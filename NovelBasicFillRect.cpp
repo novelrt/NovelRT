@@ -10,7 +10,7 @@ namespace NovelRT{
                                            const RGBAConfig &fillColour, NVGcontext* context, const float &rotation) : NovelObject(position, size, context, rotation), _colourConfig(fillColour) {
     }
 
-    void NovelBasicFillRect::drawObject() const {
+    void NovelBasicFillRect::drawObject(float deltaTime) const {
         GeoVector<float> position = getPosition();
         GeoVector<float> size = getSize();
         nvgBeginPath(_context);
