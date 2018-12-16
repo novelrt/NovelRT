@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "SDL/include/SDL.h"
+#include "SDL2/SDL.h"
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
@@ -21,8 +21,10 @@ bool init() {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
         return 1;
     }
+    int SCREEN_WIDTH=800,
+        SCREEN_HEIGHT=600;
     // create window
-    window = SDL_CreateWindow(
+    auto window = SDL_CreateWindow(
             "hello_sdl2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (window == NULL) {

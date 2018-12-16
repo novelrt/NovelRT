@@ -22,7 +22,7 @@ namespace NovelRT {
     }
 
     void NovelObject::setRotation(const float& value) {
-        _rotation = &value;
+        _rotation = value;
     }
 
     GeoVector<float> NovelObject::getScale() const {
