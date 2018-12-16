@@ -28,8 +28,6 @@ bool sdlInit() {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
         return false;
     }
-    int SCREEN_WIDTH=800,
-        SCREEN_HEIGHT=600;
     // create window
     auto window = SDL_CreateWindow(
             "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
