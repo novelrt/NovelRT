@@ -3,4 +3,6 @@ project(NovelRT)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(NovelRT nanovg/nanovg.c main.cpp NovelObject.cpp NovelObject.h GeoVector.cpp GeoVector.h NovelBasicFillRect.cpp NovelBasicFillRect.h RGBAConfig.cpp RGBAConfig.h)
+add_executable(NovelRT nanovg/nanovg.c NovelObject.cpp NovelObject.h GeoVector.cpp GeoVector.h NovelBasicFillRect.cpp NovelBasicFillRect.h RGBAConfig.cpp RGBAConfig.h main.cpp)
+
+target_link_libraries(NovelRT m GL GLU SDL2)

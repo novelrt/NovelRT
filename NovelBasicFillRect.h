@@ -13,7 +13,7 @@ namespace NovelRT {
     public:
         NovelBasicFillRect(const GeoVector<float>& position, const GeoVector<float>& size, const RGBAConfig& fillColour, NVGcontext* context, const float& rotation = 0);
 
-        void drawObject() const override;
+        void drawObject(float deltaTime) const override;
 
         RGBAConfig getColourConfig() const;
 
