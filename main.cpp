@@ -29,7 +29,7 @@ bool sdlInit() {
         return false;
     }
     // create window
-    auto window = SDL_CreateWindow(
+    window = SDL_CreateWindow(
             "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             1000, 1000, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (window == NULL) {
@@ -81,10 +81,17 @@ int main(int argc, char *argv[]) {
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
     float deltaTime = 0;
-    NovelRT::NovelBasicFillRect rect = NovelRT::NovelBasicFillRect(NovelRT::GeoVector<float>(500, 500), NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 0, 0, 255), vg);
+    NovelRT::NovelBasicFillRect rect = NovelRT::NovelBasicFillRect(NovelRT::GeoVector<float>(500, 500), NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), vg);
 
 
     while(running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT)
+            {
+                running= 0;
+                break;
+            }
+        }
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -95,6 +102,10 @@ int main(int argc, char *argv[]) {
 
         SDL_GL_SwapWindow(window);
     }
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
 
 
 }
