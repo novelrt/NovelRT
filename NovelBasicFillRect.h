@@ -9,11 +9,11 @@
 #include "RGBAConfig.h"
 
 namespace NovelRT {
-    class NovelBasicFillRect : NovelObject {
+    class NovelBasicFillRect : public NovelObject {
     public:
         NovelBasicFillRect(const GeoVector<float>& position, const GeoVector<float>& size, const RGBAConfig& fillColour, NVGcontext* context, const float& rotation = 0);
 
-        void drawObject(float deltaTime) const override;
+        void drawObject() const override;
 
         RGBAConfig getColourConfig() const;
 
