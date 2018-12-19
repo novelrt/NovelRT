@@ -34,7 +34,6 @@ namespace NovelRT {
                 "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 1000, 1000, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
         if (_window == NULL) {
-            //fprintf(stderr, "could not create window: %s\n", SDL_GetError());
             std::cerr << "could not create window: %s\n", SDL_GetError();
 
             return false;
