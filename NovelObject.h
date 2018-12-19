@@ -28,7 +28,7 @@ namespace NovelRT {
 
         void setSize(const GeoVector<float>& value);
 
-        virtual void drawObject(float deltaTime) const = 0;
+        virtual void drawObject() const = 0;
 
 
     private:

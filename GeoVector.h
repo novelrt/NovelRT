@@ -12,11 +12,11 @@ namespace NovelRT {
     public:
         GeoVector(T x, T y);
 
-        T getX();
+        T getX() const;
 
         void setX(T value);
 
-        T getY();
+        T getY() const;
 
         void setY(T value);
 
@@ -40,7 +40,7 @@ namespace NovelRT {
     }
 
     template<typename T>
-    T GeoVector<T>::getX() {
+    T GeoVector<T>::getX() const {
         return _x;
     }
 
@@ -50,7 +50,7 @@ namespace NovelRT {
     }
 
     template<typename T>
-    T GeoVector<T>::getY() {
+    T GeoVector<T>::getY() const {
         return _x;
     }
 
@@ -61,17 +61,17 @@ namespace NovelRT {
 
     template<typename T>
     inline GeoVector<T> GeoVector<T>::operator + (const GeoVector<T>& other) const {
-        return new GeoVector<T>(GeoVector<T>::getX() + other->getX(), GeoVector<T>::getY() + other->getY());
+        return GeoVector<T>(GeoVector<T>::getX() + other.getX(), GeoVector<T>::getY() + other.getY());
     }
 
     template<typename T>
     inline GeoVector<T> GeoVector<T>::operator * (const GeoVector<T>& other) const {
-        return new GeoVector<T>(GeoVector<T>::getX() * other->getX(), GeoVector<T>::getY() * other->getY());
+        return GeoVector<T>(GeoVector<T>::getX() * other.getX(), GeoVector<T>::getY() * other.getY());
     }
 
     template<typename T>
     inline GeoVector<T> GeoVector<T>::operator - (const GeoVector<T>& other) const {
-        return new GeoVector<T>(GeoVector<T>::getX() - other->getX(), GeoVector<T>::getY() - other->getY());
+        return GeoVector<T>(GeoVector<T>::getX() - other.getX(), GeoVector<T>::getY() - other.getY());
     }
 }
 
