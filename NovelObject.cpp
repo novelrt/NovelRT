@@ -41,5 +41,11 @@ namespace NovelRT {
         _size = value;
     }
 
+    bool NovelObject::getActive() const {
+        return _active;
+    }
 
+    void NovelObject::setActive(const bool& value) {
+        _active = value;
+    }
 }

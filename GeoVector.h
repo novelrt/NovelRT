@@ -51,7 +51,7 @@ namespace NovelRT {
 
     template<typename T>
     T GeoVector<T>::getY() const {
-        return _x;
+        return _y;
     }
 
     template<typename T>

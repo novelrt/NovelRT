@@ -12,13 +12,14 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#define NANOVG_GL2_IMPLEMENTATION
+#define NANOVG_GL3_IMPLEMENTATION
 
 #include "nanovg/nanovg.h"
 #include "nanovg/nanovg_gl.h"
 #include "nanovg/nanovg_gl_utils.h"
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
+#include "NovelImageRect.h"
 
 
 namespace NovelRT {
@@ -26,15 +27,18 @@ namespace NovelRT {
         if (getenv("LINUX_SSH_ENABLED"))
             setenv("DISPLAY", "127.0.0.1:0", true);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-            fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
+            std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
             return false;
         }
+
+        SDL_GetCurrentDisplayMode(0, &_current);
         // create window
+
         _window = SDL_CreateWindow(
                 "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 1000, 1000, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
         if (_window == NULL) {
-            std::cerr << "could not create window: %s\n", SDL_GetError();
+            std::cerr << "could not create window: " << SDL_GetError() << std::endl;
 
             return false;
         }
@@ -45,7 +49,7 @@ namespace NovelRT {
     }
 
     bool NovelRunner::nanovgInit() {
-        _nanovgContext = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        _nanovgContext = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (_nanovgContext == NULL) {
             std::cerr << "%llu\n", _nanovgContext;
             std::cerr << "Could not init nanovg.\n";
@@ -56,13 +60,15 @@ namespace NovelRT {
     }
 
     int NovelRunner::runNovel(int aspectRatioWidth, int aspectRatioHeight) {
+        _aspectRatioWidth = aspectRatioWidth;
+        _aspectRatioHeight = aspectRatioHeight;
         if (!sdlInit()) {
-            std::cout << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
+            std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
         }
 
         if (!nanovgInit()) {
-            std::cout << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
+            std::cerr << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
             return 1;
         }
 
@@ -82,10 +88,13 @@ namespace NovelRT {
         Uint64 NOW = SDL_GetPerformanceCounter();
         Uint64 LAST = 0;
         float deltaTime = 0;
-        NovelRT::NovelBasicFillRect rect = NovelRT::NovelBasicFillRect(NovelRT::GeoVector<float>(500, 500),
-                                                                       NovelRT::GeoVector<float>(200, 200),
-                                                                       NovelRT::RGBAConfig(255, 0, 0, 255),
+        NovelBasicFillRect rect = NovelBasicFillRect(GeoVector<float>(500, 500),
+                                                                       GeoVector<float>(200, 200),
+                                                                       RGBAConfig(255, 0, 0, 255),
                                                                        _nanovgContext);
+
+        auto imageRect = NovelImageRect(GeoVector<float>(200, 500), _nanovgContext, "test-yuri.png");
+
 
 
         while (running) {
@@ -102,6 +111,7 @@ namespace NovelRT {
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
             rect.drawObject();
+            imageRect.drawObject();
 
             nvgEndFrame(_nanovgContext);
             SDL_GL_SwapWindow(_window);

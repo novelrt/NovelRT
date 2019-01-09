@@ -12,6 +12,8 @@ namespace NovelRT{
     }
 
     void NovelBasicFillRect::drawObject() const {
+        if(!getActive()) return;
+
         GeoVector<float> position = getPosition();
         GeoVector<float> size = getSize();
         nvgSave(_context);

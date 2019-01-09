@@ -28,6 +28,10 @@ namespace NovelRT {
 
         void setSize(const GeoVector<float>& value);
 
+        bool getActive() const;
+
+        void setActive(const bool& value);
+
         virtual void drawObject() const = 0;
 
 
@@ -36,6 +40,7 @@ namespace NovelRT {
         GeoVector<float> _scale;
         GeoVector<float> _size;
         float _rotation;
+        bool _active = true;
 
     protected:
         NVGcontext* _context;
