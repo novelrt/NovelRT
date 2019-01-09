@@ -24,8 +24,6 @@
 
 namespace NovelRT {
     bool NovelRunner::sdlInit() {
-        if (getenv("LINUX_SSH_ENABLED"))
-            setenv("DISPLAY", "127.0.0.1:0", true);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
             std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
             return false;
