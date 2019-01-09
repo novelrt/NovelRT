@@ -21,6 +21,9 @@ namespace NovelRT {
         SDL_Window *_window;
         struct NVGcontext *_nanovgContext;
         SDL_GLContext _openGLContext;
+        int _aspectRatioWidth;
+        int _aspectRatioHeight;
+        SDL_DisplayMode _current;
     };
 
 }
