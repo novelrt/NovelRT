@@ -8,7 +8,7 @@
 #include "NovelObject.h"
 #include "RGBAConfig.h"
 #include <string>
-#include "nanovg/nanovg.h"
+#include "../lib/nanovg/nanovg.h"
 
 namespace NovelRT {
 

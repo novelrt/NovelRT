@@ -14,9 +14,9 @@
 
 #define NANOVG_GL3_IMPLEMENTATION
 
-#include "nanovg/nanovg.h"
-#include "nanovg/nanovg_gl.h"
-#include "nanovg/nanovg_gl_utils.h"
+#include "../lib/nanovg/nanovg.h"
+#include "../lib/nanovg/nanovg_gl.h"
+#include "../lib/nanovg/nanovg_gl_utils.h"
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
@@ -86,12 +86,12 @@ namespace NovelRT {
         Uint64 NOW = SDL_GetPerformanceCounter();
         Uint64 LAST = 0;
         float deltaTime = 0;
-        NovelBasicFillRect rect = NovelBasicFillRect(GeoVector<float>(500, 500),
+/*        NovelBasicFillRect rect = NovelBasicFillRect(GeoVector<float>(500, 500),
                                                                        GeoVector<float>(200, 200),
                                                                        RGBAConfig(255, 0, 0, 255),
                                                                        _nanovgContext);
 
-        auto imageRect = NovelImageRect(GeoVector<float>(200, 500), _nanovgContext, "test-yuri.png");
+        auto imageRect = NovelImageRect(GeoVector<float>(200, 500), _nanovgContext, "test-yuri.png");*/
 
 
 
@@ -108,8 +108,12 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
-            rect.drawObject();
-            imageRect.drawObject();
+/*            rect.drawObject();
+            imageRect.drawObject();*/
+
+            for (auto i = _renderObjects.begin(); i != _renderObjects.end(); ++i) {
+                i->drawObject();
+            }
 
             nvgEndFrame(_nanovgContext);
             SDL_GL_SwapWindow(_window);

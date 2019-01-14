@@ -4,8 +4,8 @@
 
 #ifndef NOVELRT_NOVELOBJECT_H
 #define NOVELRT_NOVELOBJECT_H
-#include "nanovg/nanovg.h"
 #include "GeoVector.h"
+#include "../lib/nanovg/nanovg.h"
 
 namespace NovelRT {
     class NovelObject {
@@ -28,6 +28,14 @@ namespace NovelRT {
 
         void setSize(const GeoVector<float>& value);
 
+        int getLayer() const;
+
+        void setLayer(const int& value);
+
+        int getOrderInLayer() const;
+
+        void setOrderInLayer(const int& value);
+
         bool getActive() const;
 
         void setActive(const bool& value);
@@ -41,6 +49,8 @@ namespace NovelRT {
         GeoVector<float> _size;
         float _rotation;
         bool _active = true;
+        int _orderInLayer;
+        int _layer;
 
     protected:
         NVGcontext* _context;
