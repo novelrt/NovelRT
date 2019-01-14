@@ -3,7 +3,7 @@
 //
 
 #include "NovelObject.h"
-#include "nanovg/nanovg.h"
+#include "../lib/nanovg/nanovg.h"
 
 namespace NovelRT {
     NovelObject::NovelObject(const GeoVector<float>& position, const GeoVector<float>& size, NVGcontext *context, const float& rotation) : _position(position), _rotation(rotation), _size(size), _context(context), _scale(GeoVector<float>(1,1)) {
@@ -47,5 +47,21 @@ namespace NovelRT {
 
     void NovelObject::setActive(const bool& value) {
         _active = value;
+    }
+
+    int NovelObject::getLayer() const {
+        return _layer;
+    }
+
+    void NovelObject::setLayer(const int &value) {
+        _layer = value;
+    }
+
+    int NovelObject::getOrderInLayer() const {
+        return _orderInLayer;
+    }
+
+    void NovelObject::setOrderInLayer(const int& value) {
+        _orderInLayer = value;
     }
 }

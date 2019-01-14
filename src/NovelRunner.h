@@ -6,7 +6,9 @@
 #define NOVELRT_NOVELRUNNER_H
 
 #include "SDL2/SDL.h"
-#include "nanovg/nanovg.h"
+#include "../lib/nanovg/nanovg.h"
+#include <vector>
+#include "NovelObject.h"
 
 namespace NovelRT {
     class NovelRunner {
@@ -24,6 +26,8 @@ namespace NovelRT {
         int _aspectRatioWidth;
         int _aspectRatioHeight;
         SDL_DisplayMode _current;
+        std::vector<NovelObject> _renderObjects;
+
     };
 
 }
