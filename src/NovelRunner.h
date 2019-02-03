@@ -5,7 +5,7 @@
 #ifndef NOVELRT_NOVELRUNNER_H
 #define NOVELRT_NOVELRUNNER_H
 
-#include "SDL2/SDL.h"
+#include "../lib/SDL2/include/SDL.h"
 #include "../lib/nanovg/nanovg.h"
 #include <vector>
 #include "NovelObject.h"
