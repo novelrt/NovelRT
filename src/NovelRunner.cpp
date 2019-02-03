@@ -4,7 +4,7 @@
 
 #include "NovelRunner.h"
 
-#include "SDL2/SDL.h"
+#include "../lib/SDL2/include/SDL.h"
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
@@ -12,8 +12,11 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
+#if OPENGL_VERSION==3
 #define NANOVG_GL3_IMPLEMENTATION
-
+#elif OPENGL_VERSION==2
+#define NANOVG_GL2_IMPLEMENTATION
+#endif
 #include "../lib/nanovg/nanovg.h"
 #include "../lib/nanovg/nanovg_gl.h"
 #include "../lib/nanovg/nanovg_gl_utils.h"
@@ -34,7 +37,7 @@ namespace NovelRT {
 
         _window = SDL_CreateWindow(
                 "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                1000, 1000, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+                500, 500, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
         if (_window == NULL) {
             std::cerr << "could not create window: " << SDL_GetError() << std::endl;
 
@@ -47,7 +50,11 @@ namespace NovelRT {
     }
 
     bool NovelRunner::nanovgInit() {
+#if OPENGL_VERSION==3
         _nanovgContext = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+#elif OPENGL_VERSION==2
+        _nanovgContext = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+#endif
         if (_nanovgContext == NULL) {
             std::cerr << "%llu\n", _nanovgContext;
             std::cerr << "Could not init nanovg.\n";

@@ -19,7 +19,7 @@ namespace NovelRT {
 
     void NovelImageRect::drawObject() const {
         if (!getActive()) return;
-
+        
         GeoVector<float> position = getPosition();
         GeoVector<float> size = getSize();
         nvgSave(_context);
