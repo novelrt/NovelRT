@@ -26,15 +26,17 @@
 
 
 namespace NovelRT {
-    bool NovelRunner::sdlInit() {
+    bool NovelRunner::sdlInit(const int& displayNumber) {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
             std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
             return false;
         }
 
-        SDL_GetCurrentDisplayMode(0, &_current);
-        // create window
+        //SDL_GetCurrentDisplayMode(displayNumber, &_displayData);
+        //TODO: make this scale based on the aspect entered.
 
+
+        // create window
         _window = SDL_CreateWindow(
                 "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 500, 500, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -64,10 +66,10 @@ namespace NovelRT {
         return true;
     }
 
-    int NovelRunner::runNovel(int aspectRatioWidth, int aspectRatioHeight) {
+    int NovelRunner::runNovel(int aspectRatioWidth, int aspectRatioHeight, int displayNumber) {
         _aspectRatioWidth = aspectRatioWidth;
         _aspectRatioHeight = aspectRatioHeight;
-        if (!sdlInit()) {
+        if (!sdlInit(displayNumber)) {
             std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
         }
@@ -93,12 +95,12 @@ namespace NovelRT {
         Uint64 NOW = SDL_GetPerformanceCounter();
         Uint64 LAST = 0;
         float deltaTime = 0;
-/*        NovelBasicFillRect rect = NovelBasicFillRect(GeoVector<float>(500, 500),
+        NovelBasicFillRect rect = NovelBasicFillRect(GeoVector<float>(200, 200),
                                                                        GeoVector<float>(200, 200),
                                                                        RGBAConfig(255, 0, 0, 255),
                                                                        _nanovgContext);
 
-        auto imageRect = NovelImageRect(GeoVector<float>(200, 500), _nanovgContext, "test-yuri.png");*/
+        auto imageRect = NovelImageRect(GeoVector<float>(200, 200), _nanovgContext, "test-yuri.png", 0, GeoVector<float>(0.5f, 2.0f));
 
 
 
@@ -115,8 +117,8 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
-/*            rect.drawObject();
-            imageRect.drawObject();*/
+            //rect.drawObject();
+            //imageRect.drawObject();
 
             for (auto i = _renderObjects.begin(); i != _renderObjects.end(); ++i) {
                 i->drawObject();

@@ -13,12 +13,12 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        int runNovel(int aspectRatioWidth, int aspectRatioHeight);
+        int runNovel(int aspectRatioWidth, int aspectRatioHeight, int displayNumber);
 
     private:
         bool nanovgInit();
 
-        bool sdlInit();
+        bool sdlInit(const int& displayNumber);
 
         SDL_Window *_window;
         struct NVGcontext *_nanovgContext;

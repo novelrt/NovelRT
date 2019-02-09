@@ -10,40 +10,40 @@
 namespace NovelRT {
     class NovelObject {
     public:
-        NovelObject(const GeoVector<float>& position, const GeoVector<float>& size, NVGcontext *context, const float& rotation = 0);
+        NovelObject(const GeoVector<float>& position, const GeoVector<float>& size, NVGcontext *context, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
 
-        GeoVector<float> getPosition() const;
+        virtual GeoVector<float> getPosition() const;
 
-        void setPosition(const GeoVector<float>& value);
+        virtual void setPosition(const GeoVector<float>& value);
 
-        float getRotation() const;
+        virtual float getRotation() const;
 
-        void setRotation(const float& value);
+        virtual void setRotation(const float& value);
 
-        GeoVector<float> getScale() const;
+        virtual GeoVector<float> getScale() const;
 
-        void setScale(const GeoVector<float>& value);
+        virtual void setScale(const GeoVector<float>& value);
 
-        GeoVector<float> getSize() const;
+        virtual GeoVector<float> getSize() const;
 
-        void setSize(const GeoVector<float>& value);
+        virtual void setSize(const GeoVector<float>& value);
 
-        int getLayer() const;
+        virtual int getLayer() const;
 
-        void setLayer(const int& value);
+        virtual void setLayer(const int& value);
 
-        int getOrderInLayer() const;
+        virtual int getOrderInLayer() const;
 
-        void setOrderInLayer(const int& value);
+        virtual void setOrderInLayer(const int& value);
 
-        bool getActive() const;
+        virtual bool getActive() const;
 
-        void setActive(const bool& value);
+        virtual void setActive(const bool& value);
 
         virtual void drawObject() const = 0;
 
 
-    private:
+    protected:
         GeoVector<float> _position;
         GeoVector<float> _scale;
         GeoVector<float> _size;
@@ -51,8 +51,6 @@ namespace NovelRT {
         bool _active = true;
         int _orderInLayer;
         int _layer;
-
-    protected:
         NVGcontext* _context;
     };
 

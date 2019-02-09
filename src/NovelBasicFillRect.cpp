@@ -8,7 +8,7 @@
 namespace NovelRT{
 
     NovelBasicFillRect::NovelBasicFillRect(const GeoVector<float> &position, const GeoVector<float> &size,
-                                           const RGBAConfig &fillColour, NVGcontext* context, const float &rotation) : NovelObject(position, size, context, rotation), _colourConfig(fillColour) {
+                                           const RGBAConfig &fillColour, NVGcontext* context, const float &rotation, const GeoVector<float>& scale) : NovelObject(position, size, context, rotation, scale), _colourConfig(fillColour) {
     }
 
     void NovelBasicFillRect::drawObject() const {
@@ -16,6 +16,8 @@ namespace NovelRT{
 
         GeoVector<float> position = getPosition();
         GeoVector<float> size = getSize();
+        GeoVector<float> scale = getScale();
+        size = size * scale;
         nvgSave(_context);
         nvgTranslate(_context, position.getX(), position.getY());
         nvgRotate(_context, getRotation());
