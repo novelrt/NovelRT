@@ -9,13 +9,17 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test-yuri.png
 
 find_package(Lua53 REQUIRED)
 If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
+    file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
     add_compile_definitions(OPENGL_VERSION=2)
 else()
     add_compile_definitions(OPENGL_VERSION=3)
 endif()
 
+file(COPY ${CORECLR} DESTINATION lib/CoreCLR/Active)
+
 if(LINUX)
-    include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
+    #include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
+
 endif()
 
 
