@@ -6,8 +6,8 @@
 
 namespace NovelRT {
 
-    NovelImageRect::NovelImageRect(const GeoVector<float> &position, NVGcontext *context, const std::string &imageDir,
-                                   const float &rotation, const GeoVector<float>& scale) : NovelObject(position, GeoVector<float>(0, 0), context,
+    NovelImageRect::NovelImageRect(const float& screenScale, const GeoVector<float> &position, NVGcontext *context, const std::string &imageDir,
+                                   const float &rotation, const GeoVector<float>& scale) : NovelObject(screenScale, position, GeoVector<float>(0, 0), context,
                                                                         rotation, scale), _imageDir(imageDir) {
         _imageHandle = nvgCreateImage(_context, _imageDir.c_str(), NVG_IMAGE_NEAREST);
         _width = 0;
@@ -18,17 +18,16 @@ namespace NovelRT {
     }
 
     void NovelImageRect::setScale(const GeoVector<float>& value)  {
-        _paint = nvgImagePattern(_context, 0, 0, _width * value.getX(), _height * value.getY(), 0, _imageHandle, 1);
+        _paint = nvgImagePattern(_context, 0, 0, (_width * _screenScale) * value.getX(), (_height * _screenScale) * value.getY(), 0, _imageHandle, 1);
         NovelObject::_scale = value;
     }
 
     void NovelImageRect::drawObject() const {
         if (!getActive()) return;
 
-        GeoVector<float> position = getPosition();
-        GeoVector<float> size = getSize();
-        GeoVector<float> scale = getScale();
-        size = size * scale;
+        GeoVector<float> position = getPosition() * _screenScale;
+        GeoVector<float> size = getSize() * _screenScale;
+        size = size * getScale();
         nvgSave(_context);
         nvgTranslate(_context, position.getX(), position.getY());
         nvgRotate(_context, getRotation());
