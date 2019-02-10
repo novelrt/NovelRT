@@ -8,6 +8,7 @@
 #include "../lib/SDL2/include/SDL.h"
 #include "../lib/nanovg/nanovg.h"
 #include <vector>
+#include <map>
 #include "NovelObject.h"
 
 namespace NovelRT {
@@ -26,7 +27,7 @@ namespace NovelRT {
         int _aspectRatioWidth;
         int _aspectRatioHeight;
         SDL_DisplayMode _current;
-        std::vector<NovelObject> _renderObjects;
+        std::map<int, std::vector<NovelObject*>> _renderObjects;
         float _screenScale;
 
     };
