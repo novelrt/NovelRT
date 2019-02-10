@@ -13,7 +13,7 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        int runNovel(int aspectRatioWidth, int aspectRatioHeight, int displayNumber);
+        int runNovel(int displayNumber);
 
     private:
         bool nanovgInit();
@@ -27,6 +27,7 @@ namespace NovelRT {
         int _aspectRatioHeight;
         SDL_DisplayMode _current;
         std::vector<NovelObject> _renderObjects;
+        float _screenScale;
 
     };
 
