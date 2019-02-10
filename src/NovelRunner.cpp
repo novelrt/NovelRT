@@ -96,13 +96,15 @@ namespace NovelRT {
         Uint64 NOW = SDL_GetPerformanceCounter();
         Uint64 LAST = 0;
         float deltaTime = 0;
-        NovelBasicFillRect rect = NovelBasicFillRect(_screenScale, GeoVector<float>(200, 200),
+/*        NovelBasicFillRect rect = NovelBasicFillRect(_screenScale, GeoVector<float>(200, 200),
                                                                        GeoVector<float>(200, 200),
                                                                        RGBAConfig(255, 0, 0, 255),
-                                                                       _nanovgContext);
+                                                                       _nanovgContext);*/
 
         auto imageRect = NovelImageRect(_screenScale, GeoVector<float>(1920.0f / 2.0f, 1080.0f / 2.0f), _nanovgContext, "test-yuri.png");
 
+        _renderObjects[0] = std::vector<NovelObject*>();
+        _renderObjects[0].push_back(&imageRect);
 
 
         while (running) {
@@ -118,11 +120,15 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
-            rect.drawObject();
-            imageRect.drawObject();
+            //rect.drawObject();
+            //imageRect.drawObject();
 
-            for (auto i = _renderObjects.begin(); i != _renderObjects.end(); ++i) {
-                i->drawObject();
+            for(auto& value : _renderObjects)
+            {
+                for(auto& renderObj : value.second)
+                {
+                    renderObj->drawObject();
+                }
             }
 
             nvgEndFrame(_nanovgContext);
