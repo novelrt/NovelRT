@@ -123,9 +123,9 @@ namespace NovelRT {
             //rect.drawObject();
             //imageRect.drawObject();
 
-            for(auto& value : _renderObjects)
+            for(const auto& value : _renderObjects)
             {
-                for(auto& renderObj : value.second)
+                for(const auto& renderObj : value.second)
                 {
                     renderObj->drawObject();
                 }
