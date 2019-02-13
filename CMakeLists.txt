@@ -28,4 +28,4 @@ add_subdirectory(lib/lua53)
 
 add_executable(NovelRT lib/nanovg/nanovg.c src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelRunner.cpp src/NovelRunner.h src/NovelImageRect.cpp src/NovelImageRect.h)
 
-target_link_libraries(NovelRT m GL GLU SDL2 liblua)
+target_link_libraries(NovelRT m GL GLU SDL2 lua)
