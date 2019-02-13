@@ -16,21 +16,9 @@ set(LIB_HEADERS lapi.h lauxlib.h lcode.h lctype.h ldebug.h
         lprefix.h lstate.h lstring.h ltable.h ltm.h
         lua.h luaconf.h lualib.h lundump.h lvm.h
         lzio.h lua.h)
-add_library(liblua STATIC ${LIB_SOURCE} ${LIB_HEADERS})
+add_library(lua STATIC ${LIB_SOURCE} ${LIB_HEADERS})
 target_link_libraries(lua m)
-set_property(TARGET liblua PROPERTY OUTPUT_NAME lua)
 
-add_executable(lua-bin lua.c)
-set_property(TARGET lua-bin PROPERTY OUTPUT_NAME lua)
-target_link_libraries(lua-bin liblua)
-
-enable_testing()
-add_test(NAME version COMMAND lua-bin -v)
-
-install(TARGETS liblua lua-bin
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
 install(FILES lua.h luaconf.h lualib.h lauxlib.h lua.h
         DESTINATION include)
 
