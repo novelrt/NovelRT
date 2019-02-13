@@ -1,9 +1,9 @@
 #include <iostream>
 #include "NovelRunner.h"
 extern "C" {
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
+    #include "../lib/lua53/lua.h"
+    #include "../lib/lua53/lualib.h"
+    #include "../lib/lua53/lauxlib.h"
 }
 
 lua_State* L;
@@ -20,6 +20,8 @@ static int average(lua_State *L) {
 }
 
 int main() {
+    // setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
+    // setenv("DISPLAY", "localhost:0.0", true);
     L = luaL_newstate();
     luaL_openlibs(L);
     lua_register(L, "average", average);
