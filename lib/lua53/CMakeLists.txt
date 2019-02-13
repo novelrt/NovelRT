@@ -17,7 +17,6 @@ set(LIB_HEADERS lapi.h lauxlib.h lcode.h lctype.h ldebug.h
         lua.h luaconf.h lualib.h lundump.h lvm.h
         lzio.h lua.h)
 add_library(lua STATIC ${LIB_SOURCE} ${LIB_HEADERS})
-target_link_libraries(lua m)
 
 install(FILES lua.h luaconf.h lualib.h lauxlib.h lua.h
         DESTINATION include)
