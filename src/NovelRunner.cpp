@@ -23,6 +23,7 @@
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
+#include <algorithm>
 
 
 namespace NovelRT {
