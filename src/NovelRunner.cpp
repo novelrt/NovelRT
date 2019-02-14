@@ -26,7 +26,7 @@
 #include <algorithm>
 
 void testSubscriber(const float& deltaTime) {
-    std::cout << "subscriber invoked with deltaTime: " << deltaTime << std::endl;
+    std::cout << "subscriber called with deltaTime: " << deltaTime << std::endl;
 }
 
 namespace NovelRT {
@@ -74,6 +74,7 @@ namespace NovelRT {
     }
 
     int NovelRunner::runNovel(int displayNumber) {
+        runOnUpdate(testSubscriber);
         if (!sdlInit(displayNumber)) {
             std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
@@ -124,7 +125,11 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
-            invokeSubscribers(deltaTime);
+            [this](const float& deltaTime) {
+                for(const auto& subscriber : _updateSubscribers) {
+                    subscriber(deltaTime);
+                }
+            }(deltaTime);
 
             //rect.drawObject();
             //imageRect.drawObject();
@@ -146,17 +151,7 @@ namespace NovelRT {
         return 0;
     }
 
-    void NovelRunner::addSubscriber(const std::function<void(const float &)> &subscriber) {
+    void NovelRunner::runOnUpdate(const std::function<void(const float &)> &subscriber) {
         _updateSubscribers.push_back(subscriber);
-    }
-
-    void NovelRunner::addSubcribers(const std::vector<std::function<void(const float &)>> subscribers) {
-        _updateSubscribers.insert(std::end(_updateSubscribers), std::begin(subscribers), std::end(subscribers));
-    }
-
-    void NovelRunner::invokeSubscribers(const float& deltaTime) {
-        for(const auto& subscriber : _updateSubscribers) {
-            subscriber(deltaTime);
-        }
     }
 }

@@ -19,8 +19,7 @@ namespace NovelRT {
     public:
         NovelImageRect& getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const GeoVector<float>& startingRotation, const GeoVector<float>& startingScale);
         NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const GeoVector<float>& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
-        void addSubscriber(const std::function<void(const float&)>& subscriber);
-        void addSubcribers(const std::vector<std::function<void(const float&)>>);
+        void runOnUpdate(const std::function<void(const float&)>& subscriber);
         void stopRunningOnUpdate(const std::function<void(const float&)>& subscriber);
 
         int runNovel(int displayNumber);
@@ -29,7 +28,6 @@ namespace NovelRT {
         std::vector<std::function<void(const float&)>> _updateSubscribers;
 
         bool nanovgInit();
-        void invokeSubscribers(const float&);
 
         bool sdlInit(const int& displayNumber);
 
