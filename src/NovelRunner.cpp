@@ -25,6 +25,9 @@
 #include "NovelImageRect.h"
 #include <algorithm>
 
+void testSubscriber(const float& deltaTime) {
+    std::cout << "subscriber invoked with deltaTime: " << deltaTime << std::endl;
+}
 
 namespace NovelRT {
     bool NovelRunner::sdlInit(const int& displayNumber) {
@@ -121,6 +124,8 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
 
+            invokeSubscribers(deltaTime);
+
             //rect.drawObject();
             //imageRect.drawObject();
 
@@ -139,5 +144,19 @@ namespace NovelRT {
         SDL_DestroyWindow(_window);
         SDL_Quit();
         return 0;
+    }
+
+    void NovelRunner::addSubscriber(const std::function<void(const float &)> &subscriber) {
+        _updateSubscribers.push_back(subscriber);
+    }
+
+    void NovelRunner::addSubcribers(const std::vector<std::function<void(const float &)>> subscribers) {
+        _updateSubscribers.insert(std::end(_updateSubscribers), std::begin(subscribers), std::end(subscribers));
+    }
+
+    void NovelRunner::invokeSubscribers(const float& deltaTime) {
+        for(const auto& subscriber : _updateSubscribers) {
+            subscriber(deltaTime);
+        }
     }
 }
