@@ -123,7 +123,7 @@ namespace NovelRT {
             NOW = SDL_GetPerformanceCounter();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
-            deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001;
+            deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
 
             [this](const float& deltaTime) {
                 for(const auto& subscriber : _updateSubscribers) {
