@@ -74,7 +74,7 @@ namespace NovelRT {
     }
 
     int NovelRunner::runNovel(int displayNumber) {
-        runOnUpdate(testSubscriber);
+        //runOnUpdate(testSubscriber);
         if (!sdlInit(displayNumber)) {
             std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
@@ -108,8 +108,6 @@ namespace NovelRT {
 
         auto imageRect = NovelImageRect(_screenScale, GeoVector<float>(1920.0f / 2.0f, 1080.0f / 2.0f), _nanovgContext, "test-yuri.png");
 
-        _renderObjects[0] = std::vector<NovelObject*>();
-        _renderObjects[0].push_back(&imageRect);
 
 
         while (running) {
@@ -125,11 +123,11 @@ namespace NovelRT {
             nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
             deltaTime = ((NOW - LAST) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
 
-            [this](const float& deltaTime) {
-                for(const auto& subscriber : _updateSubscribers) {
-                    subscriber(deltaTime);
-                }
-            }(deltaTime);
+
+            for(const auto& subscriber : _updateSubscribers) {
+                subscriber(deltaTime);
+            }
+
 
             //rect.drawObject();
             //imageRect.drawObject();
@@ -151,7 +149,23 @@ namespace NovelRT {
         return 0;
     }
 
-    void NovelRunner::runOnUpdate(const std::function<void(const float &)> &subscriber) {
+    void NovelRunner::runOnUpdate(const std::function<void(const float&)> &subscriber) {
         _updateSubscribers.push_back(subscriber);
+    }
+
+    NovelImageRect& NovelRunner::getImageRect(const std::string &filePath, const GeoVector<float> &startingPosition,
+                                                  const float& startingRotation,
+                                                  const GeoVector<float>& startingScale, const int& layer,
+                                                  const int& orderInLayer) {
+        std::map<int, std::vector<NovelObject*>>::iterator it = _renderObjects.find(layer);
+        if (it == _renderObjects.end()) {
+            _renderObjects.insert({layer, std::vector<NovelObject*>()});
+        }
+        auto imageRect = NovelImageRect(_screenScale, startingPosition, _nanovgContext,filePath, startingRotation,startingScale);
+        imageRect.setLayer(layer);
+        imageRect.setOrderInLayer(orderInLayer);
+        _renderObjects[layer].push_back(&imageRect);
+        std::sort(_renderObjects.begin(), _renderObjects.end());
+        return imageRect;
     }
 }
