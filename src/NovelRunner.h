@@ -24,6 +24,8 @@ namespace NovelRT {
 
         int runNovel(int displayNumber);
 
+        void updateRenderingLayerInfo(const int& layer, NovelObject& targetObject, const bool& migrate = true);
+
     private:
         std::vector<std::function<void(const float&)>> _updateSubscribers;
 
@@ -39,6 +41,7 @@ namespace NovelRT {
         SDL_DisplayMode _current;
         std::map<int, std::vector<NovelObject*>> _renderObjects;
         float _screenScale;
+
 
     };
 

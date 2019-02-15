@@ -157,15 +157,32 @@ namespace NovelRT {
                                                   const float& startingRotation,
                                                   const GeoVector<float>& startingScale, const int& layer,
                                                   const int& orderInLayer) {
-        std::map<int, std::vector<NovelObject*>>::iterator it = _renderObjects.find(layer);
+
+        auto imageRect = NovelImageRect(_screenScale, startingPosition, _nanovgContext,filePath, startingRotation,startingScale);
+
+        imageRect.setLayer(layer);
+        imageRect.setOrderInLayer(orderInLayer);
+        //imageRect = updateRenderingLayerInfo(layer, imageRect);
+
+        return imageRect;
+    }
+
+    void NovelRunner::updateRenderingLayerInfo(const int &layer, NovelObject& targetObject, const bool& migrate) {
+        if (migrate) {
+            auto vec = _renderObjects[targetObject.getLayer()];
+            vec.erase(std::remove_if(vec.begin(), vec.end(), [&targetObject](const NovelObject* x) {
+                auto* ptr = &targetObject;
+                auto result = x == ptr;
+                ptr = nullptr;
+                delete ptr;
+                return &result;
+            }), vec.end());
+        }
+        auto it = _renderObjects.find(layer);
         if (it == _renderObjects.end()) {
             _renderObjects.insert({layer, std::vector<NovelObject*>()});
         }
-        auto imageRect = NovelImageRect(_screenScale, startingPosition, _nanovgContext,filePath, startingRotation,startingScale);
-        imageRect.setLayer(layer);
-        imageRect.setOrderInLayer(orderInLayer);
-        _renderObjects[layer].push_back(&imageRect);
-        std::sort(_renderObjects.begin(), _renderObjects.end());
-        return imageRect;
+        _renderObjects[layer].push_back(&targetObject);
+        sort(_renderObjects.begin(), _renderObjects.end());
     }
 }
