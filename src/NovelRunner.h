@@ -17,8 +17,8 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        NovelImageRect& getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const GeoVector<float>& startingRotation, const GeoVector<float>& startingScale);
-        NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const GeoVector<float>& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
+        NovelImageRect& getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
+        NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
         void runOnUpdate(const std::function<void(const float&)>& subscriber);
         void stopRunningOnUpdate(const std::function<void(const float&)>& subscriber);
 

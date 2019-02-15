@@ -42,6 +42,10 @@ namespace NovelRT {
 
         virtual void drawObject() const = 0;
 
+        inline bool operator > (const NovelObject& other) const{
+            return getOrderInLayer() > other.getOrderInLayer();
+        }
+
 
     protected:
         GeoVector<float> _position;
