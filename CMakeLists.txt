@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(libnovelrt VERSION 0.0.1)
+project(NovelRT VERSION 0.0.1)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 17)
@@ -27,6 +27,6 @@ add_subdirectory(lib/SDL2)
 add_subdirectory(lib/nanovg)
 add_subdirectory(lib/lua53)
 
-add_library(novelrt SHARED src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelRunner.cpp src/NovelRunner.h src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRTAPI.h src/NovelRTAPI.cpp)
+add_library(NovelRT SHARED src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelRunner.cpp src/NovelRunner.h src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRTAPI.h src/NovelRTAPI.cpp)
 
-target_link_libraries(novelrt m GL GLU SDL2 nanovg lua)
+target_link_libraries(NovelRT m GL GLU SDL2 nanovg lua)
