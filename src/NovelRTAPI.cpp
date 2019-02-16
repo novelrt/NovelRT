@@ -4,6 +4,6 @@
 
 #include "NovelRTAPI.h"
 
-extern "C" int runNovel(int displayNumber) {
-    return NovelRT::NovelRunner().runNovel(displayNumber);
-}
+/*extern "C" int runNovel(int displayNumber) {
+    return NovelRT::NovelRenderingService().initialiseRendering(displayNumber);
+}*/
