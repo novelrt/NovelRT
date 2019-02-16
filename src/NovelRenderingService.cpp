@@ -126,12 +126,11 @@ namespace NovelRT {
         return imageRect;
     }
 
-    void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject& targetObject, const bool& migrate) {
+    void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject* targetObject, const bool& migrate) {
         if (migrate) {
-            auto vec = _renderObjects[targetObject.getLayer()];
-            vec.erase(std::remove_if(vec.begin(), vec.end(), [&targetObject](const NovelObject* x) {
-                auto* ptr = &targetObject;
-                auto result = x == ptr;
+            auto vec = _renderObjects[targetObject->getLayer()];
+            vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelObject* x) {
+                auto result = x == targetObject;
                 return result;
             }), vec.end());
         }
@@ -139,9 +138,12 @@ namespace NovelRT {
         if (it == _renderObjects.end()) {
             _renderObjects.insert({layer, std::vector<NovelObject*>()});
         }
-        _renderObjects[layer].push_back(&targetObject);
-        std::sort(_renderObjects[layer].begin(), _renderObjects[layer].end());
+        _renderObjects[layer].push_back(targetObject);
+        sortLayerRenderOrder(layer);
     }
+
+    void NovelRenderingService::sortLayerRenderOrder(const int& layer) {
+        sort(_renderObjects[layer].begin(), _renderObjects[layer].end()); }
 
     void NovelRenderingService::exeucteUpdateSubscriptions(const float& deltaTime) const {
         for(const auto& subscriber : _updateSubscribers) {
