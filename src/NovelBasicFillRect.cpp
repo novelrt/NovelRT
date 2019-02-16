@@ -7,7 +7,7 @@
 
 namespace NovelRT{
 
-    NovelBasicFillRect::NovelBasicFillRect(const NovelRenderingService* novelRenderer, const float& screenScale,
+    NovelBasicFillRect::NovelBasicFillRect(NovelRenderingService* novelRenderer, const float& screenScale,
                                            const GeoVector<float>& position, const GeoVector<float>& size,
                                            const RGBAConfig& fillColour, const float& rotation,
                                            const GeoVector<float>& scale) :

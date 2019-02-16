@@ -24,7 +24,7 @@ namespace NovelRT {
 
         int initialiseRendering(const int& displayNumber);
 
-        void updateRenderingLayerInfo(const int& layer, NovelObject& targetObject, const bool& migrate = true);
+        void updateRenderingLayerInfo(const int& layer, NovelObject* targetObject, const bool& migrate = true);
 
         NVGcontext* getNanoVGContext() const;
 
@@ -36,6 +36,8 @@ namespace NovelRT {
         NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
 
         void exeucteUpdateSubscriptions(const float& deltaTime) const;
+
+        void sortLayerRenderOrder(const int& layer);
 
     private:
         std::vector<std::function<void(const float&)>> _updateSubscribers;
@@ -49,7 +51,6 @@ namespace NovelRT {
         SDL_GLContext _openGLContext;
         std::map<int, std::vector<NovelObject*>> _renderObjects;
         float _screenScale;
-
 
 
     };
