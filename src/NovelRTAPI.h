@@ -5,7 +5,7 @@
 #ifndef LIBNOVELRT_NOVELRTAPI_H
 #define LIBNOVELRT_NOVELRTAPI_H
 
-#include "NovelRunner.h"
+#include "NovelRenderingService.h"
 
 extern "C" int runNovel(int);
 

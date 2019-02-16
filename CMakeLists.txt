@@ -27,6 +27,6 @@ add_subdirectory(lib/SDL2)
 add_subdirectory(lib/nanovg)
 add_subdirectory(lib/lua53)
 
-add_library(NovelRT SHARED src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelRunner.cpp src/NovelRunner.h src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRTAPI.h src/NovelRTAPI.cpp)
+add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRTAPI.h src/NovelRTAPI.cpp src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h)
 
 target_link_libraries(NovelRT m GL GLU SDL2 nanovg lua)

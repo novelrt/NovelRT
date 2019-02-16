@@ -6,11 +6,13 @@
 #define NOVELRT_NOVELOBJECT_H
 #include "GeoVector.h"
 #include "../lib/nanovg/nanovg.h"
+#include "NovelRenderingService.h"
 
 namespace NovelRT {
+    class NovelRenderingService;
     class NovelObject {
     public:
-        NovelObject(const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, NVGcontext *context, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
+        NovelObject(const NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
 
         virtual GeoVector<float> getPosition() const;
 
@@ -55,7 +57,8 @@ namespace NovelRT {
         bool _active = true;
         int _orderInLayer;
         int _layer;
-        NVGcontext* _context;
+        NVGcontext* _drawContext;
+        const NovelRenderingService* _novelRenderer;
         float _screenScale;
     };
 

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "NovelRunner.h"
+#include "NovelRenderingService.h"
 extern "C" {
     #include "../lib/lua53/lua.h"
     #include "../lib/lua53/lualib.h"
@@ -27,5 +27,6 @@ int main() {
     lua_register(L, "average", average);
     luaL_dofile(L, "avg.lua");
     lua_close(L);
-    return NovelRT::NovelRunner().runNovel(0);
+    //return NovelRT::NovelRenderingService().initialiseRendering(0);
+    return 0;
 }
