@@ -10,8 +10,8 @@ namespace NovelRT{
     NovelBasicFillRect::NovelBasicFillRect(NovelRenderingService* novelRenderer, const float& screenScale,
                                            const GeoVector<float>& position, const GeoVector<float>& size,
                                            const RGBAConfig& fillColour, const float& rotation,
-                                           const GeoVector<float>& scale) :
-                                           NovelObject(novelRenderer, screenScale, position, size, rotation, scale),
+                                           const GeoVector<float>& scale, const int& layer, const int& orderInLayer) :
+                                           NovelObject(novelRenderer, screenScale, position, size, rotation, scale, layer, orderInLayer),
                                            _colourConfig(fillColour) {
 
     }

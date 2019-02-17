@@ -35,7 +35,7 @@ namespace NovelRT {
         NovelImageRect& getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
         NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
 
-        void exeucteUpdateSubscriptions(const float& deltaTime) const;
+        void executeUpdateSubscriptions(const float &deltaTime) const;
 
         void sortLayerRenderOrder(const int& layer);
 
