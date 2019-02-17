@@ -2,6 +2,7 @@
 // Created by matth on 05/01/2019.
 //
 
+#include <iostream>
 #include "NovelImageRect.h"
 
 namespace NovelRT {
