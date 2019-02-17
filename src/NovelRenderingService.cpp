@@ -40,7 +40,7 @@ namespace NovelRT {
         SDL_GetCurrentDisplayMode(displayNumber, &displayData);
         _screenScale = displayData.h / 1080.0f;
 
-        std::cout << _screenScale;
+        std::cout << _screenScale << std::endl;
 
 
         // create window
@@ -105,6 +105,8 @@ namespace NovelRT {
             }
         }
 
+
+
         nvgEndFrame(_nanovgContext);
         SDL_GL_SwapWindow(_window);
     }
@@ -118,10 +120,7 @@ namespace NovelRT {
                                                         const GeoVector<float>& startingScale, const int& layer,
                                                         const int& orderInLayer) {
 
-        auto imageRect = NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
-        //NovelImageRect(const NovelRenderingService& novelRenderer, const float& screenScale, const GeoVector<float>& position, const std::string& imageDir, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
-        //imageRect.setLayer(layer);
-        //imageRect.setOrderInLayer(orderInLayer);
+        auto static imageRect = NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
 
         return imageRect;
     }
@@ -151,7 +150,7 @@ namespace NovelRT {
         }
     }
 
-    NVGcontext *NovelRenderingService::getNanoVGContext() const {
+    NVGcontext* NovelRenderingService::getNanoVGContext() const {
         return _nanovgContext;
     }
 }
