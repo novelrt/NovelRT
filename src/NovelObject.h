@@ -12,7 +12,7 @@ namespace NovelRT {
     class NovelRenderingService;
     class NovelObject {
     public:
-        NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
+        NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer);
 
         virtual GeoVector<float> getPosition() const;
 

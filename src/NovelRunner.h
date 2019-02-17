@@ -11,9 +11,7 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        int runNovel() const;
-    private:
-        NovelRenderingService _novelRenderer;
+        int runNovel(const NovelRenderingService& novelRenderer) const;
 
     };
 }

@@ -1,5 +1,8 @@
 #include <iostream>
 #include "NovelRenderingService.h"
+#include "NovelRunner.h"
+#include "NovelImageRect.h"
+
 extern "C" {
     #include "../lib/lua53/lua.h"
     #include "../lib/lua53/lualib.h"
@@ -20,13 +23,15 @@ static int average(lua_State *L) {
 }
 
 int main() {
-    // setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
-    // setenv("DISPLAY", "localhost:0.0", true);
+     //setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
+     //setenv("DISPLAY", "192.168.8.186:0", true);
     L = luaL_newstate();
     luaL_openlibs(L);
     lua_register(L, "average", average);
     luaL_dofile(L, "avg.lua");
     lua_close(L);
-    //return NovelRT::NovelRenderingService().initialiseRendering(0);
-    return 0;
+    auto renderer = NovelRT::NovelRenderingService();
+    renderer.initialiseRendering(0);
+    auto imageRect = renderer.getImageRect("test-yuri.png", NovelRT::GeoVector<float>(1920 / 2, 1080 /2), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
+    return NovelRT::NovelRunner().runNovel(renderer);
 }

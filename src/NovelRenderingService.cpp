@@ -118,10 +118,10 @@ namespace NovelRT {
                                                         const GeoVector<float>& startingScale, const int& layer,
                                                         const int& orderInLayer) {
 
-        auto imageRect = NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale);
+        auto imageRect = NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
         //NovelImageRect(const NovelRenderingService& novelRenderer, const float& screenScale, const GeoVector<float>& position, const std::string& imageDir, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
-        imageRect.setLayer(layer);
-        imageRect.setOrderInLayer(orderInLayer);
+        //imageRect.setLayer(layer);
+        //imageRect.setOrderInLayer(orderInLayer);
 
         return imageRect;
     }
@@ -145,7 +145,7 @@ namespace NovelRT {
     void NovelRenderingService::sortLayerRenderOrder(const int& layer) {
         sort(_renderObjects[layer].begin(), _renderObjects[layer].end()); }
 
-    void NovelRenderingService::exeucteUpdateSubscriptions(const float& deltaTime) const {
+    void NovelRenderingService::executeUpdateSubscriptions(const float &deltaTime) const {
         for(const auto& subscriber : _updateSubscribers) {
             subscriber(deltaTime);
         }

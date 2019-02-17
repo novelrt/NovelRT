@@ -6,7 +6,7 @@
 #include "../lib/SDL2/include/SDL.h"
 
 namespace NovelRT {
-    int NovelRunner::runNovel() const {
+    int NovelRunner::runNovel(const NovelRenderingService& novelRenderer) const {
 
         int winWidth, winHeight;
         int frameBufferWidth;
@@ -33,10 +33,10 @@ namespace NovelRT {
                     break;
                 }
             }
-            //exeucteUpdateSubscriptions(deltaTime);
-            //renderAllObjects(winWidth, winHeight, pxRatio);
+            novelRenderer.executeUpdateSubscriptions(deltaTime);
+            novelRenderer.renderAllObjects(winWidth, winHeight, pxRatio);
         }
-        //tearDown();
+        novelRenderer.tearDown();
         return exitCode;
     }
 }
