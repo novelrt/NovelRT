@@ -154,7 +154,7 @@ namespace NovelRT {
         return _nanovgContext;
     }
 
-    SDL_Window *NovelRenderingService::getWindow() {
+    SDL_Window *NovelRenderingService::getWindow() const {
         return _window;
     }
 }

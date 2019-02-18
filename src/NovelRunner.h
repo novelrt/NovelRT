@@ -11,7 +11,7 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        int runNovel(const NovelRenderingService& novelRenderer, SDL_Window* window) const;
+        int runNovel(const NovelRenderingService& novelRenderer) const;
 
     };
 }

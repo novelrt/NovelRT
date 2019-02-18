@@ -33,5 +33,5 @@ int main() {
     auto renderer = NovelRT::NovelRenderingService();
     renderer.initialiseRendering(0);
     auto imageRect = renderer.getImageRect("test-yuri.png", NovelRT::GeoVector<float>(960, 540), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
-    return NovelRT::NovelRunner().runNovel(renderer, renderer.getWindow());
+    return NovelRT::NovelRunner().runNovel(renderer);
 }
