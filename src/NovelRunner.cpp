@@ -6,14 +6,14 @@
 #include "../lib/SDL2/include/SDL.h"
 
 namespace NovelRT {
-    int NovelRunner::runNovel(const NovelRenderingService& novelRenderer) const {
+    int NovelRunner::runNovel(const NovelRenderingService& novelRenderer, SDL_Window* window) const {
 
         int winWidth, winHeight;
         int frameBufferWidth;
         float pxRatio;
 
 
-        //SDL_GetWindowSize(_window, &winWidth, &winHeight);
+        SDL_GetWindowSize(window, &winWidth, &winHeight);
         frameBufferWidth = winWidth;
 
         pxRatio = (float) frameBufferWidth / (float) winWidth; //TODO: WTF?
