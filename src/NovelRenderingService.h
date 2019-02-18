@@ -39,6 +39,8 @@ namespace NovelRT {
 
         void sortLayerRenderOrder(const int& layer);
 
+        SDL_Window* getWindow();
+
     private:
         std::vector<std::function<void(const float&)>> _updateSubscribers;
 

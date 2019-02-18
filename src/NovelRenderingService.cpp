@@ -153,4 +153,8 @@ namespace NovelRT {
     NVGcontext* NovelRenderingService::getNanoVGContext() const {
         return _nanovgContext;
     }
+
+    SDL_Window *NovelRenderingService::getWindow() {
+        return _window;
+    }
 }
