@@ -111,7 +111,7 @@ namespace NovelRT {
         SDL_GL_SwapWindow(_window);
     }
 
-    void NovelRenderingService::runOnUpdate(void (*subscriber)(const float)) {
+    void NovelRenderingService::runOnUpdate(NovelSubscriber subscriber) {
         _updateSubscribers.push_back(subscriber);
     }
 
@@ -156,7 +156,7 @@ namespace NovelRT {
         return _window;
     }
 
-    void NovelRenderingService::stopRunningOnUpdate(void (*subscriber)(const float)) {
+    void NovelRenderingService::stopRunningOnUpdate(NovelSubscriber subscriber) {
         if(std::find(
                 _updateSubscribers.begin(),
                 _updateSubscribers.end(),
