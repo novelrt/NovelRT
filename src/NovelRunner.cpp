@@ -16,8 +16,6 @@ void testSubscriber2(const float deltaTime) {
 
 namespace NovelRT {
     int NovelRunner::runNovel(NovelRenderingService& novelRenderer) const {
-        novelRenderer.runOnUpdate(testSubscriber1);
-        novelRenderer.runOnUpdate(testSubscriber2);
 
         Uint64 current = SDL_GetPerformanceCounter();
         Uint64 previous = 0;
@@ -35,7 +33,6 @@ namespace NovelRT {
                 }
             }
             novelRenderer.executeUpdateSubscriptions(deltaTime);
-            novelRenderer.stopRunningOnUpdate(testSubscriber2);
             novelRenderer.renderAllObjects();
 
         }
