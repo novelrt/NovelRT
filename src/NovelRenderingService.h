@@ -12,6 +12,7 @@
 #include <map>
 #include <functional>
 
+
 namespace NovelRT {
     class NovelObject;
     class NovelImageRect;
@@ -19,8 +20,8 @@ namespace NovelRT {
 
     class NovelRenderingService {
     public:
-        void runOnUpdate(const std::function<void(const float&)>& subscriber);
-        void stopRunningOnUpdate(const std::function<void(const float&)>& subscriber);
+        void runOnUpdate(void (*subscriber)(const float));
+        void stopRunningOnUpdate(void (*subscriber)(const float));
 
         int initialiseRendering(const int& displayNumber);
 
@@ -32,7 +33,7 @@ namespace NovelRT {
 
         void tearDown() const;
 
-        NovelImageRect& getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
+        NovelImageRect getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
         NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
 
         void executeUpdateSubscriptions(const float &deltaTime) const;
@@ -42,7 +43,7 @@ namespace NovelRT {
         SDL_Window* getWindow() const;
 
     private:
-        std::vector<std::function<void(const float&)>> _updateSubscribers;
+        std::vector<void (*)(const float)> _updateSubscribers;
 
         bool nanovgInit();
 
