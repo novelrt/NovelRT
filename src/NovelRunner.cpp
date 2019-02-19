@@ -8,16 +8,6 @@
 namespace NovelRT {
     int NovelRunner::runNovel(const NovelRenderingService& novelRenderer) const {
 
-        int winWidth, winHeight;
-        int frameBufferWidth;
-        float pxRatio;
-
-
-        SDL_GetWindowSize(novelRenderer.getWindow(), &winWidth, &winHeight);
-        frameBufferWidth = winWidth;
-
-        pxRatio = (float) frameBufferWidth / (float) winWidth; //TODO: WTF?
-
         Uint64 current = SDL_GetPerformanceCounter();
         Uint64 previous = 0;
         float deltaTime = 0;
@@ -34,7 +24,7 @@ namespace NovelRT {
                 }
             }
             novelRenderer.executeUpdateSubscriptions(deltaTime);
-            novelRenderer.renderAllObjects(winWidth, winHeight, pxRatio);
+            novelRenderer.renderAllObjects();
         }
         novelRenderer.tearDown();
         return exitCode;

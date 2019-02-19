@@ -85,6 +85,12 @@ namespace NovelRT {
             return 1;
         }
 
+
+        SDL_GetWindowSize(getWindow(), &_winWidth, &_winHeight);
+        _frameBufferWidth = _winWidth;
+
+        _pxRatio = (float) _frameBufferWidth / (float) _winWidth; //TODO: WTF?
+
         return 0;
     }
 
@@ -95,9 +101,10 @@ namespace NovelRT {
         SDL_Quit();
     }
 
-    void NovelRenderingService::renderAllObjects(int winWidth, int winHeight, float pxRatio) const {
+    void NovelRenderingService::renderAllObjects() const {
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        nvgBeginFrame(_nanovgContext, winWidth, winHeight, pxRatio);
+        nvgBeginFrame(_nanovgContext, _winWidth, _winHeight, _pxRatio);
 
         for(const auto& value : _renderObjects){
             for(const auto& renderObj : value.second){

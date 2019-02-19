@@ -28,7 +28,7 @@ namespace NovelRT {
 
         NVGcontext* getNanoVGContext() const;
 
-        void renderAllObjects(int winWidth, int winHeight, float pxRatio) const;
+        void renderAllObjects() const;
 
         void tearDown() const;
 
@@ -55,6 +55,10 @@ namespace NovelRT {
         float _screenScale;
 
 
+        int _winWidth;
+        int _winHeight;
+        int _frameBufferWidth;
+        float _pxRatio;
     };
 
 }
