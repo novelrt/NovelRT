@@ -118,18 +118,16 @@ namespace NovelRT {
         SDL_GL_SwapWindow(_window);
     }
 
-    void NovelRenderingService::runOnUpdate(const std::function<void(const float&)> &subscriber) {
+    void NovelRenderingService::runOnUpdate(NovelSubscriber subscriber) {
         _updateSubscribers.push_back(subscriber);
     }
 
-    NovelImageRect& NovelRenderingService::getImageRect(const std::string &filePath, const GeoVector<float> &startingPosition,
+    NovelImageRect NovelRenderingService::getImageRect(const std::string &filePath, const GeoVector<float> &startingPosition,
                                                         const float& startingRotation,
                                                         const GeoVector<float>& startingScale, const int& layer,
                                                         const int& orderInLayer) {
 
-        auto static imageRect = NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
-
-        return imageRect;
+        return NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
     }
 
     void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject* targetObject, const bool& migrate) {
@@ -163,5 +161,22 @@ namespace NovelRT {
 
     SDL_Window *NovelRenderingService::getWindow() const {
         return _window;
+    }
+
+    void NovelRenderingService::stopRunningOnUpdate(NovelSubscriber subscriber) {
+        if(std::find(
+                _updateSubscribers.begin(),
+                _updateSubscribers.end(),
+                subscriber) != _updateSubscribers.end()) {
+            _updateSubscribers.erase(std::remove_if(
+                    _updateSubscribers.begin(),
+                    _updateSubscribers.end(),
+                    [subscriber](void (*existingSubscriber)(const float)) {
+                        return subscriber == existingSubscriber;
+                    }));
+        }
+        else {
+            return;
+        }
     }
 }
