@@ -12,6 +12,7 @@
 #include <map>
 #include <functional>
 
+typedef void (*NovelSubscriber)(const float);
 
 namespace NovelRT {
     class NovelObject;
@@ -20,8 +21,8 @@ namespace NovelRT {
 
     class NovelRenderingService {
     public:
-        void runOnUpdate(void (*subscriber)(const float));
-        void stopRunningOnUpdate(void (*subscriber)(const float));
+        void runOnUpdate(NovelSubscriber);
+        void stopRunningOnUpdate(NovelSubscriber);
 
         int initialiseRendering(const int& displayNumber);
 
@@ -43,7 +44,7 @@ namespace NovelRT {
         SDL_Window* getWindow() const;
 
     private:
-        std::vector<void (*)(const float)> _updateSubscribers;
+        std::vector<NovelSubscriber> _updateSubscribers;
 
         bool nanovgInit();
 
