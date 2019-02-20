@@ -26,7 +26,7 @@
 #include <algorithm>
 
 namespace NovelRT {
-    bool NovelRenderingService::sdlInit(const int& displayNumber) {
+    bool NovelRenderingService::sdlInit(const int displayNumber) {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
             std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
             return false;
@@ -69,7 +69,7 @@ namespace NovelRT {
         return true;
     }
 
-    int NovelRenderingService::initialiseRendering(const int& displayNumber) {
+    int NovelRenderingService::initialiseRendering(const int displayNumber) {
         if (!sdlInit(displayNumber)) {
             std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
@@ -114,14 +114,14 @@ namespace NovelRT {
     }
 
     NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const GeoVector<float> &startingPosition,
-                                                        const float& startingRotation,
-                                                        const GeoVector<float>& startingScale, const int& layer,
-                                                        const int& orderInLayer) {
+                                                        const float startingRotation,
+                                                        const GeoVector<float>& startingScale, const int layer,
+                                                        const int orderInLayer) {
 
         return NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
     }
 
-    void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject* targetObject, const bool& migrate) {
+    void NovelRenderingService::updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate) {
         if (migrate) {
             auto vec = _renderObjects[targetObject->getLayer()];
             vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelObject* x) {
@@ -137,7 +137,7 @@ namespace NovelRT {
         sortLayerRenderOrder(layer);
     }
 
-    void NovelRenderingService::sortLayerRenderOrder(const int& layer) {
+    void NovelRenderingService::sortLayerRenderOrder(const int layer) {
         sort(_renderObjects[layer].begin(), _renderObjects[layer].end()); }
 
     NVGcontext* NovelRenderingService::getNanoVGContext() const {

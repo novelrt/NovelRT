@@ -12,7 +12,7 @@ namespace NovelRT {
     class NovelRenderingService;
     class NovelObject {
     public:
-        NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer);
+        NovelObject(NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float rotation, const GeoVector<float>& scale, const int layer, const int orderInLayer);
 
         virtual GeoVector<float> getPosition() const;
 
@@ -20,7 +20,7 @@ namespace NovelRT {
 
         virtual float getRotation() const;
 
-        virtual void setRotation(const float& value);
+        virtual void setRotation(const float value);
 
         virtual GeoVector<float> getScale() const;
 
@@ -32,15 +32,15 @@ namespace NovelRT {
 
         virtual int getLayer() const;
 
-        virtual void setLayer(const int& value);
+        virtual void setLayer(const int value);
 
         virtual int getOrderInLayer() const;
 
-        virtual void setOrderInLayer(const int& value);
+        virtual void setOrderInLayer(const int value);
 
         virtual bool getActive() const;
 
-        virtual void setActive(const bool& value);
+        virtual void setActive(const bool value);
 
         virtual void drawObject() const = 0;
 

@@ -6,7 +6,7 @@
 #include "../lib/nanovg/nanovg.h"
 
 namespace NovelRT {
-    NovelObject::NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer) : _novelRenderer(novelRenderer), _position(position), _rotation(rotation), _size(size), _scale(scale), _screenScale(screenScale), _layer(layer), _orderInLayer(orderInLayer), _active(true) {
+    NovelObject::NovelObject(NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float rotation, const GeoVector<float>& scale, const int layer, const int orderInLayer) : _novelRenderer(novelRenderer), _position(position), _rotation(rotation), _size(size), _scale(scale), _screenScale(screenScale), _layer(layer), _orderInLayer(orderInLayer), _active(true) {
         _drawContext = novelRenderer->getNanoVGContext();
         _novelRenderer->updateRenderingLayerInfo(layer, this, false);
     }
@@ -23,7 +23,7 @@ namespace NovelRT {
         return _rotation;
     }
 
-    void NovelObject::setRotation(const float& value) {
+    void NovelObject::setRotation(const float value) {
         _rotation = value;
     }
 
@@ -47,7 +47,7 @@ namespace NovelRT {
         return _active;
     }
 
-    void NovelObject::setActive(const bool& value) {
+    void NovelObject::setActive(const bool value) {
         _active = value;
     }
 
@@ -55,7 +55,7 @@ namespace NovelRT {
         return _layer;
     }
 
-    void NovelObject::setLayer(const int &value) {
+    void NovelObject::setLayer(const int value) {
         _layer = value;
         _novelRenderer->updateRenderingLayerInfo(value, this);
 
@@ -65,7 +65,7 @@ namespace NovelRT {
         return _orderInLayer;
     }
 
-    void NovelObject::setOrderInLayer(const int& value) {
+    void NovelObject::setOrderInLayer(const int value) {
         _orderInLayer = value;
         _novelRenderer->sortLayerRenderOrder(getLayer());
     }

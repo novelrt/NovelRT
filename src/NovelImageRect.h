@@ -14,7 +14,7 @@ namespace NovelRT {
 
     class NovelImageRect : public NovelObject {
     public:
-        NovelImageRect(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const std::string_view imageDir, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer);
+        NovelImageRect(NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& position, const std::string_view imageDir, const float rotation, const GeoVector<float>& scale, const int layer, const int orderInLayer);
 
         void drawObject() const override;
         void setScale(const GeoVector<float>& value) override;
