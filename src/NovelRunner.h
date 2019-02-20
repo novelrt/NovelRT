@@ -11,8 +11,12 @@
 namespace NovelRT {
     class NovelRunner {
     public:
-        int runNovel(NovelRenderingService& novelRenderer) const;
+        explicit NovelRunner(int);
+        int runNovel() const;
+        std::shared_ptr<NovelRenderingService> getRenderer();
 
+    private:
+        std::shared_ptr<NovelRenderingService> _novelRenderer;
     };
 }
 

@@ -25,10 +25,6 @@
 #include "NovelImageRect.h"
 #include <algorithm>
 
-void testSubscriber(const float& deltaTime) {
-    std::cout << "subscriber called with deltaTime: " << deltaTime << std::endl;
-}
-
 namespace NovelRT {
     bool NovelRenderingService::sdlInit(const int& displayNumber) {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -47,7 +43,7 @@ namespace NovelRT {
         _window = SDL_CreateWindow(
                 "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 displayData.w, displayData.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-        if (_window == NULL) {
+        if (_window == nullptr) {
             std::cerr << "could not create window: " << SDL_GetError() << std::endl;
 
             return false;
@@ -64,7 +60,7 @@ namespace NovelRT {
 #elif OPENGL_VERSION==2
         _nanovgContext = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 #endif
-        if (_nanovgContext == NULL) {
+        if (_nanovgContext == nullptr) {
             std::cerr << "%llu\n", _nanovgContext;
             std::cerr << "Could not init nanovg.\n";
             return false;
@@ -74,7 +70,6 @@ namespace NovelRT {
     }
 
     int NovelRenderingService::initialiseRendering(const int& displayNumber) {
-        //runOnUpdate(testSubscriber);
         if (!sdlInit(displayNumber)) {
             std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
             return 1;
