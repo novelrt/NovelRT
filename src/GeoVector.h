@@ -27,11 +27,15 @@ namespace NovelRT {
 
         inline GeoVector<T> operator - (const GeoVector<T>& other) const;
 
+        inline GeoVector<T> operator / (const GeoVector<T>& other) const;
+
         inline GeoVector<T> operator + (const float& other) const;
 
         inline GeoVector<T> operator * (const float& other) const;
 
         inline GeoVector<T> operator - (const float& other) const;
+
+        inline GeoVector<T> operator / (const float& other) const;
 
 
     private:
@@ -92,6 +96,16 @@ namespace NovelRT {
     template<typename T>
     inline GeoVector<T> GeoVector<T>::operator - (const float& other) const {
         return GeoVector<T>(GeoVector<T>::getX() - other, GeoVector<T>::getY() - other);
+    }
+
+    template<typename T>
+    GeoVector<T> GeoVector<T>::operator / (const GeoVector<T> &other) const {
+        return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
+    }
+
+    template<typename T>
+    GeoVector<T> GeoVector<T>::operator / (const float &other) const {
+        return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
     }
 }
 
