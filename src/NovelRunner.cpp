@@ -5,10 +5,11 @@
 #include <iostream>
 #include "NovelRunner.h"
 #include "../lib/SDL2/include/SDL.h"
+#include "NovelImageRect.h"
 
 namespace NovelRT {
-    int NovelRunner::runNovel(NovelRenderingService& novelRenderer) const {
-
+    int NovelRunner::runNovel() const {
+        auto imageRect = _novelRenderer->getImageRect("test-yuri.png", NovelRT::GeoVector<float>(960, 540), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
         Uint64 current = SDL_GetPerformanceCounter();
         Uint64 previous = 0;
         float deltaTime = 0;
@@ -24,11 +25,19 @@ namespace NovelRT {
                     break;
                 }
             }
-            novelRenderer.executeUpdateSubscriptions(deltaTime);
-            novelRenderer.renderAllObjects();
+            _novelRenderer->executeUpdateSubscriptions(deltaTime);
+            _novelRenderer->renderAllObjects();
 
         }
-        novelRenderer.tearDown();
+        _novelRenderer->tearDown();
         return exitCode;
+    }
+
+    std::shared_ptr<NovelRenderingService> NovelRunner::getRenderer() {
+        return _novelRenderer;
+    }
+
+    NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_shared<NovelRenderingService>()) {
+        _novelRenderer->initialiseRendering(displayNumber);
     }
 }

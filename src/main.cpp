@@ -30,8 +30,5 @@ int main() {
     lua_register(L, "average", average);
     luaL_dofile(L, "avg.lua");
     lua_close(L);
-    auto renderer = NovelRT::NovelRenderingService();
-    renderer.initialiseRendering(0);
-    auto imageRect = renderer.getImageRect("test-yuri.png", NovelRT::GeoVector<float>(960, 540), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
-    return NovelRT::NovelRunner().runNovel(renderer);
+    return NovelRT::NovelRunner(0).runNovel();
 }
