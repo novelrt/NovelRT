@@ -34,8 +34,8 @@ namespace NovelRT {
 
         void tearDown() const;
 
-        NovelImageRect getImageRect(const std::string& filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
-        NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
+        NovelImageRect getImageRect(const std::string_view filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
+        NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
 
         void executeUpdateSubscriptions(const float &deltaTime) const;
 
