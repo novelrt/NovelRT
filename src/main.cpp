@@ -30,5 +30,6 @@ int main() {
     lua_register(L, "average", average);
     luaL_dofile(L, "avg.lua");
     lua_close(L);
-    return NovelRT::NovelRunner(0).runNovel();
+    auto runner = NovelRT::NovelRunner(0);
+    runner.runNovel();
 }

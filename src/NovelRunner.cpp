@@ -25,7 +25,7 @@ namespace NovelRT {
                     break;
                 }
             }
-            _novelRenderer->executeUpdateSubscriptions(deltaTime);
+            executeUpdateSubscriptions(deltaTime);
             _novelRenderer->renderAllObjects();
 
         }
@@ -39,5 +39,32 @@ namespace NovelRT {
 
     NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_shared<NovelRenderingService>()) {
         _novelRenderer->initialiseRendering(displayNumber);
+    }
+
+    void NovelRunner::runOnUpdate(NovelSubscriber subscriber) {
+        _updateSubscribers.push_back(subscriber);
+    }
+
+    void NovelRunner::stopRunningOnUpdate(NovelSubscriber subscriber) {
+        if(std::find(
+                _updateSubscribers.begin(),
+                _updateSubscribers.end(),
+                subscriber) != _updateSubscribers.end()) {
+            _updateSubscribers.erase(std::remove_if(
+                    _updateSubscribers.begin(),
+                    _updateSubscribers.end(),
+                    [subscriber](void (*existingSubscriber)(const float)) {
+                        return subscriber == existingSubscriber;
+                    }));
+        }
+        else {
+            return;
+        }
+    }
+
+    void NovelRunner::executeUpdateSubscriptions(const float deltaTime) const {
+        for(const auto& subscriber : _updateSubscribers) {
+            subscriber(deltaTime);
+        }
     }
 }
