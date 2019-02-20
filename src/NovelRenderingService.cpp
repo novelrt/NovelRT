@@ -122,7 +122,7 @@ namespace NovelRT {
         _updateSubscribers.push_back(subscriber);
     }
 
-    NovelImageRect NovelRenderingService::getImageRect(const std::string &filePath, const GeoVector<float> &startingPosition,
+    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const GeoVector<float> &startingPosition,
                                                         const float& startingRotation,
                                                         const GeoVector<float>& startingScale, const int& layer,
                                                         const int& orderInLayer) {
