@@ -6,14 +6,6 @@
 #include "NovelRunner.h"
 #include "../lib/SDL2/include/SDL.h"
 
-void testSubscriber1(const float deltaTime) {
-    std::cout << "testsubscriber 1 with deltatime: " << deltaTime << std::endl;
-}
-
-void testSubscriber2(const float deltaTime) {
-    std::cout << "testsubscriber 2 with deltatime: " << deltaTime << std::endl;
-}
-
 namespace NovelRT {
     int NovelRunner::runNovel(NovelRenderingService& novelRenderer) const {
 
