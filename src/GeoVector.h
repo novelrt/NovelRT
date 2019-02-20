@@ -29,13 +29,13 @@ namespace NovelRT {
 
         inline GeoVector<T> operator / (const GeoVector<T>& other) const;
 
-        inline GeoVector<T> operator + (const float& other) const;
+        inline GeoVector<T> operator + (const float other) const;
 
-        inline GeoVector<T> operator * (const float& other) const;
+        inline GeoVector<T> operator * (const float other) const;
 
-        inline GeoVector<T> operator - (const float& other) const;
+        inline GeoVector<T> operator - (const float other) const;
 
-        inline GeoVector<T> operator / (const float& other) const;
+        inline GeoVector<T> operator / (const float other) const;
 
 
     private:
@@ -84,27 +84,27 @@ namespace NovelRT {
         return GeoVector<T>(GeoVector<T>::getX() - other.getX(), GeoVector<T>::getY() - other.getY());
     }
     template<typename T>
-    inline GeoVector<T> GeoVector<T>::operator + (const float& other) const {
+    inline GeoVector<T> GeoVector<T>::operator + (const float other) const {
         return GeoVector<T>(GeoVector<T>::getX() + other, GeoVector<T>::getY() + other);
     }
 
     template<typename T>
-    inline GeoVector<T> GeoVector<T>::operator * (const float& other) const {
+    inline GeoVector<T> GeoVector<T>::operator * (const float other) const {
         return GeoVector<T>(GeoVector<T>::getX() * other, GeoVector<T>::getY() * other);
     }
 
     template<typename T>
-    inline GeoVector<T> GeoVector<T>::operator - (const float& other) const {
+    inline GeoVector<T> GeoVector<T>::operator - (const float other) const {
         return GeoVector<T>(GeoVector<T>::getX() - other, GeoVector<T>::getY() - other);
     }
 
     template<typename T>
-    GeoVector<T> GeoVector<T>::operator / (const GeoVector<T> &other) const {
+    GeoVector<T> GeoVector<T>::operator / (const GeoVector<T>& other) const {
         return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
     }
 
     template<typename T>
-    GeoVector<T> GeoVector<T>::operator / (const float &other) const {
+    GeoVector<T> GeoVector<T>::operator / (const float other) const {
         return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
     }
 }
