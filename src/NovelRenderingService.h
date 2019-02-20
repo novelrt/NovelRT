@@ -12,8 +12,6 @@
 #include <map>
 #include <functional>
 
-typedef void (*NovelSubscriber)(const float);
-
 namespace NovelRT {
     class NovelObject;
     class NovelImageRect;
@@ -21,9 +19,6 @@ namespace NovelRT {
 
     class NovelRenderingService {
     public:
-        void runOnUpdate(NovelSubscriber);
-        void stopRunningOnUpdate(NovelSubscriber);
-
         int initialiseRendering(const int& displayNumber);
 
         void updateRenderingLayerInfo(const int& layer, NovelObject* targetObject, const bool& migrate = true);
@@ -37,15 +32,11 @@ namespace NovelRT {
         NovelImageRect getImageRect(const std::string_view filePath, const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingScale, const int& layer, const int& orderInLayer);
         NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingPosition, const float& startingRotation, const GeoVector<float>& startingSize, const GeoVector<float>& startingScale);
 
-        void executeUpdateSubscriptions(const float &deltaTime) const;
-
         void sortLayerRenderOrder(const int& layer);
 
         SDL_Window* getWindow() const;
 
     private:
-        std::vector<NovelSubscriber> _updateSubscribers;
-
         bool nanovgInit();
 
         bool sdlInit(const int& displayNumber);

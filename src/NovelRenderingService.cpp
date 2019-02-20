@@ -113,10 +113,6 @@ namespace NovelRT {
         SDL_GL_SwapWindow(_window);
     }
 
-    void NovelRenderingService::runOnUpdate(NovelSubscriber subscriber) {
-        _updateSubscribers.push_back(subscriber);
-    }
-
     NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const GeoVector<float> &startingPosition,
                                                         const float& startingRotation,
                                                         const GeoVector<float>& startingScale, const int& layer,
@@ -144,34 +140,11 @@ namespace NovelRT {
     void NovelRenderingService::sortLayerRenderOrder(const int& layer) {
         sort(_renderObjects[layer].begin(), _renderObjects[layer].end()); }
 
-    void NovelRenderingService::executeUpdateSubscriptions(const float &deltaTime) const {
-        for(const auto& subscriber : _updateSubscribers) {
-            subscriber(deltaTime);
-        }
-    }
-
     NVGcontext* NovelRenderingService::getNanoVGContext() const {
         return _nanovgContext;
     }
 
     SDL_Window *NovelRenderingService::getWindow() const {
         return _window;
-    }
-
-    void NovelRenderingService::stopRunningOnUpdate(NovelSubscriber subscriber) {
-        if(std::find(
-                _updateSubscribers.begin(),
-                _updateSubscribers.end(),
-                subscriber) != _updateSubscribers.end()) {
-            _updateSubscribers.erase(std::remove_if(
-                    _updateSubscribers.begin(),
-                    _updateSubscribers.end(),
-                    [subscriber](void (*existingSubscriber)(const float)) {
-                        return subscriber == existingSubscriber;
-                    }));
-        }
-        else {
-            return;
-        }
     }
 }
