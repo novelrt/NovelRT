@@ -23,6 +23,7 @@
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
+#include "NovelCommonArgs.h"
 #include <algorithm>
 
 namespace NovelRT {
@@ -113,12 +114,9 @@ namespace NovelRT {
         SDL_GL_SwapWindow(_window);
     }
 
-    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const GeoVector<float> &startingPosition,
-                                                        const float& startingRotation,
-                                                        const GeoVector<float>& startingScale, const int& layer,
-                                                        const int& orderInLayer) {
+    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, NovelCommonArgs* args) {
 
-        return NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
+        return NovelImageRect(this, _screenScale, filePath, args);
     }
 
     void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject* targetObject, const bool& migrate) {

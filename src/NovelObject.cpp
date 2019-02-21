@@ -6,9 +6,23 @@
 #include "../lib/nanovg/nanovg.h"
 
 namespace NovelRT {
-    NovelObject::NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer) : _novelRenderer(novelRenderer), _position(position), _rotation(rotation), _size(size), _scale(scale), _screenScale(screenScale), _layer(layer), _orderInLayer(orderInLayer), _active(true) {
+    NovelObject::NovelObject(
+            NovelRenderingService* novelRenderer,
+            const float& screenScale,
+            const GeoVector<float>& size,
+            NovelCommonArgs* args)
+            :
+            _novelRenderer(novelRenderer),
+            _position(args->startingPosition),
+            _rotation(args->startingRotation),
+            _size(size),
+            _scale(args->startingScale),
+            _screenScale(screenScale),
+            _layer(args->layer),
+            _orderInLayer(args->orderInLayer),
+            _active(true) {
         _drawContext = novelRenderer->getNanoVGContext();
-        _novelRenderer->updateRenderingLayerInfo(layer, this, false);
+        _novelRenderer->updateRenderingLayerInfo(args->layer, this, false);
     }
 
     GeoVector<float> NovelObject::getPosition() const {

@@ -9,7 +9,8 @@
 
 namespace NovelRT {
     int NovelRunner::runNovel() const {
-        auto imageRect = _novelRenderer->getImageRect("test-yuri.png", NovelRT::GeoVector<float>(960, 540), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
+        NovelCommonArgs args = NovelCommonArgs(GeoVector<float>(960, 540), 0, GeoVector<float>(1, 1), 0, 0);
+        auto imageRect = _novelRenderer->getImageRect("test-yuri.png", &args);
         Uint64 current = SDL_GetPerformanceCounter();
         Uint64 previous = 0;
         float deltaTime = 0;
