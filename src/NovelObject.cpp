@@ -37,7 +37,7 @@ namespace NovelRT {
         return _rotation;
     }
 
-    void NovelObject::setRotation(const float& value) {
+    void NovelObject::setRotation(const float value) {
         _rotation = value;
     }
 
@@ -61,7 +61,7 @@ namespace NovelRT {
         return _active;
     }
 
-    void NovelObject::setActive(const bool& value) {
+    void NovelObject::setActive(const bool value) {
         _active = value;
     }
 
@@ -69,7 +69,7 @@ namespace NovelRT {
         return _layer;
     }
 
-    void NovelObject::setLayer(const int &value) {
+    void NovelObject::setLayer(const int value) {
         _layer = value;
         _novelRenderer->updateRenderingLayerInfo(value, this);
 
@@ -79,7 +79,7 @@ namespace NovelRT {
         return _orderInLayer;
     }
 
-    void NovelObject::setOrderInLayer(const int& value) {
+    void NovelObject::setOrderInLayer(const int value) {
         _orderInLayer = value;
         _novelRenderer->sortLayerRenderOrder(getLayer());
     }

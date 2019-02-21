@@ -20,9 +20,9 @@ namespace NovelRT {
 
     class NovelRenderingService {
     public:
-        int initialiseRendering(const int& displayNumber);
+        int initialiseRendering(const int displayNumber);
 
-        void updateRenderingLayerInfo(const int& layer, NovelObject* targetObject, const bool& migrate = true);
+        void updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
 
         NVGcontext* getNanoVGContext() const;
 
@@ -33,14 +33,14 @@ namespace NovelRT {
         NovelImageRect getImageRect(const std::string_view filePath, NovelCommonArgs* args);
         NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, NovelCommonArgs* args);
 
-        void sortLayerRenderOrder(const int& layer);
+        void sortLayerRenderOrder(const int layer);
 
         SDL_Window* getWindow() const;
 
     private:
         bool nanovgInit();
 
-        bool sdlInit(const int& displayNumber);
+        bool sdlInit(const int displayNumber);
 
         SDL_Window *_window;
         struct NVGcontext *_nanovgContext;
