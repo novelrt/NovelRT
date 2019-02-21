@@ -33,10 +33,6 @@ namespace NovelRT {
         return exitCode;
     }
 
-    std::shared_ptr<NovelRenderingService> NovelRunner::getRenderer() {
-        return _novelRenderer;
-    }
-
     NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_shared<NovelRenderingService>()) {
         _novelRenderer->initialiseRendering(displayNumber);
     }
