@@ -19,11 +19,11 @@ namespace NovelRT {
 
         explicit NovelRunner(int);
         int runNovel() const;
-        std::shared_ptr<NovelRenderingService> getRenderer();
+        std::unique_ptr<NovelRenderingService>& getRenderer();
 
     private:
         std::vector<NovelSubscriber> _updateSubscribers;
-        std::shared_ptr<NovelRenderingService> _novelRenderer;
+        std::unique_ptr<NovelRenderingService> _novelRenderer;
     };
 }
 
