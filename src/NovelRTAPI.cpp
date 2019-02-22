@@ -4,6 +4,7 @@
 
 #include "NovelRTAPI.h"
 #include "NovelRunner.h"
+#include "GeoVector.h"
 
 extern "C" {
     NovelRunnerWrapper* createRunner(int displayNumber) {
@@ -28,5 +29,29 @@ extern "C" {
 
     int runNovel(NovelRunnerWrapper* runner) {
         return reinterpret_cast<NovelRT::NovelRunner*>(runner)->runNovel();
+    }
+
+    GeoVectorWrapper* createGeoVector(void* x, void* y) {
+        return reinterpret_cast<GeoVectorWrapper*>(new NovelRT::GeoVector(x, y));
+    }
+
+    void destroyGeoVector(GeoVectorWrapper* geoVector) {
+        delete reinterpret_cast<NovelRT::GeoVector<void*>*>(geoVector);
+    }
+
+    void* getX(GeoVectorWrapper* geoVector) {
+        return reinterpret_cast<NovelRT::GeoVector<void*>*>(geoVector)->getX();
+    }
+
+    void setX(GeoVectorWrapper* geoVector, void* x) {
+        return reinterpret_cast<NovelRT::GeoVector<void*>*>(geoVector)->setX(x);
+    }
+
+    void* getY(GeoVectorWrapper* geoVector) {
+        return reinterpret_cast<NovelRT::GeoVector<void*>*>(geoVector)->getY();
+    }
+
+    void setY(GeoVectorWrapper* geoVector, void* y) {
+        return reinterpret_cast<NovelRT::GeoVector<void*>*>(geoVector)->setY(y);
     }
 }

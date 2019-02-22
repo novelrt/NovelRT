@@ -20,6 +20,17 @@ void stopRunningOnUpdate(NovelRunnerWrapper*, NovelSubscriber);
 void executeUpdateSubscriptions(NovelRunnerWrapper*, const float);
 int runNovel(NovelRunnerWrapper*);
 
+
+typedef struct GeoVectorWrapper GeoVectorWrapper;
+
+GeoVectorWrapper* createGeoVector(void*, void*);
+void destroyGeoVector(GeoVectorWrapper*);
+
+void* getX(GeoVectorWrapper*);
+void setX(GeoVectorWrapper*, void*);
+void* getY(GeoVectorWrapper*);
+void setY(GeoVectorWrapper*, void*);
+
 #ifdef __cplusplus
 }
 #endif
