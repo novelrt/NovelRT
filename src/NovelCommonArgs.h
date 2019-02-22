@@ -8,26 +8,14 @@
 #include "NovelRenderingService.h"
 
 namespace NovelRT {
-    class NovelCommonArgs {
+    struct NovelCommonArgs {
     public:
-        NovelCommonArgs(
-                const GeoVector<float>& startingPosition,
-                const float startingRotation,
-                const GeoVector<float>& startingScale,
-                const int layer,
-                const int orderInLayer
-                ) :
-                startingPosition(startingPosition),
-                startingRotation(startingRotation),
-                startingScale(startingScale),
-                layer(layer),
-                orderInLayer(orderInLayer)
-                {};
-        const GeoVector<float>& startingPosition;
-        const float startingRotation;
-        const GeoVector<float>& startingScale;
-        const int layer;
-        const int orderInLayer;
+        NovelCommonArgs(){};
+        GeoVector<float> startingPosition = GeoVector<float>(0, 0);
+        float startingRotation;
+        GeoVector<float> startingScale = GeoVector<float>(1.0f, 1.0f);
+        int layer;
+        int orderInLayer;
     };
 }
 

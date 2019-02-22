@@ -7,17 +7,9 @@
 
 namespace NovelRT{
 
-    NovelBasicFillRect::NovelBasicFillRect(
-            NovelRenderingService* novelRenderer,
-            const float screenScale,
-            const GeoVector<float>& size,
-            const RGBAConfig& fillColour,
-            NovelCommonArgs* args)
-            :
-            NovelObject(novelRenderer, screenScale, size, args),
-            _colourConfig(fillColour) {
-
-    }
+    NovelBasicFillRect::NovelBasicFillRect(NovelRenderingService* novelRenderer, const float screenScale,
+            const GeoVector<float>& size, const RGBAConfig& fillColour,const NovelCommonArgs& args):
+            NovelObject(novelRenderer, screenScale, size, args), _colourConfig(fillColour) {}
 
     void NovelBasicFillRect::drawObject() const {
         if(!getActive()) return;

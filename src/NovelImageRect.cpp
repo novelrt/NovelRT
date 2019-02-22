@@ -7,25 +7,16 @@
 
 namespace NovelRT {
 
-    NovelImageRect::NovelImageRect(
-            NovelRenderingService* novelRenderer,
-            const float screenScale,
-            const std::string_view imageDir,
-            NovelCommonArgs* args)
-            :
-            NovelObject(
-            novelRenderer,
-            screenScale,
-            GeoVector<float>(0, 0),
-            args),
-            _imageDir(imageDir)
-    {
+    NovelImageRect::NovelImageRect(NovelRenderingService* novelRenderer, const float screenScale,
+            const std::string_view imageDir, const NovelCommonArgs& args):
+            NovelObject(novelRenderer, screenScale, GeoVector<float>(0, 0), args), _imageDir(imageDir) {
+
         _imageHandle = nvgCreateImage(_drawContext, _imageDir.c_str(), NVG_IMAGE_NEAREST);
         _width = 0;
         _height = 0;
         nvgImageSize(_drawContext, _imageHandle, &_width, &_height);
         setSize(GeoVector<float>(_width, _height));
-        setScale(args->startingScale);
+        setScale(args.startingScale);
     }
 
     void NovelImageRect::setScale(const GeoVector<float>& value)  {

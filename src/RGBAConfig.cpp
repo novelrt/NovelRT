@@ -5,7 +5,7 @@
 #include "RGBAConfig.h"
 
 namespace NovelRT {
-    RGBAConfig::RGBAConfig(int r, int g, int b, int a) {
+    RGBAConfig::RGBAConfig(const int r, const int g, const int b, const int a) {
         _r = r;
         _g = g;
         _b = b;
@@ -16,7 +16,7 @@ namespace NovelRT {
         return _r;
     }
 
-    void RGBAConfig::setR(int value) {
+    void RGBAConfig::setR(const int value) {
         if(value < 0) {
             _r = 0;
         }
@@ -32,7 +32,7 @@ namespace NovelRT {
         return _g;
     }
 
-    void RGBAConfig::setG(int value) {
+    void RGBAConfig::setG(const int value) {
         if(value < 0) {
             _g = 0;
         }
@@ -48,7 +48,7 @@ namespace NovelRT {
         return _b;
     }
 
-    void RGBAConfig::setB(int value) {
+    void RGBAConfig::setB(const int value) {
         if(value < 0) {
             _b = 0;
         }
@@ -64,7 +64,7 @@ namespace NovelRT {
         return _a;
     }
 
-    void RGBAConfig::setA(int value) {
+    void RGBAConfig::setA(const int value) {
         if(value < 0) {
             _a = 0;
         }
