@@ -32,11 +32,11 @@ namespace NovelRT {
         return exitCode;
     }
 
-    std::shared_ptr<NovelRenderingService> NovelRunner::getRenderer() {
+    std::unique_ptr<NovelRenderingService>& NovelRunner::getRenderer() {
         return _novelRenderer;
     }
 
-    NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_shared<NovelRenderingService>()) {
+    NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_unique<NovelRenderingService>()) {
         _novelRenderer->initialiseRendering(displayNumber);
     }
 
