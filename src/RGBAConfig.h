@@ -8,23 +8,23 @@
 namespace NovelRT {
     class RGBAConfig {
     public:
-        RGBAConfig(int r, int g, int b, int a);
+        RGBAConfig(const int r, const int g, const int b, const int a);
 
         int getR() const;
 
-        void setR(int value);
+        void setR(const int value);
 
         int getG() const;
 
-        void setG(int value);
+        void setG(const int value);
 
         int getB() const;
 
-        void setB(int value);
+        void setB(const int value);
 
         int getA() const;
 
-        void setA(int value);
+        void setA(const int value);
 
     private:
         int _r;

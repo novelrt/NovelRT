@@ -114,7 +114,7 @@ namespace NovelRT {
         SDL_GL_SwapWindow(_window);
     }
 
-    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, NovelCommonArgs* args) {
+    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
 
         return NovelImageRect(this, _screenScale, filePath, args);
     }

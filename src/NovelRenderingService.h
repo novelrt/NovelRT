@@ -30,8 +30,8 @@ namespace NovelRT {
 
         void tearDown() const;
 
-        NovelImageRect getImageRect(const std::string_view filePath, NovelCommonArgs* args);
-        NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, NovelCommonArgs* args);
+        NovelImageRect getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+        NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, const NovelCommonArgs& args);
 
         void sortLayerRenderOrder(const int layer);
 

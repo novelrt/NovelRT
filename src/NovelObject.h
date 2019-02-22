@@ -13,10 +13,8 @@ namespace NovelRT {
     class NovelObject {
     public:
         NovelObject(
-                NovelRenderingService* novelRenderer,
-                const float& screenScale,
-                const GeoVector<float>& size,
-                NovelCommonArgs* args);
+                NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& size,
+                const NovelCommonArgs& args);
 
         virtual GeoVector<float> getPosition() const;
 
