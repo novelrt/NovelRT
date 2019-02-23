@@ -37,8 +37,6 @@ public:
 
   std::shared_ptr<SDL_Window> getWindow() const;
 
-  ~NovelRenderingService();
-
 private:
   bool nanovgInit();
 
