@@ -78,6 +78,6 @@ namespace NovelRT {
 
     void NovelObject::setOrderInLayer(const int value) {
         _orderInLayer = value;
-        _novelRenderer->sortLayerRenderOrder(getLayer());
+      _novelRenderer->sortLayerOrder(getLayer());
     }
 }

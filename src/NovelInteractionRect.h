@@ -5,10 +5,15 @@
 #ifndef NOVELRT_NOVELINTERACTIONRECT_H
 #define NOVELRT_NOVELINTERACTIONRECT_H
 
+#include "NovelObject.h"
 
-class NovelInteractionRect {
+namespace NovelRT {
+class NovelInteractionRect : public NovelObject {
+public:
+  NovelInteractionRect(NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& size,
+                       const NovelCommonArgs& args);
 
 };
-
+}
 
 #endif //NOVELRT_NOVELINTERACTIONRECT_H
