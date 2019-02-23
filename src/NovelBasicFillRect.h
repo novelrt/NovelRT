@@ -11,7 +11,9 @@
 namespace NovelRT {
     class NovelBasicFillRect : public NovelObject {
     public:
-        NovelBasicFillRect(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const RGBAConfig& fillColour, const float& rotation, const GeoVector<float>& scale, const int& layer, const int& orderInLayer);
+        NovelBasicFillRect(
+            NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& size,
+            const RGBAConfig& fillColour, const NovelCommonArgs& args);
 
         void drawObject() const override;
 

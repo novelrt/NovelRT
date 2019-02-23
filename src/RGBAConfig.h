@@ -6,34 +6,33 @@
 #define NOVELRT_RGBACONFIG_H
 
 namespace NovelRT {
-    class RGBAConfig {
-    public:
-        RGBAConfig(int r, int g, int b, int a);
+class RGBAConfig {
+public:
+  RGBAConfig(const int r, const int g, const int b, const int a);
 
-        int getR() const;
+  int getR() const;
 
-        void setR(int value);
+  void setR(const int value);
 
-        int getG() const;
+  int getG() const;
 
-        void setG(int value);
+  void setG(const int value);
 
-        int getB() const;
+  int getB() const;
 
-        void setB(int value);
+  void setB(const int value);
 
-        int getA() const;
+  int getA() const;
 
-        void setA(int value);
+  void setA(const int value);
 
-    private:
-        int _r;
-        int _g;
-        int _b;
-        int _a;
+private:
+  int _r;
+  int _g;
+  int _b;
+  int _a;
 
-    };
+};
 }
-
 
 #endif //NOVELRT_RGBACONFIG_H
