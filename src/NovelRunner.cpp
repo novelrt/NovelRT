@@ -32,8 +32,8 @@ namespace NovelRT {
         return exitCode;
     }
 
-    std::unique_ptr<NovelRenderingService>& NovelRunner::getRenderer() {
-        return _novelRenderer;
+    NovelRenderingService* NovelRunner::getRenderer() const {
+        return _novelRenderer.get();
     }
 
     NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_unique<NovelRenderingService>()) {
