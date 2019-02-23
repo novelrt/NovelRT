@@ -14,46 +14,47 @@
 #include <functional>
 
 namespace NovelRT {
-    class NovelObject;
-    class NovelImageRect;
-    class NovelBasicFillRect;
+class NovelObject;
+class NovelImageRect;
+class NovelBasicFillRect;
 
-    class NovelRenderingService {
-    public:
-        int initialiseRendering(const int displayNumber);
+class NovelRenderingService {
+public:
+  NovelRenderingService();
+  int initialiseRendering(const int displayNumber);
 
-        void updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
+  void updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
+  void sortLayerOrder(const int layer);
 
-        NVGcontext* getNanoVGContext() const;
+  NVGcontext* getNanoVGContext() const;
 
-        void renderAllObjects() const;
+  void renderAllObjects() const;
 
-        void tearDown() const;
+  void tearDown() const;
 
-        NovelImageRect getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
-        NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, const NovelCommonArgs& args);
+  NovelImageRect getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+  NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, const NovelCommonArgs& args);
 
-        void sortLayerRenderOrder(const int layer);
+  std::shared_ptr<SDL_Window> getWindow() const;
 
-        SDL_Window* getWindow() const;
+  ~NovelRenderingService();
 
-    private:
-        bool nanovgInit();
+private:
+  bool nanovgInit();
 
-        bool sdlInit(const int displayNumber);
+  bool sdlInit(const int displayNumber);
 
-        SDL_Window *_window;
-        struct NVGcontext *_nanovgContext;
-        SDL_GLContext _openGLContext;
-        std::map<int, std::vector<NovelObject*>> _renderObjects;
-        float _screenScale;
+  std::shared_ptr<SDL_Window> _window;
+  std::unique_ptr<NVGcontext, void(*)(NVGcontext*)> _nanovgContext;
+  SDL_GLContext _openGLContext;
+  std::map<int, std::vector<NovelObject*>> _renderObjects;
+  float _screenScale;
 
-
-        int _winWidth;
-        int _winHeight;
-        int _frameBufferWidth;
-        float _pxRatio;
-    };
+  int _winWidth;
+  int _winHeight;
+  int _frameBufferWidth;
+  float _pxRatio;
+};
 
 }
 #endif //NOVELRT_NOVELRENDERINGSERVICE_H
