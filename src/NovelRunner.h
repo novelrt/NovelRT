@@ -19,7 +19,7 @@ namespace NovelRT {
 
         explicit NovelRunner(int);
         int runNovel() const;
-        std::unique_ptr<NovelRenderingService>& getRenderer();
+      NovelRenderingService* getRenderer() const;
 
     private:
         std::vector<NovelSubscriber> _updateSubscribers;
