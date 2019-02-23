@@ -142,9 +142,7 @@ NVGcontext* NovelRenderingService::getNanoVGContext() const {
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
-NovelRenderingService::~NovelRenderingService() {
-  delete this;
-}
+
 NovelRenderingService::NovelRenderingService() : _nanovgContext(nullptr, &nvgDeleteGL3) {
 }
 }
