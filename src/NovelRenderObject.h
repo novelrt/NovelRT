@@ -14,7 +14,7 @@ public:
   NovelRenderObject(NovelLayeringService* layeringService, NovelRenderingService* renderingService, const float& screenScale, const GeoVector<float>& size,
                     const NovelCommonArgs& args);
 
-  void executeObjectBehaviour() const override;
+  void executeObjectBehaviour() const final;
 
 protected:
   NVGcontext* _drawContext;

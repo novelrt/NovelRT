@@ -13,7 +13,8 @@ public:
   NovelInteractionRect(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
                        const NovelCommonArgs& args);
 
-  void executeObjectBehaviour() const override;
+  void executeObjectBehaviour() const final;
+  virtual void checkInteractionPerimeter() const = 0;
 
 };
 }
