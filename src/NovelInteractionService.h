@@ -12,7 +12,7 @@ public:
 
   void initializeInputHandling();
 
-  NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
+  //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
 
 };
 }

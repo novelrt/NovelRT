@@ -25,7 +25,8 @@ int NovelRunner::runNovel() const {
       }
     }
     executeUpdateSubscriptions(deltaTime);
-    _novelRenderer->renderAllObjects();
+    _novelRenderer->beginFrame();
+    _novelRenderer->endFrame();
 
   }
   _novelRenderer->tearDown();

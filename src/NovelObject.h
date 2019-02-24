@@ -7,12 +7,13 @@
 #include "GeoVector.h"
 #include "../lib/nanovg/nanovg.h"
 #include "NovelRenderingService.h"
+#include "NovelLayeringService.h"
 
 namespace NovelRT {
-class NovelRenderingService;
+class NovelLayeringService;
 class NovelObject {
 public:
-  NovelObject(NovelRenderingService* novelRenderer, const float& screenScale, const GeoVector<float>& size,
+  NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
               const NovelCommonArgs& args);
 
   virtual GeoVector<float> getPosition() const;
@@ -43,7 +44,7 @@ public:
 
   virtual void setActive(const bool value);
 
-  virtual void drawObject() const = 0;
+  virtual void executeObjectBehaviour() const = 0;
 
   inline bool operator>(const NovelObject& other) const {
     return getOrderInLayer() > other.getOrderInLayer();
@@ -57,9 +58,8 @@ protected:
   bool _active = true;
   int _orderInLayer;
   int _layer;
-  NVGcontext* _drawContext;
-  NovelRenderingService* _novelRenderer;
   float _screenScale;
+  NovelLayeringService* _layeringService;
 };
 
 }
