@@ -3,6 +3,7 @@
 #include "NovelRunner.h"
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
+#include "NovelLayeringService.h"
 
 extern "C" {
 #include "../lib/lua53/lua.h"
@@ -31,7 +32,7 @@ int main() {
   lua_register(L, "average", average);
   luaL_dofile(L, "avg.lua");
   lua_close(L);
-  auto runner = NovelRT::NovelRunner(0);
+  auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
   NovelRT::NovelCommonArgs args;
   args.startingPosition.setX(1920 / 2);
   args.startingPosition.setY(1080 / 2);

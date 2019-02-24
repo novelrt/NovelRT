@@ -37,7 +37,7 @@ NovelRenderingService* NovelRunner::getRenderer() const {
   return _novelRenderer.get();
 }
 
-NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_unique<NovelRenderingService>()) {
+NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService) : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
   _novelRenderer->initialiseRendering(displayNumber);
 }
 
