@@ -26,6 +26,7 @@ int NovelRunner::runNovel() const {
     }
     executeUpdateSubscriptions(deltaTime);
     _novelRenderer->beginFrame();
+    _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
 
   }
