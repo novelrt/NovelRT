@@ -17,6 +17,7 @@ namespace NovelRT {
             _orderInLayer(args.orderInLayer),
             _active(true),
             _layeringService(layeringService){
+      _layeringService->updateLayerInfo(getLayer(), this, true);
     }
 
     GeoVector<float> NovelObject::getPosition() const {
