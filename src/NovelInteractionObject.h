@@ -8,9 +8,9 @@
 #include "NovelObject.h"
 
 namespace NovelRT {
-class NovelInteractionRect : public NovelObject {
+class NovelInteractionObject : public NovelObject {
 public:
-  NovelInteractionRect(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+  NovelInteractionObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
                        const NovelCommonArgs& args);
 
   void executeObjectBehaviour() const final;
