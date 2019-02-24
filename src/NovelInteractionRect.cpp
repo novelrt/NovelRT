@@ -10,4 +10,8 @@ NovelInteractionRect::NovelInteractionRect(NovelLayeringService* layeringService
                                            const NovelCommonArgs& args) :
     NovelObject(layeringService, screenScale, size, args) {}
 
+void NovelInteractionRect::executeObjectBehaviour() const {
+
+}
+
 }
