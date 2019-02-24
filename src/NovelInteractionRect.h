@@ -10,7 +10,7 @@
 namespace NovelRT {
 class NovelInteractionRect : public NovelObject {
 public:
-  NovelInteractionRect(NovelRenderingService* novelRenderer, const float screenScale, const GeoVector<float>& size,
+  NovelInteractionRect(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
                        const NovelCommonArgs& args);
 
 };

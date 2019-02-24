@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include "RGBAConfig.h"
+#include "NovelLayeringService.h"
 
 namespace NovelRT {
 class NovelObject;
@@ -20,20 +22,20 @@ class NovelBasicFillRect;
 
 class NovelRenderingService {
 public:
-  NovelRenderingService();
+  NovelRenderingService(NovelLayeringService* layeringService);
   int initialiseRendering(const int displayNumber);
-
-  void updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
-  void sortLayerOrder(const int layer);
 
   NVGcontext* getNanoVGContext() const;
 
-  void renderAllObjects() const;
-
   void tearDown() const;
 
-  NovelImageRect getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
-  NovelBasicFillRect getBasicFillRect(const GeoVector<float>& startingSize, const NovelCommonArgs& args);
+  NovelImageRect& getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+  NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingSize,
+                                       const RGBAConfig& colourConfig,
+                                       const NovelCommonArgs& args);
+
+  void beginFrame() const;
+  void endFrame() const;
 
   std::shared_ptr<SDL_Window> getWindow() const;
 
@@ -42,16 +44,17 @@ private:
 
   bool sdlInit(const int displayNumber);
 
+  NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;
-  std::unique_ptr<NVGcontext, void(*)(NVGcontext*)> _nanovgContext;
+  std::unique_ptr<NVGcontext, void (*)(NVGcontext*)> _nanovgContext;
   SDL_GLContext _openGLContext;
-  std::map<int, std::vector<NovelObject*>> _renderObjects;
   float _screenScale;
 
   int _winWidth;
   int _winHeight;
   int _frameBufferWidth;
   float _pxRatio;
+
 };
 
 }

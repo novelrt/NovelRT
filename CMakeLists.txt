@@ -27,8 +27,8 @@ add_subdirectory(lib/SDL2)
 add_subdirectory(lib/nanovg)
 add_subdirectory(lib/lua53)
 
-add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelCommonArgs.h src/NovelInteractionRect.cpp src/NovelInteractionRect.h)
-add_library(NovelRTLib SHARED src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelRunner_C.cpp src/NovelRunner_C.h src/NovelCommonArgs.h src/NovelInteractionRect.cpp src/NovelInteractionRect.h src/NovelInteractionService.cpp src/NovelInteractionService.h src/NovelLayeringService.cpp src/NovelLayeringService.h)
+add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelCommonArgs.h src/NovelInteractionRect.cpp src/NovelInteractionRect.h src/NovelRenderObject.cpp src/NovelRenderObject.h)
+add_library(NovelRTLib SHARED src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelRunner_C.cpp src/NovelRunner_C.h src/NovelCommonArgs.h src/NovelInteractionRect.cpp src/NovelInteractionRect.h src/NovelInteractionService.cpp src/NovelInteractionService.h src/NovelLayeringService.cpp src/NovelLayeringService.h src/NovelRenderObject.cpp src/NovelRenderObject.h)
 
 target_link_libraries(NovelRTLib m GL GLU SDL2 nanovg lua)
 

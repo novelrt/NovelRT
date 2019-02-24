@@ -4,10 +4,10 @@
 
 #include "NovelInteractionRect.h"
 namespace NovelRT {
-NovelInteractionRect::NovelInteractionRect(NovelRenderingService* novelRenderer,
+NovelInteractionRect::NovelInteractionRect(NovelLayeringService* layeringService,
                                            const float screenScale,
                                            const GeoVector<float>& size,
                                            const NovelCommonArgs& args) :
-                                           NovelObject(novelRenderer, screenScale, size, args) {}
+    NovelObject(layeringService, screenScale, size, args) {}
 
 }
