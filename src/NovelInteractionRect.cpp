@@ -11,7 +11,7 @@ NovelInteractionRect::NovelInteractionRect(NovelLayeringService* layeringService
     NovelObject(layeringService, screenScale, size, args) {}
 
 void NovelInteractionRect::executeObjectBehaviour() const {
-
+  checkInteractionPerimeter();
 }
 
 }
