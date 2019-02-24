@@ -6,7 +6,7 @@
 #define NOVELRT_NOVELOBJECT_H
 #include "GeoVector.h"
 #include "../lib/nanovg/nanovg.h"
-#include "NovelRenderingService.h"
+#include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
 
 namespace NovelRT {

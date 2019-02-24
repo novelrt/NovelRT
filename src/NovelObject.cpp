@@ -1,9 +1,8 @@
 //
 // Created by matth on 15/12/2018.
 //
-
 #include "NovelObject.h"
-#include "../lib/nanovg/nanovg.h"
+
 
 namespace NovelRT {
     NovelObject::NovelObject(NovelLayeringService* layeringService, const float& screenScale,

@@ -6,6 +6,7 @@
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
 #include "../lib/nanovg/nanovg.h"
+#include "NovelRenderingService.h"
 
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {

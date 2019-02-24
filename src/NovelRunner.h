@@ -16,12 +16,13 @@ public:
   void stopRunningOnUpdate(NovelSubscriber);
   void executeUpdateSubscriptions(const float deltaTime) const;
 
-  explicit NovelRunner(int);
+  explicit NovelRunner(int, NovelLayeringService*);
   int runNovel() const;
   NovelRenderingService* getRenderer() const;
 
 private:
   std::vector<NovelSubscriber> _updateSubscribers;
+  NovelLayeringService* _layeringService;
   std::unique_ptr<NovelRenderingService> _novelRenderer;
 };
 }

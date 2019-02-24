@@ -17,9 +17,9 @@ void NovelLayeringService::updateLayerInfo(const int layer, NovelObject* targetO
   }
   auto it = _layerMatrix.find(layer);
   if (it == _layerMatrix.end()) {
-    _layerMatrix.insert({layer, std::vector<std::unique_ptr<NovelObject>>()});
+    _layerMatrix.insert({layer, std::vector<NovelObject*>()});
   }
-  _layerMatrix[layer].push_back(std::make_unique<NovelObject>(targetObject));
+  _layerMatrix[layer].push_back(targetObject);
   sortLayerOrder(layer);
 }
 
@@ -32,6 +32,13 @@ void NovelLayeringService::executeAllObjectBehaviours(){
   for (const auto& value : _layerMatrix) {
     for (const auto& renderObj : value.second) {
       renderObj->executeObjectBehaviour();
+    }
+  }
+}
+NovelLayeringService::~NovelLayeringService() {
+  for (const auto& value : _layerMatrix) {
+    for (const auto& renderObj : value.second) {
+      delete renderObj;
     }
   }
 }
