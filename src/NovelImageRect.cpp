@@ -7,9 +7,9 @@
 
 namespace NovelRT {
 
-NovelImageRect::NovelImageRect(NovelRenderingService* novelRenderer, const float screenScale,
+NovelImageRect::NovelImageRect(NovelLayeringService* layeringService, NovelRenderingService* renderingService, const float& screenScale,
                                const std::string_view imageDir, const NovelCommonArgs& args) :
-    NovelObject(novelRenderer, screenScale, GeoVector<float>(0, 0), args), _imageDir(imageDir) {
+    NovelRenderObject(layeringService, renderingService, screenScale, GeoVector<float>(0, 0), args), _imageDir(imageDir) {
 
   _imageHandle = nvgCreateImage(_drawContext, _imageDir.c_str(), NVG_IMAGE_NEAREST);
   _width = 0;

@@ -5,17 +5,18 @@
 #ifndef NOVELRT_NOVELIMAGERECT_H
 #define NOVELRT_NOVELIMAGERECT_H
 
-#include "NovelObject.h"
+
 #include "RGBAConfig.h"
 #include <string>
 #include "../lib/nanovg/nanovg.h"
+#include "NovelRenderObject.h"
 
 namespace NovelRT {
 
-class NovelImageRect : public NovelObject {
+class NovelImageRect : public NovelRenderObject {
 public:
-  NovelImageRect(NovelRenderingService* novelRenderer, const float screenScale, const std::string_view imageDir,
-                 const NovelCommonArgs& args);
+  NovelImageRect(NovelLayeringService* layeringService, NovelRenderingService* renderingService, const float& screenScale,
+                 const std::string_view imageDir, const NovelCommonArgs& args);
 
   void drawObject() const override;
   void setScale(const GeoVector<float>& value) override;

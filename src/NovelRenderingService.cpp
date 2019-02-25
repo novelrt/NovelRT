@@ -23,7 +23,6 @@
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
-#include "NovelCommonArgs.h"
 #include <algorithm>
 
 namespace NovelRT {
@@ -57,9 +56,11 @@ bool NovelRenderingService::sdlInit(const int displayNumber) {
 
 bool NovelRenderingService::nanovgInit() {
 #if OPENGL_VERSION == 3
-  _nanovgContext = std::unique_ptr<NVGcontext, void(*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG), &nvgDeleteGL3);
+  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
+                                                         &nvgDeleteGL3);
 #elif OPENGL_VERSION == 2
-  _nanovgContext = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
+                                                         &nvgDeleteGL2);
 #endif
   if (_nanovgContext == nullptr) {
     std::cerr << "%llu\n", _nanovgContext.get();
@@ -94,44 +95,18 @@ void NovelRenderingService::tearDown() const {
   SDL_Quit();
 }
 
-void NovelRenderingService::renderAllObjects() const {
-
+void NovelRenderingService::beginFrame() const {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   nvgBeginFrame(_nanovgContext.get(), _winWidth, _winHeight, _pxRatio);
+}
 
-  for (const auto& value : _renderObjects) {
-    for (const auto& renderObj : value.second) {
-      renderObj->drawObject();
-    }
-  }
-
+void NovelRenderingService::endFrame() const {
   nvgEndFrame(_nanovgContext.get());
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-
-  return NovelImageRect(this, _screenScale, filePath, args);
-}
-
-void NovelRenderingService::updateRenderingLayerInfo(const int layer, NovelObject* targetObject, const bool migrate) {
-  if (migrate) {
-    auto vec = _renderObjects[targetObject->getLayer()];
-    vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelObject* x) {
-      auto result = x == targetObject;
-      return result;
-    }), vec.end());
-  }
-  auto it = _renderObjects.find(layer);
-  if (it == _renderObjects.end()) {
-    _renderObjects.insert({layer, std::vector<NovelObject*>()});
-  }
-  _renderObjects[layer].push_back(targetObject);
-  sortLayerOrder(layer);
-}
-
-void NovelRenderingService::sortLayerOrder(const int layer) {
-  sort(_renderObjects[layer].begin(), _renderObjects[layer].end());
+NovelImageRect& NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
+  return *new NovelImageRect(_layeringService, this, _screenScale, filePath, args);
 }
 
 NVGcontext* NovelRenderingService::getNanoVGContext() const {
@@ -143,6 +118,12 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService() : _nanovgContext(nullptr, &nvgDeleteGL3) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr, &nvgDeleteGL3), _layeringService(layeringService) {
+}
+
+NovelBasicFillRect& NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
+                                                            const RGBAConfig& colourConfig,
+                                                            const NovelCommonArgs& args) {
+  return *new NovelBasicFillRect(_layeringService, this, _screenScale, startingSize, colourConfig, args);
 }
 }

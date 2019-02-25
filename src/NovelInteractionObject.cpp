@@ -2,12 +2,16 @@
 // Created by matth on 22/02/2019.
 //
 
-#include "NovelInteractionRect.h"
+#include "NovelInteractionObject.h"
 namespace NovelRT {
-NovelInteractionRect::NovelInteractionRect(NovelRenderingService* novelRenderer,
+NovelInteractionObject::NovelInteractionObject(NovelLayeringService* layeringService,
                                            const float screenScale,
                                            const GeoVector<float>& size,
                                            const NovelCommonArgs& args) :
-                                           NovelObject(novelRenderer, screenScale, size, args) {}
+    NovelObject(layeringService, screenScale, size, args) {}
+
+void NovelInteractionObject::executeObjectBehaviour() const {
+  checkInteractionPerimeter();
+}
 
 }
