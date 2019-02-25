@@ -10,6 +10,18 @@ extern "C" {
 #endif
 typedef void (*NovelSubscriber)(const float);
 
+typedef struct NovelCommonArgsWrapper {
+  float startingRotation;
+  int layer;
+  int orderInLayer;
+} NovelCommonArgsWrapper;
+
+typedef struct NovelImageRectWrapper NovelImageRectWrapper;
+
+typedef struct NovelRenderingServiceWrapper NovelRenderingServiceWrapper;
+
+NovelImageRectWrapper* getImageRect(NovelRenderingServiceWrapper*, char*, NovelCommonArgsWrapper*);
+
 typedef struct NovelRunnerWrapper NovelRunnerWrapper;
 
 NovelRunnerWrapper *createRunner(int);
@@ -19,6 +31,7 @@ void runOnUpdate(NovelRunnerWrapper*, NovelSubscriber);
 void stopRunningOnUpdate(NovelRunnerWrapper*, NovelSubscriber);
 void executeUpdateSubscriptions(NovelRunnerWrapper*, const float);
 int runNovel(NovelRunnerWrapper*);
+NovelRenderingServiceWrapper* getRenderer(NovelRunnerWrapper*);
 
 
 typedef struct GeoVectorWrapper GeoVectorWrapper;
