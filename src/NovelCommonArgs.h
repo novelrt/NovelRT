@@ -10,10 +10,10 @@ struct NovelCommonArgs {
 public:
   NovelCommonArgs() {};
   GeoVector<float> startingPosition = GeoVector<float>(0, 0);
-  float startingRotation;
+  float startingRotation = 0;
   GeoVector<float> startingScale = GeoVector<float>(1.0f, 1.0f);
-  int layer;
-  int orderInLayer;
+  int layer = 0;
+  int orderInLayer = 0;
 };
 }
 
