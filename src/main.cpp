@@ -22,6 +22,39 @@ static int average(lua_State *L) {
     return 2;
 }
 
+static void is_prime() {
+
+    lua_State* _L = luaL_newstate(); // create instance of lua stuff
+    luaL_openlibs(_L); // open lua stdlibs
+
+    if(luaL_loadfile(_L, "prime.lua")) { //load muh file
+        std::cout << "loadfile failed" << std::endl;
+    };
+
+    lua_pcall(_L, 0, 0, 0); // this initalizes all stuff and things
+
+
+    for(int i = 0; i < 10; i++) {
+
+        lua_getglobal(_L, "isPrime"); // this pushes the method onto the stack
+
+        lua_pushnumber(_L, static_cast<float>(i)); // this pushes the argument onto the stack
+
+        lua_call(_L, 1, 1); // call the method, expecting one param and one return value
+
+        bool result = static_cast<bool>(lua_toboolean(_L, -1)); // get the result
+
+        if (result) {
+            std::cout << i << " true" << std::endl;
+        } else {
+            std::cout << i << " false" << std::endl;
+        }
+
+        lua_pop(_L, 3); // pop the method, argument, and return value off the stack
+    }
+    lua_close(_L);
+}
+
 int main() {
      //setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
      //setenv("DISPLAY", "192.168.8.186:0", true);
@@ -30,6 +63,9 @@ int main() {
     lua_register(L, "average", average);
     luaL_dofile(L, "avg.lua");
     lua_close(L);
+
+    is_prime();
+
     auto runner = NovelRT::NovelRunner(0);
     runner.runNovel();
 }

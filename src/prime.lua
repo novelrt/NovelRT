@@ -1,8 +1,8 @@
---
--- Created by IntelliJ IDEA.
--- User: tyler
--- Date: 20/02/19
--- Time: 13:53
--- To change this template use File | Settings | File Templates.
---
-
+function isPrime(n)
+    for i = 2, n^(1/2) do
+        if (n % i) == 0 then
+            return false
+        end
+        return true
+    end
+end
