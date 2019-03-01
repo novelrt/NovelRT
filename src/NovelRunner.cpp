@@ -8,63 +8,63 @@
 #include "NovelImageRect.h"
 
 namespace NovelRT {
-    int NovelRunner::runNovel() const {
-        auto imageRect = _novelRenderer->getImageRect("test-yuri.png", NovelRT::GeoVector<float>(960, 540), 0, NovelRT::GeoVector<float>(1,1), 0, 0);
-        Uint64 current = SDL_GetPerformanceCounter();
-        Uint64 previous = 0;
-        float deltaTime = 0;
-        SDL_Event event;
-        int exitCode = 1;
-        while (exitCode) {
-            previous = current;
-            current = SDL_GetPerformanceCounter();
-            deltaTime = ((current - previous) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) {
-                    exitCode = 0;
-                    break;
-                }
-            }
-            executeUpdateSubscriptions(deltaTime);
-            _novelRenderer->renderAllObjects();
-
-        }
-        _novelRenderer->tearDown();
-        return exitCode;
+int NovelRunner::runNovel() const {
+  Uint64 current = SDL_GetPerformanceCounter();
+  Uint64 previous = 0;
+  float deltaTime = 0;
+  SDL_Event event;
+  int exitCode = 1;
+  while (exitCode) {
+    previous = current;
+    current = SDL_GetPerformanceCounter();
+    deltaTime = ((current - previous) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
+        exitCode = 0;
+        break;
+      }
     }
+    executeUpdateSubscriptions(deltaTime);
+    _novelRenderer->beginFrame();
+    _layeringService->executeAllObjectBehaviours();
+    _novelRenderer->endFrame();
 
-    std::shared_ptr<NovelRenderingService> NovelRunner::getRenderer() {
-        return _novelRenderer;
-    }
+  }
+  _novelRenderer->tearDown();
+  return exitCode;
+}
 
-    NovelRunner::NovelRunner(int displayNumber) : _novelRenderer(std::make_shared<NovelRenderingService>()) {
-        _novelRenderer->initialiseRendering(displayNumber);
-    }
+NovelRenderingService* NovelRunner::getRenderer() const {
+  return _novelRenderer.get();
+}
 
-    void NovelRunner::runOnUpdate(NovelSubscriber subscriber) {
-        _updateSubscribers.push_back(subscriber);
-    }
+NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService) : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+  _novelRenderer->initialiseRendering(displayNumber);
+}
 
-    void NovelRunner::stopRunningOnUpdate(NovelSubscriber subscriber) {
-        if(std::find(
-                _updateSubscribers.begin(),
-                _updateSubscribers.end(),
-                subscriber) != _updateSubscribers.end()) {
-            _updateSubscribers.erase(std::remove_if(
-                    _updateSubscribers.begin(),
-                    _updateSubscribers.end(),
-                    [subscriber](void (*existingSubscriber)(const float)) {
-                        return subscriber == existingSubscriber;
-                    }));
-        }
-        else {
-            return;
-        }
-    }
+void NovelRunner::runOnUpdate(NovelSubscriber subscriber) {
+  _updateSubscribers.push_back(subscriber);
+}
 
-    void NovelRunner::executeUpdateSubscriptions(const float deltaTime) const {
-        for(const auto& subscriber : _updateSubscribers) {
-            subscriber(deltaTime);
-        }
-    }
+void NovelRunner::stopRunningOnUpdate(NovelSubscriber subscriber) {
+  if (std::find(
+      _updateSubscribers.begin(),
+      _updateSubscribers.end(),
+      subscriber) != _updateSubscribers.end()) {
+    _updateSubscribers.erase(std::remove_if(
+        _updateSubscribers.begin(),
+        _updateSubscribers.end(),
+        [subscriber](void (* existingSubscriber)(const float)) {
+          return subscriber == existingSubscriber;
+        }));
+  } else {
+    return;
+  }
+}
+
+void NovelRunner::executeUpdateSubscriptions(const float deltaTime) const {
+  for (const auto& subscriber : _updateSubscribers) {
+    subscriber(deltaTime);
+  }
+}
 }

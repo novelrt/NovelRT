@@ -12,9 +12,9 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#if OPENGL_VERSION==3
+#if OPENGL_VERSION == 3
 #define NANOVG_GL3_IMPLEMENTATION
-#elif OPENGL_VERSION==2
+#elif OPENGL_VERSION == 2
 #define NANOVG_GL2_IMPLEMENTATION
 #endif
 #include "../lib/nanovg/nanovg.h"
@@ -26,125 +26,104 @@
 #include <algorithm>
 
 namespace NovelRT {
-    bool NovelRenderingService::sdlInit(const int& displayNumber) {
-        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-            std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
-            return false;
-        }
+bool NovelRenderingService::sdlInit(const int displayNumber) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+    std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
+    return false;
+  }
 
-        SDL_DisplayMode displayData;
-        SDL_GetCurrentDisplayMode(displayNumber, &displayData);
-        _screenScale = displayData.h / 1080.0f;
+  SDL_DisplayMode displayData;
+  SDL_GetCurrentDisplayMode(displayNumber, &displayData);
+  _screenScale = displayData.h / 1080.0f;
 
-        std::cout << _screenScale << std::endl;
+  std::cout << _screenScale << std::endl;
 
 
-        // create window
-        _window = SDL_CreateWindow(
-                "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                displayData.w, displayData.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-        if (_window == nullptr) {
-            std::cerr << "could not create window: " << SDL_GetError() << std::endl;
+  // create window
+  _window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(
+      "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      displayData.w, displayData.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
+  if (_window == nullptr) {
+    std::cerr << "could not create window: " << SDL_GetError() << std::endl;
 
-            return false;
-        }
+    return false;
+  }
 
-        _openGLContext = SDL_GL_CreateContext(_window);
-        SDL_GL_MakeCurrent(_window, _openGLContext);
-        return true;
-    }
+  _openGLContext = SDL_GL_CreateContext(_window.get());
+  SDL_GL_MakeCurrent(_window.get(), _openGLContext);
+  return true;
+}
 
-    bool NovelRenderingService::nanovgInit() {
-#if OPENGL_VERSION==3
-        _nanovgContext = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-#elif OPENGL_VERSION==2
-        _nanovgContext = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+bool NovelRenderingService::nanovgInit() {
+#if OPENGL_VERSION == 3
+  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
+                                                         &nvgDeleteGL3);
+#elif OPENGL_VERSION == 2
+  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
+                                                         &nvgDeleteGL2);
 #endif
-        if (_nanovgContext == nullptr) {
-            std::cerr << "%llu\n", _nanovgContext;
-            std::cerr << "Could not init nanovg.\n";
-            return false;
-        }
+  if (_nanovgContext == nullptr) {
+    std::cerr << "%llu\n", _nanovgContext.get();
+    std::cerr << "Could not init nanovg.\n";
+    return false;
+  }
 
-        return true;
-    }
+  return true;
+}
 
-    int NovelRenderingService::initialiseRendering(const int& displayNumber) {
-        if (!sdlInit(displayNumber)) {
-            std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
-            return 1;
-        }
+int NovelRenderingService::initialiseRendering(const int displayNumber) {
+  if (!sdlInit(displayNumber)) {
+    std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
+    return 1;
+  }
 
-        if (!nanovgInit()) {
-            std::cerr << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
-            return 1;
-        }
+  if (!nanovgInit()) {
+    std::cerr << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
+    return 1;
+  }
 
+  SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
+  _frameBufferWidth = _winWidth;
 
-        SDL_GetWindowSize(getWindow(), &_winWidth, &_winHeight);
-        _frameBufferWidth = _winWidth;
+  _pxRatio = (float) _frameBufferWidth / (float) _winWidth; //TODO: WTF?
 
-        _pxRatio = (float) _frameBufferWidth / (float) _winWidth; //TODO: WTF?
+  return 0;
+}
 
-        return 0;
-    }
+void NovelRenderingService::tearDown() const {
+  SDL_DestroyWindow(getWindow().get());
+  SDL_Quit();
+}
 
+void NovelRenderingService::beginFrame() const {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  nvgBeginFrame(_nanovgContext.get(), _winWidth, _winHeight, _pxRatio);
+}
 
+void NovelRenderingService::endFrame() const {
+  nvgEndFrame(_nanovgContext.get());
+  SDL_GL_SwapWindow(_window.get());
+}
 
-    void NovelRenderingService::tearDown() const {
-        SDL_DestroyWindow(_window);
-        SDL_Quit();
-    }
+NovelImageRect& NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
+  return *new NovelImageRect(_layeringService, this, _screenScale, filePath, args);
+}
 
-    void NovelRenderingService::renderAllObjects() const {
+NVGcontext* NovelRenderingService::getNanoVGContext() const {
+  return _nanovgContext.get();
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        nvgBeginFrame(_nanovgContext, _winWidth, _winHeight, _pxRatio);
+}
 
-        for(const auto& value : _renderObjects){
-            for(const auto& renderObj : value.second){
-                renderObj->drawObject();
-            }
-        }
+std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
+  return _window;
+}
 
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr, &nvgDeleteGL3), _layeringService(layeringService) {
+}
 
-
-        nvgEndFrame(_nanovgContext);
-        SDL_GL_SwapWindow(_window);
-    }
-
-    NovelImageRect NovelRenderingService::getImageRect(const std::string_view filePath, const GeoVector<float> &startingPosition,
-                                                        const float& startingRotation,
-                                                        const GeoVector<float>& startingScale, const int& layer,
-                                                        const int& orderInLayer) {
-
-        return NovelImageRect(this, _screenScale,startingPosition, filePath, startingRotation, startingScale, layer, orderInLayer);
-    }
-
-    void NovelRenderingService::updateRenderingLayerInfo(const int &layer, NovelObject* targetObject, const bool& migrate) {
-        if (migrate) {
-            auto vec = _renderObjects[targetObject->getLayer()];
-            vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelObject* x) {
-                auto result = x == targetObject;
-                return result;
-            }), vec.end());
-        }
-        auto it = _renderObjects.find(layer);
-        if (it == _renderObjects.end()) {
-            _renderObjects.insert({layer, std::vector<NovelObject*>()});
-        }
-        _renderObjects[layer].push_back(targetObject);
-        sortLayerRenderOrder(layer);
-    }
-
-    void NovelRenderingService::sortLayerRenderOrder(const int& layer) {
-        sort(_renderObjects[layer].begin(), _renderObjects[layer].end()); }
-
-    NVGcontext* NovelRenderingService::getNanoVGContext() const {
-        return _nanovgContext;
-    }
-
-    SDL_Window *NovelRenderingService::getWindow() const {
-        return _window;
-    }
+NovelBasicFillRect& NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
+                                                            const RGBAConfig& colourConfig,
+                                                            const NovelCommonArgs& args) {
+  return *new NovelBasicFillRect(_layeringService, this, _screenScale, startingSize, colourConfig, args);
+}
 }
