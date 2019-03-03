@@ -27,6 +27,7 @@
 
 namespace NovelRT {
 bool NovelRenderingService::sdlInit(const int displayNumber) {
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
     std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
@@ -34,21 +35,22 @@ bool NovelRenderingService::sdlInit(const int displayNumber) {
 
   SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
-  _screenScale = displayData.h / 1080.0f;
+  _screenScale = (displayData.h * 0.7f) / 1080.0f;
 
   std::cout << _screenScale << std::endl;
 
 
   // create window
+  float wData = 1920.0f * _screenScale;
+  float hData = 1080.0f * _screenScale;
   _window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(
-      "NovelRTTest", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      displayData.w, displayData.h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
+      "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
   if (_window == nullptr) {
     std::cerr << "could not create window: " << SDL_GetError() << std::endl;
 
     return false;
   }
-
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
   return true;

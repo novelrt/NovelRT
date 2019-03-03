@@ -1,0 +1,12 @@
+//
+// Created by matth on 01/03/2019.
+//
+
+#ifndef NOVELRT_NOVELBASICINTERACTIONRECT_H
+#define NOVELRT_NOVELBASICINTERACTIONRECT_H
+
+class NovelBasicInteractionRect {
+
+};
+
+#endif //NOVELRT_NOVELBASICINTERACTIONRECT_H
