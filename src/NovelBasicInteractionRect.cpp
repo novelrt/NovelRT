@@ -3,3 +3,7 @@
 //
 
 #include "NovelBasicInteractionRect.h"
+void NovelRT::NovelBasicInteractionRect::checkInteractionPerimeter() const {
+
+
+}
