@@ -58,7 +58,8 @@ bool NovelRenderingService::sdlInit(const int displayNumber) {
 
 bool NovelRenderingService::nanovgInit() {
 #if OPENGL_VERSION == 3
-  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
+  _nanovgContext =
+      std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
                                                          &nvgDeleteGL3);
 #elif OPENGL_VERSION == 2
   _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
@@ -120,7 +121,9 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr, &nvgDeleteGL3), _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr,
+                                                                                                     &nvgDeleteGL3),
+                                                                                      _layeringService(layeringService) {
 }
 
 NovelBasicFillRect& NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,

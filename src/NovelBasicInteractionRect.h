@@ -4,9 +4,12 @@
 
 #ifndef NOVELRT_NOVELBASICINTERACTIONRECT_H
 #define NOVELRT_NOVELBASICINTERACTIONRECT_H
-
-class NovelBasicInteractionRect {
+#include "NovelInteractionObject.h"
+namespace NovelRT {
+class NovelBasicInteractionRect : public NovelInteractionObject {
+public:
+  void checkInteractionPerimeter() const final;
 
 };
-
+}
 #endif //NOVELRT_NOVELBASICINTERACTIONRECT_H

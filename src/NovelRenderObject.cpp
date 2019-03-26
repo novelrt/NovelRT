@@ -5,11 +5,11 @@
 #include "NovelRenderObject.h"
 
 namespace NovelRT {
-NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService* layeringService,
-                                     NovelRT::NovelRenderingService* renderingService,
+NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
+                                     NovelRenderingService* renderingService,
                                      const float& screenScale,
-                                     const NovelRT::GeoVector<float>& size,
-                                     const NovelRT::NovelCommonArgs& args) :
+                                     const GeoVector<float>& size,
+                                     const NovelCommonArgs& args) :
     NovelObject(layeringService, screenScale, size, args) {
   _drawContext = renderingService->getNanoVGContext();
 

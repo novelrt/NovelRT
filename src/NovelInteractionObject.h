@@ -1,22 +1,22 @@
 //
-// Created by matth on 22/02/2019.
+// Created by matth on 25/03/2019.
 //
 
-#ifndef NOVELRT_NOVELINTERACTIONRECT_H
-#define NOVELRT_NOVELINTERACTIONRECT_H
+#ifndef NOVELRT_NOVELINTERACTIONOBJECT_H
+#define NOVELRT_NOVELINTERACTIONOBJECT_H
 
 #include "NovelObject.h"
 
 namespace NovelRT {
-class NovelInteractionObject : public NovelObject {
+class NovelInteractionService;
+class NovelInteractionObject : NovelObject {
 public:
-  NovelInteractionObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
-                       const NovelCommonArgs& args);
-
-  void executeObjectBehaviour() const final;
   virtual void checkInteractionPerimeter() const = 0;
+  void executeObjectBehaviour() const final;
 
+private:
+  void setLastDrawn(const NovelInteractionObject* target) const;
+  NovelInteractionService* _interactionService;
 };
 }
-
-#endif //NOVELRT_NOVELINTERACTIONRECT_H
+#endif //NOVELRT_NOVELINTERACTIONOBJECT_H

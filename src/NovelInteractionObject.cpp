@@ -1,17 +1,17 @@
 //
-// Created by matth on 22/02/2019.
+// Created by matth on 25/03/2019.
 //
 
 #include "NovelInteractionObject.h"
+#include "NovelInteractionService.h"
+
 namespace NovelRT {
-NovelInteractionObject::NovelInteractionObject(NovelLayeringService* layeringService,
-                                           const float screenScale,
-                                           const GeoVector<float>& size,
-                                           const NovelCommonArgs& args) :
-    NovelObject(layeringService, screenScale, size, args) {}
 
 void NovelInteractionObject::executeObjectBehaviour() const {
-  checkInteractionPerimeter();
-}
+  setLastDrawn(this);
 
+}
+void NovelInteractionObject::setLastDrawn(const NovelInteractionObject* target) const {
+  _interactionService->setLastInteractableDrawn(target);
+}
 }

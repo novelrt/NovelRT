@@ -4,9 +4,11 @@
 
 #ifndef NOVELRT_NOVELTEXTRECT_H
 #define NOVELRT_NOVELTEXTRECT_H
+#include "NovelRenderObject.h"
 
-class NovelTextRect {
+namespace NovelRT {
+class NovelTextRect : public NovelRenderObject {
 
 };
-
+}
 #endif //NOVELRT_NOVELTEXTRECT_H
