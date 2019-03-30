@@ -19,7 +19,7 @@ NovelObject::NovelObject(NovelLayeringService* layeringService, const float& scr
   _layeringService->updateLayerInfo(getLayer(), this, true);
 }
 
-GeoVector<float> NovelObject::getPosition() const {
+GeoVector<float> NovelObject::getWorldSpacePosition() const {
   return _position;
 }
 
@@ -43,7 +43,7 @@ void NovelObject::setScale(const GeoVector<float>& value) {
   _scale = value;
 }
 
-GeoVector<float> NovelObject::getSize() const {
+GeoVector<float> NovelObject::getWorldSpaceSize() const {
   return _size;
 }
 

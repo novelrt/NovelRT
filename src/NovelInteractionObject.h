@@ -6,17 +6,24 @@
 #define NOVELRT_NOVELINTERACTIONOBJECT_H
 #include <functional>
 #include "NovelObject.h"
+#include "KeyCode.h"
 
 namespace NovelRT {
-class NovelInteractionObject : NovelObject {
+class NovelInteractionObject : public NovelObject {
 public:
+  std::function<void()> interacted;
+
   NovelInteractionObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
-                         const NovelCommonArgs& args, const std::function<void(const NovelInteractionObject*)> notifyHasBeenDrawnObject);
-  void executeObjectBehaviour() const final;
-  virtual void checkInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;
+                         const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
+  void executeObjectBehaviour() final;
+  virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;
+  KeyCode getSubscribedKey() const;
+  void setSubscribedKey(const KeyCode key);
 
 private:
-  std::function<void(const NovelInteractionObject*)> _notifyHasBeenDrawnObject;
+  std::function<void(NovelInteractionObject*)> _notifyHasBeenDrawnObject;
+  KeyCode _subscribedKey = LeftMouseButton;
+
 };
 }
 #endif //NOVELRT_NOVELINTERACTIONOBJECT_H
