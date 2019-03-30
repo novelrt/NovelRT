@@ -10,7 +10,7 @@ namespace NovelRT {
 struct NovelObjectSortComparison {
 public:
   inline bool const operator()(NovelObject* lhs, NovelObject* rhs) const {
-    return lhs->getOrderInLayer() > rhs->getOrderInLayer();
+    return lhs->getOrderInLayer() < rhs->getOrderInLayer();
   }
 };
 }
