@@ -7,12 +7,13 @@
 
 namespace NovelRT {
 
-NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService, NovelRenderingService* renderingService,
+NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const float screenScale,
                                        const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
-                                       const NovelCommonArgs& args) :
-    NovelRenderObject(layeringService, renderingService, screenScale, size, args), _colourConfig(fillColour) {}
+                                       const NovelCommonArgs& args,
+                                       NovelRenderingService* renderingService) :
+    NovelRenderObject(layeringService, screenScale, size, args, renderingService), _colourConfig(fillColour) {}
 
 void NovelBasicFillRect::drawObject() const {
   if (!getActive())

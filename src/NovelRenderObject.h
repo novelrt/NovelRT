@@ -11,8 +11,8 @@
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
 public:
-  NovelRenderObject(NovelLayeringService* layeringService, NovelRenderingService* renderingService, const float& screenScale, const GeoVector<float>& size,
-                    const NovelCommonArgs& args);
+  NovelRenderObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+                    const NovelCommonArgs& args, NovelRenderingService* renderingService);
 
   void executeObjectBehaviour() const final;
 

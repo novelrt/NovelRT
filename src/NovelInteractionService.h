@@ -4,20 +4,23 @@
 
 #ifndef NOVELRT_NOVELINPUTSERVICE_H
 #define NOVELRT_NOVELINPUTSERVICE_H
-
 #include "NovelInteractionObject.h"
+#include "../lib/SDL2/include/SDL_types.h"
+#include "KeyCode.h"
+
 namespace NovelRT {
 class NovelInteractionService {
 public:
 
 
-  void initializeInputHandling();
+  void consumePlayerInput();
 
   //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
-
-  void setLastInteractableDrawn(const NovelInteractionObject* target);
 private:
-  const NovelInteractionObject* _target;
+  void setLastInteractableDrawn(NovelInteractionObject* target);
+  NovelInteractionObject* _target;
+  std::map<KeyCode, bool> _keyStates;
+  GeoVector<Sint32> _windowClickPosition;
 };
 }
 

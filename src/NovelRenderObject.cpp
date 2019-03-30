@@ -6,10 +6,10 @@
 
 namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-                                     NovelRenderingService* renderingService,
-                                     const float& screenScale,
+                                     const float screenScale,
                                      const GeoVector<float>& size,
-                                     const NovelCommonArgs& args) :
+                                     const NovelCommonArgs& args,
+                                     NovelRenderingService* renderingService) :
     NovelObject(layeringService, screenScale, size, args) {
   _drawContext = renderingService->getNanoVGContext();
 

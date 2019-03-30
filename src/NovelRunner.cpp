@@ -12,18 +12,18 @@ int NovelRunner::runNovel() const {
   Uint64 current = SDL_GetPerformanceCounter();
   Uint64 previous = 0;
   float deltaTime = 0;
-  SDL_Event event;
   int exitCode = 1;
   while (exitCode) {
-    previous = current;
-    current = SDL_GetPerformanceCounter();
-    deltaTime = ((current - previous) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
+    SDL_Event event;
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
+      if(event.type == SDL_QUIT) {
         exitCode = 0;
         break;
       }
     }
+    previous = current;
+    current = SDL_GetPerformanceCounter();
+    deltaTime = ((current - previous) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
     executeUpdateSubscriptions(deltaTime);
     _novelRenderer->beginFrame();
     _layeringService->executeAllObjectBehaviours();
@@ -38,7 +38,8 @@ NovelRenderingService* NovelRunner::getRenderer() const {
   return _novelRenderer.get();
 }
 
-NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService) : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService)
+    : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
   _novelRenderer->initialiseRendering(displayNumber);
 }
 
