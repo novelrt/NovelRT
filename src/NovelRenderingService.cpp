@@ -109,7 +109,7 @@ void NovelRenderingService::endFrame() const {
 }
 
 NovelImageRect& NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return *new NovelImageRect(_layeringService, this, _screenScale, filePath, args);
+  return *new NovelImageRect(_layeringService, _screenScale, filePath, args, this);
 }
 
 NVGcontext* NovelRenderingService::getNanoVGContext() const {
@@ -129,6 +129,6 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
 NovelBasicFillRect& NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return *new NovelBasicFillRect(_layeringService, this, _screenScale, startingSize, colourConfig, args);
+  return *new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, this);
 }
 }

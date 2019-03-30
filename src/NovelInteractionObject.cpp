@@ -1,17 +1,20 @@
 //
-// Created by matth on 25/03/2019.
+// Created by matth on 26/03/2019.
 //
 
 #include "NovelInteractionObject.h"
-#include "NovelInteractionService.h"
-
 namespace NovelRT {
+NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
+                                               const float screenScale,
+                                               const NovelRT::GeoVector<float>& size,
+                                               const NovelRT::NovelCommonArgs& args,
+                                               const std::function<void(const NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
+    : NovelObject(layeringService, screenScale, size, args) {
+  _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
+}
 
 void NovelInteractionObject::executeObjectBehaviour() const {
-  setLastDrawn(this);
 
-}
-void NovelInteractionObject::setLastDrawn(const NovelInteractionObject* target) const {
-  _interactionService->setLastInteractableDrawn(target);
+  _notifyHasBeenDrawnObject(this);
 }
 }
