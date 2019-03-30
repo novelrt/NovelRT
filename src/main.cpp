@@ -43,7 +43,7 @@ int main() {
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
-  rectArgs.layer = 0;
+  rectArgs.layer = 1;
   rectArgs.orderInLayer = 1;
 
   runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(500, 500), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
