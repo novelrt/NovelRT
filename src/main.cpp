@@ -26,7 +26,6 @@ static int average(lua_State* L) {
 
 int main() {
   //setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
-  setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
   luaL_openlibs(L);
   lua_register(L, "average", average);
