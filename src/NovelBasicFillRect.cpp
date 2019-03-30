@@ -19,8 +19,8 @@ void NovelBasicFillRect::drawObject() const {
   if (!getActive())
     return;
 
-  GeoVector<float> position = getPosition() * _screenScale;
-  GeoVector<float> size = getSize() * _screenScale;
+  GeoVector<float> position = getWorldSpacePosition() * _screenScale;
+  GeoVector<float> size = getWorldSpaceSize() * _screenScale;
   size = size * getScale();
   nvgSave(_drawContext);
   nvgTranslate(_drawContext, position.getX(), position.getY());

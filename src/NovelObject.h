@@ -16,7 +16,7 @@ public:
   NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
               const NovelCommonArgs& args);
 
-  virtual GeoVector<float> getPosition() const;
+  virtual GeoVector<float> getWorldSpacePosition() const;
 
   virtual void setPosition(const GeoVector<float>& value);
 
@@ -28,7 +28,7 @@ public:
 
   virtual void setScale(const GeoVector<float>& value);
 
-  virtual GeoVector<float> getSize() const;
+  virtual GeoVector<float> getWorldSpaceSize() const;
 
   virtual void setSize(const GeoVector<float>& value);
 
@@ -44,7 +44,7 @@ public:
 
   virtual void setActive(const bool value);
 
-  virtual void executeObjectBehaviour() const = 0;
+  virtual void executeObjectBehaviour() = 0;
 
 protected:
   GeoVector<float> _position;

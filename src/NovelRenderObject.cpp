@@ -15,7 +15,7 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
 
 }
 
-void NovelRenderObject::executeObjectBehaviour() const {
+void NovelRenderObject::executeObjectBehaviour() {
   drawObject();
 }
 }

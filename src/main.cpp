@@ -4,6 +4,7 @@
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
+#include "NovelInteractionService.h"
 
 extern "C" {
 #include "../lib/lua53/lua.h"
@@ -39,15 +40,20 @@ int main() {
   yuriArgs.startingPosition.setX(1920 / 2);
   yuriArgs.startingPosition.setY(1080 / 2);
 
-  runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
+  auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
+  rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 1;
 
-  runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(500, 500), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  //NovelRT::NovelInteractionService().consumePlayerInput();
 
+  runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
+  rect->interacted = [yuri]{yuri->setActive(!yuri->getActive());};
 
   runner.runNovel();
 }
+

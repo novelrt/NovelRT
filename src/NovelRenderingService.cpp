@@ -108,8 +108,8 @@ void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect& NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return *new NovelImageRect(_layeringService, _screenScale, filePath, args, this);
+NovelImageRect* NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
+  return new NovelImageRect(_layeringService, _screenScale, filePath, args, this);
 }
 
 NVGcontext* NovelRenderingService::getNanoVGContext() const {
@@ -126,9 +126,13 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
                                                                                       _layeringService(layeringService) {
 }
 
-NovelBasicFillRect& NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
+NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return *new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, this);
+  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, this);
+}
+
+float NovelRenderingService::getScreenScale() const {
+  return _screenScale;
 }
 }

@@ -5,42 +5,37 @@
 #include <iostream>
 #include "NovelRunner.h"
 #include "../lib/SDL2/include/SDL.h"
-#include "NovelImageRect.h"
 
 namespace NovelRT {
-int NovelRunner::runNovel() const {
+NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService)
+    : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+  _novelRenderer->initialiseRendering(displayNumber);
+  _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
+  _novelInteractionService->quit = [this]{_exitCode = 0;};
+}
+
+int NovelRunner::runNovel() {
   Uint64 current = SDL_GetPerformanceCounter();
   Uint64 previous = 0;
   float deltaTime = 0;
-  int exitCode = 1;
-  while (exitCode) {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      if(event.type == SDL_QUIT) {
-        exitCode = 0;
-        break;
-      }
-    }
+  while (_exitCode) {
     previous = current;
     current = SDL_GetPerformanceCounter();
     deltaTime = ((current - previous) * 1000 / SDL_GetPerformanceFrequency()) * 0.001f;
     executeUpdateSubscriptions(deltaTime);
+    _novelInteractionService->consumePlayerInput();
     _novelRenderer->beginFrame();
     _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
+    _novelInteractionService->ExecuteClickedInteractable();
 
   }
   _novelRenderer->tearDown();
-  return exitCode;
+  return _exitCode;
 }
 
 NovelRenderingService* NovelRunner::getRenderer() const {
   return _novelRenderer.get();
-}
-
-NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService)
-    : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
-  _novelRenderer->initialiseRendering(displayNumber);
 }
 
 void NovelRunner::runOnUpdate(NovelSubscriber subscriber) {
@@ -67,5 +62,8 @@ void NovelRunner::executeUpdateSubscriptions(const float deltaTime) const {
   for (const auto& subscriber : _updateSubscribers) {
     subscriber(deltaTime);
   }
+}
+NovelInteractionService* NovelRunner::getInteractionService() const {
+  return _novelInteractionService.get();
 }
 }

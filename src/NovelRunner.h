@@ -6,6 +6,7 @@
 #define NOVELRT_NOVELRUNNER_H
 
 #include "NovelRenderingService.h"
+#include "NovelInteractionService.h"
 
 typedef void (* NovelSubscriber)(const float);
 
@@ -17,13 +18,16 @@ public:
   void executeUpdateSubscriptions(const float deltaTime) const;
 
   explicit NovelRunner(int, NovelLayeringService*);
-  int runNovel() const;
+  int runNovel();
   NovelRenderingService* getRenderer() const;
+  NovelInteractionService* getInteractionService() const;
 
 private:
   std::vector<NovelSubscriber> _updateSubscribers;
   NovelLayeringService* _layeringService;
   std::unique_ptr<NovelRenderingService> _novelRenderer;
+  std::unique_ptr<NovelInteractionService> _novelInteractionService;
+  int _exitCode = 1;
 };
 }
 

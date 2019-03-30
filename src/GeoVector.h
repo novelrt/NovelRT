@@ -10,6 +10,7 @@ namespace NovelRT {
 template<typename T>
 class GeoVector {
 public:
+  GeoVector();
   GeoVector(T x, T y);
 
   T getX() const;
@@ -105,6 +106,10 @@ inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
 template<typename T>
 GeoVector<T> GeoVector<T>::operator/(const T other) const {
   return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
+}
+template<typename T>
+GeoVector<T>::GeoVector() {
+
 }
 
 }
