@@ -70,10 +70,14 @@ int main() {
   yuriArgs.startingPosition.setX(1920 / 2);
   yuriArgs.startingPosition.setY(1080 / 2);
 
+  yuriArgs.layer = 0;
+  yuriArgs.orderInLayer = 0;
+
   runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
+  rectArgs.layer = 0;
   rectArgs.orderInLayer = 1;
 
   runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(500, 500), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
