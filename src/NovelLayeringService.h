@@ -17,6 +17,7 @@ public:
   void updateLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
   void sortLayerOrder(const int layer);
   void executeAllObjectBehaviours();
+
   ~NovelLayeringService();
 private:
   std::map<int, std::vector<NovelObject*>> _layerMatrix;

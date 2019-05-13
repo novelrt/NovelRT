@@ -11,6 +11,7 @@ NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* la
                                                const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
     : NovelObject(layeringService, screenScale, size, args) {
   _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
+
 }
 
 void NovelInteractionObject::executeObjectBehaviour() {

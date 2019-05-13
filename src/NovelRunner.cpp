@@ -11,7 +11,7 @@ NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringServic
     : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
   _novelRenderer->initialiseRendering(displayNumber);
   _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
-  _novelInteractionService->quit = [this]{_exitCode = 0;};
+  _novelInteractionService->subscribeToQuit([this]{_exitCode = 0;});
 }
 
 int NovelRunner::runNovel() {

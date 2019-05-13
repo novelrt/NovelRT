@@ -18,7 +18,7 @@ public:
                      const NovelCommonArgs& args,
                      NovelRenderingService* renderingService);
 
-  void drawObject() const override;
+  void drawObject() const final;
 
   RGBAConfig getColourConfig() const;
 

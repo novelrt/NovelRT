@@ -8,7 +8,18 @@
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
+public:
+  NovelTextRect(NovelLayeringService* layeringService, const float& screenScale,
+  const std::string_view fontFileDir, const NovelCommonArgs& args, NovelRenderingService* renderingService);
 
+  void drawObject() const final;
+
+  RGBAConfig getColourConfig() const;
+
+  void setColourConfig(const RGBAConfig& value);
+
+private:
+  RGBAConfig _colourConfig;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

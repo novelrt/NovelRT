@@ -52,7 +52,7 @@ int main() {
 
   runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
-  rect->interacted = [yuri]{yuri->setActive(!yuri->getActive());};
+  rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
 
   runner.runNovel();
 }

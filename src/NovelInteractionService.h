@@ -10,10 +10,9 @@
 #include "NovelBasicInteractionRect.h"
 
 namespace NovelRT {
-class NovelInteractionService {
+class NovelInteractionService { friend class NovelInteractionObject;
+NOVELRT_PARAMETERLESS_EVENT(Quit)
 public:
-std::function<void()> quit;
-
   NovelInteractionService(NovelLayeringService* layeringService, const float screenScale);
 
   void consumePlayerInput();
