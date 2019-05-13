@@ -7,12 +7,14 @@
 #include <functional>
 #include "NovelObject.h"
 #include "KeyCode.h"
+#include "NovelRTMacroUtilities.h"
 
 namespace NovelRT {
 class NovelInteractionObject : public NovelObject {
-public:
-  std::function<void()> interacted;
+  friend class NovelInteractionService; //how to make shit tightly coupled oh god
 
+NOVELRT_PARAMETERLESS_EVENT(Interacted)
+public:
   NovelInteractionObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
                          const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
   void executeObjectBehaviour() final;

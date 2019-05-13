@@ -33,4 +33,11 @@ void NovelBasicFillRect::drawObject() const {
   nvgFill(_drawContext);
   nvgRestore(_drawContext);
 }
+
+RGBAConfig NovelBasicFillRect::getColourConfig() const {
+  return _colourConfig;
+}
+void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
+  _colourConfig = value;
+}
 }

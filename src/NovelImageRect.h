@@ -17,8 +17,8 @@ public:
   NovelImageRect(NovelLayeringService* layeringService, const float& screenScale,
                  const std::string_view imageDir, const NovelCommonArgs& args, NovelRenderingService* renderingService);
 
-  void drawObject() const override;
-  void setScale(const GeoVector<float>& value) override;
+  void drawObject() const final;
+  void setScale(const GeoVector<float>& value) final;
 
 private:
   std::string _imageDir;

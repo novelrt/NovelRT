@@ -20,6 +20,9 @@ protected:
   NVGcontext* _drawContext;
   NovelRenderingService* _novelRenderer;
   virtual void drawObject() const = 0;
+
+public:
+  std::string wew;
 };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H

@@ -12,9 +12,11 @@ NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringS
 }
 
 void NovelInteractionService::HandleInteractionDraw(NovelInteractionObject* target) {
-  if (_keyStates[target->getSubscribedKey()] && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[LeftMouseButton])
-          && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
-          && target->getOrderInLayer() >= _clickTarget->getOrderInLayer()))) _clickTarget = target;
+  if (_keyStates[target->getSubscribedKey()]
+      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[LeftMouseButton])
+      && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
+          && target->getOrderInLayer() >= _clickTarget->getOrderInLayer())))
+    _clickTarget = target;
 }
 
 void NovelInteractionService::consumePlayerInput() {
@@ -25,7 +27,8 @@ void NovelInteractionService::consumePlayerInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-    case SDL_QUIT:quit();
+    case SDL_QUIT:
+      raiseQuit();
       return;
     case SDL_MOUSEBUTTONUP:
       if (event.button.button == SDL_BUTTON_LEFT) {
@@ -42,15 +45,15 @@ NovelBasicInteractionRect* NovelInteractionService::getBasicInteractionRect(cons
                                                                             const NovelCommonArgs& args) {
   //return *new NovelBasicInteractionRect(_layeringService, _screenScale, startingSize, args, [this](NovelInteractionObject* x){ HandleInteractionDraw(x);});
   return new NovelBasicInteractionRect(_layeringService,
-                                        _screenScale,
-                                        startingSize,
-                                        args,
-                                        [this](NovelInteractionObject* x) { HandleInteractionDraw(x); });
+                                       _screenScale,
+                                       startingSize,
+                                       args,
+                                       [this](NovelInteractionObject* x) { HandleInteractionDraw(x); });
 }
 void NovelInteractionService::ExecuteClickedInteractable() {
-  if (_clickTarget != nullptr) {
-    _clickTarget->interacted();
-    _clickTarget = nullptr;
-  }
+  if (_clickTarget == nullptr) return;
+
+  _clickTarget->raiseInteracted();
+  _clickTarget = nullptr;
 }
 }
