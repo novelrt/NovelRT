@@ -5,7 +5,6 @@
 #ifndef NOVELRT_NOVELINPUTSERVICE_H
 #define NOVELRT_NOVELINPUTSERVICE_H
 #include "NovelInteractionObject.h"
-#include "../lib/SDL2/include/SDL_types.h"
 #include "KeyCode.h"
 #include "NovelBasicInteractionRect.h"
 
