@@ -4,7 +4,6 @@
 
 #ifndef NOVELRT_COORDINATEVECTOR_H
 #define NOVELRT_COORDINATEVECTOR_H
-#include<memory>
 
 namespace NovelRT {
 template<typename T>

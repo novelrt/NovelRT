@@ -6,8 +6,6 @@
 #define NOVELRT_NOVELIMAGERECT_H
 
 #include "RGBAConfig.h"
-#include <string>
-#include "../lib/nanovg/nanovg.h"
 #include "NovelRenderObject.h"
 
 namespace NovelRT {

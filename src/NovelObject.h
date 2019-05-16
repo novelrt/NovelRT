@@ -5,7 +5,6 @@
 #ifndef NOVELRT_NOVELOBJECT_H
 #define NOVELRT_NOVELOBJECT_H
 #include "GeoVector.h"
-#include "../lib/nanovg/nanovg.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
 

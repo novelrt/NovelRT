@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <memory>
 #include "RGBAConfig.h"
 #include "NovelLayeringService.h"
 
