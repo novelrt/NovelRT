@@ -16,6 +16,8 @@
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
+#include "../lib/glew/include/GL/glew.h"
+#include "../lib/GLFW/include/GLFW/glfw3.h"
 
 namespace NovelRT {
 
