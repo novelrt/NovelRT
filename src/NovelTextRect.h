@@ -5,12 +5,13 @@
 #ifndef NOVELRT_NOVELTEXTRECT_H
 #define NOVELRT_NOVELTEXTRECT_H
 #include "NovelRenderObject.h"
+#include "RGBAConfig.h"
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
 public:
   NovelTextRect(NovelLayeringService* layeringService, const float& screenScale,
-  const std::string_view fontFileDir, const NovelCommonArgs& args, NovelRenderingService* renderingService);
+  const std::string_view fontFileDir, const NovelCommonArgs& args);
 
   void drawObject() const final;
 

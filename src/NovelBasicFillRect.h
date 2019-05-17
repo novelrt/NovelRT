@@ -15,8 +15,7 @@ public:
                      const float screenScale,
                      const GeoVector<float>& size,
                      const RGBAConfig& fillColour,
-                     const NovelCommonArgs& args,
-                     NovelRenderingService* renderingService);
+                     const NovelCommonArgs& args);
 
   void drawObject() const final;
 

@@ -17,9 +17,6 @@
 #elif OPENGL_VERSION == 2
 #define NANOVG_GL2_IMPLEMENTATION
 #endif
-#include "../lib/nanovg/nanovg.h"
-#include "../lib/nanovg/nanovg_gl.h"
-#include "../lib/nanovg/nanovg_gl_utils.h"
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
@@ -56,32 +53,9 @@ bool NovelRenderingService::sdlInit(const int displayNumber) {
   return true;
 }
 
-bool NovelRenderingService::nanovgInit() {
-#if OPENGL_VERSION == 3
-  _nanovgContext =
-      std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
-                                                         &nvgDeleteGL3);
-#elif OPENGL_VERSION == 2
-  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
-                                                         &nvgDeleteGL2);
-#endif
-  if (_nanovgContext == nullptr) {
-    std::cerr << "%llu\n", _nanovgContext.get();
-    std::cerr << "Could not init nanovg.\n";
-    return false;
-  }
-
-  return true;
-}
-
 int NovelRenderingService::initialiseRendering(const int displayNumber) {
   if (!sdlInit(displayNumber)) {
     std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
-    return 1;
-  }
-
-  if (!nanovgInit()) {
-    std::cerr << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
     return 1;
   }
 
@@ -100,36 +74,27 @@ void NovelRenderingService::tearDown() const {
 
 void NovelRenderingService::beginFrame() const {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-  nvgBeginFrame(_nanovgContext.get(), _winWidth, _winHeight, _pxRatio);
 }
 
 void NovelRenderingService::endFrame() const {
-  nvgEndFrame(_nanovgContext.get());
   SDL_GL_SwapWindow(_window.get());
 }
 
 NovelImageRect* NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, filePath, args, this);
-}
-
-NVGcontext* NovelRenderingService::getNanoVGContext() const {
-  return _nanovgContext.get();
-
+  return new NovelImageRect(_layeringService, _screenScale, filePath, args);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr,
-                                                                                                     &nvgDeleteGL3),
-                                                                                      _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService) {
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, this);
+  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args);
 }
 
 float NovelRenderingService::getScreenScale() const {

@@ -13,7 +13,7 @@ namespace NovelRT {
 class NovelImageRect : public NovelRenderObject {
 public:
   NovelImageRect(NovelLayeringService* layeringService, const float& screenScale,
-                 const std::string_view imageDir, const NovelCommonArgs& args, NovelRenderingService* renderingService);
+                 const std::string_view imageDir, const NovelCommonArgs& args);
 
   void drawObject() const final;
   void setScale(const GeoVector<float>& value) final;
@@ -21,7 +21,6 @@ public:
 private:
   std::string _imageDir;
   int _imageHandle;
-  NVGpaint _paint;
   int _width;
   int _height;
 
