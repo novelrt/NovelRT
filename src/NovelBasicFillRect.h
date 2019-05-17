@@ -5,30 +5,30 @@
 #ifndef NOVELRT_NOVELRECT_H
 #define NOVELRT_NOVELRECT_H
 
-#include "NovelObject.h"
+#include "NovelRenderObject.h"
 #include "RGBAConfig.h"
 
 namespace NovelRT {
-    class NovelBasicFillRect : public NovelObject {
-    public:
-        NovelBasicFillRect(const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, const RGBAConfig& fillColour, NVGcontext* context, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1.0f, 1.0f));
+class NovelBasicFillRect : public NovelRenderObject {
+public:
+  NovelBasicFillRect(NovelLayeringService* layeringService,
+                     const float screenScale,
+                     const GeoVector<float>& size,
+                     const RGBAConfig& fillColour,
+                     const NovelCommonArgs& args,
+                     NovelRenderingService* renderingService);
 
-        void drawObject() const override;
+  void drawObject() const final;
 
-        RGBAConfig getColourConfig() const;
+  RGBAConfig getColourConfig() const;
 
-        void setColourConfig(const RGBAConfig& value);
+  void setColourConfig(const RGBAConfig& value);
 
-    private:
+private:
 
-        RGBAConfig _colourConfig;
+  RGBAConfig _colourConfig;
 
-
-
-
-
-
-    };
+};
 }
 
 #endif //NOVELRT_NOVELRECT_H
