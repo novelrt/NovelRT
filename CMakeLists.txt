@@ -24,13 +24,12 @@ endif()
 
 
 add_subdirectory(lib/SDL2)
-add_subdirectory(lib/nanovg)
 add_subdirectory(lib/lua53)
 
 add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/NovelInteractionService.h src/NovelLayeringService.cpp  src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelCommonArgs.h  src/NovelRenderObject.cpp src/NovelRenderObject.h src/NovelTextRect.cpp src/NovelTextRect.h src/NovelInteractionService.cpp src/NovelInteractionObject.cpp src/NovelInteractionObject.h src/NovelObjectSortComparison.h src/NovelBasicInteractionRect.cpp src/NovelBasicInteractionRect.h src/GeoBounds.cpp src/GeoBounds.h src/NovelRTMacroUtilities.h)
 add_library(NovelRTLib SHARED src/NovelInteractionService.h src/NovelLayeringService.cpp src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelRunner_C.cpp src/NovelRunner_C.h src/NovelCommonArgs.h src/NovelInteractionService.cpp src/NovelRenderObject.cpp src/NovelRenderObject.h src/NovelTextRect.cpp src/NovelTextRect.h src/NovelInteractionObject.cpp src/NovelInteractionObject.h src/KeyCode.h src/NovelObjectSortComparison.h src/NovelBasicInteractionRect.cpp src/NovelBasicInteractionRect.h src/GeoBounds.cpp src/GeoBounds.h src/NovelRTMacroUtilities.h)
 
-target_link_libraries(NovelRTLib m GL GLU SDL2 nanovg lua)
+target_link_libraries(NovelRTLib m GL GLU SDL2 lua)
 
 set_target_properties(NovelRTLib PROPERTIES PUBLIC_HEADER include/NovelRTLib_C.h)
 
@@ -38,4 +37,4 @@ install(TARGETS NovelRTLib
         LIBRARY DESTINATION /lib/${PROJECT_NAME}
         PUBLIC_HEADER DESTINATION /usr/include/${PROJECT_NAME})
 
-target_link_libraries(NovelRT m GL GLU SDL2 nanovg lua)
+target_link_libraries(NovelRT m GL GLU SDL2 lua)
