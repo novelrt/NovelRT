@@ -9,14 +9,8 @@
 
 #define GL_GLEXT_PROTOTYPES
 
-#include <GL/gl.h>
-#include <GL/glext.h>
 
-#if OPENGL_VERSION == 3
-#define NANOVG_GL3_IMPLEMENTATION
-#elif OPENGL_VERSION == 2
-#define NANOVG_GL2_IMPLEMENTATION
-#endif
+
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
@@ -24,7 +18,7 @@
 
 namespace NovelRT {
 bool NovelRenderingService::sdlInit(const int displayNumber) {
-
+  glfwInit();
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
     std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
