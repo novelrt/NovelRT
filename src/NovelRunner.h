@@ -1,36 +1,34 @@
 //
-// Created by matth on 19/12/2018.
+// Created by matth on 16/02/2019.
 //
 
 #ifndef NOVELRT_NOVELRUNNER_H
 #define NOVELRT_NOVELRUNNER_H
 
-#include "../lib/SDL2/include/SDL.h"
-#include "../lib/nanovg/nanovg.h"
-#include <vector>
-#include <map>
-#include "NovelObject.h"
+#include "NovelRenderingService.h"
+#include "NovelInteractionService.h"
+
+typedef void (* NovelSubscriber)(const float);
 
 namespace NovelRT {
-    class NovelRunner {
-    public:
-        int runNovel(int displayNumber);
+class NovelRunner {
+public:
+  void runOnUpdate(NovelSubscriber);
+  void stopRunningOnUpdate(NovelSubscriber);
+  void executeUpdateSubscriptions(const float deltaTime) const;
 
-    private:
-        bool nanovgInit();
+  explicit NovelRunner(int, NovelLayeringService*);
+  int runNovel();
+  NovelRenderingService* getRenderer() const;
+  NovelInteractionService* getInteractionService() const;
 
-        bool sdlInit(const int& displayNumber);
-
-        SDL_Window *_window;
-        struct NVGcontext *_nanovgContext;
-        SDL_GLContext _openGLContext;
-        int _aspectRatioWidth;
-        int _aspectRatioHeight;
-        SDL_DisplayMode _current;
-        std::map<int, std::vector<NovelObject*>> _renderObjects;
-        float _screenScale;
-
-    };
-
+private:
+  std::vector<NovelSubscriber> _updateSubscribers;
+  NovelLayeringService* _layeringService;
+  std::unique_ptr<NovelRenderingService> _novelRenderer;
+  std::unique_ptr<NovelInteractionService> _novelInteractionService;
+  int _exitCode = 1;
+};
 }
+
 #endif //NOVELRT_NOVELRUNNER_H

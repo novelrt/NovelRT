@@ -5,56 +5,57 @@
 #ifndef NOVELRT_NOVELOBJECT_H
 #define NOVELRT_NOVELOBJECT_H
 #include "GeoVector.h"
-#include "../lib/nanovg/nanovg.h"
+#include "NovelCommonArgs.h"
+#include "NovelLayeringService.h"
 
 namespace NovelRT {
-    class NovelObject {
-    public:
-        NovelObject(const float& screenScale, const GeoVector<float>& position, const GeoVector<float>& size, NVGcontext *context, const float& rotation = 0, const GeoVector<float>& scale = GeoVector<float>(1, 1));
+class NovelLayeringService;
+class NovelObject {
+public:
+  NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
+              const NovelCommonArgs& args);
 
-        virtual GeoVector<float> getPosition() const;
+  virtual GeoVector<float> getWorldSpacePosition() const;
 
-        virtual void setPosition(const GeoVector<float>& value);
+  virtual void setPosition(const GeoVector<float>& value);
 
-        virtual float getRotation() const;
+  virtual float getRotation() const;
 
-        virtual void setRotation(const float& value);
+  virtual void setRotation(const float value);
 
-        virtual GeoVector<float> getScale() const;
+  virtual GeoVector<float> getScale() const;
 
-        virtual void setScale(const GeoVector<float>& value);
+  virtual void setScale(const GeoVector<float>& value);
 
-        virtual GeoVector<float> getSize() const;
+  virtual GeoVector<float> getWorldSpaceSize() const;
 
-        virtual void setSize(const GeoVector<float>& value);
+  virtual void setSize(const GeoVector<float>& value);
 
-        virtual int getLayer() const;
+  virtual int getLayer() const;
 
-        virtual void setLayer(const int& value);
+  virtual void setLayer(const int value);
 
-        virtual int getOrderInLayer() const;
+  virtual int getOrderInLayer() const;
 
-        virtual void setOrderInLayer(const int& value);
+  virtual void setOrderInLayer(const int value);
 
-        virtual bool getActive() const;
+  virtual bool getActive() const;
 
-        virtual void setActive(const bool& value);
+  virtual void setActive(const bool value);
 
-        virtual void drawObject() const = 0;
+  virtual void executeObjectBehaviour() = 0;
 
-
-    protected:
-        GeoVector<float> _position;
-        GeoVector<float> _scale;
-        GeoVector<float> _size;
-        float _rotation;
-        bool _active = true;
-        int _orderInLayer;
-        int _layer;
-        NVGcontext* _context;
-        float _screenScale;
-    };
-
+protected:
+  GeoVector<float> _position;
+  GeoVector<float> _scale;
+  GeoVector<float> _size;
+  float _rotation;
+  bool _active = true;
+  int _orderInLayer;
+  int _layer;
+  float _screenScale;
+  NovelLayeringService* _layeringService;
+};
 
 }
 
