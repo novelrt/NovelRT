@@ -23,10 +23,14 @@ public:
 
   void setColourConfig(const RGBAConfig& value);
 
+  void setWorldSpaceSize(const GeoVector<float>& value) final;
+
 private:
 
   RGBAConfig _colourConfig;
+  std::vector<GLfloat> _vertexBufferData;
 
+  void configureBuffer(bool isInit);
 };
 }
 

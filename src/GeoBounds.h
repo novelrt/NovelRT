@@ -12,6 +12,7 @@ public:
   GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size);
   //GeoVector<float>> getCorners() const;
   bool pointIsWithinBounds(const GeoVector<float>& point) const;
+  GeoVector<float> getCorner(const int index) const;
 
 private:
   GeoVector<float> _corners[4];

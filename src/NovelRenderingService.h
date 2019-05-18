@@ -17,7 +17,6 @@
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
 #include "../lib/glew/include/GL/glew.h"
-#include "../lib/GLFW/include/GLFW/glfw3.h"
 
 namespace NovelRT {
 
@@ -42,7 +41,7 @@ public:
 
 private:
 
-  bool sdlInit(const int displayNumber);
+  bool initializeRenderPipeline(const int displayNumber);
 
   NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;
@@ -54,6 +53,8 @@ private:
   int _frameBufferWidth;
   float _pxRatio;
 
+  GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
+  GLuint _programID;
 };
 
 }

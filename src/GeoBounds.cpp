@@ -18,4 +18,7 @@ bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
 
   return false;
 }
+GeoVector<float> GeoBounds::getCorner(const int index) const {
+  return _corners[index];
+}
 }
