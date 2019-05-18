@@ -5,6 +5,7 @@
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
+#include "../lib/glew/include/GL/glew.h"
 
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
@@ -16,6 +17,7 @@ public:
 
 protected:
   virtual void drawObject() const = 0;
+  GLuint _buffer;
 
 public:
   std::string wew;

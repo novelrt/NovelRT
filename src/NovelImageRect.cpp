@@ -15,7 +15,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
     _imageDir(imageDir) {
   _width = 0;
   _height = 0;
-  setSize(GeoVector<float>(_width, _height));
+  setWorldSpaceSize(GeoVector<float>(_width, _height));
   setScale(args.startingScale);
 }
 
