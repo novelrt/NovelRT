@@ -7,19 +7,20 @@
 
 namespace NovelRT {
 
-NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService, NovelRenderingService* renderingService,
+NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const float screenScale,
                                        const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
-                                       const NovelCommonArgs& args) :
-    NovelRenderObject(layeringService, renderingService, screenScale, size, args), _colourConfig(fillColour) {}
+                                       const NovelCommonArgs& args,
+                                       NovelRenderingService* renderingService) :
+    NovelRenderObject(layeringService, screenScale, size, args, renderingService), _colourConfig(fillColour) {}
 
 void NovelBasicFillRect::drawObject() const {
   if (!getActive())
     return;
 
-  GeoVector<float> position = getPosition() * _screenScale;
-  GeoVector<float> size = getSize() * _screenScale;
+  GeoVector<float> position = getWorldSpacePosition() * _screenScale;
+  GeoVector<float> size = getWorldSpaceSize() * _screenScale;
   size = size * getScale();
   nvgSave(_drawContext);
   nvgTranslate(_drawContext, position.getX(), position.getY());
@@ -31,5 +32,12 @@ void NovelBasicFillRect::drawObject() const {
                nvgRGBA(_colourConfig.getR(), _colourConfig.getG(), _colourConfig.getB(), _colourConfig.getA()));
   nvgFill(_drawContext);
   nvgRestore(_drawContext);
+}
+
+RGBAConfig NovelBasicFillRect::getColourConfig() const {
+  return _colourConfig;
+}
+void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
+  _colourConfig = value;
 }
 }

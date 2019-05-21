@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <memory>
 #include "RGBAConfig.h"
 #include "NovelLayeringService.h"
 
@@ -29,10 +30,12 @@ public:
 
   void tearDown() const;
 
-  NovelImageRect& getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
-  NovelBasicFillRect& getBasicFillRect(const GeoVector<float>& startingSize,
+  NovelImageRect* getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+  NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);
+
+  float getScreenScale() const;
 
   void beginFrame() const;
   void endFrame() const;

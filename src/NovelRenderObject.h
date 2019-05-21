@@ -11,15 +11,18 @@
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
 public:
-  NovelRenderObject(NovelLayeringService* layeringService, NovelRenderingService* renderingService, const float& screenScale, const GeoVector<float>& size,
-                    const NovelCommonArgs& args);
+  NovelRenderObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+                    const NovelCommonArgs& args, NovelRenderingService* renderingService);
 
-  void executeObjectBehaviour() const final;
+  void executeObjectBehaviour() final;
 
 protected:
   NVGcontext* _drawContext;
   NovelRenderingService* _novelRenderer;
   virtual void drawObject() const = 0;
+
+public:
+  std::string wew;
 };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H

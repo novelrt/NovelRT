@@ -4,6 +4,7 @@
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
+#include "NovelInteractionService.h"
 
 extern "C" {
 #include "../lib/lua53/lua.h"
@@ -26,17 +27,33 @@ static int average(lua_State* L) {
 
 int main() {
   //setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
-  //setenv("DISPLAY", "192.168.8.186:0", true);
+  setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
   luaL_openlibs(L);
   lua_register(L, "average", average);
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
-  NovelRT::NovelCommonArgs args;
-  args.startingPosition.setX(1920 / 2);
-  args.startingPosition.setY(1080 / 2);
+  NovelRT::NovelCommonArgs yuriArgs;
+  yuriArgs.layer = 0;
+  yuriArgs.orderInLayer = 0;
+  yuriArgs.startingPosition.setX(1920 / 2);
+  yuriArgs.startingPosition.setY(1080 / 2);
 
-  runner.getRenderer()->getImageRect("test-yuri.png", args);
+  auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
+
+  auto rectArgs = NovelRT::NovelCommonArgs();
+  rectArgs.startingPosition = yuriArgs.startingPosition;
+  rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
+  rectArgs.layer = 0;
+  rectArgs.orderInLayer = 1;
+
+  //NovelRT::NovelInteractionService().consumePlayerInput();
+
+  runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
+  rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
+
   runner.runNovel();
 }
+

@@ -4,12 +4,12 @@
 
 #ifndef NOVELRT_COORDINATEVECTOR_H
 #define NOVELRT_COORDINATEVECTOR_H
-#include<memory>
 
 namespace NovelRT {
 template<typename T>
 class GeoVector {
 public:
+  GeoVector();
   GeoVector(T x, T y);
 
   T getX() const;
@@ -22,19 +22,19 @@ public:
 
   inline GeoVector<T> operator+(const GeoVector<T>& other) const;
 
-  inline GeoVector<T> operator*(const GeoVector<T>& other) const;
-
   inline GeoVector<T> operator-(const GeoVector<T>& other) const;
+
+  inline GeoVector<T> operator*(const GeoVector<T>& other) const;
 
   inline GeoVector<T> operator/(const GeoVector<T>& other) const;
 
-  inline GeoVector<T> operator+(const float other) const;
+  inline GeoVector<T> operator+(const T other) const;
 
-  inline GeoVector<T> operator*(const float other) const;
+  inline GeoVector<T> operator-(const T other) const;
 
-  inline GeoVector<T> operator-(const float other) const;
+  inline GeoVector<T> operator*(const T other) const;
 
-  inline GeoVector<T> operator/(const float other) const;
+  inline GeoVector<T> operator/(const T other) const;
 
 private:
   T _x;
@@ -73,27 +73,13 @@ inline GeoVector<T> GeoVector<T>::operator+(const GeoVector<T>& other) const {
 }
 
 template<typename T>
-inline GeoVector<T> GeoVector<T>::operator*(const GeoVector<T>& other) const {
-  return GeoVector<T>(GeoVector<T>::getX() * other.getX(), GeoVector<T>::getY() * other.getY());
-}
-
-template<typename T>
 inline GeoVector<T> GeoVector<T>::operator-(const GeoVector<T>& other) const {
   return GeoVector<T>(GeoVector<T>::getX() - other.getX(), GeoVector<T>::getY() - other.getY());
 }
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator+(const float other) const {
-  return GeoVector<T>(GeoVector<T>::getX() + other, GeoVector<T>::getY() + other);
-}
 
 template<typename T>
-inline GeoVector<T> GeoVector<T>::operator*(const float other) const {
-  return GeoVector<T>(GeoVector<T>::getX() * other, GeoVector<T>::getY() * other);
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator-(const float other) const {
-  return GeoVector<T>(GeoVector<T>::getX() - other, GeoVector<T>::getY() - other);
+inline GeoVector<T> GeoVector<T>::operator*(const GeoVector<T>& other) const {
+  return GeoVector<T>(GeoVector<T>::getX() * other.getX(), GeoVector<T>::getY() * other.getY());
 }
 
 template<typename T>
@@ -102,9 +88,29 @@ GeoVector<T> GeoVector<T>::operator/(const GeoVector<T>& other) const {
 }
 
 template<typename T>
-GeoVector<T> GeoVector<T>::operator/(const float other) const {
+inline GeoVector<T> GeoVector<T>::operator+(const T other) const {
+  return GeoVector<T>(GeoVector<T>::getX() + other, GeoVector<T>::getY() + other);
+}
+
+template<typename T>
+inline GeoVector<T> GeoVector<T>::operator-(const T other) const {
+  return GeoVector<T>(GeoVector<T>::getX() - other, GeoVector<T>::getY() - other);
+}
+
+template<typename T>
+inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
+  return GeoVector<T>(GeoVector<T>::getX() * other, GeoVector<T>::getY() * other);
+}
+
+template<typename T>
+GeoVector<T> GeoVector<T>::operator/(const T other) const {
   return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
 }
+template<typename T>
+GeoVector<T>::GeoVector() {
+
+}
+
 }
 
 #endif //NOVELRT_COORDINATEVECTOR_H
