@@ -18,7 +18,14 @@ bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
 
   return false;
 }
-GeoVector<float> GeoBounds::getCorner(const int index) const {
+GeoVector<float> GeoBounds::getCornerInWorldSpace(const int index) const {
   return _corners[index];
+}
+
+GeoVector<float> GeoBounds::getCornerInOpenGLSurfaceSpace(const int index, const float scale) const {
+  auto point = _corners[index];
+  point.setX(point.getX() / (1920.0f * scale) - 0.5f);
+  point.setY(-(point.getY() / (1080.0f * scale) - 0.5f));
+  return point;
 }
 }
