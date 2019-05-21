@@ -10,39 +10,60 @@ extern "C" {
 #endif
 typedef void (*NovelSubscriber)(const float);
 
-typedef struct NovelCommonArgsWrapper {
+typedef struct WGeoVector WGeoVector;
+
+WGeoVector* createGeoVector(void*, void*);
+void destroyGeoVector(WGeoVector*);
+
+void* getX(WGeoVector*);
+void setX(WGeoVector*, void*);
+void* getY(WGeoVector*);
+void setY(WGeoVector*, void*);
+
+typedef struct WNovelCommonArgs {
+  WGeoVector* startingPosition;
   float startingRotation;
+  WGeoVector* startingScale;
   int layer;
   int orderInLayer;
-} NovelCommonArgsWrapper;
+} WNovelCommonArgs;
 
-typedef struct NovelImageRectWrapper NovelImageRectWrapper;
+typedef struct WRGBAConfig WRGBAConfig;
 
-typedef struct NovelRenderingServiceWrapper NovelRenderingServiceWrapper;
+WRGBAConfig *createRGBAConfig(const int, const int, const int, const int);
+void destroyRGBAConfig(WRGBAConfig*);
 
-NovelImageRectWrapper* getImageRect(NovelRenderingServiceWrapper*, char*, NovelCommonArgsWrapper*);
+const int getR(WRGBAConfig*);
+void setR(WRGBAConfig*, const int);
 
-typedef struct NovelRunnerWrapper NovelRunnerWrapper;
+const int getG(WRGBAConfig*);
+void setG(WRGBAConfig*, const int);
 
-NovelRunnerWrapper *createRunner(int);
-void destroyRunner(NovelRunnerWrapper*);
+const int getB(WRGBAConfig*);
+void setB(WRGBAConfig*, const int);
 
-void runOnUpdate(NovelRunnerWrapper*, NovelSubscriber);
-void stopRunningOnUpdate(NovelRunnerWrapper*, NovelSubscriber);
-void executeUpdateSubscriptions(NovelRunnerWrapper*, const float);
-int runNovel(NovelRunnerWrapper*);
-NovelRenderingServiceWrapper* getRenderer(NovelRunnerWrapper*);
+const int getA(WRGBAConfig*);
+void setA(WRGBAConfig*, const int);
 
+typedef struct WNovelImageRect WNovelImageRect;
 
-typedef struct GeoVectorWrapper GeoVectorWrapper;
+typedef struct WNovelBasicFillRect WNovelBasicFillRect;
 
-GeoVectorWrapper* createGeoVector(void*, void*);
-void destroyGeoVector(GeoVectorWrapper*);
+typedef struct WNovelRunner WNovelRunner;
 
-void* getX(GeoVectorWrapper*);
-void setX(GeoVectorWrapper*, void*);
-void* getY(GeoVectorWrapper*);
-void setY(GeoVectorWrapper*, void*);
+WNovelRunner *createRunner(int);
+void destroyRunner(WNovelRunner*);
+
+void runOnUpdate(WNovelRunner*, NovelSubscriber);
+void stopRunningOnUpdate(WNovelRunner*, NovelSubscriber);
+void executeUpdateSubscriptions(WNovelRunner*, const float);
+int runNovel(WNovelRunner*);
+
+typedef struct WNovelRenderingService WNovelRenderingService;
+
+WNovelImageRect *getImageRect(WNovelRenderingService*, char*, WNovelCommonArgs*);
+
+WNovelRenderingService* getRenderer(WNovelRunner*);
 
 #ifdef __cplusplus
 }
