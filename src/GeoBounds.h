@@ -12,8 +12,8 @@ public:
   GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size);
   //GeoVector<float>> getCorners() const;
   bool pointIsWithinBounds(const GeoVector<float>& point) const;
-  GeoVector<float> getCorner(const int index) const;
-
+  GeoVector<float> getCornerInWorldSpace(const int index) const;
+  GeoVector<float> getCornerInOpenGLSurfaceSpace(const int index, const float scale) const;
 private:
   GeoVector<float> _corners[4];
 };
