@@ -29,12 +29,12 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
 // Give our vertices to OpenGL.
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);*/
 
-  configureBuffer(true);
+  configureBuffer();
 }
 
-void NovelBasicFillRect::configureBuffer(bool isInit) {
+void NovelBasicFillRect::configureBuffer() {
   GeoVector<float> position = getWorldSpacePosition() * _screenScale;
-  GeoVector<float> size = getWorldSpaceSize() * _screenScale;
+  GeoVector<float> size = getWorldSpaceSize(); //* _screenScale;
   /* GeoBounds bounds(position, size);
    GeoVector<float> topLeft = bounds.getCorner(0);
    GeoVector<float> topRight = bounds.getCorner(1);
@@ -50,13 +50,21 @@ void NovelBasicFillRect::configureBuffer(bool isInit) {
       bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,
       bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,*//*
   };*/
-  GeoBounds bounds(GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2), GeoVector<float>(50, 50));
+  GeoBounds otherBounds(GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2), GeoVector<float>(50, 50));
+  GeoBounds bounds(position, size);
+  //I think this is forward facing?
   _vertexBufferData = {
       bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getY(), 0.0f,
+      bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getY(), 0.0f,
       bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale).getY(), 0.0f,
+      bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getY(), 0.0f,
+      bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getY(), 0.0f,
       bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getY(), 0.0f,
   };
   std::cout << bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getX() << " " << bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getY() << std::endl;
+  std::cout << position.getX() << " " << position.getY() << std::endl;
+  //std::cout << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getX() << " " << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getY() << std::endl;
+  std::cout << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getX() << " " << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getY() << std::endl;
   GLfloat targetArray[_vertexBufferData.size()];
   std::copy(_vertexBufferData.begin(), _vertexBufferData.end(), targetArray);
 // Generate 1 buffer, put the resulting identifier in vertexbuffer
