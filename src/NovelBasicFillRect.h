@@ -30,7 +30,7 @@ private:
   RGBAConfig _colourConfig;
   std::vector<GLfloat> _vertexBufferData;
 
-  void configureBuffer(bool isInit);
+  void configureBuffer();
 };
 }
 
