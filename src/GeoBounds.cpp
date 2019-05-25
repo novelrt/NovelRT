@@ -26,7 +26,7 @@ GeoVector<float> GeoBounds::getCornerInOpenGLSurfaceSpace(const int index, const
   auto point = _corners[index];
   float pointX = (point.getX() / ((1920.0f * scale) / 2.0f)) - 1.0f;
   point.setX(pointX);
-  float pointY = -((point.getY() / ((1080.0f * scale) / 2.0f)) - 1.0f);
+  float pointY = (point.getY() / ((1080.0f * scale) / 2.0f)) - 1.0f;
   point.setY(pointY);
   return point;
 }
