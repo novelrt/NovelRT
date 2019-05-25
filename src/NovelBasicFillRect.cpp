@@ -14,43 +14,12 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const RGBAConfig& fillColour,
                                        const NovelCommonArgs& args) :
     NovelRenderObject(layeringService, screenScale, size, args), _colourConfig(fillColour) {
-/*  GLfloat g_vertex_buffer_data[] = {
-      -1.0f, -1.0f, 0.0f,
-      1.0f, -1.0f, 0.0f,
-     -1.0f,  1.0f, 0.0f,
-     1.0f,  1.0f, 0.0f,
-     1.0f,  -1.0f, 0.0f,
-     -1.0f,  1.0f, 0.0f,
-  };
-// Generate 1 buffer, put the resulting identifier in vertexbuffer
-  glGenBuffers(1, &_buffer);
-// The following commands will talk about our 'vertexbuffer' buffer
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer);
-// Give our vertices to OpenGL.
-  glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);*/
-
   configureBuffer();
 }
 
 void NovelBasicFillRect::configureBuffer() {
   GeoVector<float> position = getWorldSpacePosition() * _screenScale;
   GeoVector<float> size = getWorldSpaceSize() * _screenScale;
-  /* GeoBounds bounds(position, size);
-   GeoVector<float> topLeft = bounds.getCorner(0);
-   GeoVector<float> topRight = bounds.getCorner(1);
-   GeoVector<float> bottomRight = bounds.getCorner(2);
-   GeoVector<float> bottomLeft = bounds.getCornerInWorldSpace(3);
-   size = size * getScale();
-   _vertexBufferData = {
-       (topLeft.getX() / (1920.0f * _screenScale)) - 0.5f, (topLeft.getY() / (1080.0f * _screenScale)) - 0.5f, 0.0f,
-       (topRight.getX() / (1920.0f * _screenScale)) - 0.5f, (topRight.getY() / (1080.0f * _screenScale)) - 0.5f, 0.0f,
-       (bottomRight.getX() / (1920.0f * _screenScale)) - 0.5f, (bottomRight.getY() / (1080.0f * _screenScale)) - 0.5f, 0.0f,
-       //topRight.getX() / (1920.0f * _screenScale), topRight.getY() / (1080.0f * _screenScale), 0.0f,
- *//*      bottomRight.getX() / (1920.0f * _screenScale), bottomRight.getY() / (1080.0f * _screenScale), 0.0f,
-      bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,
-      bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,*//*
-  };*/
-  //GeoBounds bounds(GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2), GeoVector<float>(1920.0f, 1080.0f) * _screenScale);
   GeoBounds bounds(position, size);
   //I think this is forward facing?
   _vertexBufferData = {
@@ -61,15 +30,7 @@ void NovelBasicFillRect::configureBuffer() {
       bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getY(), 0.0f,
       bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getY(), 0.0f,
   };
-  for (int i = 0; i < 4; ++i) {
-    std::cout << "POINT " << i << ":" << std::endl;
-    std::cout << bounds.getCornerInWorldSpace(i).getX() << " " << bounds.getCornerInWorldSpace(i).getY() << std::endl;
-    std::cout << bounds.getCornerInOpenGLSurfaceSpace(i, _screenScale).getX() << " " << bounds.getCornerInOpenGLSurfaceSpace(i, _screenScale).getY() << std::endl;
-  }
 
-  std::cout << position.getX() << " " << position.getY() << std::endl;
-  //std::cout << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getX() << " " << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getY() << std::endl;
-  std::cout << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getX() << " " << (GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2)).getY() << std::endl;
   GLfloat targetArray[_vertexBufferData.size()];
   std::copy(_vertexBufferData.begin(), _vertexBufferData.end(), targetArray);
 // Generate 1 buffer, put the resulting identifier in vertexbuffer
@@ -82,27 +43,12 @@ void NovelBasicFillRect::configureBuffer() {
 }
 
 void NovelBasicFillRect::setWorldSpaceSize(const GeoVector<float>& value) {
-/*  GeoVector<float> position = getWorldSpacePosition() * _screenScale;
-  GeoVector<float> size = getWorldSpaceSize() * _screenScale;
-  GeoBounds bounds(position, size);
-  GeoVector<float> topLeft = bounds.getCorner(0);
-  GeoVector<float> topRight = bounds.getCorner(1);
-  GeoVector<float> bottomRight = bounds.getCorner(2);
-  GeoVector<float> bottomLeft = bounds.getCornerInWorldSpace(3);
-  size = size * getScale();
-  _vertexBufferData = {
-    topLeft.getX() / (1920.0f * _screenScale), topLeft.getY() / (1080.0f * _screenScale), 0.0f,
-      topRight.getX() / (1920.0f * _screenScale), topRight.getY() / (1080.0f * _screenScale), 0.0f,
-    bottomRight.getX() / (1920.0f * _screenScale), bottomRight.getY() / (1080.0f * _screenScale), 0.0f,
-    bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,
-  };
-  configureBuffer(false);*/
+  configureBuffer();
   _size = value;
 }
 
 void NovelBasicFillRect::drawObject() const {
-  if (!getActive())
-    return;
+  if (!getActive()) return;
 
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, _buffer);
