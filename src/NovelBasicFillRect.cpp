@@ -34,7 +34,7 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
 
 void NovelBasicFillRect::configureBuffer() {
   GeoVector<float> position = getWorldSpacePosition() * _screenScale;
-  GeoVector<float> size = getWorldSpaceSize(); //* _screenScale;
+  GeoVector<float> size = getWorldSpaceSize() * _screenScale;
   /* GeoBounds bounds(position, size);
    GeoVector<float> topLeft = bounds.getCorner(0);
    GeoVector<float> topRight = bounds.getCorner(1);
@@ -50,7 +50,7 @@ void NovelBasicFillRect::configureBuffer() {
       bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,
       bottomLeft.getX() / (1920.0f * _screenScale), bottomLeft.getY() / (1080.0f * _screenScale), 0.0f,*//*
   };*/
-  //GeoBounds bounds(GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2), GeoVector<float>(1920.0f, 1080.0f));
+  //GeoBounds bounds(GeoVector<float>((1920.0f * _screenScale) / 2, (1080.0f * _screenScale) / 2), GeoVector<float>(1920.0f, 1080.0f) * _screenScale);
   GeoBounds bounds(position, size);
   //I think this is forward facing?
   _vertexBufferData = {
