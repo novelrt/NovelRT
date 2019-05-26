@@ -22,13 +22,17 @@ void NovelBasicFillRect::configureBuffer() {
   GeoVector<float> size = getWorldSpaceSize() * _screenScale;
   GeoBounds bounds(position, size);
   //I think this is forward facing?
+  auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
+  auto bottomRight = bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale);
+  auto topRight = bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale);
+  auto bottomLeft = bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale);
   _vertexBufferData = {
-      bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getY(), 0.0f,
-      bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getY(), 0.0f,
-      bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale).getY(), 0.0f,
-      bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale).getY(), 0.0f,
-      bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale).getY(), 0.0f,
-      bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getX(), bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale).getY(), 0.0f,
+      topLeft.getX(), topLeft.getY(), 0.0f,
+      bottomRight.getX(), bottomRight.getY(), 0.0f,
+      topRight.getX(), topRight.getY(), 0.0f,
+      topLeft.getX(), topLeft.getY(), 0.0f,
+      bottomLeft.getX(), bottomLeft.getY(), 0.0f,
+      bottomRight.getX(), bottomRight.getY(), 0.0f,
   };
 
   GLfloat targetArray[_vertexBufferData.size()];
