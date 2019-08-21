@@ -2,7 +2,7 @@
 // Created by matth on 22/02/2019.
 //
 #include "NovelInteractionService.h"
-#include "../lib/SDL2/include/SDL_events.h"
+#include <SDL2/SDL_events.h>
 
 namespace NovelRT {
 NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService, const float screenScale)
