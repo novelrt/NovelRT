@@ -5,7 +5,7 @@
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
-#include "../lib/glew/include/GL/glew.h"
+#include <GL/glew.h>
 
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {

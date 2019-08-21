@@ -26,20 +26,20 @@ if(LINUX)
     #include_directories(/usr/local/include ${LUA_INCLUDE_DIR})
 endif()
 
-
-add_subdirectory(lib/SDL2)
 add_subdirectory(lib/lua53)
-add_subdirectory(lib/glew/build/cmake)
+
+find_package(SDL2 CONFIG REQUIRED)
+find_package(GLEW REQUIRED)
 
 add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/NovelInteractionService.h src/NovelLayeringService.cpp  src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelCommonArgs.h  src/NovelRenderObject.cpp src/NovelRenderObject.h src/NovelTextRect.cpp src/NovelTextRect.h src/NovelInteractionService.cpp src/NovelInteractionObject.cpp src/NovelInteractionObject.h src/NovelObjectSortComparison.h src/NovelBasicInteractionRect.cpp src/NovelBasicInteractionRect.h src/GeoBounds.cpp src/GeoBounds.h src/NovelRTMacroUtilities.h)
+target_link_libraries(NovelRT m lua GLEW::GLEW SDL2::SDL2main SDL2::SDL2-static)
+
+
+
 add_library(NovelRTLib SHARED src/NovelInteractionService.h src/NovelLayeringService.cpp src/NovelObject.cpp src/NovelObject.h src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelRunner_C.cpp src/NovelRunner_C.h src/NovelCommonArgs.h src/NovelInteractionService.cpp src/NovelRenderObject.cpp src/NovelRenderObject.h src/NovelTextRect.cpp src/NovelTextRect.h src/NovelInteractionObject.cpp src/NovelInteractionObject.h src/KeyCode.h src/NovelObjectSortComparison.h src/NovelBasicInteractionRect.cpp src/NovelBasicInteractionRect.h src/GeoBounds.cpp src/GeoBounds.h src/NovelRTMacroUtilities.h)
-
 target_link_libraries(NovelRTLib m glew GL GLU SDL2 lua)
-
 set_target_properties(NovelRTLib PROPERTIES PUBLIC_HEADER include/NovelRTLib_C.h)
-
 install(TARGETS NovelRTLib
         LIBRARY DESTINATION /lib/${PROJECT_NAME}
         PUBLIC_HEADER DESTINATION /usr/include/${PROJECT_NAME})
 
-target_link_libraries(NovelRT m glew GL GLU SDL2 lua)

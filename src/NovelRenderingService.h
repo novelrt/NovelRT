@@ -5,7 +5,7 @@
 #ifndef NOVELRT_NOVELRENDERINGSERVICE_H
 #define NOVELRT_NOVELRENDERINGSERVICE_H
 
-#include "../lib/SDL2/include/SDL.h"
+#include <SDL2/SDL.h>
 #include "GeoVector.h"
 #include "NovelCommonArgs.h"
 #include <vector>
@@ -16,7 +16,7 @@
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
-#include "../lib/glew/include/GL/glew.h"
+#include <GL/glew.h>
 
 namespace NovelRT {
 
