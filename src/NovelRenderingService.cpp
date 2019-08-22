@@ -4,30 +4,22 @@
 
 #include "NovelRenderingService.h"
 
-#include "../lib/SDL2/include/SDL.h"
+#include <SDL2/SDL.h>
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
 
-#include <GL/gl.h>
-#include <GL/glext.h>
 
-#if OPENGL_VERSION == 3
-#define NANOVG_GL3_IMPLEMENTATION
-#elif OPENGL_VERSION == 2
-#define NANOVG_GL2_IMPLEMENTATION
-#endif
-#include "../lib/nanovg/nanovg.h"
-#include "../lib/nanovg/nanovg_gl.h"
-#include "../lib/nanovg/nanovg_gl_utils.h"
+
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 namespace NovelRT {
-bool NovelRenderingService::sdlInit(const int displayNumber) {
-
+bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
     std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
@@ -53,42 +45,110 @@ bool NovelRenderingService::sdlInit(const int displayNumber) {
   }
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
+  if (!gladLoadGL()) {
+    fprintf(stderr, "Failed to initialize glad\n");
+    return -1;
+  }
+  _programID = LoadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   return true;
 }
 
-bool NovelRenderingService::nanovgInit() {
-#if OPENGL_VERSION == 3
-  _nanovgContext =
-      std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
-                                                         &nvgDeleteGL3);
-#elif OPENGL_VERSION == 2
-  _nanovgContext = std::unique_ptr<NVGcontext, void (*)(NVGcontext*)>(nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG),
-                                                         &nvgDeleteGL2);
-#endif
-  if (_nanovgContext == nullptr) {
-    std::cerr << "%llu\n", _nanovgContext.get();
-    std::cerr << "Could not init nanovg.\n";
-    return false;
+GLuint NovelRenderingService::LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+
+  // Create the shaders
+  GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+  GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+  // Read the Vertex Shader code from the file
+  std::string VertexShaderCode;
+  std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+  if(VertexShaderStream.is_open()){
+    std::stringstream sstr;
+    sstr << VertexShaderStream.rdbuf();
+    VertexShaderCode = sstr.str();
+    VertexShaderStream.close();
+  }else{
+    printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+    getchar();
+    return 0;
   }
 
-  return true;
+  // Read the Fragment Shader code from the file
+  std::string FragmentShaderCode;
+  std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+  if(FragmentShaderStream.is_open()){
+    std::stringstream sstr;
+    sstr << FragmentShaderStream.rdbuf();
+    FragmentShaderCode = sstr.str();
+    FragmentShaderStream.close();
+  }
+
+  GLint Result = GL_FALSE;
+  int InfoLogLength;
+
+  // Compile Vertex Shader
+  printf("Compiling shader : %s\n", vertex_file_path);
+  char const * VertexSourcePointer = VertexShaderCode.c_str();
+  glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+  glCompileShader(VertexShaderID);
+
+  // Check Vertex Shader
+  glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  if ( InfoLogLength > 0 ){
+    std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+    printf("%s\n", &VertexShaderErrorMessage[0]);
+  }
+
+  // Compile Fragment Shader
+  printf("Compiling shader : %s\n", fragment_file_path);
+  char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+  glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
+  glCompileShader(FragmentShaderID);
+
+  // Check Fragment Shader
+  glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  if ( InfoLogLength > 0 ){
+    std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
+    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+    printf("%s\n", &FragmentShaderErrorMessage[0]);
+  }
+
+  // Link the program
+  printf("Linking program\n");
+  GLuint ProgramID = glCreateProgram();
+  glAttachShader(ProgramID, VertexShaderID);
+  glAttachShader(ProgramID, FragmentShaderID);
+  glLinkProgram(ProgramID);
+
+  // Check the program
+  glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+  glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  if ( InfoLogLength > 0 ){
+    std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+    printf("%s\n", &ProgramErrorMessage[0]);
+  }
+
+  glDetachShader(ProgramID, VertexShaderID);
+  glDetachShader(ProgramID, FragmentShaderID);
+
+  glDeleteShader(VertexShaderID);
+  glDeleteShader(FragmentShaderID);
+
+  return ProgramID;
 }
 
 int NovelRenderingService::initialiseRendering(const int displayNumber) {
-  if (!sdlInit(displayNumber)) {
+  if (!initializeRenderPipeline(displayNumber)) {
     std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
-    return 1;
-  }
-
-  if (!nanovgInit()) {
-    std::cerr << "Apologies, something went wrong. Reason: nanovg could not initialise." << std::endl;
     return 1;
   }
 
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
   _frameBufferWidth = _winWidth;
-
-  _pxRatio = (float) _frameBufferWidth / (float) _winWidth; //TODO: WTF?
 
   return 0;
 }
@@ -100,36 +160,29 @@ void NovelRenderingService::tearDown() const {
 
 void NovelRenderingService::beginFrame() const {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-  nvgBeginFrame(_nanovgContext.get(), _winWidth, _winHeight, _pxRatio);
+  glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+  glUseProgram(_programID);
 }
 
 void NovelRenderingService::endFrame() const {
-  nvgEndFrame(_nanovgContext.get());
   SDL_GL_SwapWindow(_window.get());
 }
 
 NovelImageRect* NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, filePath, args, this);
-}
-
-NVGcontext* NovelRenderingService::getNanoVGContext() const {
-  return _nanovgContext.get();
-
+  return new NovelImageRect(_layeringService, _screenScale, filePath, args);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _nanovgContext(nullptr,
-                                                                                                     &nvgDeleteGL3),
-                                                                                      _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService) {
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, this);
+  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args);
 }
 
 float NovelRenderingService::getScreenScale() const {

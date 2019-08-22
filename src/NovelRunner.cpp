@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "NovelRunner.h"
-#include "../lib/SDL2/include/SDL.h"
+#include <SDL2/SDL.h>
 
 namespace NovelRT {
 NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService)
