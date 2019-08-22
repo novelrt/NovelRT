@@ -25,6 +25,12 @@ static int average(lua_State* L) {
   return 2;
 }
 
+#ifdef WIN32
+#define setenv(name, value, overwrite) \
+    static_assert(overwrite != 0);     \
+    _putenv_s(name, value)
+#endif
+
 int main() {
   setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
   //setenv("DISPLAY", "localhost:0", true);
