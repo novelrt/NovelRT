@@ -14,7 +14,7 @@ file(COPY ${LUA_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(GLOB GLSL_FILES "src/*.glsl")
 file(COPY ${GLSL_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
+If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
     file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
     add_compile_definitions(OPENGL_VERSION=2)
 else()
