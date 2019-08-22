@@ -51,7 +51,6 @@ private:
   int _winWidth;
   int _winHeight;
   int _frameBufferWidth;
-  float _pxRatio;
 
   GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
   GLuint _programID;
