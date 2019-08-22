@@ -16,7 +16,7 @@
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 namespace NovelRT {
 
