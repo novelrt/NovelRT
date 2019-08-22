@@ -1,3 +1,0 @@
-[submodule "SDL2"]
-	path = lib/SDL2
-	url = git@github.com:davidsiaw/SDL2.git

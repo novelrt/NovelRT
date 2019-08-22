@@ -7,7 +7,7 @@
 
 extern "C" {
 NovelRunner_t* createRunner(int displayNumber) {
-  return reinterpret_cast<NovelRunner_t*>(new NovelRT::NovelRunner(displayNumber));
+  return reinterpret_cast<NovelRunner_t*>(new NovelRT::NovelRunner(displayNumber, new NovelRT::NovelLayeringService()));
 }
 
 void destroyRunner(NovelRunner_t* runner) {

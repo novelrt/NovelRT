@@ -29,7 +29,7 @@ public:
 
   virtual GeoVector<float> getWorldSpaceSize() const;
 
-  virtual void setSize(const GeoVector<float>& value);
+  virtual void setWorldSpaceSize(const GeoVector<float>& value);
 
   virtual int getLayer() const;
 
