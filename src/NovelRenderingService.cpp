@@ -45,8 +45,8 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   }
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
-  if (glewInit() != GLEW_OK) {
-    fprintf(stderr, "Failed to initialize GLEW\n");
+  if (!gladLoadGL()) {
+    fprintf(stderr, "Failed to initialize glad\n");
     return -1;
   }
   _programID = LoadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
