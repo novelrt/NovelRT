@@ -31,7 +31,7 @@ static int average(lua_State* L) {
     _putenv_s(name, value)
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
   setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
   //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
@@ -61,5 +61,7 @@ int main() {
   rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
 
   runner.runNovel();
+
+  return 0;
 }
 
