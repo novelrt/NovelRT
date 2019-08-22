@@ -35,14 +35,12 @@ void NovelBasicFillRect::configureBuffer() {
       bottomRight.getX(), bottomRight.getY(), 0.0f,
   };
 
-  GLfloat targetArray[_vertexBufferData.size()];
-  std::copy(_vertexBufferData.begin(), _vertexBufferData.end(), targetArray);
 // Generate 1 buffer, put the resulting identifier in vertexbuffer
   glGenBuffers(1, &_buffer);
 // The following commands will talk about our 'vertexbuffer' buffer
   glBindBuffer(GL_ARRAY_BUFFER, _buffer);
 // Give our vertices to OpenGL.
-  glBufferData(GL_ARRAY_BUFFER, sizeof(targetArray), targetArray, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
 
 }
 
