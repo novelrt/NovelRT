@@ -4,6 +4,7 @@
 
 #ifndef NOVELRT_NOVELINTERACTIONOBJECT_H
 #define NOVELRT_NOVELINTERACTIONOBJECT_H
+#include <algorithm>
 #include <functional>
 #include "NovelObject.h"
 #include "KeyCode.h"
