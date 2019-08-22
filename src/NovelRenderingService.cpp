@@ -150,8 +150,6 @@ int NovelRenderingService::initialiseRendering(const int displayNumber) {
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
   _frameBufferWidth = _winWidth;
 
-  _pxRatio = (float) _frameBufferWidth / (float) _winWidth; //TODO: WTF?
-
   return 0;
 }
 
