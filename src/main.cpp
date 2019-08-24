@@ -25,9 +25,15 @@ static int average(lua_State* L) {
   return 2;
 }
 
-int main() {
-  //setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
-  setenv("DISPLAY", "localhost:0", true);
+#ifdef WIN32
+#define setenv(name, value, overwrite) \
+    static_assert(overwrite != 0);     \
+    _putenv_s(name, value)
+#endif
+
+int main(int argc, char* argv[]) {
+  setenv("MESA_GL_VERSION_OVERRIDE", "3.2", true);
+  //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
   luaL_openlibs(L);
   lua_register(L, "average", average);
@@ -55,5 +61,7 @@ int main() {
   rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
 
   runner.runNovel();
+
+  return 0;
 }
 
