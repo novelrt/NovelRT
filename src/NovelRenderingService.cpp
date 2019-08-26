@@ -54,6 +54,9 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
     return -1;
   }
 
+  std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
+  std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
   _programID = LoadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   return true;
 }
