@@ -5,6 +5,7 @@
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
+#include <string>
 #include <glad/glad.h>
 
 namespace NovelRT {
