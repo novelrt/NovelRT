@@ -25,6 +25,10 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
     return false;
   }
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
   SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
@@ -49,6 +53,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
     fprintf(stderr, "Failed to initialize glad\n");
     return -1;
   }
+
   _programID = LoadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   return true;
 }
