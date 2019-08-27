@@ -35,6 +35,8 @@ void NovelBasicFillRect::configureBuffer() {
       bottomRight.getX(), bottomRight.getY(), 0.0f,
   };
 
+  glGenVertexArrays(1, &_vertexArrayObject);
+
 // Generate 1 buffer, put the resulting identifier in vertexbuffer
   glGenBuffers(1, &_buffer);
 // The following commands will talk about our 'vertexbuffer' buffer
@@ -52,6 +54,7 @@ void NovelBasicFillRect::setWorldSpaceSize(const GeoVector<float>& value) {
 void NovelBasicFillRect::drawObject() const {
   if (!getActive()) return;
 
+  glBindVertexArray(_vertexArrayObject);
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, _buffer);
   glVertexAttribPointer(
@@ -60,11 +63,12 @@ void NovelBasicFillRect::drawObject() const {
       GL_FLOAT,           // type
       GL_FALSE,           // normalized?
       0,                  // stride
-      (void*) 0            // array buffer offset
+      nullptr          // array buffer offset
   );
 // Draw the triangle !
   glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
   glDisableVertexAttribArray(0);
+  glBindVertexArray(0);
 
 }
 

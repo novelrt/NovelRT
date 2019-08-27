@@ -7,6 +7,7 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
+#include <SDL2/SDL_image.h>
 
 namespace NovelRT {
 
@@ -17,6 +18,9 @@ public:
 
   void drawObject() const final;
   void setScale(const GeoVector<float>& value) final;
+
+protected:
+  void configureBuffer() final;
 
 private:
   std::string _imageDir;
