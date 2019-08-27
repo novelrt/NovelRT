@@ -37,9 +37,10 @@ add_subdirectory(lib/lua53)
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(sdl2-image CONFIG REQUIRED)
 
 add_executable(NovelRT src/NovelObject.cpp src/NovelObject.h src/NovelInteractionService.h src/NovelLayeringService.cpp  src/GeoVector.h src/NovelBasicFillRect.cpp src/NovelBasicFillRect.h src/RGBAConfig.cpp src/RGBAConfig.h src/main.cpp src/NovelImageRect.cpp src/NovelImageRect.h src/NovelRunner.cpp src/NovelRunner.h src/NovelRenderingService.cpp src/NovelRenderingService.h src/NovelCommonArgs.h  src/NovelRenderObject.cpp src/NovelRenderObject.h src/NovelTextRect.cpp src/NovelTextRect.h src/NovelInteractionService.cpp src/NovelInteractionObject.cpp src/NovelInteractionObject.h src/NovelObjectSortComparison.h src/NovelBasicInteractionRect.cpp src/NovelBasicInteractionRect.h src/GeoBounds.cpp src/GeoBounds.h src/NovelRTMacroUtilities.h)
-target_link_libraries(NovelRT lua glad::glad SDL2::SDL2main SDL2::SDL2-static ${ADDITIONAL_LINK_LIBRARIES})
+target_link_libraries(NovelRT lua glad::glad SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_image ${ADDITIONAL_LINK_LIBRARIES})
 
 
 

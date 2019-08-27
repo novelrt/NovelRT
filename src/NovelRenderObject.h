@@ -18,7 +18,9 @@ public:
 
 protected:
   virtual void drawObject() const = 0;
+  virtual void configureBuffer() = 0;
   GLuint _buffer;
+  GLuint _vertexArrayObject;
 
 public:
   std::string wew;

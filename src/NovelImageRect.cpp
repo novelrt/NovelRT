@@ -2,7 +2,6 @@
 // Created by matth on 05/01/2019.
 //
 
-#include <iostream>
 #include "NovelImageRect.h"
 
 namespace NovelRT {
@@ -30,5 +29,8 @@ void NovelImageRect::drawObject() const {
   GeoVector<float> position = getWorldSpacePosition() * _screenScale;
   GeoVector<float> size = getWorldSpaceSize() * _screenScale;
   size = size * getScale();
+}
+void NovelImageRect::configureBuffer() {
+
 }
 }
