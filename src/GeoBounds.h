@@ -13,7 +13,7 @@ public:
   GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
   bool pointIsWithinBounds(const GeoVector<float>& point) const;
   GeoVector<float> getCornerInWorldSpace(const int index) const;
-  GeoVector<float> getCornerInOpenGLSurfaceSpace(const int index, const float scale) const;
+  GeoVector<float> getCornerInOpenGLSurfaceSpace(const int index, const float screenScale) const;
 private:
   std::vector<GeoVector<float>> _corners = std::vector<GeoVector<float>>(4);
   void rotateToAngle(float rotationAngleValue);
