@@ -13,10 +13,13 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const NovelCommonArgs& args,
                                      const GLuint programId) :
     NovelObject(layeringService, screenScale, size, args), _programId(programId) {
-  configureObjectBuffers(true);
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
+  if(!_bufferInitialised) {
+    configureObjectBuffers(true);
+    _bufferInitialised = true;
+  }
   drawObject();
 }
 
