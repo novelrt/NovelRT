@@ -52,8 +52,9 @@ private:
   int _winHeight;
   int _frameBufferWidth;
 
-  GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
-  GLuint _programID;
+  GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
+  GLuint _basicFillRectProgramId;
+  GLuint _texturedRectProgramId;
 };
 
 }

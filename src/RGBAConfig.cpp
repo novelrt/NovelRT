@@ -67,5 +67,17 @@ void RGBAConfig::setA(const int value) {
     _a = value;
   }
 }
+float RGBAConfig::getRScalar() const {
+  return getR() / 255.0f;
+}
+float RGBAConfig::getGScalar() const {
+  return getG() / 255.0f;
+}
+float RGBAConfig::getBScalar() const {
+  return getB() / 255.0f;
+}
+float RGBAConfig::getAScalar() const {
+  return getA() / 255.0f;
+}
 }
 

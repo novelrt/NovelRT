@@ -15,7 +15,8 @@ public:
                      const float screenScale,
                      const GeoVector<float>& size,
                      const RGBAConfig& fillColour,
-                     const NovelCommonArgs& args);
+                     const NovelCommonArgs& args,
+                     const GLuint programId);
 
   void drawObject() const final;
 
@@ -23,15 +24,14 @@ public:
 
   void setColourConfig(const RGBAConfig& value);
 
-  void setWorldSpaceSize(const GeoVector<float>& value) final;
+protected:
+  void configureObjectBuffers(bool refreshBuffers = false) override;
 
 private:
 
   RGBAConfig _colourConfig;
-  std::vector<GLfloat> _vertexBufferData;
-
-protected:
-  void configureBuffer() final;
+  GLuint _colourBuffer;
+  std::vector<GLfloat> _colourData;
 };
 }
 

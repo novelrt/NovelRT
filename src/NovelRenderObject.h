@@ -12,18 +12,19 @@ namespace NovelRT {
 class NovelRenderObject : public NovelObject {
 public:
   NovelRenderObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
-                    const NovelCommonArgs& args);
+                    const NovelCommonArgs& args, const GLuint programId);
 
   void executeObjectBehaviour() final;
+  void setWorldSpaceSize(const GeoVector<float>& value) override;
 
 protected:
   virtual void drawObject() const = 0;
-  virtual void configureBuffer() = 0;
+  virtual void configureObjectBuffers(const bool refreshBuffers = false);
+
   GLuint _buffer;
   GLuint _vertexArrayObject;
-
-public:
-  std::string wew;
+  GLuint _programId;
+  std::vector<GLfloat> _vertexBufferData;
 };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
   yuriArgs.startingPosition.setX(1920 / 2);
   yuriArgs.startingPosition.setY(1080 / 2);
 
-  auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
+  //auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
@@ -56,8 +56,10 @@ int main(int argc, char* argv[]) {
   //NovelRT::NovelInteractionService().consumePlayerInput();
 
   runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+/*
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
   rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
+*/
 
   runner.runNovel();
 
