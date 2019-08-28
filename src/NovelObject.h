@@ -59,7 +59,7 @@ protected:
   float _screenScale;
   NovelLayeringService* _layeringService;
   bool _isDirty = true;
-  GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0));
+  GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0), 0);
 };
 
 }

@@ -88,7 +88,7 @@ GeoBounds NovelObject::getObjectBounds() {
   _isDirty = false;
   GeoVector<float> position = getWorldSpacePosition() * _screenScale;
   GeoVector<float> size = (getWorldSpaceSize() * getScale()) * _screenScale;
-  _objectBounds = GeoBounds(position, size);
+  _objectBounds = GeoBounds(position, size, getRotation());
   }
   return _objectBounds;
 }
