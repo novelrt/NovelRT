@@ -4,6 +4,7 @@
 
 #ifndef NOVELRT_COORDINATEVECTOR_H
 #define NOVELRT_COORDINATEVECTOR_H
+#include <math.h>
 
 namespace NovelRT {
 template<typename T>
@@ -36,6 +37,7 @@ public:
 
   inline GeoVector<T> operator/(const T other) const;
 
+  void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point);
 private:
   T _x;
   T _y;
@@ -109,6 +111,16 @@ GeoVector<T> GeoVector<T>::operator/(const T other) const {
 template<typename T>
 GeoVector<T>::GeoVector() {
 
+}
+template<typename T>
+void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
+  auto angle = angleRotationValue * (M_PI/180);
+  auto x = getX();
+  auto y = getY();
+  auto targetX = point.getX();
+  auto targetY = point.getY();
+  setX(cos(angle) * (x - targetX) - sin(angle) * (y - targetY) + targetX);
+  setY(sin(angle) * (x - targetX) - cos(angle) * (y - targetY) + targetY);
 }
 
 }

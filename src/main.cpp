@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 1;
+  rectArgs.startingRotation = 45.0f;
 
   //NovelRT::NovelInteractionService().consumePlayerInput();
 
