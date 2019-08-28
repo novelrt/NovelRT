@@ -38,7 +38,7 @@ void NovelBasicFillRect::drawObject() const {
   glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer);
   glVertexAttribPointer(
       1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-      3,                                // size
+      4,                                // size
       GL_FLOAT,                         // type
       GL_FALSE,                         // normalized?
       0,                                // stride
@@ -62,13 +62,14 @@ void NovelBasicFillRect::configureObjectBuffers(bool refreshBuffers) {
   NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
   if(refreshBuffers) {
+    auto config = getColourConfig();
     _colourData = {
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
     };
 
     glGenBuffers(1, &_colourBuffer);
