@@ -2,6 +2,7 @@
 // Created by matth on 23/02/2019.
 //
 
+#include <iostream>
 #include "NovelRenderObject.h"
 #include "GeoBounds.h"
 
