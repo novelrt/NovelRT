@@ -16,6 +16,10 @@ public:
 
   void executeObjectBehaviour() final;
   void setWorldSpaceSize(const GeoVector<float>& value) override;
+  void setRotation(const float value) override;
+  void setScale(const GeoVector<float>& value) override;
+  void setPosition(const GeoVector<float>& value) override;
+
 
 protected:
   virtual void drawObject() const = 0;
