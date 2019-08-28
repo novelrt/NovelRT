@@ -55,4 +55,16 @@ void NovelRenderObject::setWorldSpaceSize(const GeoVector<float>& value) {
   NovelObject::setWorldSpaceSize(value);
   configureObjectBuffers();
 }
+void NovelRenderObject::setRotation(const float value) {
+  NovelObject::setRotation(value);
+  configureObjectBuffers();
+}
+void NovelRenderObject::setScale(const GeoVector<float>& value) {
+  NovelObject::setScale(value);
+  configureObjectBuffers();
+}
+void NovelRenderObject::setPosition(const GeoVector<float>& value) {
+  NovelObject::setPosition(value);
+  configureObjectBuffers();
+}
 }
