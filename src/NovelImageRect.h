@@ -7,26 +7,29 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
-#include <SDL2/SDL_image.h>
 
 namespace NovelRT {
 
 class NovelImageRect : public NovelRenderObject {
 public:
-  NovelImageRect(NovelLayeringService* layeringService, const float& screenScale,
-                 const std::string_view imageDir, const NovelCommonArgs& args);
+  NovelImageRect(NovelLayeringService* layeringService,
+                 const float& screenScale,
+                 const std::string_view imageDir,
+                 const NovelCommonArgs& args, GLuint programId);
 
   void drawObject() const final;
   void setScale(const GeoVector<float>& value) final;
 
 protected:
-  void configureBuffer() final;
+  void configureObjectBuffers(const bool refreshBuffers = false) final;
 
 private:
   std::string _imageDir;
   int _imageHandle;
   int _width;
   int _height;
+  GLuint _textureId;
+  std::vector<GLfloat> _uvCoordinates;
 
 };
 
