@@ -25,6 +25,7 @@ protected:
   GLuint _vertexArrayObject;
   GLuint _programId;
   std::vector<GLfloat> _vertexBufferData;
+  bool _bufferInitialised = false;
 };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H

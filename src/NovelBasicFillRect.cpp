@@ -15,7 +15,6 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const NovelCommonArgs& args,
                                        const GLuint programId) :
     NovelRenderObject(layeringService, screenScale, size, args, programId), _colourConfig(fillColour) {
-    configureObjectBuffers(true);
 }
 
 void NovelBasicFillRect::drawObject() const {
@@ -60,6 +59,8 @@ void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
   _colourConfig = value;
 }
 void NovelBasicFillRect::configureObjectBuffers(bool refreshBuffers) {
+  NovelRenderObject::configureObjectBuffers(refreshBuffers);
+
   if(refreshBuffers) {
     _colourData = {
         1.0f, 1.0f, 0.0f,
