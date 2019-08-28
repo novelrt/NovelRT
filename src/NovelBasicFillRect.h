@@ -24,8 +24,10 @@ public:
 
   void setColourConfig(const RGBAConfig& value);
 
+  ~NovelBasicFillRect();
+
 protected:
-  void configureObjectBuffers(bool refreshBuffers = false) override;
+  virtual void configureObjectBuffers(bool refreshBuffers = false) override;
 
 private:
 

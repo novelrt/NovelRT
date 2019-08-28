@@ -15,7 +15,7 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const NovelCommonArgs& args,
                                        const GLuint programId) :
     NovelRenderObject(layeringService, screenScale, size, args, programId), _colourConfig(fillColour) {
-
+    configureObjectBuffers(true);
 }
 
 void NovelBasicFillRect::drawObject() const {
@@ -39,7 +39,7 @@ void NovelBasicFillRect::drawObject() const {
   glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer);
   glVertexAttribPointer(
       1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-      4,                                // size
+      3,                                // size
       GL_FLOAT,                         // type
       GL_FALSE,                         // normalized?
       0,                                // stride
@@ -47,10 +47,9 @@ void NovelBasicFillRect::drawObject() const {
   );
 // Draw the triangle !
   glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
+  glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(0);
-
   glBindVertexArray(0);
-
 
 }
 
@@ -61,21 +60,22 @@ void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
   _colourConfig = value;
 }
 void NovelBasicFillRect::configureObjectBuffers(bool refreshBuffers) {
-  NovelRenderObject::configureObjectBuffers(refreshBuffers);
-
-  //if(refreshBuffers){
+  if(refreshBuffers) {
     _colourData = {
-        1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f
+        1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f
     };
 
     glGenBuffers(1, &_colourBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourData.size(), _colourData.data(), GL_STATIC_DRAW);
-  //}
+  }
+}
+NovelBasicFillRect::~NovelBasicFillRect() {
+  glDeleteVertexArrays(1, &_vertexArrayObject);
 }
 }

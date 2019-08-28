@@ -60,8 +60,8 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
 
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+/*  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
@@ -175,6 +175,8 @@ int NovelRenderingService::initialiseRendering(const int displayNumber) {
 }
 
 void NovelRenderingService::tearDown() const {
+  glDeleteProgram(_basicFillRectProgramId);
+  glDeleteProgram(_texturedRectProgramId);
   SDL_DestroyWindow(getWindow().get());
   SDL_Quit();
 }
