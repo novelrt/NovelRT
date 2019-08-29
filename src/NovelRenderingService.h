@@ -27,7 +27,9 @@ public:
 
   void tearDown() const;
 
-  NovelImageRect* getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+  NovelImageRect* getImageRect(const GeoVector<float>& startingSize, 
+                               const std::string_view filePath,
+                               const NovelCommonArgs& args);
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);

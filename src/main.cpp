@@ -32,6 +32,7 @@ static int average(lua_State* L) {
 #endif
 
 NovelRT::NovelBasicFillRect* basicFillRect;
+NovelRT::NovelImageRect* yuri;
 
 int main(int argc, char* argv[]) {
   //setenv("DISPLAY", "localhost:0", true);
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
   yuriArgs.startingPosition.setX(1920 / 2);
   yuriArgs.startingPosition.setY(1080 / 2);
 
-  auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
+  yuri = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(200, 200), "test-yuri.png", yuriArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
@@ -61,17 +62,18 @@ int main(int argc, char* argv[]) {
   basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
 
   runner.runOnUpdate([](const float delta) {
-	  const float rotationAmount = 45.0f;
+    const float rotationAmount = 45.0f;
 
-	  auto rotation = basicFillRect->getRotation();
-	  rotation += rotationAmount * delta;
+    auto rotation = basicFillRect->getRotation();
+    rotation += rotationAmount * delta;
 
-	  if (rotation > 360.0f)
-	  {
-		  rotation -= 360.0f;
-	  }
+    if (rotation > 360.0f)
+    {
+      rotation -= 360.0f;
+    }
 
-	  basicFillRect->setRotation(rotation);
+    basicFillRect->setRotation(rotation);
+    yuri->setRotation(-rotation);
   });
 
 /*
