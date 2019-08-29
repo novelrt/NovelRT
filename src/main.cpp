@@ -32,7 +32,7 @@ static int average(lua_State* L) {
 #endif
 
 NovelRT::NovelBasicFillRect* basicFillRect;
-NovelRT::NovelImageRect* yuri;
+NovelRT::NovelImageRect* novelChanRect;
 
 int main(int argc, char* argv[]) {
   //setenv("DISPLAY", "localhost:0", true);
@@ -42,29 +42,27 @@ int main(int argc, char* argv[]) {
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
-  NovelRT::NovelCommonArgs yuriArgs;
-  yuriArgs.layer = 0;
-  yuriArgs.orderInLayer = 0;
-  yuriArgs.startingPosition.setX(1920 / 2);
-  yuriArgs.startingPosition.setY(1080 / 2);
+  NovelRT::NovelCommonArgs novelChanArgs;
+  novelChanArgs.layer = 0;
+  novelChanArgs.orderInLayer = 0;
+  novelChanArgs.startingPosition.setX(1920 / 2);
+  novelChanArgs.startingPosition.setY(1080 / 2);
 
-  yuri = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(200, 200), "test-yuri.png", yuriArgs);
+  novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
-  rectArgs.startingPosition = yuriArgs.startingPosition;
+  rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 1;
-  rectArgs.startingRotation = 20.0f;
-
-  //NovelRT::NovelInteractionService().consumePlayerInput();
+  rectArgs.startingRotation = 0.0f;
 
   basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
 
   runner.runOnUpdate([](const float delta) {
     const float rotationAmount = 45.0f;
 
-    auto rotation = basicFillRect->getRotation();
+    auto rotation = novelChanRect->getRotation();
     rotation += rotationAmount * delta;
 
     if (rotation > 360.0f)
@@ -72,14 +70,13 @@ int main(int argc, char* argv[]) {
       rotation -= 360.0f;
     }
 
-    basicFillRect->setRotation(rotation);
-    yuri->setRotation(-rotation);
+    novelChanRect->setRotation(rotation);
   });
 
-/*
+
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
-  rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
-*/
+  rect->subscribeToInteracted([]{novelChanRect->setActive(!novelChanRect->getActive());});
+
 
   runner.runNovel();
 

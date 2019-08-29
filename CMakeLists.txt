@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(OpenGL_GL_PREFERENCE GLVND)
 
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test-yuri.png
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/novel-chan.png
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB LUA_FILES "src/*.lua")
