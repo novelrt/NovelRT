@@ -124,7 +124,7 @@ void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const Ge
   
   auto x = px - ox;
   auto y = py - oy;
-  
+
   auto cos0 = cosf(angle);
   auto sin0 = sinf(angle);
 

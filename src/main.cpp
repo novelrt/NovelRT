@@ -47,14 +47,14 @@ int main(int argc, char* argv[]) {
   yuriArgs.startingPosition.setX(1920 / 2);
   yuriArgs.startingPosition.setY(1080 / 2);
 
-  //auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
+  auto yuri = runner.getRenderer()->getImageRect("test-yuri.png", yuriArgs);
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = yuriArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 1;
-  rectArgs.startingRotation = 0.0f;
+  rectArgs.startingRotation = 20.0f;
 
   //NovelRT::NovelInteractionService().consumePlayerInput();
 
