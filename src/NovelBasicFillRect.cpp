@@ -63,13 +63,17 @@ void NovelBasicFillRect::configureObjectBuffers(bool refreshBuffers) {
 
   if(refreshBuffers) {
     auto config = getColourConfig();
+    auto rScalar = config.getRScalar();
+    auto gScalar = config.getGScalar();
+    auto bScalar = config.getBScalar();
+    auto aScalar = config.getAScalar();
     _colourData = {
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
-        config.getRScalar(), config.getGScalar(), config.getBScalar(), config.getAScalar(),
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
     };
 
     glGenBuffers(1, &_colourBuffer);
