@@ -68,7 +68,7 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
   NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
   if (refreshBuffers) {
-    SDL_Surface* surface = IMG_Load("novel-chan.png");
+    SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
     if(surface == nullptr) {
       std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" <<std::endl;
