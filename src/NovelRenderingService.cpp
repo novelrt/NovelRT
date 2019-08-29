@@ -190,8 +190,10 @@ void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect* NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, filePath, args, _texturedRectProgramId);
+NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize, 
+                                                    const std::string_view filePath,
+                                                    const NovelCommonArgs& args) {
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
