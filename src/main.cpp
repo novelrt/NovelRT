@@ -31,6 +31,8 @@ static int average(lua_State* L) {
     _putenv_s(name, value)
 #endif
 
+NovelRT::NovelBasicFillRect* basicFillRect;
+
 int main(int argc, char* argv[]) {
   //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
@@ -56,7 +58,22 @@ int main(int argc, char* argv[]) {
 
   //NovelRT::NovelInteractionService().consumePlayerInput();
 
-  runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+
+  runner.runOnUpdate([](const float delta) {
+	  const float rotationAmount = 45.0f;
+
+	  auto rotation = basicFillRect->getRotation();
+	  rotation += rotationAmount * delta;
+
+	  if (rotation > 360.0f)
+	  {
+		  rotation -= 360.0f;
+	  }
+
+	  basicFillRect->setRotation(rotation);
+  });
+
 /*
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
   rect->subscribeToInteracted([yuri]{yuri->setActive(!yuri->getActive());});
