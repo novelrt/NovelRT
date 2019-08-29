@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
 #include "NovelImageRect.h"
 #include "GeoBounds.h"
 
@@ -67,7 +68,12 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
   NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
   if (refreshBuffers) {
-    SDL_Surface* surface = IMG_Load("test-yuri.png");
+    SDL_Surface* surface = IMG_Load("novel-chan.png");
+
+    if(surface == nullptr) {
+      std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" <<std::endl;
+      throw -1;
+    }
 
     if(_bufferInitialised) {
       glDeleteTextures(1, &_textureId);
