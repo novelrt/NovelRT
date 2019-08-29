@@ -31,6 +31,8 @@ private:
   GLuint _textureId;
   std::vector<GLfloat> _uvCoordinates;
 
+  GLuint _uvBuffer;
+  GLuint _colourBuffer;
 };
 
 }
