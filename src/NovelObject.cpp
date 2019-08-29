@@ -2,6 +2,7 @@
 // Created by matth on 15/12/2018.
 //
 #include "NovelObject.h"
+#include "GeoBounds.h"
 
 namespace NovelRT {
 NovelObject::NovelObject(NovelLayeringService* layeringService, const float& screenScale,
@@ -15,7 +16,7 @@ NovelObject::NovelObject(NovelLayeringService* layeringService, const float& scr
   setPosition(args.startingPosition);
   setRotation(args.startingRotation);
   setWorldSpaceSize(size);
-  setScale(size);
+  setScale(args.startingScale);
   setActive(true);
 }
 
@@ -24,6 +25,7 @@ GeoVector<float> NovelObject::getWorldSpacePosition() const {
 }
 
 void NovelObject::setPosition(const GeoVector<float>& value) {
+  _isDirty = true;
   _position = value;
 }
 
@@ -32,6 +34,7 @@ float NovelObject::getRotation() const {
 }
 
 void NovelObject::setRotation(const float value) {
+  _isDirty = true;
   _rotation = value;
 }
 
@@ -40,6 +43,7 @@ GeoVector<float> NovelObject::getScale() const {
 }
 
 void NovelObject::setScale(const GeoVector<float>& value) {
+  _isDirty = true;
   _scale = value;
 }
 
@@ -48,6 +52,7 @@ GeoVector<float> NovelObject::getWorldSpaceSize() const {
 }
 
 void NovelObject::setWorldSpaceSize(const GeoVector<float>& value) {
+  _isDirty = true;
   _size = value;
 }
 
@@ -76,5 +81,15 @@ int NovelObject::getOrderInLayer() const {
 void NovelObject::setOrderInLayer(const int value) {
   _orderInLayer = value;
   _layeringService->sortLayerOrder(getLayer());
+}
+
+GeoBounds NovelObject::getObjectBounds() {
+  if(_isDirty) {
+  _isDirty = false;
+  GeoVector<float> position = getWorldSpacePosition();
+  GeoVector<float> size = (getWorldSpaceSize() * getScale());
+  _objectBounds = GeoBounds(position, size, getRotation());
+  }
+  return _objectBounds;
 }
 }

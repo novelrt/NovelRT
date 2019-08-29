@@ -27,7 +27,9 @@ public:
 
   void tearDown() const;
 
-  NovelImageRect* getImageRect(const std::string_view filePath, const NovelCommonArgs& args);
+  NovelImageRect* getImageRect(const GeoVector<float>& startingSize, 
+                               const std::string_view filePath,
+                               const NovelCommonArgs& args);
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);
@@ -52,8 +54,9 @@ private:
   int _winHeight;
   int _frameBufferWidth;
 
-  GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
-  GLuint _programID;
+  GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
+  GLuint _basicFillRectProgramId;
+  GLuint _texturedRectProgramId;
 };
 
 }

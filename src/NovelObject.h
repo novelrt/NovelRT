@@ -7,6 +7,7 @@
 #include "GeoVector.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
+#include "GeoBounds.h"
 
 namespace NovelRT {
 class NovelLayeringService;
@@ -45,6 +46,8 @@ public:
 
   virtual void executeObjectBehaviour() = 0;
 
+  virtual GeoBounds getObjectBounds();
+
 protected:
   GeoVector<float> _position;
   GeoVector<float> _scale;
@@ -55,6 +58,8 @@ protected:
   int _layer;
   float _screenScale;
   NovelLayeringService* _layeringService;
+  bool _isDirty = true;
+  GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0), 0);
 };
 
 }

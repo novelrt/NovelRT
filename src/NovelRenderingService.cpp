@@ -25,6 +25,11 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
     return false;
   }
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
   SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
@@ -46,99 +51,115 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
   if (!gladLoadGL()) {
-    fprintf(stderr, "Failed to initialize glad\n");
+    std::cerr << "ERROR: Failed to initialise glad." << std::endl;
     return -1;
   }
-  _programID = LoadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
+
+  std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
+  std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
+  _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
   return true;
 }
 
-GLuint NovelRenderingService::LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::string fragmentFilePath){
 
   // Create the shaders
-  GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-  GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
   // Read the Vertex Shader code from the file
-  std::string VertexShaderCode;
-  std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+  std::string vertexShaderCode;
+
+  std::ifstream VertexShaderStream(vertexFilePath, std::ios::in);
   if(VertexShaderStream.is_open()){
     std::stringstream sstr;
     sstr << VertexShaderStream.rdbuf();
-    VertexShaderCode = sstr.str();
+    vertexShaderCode = sstr.str();
     VertexShaderStream.close();
   }else{
-    printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+    std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
     getchar();
     return 0;
   }
 
   // Read the Fragment Shader code from the file
-  std::string FragmentShaderCode;
-  std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
-  if(FragmentShaderStream.is_open()){
-    std::stringstream sstr;
-    sstr << FragmentShaderStream.rdbuf();
-    FragmentShaderCode = sstr.str();
-    FragmentShaderStream.close();
+  std::string fragmentShaderCode;
+  std::ifstream fragmentShaderStream(fragmentFilePath, std::ios::in);
+  if(fragmentShaderStream.is_open()){
+    std::stringstream stringStream;
+    stringStream << fragmentShaderStream.rdbuf();
+    fragmentShaderCode = stringStream.str();
+    fragmentShaderStream.close();
+  }else{
+    std::cerr << "ERROR: Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
+    getchar();
+    return 0;
   }
 
   GLint Result = GL_FALSE;
-  int InfoLogLength;
+  int infoLogLength;
 
   // Compile Vertex Shader
-  printf("Compiling shader : %s\n", vertex_file_path);
-  char const * VertexSourcePointer = VertexShaderCode.c_str();
-  glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
-  glCompileShader(VertexShaderID);
+  std::cout << "INFO: Compiling shader: " << vertexFilePath << "..." << std::endl;
+  char const * vertexSourcePointer = vertexShaderCode.c_str();
+  glShaderSource(vertexShaderId, 1, &vertexSourcePointer , nullptr);
+  glCompileShader(vertexShaderId);
 
   // Check Vertex Shader
-  glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-  glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-  if ( InfoLogLength > 0 ){
-    std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
-    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-    printf("%s\n", &VertexShaderErrorMessage[0]);
+  glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+  if ( infoLogLength > 0 ){
+    std::vector<char> vertexShaderErrorMessage(infoLogLength+1);
+    glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
+    std::cerr << "ERROR: " << &vertexShaderErrorMessage[0] << std::endl;
   }
 
   // Compile Fragment Shader
-  printf("Compiling shader : %s\n", fragment_file_path);
-  char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-  glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
-  glCompileShader(FragmentShaderID);
+  std::cout << "INFO: Compiling shader: " << fragmentFilePath << "..." << std::endl;
+  const char* FragmentSourcePointer = fragmentShaderCode.c_str();
+  glShaderSource(fragmentShaderId, 1, &FragmentSourcePointer , nullptr);
+  glCompileShader(fragmentShaderId);
 
   // Check Fragment Shader
-  glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-  glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-  if ( InfoLogLength > 0 ){
-    std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
-    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-    printf("%s\n", &FragmentShaderErrorMessage[0]);
+  glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+  if ( infoLogLength > 0 ){
+    std::vector<char> fragmentShaderErrorMessage(infoLogLength+1);
+    glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
+    std::cerr << "ERROR: " << &fragmentShaderErrorMessage[0] << std::endl;
   }
 
   // Link the program
-  printf("Linking program\n");
-  GLuint ProgramID = glCreateProgram();
-  glAttachShader(ProgramID, VertexShaderID);
-  glAttachShader(ProgramID, FragmentShaderID);
-  glLinkProgram(ProgramID);
+  //printf("Linking program\n");
+  std::cout << "INFO: Linking program..." << std::endl;
+  GLuint programId = glCreateProgram();
+  glAttachShader(programId, vertexShaderId);
+  glAttachShader(programId, fragmentShaderId);
+  glLinkProgram(programId);
 
   // Check the program
-  glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-  glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-  if ( InfoLogLength > 0 ){
-    std::vector<char> ProgramErrorMessage(InfoLogLength+1);
-    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-    printf("%s\n", &ProgramErrorMessage[0]);
+  glGetProgramiv(programId, GL_LINK_STATUS, &Result);
+  glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
+  if ( infoLogLength > 0 ){
+    std::vector<char> ProgramErrorMessage(infoLogLength+1);
+    glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
+    std::cerr << "ERROR: " << &ProgramErrorMessage[0] << std::endl;
   }
 
-  glDetachShader(ProgramID, VertexShaderID);
-  glDetachShader(ProgramID, FragmentShaderID);
+  glDetachShader(programId, vertexShaderId);
+  glDetachShader(programId, fragmentShaderId);
 
-  glDeleteShader(VertexShaderID);
-  glDeleteShader(FragmentShaderID);
+  glDeleteShader(vertexShaderId);
+  glDeleteShader(fragmentShaderId);
 
-  return ProgramID;
+  return programId;
 }
 
 int NovelRenderingService::initialiseRendering(const int displayNumber) {
@@ -154,6 +175,8 @@ int NovelRenderingService::initialiseRendering(const int displayNumber) {
 }
 
 void NovelRenderingService::tearDown() const {
+  glDeleteProgram(_basicFillRectProgramId);
+  glDeleteProgram(_texturedRectProgramId);
   SDL_DestroyWindow(getWindow().get());
   SDL_Quit();
 }
@@ -161,15 +184,16 @@ void NovelRenderingService::tearDown() const {
 void NovelRenderingService::beginFrame() const {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-  glUseProgram(_programID);
 }
 
 void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect* NovelRenderingService::getImageRect(const std::string_view filePath, const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, filePath, args);
+NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize, 
+                                                    const std::string_view filePath,
+                                                    const NovelCommonArgs& args) {
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -182,7 +206,7 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args);
+  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
 
 float NovelRenderingService::getScreenScale() const {
