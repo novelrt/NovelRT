@@ -1,0 +1,24 @@
+###############################################################################
+# EditorConfig is awesome: http://EditorConfig.org
+###############################################################################
+
+###############################################################################
+# Top-most EditorConfig file
+###############################################################################
+root = true
+
+###############################################################################
+# Set default behavior to:
+#   a UTF-8 encoding,
+#   Unix-style line endings,
+#   a newline ending the file,
+#   2 space indentation, and
+#   trimming of trailing whitespace
+###############################################################################
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
