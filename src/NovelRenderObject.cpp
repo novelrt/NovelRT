@@ -25,7 +25,7 @@ void NovelRenderObject::executeObjectBehaviour() {
 
 void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
   auto bounds = getObjectBounds();
-  //I think this is forward facing?
+
   auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
   auto bottomRight = bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale);
   auto topRight = bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale);
