@@ -12,17 +12,25 @@ public:
 
   int getR() const;
 
+  float getRScalar() const;
+
   void setR(const int value);
 
   int getG() const;
+
+  float getGScalar() const;
 
   void setG(const int value);
 
   int getB() const;
 
+  float getBScalar() const;
+
   void setB(const int value);
 
   int getA() const;
+
+  float getAScalar() const;
 
   void setA(const int value);
 
