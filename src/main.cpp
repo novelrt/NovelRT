@@ -7,9 +7,9 @@
 #include "NovelInteractionService.h"
 
 extern "C" {
-#include "../lib/lua53/lua.h"
-#include "../lib/lua53/lualib.h"
-#include "../lib/lua53/lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
 lua_State* L;
