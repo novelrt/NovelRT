@@ -43,12 +43,15 @@ public:
 private:
   GeoVector(glm::vec<2, T> value);
 
+  inline glm::vec<2, T> getValue() const;
+
+  inline void setValue(glm::vec<2, T> value);
+
   glm::vec<2, T> _value;
 };
 
 template<typename T>
-GeoVector<T>::GeoVector(T x, T y) {
-  _value = glm::vec2(x, y);
+GeoVector<T>::GeoVector(T x, T y) : _value(glm::vec2(x, y)) {
 }
 
 template<typename T>
@@ -57,7 +60,7 @@ GeoVector<T>::GeoVector(glm::vec<2, T> value) : _value(value) {
 
 template<typename T>
 T GeoVector<T>::getX() const {
-  return _value.x;
+  return getValue().x;
 }
 
 template<typename T>
@@ -67,7 +70,7 @@ void GeoVector<T>::setX(T value) {
 
 template<typename T>
 T GeoVector<T>::getY() const {
-  return _value.y;
+  return getValue().y;
 }
 
 template<typename T>
@@ -77,42 +80,42 @@ void GeoVector<T>::setY(T value) {
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator+(const GeoVector<T>& other) const {
-  return GeoVector<T>(_value + other._value);
+  return GeoVector<T>(getValue() + other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator-(const GeoVector<T>& other) const {
-  return GeoVector<T>(_value - other._value);
+  return GeoVector<T>(getValue() - other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator*(const GeoVector<T>& other) const {
-  return GeoVector<T>(_value * other._value);
+  return GeoVector<T>(getValue() * other.getValue());
 }
 
 template<typename T>
 GeoVector<T> GeoVector<T>::operator/(const GeoVector<T>& other) const {
-  return GeoVector<T>(_value / other._value);
+  return GeoVector<T>(getValue() / other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator+(const T other) const {
-  return GeoVector<T>(_value + other);
+  return GeoVector<T>(getValue() + other);
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator-(const T other) const {
-  return GeoVector<T>(_value - other);
+  return GeoVector<T>(getValue() - other);
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
-  return GeoVector<T>(_value * other);
+  return GeoVector<T>(getValue() * other);
 }
 
 template<typename T>
 GeoVector<T> GeoVector<T>::operator/(const T other) const {
-  return GeoVector<T>(_value / other);
+  return GeoVector<T>(getValue() / other);
 }
 template<typename T>
 GeoVector<T>::GeoVector() {
@@ -120,7 +123,17 @@ GeoVector<T>::GeoVector() {
 }
 template<typename T>
 void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
-  _value = glm::rotate((_value - point._value), glm::radians(angleRotationValue)) + point._value;
+  setValue(glm::rotate((getValue() - point.getValue()), glm::radians(angleRotationValue)) + point.getValue());
+}
+
+template<typename T>
+inline glm::vec<2, T> GeoVector<T>::getValue() const {
+  return _value;
+}
+
+template<typename T>
+inline void GeoVector<T>::setValue(glm::vec<2, T> value) {
+  _value = value;
 }
 
 }
