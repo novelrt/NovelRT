@@ -4,8 +4,8 @@
 
 #ifndef NOVELRT_COORDINATEVECTOR_H
 #define NOVELRT_COORDINATEVECTOR_H
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 namespace NovelRT {
 template<typename T>
@@ -39,75 +39,83 @@ public:
   inline GeoVector<T> operator/(const T other) const;
 
   void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point);
+
 private:
-  T _x;
-  T _y;
+  GeoVector(glm::vec<2, T> value);
+
+  inline glm::vec<2, T> getValue() const;
+
+  inline void setValue(glm::vec<2, T> value);
+
+  glm::vec<2, T> _value;
 };
 
 template<typename T>
-GeoVector<T>::GeoVector(T x, T y) {
-  _x = x;
-  _y = y;
+GeoVector<T>::GeoVector(T x, T y) : _value(glm::vec2(x, y)) {
+}
+
+template<typename T>
+GeoVector<T>::GeoVector(glm::vec<2, T> value) : _value(value) {
 }
 
 template<typename T>
 T GeoVector<T>::getX() const {
-  return _x;
+  return getValue().x;
 }
 
 template<typename T>
 void GeoVector<T>::setX(T value) {
-  GeoVector::_x = value;
+  _value.x = value;
 }
 
 template<typename T>
 T GeoVector<T>::getY() const {
-  return _y;
+  return getValue().y;
 }
 
 template<typename T>
 void GeoVector<T>::setY(T value) {
-  GeoVector::_y = value;
+  _value.y = value;
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator+(const GeoVector<T>& other) const {
-  return GeoVector<T>(GeoVector<T>::getX() + other.getX(), GeoVector<T>::getY() + other.getY());
+  return GeoVector<T>(getValue() + other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator-(const GeoVector<T>& other) const {
-  return GeoVector<T>(GeoVector<T>::getX() - other.getX(), GeoVector<T>::getY() - other.getY());
+  return GeoVector<T>(getValue() - other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator*(const GeoVector<T>& other) const {
-  return GeoVector<T>(GeoVector<T>::getX() * other.getX(), GeoVector<T>::getY() * other.getY());
+  return GeoVector<T>(getValue() * other.getValue());
 }
 
 template<typename T>
 GeoVector<T> GeoVector<T>::operator/(const GeoVector<T>& other) const {
-  return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
+  return GeoVector<T>(getValue() / other.getValue());
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator+(const T other) const {
-  return GeoVector<T>(GeoVector<T>::getX() + other, GeoVector<T>::getY() + other);
+  return GeoVector<T>(getValue() + other);
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator-(const T other) const {
-  return GeoVector<T>(GeoVector<T>::getX() - other, GeoVector<T>::getY() - other);
+  return GeoVector<T>(getValue() - other);
 }
 
 template<typename T>
 inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
-  return GeoVector<T>(GeoVector<T>::getX() * other, GeoVector<T>::getY() * other);
+  return GeoVector<T>(getValue() * other);
 }
 
 template<typename T>
 GeoVector<T> GeoVector<T>::operator/(const T other) const {
-  return GeoVector<T>(GeoVector<T>::getX() / other, GeoVector<T>::getY() / other);
+  return GeoVector<T>(getValue() / other);
 }
 template<typename T>
 GeoVector<T>::GeoVector() {
@@ -115,21 +123,17 @@ GeoVector<T>::GeoVector() {
 }
 template<typename T>
 void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
-  auto angle = angleRotationValue * (M_PI/180);
+  setValue(glm::rotate((getValue() - point.getValue()), glm::radians(angleRotationValue)) + point.getValue());
+}
 
-  auto px = getX();
-  auto py = getY();
-  auto ox = point.getX();
-  auto oy = point.getY();
-  
-  auto x = px - ox;
-  auto y = py - oy;
+template<typename T>
+inline glm::vec<2, T> GeoVector<T>::getValue() const {
+  return _value;
+}
 
-  auto cos0 = cosf(angle);
-  auto sin0 = sinf(angle);
-
-  setX(((x * cos0) - (y * sin0)) + ox);
-  setY(((y * cos0) + (x * sin0)) + oy);
+template<typename T>
+inline void GeoVector<T>::setValue(glm::vec<2, T> value) {
+  _value = value;
 }
 
 }
