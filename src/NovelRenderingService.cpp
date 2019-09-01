@@ -20,8 +20,13 @@
 
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
+
+  if(FT_Init_FreeType(&_freeTypeLoader)) {
+    std::cerr << "ERROR: Failed to initialise Freetype." << std::endl;
+  }
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-    std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
+    std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
   }
 
@@ -137,7 +142,6 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   }
 
   // Link the program
-  //printf("Linking program\n");
   std::cout << "INFO: Linking program..." << std::endl;
   GLuint programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
@@ -169,7 +173,6 @@ int NovelRenderingService::initialiseRendering(const int displayNumber) {
   }
 
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
-  _frameBufferWidth = _winWidth;
 
   return 0;
 }

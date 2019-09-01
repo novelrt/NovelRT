@@ -57,29 +57,32 @@ RGBAConfig NovelBasicFillRect::getColourConfig() const {
 }
 void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
   _colourConfig = value;
+  configureObjectBuffers();
 }
 void NovelBasicFillRect::configureObjectBuffers(bool refreshBuffers) {
   NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
-  if(refreshBuffers) {
-    auto config = getColourConfig();
-    auto rScalar = config.getRScalar();
-    auto gScalar = config.getGScalar();
-    auto bScalar = config.getBScalar();
-    auto aScalar = config.getAScalar();
-    _colourData = {
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-    };
+  auto config = getColourConfig();
+  auto rScalar = config.getRScalar();
+  auto gScalar = config.getGScalar();
+  auto bScalar = config.getBScalar();
+  auto aScalar = config.getAScalar();
 
+  _colourData = {
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+  };
+
+  if(refreshBuffers) {
     glGenBuffers(1, &_colourBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourData.size(), _colourData.data(), GL_STATIC_DRAW);
   }
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourData.size(), _colourData.data(), GL_STATIC_DRAW);
 }
 NovelBasicFillRect::~NovelBasicFillRect() {
   glDeleteVertexArrays(1, &_vertexArrayObject);
