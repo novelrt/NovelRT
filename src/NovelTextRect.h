@@ -1,3 +1,4 @@
+
 //
 // Created by matth on 27/02/2019.
 //
@@ -17,9 +18,10 @@ public:
                 const float fontSize,
                 const float screenScale,
                 const std::string& fontFileDir,
-                RGBAConfig& colourConfig,
+                const RGBAConfig& colourConfig,
+                const FT_Library& freeTypeLoader,
                 const NovelCommonArgs& args,
-                GLuint programId);
+                const GLuint programId);
 
   void drawObject() const final;
 
@@ -33,6 +35,7 @@ private:
   RGBAConfig _colourConfig;
   std::string _fontFileDir;
   float _fontSize;
+  const FT_Library _freeTypeLoader;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

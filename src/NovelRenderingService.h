@@ -17,6 +17,8 @@
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
 #include <glad/glad.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 namespace NovelRT {
 
@@ -52,11 +54,11 @@ private:
 
   int _winWidth;
   int _winHeight;
-  int _frameBufferWidth;
 
   GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
+  FT_Library _freeTypeLoader;
 };
 
 }
