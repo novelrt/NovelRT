@@ -4,13 +4,13 @@
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
-#include "NovelInteractionService.h"
 
 extern "C" {
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 }
+
 
 lua_State* L;
 

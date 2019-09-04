@@ -2,8 +2,8 @@
 // Created by matth on 22/02/2019.
 //
 
-#ifndef NOVELRT_NOVELINPUTSERVICE_H
-#define NOVELRT_NOVELINPUTSERVICE_H
+#ifndef NOVELRT_NOVELINTERACTIONSERVICE_H
+#define NOVELRT_NOVELINTERACTIONSERVICE_H
 #include "NovelInteractionObject.h"
 #include "KeyCode.h"
 #include "NovelBasicInteractionRect.h"
@@ -18,11 +18,11 @@ public:
 
   NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize,
                                                      const NovelCommonArgs& args);
-  void ExecuteClickedInteractable();
+  void executeClickedInteractable();
 
   //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
 private:
-  void HandleInteractionDraw(NovelInteractionObject* target);
+  void handleInteractionDraw(NovelInteractionObject* target);
   NovelInteractionObject* _clickTarget;
   std::map<KeyCode, bool> _keyStates;
   std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
@@ -31,4 +31,4 @@ private:
 };
 }
 
-#endif //NOVELRT_NOVELINPUTSERVICE_H
+#endif //NOVELRT_NOVELINTERACTIONSERVICE_H

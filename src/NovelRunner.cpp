@@ -27,7 +27,7 @@ int NovelRunner::runNovel() {
     _novelRenderer->beginFrame();
     _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
-    _novelInteractionService->ExecuteClickedInteractable();
+    _novelInteractionService->executeClickedInteractable();
 
   }
   _novelRenderer->tearDown();
