@@ -36,8 +36,8 @@ GeoVector<float> GeoBounds::getCornerInOpenGLSurfaceSpace(const int index, const
   return point;
 }
 void GeoBounds::rotateToAngle(float rotationAngleValue) {
-  for (auto& _corner : _corners) {
-    _corner.rotateToAngleAroundPoint(rotationAngleValue, _position);
+  for (auto& corner : _corners) {
+    corner.rotateToAngleAroundPoint(rotationAngleValue, _position);
   }
 }
 }

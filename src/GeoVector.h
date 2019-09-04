@@ -2,8 +2,8 @@
 // Created by matth on 15/12/2018.
 //
 
-#ifndef NOVELRT_COORDINATEVECTOR_H
-#define NOVELRT_COORDINATEVECTOR_H
+#ifndef NOVELRT_GEOVECTOR_H
+#define NOVELRT_GEOVECTOR_H
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
@@ -138,4 +138,4 @@ inline void GeoVector<T>::setValue(glm::vec<2, T> value) {
 
 }
 
-#endif //NOVELRT_COORDINATEVECTOR_H
+#endif //NOVELRT_GEOVECTOR_H

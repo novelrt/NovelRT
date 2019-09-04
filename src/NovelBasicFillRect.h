@@ -2,8 +2,8 @@
 // Created by matth on 16/12/2018.
 //
 
-#ifndef NOVELRT_NOVELRECT_H
-#define NOVELRT_NOVELRECT_H
+#ifndef NOVELRT_NOVELBASICFILLRECT_H
+#define NOVELRT_NOVELBASICFILLRECT_H
 
 #include "NovelRenderObject.h"
 #include "RGBAConfig.h"
@@ -37,4 +37,4 @@ private:
 };
 }
 
-#endif //NOVELRT_NOVELRECT_H
+#endif //NOVELRT_NOVELBASICFILLRECT_H

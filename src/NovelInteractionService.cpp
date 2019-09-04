@@ -11,7 +11,7 @@ NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringS
   _keyStates.insert({LeftMouseButton, false});
 }
 
-void NovelInteractionService::HandleInteractionDraw(NovelInteractionObject* target) {
+void NovelInteractionService::handleInteractionDraw(NovelInteractionObject* target) {
   if (_keyStates[target->getSubscribedKey()]
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[LeftMouseButton])
       && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
@@ -43,14 +43,14 @@ void NovelInteractionService::consumePlayerInput() {
 
 NovelBasicInteractionRect* NovelInteractionService::getBasicInteractionRect(const GeoVector<float>& startingSize,
                                                                             const NovelCommonArgs& args) {
-  //return *new NovelBasicInteractionRect(_layeringService, _screenScale, startingSize, args, [this](NovelInteractionObject* x){ HandleInteractionDraw(x);});
+  //return *new NovelBasicInteractionRect(_layeringService, _screenScale, startingSize, args, [this](NovelInteractionObject* x){ handleInteractionDraw(x);});
   return new NovelBasicInteractionRect(_layeringService,
                                        _screenScale,
                                        startingSize,
                                        args,
-                                       [this](NovelInteractionObject* x) { HandleInteractionDraw(x); });
+                                       [this](NovelInteractionObject* x) { handleInteractionDraw(x); });
 }
-void NovelInteractionService::ExecuteClickedInteractable() {
+void NovelInteractionService::executeClickedInteractable() {
   if (_clickTarget == nullptr) return;
 
   _clickTarget->raiseInteracted();
