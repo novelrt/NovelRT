@@ -15,6 +15,6 @@ private:
 public:
   LuaRunner(const std::string& fileName);
 };
-&}
+}
 
 #endif //NOVELRT_SRC_LUA_LUARUNNER_H
