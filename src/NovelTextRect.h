@@ -10,6 +10,7 @@
 #include <string>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include "GraphicsCharacterRenderData.h"
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
@@ -36,6 +37,7 @@ private:
   std::string _fontFileDir;
   float _fontSize;
   const FT_Library _freeTypeLoader;
+  std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H
