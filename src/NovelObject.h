@@ -18,7 +18,9 @@ public:
 
   virtual GeoVector<float> getWorldSpacePosition() const;
 
-  virtual void setPosition(const GeoVector<float>& value);
+  virtual void setWorldSpacePosition(const GeoVector<float>& value);
+
+  virtual GeoVector<float> getScreenSpacePosition() const;
 
   virtual float getRotation() const;
 
@@ -31,6 +33,8 @@ public:
   virtual GeoVector<float> getWorldSpaceSize() const;
 
   virtual void setWorldSpaceSize(const GeoVector<float>& value);
+
+  virtual GeoVector<float> getScreenSpaceSize() const;
 
   virtual int getLayer() const;
 
@@ -46,7 +50,9 @@ public:
 
   virtual void executeObjectBehaviour() = 0;
 
-  virtual GeoBounds getObjectBounds();
+  virtual GeoBounds getScreenSpaceObjectBounds();
+
+  virtual float getScaleHypotenuseScalar() const;
 
 protected:
   GeoVector<float> _position;

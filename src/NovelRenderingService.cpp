@@ -21,10 +21,6 @@
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
-  if(FT_Init_FreeType(&_freeTypeLoader)) {
-    std::cerr << "ERROR: Failed to initialise Freetype." << std::endl;
-  }
-
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
     std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
@@ -70,6 +66,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
+  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
@@ -193,10 +190,17 @@ void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize, 
+NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
                                                     const std::string_view filePath,
                                                     const NovelCommonArgs& args) {
   return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
+}
+
+NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
+                                                  const float fontSize,
+                                                  const std::string& fontFilePath,
+                                                  const NovelCommonArgs& args) {
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -211,7 +215,6 @@ NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<floa
                                                             const NovelCommonArgs& args) {
   return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
-
 float NovelRenderingService::getScreenScale() const {
   return _screenScale;
 }

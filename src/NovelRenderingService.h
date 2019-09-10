@@ -16,9 +16,8 @@
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
+#include "NovelTextRect.h"
 #include <glad/glad.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 namespace NovelRT {
 
@@ -29,12 +28,16 @@ public:
 
   void tearDown() const;
 
-  NovelImageRect* getImageRect(const GeoVector<float>& startingSize, 
+  NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
                                const std::string_view filePath,
                                const NovelCommonArgs& args);
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);
+  NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
+                             const float fontSize,
+                             const std::string& fontFilePath,
+                             const NovelCommonArgs& args);
 
   float getScreenScale() const;
 
@@ -58,7 +61,7 @@ private:
   GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
-  FT_Library _freeTypeLoader;
+  GLuint _fontProgramId;
 };
 
 }

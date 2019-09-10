@@ -8,8 +8,6 @@
 #include "NovelRenderObject.h"
 #include "RGBAConfig.h"
 #include <string>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "GraphicsCharacterRenderData.h"
 
 namespace NovelRT {
@@ -20,7 +18,6 @@ public:
                 const float screenScale,
                 const std::string& fontFileDir,
                 const RGBAConfig& colourConfig,
-                const FT_Library& freeTypeLoader,
                 const NovelCommonArgs& args,
                 const GLuint programId);
 
@@ -30,14 +27,18 @@ public:
 
   void setColourConfig(const RGBAConfig& value);
 
+  std::string getText() const;
+  void setText(const std::string& value);
+
 protected:
   void configureObjectBuffers(const bool refreshBuffers = false) final;
 private:
   RGBAConfig _colourConfig;
   std::string _fontFileDir;
   float _fontSize;
-  const FT_Library _freeTypeLoader;
   std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
+  std::string _text;
+  GLuint _textBuffer;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H
