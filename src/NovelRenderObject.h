@@ -18,7 +18,7 @@ public:
   void setWorldSpaceSize(const GeoVector<float>& value) override;
   void setRotation(const float value) override;
   void setScale(const GeoVector<float>& value) override;
-  void setPosition(const GeoVector<float>& value) override;
+  void setWorldSpacePosition(const GeoVector<float>& value) override;
 
 
 protected:

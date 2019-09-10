@@ -58,6 +58,9 @@ int main(int argc, char* argv[]) {
   rectArgs.startingRotation = 0.0f;
 
   basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(255, 255, 255, 255), 20, "Raleway-Regular.ttf", rectArgs);
+  textRect->setText("hello world");
+
 
   runner.runOnUpdate([](const float delta) {
     const float rotationAmount = 45.0f;
