@@ -2,9 +2,9 @@
 // Created by Tyler on 04/09/2019.
 //
 
+#include "LuaRunner.h"
 #include <lua.hpp>
 #include <string>
-#include "LuaRunner.h"
 namespace NovelRT::Lua {
 
 LuaRunner::LuaRunner(const std::string& fileName) {
@@ -18,7 +18,7 @@ void LuaRunner::registerMethod(const char* name, lua_CFunction fn) {
 }
 
 void LuaRunner::run() {
-  printf(_fileName);
+  std::cout << _fileName << std::endl;
   luaL_dofile(_state, _fileName);
 }
 
