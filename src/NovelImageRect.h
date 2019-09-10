@@ -18,8 +18,16 @@ public:
                  const std::string_view imageDir,
                  const NovelCommonArgs& args, GLuint programId);
 
+  NovelImageRect(NovelLayeringService* layeringService,
+                 const float& screenScale,
+                 const GeoVector<float>& size,
+                 const NovelCommonArgs& args,
+                 GLuint programId);
+
   void drawObject() const final;
   void setScale(const GeoVector<float>& value) final;
+
+  void setTextureInternal(const GLuint textureId);
 
 protected:
   void configureObjectBuffers(const bool refreshBuffers = false) final;
