@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
   rectArgs.orderInLayer = 1;
   rectArgs.startingRotation = 0.0f;
 
-  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(255, 255, 255, 255), 20, "Raleway-Regular.ttf", rectArgs);
   textRect->setText("hello world");
 

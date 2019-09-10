@@ -9,6 +9,7 @@
 #include "RGBAConfig.h"
 #include <string>
 #include "GraphicsCharacterRenderData.h"
+#include "NovelImageRect.h"
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
@@ -33,12 +34,15 @@ public:
 protected:
   void configureObjectBuffers(const bool refreshBuffers = false) final;
 private:
+  void reloadText();
+
   RGBAConfig _colourConfig;
   std::string _fontFileDir;
   float _fontSize;
   std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
-  std::string _text;
-  GLuint _textBuffer;
+  std::string _text = "";
+  std::vector<NovelImageRect*> _letterRects;
+  NovelCommonArgs _args;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

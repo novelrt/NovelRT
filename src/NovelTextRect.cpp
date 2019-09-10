@@ -9,59 +9,7 @@
 
 namespace NovelRT {
 void NovelTextRect::drawObject() const {
-  glUseProgram(_programId);
-  //std::cout << glGetError() << std::endl;
-  auto colourConfig = getColourConfig();
-  glUniform3f(glGetUniformLocation(_programId, "textColour"), colourConfig.getRScalar(), colourConfig.getGScalar(), colourConfig.getBScalar());
-  glActiveTexture(GL_TEXTURE0);
-
-  auto surfaceSpace = GeoVector<GLfloat>(_vertexBufferData[0], _vertexBufferData[1]);
-  float scale = getScaleHypotenuseScalar();
-
-  for(const char& c : getText()) {
-    GraphicsCharacterRenderData ch;
-
-    //std::cout << c << std::endl;
-
-    auto match = _fontCharacters.find(c);
-    if (match == _fontCharacters.end())
-    {
-      match = _fontCharacters.begin();
-    }
-    ch = match->second;
-
-    GLfloat xpos = surfaceSpace.getX() + ch.bearing.getX() * scale;
-    GLfloat ypos = surfaceSpace.getY() - (ch.size.getY() - ch.size.getY()) * scale;
-
-    GLfloat w = ch.size.getX() * scale;
-    GLfloat h = ch.size.getY() * scale;
-    // Update VBO for each character
-    GLfloat vertices[6][4] = {
-        { xpos,     ypos + h,   0.0, 0.0 },
-        { xpos,     ypos,       0.0, 1.0 },
-        { xpos + w, ypos,       1.0, 1.0 },
-
-        { xpos,     ypos + h,   0.0, 0.0 },
-        { xpos + w, ypos,       1.0, 1.0 },
-        { xpos + w, ypos + h,   1.0, 0.0 }
-    };
-    // Render glyph texture over quad
-    glBindTexture(GL_TEXTURE_2D, ch.textureId);
-
-
-
-    // Update content of VBO memory
-    glBindBuffer(GL_ARRAY_BUFFER, _textBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // Render quad
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-    surfaceSpace.setX(surfaceSpace.getX() + (ch.advance >> 6) * scale); // Bitshift by 6 to get value in pixels (2^6 = 64)
-  }
-  glBindVertexArray(0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
+return;
   }
 
 RGBAConfig NovelTextRect::getColourConfig() const {
@@ -73,7 +21,6 @@ void NovelTextRect::setColourConfig(const RGBAConfig& value) {
   configureObjectBuffers();
 }
 void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
-  NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
   if (refreshBuffers) {
     FT_Library freeTypeLoader;
@@ -86,6 +33,7 @@ void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
     FT_Set_Pixel_Sizes(face, 0, _fontSize);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+
 
     for (GLubyte c = 0; c < 128; c++)
     {
@@ -127,7 +75,7 @@ void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
     FT_Done_Face(face);
     FT_Done_FreeType(freeTypeLoader);
 
-    glGenBuffers(1, &_textBuffer);
+    //glGenBuffers(1, &_textBuffer);
   }
 }
 
@@ -139,10 +87,10 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                              const NovelCommonArgs& args,
                              const GLuint programId) : NovelRenderObject(layeringService,
                                                                          screenScale,
-                                                                         GeoVector<float>(0, 0),
+                                                                         GeoVector<float>(200, 200),
                                                                          args,
                                                                          programId), _colourConfig(colourConfig),
-                                                       _fontFileDir(fontFileDir), _fontSize(fontSize) {
+                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
 
 }
 std::string NovelTextRect::getText() const {
@@ -150,5 +98,43 @@ std::string NovelTextRect::getText() const {
 }
 void NovelTextRect::setText(const std::string& value) {
   _text = value;
+  int difference = _text.length() - _letterRects.size();
+  for(int i = 0; i < difference; i++) {
+    _letterRects.push_back(new NovelImageRect(_layeringService, _screenScale, GeoVector<float>(50, 50),_args, _programId));
+  }
+  reloadText();
+}
+void NovelTextRect::reloadText() {
+
+  auto worldSpace = getWorldSpacePosition();
+
+  int i = 0;
+  for(const char& c : getText()) {
+    GraphicsCharacterRenderData ch;
+
+
+    auto match = _fontCharacters.find(c);
+    if (match == _fontCharacters.end())
+    {
+      match = _fontCharacters.begin();
+    }
+    ch = match->second;
+    auto target = _letterRects[i++];
+    target->setTextureInternal(ch.textureId);
+    target->setWorldSpacePosition(worldSpace);
+    target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
+    target->setScale(GeoVector<float>(1, 1));
+    target->setActive(true);
+    worldSpace.setX(static_cast<int>(worldSpace.getX()) + 10); //arbitrary value for a test
+
+  }
+
+  auto beginIt = _letterRects.begin() + i;
+  auto endIt = _letterRects.end();
+
+  auto unusedRects = std::vector<NovelImageRect*>(beginIt, endIt);
+  for(auto rect : unusedRects) {
+    rect->setActive(false);
+  }
 }
 }

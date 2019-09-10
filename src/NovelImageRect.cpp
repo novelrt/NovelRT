@@ -21,6 +21,15 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 
 }
 
+NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
+                               const float& screenScale,
+                               const GeoVector<float>& size,
+                               const NovelCommonArgs& args,
+                               GLuint programId) :  NovelRenderObject(layeringService, screenScale, size, args, programId),
+_imageDir("") {
+
+}
+
 void NovelImageRect::setScale(const GeoVector<float>& value) {
   NovelObject::_scale = value;
 }
@@ -68,6 +77,10 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
   NovelRenderObject::configureObjectBuffers(refreshBuffers);
 
   if (refreshBuffers) {
+
+    if(!_imageDir.empty()) {
+
+
     SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
     if(surface == nullptr) {
@@ -95,7 +108,9 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
 
     glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_free(surface);
 
+    }
     _uvCoordinates = {
       0.0f, 1.0f,
       1.0f, 0.0f,
@@ -109,7 +124,10 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
     glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
-    SDL_free(surface);
   }
 }
+void NovelImageRect::setTextureInternal(const GLuint textureId) {
+  _textureId = textureId;
+}
+
 }

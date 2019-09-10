@@ -66,7 +66,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
-  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
+  //_fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
@@ -160,6 +160,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   glDeleteShader(vertexShaderId);
   glDeleteShader(fragmentShaderId);
 
+
   return programId;
 }
 
@@ -200,7 +201,7 @@ NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig
                                                   const float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
-  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _texturedRectProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
