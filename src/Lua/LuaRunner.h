@@ -13,7 +13,10 @@ private:
   lua_State* _state;
   const char* _fileName;
 public:
-  LuaRunner(const std::string& fileName);
+  explicit LuaRunner(const std::string& fileName);
+  void run();
+  void stop();
+  void registerMethod(const char* name, lua_CFunction fn);
 };
 }
 
