@@ -1,9 +1,10 @@
-#include <iostream>
+#include "Lua/LuaRunner.h"
+#include "NovelCommonArgs.h"
+#include "NovelImageRect.h"
+#include "NovelLayeringService.h"
 #include "NovelRenderingService.h"
 #include "NovelRunner.h"
-#include "NovelImageRect.h"
-#include "NovelCommonArgs.h"
-#include "NovelLayeringService.h"
+#include <iostream>
 
 extern "C" {
 #include <lua.h>
@@ -25,6 +26,26 @@ static int average(lua_State* L) {
   return 2;
 }
 
+NovelRT::NovelRunner* _runner;
+
+static int draw(lua_State* l) {
+
+  printf("called");
+
+  auto rectArgs = NovelRT::NovelCommonArgs();
+  rectArgs.startingPosition.setY(1080 / 2);
+  rectArgs.startingPosition.setX((1080 / 2) + 400);
+  rectArgs.layer = 0;
+  rectArgs.orderInLayer = 1;
+  rectArgs.startingRotation = 0.0f;
+
+  _runner->getRenderer()->getBasicFillRect(
+      NovelRT::GeoVector<float>(200, 200),
+          NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+
+  return 2;
+}
+
 #ifdef WIN32
 #define setenv(name, value, overwrite) \
     static_assert(overwrite != 0);     \
@@ -36,12 +57,21 @@ NovelRT::NovelImageRect* novelChanRect;
 
 int main(int argc, char* argv[]) {
   //setenv("DISPLAY", "localhost:0", true);
-  L = luaL_newstate();
-  luaL_openlibs(L);
-  lua_register(L, "average", average);
-  luaL_dofile(L, "avg.lua");
-  lua_close(L);
+  //L = luaL_newstate();
+  //luaL_openlibs(L);
+  //lua_register(L, "average", average);
+  //luaL_dofile(L, "avg.lua");
+  //lua_close(L);
+
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
+
+  auto luaRunner = NovelRT::Lua::LuaRunner("test.lua");
+  luaRunner.registerMethod("drawSquare", draw);
+
+  _runner = &runner;
+
+  luaRunner.run();
+
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
@@ -50,14 +80,14 @@ int main(int argc, char* argv[]) {
 
   novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs);
 
-  auto rectArgs = NovelRT::NovelCommonArgs();
-  rectArgs.startingPosition = novelChanArgs.startingPosition;
-  rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
-  rectArgs.layer = 0;
-  rectArgs.orderInLayer = 1;
-  rectArgs.startingRotation = 0.0f;
+  //auto rectArgs = NovelRT::NovelCommonArgs();
+  //rectArgs.startingPosition = novelChanArgs.startingPosition;
+  //rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
+  //rectArgs.layer = 0;
+  //rectArgs.orderInLayer = 1;
+  //rectArgs.startingRotation = 0.0f;
 
-  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
 
   runner.runOnUpdate([](const float delta) {
     const float rotationAmount = 45.0f;
@@ -74,8 +104,8 @@ int main(int argc, char* argv[]) {
   });
 
 
-  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
-  rect->subscribeToInteracted([]{novelChanRect->setActive(!novelChanRect->getActive());});
+  //auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
+  //rect->subscribeToInteracted([]{novelChanRect->setActive(!novelChanRect->getActive());});
 
 
   runner.runNovel();
