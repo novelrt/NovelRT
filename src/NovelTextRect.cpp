@@ -22,7 +22,7 @@ void NovelTextRect::setColourConfig(const RGBAConfig& value) {
 }
 void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
 
-  if (refreshBuffers) {
+  if (refreshBuffers && _fontCharacters.size() == 0) { //TODO: HAX
     FT_Library freeTypeLoader;
     if(FT_Init_FreeType(&freeTypeLoader)) {
       std::cerr << "ERROR: Failed to initialise Freetype." << std::endl;
@@ -106,7 +106,10 @@ void NovelTextRect::setText(const std::string& value) {
 }
 void NovelTextRect::reloadText() {
 
+  if(_fontCharacters.size() == 0) configureObjectBuffers(true);
+
   auto worldSpace = getWorldSpacePosition();
+  auto scale = getScaleHypotenuseScalar();
 
   int i = 0;
   for(const char& c : getText()) {
@@ -125,7 +128,7 @@ void NovelTextRect::reloadText() {
     target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setScale(GeoVector<float>(1, 1));
     target->setActive(true);
-    worldSpace.setX(static_cast<int>(worldSpace.getX()) + 10); //arbitrary value for a test
+    worldSpace.setX(worldSpace.getX() + (16 + ch.size.getX())); //arbitrary value for a test
 
   }
 
