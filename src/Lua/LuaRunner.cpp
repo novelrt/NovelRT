@@ -3,6 +3,7 @@
 //
 
 #include "LuaRunner.h"
+#include <iostream>
 #include <lua.hpp>
 #include <string>
 namespace NovelRT::Lua {
