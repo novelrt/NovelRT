@@ -65,7 +65,7 @@ void NovelImageRect::drawObject() const {
   );
 // Draw the triangle !
   glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
-  //auto bla = glGetError();
+  auto bla = glGetError();
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
