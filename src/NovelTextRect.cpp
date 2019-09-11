@@ -22,7 +22,9 @@ void NovelTextRect::setColourConfig(const RGBAConfig& value) {
 }
 void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
 
-  if (refreshBuffers && _fontCharacters.size() == 0) { //TODO: HAX
+
+
+  if (refreshBuffers) {
     FT_Library freeTypeLoader;
     if(FT_Init_FreeType(&freeTypeLoader)) {
       std::cerr << "ERROR: Failed to initialise Freetype." << std::endl;
@@ -76,6 +78,8 @@ void NovelTextRect::configureObjectBuffers(const bool refreshBuffers) {
     FT_Done_FreeType(freeTypeLoader);
 
     //glGenBuffers(1, &_textBuffer);
+
+    reloadText();
   }
 }
 
@@ -102,14 +106,10 @@ void NovelTextRect::setText(const std::string& value) {
   for(int i = 0; i < difference; i++) {
     _letterRects.push_back(new NovelImageRect(_layeringService, _screenScale, GeoVector<float>(50, 50),_args, _programId));
   }
-  reloadText();
 }
 void NovelTextRect::reloadText() {
 
-  if(_fontCharacters.size() == 0) configureObjectBuffers(true);
-
   auto worldSpace = getWorldSpacePosition();
-  auto scale = getScaleHypotenuseScalar();
 
   int i = 0;
   for(const char& c : getText()) {
@@ -122,15 +122,19 @@ void NovelTextRect::reloadText() {
       match = _fontCharacters.begin();
     }
     ch = match->second;
+
+    auto worldSpaceAdjusted = GeoVector<float>(worldSpace.getX(), worldSpace.getY() - (ch.size.getY() - ch.bearing.getY()));
+
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
-    target->setWorldSpacePosition(worldSpace);
+    target->setWorldSpacePosition(worldSpaceAdjusted);
     target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
-    target->setScale(GeoVector<float>(1, 1));
     target->setActive(true);
-    worldSpace.setX(worldSpace.getX() + (16 + ch.size.getX())); //arbitrary value for a test
+    worldSpace.setX(worldSpace.getX() + (ch.advance >> 6));
 
   }
+
+  if(_letterRects.size() == i + 1) return;
 
   auto beginIt = _letterRects.begin() + i;
   auto endIt = _letterRects.end();

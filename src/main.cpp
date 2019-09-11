@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
   //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(255, 255, 255, 255), 70, "Raleway-Regular.ttf", rectArgs);
-  textRect->setText("xyz{}|~");
+  textRect->setText("RubyNova");
 
 
 
