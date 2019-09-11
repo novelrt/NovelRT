@@ -109,7 +109,7 @@ void NovelTextRect::setText(const std::string& value) {
 }
 void NovelTextRect::reloadText() {
 
-  auto worldSpace = getWorldSpacePosition();
+  auto ttfOrigin = getWorldSpacePosition();
 
   int i = 0;
   for(const char& c : getText()) {
@@ -123,15 +123,14 @@ void NovelTextRect::reloadText() {
     }
     ch = match->second;
 
-    auto worldSpaceAdjusted = GeoVector<float>(worldSpace.getX(), worldSpace.getY() - (ch.size.getY() - ch.bearing.getY()));
+    auto currentWorldPosition = GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2) + ch.bearing.getX(), (ttfOrigin.getY() + (ch.bearing.getY() / 2)) - ((ch.size.getY() - ch.bearing.getY()) / 2));
 
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
-    target->setWorldSpacePosition(worldSpaceAdjusted);
+    target->setWorldSpacePosition(currentWorldPosition);
     target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setActive(true);
-    worldSpace.setX(worldSpace.getX() + (ch.advance >> 6));
-
+    ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }
 
   if(_letterRects.size() == i + 1) return;
