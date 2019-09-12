@@ -27,7 +27,7 @@ public:
   ~NovelBasicFillRect();
 
 protected:
-  virtual void configureObjectBuffers(bool refreshBuffers = false) override;
+  void configureObjectBuffers(bool refreshBuffers = false) final;
 
 private:
 

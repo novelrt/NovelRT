@@ -13,7 +13,7 @@ NovelObject::NovelObject(NovelLayeringService* layeringService, const float& scr
   setLayer(args.layer);
   setOrderInLayer(args.orderInLayer);
   _layeringService->updateLayerInfo(getLayer(), this, true);
-  setPosition(args.startingPosition);
+  setWorldSpacePosition(args.startingPosition);
   setRotation(args.startingRotation);
   setWorldSpaceSize(size);
   setScale(args.startingScale);
@@ -24,7 +24,7 @@ GeoVector<float> NovelObject::getWorldSpacePosition() const {
   return _position;
 }
 
-void NovelObject::setPosition(const GeoVector<float>& value) {
+void NovelObject::setWorldSpacePosition(const GeoVector<float>& value) {
   _isDirty = true;
   _position = value;
 }
@@ -83,7 +83,7 @@ void NovelObject::setOrderInLayer(const int value) {
   _layeringService->sortLayerOrder(getLayer());
 }
 
-GeoBounds NovelObject::getObjectBounds() {
+GeoBounds NovelObject::getScreenSpaceObjectBounds() {
   if(_isDirty) {
   _isDirty = false;
   GeoVector<float> position = getWorldSpacePosition();
@@ -91,5 +91,15 @@ GeoBounds NovelObject::getObjectBounds() {
   _objectBounds = GeoBounds(position, size, getRotation());
   }
   return _objectBounds;
+}
+float NovelObject::getScaleHypotenuseScalar() const {
+  auto scale = getScale();
+  return scale.getX() * scale.getY();
+}
+GeoVector<float> NovelObject::getScreenSpaceSize() const {
+  return getWorldSpaceSize() * _screenScale;
+}
+GeoVector<float> NovelObject::getScreenSpacePosition() const {
+  return getWorldSpacePosition() * _screenScale;
 }
 }

@@ -24,7 +24,7 @@ void NovelRenderObject::executeObjectBehaviour() {
 }
 
 void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
-  auto bounds = getObjectBounds();
+  auto bounds = getScreenSpaceObjectBounds();
 
   auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
   auto bottomRight = bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale);
@@ -63,8 +63,8 @@ void NovelRenderObject::setScale(const GeoVector<float>& value) {
   NovelObject::setScale(value);
   configureObjectBuffers();
 }
-void NovelRenderObject::setPosition(const GeoVector<float>& value) {
-  NovelObject::setPosition(value);
+void NovelRenderObject::setWorldSpacePosition(const GeoVector<float>& value) {
+  NovelObject::setWorldSpacePosition(value);
   configureObjectBuffers();
 }
 }
