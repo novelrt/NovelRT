@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
   textRect->setText("RubyGnomer");
 
-
+  runner.getDebugService()->setIsFpsCounterVisible(true);
 
   runner.runOnUpdate([](const double delta) {
     const float rotationAmount = 45.0f;
