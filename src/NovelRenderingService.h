@@ -16,6 +16,7 @@
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
+#include "NovelTextRect.h"
 #include <glad/glad.h>
 
 namespace NovelRT {
@@ -27,12 +28,17 @@ public:
 
   void tearDown() const;
 
-  NovelImageRect* getImageRect(const GeoVector<float>& startingSize, 
+  NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
                                const std::string_view filePath,
-                               const NovelCommonArgs& args);
+                               const NovelCommonArgs& args,
+                               const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);
+  NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
+                             const float fontSize,
+                             const std::string& fontFilePath,
+                             const NovelCommonArgs& args);
 
   float getScreenScale() const;
 
@@ -52,11 +58,11 @@ private:
 
   int _winWidth;
   int _winHeight;
-  int _frameBufferWidth;
 
   GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
+  GLuint _fontProgramId;
 };
 
 }

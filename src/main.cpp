@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
   novelChanArgs.startingPosition.setX(1920 / 2);
   novelChanArgs.startingPosition.setY(1080 / 2);
 
-  novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs);
+  novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;
@@ -57,7 +57,11 @@ int main(int argc, char* argv[]) {
   rectArgs.orderInLayer = 1;
   rectArgs.startingRotation = 0.0f;
 
-  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  textRect->setText("RubyGnomer");
+
+
 
   runner.runOnUpdate([](const float delta) {
     const float rotationAmount = 45.0f;

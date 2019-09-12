@@ -20,8 +20,9 @@
 
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-    std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
+    std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
   }
 
@@ -65,6 +66,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
+  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
@@ -137,7 +139,6 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   }
 
   // Link the program
-  //printf("Linking program\n");
   std::cout << "INFO: Linking program..." << std::endl;
   GLuint programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
@@ -159,6 +160,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   glDeleteShader(vertexShaderId);
   glDeleteShader(fragmentShaderId);
 
+
   return programId;
 }
 
@@ -169,7 +171,6 @@ int NovelRenderingService::initialiseRendering(const int displayNumber) {
   }
 
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
-  _frameBufferWidth = _winWidth;
 
   return 0;
 }
@@ -190,10 +191,18 @@ void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize, 
+NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
                                                     const std::string_view filePath,
-                                                    const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
+                                                    const NovelCommonArgs& args,
+                                                    const RGBAConfig& colourTint) {
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint);
+}
+
+NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
+                                                  const float fontSize,
+                                                  const std::string& fontFilePath,
+                                                  const NovelCommonArgs& args) {
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -208,7 +217,6 @@ NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<floa
                                                             const NovelCommonArgs& args) {
   return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
-
 float NovelRenderingService::getScreenScale() const {
   return _screenScale;
 }
