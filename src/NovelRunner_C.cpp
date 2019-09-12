@@ -14,15 +14,11 @@ void destroyRunner(NovelRunner_t* runner) {
   delete reinterpret_cast<NovelRT::NovelRunner*>(runner);
 }
 
-void executeUpdateSubscriptions(NovelRunner_t* runner, const float deltaTime) {
-  return reinterpret_cast<NovelRT::NovelRunner*>(runner)->executeUpdateSubscriptions(deltaTime);
-}
-
-void runOnUpdate(NovelRunner_t* runner, NovelSubscriber subscriber) {
+void runOnUpdate(NovelRunner_t* runner, NovelUpdateSubscriber subscriber) {
   return reinterpret_cast<NovelRT::NovelRunner*>(runner)->runOnUpdate(subscriber);
 }
 
-void stopRunningOnUpdate(NovelRunner_t* runner, NovelSubscriber subscriber) {
+void stopRunningOnUpdate(NovelRunner_t* runner, NovelUpdateSubscriber subscriber) {
   return reinterpret_cast<NovelRT::NovelRunner*>(runner)->stopRunningOnUpdate(subscriber);
 }
 
