@@ -9,9 +9,9 @@
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
-  StepTimer::StepTimer(uint32_t targetFrameRate) :
+  StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
     _frequency(SDL_GetPerformanceFrequency()),
-    _maxCounterDelta(_frequency / 10), // 1/10th of a second
+    _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),
     _lastCounter(SDL_GetPerformanceCounter()),
     _secondCounter(0),
     _remainingTicks(0),

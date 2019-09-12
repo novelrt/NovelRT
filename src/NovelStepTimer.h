@@ -19,7 +19,7 @@ namespace NovelRT {
     // Windows and some other platforms use 100ns ticks
     static const uint64_t TicksPerSecond = 10'000'000;
 
-    StepTimer(uint32_t targetFrameRate = 0);
+    StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1);
 
     uint64_t getElapsedTicks() const;
     uint64_t getTotalTicks() const;
