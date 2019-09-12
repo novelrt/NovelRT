@@ -63,11 +63,11 @@ int main(int argc, char* argv[]) {
 
 
 
-  runner.runOnUpdate([](const float delta) {
+  runner.runOnUpdate([](const double delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getRotation();
-    rotation += rotationAmount * delta;
+    rotation += rotationAmount * (float)delta;
 
     if (rotation > 360.0f)
     {
