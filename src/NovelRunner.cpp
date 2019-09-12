@@ -7,8 +7,8 @@
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
-NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService, uint32_t targetFrameRate)
-    : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)), _stepTimer(targetFrameRate) {
+  NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService, uint32_t targetFrameRate)
+    : _layeringService(layeringService), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)), _novelDebugService(std::make_unique<NovelDebugService>(this)), _stepTimer(targetFrameRate) {
   _novelRenderer->initialiseRendering(displayNumber);
   _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
   _novelInteractionService->subscribeToQuit([this]{_exitCode = 0;});
@@ -19,15 +19,7 @@ int NovelRunner::runNovel() {
 
   while (_exitCode) {
     _stepTimer.tick(_updateSubscribers);
-
-    auto framesPerSecond = _stepTimer.getFramesPerSecond();
-
-    if (framesPerSecond != lastFramesPerSecond) {
-      std::cout << "\33[2K"; // Erase the current line
-      std::cout << '\r';     // Move cursor to beginning of the line
-      std::cout << framesPerSecond << " fps";
-    }
-
+    _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
     _novelInteractionService->consumePlayerInput();
     _novelRenderer->beginFrame();
     _layeringService->executeAllObjectBehaviours();
@@ -65,5 +57,9 @@ void NovelRunner::stopRunningOnUpdate(NovelUpdateSubscriber subscriber) {
 
 NovelInteractionService* NovelRunner::getInteractionService() const {
   return _novelInteractionService.get();
+}
+
+NovelDebugService* NovelRunner::getDebugService() const {
+  return _novelDebugService.get();
 }
 }
