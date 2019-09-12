@@ -66,7 +66,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
-  //_fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
+  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
@@ -193,15 +193,16 @@ void NovelRenderingService::endFrame() const {
 
 NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
                                                     const std::string_view filePath,
-                                                    const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
+                                                    const NovelCommonArgs& args,
+                                                    const RGBAConfig& colourTint) {
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint);
 }
 
 NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
                                                   const float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
-  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _texturedRectProgramId);
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
