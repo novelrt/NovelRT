@@ -1,12 +1,14 @@
 #version 330 core
-in vec2 TexCoords;
-out vec4 color;
+out vec4 fragColor;
 
-uniform sampler2D text;
-uniform vec3 textColour;
+in vec2 texCoord;
+in vec4 colourTint;
+
+uniform sampler2D ourTexture;
 
 void main()
 {
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
-    color = vec4(textColor, 1.0) * sampled;
+    vec3 glyphColour = texture(ourTexture, texCoord).rgb;
+    float alpha = glyphColour.r;
+    fragColor = vec4(1, 1, 1, alpha)  * colourTint;
 }

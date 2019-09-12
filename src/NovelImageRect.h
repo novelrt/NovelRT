@@ -16,18 +16,24 @@ public:
                  const float& screenScale,
                  const GeoVector<float>& size,
                  const std::string_view imageDir,
-                 const NovelCommonArgs& args, GLuint programId);
+                 const NovelCommonArgs& args,
+                 GLuint programId,
+                 const RGBAConfig& colourTint);
 
   NovelImageRect(NovelLayeringService* layeringService,
                  const float& screenScale,
                  const GeoVector<float>& size,
                  const NovelCommonArgs& args,
-                 GLuint programId);
+                 GLuint programId,
+                 const RGBAConfig& colourTint);
 
   void drawObject() const final;
   void setScale(const GeoVector<float>& value) final;
 
   void setTextureInternal(const GLuint textureId);
+
+  RGBAConfig getColourTintConfig() const;
+  void setColourTintConfig(const RGBAConfig& value);
 
 protected:
   void configureObjectBuffers(const bool refreshBuffers = false) final;
@@ -39,9 +45,11 @@ private:
   int _height;
   GLuint _textureId;
   std::vector<GLfloat> _uvCoordinates;
-
   GLuint _uvBuffer;
-  GLuint _colourBuffer;
+  GLuint _colourTintBuffer;
+  RGBAConfig _colourTint;
+  std::vector<GLfloat> _colourTintData;
+
 };
 
 }

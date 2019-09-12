@@ -30,7 +30,8 @@ public:
 
   NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
                                const std::string_view filePath,
-                               const NovelCommonArgs& args);
+                               const NovelCommonArgs& args,
+                               const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);

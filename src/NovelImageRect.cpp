@@ -15,9 +15,10 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
                                const std::string_view imageDir,
                                const NovelCommonArgs& args,
-                               const GLuint programId) :
+                               const GLuint programId,
+                               const RGBAConfig& colourTint) :
     NovelRenderObject(layeringService, screenScale, size, args, programId),
-    _imageDir(imageDir) {
+    _imageDir(imageDir), _colourTint(colourTint) {
 
 }
 
@@ -25,8 +26,9 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const float& screenScale,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
-                               GLuint programId) :  NovelRenderObject(layeringService, screenScale, size, args, programId),
-_imageDir("") {
+                               GLuint programId,
+                               const RGBAConfig& colourTint) :  NovelRenderObject(layeringService, screenScale, size, args, programId),
+_imageDir(""), _colourTint(colourTint) {
 
 }
 
@@ -45,32 +47,40 @@ void NovelImageRect::drawObject() const {
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, _buffer);
   glVertexAttribPointer(
-      0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-      3,                  // size
-      GL_FLOAT,           // type
-      GL_FALSE,           // normalized?
-      0,                  // stride
-      nullptr          // array buffer offset
+      0,
+      3,
+      GL_FLOAT,
+      GL_FALSE,
+      0,
+      nullptr
   );
 
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glVertexAttribPointer(
-      1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-      2,                                // size
-      GL_FLOAT,                         // type
-      GL_FALSE,                         // normalized?
-      0,                                // stride
-      nullptr                        // array buffer offset
+      1,
+      2,
+      GL_FLOAT,
+      GL_FALSE,
+      0,
+      nullptr
   );
-// Draw the triangle !
-  glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
-  auto bla = glGetError();
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer);
+  glVertexAttribPointer(
+      2,
+      4,
+      GL_FLOAT,
+      GL_FALSE,
+      0,
+      nullptr
+  );
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDisableVertexAttribArray(2);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
-
-
 }
 
 void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
@@ -124,10 +134,35 @@ void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
     glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
+
+    auto config = getColourTintConfig();
+    auto rScalar = config.getRScalar();
+    auto gScalar = config.getGScalar();
+    auto bScalar = config.getBScalar();
+    auto aScalar = config.getAScalar();
+
+    _colourTintData = {
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+        rScalar, gScalar, bScalar, aScalar,
+    };
+
+    glGenBuffers(1, &_colourTintBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
   }
 }
 void NovelImageRect::setTextureInternal(const GLuint textureId) {
   _textureId = textureId;
+}
+RGBAConfig NovelImageRect::getColourTintConfig() const {
+  return _colourTint;
+}
+void NovelImageRect::setColourTintConfig(const RGBAConfig& value) {
+  _colourTint = value;
 }
 
 }
