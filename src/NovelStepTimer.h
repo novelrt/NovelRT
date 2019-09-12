@@ -48,7 +48,7 @@ namespace NovelRT {
     }
 
     void resetElapsedTime();
-    void tick(std::vector<NovelUpdateSubscriber> update);
+    void tick(const std::vector<NovelUpdateSubscriber>& update);
 
   private:
     const uint64_t _frequency;

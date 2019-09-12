@@ -32,7 +32,8 @@ namespace NovelRT {
     _framesThisSecond = 0;
   }
 
-  void StepTimer::tick(std::vector<NovelUpdateSubscriber> update) {
+  void StepTimer::tick(const std::vector<NovelUpdateSubscriber>& update) {
+
     auto currentCounter = SDL_GetPerformanceCounter();
     auto counterDelta = currentCounter - _lastCounter;
 
