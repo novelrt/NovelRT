@@ -19,7 +19,7 @@
 #include <sstream>
 
 //DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
-void GLAPIENTRY
+/*void GLAPIENTRY
 messageCallback(GLenum source,
                 GLenum type,
                 GLuint id,
@@ -34,7 +34,7 @@ messageCallback(GLenum source,
     fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
              ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
              type, severity, message );
-}
+}*/
 
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
@@ -78,8 +78,8 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   //DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
     // During init, enable debug output
-    glEnable( GL_DEBUG_OUTPUT );
-  glDebugMessageCallback(messageCallback, 0);
+/*    glEnable( GL_DEBUG_OUTPUT );
+  glDebugMessageCallback(messageCallback, 0);*/
 
   std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
   std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;

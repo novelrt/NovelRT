@@ -179,7 +179,7 @@ void NovelImageRect::configureObjectBuffers() {
 
   glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
   glGenerateMipmap(GL_TEXTURE_2D);
-  SDL_free(surface);
+  SDL_FreeSurface(surface);
 }
 
 void NovelImageRect::setTextureInternal(GLuint textureId) {
