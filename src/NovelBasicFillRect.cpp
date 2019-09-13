@@ -15,11 +15,7 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const NovelCommonArgs& args,
                                        GLuint programId) :
     NovelRenderObject(layeringService, screenScale, size, args, programId), _colourConfig(fillColour),
-    _colourBuffer(Lazy<GLuint>([] {
-      GLuint tempBuffer;
-      glGenBuffers(1, &tempBuffer);
-      return tempBuffer;
-    })) {
+    _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {
 }
 
 void NovelBasicFillRect::drawObject() {

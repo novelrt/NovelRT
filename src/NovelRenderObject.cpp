@@ -18,11 +18,7 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                                                  glGenVertexArrays(1, &tempVao);
                                                                  return tempVao;
                                                                })),
-                                                               _buffer(Lazy<GLuint>([] {
-                                                                 GLuint tempBuffer;
-                                                                 glGenBuffers(1, &tempBuffer);
-                                                                 return tempBuffer;
-                                                               })) {
+                                                               _buffer(Lazy<GLuint>(generateStandardBuffer)) {
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
@@ -79,5 +75,11 @@ NovelRenderObject::~NovelRenderObject() {
 
   auto vao = _vertexArrayObject.getActual();
   glDeleteVertexArrays(1, &vao);
+}
+
+GLuint NovelRenderObject::generateStandardBuffer() {
+  GLuint tempBuffer;
+  glGenBuffers(1, &tempBuffer);
+  return tempBuffer;
 }
 }

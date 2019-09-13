@@ -26,6 +26,7 @@ public:
 protected:
   virtual void drawObject() = 0;
   virtual void configureObjectBuffers();
+  static GLuint generateStandardBuffer();
 
   Lazy<GLuint> _buffer;
   Lazy<GLuint> _vertexArrayObject;

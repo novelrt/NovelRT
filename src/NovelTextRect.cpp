@@ -76,10 +76,7 @@ void NovelTextRect::configureObjectBuffers() {
   FT_Done_Face(face);
   FT_Done_FreeType(freeTypeLoader);
 
-  //glGenBuffers(1, &_textBuffer);
-
   reloadText();
-
 }
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
@@ -110,6 +107,7 @@ void NovelTextRect::setText(const std::string& value) {
                                               _programId,
                                               _colourConfig));
   }
+
   if (_bufferInitialised) {
     reloadText();
   }
