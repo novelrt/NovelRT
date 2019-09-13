@@ -18,21 +18,19 @@ public:
                      const NovelCommonArgs& args,
                      const GLuint programId);
 
-  void drawObject() const final;
+  void drawObject() final;
 
   RGBAConfig getColourConfig() const;
 
   void setColourConfig(const RGBAConfig& value);
 
-  ~NovelBasicFillRect();
-
 protected:
-  void configureObjectBuffers(bool refreshBuffers = false) final;
+  void configureObjectBuffers() final;
 
 private:
 
   RGBAConfig _colourConfig;
-  GLuint _colourBuffer;
+  Lazy<GLuint> _colourBuffer;
   std::vector<GLfloat> _colourData;
 };
 }
