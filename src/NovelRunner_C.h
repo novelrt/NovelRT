@@ -8,7 +8,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef void (* NovelSubscriber)(const float);
+typedef void (* NovelUpdateSubscriber)(const double);
 
 struct NovelRunner_C;
 typedef struct NovelRunner_C NovelRunner_t;
@@ -16,9 +16,8 @@ typedef struct NovelRunner_C NovelRunner_t;
 NovelRunner_t* createRunner(int);
 void destroyRunner(NovelRunner_t*);
 
-void runOnUpdate(NovelRunner_t*, NovelSubscriber);
-void stopRunningOnUpdate(NovelRunner_t*, NovelSubscriber);
-void executeUpdateSubscriptions(NovelRunner_t*, const float);
+void runOnUpdate(NovelRunner_t*, NovelUpdateSubscriber);
+void stopRunningOnUpdate(NovelRunner_t*, NovelUpdateSubscriber);
 int runNovel(NovelRunner_t*);
 
 #ifdef __cplusplus

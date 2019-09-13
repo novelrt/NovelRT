@@ -110,6 +110,9 @@ void NovelTextRect::setText(const std::string& value) {
                                               _programId,
                                               _colourConfig));
   }
+  if (_bufferInitialised) {
+    reloadText();
+  }
 }
 void NovelTextRect::reloadText() {
 
