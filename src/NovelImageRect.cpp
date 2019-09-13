@@ -124,8 +124,9 @@ void NovelImageRect::configureObjectBuffers() {
   glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
 
-  if (_imageDir.empty())
-    return;
+  if (_imageDir.empty() || _imageDir == _previousImageDir) return;
+
+  _previousImageDir = _imageDir;
 
   SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
