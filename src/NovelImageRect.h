@@ -27,29 +27,30 @@ public:
                  GLuint programId,
                  const RGBAConfig& colourTint);
 
-  void drawObject() const final;
+  void drawObject() final;
   void setScale(const GeoVector<float>& value) final;
 
-  void setTextureInternal(const GLuint textureId);
+  void setTextureInternal(GLuint textureId);
 
   RGBAConfig getColourTintConfig() const;
   void setColourTintConfig(const RGBAConfig& value);
+  ~NovelImageRect() override;
 
 protected:
-  void configureObjectBuffers(const bool refreshBuffers = false) final;
+  void configureObjectBuffers() final;
 
 private:
   std::string _imageDir;
   int _imageHandle;
   int _width;
   int _height;
-  GLuint _textureId;
+  LazyFunction<GLuint> _textureId;
   std::vector<GLfloat> _uvCoordinates;
-  GLuint _uvBuffer;
-  GLuint _colourTintBuffer;
+  LazyFunction<GLuint> _uvBuffer;
+  LazyFunction<GLuint> _colourTintBuffer;
   RGBAConfig _colourTint;
   std::vector<GLfloat> _colourTintData;
-
+  bool _textureIsSelfManaged = true;
 };
 
 }

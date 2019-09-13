@@ -22,7 +22,7 @@ public:
                 const NovelCommonArgs& args,
                 const GLuint programId);
 
-  void drawObject() const final;
+  void drawObject() final;
 
   RGBAConfig getColourConfig() const;
 
@@ -32,7 +32,7 @@ public:
   void setText(const std::string& value);
 
 protected:
-  void configureObjectBuffers(const bool refreshBuffers = false) final;
+  void configureObjectBuffers() final;
 private:
   void reloadText();
 
