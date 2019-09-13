@@ -194,8 +194,10 @@ RGBAConfig NovelImageRect::getColourTintConfig() const {
 void NovelImageRect::setColourTintConfig(const RGBAConfig& value) {
   _colourTint = value;
 }
+
 NovelImageRect::~NovelImageRect() {
-  if(_imageDir.empty()) return;
+  if(_imageDir.empty() && !_textureId.isCreated()) return;
+
   auto textureId = _textureId.getActual();
   glDeleteTextures(1, &textureId);
 }

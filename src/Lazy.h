@@ -15,6 +15,7 @@ public:
   Lazy(T eagerStartValue, std::function<T()> delegate);
   T getActual();
   void reset();
+  bool isCreated() const;
 private:
   std::function<T()> _delegate;
   std::unique_ptr<T> _actual = nullptr;
@@ -28,7 +29,7 @@ Lazy<T>::Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delega
 
 template <typename T>
 T Lazy<T>::getActual() {
-  if(_actual == nullptr) _actual = std::make_unique<T>(_delegate());
+  if(!isCreated()) _actual = std::make_unique<T>(_delegate());
 
   return *_actual;
 }
@@ -36,6 +37,10 @@ T Lazy<T>::getActual() {
 template <typename T>
 void Lazy<T>::reset() {
   _actual.reset();
+}
+template<typename T>
+bool Lazy<T>::isCreated() const {
+  return _actual != nullptr;
 }
 
 }

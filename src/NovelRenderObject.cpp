@@ -75,7 +75,9 @@ void NovelRenderObject::setWorldSpacePosition(const GeoVector<float>& value) {
   configureObjectBuffers();
 }
 NovelRenderObject::~NovelRenderObject() {
+  if(!_vertexArrayObject.isCreated()) return;
+
   auto vao = _vertexArrayObject.getActual();
-  glDeleteVertexArrays(1, &vao);
+  glDeleteVertexArrays(1, &_vertexArrayObject.getActual());
 }
 }
