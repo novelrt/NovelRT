@@ -9,6 +9,7 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
+//glGenBuffers(1, &_uvBuffer);
 
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const float& screenScale,
@@ -16,9 +17,27 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const std::string_view imageDir,
                                const NovelCommonArgs& args,
                                const GLuint programId,
-                               const RGBAConfig& colourTint) :
-    NovelRenderObject(layeringService, screenScale, size, args, programId),
-    _imageDir(imageDir), _colourTint(colourTint) {
+                               const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
+                                                                                 screenScale,
+                                                                                 size,
+                                                                                 args,
+                                                                                 programId),
+                                                               _imageDir(imageDir), _colourTint(colourTint),
+                                                               _uvBuffer(LazyFunction<GLuint>([] {
+                                                                 GLuint tempBuffer;
+                                                                 glGenBuffers(1, &tempBuffer);
+                                                                 return tempBuffer;
+                                                               })),
+                                                               _colourTintBuffer(LazyFunction<GLuint>([] {
+                                                                 GLuint tempBuffer;
+                                                                 glGenBuffers(1, &tempBuffer);
+                                                                 return tempBuffer;
+                                                               })),
+                                                               _textureId(LazyFunction<GLuint>([] {
+                                                                 GLuint tempTexture;
+                                                                 glGenTextures(1, &tempTexture);
+                                                                 return tempTexture;
+                                                               })){
 
 }
 
@@ -27,8 +46,28 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                GLuint programId,
-                               const RGBAConfig& colourTint) :  NovelRenderObject(layeringService, screenScale, size, args, programId),
-_imageDir(""), _colourTint(colourTint) {
+                               const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
+                                                                                 screenScale,
+                                                                                 size,
+                                                                                 args,
+                                                                                 programId),
+                                                               _imageDir(""), _colourTint(colourTint),
+                                                               _uvBuffer(LazyFunction<GLuint>([] {
+                                                                 GLuint tempBuffer;
+                                                                 glGenBuffers(1, &tempBuffer);
+                                                                 return tempBuffer;
+                                                               })),
+                                                               _colourTintBuffer(LazyFunction<GLuint>([] {
+                                                                 GLuint tempBuffer;
+                                                                 glGenBuffers(1, &tempBuffer);
+                                                                 return tempBuffer;
+                                                               })),
+                                                               _textureId(LazyFunction<GLuint>([] {
+                                                                 GLuint tempTexture;
+                                                                 glGenTextures(1, &tempTexture);
+                                                                 return tempTexture;
+                                                               })){
+  _textureIsSelfManaged = false;
 
 }
 
@@ -36,16 +75,15 @@ void NovelImageRect::setScale(const GeoVector<float>& value) {
   NovelObject::_scale = value;
 }
 
-void NovelImageRect::drawObject() const {
+void NovelImageRect::drawObject() {
   if (!getActive())
     return;
 
-
   glUseProgram(_programId);
-  glBindTexture(GL_TEXTURE_2D, _textureId);
-  glBindVertexArray(_vertexArrayObject);
+  glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
+  glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
   glVertexAttribPointer(
       0,
       3,
@@ -56,7 +94,7 @@ void NovelImageRect::drawObject() const {
   );
 
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
   glVertexAttribPointer(
       1,
       2,
@@ -66,7 +104,7 @@ void NovelImageRect::drawObject() const {
       nullptr
   );
   glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
   glVertexAttribPointer(
       2,
       4,
@@ -83,86 +121,85 @@ void NovelImageRect::drawObject() const {
   glBindVertexArray(0);
 }
 
-void NovelImageRect::configureObjectBuffers(const bool refreshBuffers) {
-  NovelRenderObject::configureObjectBuffers(refreshBuffers);
+void NovelImageRect::configureObjectBuffers() {
+  NovelRenderObject::configureObjectBuffers();
 
-  if (refreshBuffers) {
-
-    if(!_imageDir.empty()) {
-
-
-    SDL_Surface* surface = IMG_Load(_imageDir.c_str());
-
-    if(surface == nullptr) {
-      std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" <<std::endl;
-      throw -1;
-    }
-
-    if(_bufferInitialised) {
-      glDeleteTextures(1, &_textureId);
-    }
-
-    glGenTextures(1, &_textureId);
-    glBindTexture(GL_TEXTURE_2D, _textureId);
-
-    int mode = GL_RGB;
-
-    if(surface->format->BytesPerPixel == 4) {
-      mode = GL_RGBA;
-    }
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    SDL_free(surface);
-
-    }
-    _uvCoordinates = {
+  _uvCoordinates = {
       0.0f, 1.0f,
       1.0f, 0.0f,
       1.0f, 1.0f,
       0.0f, 1.0f,
       0.0f, 0.0f,
       1.0f, 0.0f
-    };
+  };
 
-    glGenBuffers(1, &_uvBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
 
-    auto config = getColourTintConfig();
-    auto rScalar = config.getRScalar();
-    auto gScalar = config.getGScalar();
-    auto bScalar = config.getBScalar();
-    auto aScalar = config.getAScalar();
+  auto config = getColourTintConfig();
+  auto rScalar = config.getRScalar();
+  auto gScalar = config.getGScalar();
+  auto bScalar = config.getBScalar();
+  auto aScalar = config.getAScalar();
 
-    _colourTintData = {
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-        rScalar, gScalar, bScalar, aScalar,
-    };
+  _colourTintData = {
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+      rScalar, gScalar, bScalar, aScalar,
+  };
 
-    glGenBuffers(1, &_colourTintBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
+
+  if (_imageDir.empty())
+    return;
+
+  SDL_Surface* surface = IMG_Load(_imageDir.c_str());
+
+  if (surface == nullptr) {
+    std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" << std::endl;
+    throw -1;
   }
+  glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
+
+  int mode = GL_RGB;
+
+  if (surface->format->BytesPerPixel == 4) {
+    mode = GL_RGBA;
+  }
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SDL_free(surface);
 }
-void NovelImageRect::setTextureInternal(const GLuint textureId) {
-  _textureId = textureId;
+
+void NovelImageRect::setTextureInternal(GLuint textureId) {
+  _textureIsSelfManaged = false;
+  _textureId = LazyFunction<GLuint>(textureId, []{
+    GLuint tempBuffer;
+    glGenBuffers(1, &tempBuffer);
+    return tempBuffer;
+  });
 }
 RGBAConfig NovelImageRect::getColourTintConfig() const {
   return _colourTint;
 }
 void NovelImageRect::setColourTintConfig(const RGBAConfig& value) {
   _colourTint = value;
+}
+NovelImageRect::~NovelImageRect() {
+  if(!_textureIsSelfManaged || _imageDir.empty()) return;
+  auto textureId = _textureId.getActual();
+  glDeleteTextures(1, &textureId);
 }
 
 }

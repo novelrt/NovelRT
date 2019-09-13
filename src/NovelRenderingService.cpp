@@ -18,6 +18,24 @@
 #include <fstream>
 #include <sstream>
 
+//DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
+void GLAPIENTRY
+messageCallback(GLenum source,
+                GLenum type,
+                GLuint id,
+                GLenum severity,
+                GLsizei length,
+                const GLchar* message,
+                const void* userParam ) {
+    if (severity < GL_DEBUG_SEVERITY_HIGH) {
+        return;
+    }
+
+    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+             type, severity, message );
+}
+
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
@@ -26,12 +44,13 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
     return false;
   }
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  SDL_DisplayMode displayData;
+
+    SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
 
@@ -51,10 +70,16 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   }
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
+
   if (!gladLoadGL()) {
     std::cerr << "ERROR: Failed to initialise glad." << std::endl;
     return -1;
   }
+
+  //DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
+    // During init, enable debug output
+    glEnable( GL_DEBUG_OUTPUT );
+  glDebugMessageCallback(messageCallback, 0);
 
   std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
   std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;

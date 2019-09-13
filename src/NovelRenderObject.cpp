@@ -11,19 +11,29 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const float screenScale,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) :
-    NovelObject(layeringService, screenScale, size, args), _programId(programId) {
+                                     const GLuint programId) : NovelObject(layeringService, screenScale, size, args),
+                                                               _programId(programId),
+                                                               _vertexArrayObject(LazyFunction<GLuint>([] {
+                                                                 GLuint tempVao;
+                                                                 glGenVertexArrays(1, &tempVao);
+                                                                 return tempVao;
+                                                               })),
+                                                               _buffer(LazyFunction<GLuint>([] {
+                                                                 GLuint tempBuffer;
+                                                                 glGenBuffers(1, &tempBuffer);
+                                                                 return tempBuffer;
+                                                               })) {
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
-  if(!_bufferInitialised) {
-    configureObjectBuffers(true);
+  if (!_bufferInitialised) {
+    configureObjectBuffers();
     _bufferInitialised = true;
   }
   drawObject();
 }
 
-void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
+void NovelRenderObject::configureObjectBuffers() {
   auto bounds = getScreenSpaceObjectBounds();
 
   auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
@@ -39,13 +49,10 @@ void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
       bottomRight.getX(), bottomRight.getY(), 0.0f,
   };
 
-  if (refreshBuffers) {
-    glGenVertexArrays(1, &_vertexArrayObject);
-    glGenBuffers(1, &_buffer);
-  }
+  _vertexArrayObject.getActual(); //this is just here to force initialisation.
 
 // The following commands will talk about our 'vertexbuffer' buffer
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
 
 // Give our vertices to OpenGL.
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
@@ -66,5 +73,9 @@ void NovelRenderObject::setScale(const GeoVector<float>& value) {
 void NovelRenderObject::setWorldSpacePosition(const GeoVector<float>& value) {
   NovelObject::setWorldSpacePosition(value);
   configureObjectBuffers();
+}
+NovelRenderObject::~NovelRenderObject() {
+  auto vao = _vertexArrayObject.getActual();
+  glDeleteVertexArrays(1, &vao);
 }
 }
