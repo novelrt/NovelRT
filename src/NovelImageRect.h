@@ -50,7 +50,6 @@ private:
   Lazy<GLuint> _colourTintBuffer;
   RGBAConfig _colourTint;
   std::vector<GLfloat> _colourTintData;
-  bool _textureIsSelfManaged = true;
 };
 
 }
