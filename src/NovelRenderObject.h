@@ -5,7 +5,7 @@
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
-#include "LazyFunction.h"
+#include "Lazy.h"
 #include <string>
 #include <glad/glad.h>
 #include <memory>
@@ -27,8 +27,8 @@ protected:
   virtual void drawObject() = 0;
   virtual void configureObjectBuffers();
 
-  LazyFunction<GLuint> _buffer;
-  LazyFunction<GLuint> _vertexArrayObject;
+  Lazy<GLuint> _buffer;
+  Lazy<GLuint> _vertexArrayObject;
   GLuint _programId;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;

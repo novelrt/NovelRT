@@ -44,10 +44,10 @@ private:
   int _imageHandle;
   int _width;
   int _height;
-  LazyFunction<GLuint> _textureId;
+  Lazy<GLuint> _textureId;
   std::vector<GLfloat> _uvCoordinates;
-  LazyFunction<GLuint> _uvBuffer;
-  LazyFunction<GLuint> _colourTintBuffer;
+  Lazy<GLuint> _uvBuffer;
+  Lazy<GLuint> _colourTintBuffer;
   RGBAConfig _colourTint;
   std::vector<GLfloat> _colourTintData;
   bool _textureIsSelfManaged = true;
