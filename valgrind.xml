@@ -1,0 +1,3565 @@
+<?xml version="1.0"?>
+
+<valgrindoutput>
+
+<protocolversion>4</protocolversion>
+<protocoltool>memcheck</protocoltool>
+
+<preamble>
+  <line>Memcheck, a memory error detector</line>
+  <line>Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.</line>
+  <line>Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info</line>
+  <line>Command: /home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</line>
+</preamble>
+
+<pid>6553</pid>
+<ppid>5608</ppid>
+<tool>memcheck</tool>
+
+<args>
+  <vargv>
+    <exe>/usr/bin/valgrind.bin</exe>
+    <arg>--tool=memcheck</arg>
+    <arg>--xml=yes</arg>
+    <arg>--xml-file=/tmp/valgrind</arg>
+    <arg>--gen-suppressions=all</arg>
+    <arg>--leak-check=full</arg>
+    <arg>--leak-resolution=med</arg>
+    <arg>--track-origins=yes</arg>
+    <arg>--vgdb=no</arg>
+  </vargv>
+  <argv>
+    <exe>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</exe>
+  </argv>
+</args>
+
+<status>
+  <state>RUNNING</state>
+  <time>00:00:00:00.124 </time>
+</status>
+
+<error>
+  <unique>0x0</unique>
+  <tid>1</tid>
+  <kind>SyscallParam</kind>
+  <what>Syscall param ioctl(generic) points to uninitialised byte(s)</what>
+  <stack>
+    <frame>
+      <ip>0x4CE5417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libc-2.29.so</obj>
+      <fn>ioctl</fn>
+      <dir>/build/glibc-KRRWSm/glibc-2.29/misc/../sysdeps/unix</dir>
+      <file>syscall-template.S</file>
+      <line>78</line>
+    </frame>
+    <frame>
+      <ip>0x77BB987</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0</obj>
+      <fn>drmIoctl</fn>
+    </frame>
+    <frame>
+      <ip>0x77BE7EB</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0</obj>
+      <fn>drmCommandWriteRead</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA7A4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0xC6CB13A</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <auxwhat>Address 0x73b1a52 is 2 bytes inside a block of size 72 alloc'd</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA74B</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0xC6CB13A</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773DFC3</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773E9C4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA74B</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0xC6CB13A</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773DFC3</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773E9C4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Param</skind>
+    <skaux>ioctl(generic)</skaux>
+    <sframe> <fun>ioctl</fun> </sframe>
+    <sframe> <fun>drmIoctl</fun> </sframe>
+    <sframe> <fun>drmCommandWriteRead</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj> </sframe>
+    <sframe> <fun>nouveau_device_new</fun> </sframe>
+    <sframe> <fun>nouveau_drm_screen_create</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drmCommandWriteRead
+   obj:/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+   fun:nouveau_device_new
+   fun:nouveau_drm_screen_create
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Param</skind>
+    <skaux>ioctl(generic)</skaux>
+    <sframe> <fun>ioctl</fun> </sframe>
+    <sframe> <fun>drmIoctl</fun> </sframe>
+    <sframe> <fun>drmCommandWriteRead</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj> </sframe>
+    <sframe> <fun>nouveau_device_new</fun> </sframe>
+    <sframe> <fun>nouveau_drm_screen_create</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drmCommandWriteRead
+   obj:/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+   fun:nouveau_device_new
+   fun:nouveau_drm_screen_create
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x1</unique>
+  <tid>1</tid>
+  <kind>SyscallParam</kind>
+  <what>Syscall param ioctl(generic) points to uninitialised byte(s)</what>
+  <stack>
+    <frame>
+      <ip>0x4CE5417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libc-2.29.so</obj>
+      <fn>ioctl</fn>
+      <dir>/build/glibc-KRRWSm/glibc-2.29/misc/../sysdeps/unix</dir>
+      <file>syscall-template.S</file>
+      <line>78</line>
+    </frame>
+    <frame>
+      <ip>0x77BB987</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0</obj>
+      <fn>drmIoctl</fn>
+    </frame>
+    <frame>
+      <ip>0x77BE7EB</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0</obj>
+      <fn>drmCommandWriteRead</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA915</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_object_mthd</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CB159</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <auxwhat>Address 0x73b1ae2 is 2 bytes inside a block of size 136 alloc'd</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA8D9</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_object_mthd</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CB159</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773DFC3</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773E9C4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CA8D9</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_object_mthd</fn>
+    </frame>
+    <frame>
+      <ip>0xC6CB159</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0</obj>
+      <fn>nouveau_device_new</fn>
+    </frame>
+    <frame>
+      <ip>0x7F3DC3C</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+      <fn>nouveau_drm_screen_create</fn>
+    </frame>
+    <frame>
+      <ip>0x7CDB3F5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7D7A417</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDF789</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7CDCC97</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj>
+    </frame>
+    <frame>
+      <ip>0x7755BDE</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773DFC3</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x773E9C4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Param</skind>
+    <skaux>ioctl(generic)</skaux>
+    <sframe> <fun>ioctl</fun> </sframe>
+    <sframe> <fun>drmIoctl</fun> </sframe>
+    <sframe> <fun>drmCommandWriteRead</fun> </sframe>
+    <sframe> <fun>nouveau_object_mthd</fun> </sframe>
+    <sframe> <fun>nouveau_device_new</fun> </sframe>
+    <sframe> <fun>nouveau_drm_screen_create</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drmCommandWriteRead
+   fun:nouveau_object_mthd
+   fun:nouveau_device_new
+   fun:nouveau_drm_screen_create
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Param</skind>
+    <skaux>ioctl(generic)</skaux>
+    <sframe> <fun>ioctl</fun> </sframe>
+    <sframe> <fun>drmIoctl</fun> </sframe>
+    <sframe> <fun>drmCommandWriteRead</fun> </sframe>
+    <sframe> <fun>nouveau_object_mthd</fun> </sframe>
+    <sframe> <fun>nouveau_device_new</fun> </sframe>
+    <sframe> <fun>nouveau_drm_screen_create</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0</obj> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drmCommandWriteRead
+   fun:nouveau_object_mthd
+   fun:nouveau_device_new
+   fun:nouveau_drm_screen_create
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x7</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E4A1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1847</line>
+    </frame>
+    <frame>
+      <ip>0x40D6B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__final_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1890</line>
+    </frame>
+    <frame>
+      <ip>0x40D4BB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1971</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x41EAEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::NovelTextRect(NovelRT::NovelLayeringService*, float, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::RGBAConfig const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>91</line>
+    </frame>
+    <frame>
+      <ip>0x41B515</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::getTextRect(NovelRT::RGBAConfig const&amp;, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>230</line>
+    </frame>
+    <frame>
+      <ip>0x410E99</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>61</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41B4CE</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::getTextRect(NovelRT::RGBAConfig const&amp;, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>230</line>
+    </frame>
+    <frame>
+      <ip>0x410E99</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>61</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x8</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E694</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__unguarded_linear_insert&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1828</line>
+    </frame>
+    <frame>
+      <ip>0x40E53B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1855</line>
+    </frame>
+    <frame>
+      <ip>0x40D6B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__final_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1890</line>
+    </frame>
+    <frame>
+      <ip>0x40D4BB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1971</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x41EAEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::NovelTextRect(NovelRT::NovelLayeringService*, float, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::RGBAConfig const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>91</line>
+    </frame>
+    <frame>
+      <ip>0x41B515</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::getTextRect(NovelRT::RGBAConfig const&amp;, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>230</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41B4CE</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::getTextRect(NovelRT::RGBAConfig const&amp;, float, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>230</line>
+    </frame>
+    <frame>
+      <ip>0x410E99</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>61</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT13NovelTextRectC1EPNS_20NovelLayeringServiceEffRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_10RGBAConfigERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT21NovelRenderingService11getTextRectERKNS_10RGBAConfigEfRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKNS_15NovelCommonArgsE
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x3f</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E06C</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__move_median_to_first&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>83</line>
+    </frame>
+    <frame>
+      <ip>0x40D7B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt; std::__unguarded_partition_pivot&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1921</line>
+    </frame>
+    <frame>
+      <ip>0x40D59B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__introsort_loop&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1953</line>
+    </frame>
+    <frame>
+      <ip>0x40D498</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1968</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x40</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E0BC</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__move_median_to_first&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>85</line>
+    </frame>
+    <frame>
+      <ip>0x40D7B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt; std::__unguarded_partition_pivot&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1921</line>
+    </frame>
+    <frame>
+      <ip>0x40D59B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__introsort_loop&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1953</line>
+    </frame>
+    <frame>
+      <ip>0x40D498</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1968</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt22__move_median_to_firstIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x41</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E30C</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt; std::__unguarded_partition&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1905</line>
+    </frame>
+    <frame>
+      <ip>0x40D7F3</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt; std::__unguarded_partition_pivot&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1923</line>
+    </frame>
+    <frame>
+      <ip>0x40D59B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__introsort_loop&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, long, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1953</line>
+    </frame>
+    <frame>
+      <ip>0x40D498</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1968</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt21__unguarded_partitionIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt21__unguarded_partitionIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt21__unguarded_partitionIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt21__unguarded_partitionIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_SE_T0_
+   fun:_ZSt27__unguarded_partition_pivotIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEET_SE_SE_T0_
+   fun:_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_T1_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x43</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E4A1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1847</line>
+    </frame>
+    <frame>
+      <ip>0x40D663</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__final_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1885</line>
+    </frame>
+    <frame>
+      <ip>0x40D4BB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1971</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x44</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E694</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__unguarded_linear_insert&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1828</line>
+    </frame>
+    <frame>
+      <ip>0x40E53B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1855</line>
+    </frame>
+    <frame>
+      <ip>0x40D663</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__final_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1885</line>
+    </frame>
+    <frame>
+      <ip>0x40D4BB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1971</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x46</unique>
+  <tid>1</tid>
+  <kind>UninitCondition</kind>
+  <what>Conditional jump or move depends on uninitialised value(s)</what>
+  <stack>
+    <frame>
+      <ip>0x40E694</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__unguarded_linear_insert&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Val_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1828</line>
+    </frame>
+    <frame>
+      <ip>0x40E5AD</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__unguarded_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1867</line>
+    </frame>
+    <frame>
+      <ip>0x40D690</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__final_insertion_sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1886</line>
+    </frame>
+    <frame>
+      <ip>0x40D4BB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::__sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt; &gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__ops::_Iter_comp_iter&lt;NovelRT::NovelObjectSortComparison&gt;)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>1971</line>
+    </frame>
+    <frame>
+      <ip>0x4098B1</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>void std::sort&lt;__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison&gt;(__gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;NovelRT::NovelObject**, std::vector&lt;NovelRT::NovelObject*, std::allocator&lt;NovelRT::NovelObject*&gt; &gt; &gt;, NovelRT::NovelObjectSortComparison)</fn>
+      <dir>/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits</dir>
+      <file>stl_algo.h</file>
+      <line>4866</line>
+    </frame>
+    <frame>
+      <ip>0x408B01</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::sortLayerOrder(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>27</line>
+    </frame>
+    <frame>
+      <ip>0x408A39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::updateLayerInfo(int, NovelRT::NovelObject*, bool)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>23</line>
+    </frame>
+    <frame>
+      <ip>0x407614</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::setLayer(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>73</line>
+    </frame>
+    <frame>
+      <ip>0x407329</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelObject::NovelObject(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelObject.cpp</file>
+      <line>13</line>
+    </frame>
+    <frame>
+      <ip>0x41D0E8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::NovelRenderObject(NovelRT::NovelLayeringService*, float, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>14</line>
+    </frame>
+    <frame>
+      <ip>0x414B39</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::NovelImageRect(NovelRT::NovelLayeringService*, float const&amp;, NovelRT::GeoVector&lt;float&gt; const&amp;, NovelRT::NovelCommonArgs const&amp;, unsigned int, NovelRT::RGBAConfig const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>49</line>
+    </frame>
+    <frame>
+      <ip>0x41ED71</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+  </stack>
+  <auxwhat>Uninitialised value was created by a heap allocation</auxwhat>
+  <stack>
+    <frame>
+      <ip>0x4838DBF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>operator new(unsigned long)</fn>
+    </frame>
+    <frame>
+      <ip>0x41ECEF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelTextRect::setText(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelTextRect.cpp</file>
+      <line>106</line>
+    </frame>
+    <frame>
+      <ip>0x410F1F</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>62</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt26__unguarded_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt26__unguarded_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Cond</skind>
+    <sframe> <fun>_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt26__unguarded_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_</fun> </sframe>
+    <sframe> <fun>_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObject8setLayerEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_T0_
+   fun:_ZSt26__unguarded_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt22__final_insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt6__sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterINS2_25NovelObjectSortComparisonEEEEvT_SE_T0_
+   fun:_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN7NovelRT11NovelObjectESt6vectorIS4_SaIS4_EEEENS2_25NovelObjectSortComparisonEEvT_SB_T0_
+   fun:_ZN7NovelRT20NovelLayeringService14sortLayerOrderEi
+   fun:_ZN7NovelRT20NovelLayeringService15updateLayerInfoEiPNS_11NovelObjectEb
+   fun:_ZN7NovelRT11NovelObject8setLayerEi
+   fun:_ZN7NovelRT11NovelObjectC2EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsE
+   fun:_ZN7NovelRT17NovelRenderObjectC2EPNS_20NovelLayeringServiceEfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEj
+   fun:_ZN7NovelRT14NovelImageRectC1EPNS_20NovelLayeringServiceERKfRKNS_9GeoVectorIfEERKNS_15NovelCommonArgsEjRKNS_10RGBAConfigE
+   fun:_ZN7NovelRT13NovelTextRect7setTextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+}
+]]>
+    </rawtext>
+  </suppression>
+
+<status>
+  <state>FINISHED</state>
+  <time>00:00:01:18.489 </time>
+</status>
+
+<error>
+  <unique>0x95</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>17 bytes in 1 blocks are definitely lost in loss record 63 of 629</text>
+    <leakedbytes>17</leakedbytes>
+    <leakedblocks>1</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0x5219ED4</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>_XlcDefaultMapModifiers</fn>
+    </frame>
+    <frame>
+      <ip>0x521A2C5</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>XSetLocaleModifiers</fn>
+    </frame>
+    <frame>
+      <ip>0x67B43E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_InitKeyboard</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11keyboard.c</file>
+      <line>321</line>
+    </frame>
+    <frame>
+      <ip>0x5CE1B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_VideoInit</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11video.c</file>
+      <line>447</line>
+    </frame>
+    <frame>
+      <ip>0x4E7CF9</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_VideoInit_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_video.c</file>
+      <line>532</line>
+    </frame>
+    <frame>
+      <ip>0x5DADFC</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_InitSubSystem_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/SDL.c</file>
+      <line>171</line>
+    </frame>
+    <frame>
+      <ip>0x5DB192</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_Init_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/SDL.c</file>
+      <line>256</line>
+    </frame>
+    <frame>
+      <ip>0x4A29FB</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_Init_DEFAULT</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>85</line>
+    </frame>
+    <frame>
+      <ip>0x494676</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_Init</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>85</line>
+    </frame>
+    <frame>
+      <ip>0x419E48</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::initializeRenderPipeline(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>42</line>
+    </frame>
+    <frame>
+      <ip>0x41B1AE</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::initialiseRendering(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>193</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>_XlcDefaultMapModifiers</fun> </sframe>
+    <sframe> <fun>XSetLocaleModifiers</fun> </sframe>
+    <sframe> <fun>X11_InitKeyboard</fun> </sframe>
+    <sframe> <fun>X11_VideoInit</fun> </sframe>
+    <sframe> <fun>SDL_VideoInit_REAL</fun> </sframe>
+    <sframe> <fun>SDL_InitSubSystem_REAL</fun> </sframe>
+    <sframe> <fun>SDL_Init_REAL</fun> </sframe>
+    <sframe> <fun>SDL_Init_DEFAULT</fun> </sframe>
+    <sframe> <fun>SDL_Init</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:_XlcDefaultMapModifiers
+   fun:XSetLocaleModifiers
+   fun:X11_InitKeyboard
+   fun:X11_VideoInit
+   fun:SDL_VideoInit_REAL
+   fun:SDL_InitSubSystem_REAL
+   fun:SDL_Init_REAL
+   fun:SDL_Init_DEFAULT
+   fun:SDL_Init
+   fun:_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi
+   fun:_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>_XlcDefaultMapModifiers</fun> </sframe>
+    <sframe> <fun>XSetLocaleModifiers</fun> </sframe>
+    <sframe> <fun>X11_InitKeyboard</fun> </sframe>
+    <sframe> <fun>X11_VideoInit</fun> </sframe>
+    <sframe> <fun>SDL_VideoInit_REAL</fun> </sframe>
+    <sframe> <fun>SDL_InitSubSystem_REAL</fun> </sframe>
+    <sframe> <fun>SDL_Init_REAL</fun> </sframe>
+    <sframe> <fun>SDL_Init_DEFAULT</fun> </sframe>
+    <sframe> <fun>SDL_Init</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:_XlcDefaultMapModifiers
+   fun:XSetLocaleModifiers
+   fun:X11_InitKeyboard
+   fun:X11_VideoInit
+   fun:SDL_VideoInit_REAL
+   fun:SDL_InitSubSystem_REAL
+   fun:SDL_Init_REAL
+   fun:SDL_Init_DEFAULT
+   fun:SDL_Init
+   fun:_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi
+   fun:_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x28d</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>1,880 (152 direct, 1,728 indirect) bytes in 2 blocks are definitely lost in loss record 567 of 629</text>
+    <leakedbytes>1880</leakedbytes>
+    <leakedblocks>2</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483AD4B</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>realloc</fn>
+    </frame>
+    <frame>
+      <ip>0x52106C9</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+    </frame>
+    <frame>
+      <ip>0x5210B24</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+    </frame>
+    <frame>
+      <ip>0x521244E</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+    </frame>
+    <frame>
+      <ip>0x5212C67</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>_XlcCreateLC</fn>
+    </frame>
+    <frame>
+      <ip>0x522F6CF</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>_XlcDefaultLoader</fn>
+    </frame>
+    <frame>
+      <ip>0x521A11D</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>_XOpenLC</fn>
+    </frame>
+    <frame>
+      <ip>0x521A267</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>_XlcCurrentLC</fn>
+    </frame>
+    <frame>
+      <ip>0x521A29D</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj>
+      <fn>XSetLocaleModifiers</fn>
+    </frame>
+    <frame>
+      <ip>0x67B30D</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_InitKeyboard</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11keyboard.c</file>
+      <line>293</line>
+    </frame>
+    <frame>
+      <ip>0x5CE1B8</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_VideoInit</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11video.c</file>
+      <line>447</line>
+    </frame>
+    <frame>
+      <ip>0x4E7CF9</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_VideoInit_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_video.c</file>
+      <line>532</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>realloc</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <fun>_XlcCreateLC</fun> </sframe>
+    <sframe> <fun>_XlcDefaultLoader</fun> </sframe>
+    <sframe> <fun>_XOpenLC</fun> </sframe>
+    <sframe> <fun>_XlcCurrentLC</fun> </sframe>
+    <sframe> <fun>XSetLocaleModifiers</fun> </sframe>
+    <sframe> <fun>X11_InitKeyboard</fun> </sframe>
+    <sframe> <fun>X11_VideoInit</fun> </sframe>
+    <sframe> <fun>SDL_VideoInit_REAL</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:realloc
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XlcCreateLC
+   fun:_XlcDefaultLoader
+   fun:_XOpenLC
+   fun:_XlcCurrentLC
+   fun:XSetLocaleModifiers
+   fun:X11_InitKeyboard
+   fun:X11_VideoInit
+   fun:SDL_VideoInit_REAL
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>realloc</fun> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0</obj> </sframe>
+    <sframe> <fun>_XlcCreateLC</fun> </sframe>
+    <sframe> <fun>_XlcDefaultLoader</fun> </sframe>
+    <sframe> <fun>_XOpenLC</fun> </sframe>
+    <sframe> <fun>_XlcCurrentLC</fun> </sframe>
+    <sframe> <fun>XSetLocaleModifiers</fun> </sframe>
+    <sframe> <fun>X11_InitKeyboard</fun> </sframe>
+    <sframe> <fun>X11_VideoInit</fun> </sframe>
+    <sframe> <fun>SDL_VideoInit_REAL</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:realloc
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XlcCreateLC
+   fun:_XlcDefaultLoader
+   fun:_XOpenLC
+   fun:_XlcCurrentLC
+   fun:XSetLocaleModifiers
+   fun:X11_InitKeyboard
+   fun:X11_VideoInit
+   fun:SDL_VideoInit_REAL
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2a9</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>4,096 bytes in 1 blocks are definitely lost in loss record 595 of 629</text>
+    <leakedbytes>4096</leakedbytes>
+    <leakedblocks>1</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0x4C2548E</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libc-2.29.so</obj>
+      <fn>realpath@@GLIBC_2.3</fn>
+      <dir>/build/glibc-KRRWSm/glibc-2.29/stdlib</dir>
+      <file>canonicalize.c</file>
+      <line>78</line>
+    </frame>
+    <frame>
+      <ip>0x77659ED</ip>
+    </frame>
+    <frame>
+      <ip>0x7765627</ip>
+    </frame>
+    <frame>
+      <ip>0x775FBFF</ip>
+    </frame>
+    <frame>
+      <ip>0x7755B00</ip>
+    </frame>
+    <frame>
+      <ip>0x77428D8</ip>
+    </frame>
+    <frame>
+      <ip>0x773DFC3</ip>
+    </frame>
+    <frame>
+      <ip>0x773E9C4</ip>
+    </frame>
+    <frame>
+      <ip>0x680CCF</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_GL_GetVisual</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11opengl.c</file>
+      <line>606</line>
+    </frame>
+    <frame>
+      <ip>0x680505</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_GL_InitExtensions</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11opengl.c</file>
+      <line>342</line>
+    </frame>
+    <frame>
+      <ip>0x6802E7</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_GL_LoadLibrary</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11opengl.c</file>
+      <line>235</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>realpath@@GLIBC_2.3</fun> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <fun>X11_GL_GetVisual</fun> </sframe>
+    <sframe> <fun>X11_GL_InitExtensions</fun> </sframe>
+    <sframe> <fun>X11_GL_LoadLibrary</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:realpath@@GLIBC_2.3
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:X11_GL_GetVisual
+   fun:X11_GL_InitExtensions
+   fun:X11_GL_LoadLibrary
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>realpath@@GLIBC_2.3</fun> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <fun>X11_GL_GetVisual</fun> </sframe>
+    <sframe> <fun>X11_GL_InitExtensions</fun> </sframe>
+    <sframe> <fun>X11_GL_LoadLibrary</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:realpath@@GLIBC_2.3
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:X11_GL_GetVisual
+   fun:X11_GL_InitExtensions
+   fun:X11_GL_LoadLibrary
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2b8</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>9,344 bytes in 73 blocks are definitely lost in loss record 610 of 629</text>
+    <leakedbytes>9344</leakedbytes>
+    <leakedblocks>73</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483AB35</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>calloc</fn>
+    </frame>
+    <frame>
+      <ip>0x4D9386</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_calloc_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/stdlib/SDL_malloc.c</file>
+      <line>5344</line>
+    </frame>
+    <frame>
+      <ip>0x4E1586</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_AllocBlitMap</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_pixels.c</file>
+      <line>957</line>
+    </frame>
+    <frame>
+      <ip>0x4E4EDD</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurfaceWithFormat_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>133</line>
+    </frame>
+    <frame>
+      <ip>0x4E541E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>166</line>
+    </frame>
+    <frame>
+      <ip>0x499299</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>473</line>
+    </frame>
+    <frame>
+      <ip>0x68D96D</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadPNG_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG_png.c</file>
+      <line>393</line>
+    </frame>
+    <frame>
+      <ip>0x6870C6</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadTyped_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>242</line>
+    </frame>
+    <frame>
+      <ip>0x686F52</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_Load</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>156</line>
+    </frame>
+    <frame>
+      <ip>0x415587</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::configureObjectBuffers()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>161</line>
+    </frame>
+    <frame>
+      <ip>0x41D930</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::setRotation(float)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>67</line>
+    </frame>
+    <frame>
+      <ip>0x41130A</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main::$_0::operator()(float) const</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>77</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>calloc</fun> </sframe>
+    <sframe> <fun>SDL_calloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_AllocBlitMap</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   fun:SDL_calloc_REAL
+   fun:SDL_AllocBlitMap
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>calloc</fun> </sframe>
+    <sframe> <fun>SDL_calloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_AllocBlitMap</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   fun:SDL_calloc_REAL
+   fun:SDL_AllocBlitMap
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2c8</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>551,493 (400 direct, 551,093 indirect) bytes in 1 blocks are definitely lost in loss record 626 of 629</text>
+    <leakedbytes>551493</leakedbytes>
+    <leakedblocks>1</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483AB35</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>calloc</fn>
+    </frame>
+    <frame>
+      <ip>0x775565F</ip>
+    </frame>
+    <frame>
+      <ip>0x773D839</ip>
+    </frame>
+    <frame>
+      <ip>0x761E04B</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0</obj>
+    </frame>
+    <frame>
+      <ip>0x6819AC</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>X11_GL_CreateContext</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/x11/SDL_x11opengl.c</file>
+      <line>771</line>
+    </frame>
+    <frame>
+      <ip>0x4F2DC0</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_GL_CreateContext_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_video.c</file>
+      <line>3478</line>
+    </frame>
+    <frame>
+      <ip>0x49A993</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_GL_CreateContext</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>587</line>
+    </frame>
+    <frame>
+      <ip>0x41A089</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::initializeRenderPipeline(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>71</line>
+    </frame>
+    <frame>
+      <ip>0x41B1AE</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderingService::initialiseRendering(int)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderingService.cpp</file>
+      <line>193</line>
+    </frame>
+    <frame>
+      <ip>0x41733E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRunner::NovelRunner(int, NovelRT::NovelLayeringService*)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRunner.cpp</file>
+      <line>12</line>
+    </frame>
+    <frame>
+      <ip>0x410C8A</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>44</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>calloc</fun> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0</obj> </sframe>
+    <sframe> <fun>X11_GL_CreateContext</fun> </sframe>
+    <sframe> <fun>SDL_GL_CreateContext_REAL</fun> </sframe>
+    <sframe> <fun>SDL_GL_CreateContext</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelRunnerC1EiPNS_20NovelLayeringServiceE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+   fun:X11_GL_CreateContext
+   fun:SDL_GL_CreateContext_REAL
+   fun:SDL_GL_CreateContext
+   fun:_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi
+   fun:_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi
+   fun:_ZN7NovelRT11NovelRunnerC1EiPNS_20NovelLayeringServiceE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>calloc</fun> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>*</obj> </sframe>
+    <sframe> <obj>/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0</obj> </sframe>
+    <sframe> <fun>X11_GL_CreateContext</fun> </sframe>
+    <sframe> <fun>SDL_GL_CreateContext_REAL</fun> </sframe>
+    <sframe> <fun>SDL_GL_CreateContext</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelRunnerC1EiPNS_20NovelLayeringServiceE</fun> </sframe>
+    <sframe> <fun>main</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+   fun:X11_GL_CreateContext
+   fun:SDL_GL_CreateContext_REAL
+   fun:SDL_GL_CreateContext
+   fun:_ZN7NovelRT21NovelRenderingService24initializeRenderPipelineEi
+   fun:_ZN7NovelRT21NovelRenderingService19initialiseRenderingEi
+   fun:_ZN7NovelRT11NovelRunnerC1EiPNS_20NovelLayeringServiceE
+   fun:main
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2c9</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>1,127,232 bytes in 1 blocks are definitely lost in loss record 627 of 629</text>
+    <leakedbytes>1127232</leakedbytes>
+    <leakedblocks>1</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0x4D930B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_malloc_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/stdlib/SDL_malloc.c</file>
+      <line>5328</line>
+    </frame>
+    <frame>
+      <ip>0x4E4E7C</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurfaceWithFormat_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>122</line>
+    </frame>
+    <frame>
+      <ip>0x4E541E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>166</line>
+    </frame>
+    <frame>
+      <ip>0x499299</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>473</line>
+    </frame>
+    <frame>
+      <ip>0x68D96D</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadPNG_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG_png.c</file>
+      <line>393</line>
+    </frame>
+    <frame>
+      <ip>0x6870C6</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadTyped_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>242</line>
+    </frame>
+    <frame>
+      <ip>0x686F52</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_Load</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>156</line>
+    </frame>
+    <frame>
+      <ip>0x415587</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::configureObjectBuffers()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>161</line>
+    </frame>
+    <frame>
+      <ip>0x41D3B0</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::executeObjectBehaviour()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>30</line>
+    </frame>
+    <frame>
+      <ip>0x408BCC</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelLayeringService::executeAllObjectBehaviours()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelLayeringService.cpp</file>
+      <line>34</line>
+    </frame>
+    <frame>
+      <ip>0x41765E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRunner::runNovel()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRunner.cpp</file>
+      <line>28</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject22executeObjectBehaviourEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService26executeAllObjectBehavioursEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelRunner8runNovelEv</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject22executeObjectBehaviourEv
+   fun:_ZN7NovelRT20NovelLayeringService26executeAllObjectBehavioursEv
+   fun:_ZN7NovelRT11NovelRunner8runNovelEv
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject22executeObjectBehaviourEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT20NovelLayeringService26executeAllObjectBehavioursEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT11NovelRunner8runNovelEv</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject22executeObjectBehaviourEv
+   fun:_ZN7NovelRT20NovelLayeringService26executeAllObjectBehavioursEv
+   fun:_ZN7NovelRT11NovelRunner8runNovelEv
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2ca</unique>
+  <tid>1</tid>
+  <kind>Leak_PossiblyLost</kind>
+  <xwhat>
+    <text>18,035,712 bytes in 16 blocks are possibly lost in loss record 628 of 629</text>
+    <leakedbytes>18035712</leakedbytes>
+    <leakedblocks>16</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0x4D930B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_malloc_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/stdlib/SDL_malloc.c</file>
+      <line>5328</line>
+    </frame>
+    <frame>
+      <ip>0x4E4E7C</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurfaceWithFormat_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>122</line>
+    </frame>
+    <frame>
+      <ip>0x4E541E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>166</line>
+    </frame>
+    <frame>
+      <ip>0x499299</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>473</line>
+    </frame>
+    <frame>
+      <ip>0x68D96D</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadPNG_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG_png.c</file>
+      <line>393</line>
+    </frame>
+    <frame>
+      <ip>0x6870C6</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadTyped_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>242</line>
+    </frame>
+    <frame>
+      <ip>0x686F52</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_Load</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>156</line>
+    </frame>
+    <frame>
+      <ip>0x415587</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::configureObjectBuffers()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>161</line>
+    </frame>
+    <frame>
+      <ip>0x41D930</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::setRotation(float)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>67</line>
+    </frame>
+    <frame>
+      <ip>0x41130A</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main::$_0::operator()(float) const</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>77</line>
+    </frame>
+    <frame>
+      <ip>0x411266</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main::$_0::__invoke(float)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>66</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: possible</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainEN3$_08__invokeEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+   fun:_ZZ4mainEN3$_08__invokeEf
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: possible</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainEN3$_08__invokeEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+   fun:_ZZ4mainEN3$_08__invokeEf
+}
+]]>
+    </rawtext>
+  </suppression>
+<error>
+  <unique>0x2cb</unique>
+  <tid>1</tid>
+  <kind>Leak_DefinitelyLost</kind>
+  <xwhat>
+    <text>63,124,992 bytes in 56 blocks are definitely lost in loss record 629 of 629</text>
+    <leakedbytes>63124992</leakedbytes>
+    <leakedblocks>56</leakedblocks>
+  </xwhat>
+  <stack>
+    <frame>
+      <ip>0x483874F</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so</obj>
+      <fn>malloc</fn>
+    </frame>
+    <frame>
+      <ip>0x4D930B</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_malloc_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/stdlib/SDL_malloc.c</file>
+      <line>5328</line>
+    </frame>
+    <frame>
+      <ip>0x4E4E7C</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurfaceWithFormat_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>122</line>
+    </frame>
+    <frame>
+      <ip>0x4E541E</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface_REAL</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/video/SDL_surface.c</file>
+      <line>166</line>
+    </frame>
+    <frame>
+      <ip>0x499299</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>SDL_CreateRGBSurface</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2</dir>
+      <file>src/ease-2.0.9-520d112c65/src/dynapi/SDL_dynapi_procs.h</file>
+      <line>473</line>
+    </frame>
+    <frame>
+      <ip>0x68D96D</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadPNG_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG_png.c</file>
+      <line>393</line>
+    </frame>
+    <frame>
+      <ip>0x6870C6</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_LoadTyped_RW</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>242</line>
+    </frame>
+    <frame>
+      <ip>0x686F52</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>IMG_Load</fn>
+      <dir>/home/matt/Documents/vcpkg/buildtrees/sdl2-image</dir>
+      <file>src/2.0.5-633f4ae965/IMG.c</file>
+      <line>156</line>
+    </frame>
+    <frame>
+      <ip>0x415587</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelImageRect::configureObjectBuffers()</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelImageRect.cpp</file>
+      <line>161</line>
+    </frame>
+    <frame>
+      <ip>0x41D930</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>NovelRT::NovelRenderObject::setRotation(float)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/NovelRenderObject.cpp</file>
+      <line>67</line>
+    </frame>
+    <frame>
+      <ip>0x41130A</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main::$_0::operator()(float) const</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>77</line>
+    </frame>
+    <frame>
+      <ip>0x411266</ip>
+      <obj>/home/matt/Documents/NovelRT/cmake-build-debug/NovelRT</obj>
+      <fn>main::$_0::__invoke(float)</fn>
+      <dir>/home/matt/Documents/NovelRT</dir>
+      <file>src/main.cpp</file>
+      <line>66</line>
+    </frame>
+  </stack>
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainEN3$_08__invokeEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+   fun:_ZZ4mainEN3$_08__invokeEf
+}
+]]>
+    </rawtext>
+  </suppression>
+</error>
+
+  <suppression>
+    <sname>insert_a_suppression_name_here</sname>
+    <skind>Memcheck:Leak</skind>
+    <skaux>match-leak-kinds: definite</skaux>
+    <sframe> <fun>malloc</fun> </sframe>
+    <sframe> <fun>SDL_malloc_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurfaceWithFormat_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface_REAL</fun> </sframe>
+    <sframe> <fun>SDL_CreateRGBSurface</fun> </sframe>
+    <sframe> <fun>IMG_LoadPNG_RW</fun> </sframe>
+    <sframe> <fun>IMG_LoadTyped_RW</fun> </sframe>
+    <sframe> <fun>IMG_Load</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv</fun> </sframe>
+    <sframe> <fun>_ZN7NovelRT17NovelRenderObject11setRotationEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainENK3$_0clEf</fun> </sframe>
+    <sframe> <fun>_ZZ4mainEN3$_08__invokeEf</fun> </sframe>
+    <rawtext>
+<![CDATA[
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:SDL_malloc_REAL
+   fun:SDL_CreateRGBSurfaceWithFormat_REAL
+   fun:SDL_CreateRGBSurface_REAL
+   fun:SDL_CreateRGBSurface
+   fun:IMG_LoadPNG_RW
+   fun:IMG_LoadTyped_RW
+   fun:IMG_Load
+   fun:_ZN7NovelRT14NovelImageRect22configureObjectBuffersEv
+   fun:_ZN7NovelRT17NovelRenderObject11setRotationEf
+   fun:_ZZ4mainENK3$_0clEf
+   fun:_ZZ4mainEN3$_08__invokeEf
+}
+]]>
+    </rawtext>
+  </suppression>
+<errorcounts>
+  <pair>
+    <count>8</count>
+    <unique>0x44</unique>
+  </pair>
+  <pair>
+    <count>3</count>
+    <unique>0x43</unique>
+  </pair>
+  <pair>
+    <count>6</count>
+    <unique>0x41</unique>
+  </pair>
+  <pair>
+    <count>3</count>
+    <unique>0x40</unique>
+  </pair>
+  <pair>
+    <count>3</count>
+    <unique>0x3f</unique>
+  </pair>
+  <pair>
+    <count>1</count>
+    <unique>0x46</unique>
+  </pair>
+  <pair>
+    <count>49</count>
+    <unique>0x8</unique>
+  </pair>
+  <pair>
+    <count>7</count>
+    <unique>0x7</unique>
+  </pair>
+  <pair>
+    <count>6</count>
+    <unique>0x0</unique>
+  </pair>
+  <pair>
+    <count>1</count>
+    <unique>0x1</unique>
+  </pair>
+</errorcounts>
+
+<suppcounts>
+</suppcounts>
+
+</valgrindoutput>
+
