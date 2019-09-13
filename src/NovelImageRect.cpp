@@ -65,7 +65,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                  glGenTextures(1, &tempTexture);
                                                                  return tempTexture;
                                                                })){
-  _textureIsSelfManaged = false;
+  _imageDir = "";
 
 }
 
@@ -181,7 +181,7 @@ void NovelImageRect::configureObjectBuffers() {
 }
 
 void NovelImageRect::setTextureInternal(GLuint textureId) {
-  _textureIsSelfManaged = false;
+  _imageDir = "";
   _textureId = Lazy<GLuint>(textureId, []{
     GLuint tempBuffer;
     glGenBuffers(1, &tempBuffer);
@@ -195,7 +195,7 @@ void NovelImageRect::setColourTintConfig(const RGBAConfig& value) {
   _colourTint = value;
 }
 NovelImageRect::~NovelImageRect() {
-  if(!_textureIsSelfManaged || _imageDir.empty()) return;
+  if(_imageDir.empty()) return;
   auto textureId = _textureId.getActual();
   glDeleteTextures(1, &textureId);
 }
