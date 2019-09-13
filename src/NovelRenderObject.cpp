@@ -78,6 +78,6 @@ NovelRenderObject::~NovelRenderObject() {
   if(!_vertexArrayObject.isCreated()) return;
 
   auto vao = _vertexArrayObject.getActual();
-  glDeleteVertexArrays(1, &_vertexArrayObject.getActual());
+  glDeleteVertexArrays(1, &vao);
 }
 }
