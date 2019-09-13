@@ -5,8 +5,10 @@
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
 #include "NovelObject.h"
+#include "Lazy.h"
 #include <string>
 #include <glad/glad.h>
+#include <memory>
 
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
@@ -19,17 +21,19 @@ public:
   void setRotation(const float value) override;
   void setScale(const GeoVector<float>& value) override;
   void setWorldSpacePosition(const GeoVector<float>& value) override;
-
+  virtual ~NovelRenderObject();
 
 protected:
-  virtual void drawObject() const = 0;
-  virtual void configureObjectBuffers(const bool refreshBuffers = false);
+  virtual void drawObject() = 0;
+  virtual void configureObjectBuffers();
+  static GLuint generateStandardBuffer();
 
-  GLuint _buffer;
-  GLuint _vertexArrayObject;
+  Lazy<GLuint> _buffer;
+  Lazy<GLuint> _vertexArrayObject;
   GLuint _programId;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
+
 };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H
