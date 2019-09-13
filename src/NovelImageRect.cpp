@@ -9,8 +9,6 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
-//glGenBuffers(1, &_uvBuffer);
-
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const float& screenScale,
                                const GeoVector<float>& size,
