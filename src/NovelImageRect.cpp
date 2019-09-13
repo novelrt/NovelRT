@@ -21,16 +21,8 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                                  args,
                                                                                  programId),
                                                                _imageDir(imageDir), _colourTint(colourTint),
-                                                               _uvBuffer(Lazy<GLuint>([] {
-                                                                 GLuint tempBuffer;
-                                                                 glGenBuffers(1, &tempBuffer);
-                                                                 return tempBuffer;
-                                                               })),
-                                                               _colourTintBuffer(Lazy<GLuint>([] {
-                                                                 GLuint tempBuffer;
-                                                                 glGenBuffers(1, &tempBuffer);
-                                                                 return tempBuffer;
-                                                               })),
+                                                               _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
+                                                               _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
                                                                  glGenTextures(1, &tempTexture);
@@ -44,27 +36,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                GLuint programId,
-                               const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
-                                                                                 screenScale,
-                                                                                 size,
-                                                                                 args,
-                                                                                 programId),
-                                                               _imageDir(""), _colourTint(colourTint),
-                                                               _uvBuffer(Lazy<GLuint>([] {
-                                                                 GLuint tempBuffer;
-                                                                 glGenBuffers(1, &tempBuffer);
-                                                                 return tempBuffer;
-                                                               })),
-                                                               _colourTintBuffer(Lazy<GLuint>([] {
-                                                                 GLuint tempBuffer;
-                                                                 glGenBuffers(1, &tempBuffer);
-                                                                 return tempBuffer;
-                                                               })),
-                                                               _textureId(Lazy<GLuint>([] {
-                                                                 GLuint tempTexture;
-                                                                 glGenTextures(1, &tempTexture);
-                                                                 return tempTexture;
-                                                               })) {
+                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, screenScale, size, "", args, programId, colourTint) {
 
 }
 

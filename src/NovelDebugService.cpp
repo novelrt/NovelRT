@@ -2,6 +2,30 @@
 // Created by tagoo on 12/09/2019.
 //
 
+
+//TODO: Resolve older solution for this if possible.
+//DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
+/*void GLAPIENTRY
+messageCallback(GLenum source,
+                GLenum type,
+                GLuint id,
+                GLenum severity,
+                GLsizei length,
+                const GLchar* message,
+                const void* userParam ) {
+    if (severity < GL_DEBUG_SEVERITY_HIGH) {
+        return;
+    }
+
+    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+             type, severity, message );
+}*/
+
+// During init, enable debug output
+/*    glEnable( GL_DEBUG_OUTPUT );
+  glDebugMessageCallback(messageCallback, 0);*/
+
 #include <limits>
 #include "NovelDebugService.h"
 #include "NovelRunner.h"
