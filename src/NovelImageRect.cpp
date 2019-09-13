@@ -64,8 +64,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                  GLuint tempTexture;
                                                                  glGenTextures(1, &tempTexture);
                                                                  return tempTexture;
-                                                               })){
-  _imageDir = "";
+                                                               })) {
 
 }
 
