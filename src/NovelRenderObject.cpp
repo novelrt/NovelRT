@@ -13,12 +13,12 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const NovelCommonArgs& args,
                                      const GLuint programId) : NovelObject(layeringService, screenScale, size, args),
                                                                _programId(programId),
-                                                               _vertexArrayObject(LazyFunction<GLuint>([] {
+                                                               _vertexArrayObject(Lazy<GLuint>([] {
                                                                  GLuint tempVao;
                                                                  glGenVertexArrays(1, &tempVao);
                                                                  return tempVao;
                                                                })),
-                                                               _buffer(LazyFunction<GLuint>([] {
+                                                               _buffer(Lazy<GLuint>([] {
                                                                  GLuint tempBuffer;
                                                                  glGenBuffers(1, &tempBuffer);
                                                                  return tempBuffer;

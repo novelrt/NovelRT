@@ -23,17 +23,17 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                                  args,
                                                                                  programId),
                                                                _imageDir(imageDir), _colourTint(colourTint),
-                                                               _uvBuffer(LazyFunction<GLuint>([] {
+                                                               _uvBuffer(Lazy<GLuint>([] {
                                                                  GLuint tempBuffer;
                                                                  glGenBuffers(1, &tempBuffer);
                                                                  return tempBuffer;
                                                                })),
-                                                               _colourTintBuffer(LazyFunction<GLuint>([] {
+                                                               _colourTintBuffer(Lazy<GLuint>([] {
                                                                  GLuint tempBuffer;
                                                                  glGenBuffers(1, &tempBuffer);
                                                                  return tempBuffer;
                                                                })),
-                                                               _textureId(LazyFunction<GLuint>([] {
+                                                               _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
                                                                  glGenTextures(1, &tempTexture);
                                                                  return tempTexture;
@@ -52,17 +52,17 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                                  args,
                                                                                  programId),
                                                                _imageDir(""), _colourTint(colourTint),
-                                                               _uvBuffer(LazyFunction<GLuint>([] {
+                                                               _uvBuffer(Lazy<GLuint>([] {
                                                                  GLuint tempBuffer;
                                                                  glGenBuffers(1, &tempBuffer);
                                                                  return tempBuffer;
                                                                })),
-                                                               _colourTintBuffer(LazyFunction<GLuint>([] {
+                                                               _colourTintBuffer(Lazy<GLuint>([] {
                                                                  GLuint tempBuffer;
                                                                  glGenBuffers(1, &tempBuffer);
                                                                  return tempBuffer;
                                                                })),
-                                                               _textureId(LazyFunction<GLuint>([] {
+                                                               _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
                                                                  glGenTextures(1, &tempTexture);
                                                                  return tempTexture;
@@ -184,7 +184,7 @@ void NovelImageRect::configureObjectBuffers() {
 
 void NovelImageRect::setTextureInternal(GLuint textureId) {
   _textureIsSelfManaged = false;
-  _textureId = LazyFunction<GLuint>(textureId, []{
+  _textureId = Lazy<GLuint>(textureId, []{
     GLuint tempBuffer;
     glGenBuffers(1, &tempBuffer);
     return tempBuffer;

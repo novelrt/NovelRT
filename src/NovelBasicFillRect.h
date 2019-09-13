@@ -30,7 +30,7 @@ protected:
 private:
 
   RGBAConfig _colourConfig;
-  LazyFunction<GLuint> _colourBuffer;
+  Lazy<GLuint> _colourBuffer;
   std::vector<GLfloat> _colourData;
 };
 }
