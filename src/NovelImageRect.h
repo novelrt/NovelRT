@@ -41,6 +41,7 @@ protected:
 
 private:
   std::string _imageDir;
+  std::string _previousImageDir;
   int _imageHandle;
   int _width;
   int _height;

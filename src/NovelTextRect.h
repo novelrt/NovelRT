@@ -38,6 +38,7 @@ private:
 
   RGBAConfig _colourConfig;
   std::string _fontFileDir;
+  std::string _previousFontFileDir = "";
   float _fontSize;
   std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
   std::string _text = "";
