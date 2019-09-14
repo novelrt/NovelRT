@@ -102,4 +102,7 @@ GeoVector<float> NovelObject::getScreenSpaceSize() const {
 GeoVector<float> NovelObject::getScreenSpacePosition() const {
   return getWorldSpacePosition() * _screenScale;
 }
+void NovelObject::destroy() {
+  _layeringService->deleteFromMatrix(this, true);
+}
 }

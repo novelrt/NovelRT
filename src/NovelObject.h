@@ -54,6 +54,8 @@ public:
 
   virtual float getScaleHypotenuseScalar() const;
 
+  virtual void destroy();
+
 protected:
   GeoVector<float> _position;
   GeoVector<float> _scale;
