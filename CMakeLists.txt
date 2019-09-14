@@ -152,6 +152,22 @@ set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
 )
 
+target_compile_options(NovelRT
+  PRIVATE
+    -Werror
+    -Wall
+    -Wextra
+    -Wduplicated-cond
+    -Wduplicated-branches
+    -Wlogical-op
+    -Wrestrict
+    -Wnull-dereference
+    -Wuseless-cast
+    -Wdouble-promotion
+    -Wshadow
+    -Wformat=2
+)
+
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
 set_target_properties(NovelRTLib PROPERTIES PUBLIC_HEADER include/NovelRTLib_C.h)
