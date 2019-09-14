@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
+set(CMAKE_TOOLCHAIN_FILE /home/jarl/Programming/source-projects/vcpkg/scripts/buildsystems/vcpkg.cmake)
+
 project(NovelRT VERSION 0.0.1)
 include(GNUInstallDirs)
 

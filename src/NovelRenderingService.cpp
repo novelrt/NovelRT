@@ -18,6 +18,24 @@
 #include <fstream>
 #include <sstream>
 
+void GLAPIENTRY
+MessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+    if (severity < GL_DEBUG_SEVERITY_HIGH) {
+        return;
+    }
+
+    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+             type, severity, message );
+}
+
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
@@ -52,12 +70,14 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   }
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
-  SDL_GL_SetSwapInterval(0);
 
   if (!gladLoadGL()) {
     std::cerr << "ERROR: Failed to initialise glad." << std::endl;
     return -1;
   }
+    // During init, enable debug output
+    glEnable              ( GL_DEBUG_OUTPUT );
+    glDebugMessageCallback( MessageCallback, 0 );
 
   std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
   std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
