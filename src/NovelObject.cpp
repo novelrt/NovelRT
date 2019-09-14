@@ -86,8 +86,8 @@ void NovelObject::setOrderInLayer(const int value) {
 GeoBounds NovelObject::getScreenSpaceObjectBounds() {
   if(_isDirty) {
   _isDirty = false;
-  GeoVector<float> position = getWorldSpacePosition() * _screenScale;
-  GeoVector<float> size = (getWorldSpaceSize() * getScale()) * _screenScale;
+  GeoVector<float> position = getScreenSpacePosition();
+  GeoVector<float> size = getScreenSpaceSize();
   _objectBounds = GeoBounds(position, size, getRotation());
   }
   return _objectBounds;
