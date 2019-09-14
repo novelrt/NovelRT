@@ -58,12 +58,12 @@ namespace NovelRT {
       // the clock to exactly match the target value. This prevents tiny and irrelevant errors
       // from accumulating over time. Without this clamping, a game that requested a 60 fps
       // fixed update, running with vsync enabled on a 59.94 NTSC display, would eventually
-      // accumulate enough tiny errors that it would drop a frame. It is better to just round 
+      // accumulate enough tiny errors that it would drop a frame. It is better to just round
       // small deviations down to zero to leave things running smoothly.
 
       auto targetElapsedTicks = _targetElapsedTicks;
 
-      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (TicksPerSecond / 4000)) {
+      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (long)(TicksPerSecond / 4000)) {
         ticksDelta = targetElapsedTicks;
       }
 
