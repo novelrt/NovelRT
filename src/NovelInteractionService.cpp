@@ -6,7 +6,7 @@
 
 namespace NovelRT {
 NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService, const float screenScale)
-    : _layeringService(layeringService), _screenScale(screenScale), _clickTarget(nullptr) {
+    : _clickTarget(nullptr), _layeringService(layeringService), _screenScale(screenScale) {
   _mousePositionsOnScreenPerButton.insert({LeftMouseButton, GeoVector<float>(0, 0)});
   _keyStates.insert({LeftMouseButton, false});
 }
