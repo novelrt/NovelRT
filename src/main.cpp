@@ -4,7 +4,6 @@
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
-#include "NovelInteractionService.h"
 
 extern "C" {
 #include <lua.h>
@@ -14,14 +13,14 @@ extern "C" {
 
 lua_State* L;
 
-static int average(lua_State* L) {
-  int n = lua_gettop(L);
+static int average(lua_State* luaState) {
+  int n = lua_gettop(luaState);
   double sum = 0;
   for (int i = 1; i <= n; i++) {
-    sum += lua_tonumber(L, i);
+    sum += lua_tonumber(luaState, i);
   }
-  lua_pushnumber(L, sum / n);
-  lua_pushnumber(L, sum);
+  lua_pushnumber(luaState, sum / n);
+  lua_pushnumber(luaState, sum);
   return 2;
 }
 
