@@ -170,6 +170,66 @@ target_compile_options(NovelRT
     -Wno-error=unused-variable
 )
 
+set(SANITIZE_CODE ON)
+
+# Enable various sanitizer extensions
+if(${SANITIZE_CODE})
+  message("Enabling code sanitizer extensions.")
+
+  target_compile_options(NovelRT
+    PRIVATE
+      -fsanitize=undefined
+      -fsanitize=address
+      -fsanitize=shift
+      -fsanitize=shift-exponent
+      -fsanitize=shift-base
+      -fsanitize=integer-divide-by-zero
+      -fsanitize=unreachable
+      -fsanitize=vla-bound
+      -fsanitize=null
+      -fsanitize=return
+      -fsanitize=signed-integer-overflow
+      -fsanitize=bounds
+      -fsanitize=bounds-strict
+      -fsanitize=alignment
+      -fsanitize=object-size
+      -fsanitize=float-divide-by-zero
+      -fsanitize=float-cast-overflow
+      -fsanitize=nonnull-attribute
+      -fsanitize=returns-nonnull-attribute
+      -fsanitize=bool
+      -fsanitize=enum
+      -fsanitize=vptr
+          -fno-sanitize-recover
+  )
+
+  target_link_options(NovelRT
+    PRIVATE
+      -fsanitize=undefined
+      -fsanitize=address
+      -fsanitize=shift
+      -fsanitize=shift-exponent
+      -fsanitize=shift-base
+      -fsanitize=integer-divide-by-zero
+      -fsanitize=unreachable
+      -fsanitize=vla-bound
+      -fsanitize=null
+      -fsanitize=return
+      -fsanitize=signed-integer-overflow
+      -fsanitize=bounds
+      -fsanitize=bounds-strict
+      -fsanitize=alignment
+      -fsanitize=object-size
+      -fsanitize=float-divide-by-zero
+      -fsanitize=float-cast-overflow
+      -fsanitize=nonnull-attribute
+      -fsanitize=returns-nonnull-attribute
+      -fsanitize=bool
+      -fsanitize=enum
+      -fsanitize=vptr
+  )
+endif()
+
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
 set_target_properties(NovelRTLib PROPERTIES PUBLIC_HEADER include/NovelRTLib_C.h)
