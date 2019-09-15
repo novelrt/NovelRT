@@ -63,7 +63,7 @@ namespace NovelRT {
 
       auto targetElapsedTicks = _targetElapsedTicks;
 
-      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (long)(TicksPerSecond / 4000)) {
+      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (int64_t)(TicksPerSecond / 4000)) {
         ticksDelta = targetElapsedTicks;
       }
 
