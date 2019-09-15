@@ -20,14 +20,15 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                                  size,
                                                                                  args,
                                                                                  programId),
-                                                               _imageDir(imageDir), _colourTint(colourTint),
-                                                               _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
+                                                               _imageDir(imageDir),
                                                                _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
                                                                  glGenTextures(1, &tempTexture);
                                                                  return tempTexture;
-                                                               })){
+                                                               })),
+                                                               _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
+                                                               _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
+                                                               _colourTint(colourTint){
 
 }
 
