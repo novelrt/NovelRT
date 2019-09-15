@@ -151,59 +151,33 @@ set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
 )
 
-target_compile_options(NovelRT
-  PRIVATE
-    -Werror
-    -Wall
-    -Wextra
-    -Wduplicated-cond
-    -Wduplicated-branches
-    -Wlogical-op
-    -Wrestrict
-    -Wnull-dereference
-    -Wuseless-cast
-    -Wdouble-promotion
-    -Wshadow
-    -Wformat=2
-    -Wno-error=unused-parameter
-    -Wno-error=unused-variable
-)
-
-set(SANITIZE_CODE ON)
-
-# Enable various sanitizer extensions
-if(${SANITIZE_CODE})
-  message("Enabling code sanitizer extensions.")
-
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   target_compile_options(NovelRT
     PRIVATE
-      -fsanitize=undefined
-      -fsanitize=address
-      -fsanitize=shift
-      -fsanitize=shift-exponent
-      -fsanitize=shift-base
-      -fsanitize=integer-divide-by-zero
-      -fsanitize=unreachable
-      -fsanitize=vla-bound
-      -fsanitize=null
-      -fsanitize=return
-      -fsanitize=signed-integer-overflow
-      -fsanitize=bounds
-      -fsanitize=bounds-strict
-      -fsanitize=alignment
-      -fsanitize=object-size
-      -fsanitize=float-divide-by-zero
-      -fsanitize=float-cast-overflow
-      -fsanitize=nonnull-attribute
-      -fsanitize=returns-nonnull-attribute
-      -fsanitize=bool
-      -fsanitize=enum
-      -fsanitize=vptr
-          -fno-sanitize-recover
+      -Werror
+      -Wall
+      -Wextra
+      -Wduplicated-cond
+      -Wduplicated-branches
+      -Wlogical-op
+      -Wrestrict
+      -Wnull-dereference
+      -Wuseless-cast
+      -Wdouble-promotion
+      -Wshadow
+      -Wformat=2
+      -Wno-error=unused-parameter
+      -Wno-error=unused-variable
   )
 
-  target_link_options(NovelRT
-    PRIVATE
+  set(SANITIZE_CODE ON)
+
+  # Enable various sanitizer extensions
+  if (${SANITIZE_CODE})
+    message("Enabling code sanitizer extensions.")
+
+    target_compile_options(NovelRT
+      PRIVATE
       -fsanitize=undefined
       -fsanitize=address
       -fsanitize=shift
@@ -226,8 +200,36 @@ if(${SANITIZE_CODE})
       -fsanitize=bool
       -fsanitize=enum
       -fsanitize=vptr
-  )
-endif()
+      -fno-sanitize-recover
+    )
+
+    target_link_options(NovelRT
+      PRIVATE
+        -fsanitize=undefined
+        -fsanitize=address
+        -fsanitize=shift
+        -fsanitize=shift-exponent
+        -fsanitize=shift-base
+        -fsanitize=integer-divide-by-zero
+        -fsanitize=unreachable
+        -fsanitize=vla-bound
+        -fsanitize=null
+        -fsanitize=return
+        -fsanitize=signed-integer-overflow
+        -fsanitize=bounds
+        -fsanitize=bounds-strict
+        -fsanitize=alignment
+        -fsanitize=object-size
+        -fsanitize=float-divide-by-zero
+        -fsanitize=float-cast-overflow
+        -fsanitize=nonnull-attribute
+        -fsanitize=returns-nonnull-attribute
+        -fsanitize=bool
+        -fsanitize=enum
+        -fsanitize=vptr
+    )
+  endif ()
+endif ()
 
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
