@@ -166,6 +166,8 @@ target_compile_options(NovelRT
     -Wdouble-promotion
     -Wshadow
     -Wformat=2
+    -Wno-error=unused-parameter
+    -Wno-error=unused-variable
 )
 
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
