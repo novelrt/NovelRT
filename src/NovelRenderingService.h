@@ -40,7 +40,7 @@ public:
                              const std::string& fontFilePath,
                              const NovelCommonArgs& args);
 
-  float getScreenScale() const;
+  GeoVector<u_int32_t> getScreenSize() const;
 
   void beginFrame() const;
   void endFrame() const;
@@ -54,7 +54,6 @@ private:
   NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;
   SDL_GLContext _openGLContext;
-  float _screenScale;
 
   int _winWidth;
   int _winHeight;
@@ -63,6 +62,8 @@ private:
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
   GLuint _fontProgramId;
+
+  GeoVector<uint32_t> _screenSize;
 };
 
 }

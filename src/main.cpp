@@ -59,8 +59,8 @@ int main(int argc, char* argv[]) {
   rectArgs.startingRotation = 0.0f;
 
   basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
-/*  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  textRect->setText("RubyGnomer");*/
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  textRect->setText("RubyGnomer");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 

@@ -34,14 +34,11 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
     SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
-  _screenScale = (displayData.h * 0.7f) / 1080.0f;
-
-  std::cout << _screenScale << std::endl;
 
 
   // create window
-  float wData = 1920.0f * _screenScale;
-  float hData = 1080.0f * _screenScale;
+  float wData = displayData.w * 0.7f;
+  float hData = displayData.h * 0.7f;
   _window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(
       "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
@@ -50,6 +47,10 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
     return false;
   }
+
+  _screenSize = GeoVector<uint32_t>(static_cast<uint32_t>(glm::round(wData)), static_cast<uint32_t>(glm::round(hData)));
+  std::cout << "INFO: Screen size is " << _screenSize.getX() << "x" << _screenSize.getY() << std::endl;
+
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
   SDL_GL_SetSwapInterval(0);
@@ -198,14 +199,14 @@ NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& star
                                                     const std::string_view filePath,
                                                     const NovelCommonArgs& args,
                                                     const RGBAConfig& colourTint) {
-  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint);
+  return new NovelImageRect(_layeringService, startingSize, filePath, args, _texturedRectProgramId, colourTint);
 }
 
 NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
                                                   const float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
-  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
+  return new NovelTextRect(_layeringService, fontSize, fontFilePath, colourConfig, args, _fontProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -218,9 +219,10 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, _basicFillRectProgramId);
+  return new NovelBasicFillRect(_layeringService, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
-float NovelRenderingService::getScreenScale() const {
-  return _screenScale;
+
+GeoVector<u_int32_t> NovelRenderingService::getScreenSize() const {
+  return _screenSize;
 }
 }

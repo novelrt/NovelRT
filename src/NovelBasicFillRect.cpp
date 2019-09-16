@@ -9,12 +9,11 @@
 namespace NovelRT {
 
 NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
-                                       float screenScale,
                                        const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
                                        const NovelCommonArgs& args,
                                        GLuint programId) :
-    NovelRenderObject(layeringService, screenScale, size, args, programId), _colourConfig(fillColour),
+    NovelRenderObject(layeringService, size, args, programId), _colourConfig(fillColour),
     _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {
 }
 

@@ -13,7 +13,7 @@ namespace NovelRT {
 class NovelLayeringService;
 class NovelObject {
 public:
-  NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
+  NovelObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
               const NovelCommonArgs& args);
 
   virtual GeoVector<float> getWorldSpacePosition() const;
@@ -62,7 +62,6 @@ protected:
   bool _active = true;
   int _orderInLayer;
   int _layer;
-  float _screenScale;
   NovelLayeringService* _layeringService;
   bool _isDirty = true;
   GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0), 0);

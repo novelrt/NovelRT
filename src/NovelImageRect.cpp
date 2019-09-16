@@ -10,13 +10,11 @@
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const float& screenScale,
                                const GeoVector<float>& size,
                                const std::string_view imageDir,
                                const NovelCommonArgs& args,
                                const GLuint programId,
                                const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
-                                                                                 screenScale,
                                                                                  size,
                                                                                  args,
                                                                                  programId),
@@ -32,11 +30,10 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 }
 
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const float& screenScale,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                GLuint programId,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, screenScale, size, "", args, programId, colourTint) {
+                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, size, "", args, programId, colourTint) {
 
 }
 

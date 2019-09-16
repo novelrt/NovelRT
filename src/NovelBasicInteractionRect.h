@@ -9,7 +9,7 @@
 namespace NovelRT {
 class NovelBasicInteractionRect : public NovelInteractionObject {
 public:
-  NovelBasicInteractionRect(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+  NovelBasicInteractionRect(NovelLayeringService* layeringService, const GeoVector<float>& size,
   const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
 
   bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const override;

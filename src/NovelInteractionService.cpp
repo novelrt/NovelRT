@@ -5,8 +5,8 @@
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT {
-NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService, const float screenScale)
-    : _layeringService(layeringService), _screenScale(screenScale), _clickTarget(nullptr) {
+NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService)
+    : _layeringService(layeringService), _clickTarget(nullptr) {
   _mousePositionsOnScreenPerButton.insert({LeftMouseButton, GeoVector<float>(0, 0)});
   _keyStates.insert({LeftMouseButton, false});
 }
@@ -45,7 +45,6 @@ NovelBasicInteractionRect* NovelInteractionService::getBasicInteractionRect(cons
                                                                             const NovelCommonArgs& args) {
   //return *new NovelBasicInteractionRect(_layeringService, _screenScale, startingSize, args, [this](NovelInteractionObject* x){ HandleInteractionDraw(x);});
   return new NovelBasicInteractionRect(_layeringService,
-                                       _screenScale,
                                        startingSize,
                                        args,
                                        [this](NovelInteractionObject* x) { HandleInteractionDraw(x); });

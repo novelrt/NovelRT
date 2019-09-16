@@ -13,7 +13,6 @@ namespace NovelRT {
 class NovelImageRect : public NovelRenderObject {
 public:
   NovelImageRect(NovelLayeringService* layeringService,
-                 const float& screenScale,
                  const GeoVector<float>& size,
                  const std::string_view imageDir,
                  const NovelCommonArgs& args,
@@ -21,7 +20,6 @@ public:
                  const RGBAConfig& colourTint);
 
   NovelImageRect(NovelLayeringService* layeringService,
-                 const float& screenScale,
                  const GeoVector<float>& size,
                  const NovelCommonArgs& args,
                  GLuint programId,
@@ -42,9 +40,6 @@ protected:
 private:
   std::string _imageDir;
   std::string _previousImageDir;
-  int _imageHandle;
-  int _width;
-  int _height;
   Lazy<GLuint> _textureId;
   std::vector<GLfloat> _uvCoordinates;
   Lazy<GLuint> _uvBuffer;

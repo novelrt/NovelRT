@@ -5,10 +5,9 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
-NovelObject::NovelObject(NovelLayeringService* layeringService, const float& screenScale,
+NovelObject::NovelObject(NovelLayeringService* layeringService,
                          const GeoVector<float>& size,
                          const NovelCommonArgs& args) :
-    _screenScale(screenScale),
     _layeringService(layeringService) {
   setLayer(args.layer);
   setOrderInLayer(args.orderInLayer);
@@ -95,11 +94,5 @@ GeoBounds NovelObject::getScreenSpaceObjectBounds() {
 float NovelObject::getScaleHypotenuseScalar() const {
   auto scale = getScale();
   return scale.getX() * scale.getY();
-}
-GeoVector<float> NovelObject::getScreenSpaceSize() const {
-  return getWorldSpaceSize() * _screenScale;
-}
-GeoVector<float> NovelObject::getScreenSpacePosition() const {
-  return getWorldSpacePosition() * _screenScale;
 }
 }
