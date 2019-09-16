@@ -8,10 +8,9 @@
 
 namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-                                     const float screenScale,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) : NovelObject(layeringService, screenScale, size, args),
+                                     const GLuint programId) : NovelObject(layeringService, size, args),
                                                                _programId(programId),
                                                                _vertexArrayObject(Lazy<GLuint>([] {
                                                                  GLuint tempVao;
@@ -32,10 +31,12 @@ void NovelRenderObject::executeObjectBehaviour() {
 void NovelRenderObject::configureObjectBuffers() {
   auto bounds = getScreenSpaceObjectBounds();
 
-  auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
-  auto bottomRight = bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale);
-  auto topRight = bounds.getCornerInOpenGLSurfaceSpace(1, _screenScale);
-  auto bottomLeft = bounds.getCornerInOpenGLSurfaceSpace(3, _screenScale);
+  //ARF
+  auto topLeft = bounds.getCornerInLocalSpace(0);
+  auto bottomRight = bounds.getCornerInLocalSpace(2);
+  auto topRight = bounds.getCornerInLocalSpace(1);
+  auto bottomLeft = bounds.getCornerInLocalSpace(3);
+
   _vertexBufferData = {
       topLeft.getX(), topLeft.getY(), 0.0f,
       bottomRight.getX(), bottomRight.getY(), 0.0f,

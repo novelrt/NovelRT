@@ -12,7 +12,7 @@ namespace NovelRT {
 class NovelInteractionService { friend class NovelInteractionObject;
 NOVELRT_PARAMETERLESS_EVENT(Quit)
 public:
-  NovelInteractionService(NovelLayeringService* layeringService, const float screenScale);
+  NovelInteractionService(NovelLayeringService* layeringService);
 
   void consumePlayerInput();
 
@@ -27,7 +27,6 @@ private:
   std::map<KeyCode, bool> _keyStates;
   std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
   NovelLayeringService* _layeringService;
-  float _screenScale;
 };
 }
 

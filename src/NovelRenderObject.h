@@ -13,7 +13,7 @@
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
 public:
-  NovelRenderObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+  NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
                     const NovelCommonArgs& args, const GLuint programId);
 
   void executeObjectBehaviour() final;

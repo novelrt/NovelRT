@@ -16,7 +16,7 @@ class NovelInteractionObject : public NovelObject {
 
 NOVELRT_PARAMETERLESS_EVENT(Interacted)
 public:
-  NovelInteractionObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+  NovelInteractionObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
                          const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
   void executeObjectBehaviour() final;
   virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;

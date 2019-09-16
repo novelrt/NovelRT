@@ -85,12 +85,10 @@ void NovelTextRect::configureObjectBuffers() {
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                              const float fontSize,
-                             const float screenScale,
                              const std::string& fontFileDir,
                              const RGBAConfig& colourConfig,
                              const NovelCommonArgs& args,
                              const GLuint programId) : NovelRenderObject(layeringService,
-                                                                         screenScale,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
                                                                          programId), _colourConfig(colourConfig),
@@ -105,7 +103,6 @@ void NovelTextRect::setText(const std::string& value) {
   int difference = _text.length() - _letterRects.size();
   for (int i = 0; i < difference; i++) {
     _letterRects.push_back(new NovelImageRect(_layeringService,
-                                              _screenScale,
                                               GeoVector<float>(50, 50),
                                               _args,
                                               _programId,

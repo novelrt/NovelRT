@@ -13,7 +13,7 @@ class Lazy {
 public:
   Lazy(std::function<T()> delegate);
   Lazy(T eagerStartValue, std::function<T()> delegate);
-  T getActual();
+  T& getActual();
   void reset();
   bool isCreated() const;
 private:
@@ -28,7 +28,7 @@ template <typename T>
 Lazy<T>::Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(std::make_unique<T>(eagerStartValue)) {}
 
 template <typename T>
-T Lazy<T>::getActual() {
+T& Lazy<T>::getActual() {
   if(!isCreated()) _actual = std::make_unique<T>(_delegate());
 
   return *_actual;

@@ -16,7 +16,6 @@ class NovelTextRect : public NovelRenderObject {
 public:
   NovelTextRect(NovelLayeringService* layeringService,
                 const float fontSize,
-                const float screenScale,
                 const std::string& fontFileDir,
                 const RGBAConfig& colourConfig,
                 const NovelCommonArgs& args,
