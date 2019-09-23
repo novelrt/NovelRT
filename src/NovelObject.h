@@ -16,6 +16,8 @@ public:
   NovelObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
               const NovelCommonArgs& args);
 
+  virtual ~NovelObject();
+
   virtual GeoVector<float> getWorldSpacePosition() const;
 
   virtual void setWorldSpacePosition(const GeoVector<float>& value);

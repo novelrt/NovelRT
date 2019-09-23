@@ -139,7 +139,7 @@ void NovelTextRect::reloadText() {
     ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }
 
-  if (_letterRects.size() == i + 1)
+  if (_letterRects.size() == (uint)i + 1)
     return;
 
   auto beginIt = _letterRects.begin() + i;

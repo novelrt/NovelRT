@@ -19,6 +19,8 @@ NovelObject::NovelObject(NovelLayeringService* layeringService,
   setActive(true);
 }
 
+NovelObject::~NovelObject() = default;
+
 GeoVector<float> NovelObject::getWorldSpacePosition() const {
   return _position;
 }
