@@ -53,7 +53,6 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
-  SDL_GL_SetSwapInterval(0);
 
   if (!gladLoadGL()) {
     std::cerr << "ERROR: Failed to initialise glad." << std::endl;

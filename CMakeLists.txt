@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
+
 project(NovelRT VERSION 0.0.1)
 include(GNUInstallDirs)
 
@@ -149,6 +150,84 @@ set(NOVELRT_LIBRARY_SOURCES
 set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
 )
+
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND false)
+  target_compile_options(NovelRT
+    PRIVATE
+      -Werror
+      -Wall
+      -Wextra
+      -Wduplicate-enum
+      
+      -Wlong-long
+      
+      -Wnull-dereference
+      
+      -Wdouble-promotion
+      -Wshadow
+      -Wformat=2
+      -Wno-error=unused-parameter
+      -Wno-error=unused-variable
+  )
+
+  set(SANITIZE_CODE ON)
+
+  # Enable various sanitizer extensions
+  if (${SANITIZE_CODE})
+    message("Enabling code sanitizer extensions.")
+
+    target_compile_options(NovelRT
+      PRIVATE
+      -fsanitize=undefined
+      -fsanitize=address
+      -fsanitize=shift
+      -fsanitize=shift-exponent
+      -fsanitize=shift-base
+      -fsanitize=integer-divide-by-zero
+      -fsanitize=unreachable
+      -fsanitize=vla-bound
+      -fsanitize=null
+      -fsanitize=return
+      -fsanitize=signed-integer-overflow
+      -fsanitize=bounds
+      -fsanitize=alignment
+      -fsanitize=object-size
+      -fsanitize=float-divide-by-zero
+      -fsanitize=float-cast-overflow
+      -fsanitize=nonnull-attribute
+      -fsanitize=returns-nonnull-attribute
+      -fsanitize=bool
+      -fsanitize=enum
+      -fsanitize=vptr
+      -fno-sanitize-recover=all
+    )
+
+    target_link_options(NovelRT
+      PRIVATE
+        -fsanitize=undefined
+        -fsanitize=address
+        -fsanitize=shift
+        -fsanitize=shift-exponent
+        -fsanitize=shift-base
+        -fsanitize=integer-divide-by-zero
+        -fsanitize=unreachable
+        -fsanitize=vla-bound
+        -fsanitize=null
+        -fsanitize=return
+        -fsanitize=signed-integer-overflow
+        -fsanitize=bounds
+        -fsanitize=alignment
+        -fsanitize=object-size
+        -fsanitize=float-divide-by-zero
+        -fsanitize=float-cast-overflow
+        -fsanitize=nonnull-attribute
+        -fsanitize=returns-nonnull-attribute
+        -fsanitize=bool
+        -fsanitize=enum
+        -fsanitize=vptr
+    )
+  endif ()
+endif ()
 
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})

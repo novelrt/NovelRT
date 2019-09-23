@@ -5,19 +5,19 @@
 #include <iostream>
 #include "NovelRenderObject.h"
 #include "GeoBounds.h"
+#include <functional>
 
 namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
                                      const GLuint programId) : NovelObject(layeringService, size, args),
-                                                               _programId(programId),
-                                                               _vertexArrayObject(Lazy<GLuint>([] {
+                                                               _buffer(Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
+                                                               _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([]{
                                                                  GLuint tempVao;
                                                                  glGenVertexArrays(1, &tempVao);
-                                                                 return tempVao;
-                                                               })),
-                                                               _buffer(Lazy<GLuint>(generateStandardBuffer)) {
+                                                                 return tempVao;}))),
+                                                               _programId(programId){
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
