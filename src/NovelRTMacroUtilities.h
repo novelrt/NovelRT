@@ -34,7 +34,7 @@ private:                                                                        
     }), _##eventName##EventDelegates.end());                                                                      \
   }                                                                                                               \
 
-#define NOVELRT_PARAMETERLESS_EVENT(eventName)                                                                    \
+  #define NOVELRT_PARAMETERLESS_EVENT(eventName)                                                                    \
 public:                                                                                                           \
   void subscribeTo##eventName(std::function<void()> delegate) {                                                   \
     _##eventName##EventDelegates.push_back(delegate);                                                             \

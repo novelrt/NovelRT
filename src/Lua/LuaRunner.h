@@ -5,18 +5,23 @@
 #ifndef NOVELRT_LUARUNNER_H
 #define NOVELRT_LUARUNNER_H
 
+extern "C" {
 #include <lua.h>
+};
+
+#include "LuaMethodResult.h"
 #include <string>
 namespace NovelRT::Lua {
 class LuaRunner {
 private:
   lua_State* _state;
-  const char* _fileName;
+  std::string _fileName;
 public:
   explicit LuaRunner(const std::string& fileName);
   void run();
   void stop();
   void registerMethod(const char* name, lua_CFunction fn);
+  template <typename... TArgs> LuaMethodResult runMethod(std::string name, TArgs... args, int resultAmount);
 };
 }
 
