@@ -13,8 +13,8 @@ NovelBasicInteractionRect::NovelBasicInteractionRect(NovelLayeringService* layer
 
 }
 bool NovelBasicInteractionRect::validateInteractionPerimeter(const NovelRT::GeoVector<float>& mousePosition) const {
-  GeoVector<float> position = getWorldSpacePosition(); // * _screenScale;
-  GeoVector<float> size = getWorldSpaceSize(); // * _screenScale;
+  GeoVector<float> position = getPosition(); // * _screenScale;
+  GeoVector<float> size = getSize(); // * _screenScale;
   return GeoBounds(position, size, getRotation()).pointIsWithinBounds(mousePosition);
 }
 }

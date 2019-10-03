@@ -50,7 +50,7 @@ void NovelImageRect::drawObject() {
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
   glVertexAttribPointer(
       0,
       3,

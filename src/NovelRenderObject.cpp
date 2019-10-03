@@ -12,12 +12,26 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
                                      const GLuint programId) : NovelObject(layeringService, size, args),
-                                                               _buffer(Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
-                                                               _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([]{
+                                                               _modelTransform(Lazy<glm::mat3>(std::function<glm::mat3()>(
+                                                                   std::bind(&NovelRenderObject::generateModelTransform,
+                                                                             this)))),
+ /*                                                              _modelTransformUniformBuffer(Lazy<GLuint>(std::function<GLuint()>([this]{
+                                                                 auto bla = _modelTransform.getActual();
+                                                                 GLuint ubo;
+                                                                 glGenBuffers(1, &ubo);
+                                                                 glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+                                                                 glBufferData(GL_UNIFORM_BUFFER, sizeof(bla), &bla, GL_DYNAMIC_DRAW);
+                                                                 glBindBuffer(GL_UNIFORM_BUFFER, 0);
+                                                                 return ubo;
+                                                               }))),*/
+                                                               _vertexBuffer(Lazy<GLuint>(std::function<GLuint()>(
+                                                                   generateStandardBuffer))),
+                                                               _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([] {
                                                                  GLuint tempVao;
                                                                  glGenVertexArrays(1, &tempVao);
-                                                                 return tempVao;}))),
-                                                               _programId(programId){
+                                                                 return tempVao;
+                                                               }))),
+                                                               _programId(programId) {
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
@@ -29,13 +43,10 @@ void NovelRenderObject::executeObjectBehaviour() {
 }
 
 void NovelRenderObject::configureObjectBuffers() {
-  auto bounds = getScreenSpaceObjectBounds();
-
-  //ARF
-  auto topLeft = bounds.getCornerInLocalSpace(0);
-  auto bottomRight = bounds.getCornerInLocalSpace(2);
-  auto topRight = bounds.getCornerInLocalSpace(1);
-  auto bottomLeft = bounds.getCornerInLocalSpace(3);
+  auto topLeft = GeoVector<GLfloat>(-1.0f, 1.0f);
+  auto bottomRight = GeoVector<GLfloat>(1.0f, -1.0f);
+  auto topRight = GeoVector<GLfloat>(1.0f, 1.0f);
+  auto bottomLeft = GeoVector<GLfloat>(-1.0f, -1.0f);
 
   _vertexBufferData = {
       topLeft.getX(), topLeft.getY(), 0.0f,
@@ -49,30 +60,34 @@ void NovelRenderObject::configureObjectBuffers() {
   _vertexArrayObject.getActual(); //this is just here to force initialisation.
 
 // The following commands will talk about our 'vertexbuffer' buffer
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
 
 // Give our vertices to OpenGL.
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
-
 }
-void NovelRenderObject::setWorldSpaceSize(const GeoVector<float>& value) {
-  NovelObject::setWorldSpaceSize(value);
+void NovelRenderObject::setSize(const GeoVector<float>& value) {
+  _modelTransform.reset();
+  NovelObject::setSize(value);
   configureObjectBuffers();
 }
 void NovelRenderObject::setRotation(const float value) {
+  _modelTransform.reset();
   NovelObject::setRotation(value);
   configureObjectBuffers();
 }
 void NovelRenderObject::setScale(const GeoVector<float>& value) {
+  _modelTransform.reset();
   NovelObject::setScale(value);
   configureObjectBuffers();
 }
-void NovelRenderObject::setWorldSpacePosition(const GeoVector<float>& value) {
-  NovelObject::setWorldSpacePosition(value);
+void NovelRenderObject::setPosition(const GeoVector<float>& value) {
+  _modelTransform.reset();
+  NovelObject::setPosition(value);
   configureObjectBuffers();
 }
 NovelRenderObject::~NovelRenderObject() {
-  if(!_vertexArrayObject.isCreated()) return;
+  if (!_vertexArrayObject.isCreated())
+    return;
 
   auto vao = _vertexArrayObject.getActual();
   glDeleteVertexArrays(1, &vao);
@@ -82,5 +97,14 @@ GLuint NovelRenderObject::generateStandardBuffer() {
   GLuint tempBuffer;
   glGenBuffers(1, &tempBuffer);
   return tempBuffer;
+}
+glm::mat3 NovelRenderObject::generateModelTransform() {
+  auto size = (getSize() * getScale()).getValue();
+  auto position = getPosition().getValue();
+  auto matrix3D = glm::mat4();
+  glm::rotate(matrix3D, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+  glm::scale(matrix3D, glm::vec3(size, 1.0f));
+  glm::translate(matrix3D, glm::vec3(position, 0.0f));
+  return glm::mat3(matrix3D);
 }
 }

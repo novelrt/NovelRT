@@ -12,21 +12,20 @@ NovelObject::NovelObject(NovelLayeringService* layeringService,
   setLayer(args.layer);
   setOrderInLayer(args.orderInLayer);
   _layeringService->updateLayerInfo(getLayer(), this, true);
-  setWorldSpacePosition(args.startingPosition);
+  setPosition(args.startingPosition);
   setRotation(args.startingRotation);
-  setWorldSpaceSize(size);
+  setSize(size);
   setScale(args.startingScale);
   setActive(true);
 }
 
 NovelObject::~NovelObject() = default;
 
-GeoVector<float> NovelObject::getWorldSpacePosition() const {
+GeoVector<float> NovelObject::getPosition() const {
   return _position;
 }
 
-void NovelObject::setWorldSpacePosition(const GeoVector<float>& value) {
-  _isDirty = true;
+void NovelObject::setPosition(const GeoVector<float>& value) {
   _position = value;
 }
 
@@ -35,7 +34,6 @@ float NovelObject::getRotation() const {
 }
 
 void NovelObject::setRotation(const float value) {
-  _isDirty = true;
   _rotation = value;
 }
 
@@ -44,16 +42,14 @@ GeoVector<float> NovelObject::getScale() const {
 }
 
 void NovelObject::setScale(const GeoVector<float>& value) {
-  _isDirty = true;
   _scale = value;
 }
 
-GeoVector<float> NovelObject::getWorldSpaceSize() const {
+GeoVector<float> NovelObject::getSize() const {
   return _size;
 }
 
-void NovelObject::setWorldSpaceSize(const GeoVector<float>& value) {
-  _isDirty = true;
+void NovelObject::setSize(const GeoVector<float>& value) {
   _size = value;
 }
 
@@ -84,7 +80,7 @@ void NovelObject::setOrderInLayer(const int value) {
   _layeringService->sortLayerOrder(getLayer());
 }
 
-GeoBounds NovelObject::getScreenSpaceObjectBounds() {
+/*GeoBounds NovelObject::getScreenSpaceObjectBounds() {
   if(_isDirty) {
   _isDirty = false;
   GeoVector<float> position = getScreenSpacePosition();
@@ -92,9 +88,6 @@ GeoBounds NovelObject::getScreenSpaceObjectBounds() {
   _objectBounds = GeoBounds(position, size, getRotation());
   }
   return _objectBounds;
-}
-float NovelObject::getScaleHypotenuseScalar() const {
-  auto scale = getScale();
-  return scale.getX() * scale.getY();
-}
+}*/
+
 }

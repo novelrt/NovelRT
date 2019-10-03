@@ -10,6 +10,7 @@
 namespace NovelRT {
 template<typename T>
 class GeoVector {
+  friend class NovelRenderObject;
 public:
   GeoVector();
   GeoVector(T x, T y);
