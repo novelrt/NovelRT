@@ -36,5 +36,7 @@ Examples will be placed here when we have created some. In the meantime, we advi
 ## Contributing
 First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on. 
 
+Our community also has a Code of Conduct, which can be found [here](CODE_OF_CONDUCT.md).
+
 ## Questions?
 You can reach us directly via our [discord](https://discord.novelrt.dev/), or you can post your question as an issue on the appropriate repository (but honestly asking us directly might be easier).
