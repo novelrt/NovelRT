@@ -1,11 +1,19 @@
 # NovelRT
 NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
 
-As it currently stands, the C++ LLAPI exists and hopefully soon ink support will slowly start becoming a thing.
-
-For information on ink, check it out from [here](https://github.com/inkle/ink).
-
 [![Discord](https://img.shields.io/discord/543898968380145675?logo=discord&style=plastic)](https://discord.novelrt.dev/)
+
+## Future & Immediate Improvements
+
+As it currently stands, only the C++ LLAPI exists in its base form.
+
+Current features in development include:
+- C++ HLAPI
+- Audio
+- CoreCLR hosting
+- Ink narrative scripting language support
+
+For information on Ink, check it out from [here](https://github.com/inkle/ink).
 
 ## Getting Started with NovelRT
 
