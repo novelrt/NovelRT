@@ -18,11 +18,9 @@ public:
 
   virtual ~NovelObject();
 
-  virtual GeoVector<float> getWorldSpacePosition() const;
+  virtual GeoVector<float> getPosition() const;
 
-  virtual void setWorldSpacePosition(const GeoVector<float>& value);
-
-  virtual GeoVector<float> getScreenSpacePosition() const;
+  virtual void setPosition(const GeoVector<float>& value);
 
   virtual float getRotation() const;
 
@@ -32,11 +30,9 @@ public:
 
   virtual void setScale(const GeoVector<float>& value);
 
-  virtual GeoVector<float> getWorldSpaceSize() const;
+  virtual GeoVector<float> getSize() const;
 
-  virtual void setWorldSpaceSize(const GeoVector<float>& value);
-
-  virtual GeoVector<float> getScreenSpaceSize() const;
+  virtual void setSize(const GeoVector<float>& value);
 
   virtual int getLayer() const;
 
@@ -52,10 +48,6 @@ public:
 
   virtual void executeObjectBehaviour() = 0;
 
-  virtual GeoBounds getScreenSpaceObjectBounds();
-
-  virtual float getScaleHypotenuseScalar() const;
-
 protected:
   GeoVector<float> _position;
   GeoVector<float> _scale;
@@ -65,8 +57,6 @@ protected:
   int _orderInLayer;
   int _layer;
   NovelLayeringService* _layeringService;
-  bool _isDirty = true;
-  GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0), 0);
 };
 
 }

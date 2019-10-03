@@ -115,7 +115,7 @@ void NovelTextRect::setText(const std::string& value) {
 }
 void NovelTextRect::reloadText() {
 
-  auto ttfOrigin = getWorldSpacePosition();
+  auto ttfOrigin = getPosition();
 
   int i = 0;
   for (const char& c : getText()) {
@@ -133,8 +133,8 @@ void NovelTextRect::reloadText() {
 
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
-    target->setWorldSpacePosition(currentWorldPosition);
-    target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
+    target->setPosition(currentWorldPosition);
+    target->setSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setActive(true);
     ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }
