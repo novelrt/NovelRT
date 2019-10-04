@@ -3,7 +3,7 @@
 #include "NovelInteractionObject.h"
 namespace NovelRT {
 NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
-                                               const float screenScale,
+                                               float screenScale,
                                                const NovelRT::GeoVector<float>& size,
                                                const NovelRT::NovelCommonArgs& args,
                                                const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
@@ -18,7 +18,7 @@ void NovelInteractionObject::executeObjectBehaviour() {
 KeyCode NovelInteractionObject::getSubscribedKey() const {
   return _subscribedKey;
 }
-void NovelInteractionObject::setSubscribedKey(const KeyCode key) {
+void NovelInteractionObject::setSubscribedKey(KeyCode key) {
   _subscribedKey = key;
 }
 }

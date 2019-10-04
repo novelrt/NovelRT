@@ -10,11 +10,11 @@ namespace NovelRT {
 class NovelBasicFillRect : public NovelRenderObject {
 public:
   NovelBasicFillRect(NovelLayeringService* layeringService,
-                     const float screenScale,
+                     float screenScale,
                      const GeoVector<float>& size,
                      const RGBAConfig& fillColour,
                      const NovelCommonArgs& args,
-                     const GLuint programId);
+                     GLuint programId);
 
   void drawObject() final;
 

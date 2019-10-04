@@ -82,12 +82,12 @@ void NovelTextRect::configureObjectBuffers() {
 }
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
-                             const float fontSize,
-                             const float screenScale,
+                             float fontSize,
+                             float screenScale,
                              const std::string& fontFileDir,
                              const RGBAConfig& colourConfig,
                              const NovelCommonArgs& args,
-                             const GLuint programId) : NovelRenderObject(layeringService,
+                             GLuint programId) : NovelRenderObject(layeringService,
                                                                          screenScale,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
