@@ -1,6 +1,4 @@
-//
-// Created by matth on 05/01/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
