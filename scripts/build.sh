@@ -154,7 +154,7 @@ CreateDirectory "$InstallDir"
 if $ci; then
   VcpkgInstallDir="$ArtifactsDir/vcpkg"
 
-  if [ ! -d "$1" ]; then
+  if [ ! -d "$VcpkgInstallDir" ]; then
      git clone https://github.com/microsoft/vcpkg "$VcpkgInstallDir"
   fi
 
