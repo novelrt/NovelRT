@@ -9,6 +9,7 @@ As it currently stands, only the C++ LLAPI exists in its base form.
 
 Current features in development include:
 - C++ HLAPI
+- Lua 5.3 LLAPI
 - Audio
 - CoreCLR hosting
 - Ink narrative scripting language support
@@ -37,6 +38,10 @@ Examples will be placed here when we have created some. In the meantime, we advi
 First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on. 
 
 **NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Discord via direct message or by contacting us via email at admin@novelrt.dev.**
+
+##Licence
+Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See [Licence](LICENSE.md) in the repository root for more information.
+
 
 ## Questions?
 You can reach us directly via our [discord](https://discord.novelrt.dev/), or you can post your question as an issue on the appropriate repository (but honestly asking us directly might be easier).
