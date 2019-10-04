@@ -29,8 +29,8 @@ function Create-Directory([string[]] $Path) {
 
 function Generate() {
   if ($ci) {
-    $vcpkgToolchainFile = Join-Path -Path $VcpkgInstallDir -ChildPath "scripts/buildsystems/vcpkg.cmake"
-    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$vcpkgToolchainFile" + $remaining
+    $VcpkgToolchainFile = Join-Path -Path $VcpkgInstallDir -ChildPath "scripts/buildsystems/vcpkg.cmake"
+    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile" + $remaining
   }
 
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_INSTALL_PREFIX=$InstallDir $remaining
@@ -95,13 +95,17 @@ try {
       & git clone https://github.com/microsoft/vcpkg $VcpkgInstallDir
     }
 
-    & $VcpkgInstallDir/bootstrap-vcpkg.bat
+    $VcpkgExe = Join-Path -Path $VcpkgInstallDir -ChildPath "vcpkg.exe"
 
-    if ($LastExitCode -ne 0) {
-      throw "'bootstrap-vcpkg' failed"
+    if (!(Test-Path -Path $VcpkgExe)) {
+      & $VcpkgInstallDir/bootstrap-vcpkg.bat
+
+      if ($LastExitCode -ne 0) {
+        throw "'bootstrap-vcpkg' failed"
+      }
     }
 
-    & $VcpkgInstallDir/vcpkg.exe install freetype glad glm lua sdl2 sdl2-image --triplet x64-windows
+    & $VcpkgExe install freetype glad glm lua sdl2 sdl2-image --triplet x64-windows
 
     if ($LastExitCode -ne 0) {
         throw "'vcpkg install' failed"
