@@ -11,7 +11,7 @@ class LuaMethodResult {
 public:
   explicit LuaMethodResult(lua_State* l);
   template<typename... T>
-  std::tuple<T...> unpack(int amount);
+  std::tuple<T...> unpack(int amount, std::tuple<T...> result = nullptr_t());
 private:
   lua_State* _l;
   int _indexer;
