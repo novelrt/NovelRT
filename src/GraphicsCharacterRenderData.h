@@ -1,6 +1,4 @@
-//
-// Created by matt on 30/08/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #ifndef NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
 #define NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
