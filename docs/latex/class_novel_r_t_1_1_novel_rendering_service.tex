@@ -1,0 +1,41 @@
+\hypertarget{class_novel_r_t_1_1_novel_rendering_service}{}\doxysection{Novel\+RT\+::Novel\+Rendering\+Service Class Reference}
+\label{class_novel_r_t_1_1_novel_rendering_service}\index{NovelRT::NovelRenderingService@{NovelRT::NovelRenderingService}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a62a927548acd6cb52156ee276e0eecd3}\label{class_novel_r_t_1_1_novel_rendering_service_a62a927548acd6cb52156ee276e0eecd3}} 
+{\bfseries Novel\+Rendering\+Service} (\mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} $\ast$layering\+Service)
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_ab4f7e29cebb0d406a2a93fd326a3ba90}\label{class_novel_r_t_1_1_novel_rendering_service_ab4f7e29cebb0d406a2a93fd326a3ba90}} 
+int {\bfseries initialise\+Rendering} (int display\+Number)
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a8c048cfcd2156a3b52af49072c380914}\label{class_novel_r_t_1_1_novel_rendering_service_a8c048cfcd2156a3b52af49072c380914}} 
+void {\bfseries tear\+Down} () const
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a144fb3b92986a524b8a10c2a97788972}\label{class_novel_r_t_1_1_novel_rendering_service_a144fb3b92986a524b8a10c2a97788972}} 
+\mbox{\hyperlink{class_novel_r_t_1_1_novel_image_rect}{Novel\+Image\+Rect}} $\ast$ {\bfseries get\+Image\+Rect} (const \mbox{\hyperlink{class_novel_r_t_1_1_geo_vector}{Geo\+Vector}}$<$ float $>$ \&starting\+Size, std\+::string\+\_\+view file\+Path, const \mbox{\hyperlink{struct_novel_r_t_1_1_novel_common_args}{Novel\+Common\+Args}} \&args, const \mbox{\hyperlink{class_novel_r_t_1_1_r_g_b_a_config}{R\+G\+B\+A\+Config}} \&colour\+Tint=\mbox{\hyperlink{class_novel_r_t_1_1_r_g_b_a_config}{R\+G\+B\+A\+Config}}(255, 255, 255, 255))
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a4250f31e30b1a9d225a2eb498e89c2c9}\label{class_novel_r_t_1_1_novel_rendering_service_a4250f31e30b1a9d225a2eb498e89c2c9}} 
+\mbox{\hyperlink{class_novel_r_t_1_1_novel_basic_fill_rect}{Novel\+Basic\+Fill\+Rect}} $\ast$ {\bfseries get\+Basic\+Fill\+Rect} (const \mbox{\hyperlink{class_novel_r_t_1_1_geo_vector}{Geo\+Vector}}$<$ float $>$ \&starting\+Size, const \mbox{\hyperlink{class_novel_r_t_1_1_r_g_b_a_config}{R\+G\+B\+A\+Config}} \&colour\+Config, const \mbox{\hyperlink{struct_novel_r_t_1_1_novel_common_args}{Novel\+Common\+Args}} \&args)
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_aced17a3275ff10e12684a895724d2d5c}\label{class_novel_r_t_1_1_novel_rendering_service_aced17a3275ff10e12684a895724d2d5c}} 
+\mbox{\hyperlink{class_novel_r_t_1_1_novel_text_rect}{Novel\+Text\+Rect}} $\ast$ {\bfseries get\+Text\+Rect} (const \mbox{\hyperlink{class_novel_r_t_1_1_r_g_b_a_config}{R\+G\+B\+A\+Config}} \&colour\+Config, float font\+Size, const std\+::string \&font\+File\+Path, const \mbox{\hyperlink{struct_novel_r_t_1_1_novel_common_args}{Novel\+Common\+Args}} \&args)
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a03ad3ffe9035a07dac340cb0fd5a082a}\label{class_novel_r_t_1_1_novel_rendering_service_a03ad3ffe9035a07dac340cb0fd5a082a}} 
+float {\bfseries get\+Screen\+Scale} () const
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a117d609f700e2e1f84699fba0bf31876}\label{class_novel_r_t_1_1_novel_rendering_service_a117d609f700e2e1f84699fba0bf31876}} 
+void {\bfseries begin\+Frame} () const
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a1bae2a8e978e6d401671c30692866d2f}\label{class_novel_r_t_1_1_novel_rendering_service_a1bae2a8e978e6d401671c30692866d2f}} 
+void {\bfseries end\+Frame} () const
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_rendering_service_a2a41eb87d6defef930a4fd2c132e1d4a}\label{class_novel_r_t_1_1_novel_rendering_service_a2a41eb87d6defef930a4fd2c132e1d4a}} 
+std\+::shared\+\_\+ptr$<$ S\+D\+L\+\_\+\+Window $>$ {\bfseries get\+Window} () const
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/Novel\+Rendering\+Service.\+h\item 
+src/Novel\+Rendering\+Service.\+cpp\end{DoxyCompactItemize}
