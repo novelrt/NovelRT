@@ -9,12 +9,17 @@
 #include "NovelStepTimer.h"
 
 namespace NovelRT {
+/**
+ * The base class for creating a Novel.
+ */
 class NovelRunner {
 public:
   void runOnUpdate(NovelUpdateSubscriber);
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
+  /// Instantiates the NovelRunner class with its presets.
   explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
+
   /**
    * Starts the visual novel.
    * @returns Exit code.
