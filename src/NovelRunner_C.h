@@ -6,7 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef void (* NovelUpdateSubscriber)(const double);
+typedef void (* NovelUpdateSubscriber)(double);
 
 struct NovelRunner_C;
 typedef struct NovelRunner_C NovelRunner_t;

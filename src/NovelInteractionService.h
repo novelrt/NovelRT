@@ -10,7 +10,7 @@ namespace NovelRT {
 class NovelInteractionService { friend class NovelInteractionObject;
 NOVELRT_PARAMETERLESS_EVENT(Quit)
 public:
-  NovelInteractionService(NovelLayeringService* layeringService, const float screenScale);
+  NovelInteractionService(NovelLayeringService* layeringService, float screenScale);
 
   void consumePlayerInput();
 

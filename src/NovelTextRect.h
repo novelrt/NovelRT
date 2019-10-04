@@ -12,12 +12,12 @@ namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
 public:
   NovelTextRect(NovelLayeringService* layeringService,
-                const float fontSize,
-                const float screenScale,
+                float fontSize,
+                float screenScale,
                 const std::string& fontFileDir,
                 const RGBAConfig& colourConfig,
                 const NovelCommonArgs& args,
-                const GLuint programId);
+                GLuint programId);
 
   void drawObject() final;
 

@@ -11,12 +11,12 @@
 namespace NovelRT {
 class NovelRenderObject : public NovelObject {
 public:
-  NovelRenderObject(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
-                    const NovelCommonArgs& args, const GLuint programId);
+  NovelRenderObject(NovelLayeringService* layeringService, float screenScale, const GeoVector<float>& size,
+                    const NovelCommonArgs& args, GLuint programId);
 
   void executeObjectBehaviour() final;
   void setWorldSpaceSize(const GeoVector<float>& value) override;
-  void setRotation(const float value) override;
+  void setRotation(float value) override;
   void setScale(const GeoVector<float>& value) override;
   void setWorldSpacePosition(const GeoVector<float>& value) override;
   virtual ~NovelRenderObject();

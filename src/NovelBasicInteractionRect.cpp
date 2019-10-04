@@ -4,7 +4,7 @@
 #include "GeoBounds.h"
 namespace NovelRT {
 NovelBasicInteractionRect::NovelBasicInteractionRect(NovelLayeringService* layeringService,
-                                                     const float screenScale,
+                                                     float screenScale,
                                                      const GeoVector<float>& size,
                                                      const NovelCommonArgs& args,
                                                      const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject)

@@ -13,7 +13,7 @@ public:
   NovelImageRect(NovelLayeringService* layeringService,
                  const float& screenScale,
                  const GeoVector<float>& size,
-                 const std::string_view imageDir,
+                 std::string_view imageDir,
                  const NovelCommonArgs& args,
                  GLuint programId,
                  const RGBAConfig& colourTint);
