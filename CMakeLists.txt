@@ -85,6 +85,9 @@ set(NOVELRT_HEADERS
         src/NovelTextRect.h
         src/RGBAConfig.h
         src/wrapper.hpp
+        src/Lua/LuaArguments.h
+        src/Lua/LuaMethodResult.h
+        src/Lua/LuaRunner.h
         )
 
 set(NOVELRT_SOURCES
@@ -103,6 +106,9 @@ set(NOVELRT_SOURCES
         src/NovelStepTimer.cpp
         src/NovelTextRect.cpp
         src/RGBAConfig.cpp
+        src/Lua/LuaArguments.cpp
+        src/Lua/LuaMethodResult.cpp
+        src/Lua/LuaRunner.cpp
         )
 
 set(NOVELRT_LINK_LIBRARIES
