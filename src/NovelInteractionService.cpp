@@ -1,6 +1,4 @@
-//
-// Created by matth on 22/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 #include "NovelInteractionService.h"
 #include <SDL2/SDL_events.h>
 
