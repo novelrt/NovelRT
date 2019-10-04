@@ -55,13 +55,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 function Build {
-  BuildArgs="--build \"$BuildDir\""
-
-  if [[ ! -z "$remaining" ]]; then
-    BuildArgs="$BuildArgs ${remaining[@]}"
+  if [ -z "$remaining" ]; then
+    cmake --build "$BuildDir"
+  else
+    cmake --build "$BuildDir" "${remaining[@]}"
   fi
 
-  cmake "${BuildArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -77,18 +76,23 @@ function CreateDirectory {
 }
 
 function Generate {
-  GenerateArgs="-B \"$BuildDir\" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX=\"$InstallDir\""
-
-  if $ci; then
-    vcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-    GenerateArgs="$GenerateArgs -DCMAKE_TOOLCHAIN_FILE=\"$vcpkgToolchainFile\""
+  if [ -z "$remaining" ]; then
+    if $ci; then
+      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
+      echo cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+    else
+      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
+    fi
+  else
+    if $ci; then
+      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
+      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
+    else
+      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+    fi
   fi
 
-  if [[ ! -z "$remaining" ]]; then
-    GenerateArgs="$GenerateArgs ${remaining[@]}"
-  fi
-
-  cmake "${GenerateArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -114,13 +118,12 @@ function Help {
 }
 
 function Install {
-  InstallArgs="--install \"$BuildDir\""
-
-  if [[ ! -z "$remaining" ]]; then
-    InstallArgs="$InstallArgs ${remaining[@]}"
+  if [ -z "$remaining" ]; then
+    cmake --install "$BuildDir"
+  else
+    cmake --install "$BuildDir" "${remaining[@]}"
   fi
 
-  cmake "${InstallArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -158,15 +161,19 @@ if $ci; then
      git clone https://github.com/microsoft/vcpkg "$VcpkgInstallDir"
   fi
 
-  "$VcpkgInstallDir/bootstrap-vcpkg.sh"
-  LASTEXITCODE=$?
+  VcpkgExe="$VcpkgInstallDir/vcpkg"
 
-  if [ "$LASTEXITCODE" != 0 ]; then
-    echo "'bootstrap-vcpkg' failed"
-    return "$LASTEXITCODE"
+  if [ ! -f "$VcpkgExe" ]; then
+    "$VcpkgInstallDir/bootstrap-vcpkg.sh"
+    LASTEXITCODE=$?
+
+    if [ "$LASTEXITCODE" != 0 ]; then
+      echo "'bootstrap-vcpkg' failed"
+      return "$LASTEXITCODE"
+    fi
   fi
 
-  "$VcpkgInstallDir/vcpkg.exe" install freetype glad glm lua sdl2 sdl2-image
+  "$VcpkgExe" install freetype glad glm lua sdl2 sdl2-image
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
