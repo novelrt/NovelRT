@@ -1,7 +1,4 @@
-
-//
-// Created by matth on 27/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELTEXTRECT_H
 #define NOVELRT_NOVELTEXTRECT_H

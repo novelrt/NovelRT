@@ -1,7 +1,4 @@
-//
-// Created by matth on 30/03/2019.
-//
-
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 #include "GeoBounds.h"
 #include <math.h>
 

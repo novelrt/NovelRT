@@ -1,7 +1,4 @@
-//
-// Created by matth on 16/12/2018.
-//
-
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 #include <iostream>
 #include "NovelBasicFillRect.h"
 #include "GeoBounds.h"
