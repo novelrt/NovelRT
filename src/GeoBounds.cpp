@@ -1,7 +1,4 @@
-//
-// Created by matth on 30/03/2019.
-//
-
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 #include "GeoBounds.h"
 #include <math.h>
 
@@ -23,11 +20,11 @@ bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
 
   return false;
 }
-GeoVector<float> GeoBounds::getCornerInWorldSpace(const int index) const {
+GeoVector<float> GeoBounds::getCornerInWorldSpace(int index) const {
   return _corners[index];
 }
 
-GeoVector<float> GeoBounds::getCornerInOpenGLSurfaceSpace(const int index, const float screenScale) const {
+GeoVector<float> GeoBounds::getCornerInOpenGLSurfaceSpace(int index, float screenScale) const {
   auto point = _corners[index];
   float pointX = ((point.getX() * screenScale) / ((1920.0f * screenScale) / 2.0f)) - 1.0f;
   point.setX(pointX);

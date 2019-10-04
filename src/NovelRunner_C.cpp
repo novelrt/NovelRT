@@ -1,6 +1,4 @@
-//
-// Created by miron on 2/20/19.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRunner.h"
 #include "NovelRunner_C.h"
@@ -14,15 +12,11 @@ void destroyRunner(NovelRunner_t* runner) {
   delete reinterpret_cast<NovelRT::NovelRunner*>(runner);
 }
 
-void executeUpdateSubscriptions(NovelRunner_t* runner, const float deltaTime) {
-  return reinterpret_cast<NovelRT::NovelRunner*>(runner)->executeUpdateSubscriptions(deltaTime);
-}
-
-void runOnUpdate(NovelRunner_t* runner, NovelSubscriber subscriber) {
+void runOnUpdate(NovelRunner_t* runner, NovelUpdateSubscriber subscriber) {
   return reinterpret_cast<NovelRT::NovelRunner*>(runner)->runOnUpdate(subscriber);
 }
 
-void stopRunningOnUpdate(NovelRunner_t* runner, NovelSubscriber subscriber) {
+void stopRunningOnUpdate(NovelRunner_t* runner, NovelUpdateSubscriber subscriber) {
   return reinterpret_cast<NovelRT::NovelRunner*>(runner)->stopRunningOnUpdate(subscriber);
 }
 

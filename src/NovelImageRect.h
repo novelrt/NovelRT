@@ -1,6 +1,4 @@
-//
-// Created by matth on 05/01/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELIMAGERECT_H
 #define NOVELRT_NOVELIMAGERECT_H
@@ -15,25 +13,42 @@ public:
   NovelImageRect(NovelLayeringService* layeringService,
                  const float& screenScale,
                  const GeoVector<float>& size,
-                 const std::string_view imageDir,
-                 const NovelCommonArgs& args, GLuint programId);
+                 std::string_view imageDir,
+                 const NovelCommonArgs& args,
+                 GLuint programId,
+                 const RGBAConfig& colourTint);
 
-  void drawObject() const final;
+  NovelImageRect(NovelLayeringService* layeringService,
+                 const float& screenScale,
+                 const GeoVector<float>& size,
+                 const NovelCommonArgs& args,
+                 GLuint programId,
+                 const RGBAConfig& colourTint);
+
+  void drawObject() final;
   void setScale(const GeoVector<float>& value) final;
 
+  void setTextureInternal(GLuint textureId);
+
+  RGBAConfig getColourTintConfig() const;
+  void setColourTintConfig(const RGBAConfig& value);
+  ~NovelImageRect() override;
+
 protected:
-  void configureObjectBuffers(const bool refreshBuffers = false) final;
+  void configureObjectBuffers() final;
 
 private:
   std::string _imageDir;
+  std::string _previousImageDir;
   int _imageHandle;
   int _width;
   int _height;
-  GLuint _textureId;
+  Lazy<GLuint> _textureId;
   std::vector<GLfloat> _uvCoordinates;
-
-  GLuint _uvBuffer;
-  GLuint _colourBuffer;
+  Lazy<GLuint> _uvBuffer;
+  Lazy<GLuint> _colourTintBuffer;
+  RGBAConfig _colourTint;
+  std::vector<GLfloat> _colourTintData;
 };
 
 }

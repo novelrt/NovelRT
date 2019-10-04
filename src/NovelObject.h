@@ -1,6 +1,4 @@
-//
-// Created by matth on 15/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELOBJECT_H
 #define NOVELRT_NOVELOBJECT_H
@@ -16,13 +14,17 @@ public:
   NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
               const NovelCommonArgs& args);
 
+  virtual ~NovelObject();
+
   virtual GeoVector<float> getWorldSpacePosition() const;
 
-  virtual void setPosition(const GeoVector<float>& value);
+  virtual void setWorldSpacePosition(const GeoVector<float>& value);
+
+  virtual GeoVector<float> getScreenSpacePosition() const;
 
   virtual float getRotation() const;
 
-  virtual void setRotation(const float value);
+  virtual void setRotation(float value);
 
   virtual GeoVector<float> getScale() const;
 
@@ -32,21 +34,25 @@ public:
 
   virtual void setWorldSpaceSize(const GeoVector<float>& value);
 
+  virtual GeoVector<float> getScreenSpaceSize() const;
+
   virtual int getLayer() const;
 
-  virtual void setLayer(const int value);
+  virtual void setLayer(int value);
 
   virtual int getOrderInLayer() const;
 
-  virtual void setOrderInLayer(const int value);
+  virtual void setOrderInLayer(int value);
 
   virtual bool getActive() const;
 
-  virtual void setActive(const bool value);
+  virtual void setActive(bool value);
 
   virtual void executeObjectBehaviour() = 0;
 
-  virtual GeoBounds getObjectBounds();
+  virtual GeoBounds getScreenSpaceObjectBounds();
+
+  virtual float getScaleHypotenuseScalar() const;
 
 protected:
   GeoVector<float> _position;

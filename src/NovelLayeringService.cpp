@@ -1,13 +1,11 @@
-//
-// Created by matth on 23/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <algorithm>
 #include "NovelLayeringService.h"
 #include "NovelObjectSortComparison.h"
 
 namespace NovelRT {
-void NovelLayeringService::updateLayerInfo(const int layer, NovelObject* targetObject, const bool migrate) {
+void NovelLayeringService::updateLayerInfo(int layer, NovelObject* targetObject, bool migrate) {
   if (migrate) {
     auto vec = _layerMatrix[targetObject->getLayer()];
     vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelObject* x) {
@@ -23,7 +21,7 @@ void NovelLayeringService::updateLayerInfo(const int layer, NovelObject* targetO
   sortLayerOrder(layer);
 }
 
-void NovelLayeringService::sortLayerOrder(const int layer) {
+void NovelLayeringService::sortLayerOrder(int layer) {
   sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), NovelObjectSortComparison());
 }
 

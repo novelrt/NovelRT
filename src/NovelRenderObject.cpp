@@ -1,6 +1,4 @@
-//
-// Created by matth on 23/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelRenderObject.h"
@@ -8,23 +6,29 @@
 
 namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-                                     const float screenScale,
+                                     float screenScale,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) :
-    NovelObject(layeringService, screenScale, size, args), _programId(programId) {
+                                     GLuint programId) : NovelObject(layeringService, screenScale, size, args),
+                                                               _buffer(Lazy<GLuint>(generateStandardBuffer)),
+                                                               _vertexArrayObject(Lazy<GLuint>([] {
+                                                                 GLuint tempVao;
+                                                                 glGenVertexArrays(1, &tempVao);
+                                                                 return tempVao;
+                                                               })),
+                                                               _programId(programId){
 }
 
 void NovelRenderObject::executeObjectBehaviour() {
-  if(!_bufferInitialised) {
-    configureObjectBuffers(true);
+  if (!_bufferInitialised) {
+    configureObjectBuffers();
     _bufferInitialised = true;
   }
   drawObject();
 }
 
-void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
-  auto bounds = getObjectBounds();
+void NovelRenderObject::configureObjectBuffers() {
+  auto bounds = getScreenSpaceObjectBounds();
 
   auto topLeft = bounds.getCornerInOpenGLSurfaceSpace(0, _screenScale);
   auto bottomRight = bounds.getCornerInOpenGLSurfaceSpace(2, _screenScale);
@@ -39,13 +43,10 @@ void NovelRenderObject::configureObjectBuffers(const bool refreshBuffers) {
       bottomRight.getX(), bottomRight.getY(), 0.0f,
   };
 
-  if (refreshBuffers) {
-    glGenVertexArrays(1, &_vertexArrayObject);
-    glGenBuffers(1, &_buffer);
-  }
+  _vertexArrayObject.getActual(); //this is just here to force initialisation.
 
 // The following commands will talk about our 'vertexbuffer' buffer
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
 
 // Give our vertices to OpenGL.
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
@@ -55,7 +56,7 @@ void NovelRenderObject::setWorldSpaceSize(const GeoVector<float>& value) {
   NovelObject::setWorldSpaceSize(value);
   configureObjectBuffers();
 }
-void NovelRenderObject::setRotation(const float value) {
+void NovelRenderObject::setRotation(float value) {
   NovelObject::setRotation(value);
   configureObjectBuffers();
 }
@@ -63,8 +64,20 @@ void NovelRenderObject::setScale(const GeoVector<float>& value) {
   NovelObject::setScale(value);
   configureObjectBuffers();
 }
-void NovelRenderObject::setPosition(const GeoVector<float>& value) {
-  NovelObject::setPosition(value);
+void NovelRenderObject::setWorldSpacePosition(const GeoVector<float>& value) {
+  NovelObject::setWorldSpacePosition(value);
   configureObjectBuffers();
+}
+NovelRenderObject::~NovelRenderObject() {
+  if(!_vertexArrayObject.isCreated()) return;
+
+  auto vao = _vertexArrayObject.getActual();
+  glDeleteVertexArrays(1, &vao);
+}
+
+GLuint NovelRenderObject::generateStandardBuffer() {
+  GLuint tempBuffer;
+  glGenBuffers(1, &tempBuffer);
+  return tempBuffer;
 }
 }

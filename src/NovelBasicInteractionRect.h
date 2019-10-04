@@ -1,6 +1,4 @@
-//
-// Created by matth on 30/03/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELBASICINTERACTIONRECT_H
 #define NOVELRT_NOVELBASICINTERACTIONRECT_H
@@ -9,7 +7,7 @@
 namespace NovelRT {
 class NovelBasicInteractionRect : public NovelInteractionObject {
 public:
-  NovelBasicInteractionRect(NovelLayeringService* layeringService, const float screenScale, const GeoVector<float>& size,
+  NovelBasicInteractionRect(NovelLayeringService* layeringService, float screenScale, const GeoVector<float>& size,
   const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
 
   bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const override;

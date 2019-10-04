@@ -1,6 +1,4 @@
-//
-// Created by matth on 16/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELBASICFILLRECT_H
 #define NOVELRT_NOVELBASICFILLRECT_H
@@ -12,27 +10,25 @@ namespace NovelRT {
 class NovelBasicFillRect : public NovelRenderObject {
 public:
   NovelBasicFillRect(NovelLayeringService* layeringService,
-                     const float screenScale,
+                     float screenScale,
                      const GeoVector<float>& size,
                      const RGBAConfig& fillColour,
                      const NovelCommonArgs& args,
-                     const GLuint programId);
+                     GLuint programId);
 
-  void drawObject() const final;
+  void drawObject() final;
 
   RGBAConfig getColourConfig() const;
 
   void setColourConfig(const RGBAConfig& value);
 
-  ~NovelBasicFillRect();
-
 protected:
-  virtual void configureObjectBuffers(bool refreshBuffers = false) override;
+  void configureObjectBuffers() final;
 
 private:
 
   RGBAConfig _colourConfig;
-  GLuint _colourBuffer;
+  Lazy<GLuint> _colourBuffer;
   std::vector<GLfloat> _colourData;
 };
 }

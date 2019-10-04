@@ -1,6 +1,4 @@
-//
-// Created by matth on 15/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_GEOVECTOR_H
 #define NOVELRT_GEOVECTOR_H
@@ -30,15 +28,15 @@ public:
 
   inline GeoVector<T> operator/(const GeoVector<T>& other) const;
 
-  inline GeoVector<T> operator+(const T other) const;
+  inline GeoVector<T> operator+(T other) const;
 
-  inline GeoVector<T> operator-(const T other) const;
+  inline GeoVector<T> operator-(T other) const;
 
-  inline GeoVector<T> operator*(const T other) const;
+  inline GeoVector<T> operator*(T other) const;
 
-  inline GeoVector<T> operator/(const T other) const;
+  inline GeoVector<T> operator/(T other) const;
 
-  void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point);
+  void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point);
 
 private:
   GeoVector(glm::vec<2, T> value);
@@ -99,22 +97,22 @@ GeoVector<T> GeoVector<T>::operator/(const GeoVector<T>& other) const {
 }
 
 template<typename T>
-inline GeoVector<T> GeoVector<T>::operator+(const T other) const {
+inline GeoVector<T> GeoVector<T>::operator+(T other) const {
   return GeoVector<T>(getValue() + other);
 }
 
 template<typename T>
-inline GeoVector<T> GeoVector<T>::operator-(const T other) const {
+inline GeoVector<T> GeoVector<T>::operator-(T other) const {
   return GeoVector<T>(getValue() - other);
 }
 
 template<typename T>
-inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
+inline GeoVector<T> GeoVector<T>::operator*(T other) const {
   return GeoVector<T>(getValue() * other);
 }
 
 template<typename T>
-GeoVector<T> GeoVector<T>::operator/(const T other) const {
+GeoVector<T> GeoVector<T>::operator/(T other) const {
   return GeoVector<T>(getValue() / other);
 }
 template<typename T>
@@ -122,7 +120,7 @@ GeoVector<T>::GeoVector() {
 
 }
 template<typename T>
-void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
+void GeoVector<T>::rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) {
   setValue(glm::rotate((getValue() - point.getValue()), glm::radians(angleRotationValue)) + point.getValue());
 }
 

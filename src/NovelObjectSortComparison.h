@@ -1,6 +1,4 @@
-//
-// Created by matth on 30/03/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELOBJECTSORTCOMPARISON_H
 #define NOVELRT_NOVELOBJECTSORTCOMPARISON_H
@@ -9,7 +7,7 @@
 namespace NovelRT {
 struct NovelObjectSortComparison {
 public:
-  inline bool const operator()(NovelObject* lhs, NovelObject* rhs) const {
+  inline bool operator()(NovelObject* lhs, NovelObject* rhs) const {
     return lhs->getOrderInLayer() < rhs->getOrderInLayer();
   }
 };

@@ -1,12 +1,10 @@
-//
-// Created by matth on 30/03/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelBasicInteractionRect.h"
 #include "GeoBounds.h"
 namespace NovelRT {
 NovelBasicInteractionRect::NovelBasicInteractionRect(NovelLayeringService* layeringService,
-                                                     const float screenScale,
+                                                     float screenScale,
                                                      const GeoVector<float>& size,
                                                      const NovelCommonArgs& args,
                                                      const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject)

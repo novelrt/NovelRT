@@ -1,11 +1,9 @@
-//
-// Created by matth on 16/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "RGBAConfig.h"
 
 namespace NovelRT {
-RGBAConfig::RGBAConfig(const int r, const int g, const int b, const int a) {
+RGBAConfig::RGBAConfig(int r, int g, int b, int a) {
   _r = r;
   _g = g;
   _b = b;
@@ -16,7 +14,7 @@ int RGBAConfig::getR() const {
   return _r;
 }
 
-void RGBAConfig::setR(const int value) {
+void RGBAConfig::setR(int value) {
   if (value < 0) {
     _r = 0;
   } else if (value > 255) {
@@ -30,7 +28,7 @@ int RGBAConfig::getG() const {
   return _g;
 }
 
-void RGBAConfig::setG(const int value) {
+void RGBAConfig::setG(int value) {
   if (value < 0) {
     _g = 0;
   } else if (value > 255) {
@@ -44,7 +42,7 @@ int RGBAConfig::getB() const {
   return _b;
 }
 
-void RGBAConfig::setB(const int value) {
+void RGBAConfig::setB(int value) {
   if (value < 0) {
     _b = 0;
   } else if (value > 255) {
@@ -58,7 +56,7 @@ int RGBAConfig::getA() const {
   return _a;
 }
 
-void RGBAConfig::setA(const int value) {
+void RGBAConfig::setA(int value) {
   if (value < 0) {
     _a = 0;
   } else if (value > 255) {
