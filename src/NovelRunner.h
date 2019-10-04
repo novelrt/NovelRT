@@ -15,9 +15,22 @@ public:
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
   explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
+  /**
+   * Starts the visual novel.
+   * @returns Exit code.
+   */
   int runNovel();
+  /**
+   * The Rendering Service associated with this Runner.
+   */
   NovelRenderingService* getRenderer() const;
+  /**
+   * The Interaction Service associated with this Runner.
+   */
   NovelInteractionService* getInteractionService() const;
+  /**
+   * The Debug Service associated with this Runner.
+   */
   NovelDebugService* getDebugService() const;
 
 private:
