@@ -231,9 +231,3 @@ endif ()
 
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
-set_target_properties(NovelRTLib PROPERTIES PUBLIC_HEADER include/NovelRTLib_C.h)
-
-install(TARGETS NovelRTLib
-        LIBRARY DESTINATION /lib/${PROJECT_NAME}
-        PUBLIC_HEADER DESTINATION /usr/include/${PROJECT_NAME})
-
