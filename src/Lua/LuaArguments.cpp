@@ -14,6 +14,8 @@ extern "C" {
 namespace NovelRT::Lua {
 template<typename... T>
 void LuaArguments::pushToStack(lua_State* l, T... args) {
+
+  // TODO: add more type converters
   if(typeid(args).name() == typeid(std::string).name()) {
     lua_pushstring(l, args);
   } else if(typeid(args).name() == typeid(int).name()) {
