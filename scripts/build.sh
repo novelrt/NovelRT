@@ -55,12 +55,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 function Build {
-  if [[ -z "$remaining" ]]; then
-    cmake --build "$BuildDir"
-  else
-    cmake --build "$BuildDir" "${remaining[@]}"
+  BuildArgs="--build \"$BuildDir\""
+
+  if [[ ! -z "$remaining" ]]; then
+    BuildArgs="$BuildArgs ${remaining[@]}"
   fi
 
+  cmake "${BuildArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -76,12 +77,18 @@ function CreateDirectory {
 }
 
 function Generate {
-  if [[ -z "$remaining" ]]; then
-    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
-  else
-    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+  GenerateArgs="-B \"$BuildDir\" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX=\"$InstallDir\""
+
+  if $ci; then
+    vcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
+    GenerateArgs="$GenerateArgs -DCMAKE_TOOLCHAIN_FILE=\"$vcpkgToolchainFile\""
   fi
 
+  if [[ ! -z "$remaining" ]]; then
+    GenerateArgs="$GenerateArgs ${remaining[@]}"
+  fi
+
+  cmake "${GenerateArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -92,7 +99,7 @@ function Generate {
 
 function Help {
   echo "Common settings:"
-  echo "  --configuration <value>   Build configuration (Debug, Release, RelWithDebInfo, MinSizeRel)"
+  echo "  --configuration <value>   Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
   echo "  --help                    Print help and exit"
   echo ""
   echo "Actions:"
@@ -107,12 +114,13 @@ function Help {
 }
 
 function Install {
-  if [[ -z "$remaining" ]]; then
-    sudo cmake --install "$BuildDir"
-  else
-    sudo cmake --install "$BuildDir" "${remaining[@]}"
+  InstallArgs="--install \"$BuildDir\""
+
+  if [[ ! -z "$remaining" ]]; then
+    InstallArgs="$InstallArgs ${remaining[@]}"
   fi
 
+  cmake "${InstallArgs[@]}"
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -144,7 +152,27 @@ InstallDir="$ArtifactsDir/install/$configuration"
 CreateDirectory "$InstallDir"
 
 if $ci; then
-  echo "ci nyi"
+  VcpkgInstallDir="$ArtifactsDir/vcpkg"
+
+  if [ ! -d "$1" ]; then
+     git clone https://github.com/microsoft/vcpkg "$VcpkgInstallDir"
+  fi
+
+  "$VcpkgInstallDir/bootstrap-vcpkg.sh"
+  LASTEXITCODE=$?
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    echo "'bootstrap-vcpkg' failed"
+    return "$LASTEXITCODE"
+  fi
+
+  "$VcpkgInstallDir/vcpkg.exe" install freetype glad glm lua sdl2 sdl2-image
+  LASTEXITCODE=$?
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    echo "'vcpkg install' failed"
+    return "$LASTEXITCODE"
+  fi
 fi
 
 if $generate; then

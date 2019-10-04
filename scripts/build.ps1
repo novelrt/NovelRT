@@ -2,7 +2,7 @@
 Param(
   [switch] $build,
   [switch] $ci,
-  [ValidateSet("Debug", "Release", "RelWithDebInfo", "MinSizeRel")][string] $configuration = "Debug",
+  [ValidateSet("Debug", "MinSizeRel", "Release", "RelWithDebInfo")][string] $configuration = "Debug",
   [switch] $generate,
   [switch] $help,
   [switch] $install,
@@ -28,7 +28,12 @@ function Create-Directory([string[]] $Path) {
 }
 
 function Generate() {
-  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX=$InstallDir $remaining
+  if ($ci) {
+    $vcpkgToolchainFile = Join-Path -Path $VcpkgInstallDir -ChildPath "scripts/buildsystems/vcpkg.cmake"
+    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$vcpkgToolchainFile" + $remaining
+  }
+
+  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_INSTALL_PREFIX=$InstallDir $remaining
 
   if ($LastExitCode -ne 0) {
     throw "'Generate' failed"
@@ -37,7 +42,7 @@ function Generate() {
 
 function Help() {
     Write-Host -Object "Common settings:"
-    Write-Host -Object "  -configuration <value>  Build configuration (Debug, Release, RelWithDebInfo, MinSizeRel)"
+    Write-Host -Object "  -configuration <value>  Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
     Write-Host -Object "  -help                   Print help and exit"
     Write-Host -Object ""
     Write-Host -Object "Actions:"
@@ -77,15 +82,30 @@ try {
   $ArtifactsDir = Join-Path -Path $RepoRoot -ChildPath "artifacts"
   Create-Directory -Path $ArtifactsDir
 
-  $BuildDir = Join-Path -Path $ArtifactsDir -ChildPath "build"
-  $BuildDir = Join-Path -Path $BuildDir -ChildPath $Configuration
+  $BuildDir = Join-Path -Path $ArtifactsDir -ChildPath "build/$configuration"
   Create-Directory -Path $BuildDir
 
-  $InstallDir = Join-Path -Path $ArtifactsDir -ChildPath "install"
-  $InstallDir = Join-Path -Path $InstallDir -ChildPath $Configuration
+  $InstallDir = Join-Path -Path $ArtifactsDir -ChildPath "install/$configuration"
   Create-Directory -Path $InstallDir
 
   if ($ci) {
+    $VcpkgInstallDir = Join-Path -Path $ArtifactsDir -ChildPath "vcpkg"
+
+    if (!(Test-Path -Path $VcpkgInstallDir)) {
+      & git clone https://github.com/microsoft/vcpkg $VcpkgInstallDir
+    }
+
+    & $VcpkgInstallDir/bootstrap-vcpkg.bat
+
+    if ($LastExitCode -ne 0) {
+      throw "'bootstrap-vcpkg' failed"
+    }
+
+    & $VcpkgInstallDir/vcpkg.exe install freetype glad glm lua sdl2 sdl2-image --triplet x64-windows
+
+    if ($LastExitCode -ne 0) {
+        throw "'vcpkg install' failed"
+    }
   }
 
   if ($generate) {
