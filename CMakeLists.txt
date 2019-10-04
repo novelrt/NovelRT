@@ -151,18 +151,18 @@ set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
 )
 
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND false)
   target_compile_options(NovelRT
     PRIVATE
       -Werror
       -Wall
       -Wextra
-      -Wduplicated-cond
-      -Wduplicated-branches
-      -Wlogical-op
-      -Wrestrict
+      -Wduplicate-enum
+      
+      -Wlong-long
+      
       -Wnull-dereference
-      -Wuseless-cast
+      
       -Wdouble-promotion
       -Wshadow
       -Wformat=2
@@ -190,7 +190,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCH
       -fsanitize=return
       -fsanitize=signed-integer-overflow
       -fsanitize=bounds
-      -fsanitize=bounds-strict
       -fsanitize=alignment
       -fsanitize=object-size
       -fsanitize=float-divide-by-zero
@@ -200,7 +199,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCH
       -fsanitize=bool
       -fsanitize=enum
       -fsanitize=vptr
-      -fno-sanitize-recover
+      -fno-sanitize-recover=all
     )
 
     target_link_options(NovelRT
@@ -217,7 +216,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCH
         -fsanitize=return
         -fsanitize=signed-integer-overflow
         -fsanitize=bounds
-        -fsanitize=bounds-strict
         -fsanitize=alignment
         -fsanitize=object-size
         -fsanitize=float-divide-by-zero
