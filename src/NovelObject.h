@@ -24,7 +24,7 @@ public:
 
   virtual float getRotation() const;
 
-  virtual void setRotation(const float value);
+  virtual void setRotation(float value);
 
   virtual GeoVector<float> getScale() const;
 
@@ -38,15 +38,15 @@ public:
 
   virtual int getLayer() const;
 
-  virtual void setLayer(const int value);
+  virtual void setLayer(int value);
 
   virtual int getOrderInLayer() const;
 
-  virtual void setOrderInLayer(const int value);
+  virtual void setOrderInLayer(int value);
 
   virtual bool getActive() const;
 
-  virtual void setActive(const bool value);
+  virtual void setActive(bool value);
 
   virtual void executeObjectBehaviour() = 0;
 

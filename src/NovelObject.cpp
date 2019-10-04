@@ -33,7 +33,7 @@ float NovelObject::getRotation() const {
   return _rotation;
 }
 
-void NovelObject::setRotation(const float value) {
+void NovelObject::setRotation(float value) {
   _isDirty = true;
   _rotation = value;
 }
@@ -60,7 +60,7 @@ bool NovelObject::getActive() const {
   return _active;
 }
 
-void NovelObject::setActive(const bool value) {
+void NovelObject::setActive(bool value) {
   _active = value;
 }
 
@@ -68,7 +68,7 @@ int NovelObject::getLayer() const {
   return _layer;
 }
 
-void NovelObject::setLayer(const int value) {
+void NovelObject::setLayer(int value) {
   _layer = value;
   _layeringService->updateLayerInfo(value, this);
 
@@ -78,7 +78,7 @@ int NovelObject::getOrderInLayer() const {
   return _orderInLayer;
 }
 
-void NovelObject::setOrderInLayer(const int value) {
+void NovelObject::setOrderInLayer(int value) {
   _orderInLayer = value;
   _layeringService->sortLayerOrder(getLayer());
 }

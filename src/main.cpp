@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
-  runner.runOnUpdate([](const double delta) {
+  runner.runOnUpdate([](double delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getRotation();

@@ -6,31 +6,31 @@
 namespace NovelRT {
 class RGBAConfig {
 public:
-  RGBAConfig(const int r, const int g, const int b, const int a);
+  RGBAConfig(int r, int g, int b, int a);
 
   int getR() const;
 
   float getRScalar() const;
 
-  void setR(const int value);
+  void setR(int value);
 
   int getG() const;
 
   float getGScalar() const;
 
-  void setG(const int value);
+  void setG(int value);
 
   int getB() const;
 
   float getBScalar() const;
 
-  void setB(const int value);
+  void setB(int value);
 
   int getA() const;
 
   float getAScalar() const;
 
-  void setA(const int value);
+  void setA(int value);
 
 private:
   int _r;

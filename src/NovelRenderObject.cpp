@@ -6,10 +6,10 @@
 
 namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-                                     const float screenScale,
+                                     float screenScale,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) : NovelObject(layeringService, screenScale, size, args),
+                                     GLuint programId) : NovelObject(layeringService, screenScale, size, args),
                                                                _buffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _vertexArrayObject(Lazy<GLuint>([] {
                                                                  GLuint tempVao;
@@ -56,7 +56,7 @@ void NovelRenderObject::setWorldSpaceSize(const GeoVector<float>& value) {
   NovelObject::setWorldSpaceSize(value);
   configureObjectBuffers();
 }
-void NovelRenderObject::setRotation(const float value) {
+void NovelRenderObject::setRotation(float value) {
   NovelObject::setRotation(value);
   configureObjectBuffers();
 }

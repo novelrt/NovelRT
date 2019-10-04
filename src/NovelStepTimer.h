@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace NovelRT {
-  typedef void (*NovelUpdateSubscriber)(const double deltaSeconds);
+  typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
 
   class StepTimer {
   public:
