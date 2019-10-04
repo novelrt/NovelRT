@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT License
