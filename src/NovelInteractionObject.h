@@ -1,6 +1,4 @@
-//
-// Created by matth on 26/03/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELINTERACTIONOBJECT_H
 #define NOVELRT_NOVELINTERACTIONOBJECT_H

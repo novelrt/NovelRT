@@ -1,6 +1,4 @@
-//
-// Created by matt on 12/09/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #ifndef NOVELRT_LAZY_H
 #define NOVELRT_LAZY_H
