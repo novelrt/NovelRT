@@ -1,6 +1,4 @@
-//
-// Created by miron on 2/20/19.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRUNNER_C_H
 #define NOVELRT_NOVELRUNNER_C_H
