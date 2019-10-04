@@ -1,6 +1,4 @@
-//
-// Created by matth on 22/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELINTERACTIONSERVICE_H
 #define NOVELRT_NOVELINTERACTIONSERVICE_H
@@ -12,7 +10,7 @@ namespace NovelRT {
 class NovelInteractionService { friend class NovelInteractionObject;
 NOVELRT_PARAMETERLESS_EVENT(Quit)
 public:
-  NovelInteractionService(NovelLayeringService* layeringService, const float screenScale);
+  NovelInteractionService(NovelLayeringService* layeringService, float screenScale);
 
   void consumePlayerInput();
 

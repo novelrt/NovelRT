@@ -1,6 +1,4 @@
-//
-// Created by matth on 15/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelObject.h"
 #include "GeoBounds.h"
 
@@ -13,18 +11,20 @@ NovelObject::NovelObject(NovelLayeringService* layeringService, const float& scr
   setLayer(args.layer);
   setOrderInLayer(args.orderInLayer);
   _layeringService->updateLayerInfo(getLayer(), this, true);
-  setPosition(args.startingPosition);
+  setWorldSpacePosition(args.startingPosition);
   setRotation(args.startingRotation);
   setWorldSpaceSize(size);
   setScale(args.startingScale);
   setActive(true);
 }
 
+NovelObject::~NovelObject() = default;
+
 GeoVector<float> NovelObject::getWorldSpacePosition() const {
   return _position;
 }
 
-void NovelObject::setPosition(const GeoVector<float>& value) {
+void NovelObject::setWorldSpacePosition(const GeoVector<float>& value) {
   _isDirty = true;
   _position = value;
 }
@@ -33,7 +33,7 @@ float NovelObject::getRotation() const {
   return _rotation;
 }
 
-void NovelObject::setRotation(const float value) {
+void NovelObject::setRotation(float value) {
   _isDirty = true;
   _rotation = value;
 }
@@ -60,7 +60,7 @@ bool NovelObject::getActive() const {
   return _active;
 }
 
-void NovelObject::setActive(const bool value) {
+void NovelObject::setActive(bool value) {
   _active = value;
 }
 
@@ -68,7 +68,7 @@ int NovelObject::getLayer() const {
   return _layer;
 }
 
-void NovelObject::setLayer(const int value) {
+void NovelObject::setLayer(int value) {
   _layer = value;
   _layeringService->updateLayerInfo(value, this);
 
@@ -78,12 +78,12 @@ int NovelObject::getOrderInLayer() const {
   return _orderInLayer;
 }
 
-void NovelObject::setOrderInLayer(const int value) {
+void NovelObject::setOrderInLayer(int value) {
   _orderInLayer = value;
   _layeringService->sortLayerOrder(getLayer());
 }
 
-GeoBounds NovelObject::getObjectBounds() {
+GeoBounds NovelObject::getScreenSpaceObjectBounds() {
   if(_isDirty) {
   _isDirty = false;
   GeoVector<float> position = getWorldSpacePosition();
@@ -91,5 +91,15 @@ GeoBounds NovelObject::getObjectBounds() {
   _objectBounds = GeoBounds(position, size, getRotation());
   }
   return _objectBounds;
+}
+float NovelObject::getScaleHypotenuseScalar() const {
+  auto scale = getScale();
+  return scale.getX() * scale.getY();
+}
+GeoVector<float> NovelObject::getScreenSpaceSize() const {
+  return getWorldSpaceSize() * _screenScale;
+}
+GeoVector<float> NovelObject::getScreenSpacePosition() const {
+  return getWorldSpacePosition() * _screenScale;
 }
 }

@@ -1,6 +1,4 @@
-//
-// Created by matth on 09/05/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRTMACROUTILITIES_H
 #define NOVELRT_NOVELRTMACROUTILITIES_H

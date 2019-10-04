@@ -1,6 +1,4 @@
-//
-// Created by miron on 2/20/19.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRUNNER_C_H
 #define NOVELRT_NOVELRUNNER_C_H
@@ -8,7 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef void (* NovelSubscriber)(const float);
+typedef void (* NovelUpdateSubscriber)(double);
 
 struct NovelRunner_C;
 typedef struct NovelRunner_C NovelRunner_t;
@@ -16,9 +14,8 @@ typedef struct NovelRunner_C NovelRunner_t;
 NovelRunner_t* createRunner(int);
 void destroyRunner(NovelRunner_t*);
 
-void runOnUpdate(NovelRunner_t*, NovelSubscriber);
-void stopRunningOnUpdate(NovelRunner_t*, NovelSubscriber);
-void executeUpdateSubscriptions(NovelRunner_t*, const float);
+void runOnUpdate(NovelRunner_t*, NovelUpdateSubscriber);
+void stopRunningOnUpdate(NovelRunner_t*, NovelUpdateSubscriber);
 int runNovel(NovelRunner_t*);
 
 #ifdef __cplusplus

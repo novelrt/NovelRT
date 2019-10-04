@@ -1,6 +1,4 @@
-//
-// Created by miron on 2/21/19.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELCOMMONARGS_H
 #define NOVELRT_NOVELCOMMONARGS_H

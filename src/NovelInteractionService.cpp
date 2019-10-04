@@ -1,12 +1,10 @@
-//
-// Created by matth on 22/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelInteractionService.h"
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT {
 NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService, const float screenScale)
-    : _layeringService(layeringService), _screenScale(screenScale), _clickTarget(nullptr) {
+    : _clickTarget(nullptr), _layeringService(layeringService), _screenScale(screenScale) {
   _mousePositionsOnScreenPerButton.insert({LeftMouseButton, GeoVector<float>(0, 0)});
   _keyStates.insert({LeftMouseButton, false});
 }

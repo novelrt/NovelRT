@@ -1,6 +1,4 @@
-//
-// Created by miron on 5/15/19.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_WRAPPER_H
 #define NOVELRT_WRAPPER_H

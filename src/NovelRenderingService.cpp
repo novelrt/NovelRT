@@ -1,6 +1,4 @@
-//
-// Created by matth on 19/12/2018.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRenderingService.h"
 
@@ -19,18 +17,20 @@
 #include <sstream>
 
 namespace NovelRT {
-bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
+bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-    std::cerr << "could not initialize sdl2: " << SDL_GetError() << std::endl;
+    std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
     return false;
   }
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  SDL_DisplayMode displayData;
+
+    SDL_DisplayMode displayData;
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
 
@@ -50,6 +50,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
   }
   _openGLContext = SDL_GL_CreateContext(_window.get());
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
+
   if (!gladLoadGL()) {
     std::cerr << "ERROR: Failed to initialise glad." << std::endl;
     return -1;
@@ -65,6 +66,7 @@ bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
 
   _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
   _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
+  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
@@ -137,7 +139,6 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   }
 
   // Link the program
-  //printf("Linking program\n");
   std::cout << "INFO: Linking program..." << std::endl;
   GLuint programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
@@ -159,17 +160,17 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   glDeleteShader(vertexShaderId);
   glDeleteShader(fragmentShaderId);
 
+
   return programId;
 }
 
-int NovelRenderingService::initialiseRendering(const int displayNumber) {
+int NovelRenderingService::initialiseRendering(int displayNumber) {
   if (!initializeRenderPipeline(displayNumber)) {
     std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
     return 1;
   }
 
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
-  _frameBufferWidth = _winWidth;
 
   return 0;
 }
@@ -190,10 +191,18 @@ void NovelRenderingService::endFrame() const {
   SDL_GL_SwapWindow(_window.get());
 }
 
-NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize, 
-                                                    const std::string_view filePath,
-                                                    const NovelCommonArgs& args) {
-  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId);
+NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
+                                                    std::string_view filePath,
+                                                    const NovelCommonArgs& args,
+                                                    const RGBAConfig& colourTint) {
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint);
+}
+
+NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
+                                                  float fontSize,
+                                                  const std::string& fontFilePath,
+                                                  const NovelCommonArgs& args) {
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -208,7 +217,6 @@ NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<floa
                                                             const NovelCommonArgs& args) {
   return new NovelBasicFillRect(_layeringService, _screenScale, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
-
 float NovelRenderingService::getScreenScale() const {
   return _screenScale;
 }

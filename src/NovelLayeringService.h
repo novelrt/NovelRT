@@ -1,6 +1,4 @@
-//
-// Created by matth on 23/02/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELLAYERINGSERVICE_H
 #define NOVELRT_NOVELLAYERINGSERVICE_H
@@ -14,8 +12,8 @@ namespace NovelRT {
 class NovelObject;
 class NovelLayeringService {
 public:
-  void updateLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
-  void sortLayerOrder(const int layer);
+  void updateLayerInfo(int layer, NovelObject* targetObject, bool migrate = true);
+  void sortLayerOrder(int layer);
   void executeAllObjectBehaviours();
 
   ~NovelLayeringService();

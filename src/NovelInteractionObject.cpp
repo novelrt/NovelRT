@@ -1,11 +1,9 @@
-//
-// Created by matth on 26/03/2019.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelInteractionObject.h"
 namespace NovelRT {
 NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
-                                               const float screenScale,
+                                               float screenScale,
                                                const NovelRT::GeoVector<float>& size,
                                                const NovelRT::NovelCommonArgs& args,
                                                const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
@@ -20,7 +18,7 @@ void NovelInteractionObject::executeObjectBehaviour() {
 KeyCode NovelInteractionObject::getSubscribedKey() const {
   return _subscribedKey;
 }
-void NovelInteractionObject::setSubscribedKey(const KeyCode key) {
+void NovelInteractionObject::setSubscribedKey(KeyCode key) {
   _subscribedKey = key;
 }
 }
