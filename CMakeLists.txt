@@ -256,7 +256,7 @@ if (DOXYGEN_FOUND)
   #Replace variables inside @@ with the current values
   configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
   file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
-  file(COPY ${DOCS_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
  
   add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
                      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
