@@ -237,3 +237,4 @@ install(TARGETS NovelRTLib
         LIBRARY DESTINATION /lib/${PROJECT_NAME}
         PUBLIC_HEADER DESTINATION /usr/include/${PROJECT_NAME})
 
+add_subdirectory("docs")
