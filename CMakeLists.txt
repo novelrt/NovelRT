@@ -36,7 +36,6 @@ set(NOVELRT_RESOURCES
   ${NOVELRT_SHADERS}
 )
 
-
 file(COPY ${NOVELRT_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
@@ -60,6 +59,8 @@ include_directories(${LUA_INCLUDE_DIR})
 
 find_library(LUA_LIBRARY lua)
 link_libraries(${LUA_LIBRARY})
+
+find_package(Doxygen)
 
 set(NOVELRT_HEADERS
   src/GeoBounds.h
@@ -231,3 +232,38 @@ endif ()
 
 add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
 target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
+
+install(TARGETS NovelRTLib
+        LIBRARY DESTINATION /lib/${PROJECT_NAME}
+        PUBLIC_HEADER DESTINATION /usr/include/${PROJECT_NAME})
+
+# Docs
+
+if (DOXYGEN_FOUND)
+  set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/src)
+  set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/docs)
+  set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
+  set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+  set(DOXYFILE_OUT ${DOXYGEN_OUTPUT_DIR}/Doxyfile)
+
+  set(DOCS_IMAGES
+    novel-chan_doxy.png
+  )
+  set(DOCS_RESOURCES
+    ${DOCS_IMAGES}
+  )
+ 
+  #Replace variables inside @@ with the current values
+  configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+  file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
+  file(COPY ${DOCS_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ 
+  add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
+                     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+                     MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
+                     COMMENT "Generating docs")
+ 
+  add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
