@@ -47,13 +47,14 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_novel_r_t_1_1_novel_runner-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">NovelRT::NovelRunner Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>The base class for creating a Novel.  
+<p>The base class for creating a visual novel.  
  <a href="class_novel_r_t_1_1_novel_runner.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_novel_runner_8h_source.html">NovelRunner.h</a>&gt;</code></p>
@@ -64,11 +65,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the provided code upon update.  <a href="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78">More...</a><br /></td></tr>
 <tr class="separator:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb10449b010a462d626de18a56f94bf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">stopRunningOnUpdate</a> (NovelUpdateSubscriber)</td></tr>
-<tr class="memdesc:aeb10449b010a462d626de18a56f94bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a Novel.">NovelRunner</a> at the specified event.  <a href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">More...</a><br /></td></tr>
+<tr class="memdesc:aeb10449b010a462d626de18a56f94bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a visual novel.">NovelRunner</a> at the specified event.  <a href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">More...</a><br /></td></tr>
 <tr class="separator:aeb10449b010a462d626de18a56f94bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a245f093ae6bb0ab1e81cdaed456be896"><td class="memItemLeft" align="right" valign="top"><a id="a245f093ae6bb0ab1e81cdaed456be896"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRunner</a> (int, <a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *, uint32_t targetFrameRate=0)</td></tr>
-<tr class="memdesc:a245f093ae6bb0ab1e81cdaed456be896"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates the <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a Novel.">NovelRunner</a> class with its presets. <br /></td></tr>
+<tr class="memitem:a245f093ae6bb0ab1e81cdaed456be896"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRunner</a> (int, <a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *, uint32_t targetFrameRate=0)</td></tr>
+<tr class="memdesc:a245f093ae6bb0ab1e81cdaed456be896"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates the <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a visual novel.">NovelRunner</a> class with its presets.  <a href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">More...</a><br /></td></tr>
 <tr class="separator:a245f093ae6bb0ab1e81cdaed456be896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae298129e584e1ba9f2a9fbb6e4db2c04"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04">runNovel</a> ()</td></tr>
 <tr class="memdesc:ae298129e584e1ba9f2a9fbb6e4db2c04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the visual novel.  <a href="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04">More...</a><br /></td></tr>
@@ -85,10 +85,88 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="class_novel_r_t_1_1_novel_debug_service.html">NovelDebugService</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#a0b8be449542ea6af8b39c1da97bc0377">getDebugService</a> () const</td></tr>
 <tr class="memdesc:a0b8be449542ea6af8b39c1da97bc0377"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Debug Service associated with this Runner. <br /></td></tr>
 <tr class="separator:a0b8be449542ea6af8b39c1da97bc0377"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a0454effd1cd7dcb51a03c8a274ef40f4"><td class="memItemLeft" align="right" valign="top"><a id="a0454effd1cd7dcb51a03c8a274ef40f4"></a>
+<a class="el" href="class_novel_r_t_1_1_step_timer.html">StepTimer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#a0454effd1cd7dcb51a03c8a274ef40f4">_stepTimer</a></td></tr>
+<tr class="memdesc:a0454effd1cd7dcb51a03c8a274ef40f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heh. <br /></td></tr>
+<tr class="separator:a0454effd1cd7dcb51a03c8a274ef40f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4faeedc814935d1a7c6d0c2d0b42a519"><td class="memItemLeft" align="right" valign="top"><a id="a4faeedc814935d1a7c6d0c2d0b42a519"></a>
+std::vector&lt; NovelUpdateSubscriber &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_updateSubscribers</b></td></tr>
+<tr class="separator:a4faeedc814935d1a7c6d0c2d0b42a519"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364bf7395bc2a29f4fb5ad06e2065e57"><td class="memItemLeft" align="right" valign="top"><a id="a364bf7395bc2a29f4fb5ad06e2065e57"></a>
+<a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_layeringService</b></td></tr>
+<tr class="separator:a364bf7395bc2a29f4fb5ad06e2065e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1aacc04121b223de74d5c4e957b4fb53"><td class="memItemLeft" align="right" valign="top"><a id="a1aacc04121b223de74d5c4e957b4fb53"></a>
+std::unique_ptr&lt; <a class="el" href="class_novel_r_t_1_1_novel_debug_service.html">NovelDebugService</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_novelDebugService</b></td></tr>
+<tr class="separator:a1aacc04121b223de74d5c4e957b4fb53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c20c780f7576e5a7a01ead8d6bfda61"><td class="memItemLeft" align="right" valign="top"><a id="a1c20c780f7576e5a7a01ead8d6bfda61"></a>
+std::unique_ptr&lt; <a class="el" href="class_novel_r_t_1_1_novel_rendering_service.html">NovelRenderingService</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_novelRenderer</b></td></tr>
+<tr class="separator:a1c20c780f7576e5a7a01ead8d6bfda61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2de597b21bc4b98353d1c419fdeeaa1a"><td class="memItemLeft" align="right" valign="top"><a id="a2de597b21bc4b98353d1c419fdeeaa1a"></a>
+std::unique_ptr&lt; <a class="el" href="class_novel_r_t_1_1_novel_interaction_service.html">NovelInteractionService</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_novelInteractionService</b></td></tr>
+<tr class="separator:a2de597b21bc4b98353d1c419fdeeaa1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c3b7080471600e4d6cd18e3a65830f"><td class="memItemLeft" align="right" valign="top"><a id="ab8c3b7080471600e4d6cd18e3a65830f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_exitCode</b> = 1</td></tr>
+<tr class="separator:ab8c3b7080471600e4d6cd18e3a65830f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The base class for creating a Novel. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>The base class for creating a visual novel. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a245f093ae6bb0ab1e81cdaed456be896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a245f093ae6bb0ab1e81cdaed456be896">&#9670;&nbsp;</a></span>NovelRunner()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">NovelRT::NovelRunner::NovelRunner </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>displayNumber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *&#160;</td>
+          <td class="paramname"><em>layeringService</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>targetFrameRate</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Instantiates the <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a visual novel.">NovelRunner</a> class with its presets. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">displayNumber</td><td>The display on which to start the novel. </td></tr>
+    <tr><td class="paramname">layeringService</td><td>The <a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> that <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a visual novel.">NovelRunner</a> should use. </td></tr>
+    <tr><td class="paramname">targetFrameRate</td><td>The framerate that should be targeted and capped. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae298129e584e1ba9f2a9fbb6e4db2c04"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae298129e584e1ba9f2a9fbb6e4db2c04">&#9670;&nbsp;</a></span>runNovel()</h2>
 
@@ -151,7 +229,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a Novel.">NovelRunner</a> at the specified event. </p>
+<p>Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a visual novel.">NovelRunner</a> at the specified event. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">subscriber</td><td>The event at which the novel should stop running. </td></tr>
@@ -168,7 +246,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2019 17:40:44 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>

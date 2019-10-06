@@ -2,7 +2,7 @@
 \label{class_novel_r_t_1_1_novel_runner}\index{NovelRT::NovelRunner@{NovelRT::NovelRunner}}
 
 
-The base class for creating a Novel.  
+The base class for creating a visual novel.  
 
 
 
@@ -16,7 +16,6 @@ void \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4d
 \begin{DoxyCompactList}\small\item\em Executes the provided code upon update. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}{stop\+Running\+On\+Update}} (Novel\+Update\+Subscriber)
 \begin{DoxyCompactList}\small\item\em Stops the execution of the instantiated \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} at the specified event. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}\label{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}} 
 \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}{Novel\+Runner}} (int, \mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} $\ast$, uint32\+\_\+t target\+Frame\+Rate=0)
 \begin{DoxyCompactList}\small\item\em Instantiates the \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} class with its presets. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_ae298129e584e1ba9f2a9fbb6e4db2c04}{run\+Novel}} ()
@@ -30,10 +29,56 @@ int \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_ae298129e584e1ba9f2a9fbb6e
 \mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a0b8be449542ea6af8b39c1da97bc0377}\label{class_novel_r_t_1_1_novel_runner_a0b8be449542ea6af8b39c1da97bc0377}} 
 \mbox{\hyperlink{class_novel_r_t_1_1_novel_debug_service}{Novel\+Debug\+Service}} $\ast$ \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_a0b8be449542ea6af8b39c1da97bc0377}{get\+Debug\+Service}} () const
 \begin{DoxyCompactList}\small\item\em The Debug Service associated with this Runner. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a0454effd1cd7dcb51a03c8a274ef40f4}\label{class_novel_r_t_1_1_novel_runner_a0454effd1cd7dcb51a03c8a274ef40f4}} 
+\mbox{\hyperlink{class_novel_r_t_1_1_step_timer}{Step\+Timer}} \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_a0454effd1cd7dcb51a03c8a274ef40f4}{\+\_\+step\+Timer}}
+\begin{DoxyCompactList}\small\item\em Heh. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a4faeedc814935d1a7c6d0c2d0b42a519}\label{class_novel_r_t_1_1_novel_runner_a4faeedc814935d1a7c6d0c2d0b42a519}} 
+std\+::vector$<$ Novel\+Update\+Subscriber $>$ {\bfseries \+\_\+update\+Subscribers}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a364bf7395bc2a29f4fb5ad06e2065e57}\label{class_novel_r_t_1_1_novel_runner_a364bf7395bc2a29f4fb5ad06e2065e57}} 
+\mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} $\ast$ {\bfseries \+\_\+layering\+Service}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a1aacc04121b223de74d5c4e957b4fb53}\label{class_novel_r_t_1_1_novel_runner_a1aacc04121b223de74d5c4e957b4fb53}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_novel_r_t_1_1_novel_debug_service}{Novel\+Debug\+Service}} $>$ {\bfseries \+\_\+novel\+Debug\+Service}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a1c20c780f7576e5a7a01ead8d6bfda61}\label{class_novel_r_t_1_1_novel_runner_a1c20c780f7576e5a7a01ead8d6bfda61}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_novel_r_t_1_1_novel_rendering_service}{Novel\+Rendering\+Service}} $>$ {\bfseries \+\_\+novel\+Renderer}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a2de597b21bc4b98353d1c419fdeeaa1a}\label{class_novel_r_t_1_1_novel_runner_a2de597b21bc4b98353d1c419fdeeaa1a}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_novel_r_t_1_1_novel_interaction_service}{Novel\+Interaction\+Service}} $>$ {\bfseries \+\_\+novel\+Interaction\+Service}
+\item 
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_ab8c3b7080471600e4d6cd18e3a65830f}\label{class_novel_r_t_1_1_novel_runner_ab8c3b7080471600e4d6cd18e3a65830f}} 
+int {\bfseries \+\_\+exit\+Code} = 1
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-The base class for creating a Novel. 
+The base class for creating a visual novel. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}\label{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}} 
+\index{NovelRT::NovelRunner@{NovelRT::NovelRunner}!NovelRunner@{NovelRunner}}
+\index{NovelRunner@{NovelRunner}!NovelRT::NovelRunner@{NovelRT::NovelRunner}}
+\doxysubsubsection{\texorpdfstring{NovelRunner()}{NovelRunner()}}
+{\footnotesize\ttfamily Novel\+R\+T\+::\+Novel\+Runner\+::\+Novel\+Runner (\begin{DoxyParamCaption}\item[{int}]{display\+Number,  }\item[{\mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} $\ast$}]{layering\+Service,  }\item[{uint32\+\_\+t}]{target\+Frame\+Rate = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Instantiates the \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} class with its presets. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em display\+Number} & The display on which to start the novel. \\
+\hline
+{\em layering\+Service} & The \mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} that \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} should use. \\
+\hline
+{\em target\+Frame\+Rate} & The framerate that should be targeted and capped. \\
+\hline
+\end{DoxyParams}
+
 
 \doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_ae298129e584e1ba9f2a9fbb6e4db2c04}\label{class_novel_r_t_1_1_novel_runner_ae298129e584e1ba9f2a9fbb6e4db2c04}} 
