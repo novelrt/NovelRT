@@ -14,7 +14,17 @@ namespace NovelRT {
  */
 class NovelRunner {
 public:
+  /**
+   * Executes the provided code upon update.
+   *
+   * @param The code to execute on update.
+   */
   void runOnUpdate(NovelUpdateSubscriber);
+  /**
+   * Stops the execution of the instantiated NovelRunner at the specified event.
+   *
+   * @param The event at which the novel should stop running.
+   */
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
   /// Instantiates the NovelRunner class with its presets.
@@ -25,17 +35,11 @@ public:
    * @returns Exit code.
    */
   int runNovel();
-  /**
-   * The Rendering Service associated with this Runner.
-   */
+  /// The Rendering Service associated with this Runner.
   NovelRenderingService* getRenderer() const;
-  /**
-   * The Interaction Service associated with this Runner.
-   */
+  /// The Interaction Service associated with this Runner
   NovelInteractionService* getInteractionService() const;
-  /**
-   * The Debug Service associated with this Runner.
-   */
+  /// The Debug Service associated with this Runner.
   NovelDebugService* getDebugService() const;
 
 private:
