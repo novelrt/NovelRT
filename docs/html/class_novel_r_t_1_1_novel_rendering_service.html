@@ -47,6 +47,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_novel_r_t_1_1_novel_rendering_service-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">NovelRT::NovelRenderingService Class Reference</div>  </div>
@@ -85,6 +87,45 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>endFrame</b> () const
 <tr class="memitem:a2a41eb87d6defef930a4fd2c132e1d4a"><td class="memItemLeft" align="right" valign="top"><a id="a2a41eb87d6defef930a4fd2c132e1d4a"></a>
 std::shared_ptr&lt; SDL_Window &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getWindow</b> () const</td></tr>
 <tr class="separator:a2a41eb87d6defef930a4fd2c132e1d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:af93e92469942121fd0aa9441d6203d49"><td class="memItemLeft" align="right" valign="top"><a id="af93e92469942121fd0aa9441d6203d49"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>initializeRenderPipeline</b> (int displayNumber)</td></tr>
+<tr class="separator:af93e92469942121fd0aa9441d6203d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabefc94edce093d1ad01c307e56080aa"><td class="memItemLeft" align="right" valign="top"><a id="aabefc94edce093d1ad01c307e56080aa"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>loadShaders</b> (std::string vertexFilePath, std::string fragmentFilePath)</td></tr>
+<tr class="separator:aabefc94edce093d1ad01c307e56080aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a4630a23c62978fd8f4807974ae64697a"><td class="memItemLeft" align="right" valign="top"><a id="a4630a23c62978fd8f4807974ae64697a"></a>
+<a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_layeringService</b></td></tr>
+<tr class="separator:a4630a23c62978fd8f4807974ae64697a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abca0a2159b449122d96b5eaa607e00d8"><td class="memItemLeft" align="right" valign="top"><a id="abca0a2159b449122d96b5eaa607e00d8"></a>
+std::shared_ptr&lt; SDL_Window &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_window</b></td></tr>
+<tr class="separator:abca0a2159b449122d96b5eaa607e00d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2e4ef79faf6dc3f877f9836645e039f"><td class="memItemLeft" align="right" valign="top"><a id="ac2e4ef79faf6dc3f877f9836645e039f"></a>
+SDL_GLContext&#160;</td><td class="memItemRight" valign="bottom"><b>_openGLContext</b></td></tr>
+<tr class="separator:ac2e4ef79faf6dc3f877f9836645e039f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b785dfc66c7b41dd7c8ea58a037a2d5"><td class="memItemLeft" align="right" valign="top"><a id="a3b785dfc66c7b41dd7c8ea58a037a2d5"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>_screenScale</b></td></tr>
+<tr class="separator:a3b785dfc66c7b41dd7c8ea58a037a2d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc36586a648c9578cb1836688f132e49"><td class="memItemLeft" align="right" valign="top"><a id="abc36586a648c9578cb1836688f132e49"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_winWidth</b></td></tr>
+<tr class="separator:abc36586a648c9578cb1836688f132e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a966367bd056bb65c7fa39ce8ea441bc3"><td class="memItemLeft" align="right" valign="top"><a id="a966367bd056bb65c7fa39ce8ea441bc3"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_winHeight</b></td></tr>
+<tr class="separator:a966367bd056bb65c7fa39ce8ea441bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a348923f9cd085f7cde1541f4ea2ce828"><td class="memItemLeft" align="right" valign="top"><a id="a348923f9cd085f7cde1541f4ea2ce828"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>_basicFillRectProgramId</b></td></tr>
+<tr class="separator:a348923f9cd085f7cde1541f4ea2ce828"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8005a9f2b972818608f1b4fc25d7c7e"><td class="memItemLeft" align="right" valign="top"><a id="ad8005a9f2b972818608f1b4fc25d7c7e"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>_texturedRectProgramId</b></td></tr>
+<tr class="separator:ad8005a9f2b972818608f1b4fc25d7c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a410c1e09109c17dd315304117c2dc123"><td class="memItemLeft" align="right" valign="top"><a id="a410c1e09109c17dd315304117c2dc123"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>_fontProgramId</b></td></tr>
+<tr class="separator:a410c1e09109c17dd315304117c2dc123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>D:/Development/LEARNING/C++/NovelRT-Fork/src/<a class="el" href="_novel_rendering_service_8h_source.html">NovelRenderingService.h</a></li>
@@ -93,7 +134,7 @@ std::shared_ptr&lt; SDL_Window &gt;&#160;</td><td class="memItemRight" valign="b
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2019 17:40:43 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>

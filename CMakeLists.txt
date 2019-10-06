@@ -243,6 +243,7 @@ if (DOXYGEN_FOUND)
   set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/src)
   set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/docs)
   set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
+  set(DOXYGEN_FAKE_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/__index.html)
   set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
   set(DOXYFILE_OUT ${DOXYGEN_OUTPUT_DIR}/Doxyfile)
 
@@ -258,7 +259,9 @@ if (DOXYGEN_FOUND)
   file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
   file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
  
-  add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
+  add_custom_command(OUTPUT
+                       ${DOXYGEN_INDEX_FILE}
+                       ${DOXYGEN_FAKE_INDEX_FILE}
                      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
                      MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
                      COMMENT "Generating docs")

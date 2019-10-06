@@ -48,6 +48,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_novel_r_t_1_1_novel_text_rect-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">NovelRT::NovelTextRect Class Reference</div>  </div>
@@ -156,6 +158,39 @@ Protected Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>configureObjectBuffers</b> () final</td></tr>
 <tr class="separator:a08482c0b03a81627761240eaf727a35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:adb87c3f70b888f3ed357875bcc77e819"><td class="memItemLeft" align="right" valign="top"><a id="adb87c3f70b888f3ed357875bcc77e819"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reloadText</b> ()</td></tr>
+<tr class="separator:adb87c3f70b888f3ed357875bcc77e819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a12e0bd238bb9ac8259ec2a4333701de5"><td class="memItemLeft" align="right" valign="top"><a id="a12e0bd238bb9ac8259ec2a4333701de5"></a>
+<a class="el" href="class_novel_r_t_1_1_r_g_b_a_config.html">RGBAConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_colourConfig</b></td></tr>
+<tr class="separator:a12e0bd238bb9ac8259ec2a4333701de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5db0980f4d47af75898ad8fbac26b13"><td class="memItemLeft" align="right" valign="top"><a id="ad5db0980f4d47af75898ad8fbac26b13"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>_fontFileDir</b></td></tr>
+<tr class="separator:ad5db0980f4d47af75898ad8fbac26b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c10d573a3d8477a766717db313c040"><td class="memItemLeft" align="right" valign="top"><a id="a42c10d573a3d8477a766717db313c040"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>_previousFontFileDir</b> = &quot;&quot;</td></tr>
+<tr class="separator:a42c10d573a3d8477a766717db313c040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af70a5438f81630e0eba72a228a15e4ed"><td class="memItemLeft" align="right" valign="top"><a id="af70a5438f81630e0eba72a228a15e4ed"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>_fontSize</b></td></tr>
+<tr class="separator:af70a5438f81630e0eba72a228a15e4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac900d3a9855d86a60721859c177cc0b6"><td class="memItemLeft" align="right" valign="top"><a id="ac900d3a9855d86a60721859c177cc0b6"></a>
+std::map&lt; GLchar, GraphicsCharacterRenderData &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_fontCharacters</b></td></tr>
+<tr class="separator:ac900d3a9855d86a60721859c177cc0b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0378720dc4ebcd7fd67aa5aecdcca25"><td class="memItemLeft" align="right" valign="top"><a id="ad0378720dc4ebcd7fd67aa5aecdcca25"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>_text</b> = &quot;&quot;</td></tr>
+<tr class="separator:ad0378720dc4ebcd7fd67aa5aecdcca25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab548b5a044d9655918f173c7402a95d3"><td class="memItemLeft" align="right" valign="top"><a id="ab548b5a044d9655918f173c7402a95d3"></a>
+std::vector&lt; <a class="el" href="class_novel_r_t_1_1_novel_image_rect.html">NovelImageRect</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_letterRects</b></td></tr>
+<tr class="separator:ab548b5a044d9655918f173c7402a95d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6edcfb905d527f6c4cfa45af28e1c2a"><td class="memItemLeft" align="right" valign="top"><a id="ad6edcfb905d527f6c4cfa45af28e1c2a"></a>
+<a class="el" href="struct_novel_r_t_1_1_novel_common_args.html">NovelCommonArgs</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_args</b></td></tr>
+<tr class="separator:ad6edcfb905d527f6c4cfa45af28e1c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_static_methods_class_novel_r_t_1_1_novel_render_object"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_class_novel_r_t_1_1_novel_render_object')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="class_novel_r_t_1_1_novel_render_object.html">NovelRT::NovelRenderObject</a></td></tr>
@@ -220,7 +255,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>_isDirty</b> = true</
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2019 17:40:44 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>

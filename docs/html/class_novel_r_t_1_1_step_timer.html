@@ -49,6 +49,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_novel_r_t_1_1_step_timer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">NovelRT::StepTimer Class Reference</div>  </div>
@@ -117,6 +118,45 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a6f236bc14de73aa4db13436adb19a1ae"><td class="memItemLeft" align="right" valign="top"><a id="a6f236bc14de73aa4db13436adb19a1ae"></a>
 static const uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>TicksPerSecond</b> = 10'000'000</td></tr>
 <tr class="separator:a6f236bc14de73aa4db13436adb19a1ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a6eed25b8db49ebd1c9ae1248cb725eae"><td class="memItemLeft" align="right" valign="top"><a id="a6eed25b8db49ebd1c9ae1248cb725eae"></a>
+const uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_frequency</b></td></tr>
+<tr class="separator:a6eed25b8db49ebd1c9ae1248cb725eae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f33b279293c8a639477aeefa612cc3"><td class="memItemLeft" align="right" valign="top"><a id="a86f33b279293c8a639477aeefa612cc3"></a>
+const uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_maxCounterDelta</b></td></tr>
+<tr class="separator:a86f33b279293c8a639477aeefa612cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa5ef7997165bd66a5f4216eddb28fee"><td class="memItemLeft" align="right" valign="top"><a id="afa5ef7997165bd66a5f4216eddb28fee"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_lastCounter</b></td></tr>
+<tr class="separator:afa5ef7997165bd66a5f4216eddb28fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c1dca1eec1766a9f30c930bb4a580c9"><td class="memItemLeft" align="right" valign="top"><a id="a1c1dca1eec1766a9f30c930bb4a580c9"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_secondCounter</b></td></tr>
+<tr class="separator:a1c1dca1eec1766a9f30c930bb4a580c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ee22e307e23bc024a2d26dd8ca0e429"><td class="memItemLeft" align="right" valign="top"><a id="a1ee22e307e23bc024a2d26dd8ca0e429"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_remainingTicks</b></td></tr>
+<tr class="separator:a1ee22e307e23bc024a2d26dd8ca0e429"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cfaf22dbf91bbb161cd16113cbbbfa9"><td class="memItemLeft" align="right" valign="top"><a id="a5cfaf22dbf91bbb161cd16113cbbbfa9"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_elapsedTicks</b></td></tr>
+<tr class="separator:a5cfaf22dbf91bbb161cd16113cbbbfa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac335ccc8217018587857786dad71733b"><td class="memItemLeft" align="right" valign="top"><a id="ac335ccc8217018587857786dad71733b"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_totalTicks</b></td></tr>
+<tr class="separator:ac335ccc8217018587857786dad71733b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad7dfaeda9cd85bc422a2253f8dc0d03"><td class="memItemLeft" align="right" valign="top"><a id="aad7dfaeda9cd85bc422a2253f8dc0d03"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>_targetElapsedTicks</b></td></tr>
+<tr class="separator:aad7dfaeda9cd85bc422a2253f8dc0d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a671676709ed0282bb33be1474eab11b2"><td class="memItemLeft" align="right" valign="top"><a id="a671676709ed0282bb33be1474eab11b2"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_frameCount</b></td></tr>
+<tr class="separator:a671676709ed0282bb33be1474eab11b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11470d98576d276911567e80b803ab71"><td class="memItemLeft" align="right" valign="top"><a id="a11470d98576d276911567e80b803ab71"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_framesPerSecond</b></td></tr>
+<tr class="separator:a11470d98576d276911567e80b803ab71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a361c840679ea7225b059c7a49ed23d06"><td class="memItemLeft" align="right" valign="top"><a id="a361c840679ea7225b059c7a49ed23d06"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_framesThisSecond</b></td></tr>
+<tr class="separator:a361c840679ea7225b059c7a49ed23d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6906f93c9edb0112facd1b98fa9766c"><td class="memItemLeft" align="right" valign="top"><a id="ab6906f93c9edb0112facd1b98fa9766c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_isFixedTimeStep</b></td></tr>
+<tr class="separator:ab6906f93c9edb0112facd1b98fa9766c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>D:/Development/LEARNING/C++/NovelRT-Fork/src/<a class="el" href="_novel_step_timer_8h_source.html">NovelStepTimer.h</a></li>
@@ -125,7 +165,7 @@ static const uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>Tick
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2019 17:40:44 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>

@@ -10,7 +10,7 @@
 
 namespace NovelRT {
 /**
- * The base class for creating a Novel.
+ * The base class for creating a visual novel.
  */
 class NovelRunner {
 public:
@@ -27,7 +27,13 @@ public:
    */
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
-  /// Instantiates the NovelRunner class with its presets.
+  /**
+   * Instantiates the NovelRunner class with its presets.
+   *
+   * @param displayNumber The display on which to start the novel.
+   * @param layeringService The NovelLayeringService that NovelRunner should use.
+   * @param targetFrameRate The framerate that should be targeted and capped.
+   */
   explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
 
   /**

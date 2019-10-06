@@ -16,11 +16,16 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getCornerInOpenGLSurfaceSpace"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#a49cf742e1e89658a4175ad2b62591c6e"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getCornerInWorldSpace"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#adb3c024bf7a441de881eab284a158e3a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="pointIsWithinBounds"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#adf470dd5e368514bbc119dd9012b7ce6"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="rotateToAngle"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#a94660482641667a3356f27c10a5ffbab"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_corners"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#a2d85db1ad890c07d4ae1a7972e84859c"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_position"><param name="Local" value="class_novel_r_t_1_1_geo_bounds.html#ac11007f48efe0cc89d1a8e8230365176"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="GeoVector"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GeoVector"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#abe0fb0d1eff76c423044b9770b574273"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="GeoVector"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a8cd44aa494f07811437f21707e20c47a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="GeoVector"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#aedbf64f02efe153f7da3fa6b5f88c55f"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="getValue"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a5403d1b15555cec00596a78a0a492f69"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getX"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a3cb0afe3a6957a7cf955b287c0ddc8c2"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getY"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#aa5d3126530e2a09dfe070cee52a8b416"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="operator*"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a424450c40510320e4704de7ba30f9a33"><param name="ImageNumber" value="11"></OBJECT>
@@ -32,8 +37,10 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="operator/"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a8c894f82aeced19aa825331e3f4cae21"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="operator/"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#aa13f88e2163b36a3c3d585e47370287a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="rotateToAngleAroundPoint"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a0ef4c41cf96abf870abc62e1801b8f51"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="setValue"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#ae6eea39f3b262c27e665ce70df56f2eb"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setX"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a415bbf3afa23a637739f302eec865e54"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setY"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a6071347a7d9241c56a1b9da52ba82b94"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_value"><param name="Local" value="class_novel_r_t_1_1_geo_vector.html#a0dae0a5443969064cb0da85e6971f678"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="Lazy"><param name="Local" value="class_novel_r_t_1_1_lazy.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -42,6 +49,8 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getActual"><param name="Local" value="class_novel_r_t_1_1_lazy.html#a8e65adca2ed7a3ac58b3cbadff31cda0"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="isCreated"><param name="Local" value="class_novel_r_t_1_1_lazy.html#abcb9616be94466c3120955a21afa27d0"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="reset"><param name="Local" value="class_novel_r_t_1_1_lazy.html#a6fc3764b0d0224f51ce123f82e0f33ed"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_actual"><param name="Local" value="class_novel_r_t_1_1_lazy.html#a04a7952bd54c39721434e10a3fb49a71"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_delegate"><param name="Local" value="class_novel_r_t_1_1_lazy.html#a7e151a27d04f74026c8bd3c433dd6f4b"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelBasicFillRect"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -50,6 +59,9 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="drawObject"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#a7b265ac3426265db1a6958c8ab9db18c"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getColourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#a86fdc1714efe5f9351c57aa6b6375ede"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setColourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#a17454de400882259d4d82f4a2a4e6fce"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourBuffer"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#ad4672c91ef91739907613932fcd10ee0"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#a80699f19fc0667a86cd6c655c1868819"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourData"><param name="Local" value="class_novel_r_t_1_1_novel_basic_fill_rect.html#acdf179664352b256fae79d052a7573e9"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelBasicInteractionRect"><param name="Local" value="class_novel_r_t_1_1_novel_basic_interaction_rect.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -72,6 +84,10 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getIsFpsCounterVisible"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a135e1b9700d0575c36886edca203b8fd"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setFramesPerSecond"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a70ca1914aff269edfcd8899d1597d5e7"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setIsFpsCounterVisible"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a8203b02322614d278d612acbb5b360db"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="updateFpsCounter"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a12454a448c7e3ec468179216fcccbcf0"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_fpsCounter"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a6e072733100ad8f0759b7a97f48ff75a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_framesPerSecond"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#aa52d935a7150faf02fb1bfad97fcf754"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_runner"><param name="Local" value="class_novel_r_t_1_1_novel_debug_service.html#a887c8af6bd74dd83c6edb9c91c55bb23"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelImageRect"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -84,6 +100,17 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setColourTintConfig"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a6be54d7ba9057986524ff0b1f369ecb3"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setScale"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a26dae160f04e64a10800a818626ebf99"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setTextureInternal"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a6ecca0eb81816ff404f4f7ce9d81e77e"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourTint"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a296391f00bfdc4e9b546c67fb3c20040"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourTintBuffer"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a3d58fc813fe95f44a75ae2bac6ae4761"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourTintData"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a702547e46a238ebe16b63d46693e75a0"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_height"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#af35bbd95046ad514127f86facbf5d2e5"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_imageDir"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a743cd89b2519517e01340dbf66653cb3"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_imageHandle"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a9c6b1ea50b38873d5cbb8c94ff877e32"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_previousImageDir"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a3137f1da664c327a5daff7556700a1be"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_textureId"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a1b538709318b9c16f6e5747df6198868"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_uvBuffer"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a71e73ded35c5955b8c7766f7eb21a3b1"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_uvCoordinates"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#ad98e494921dd1a8cdd0c769194c28cef"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_width"><param name="Local" value="class_novel_r_t_1_1_novel_image_rect.html#a4f3cc33b8c61bc163ea18c3d05669d06"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelInteractionObject"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -93,6 +120,8 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setSubscribedKey"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html#abf998c4867dc5f694e62864ee70a5b26"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="validateInteractionPerimeter"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html#a79f4db4f1ed2474c49f34650d60e73bf"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelInteractionService"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html#a5af62c263526d102050d0486b2fccd8e"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_notifyHasBeenDrawnObject"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html#a3bc63abcb8cae2cce21e9ef8d4494542"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_subscribedKey"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_object.html#a27d355c19802205802f0064f9c874eba"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelInteractionService"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -100,7 +129,13 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="consumePlayerInput"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#aca39f84460a33fc6a090f5f04bb1cf5f"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="ExecuteClickedInteractable"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a48b1103644d526c8295fefb3c505c74c"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getBasicInteractionRect"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a6ac771cb0518206feadf14c9c135341c"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="HandleInteractionDraw"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a0ba549919d2ba8f81a62ef532bde2d26"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelInteractionObject"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a828e54e8acb0c4541d102de658e80e49"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_clickTarget"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a64ce1e53f5e772a860b086614d7f4ac7"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_keyStates"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a7fa919429092d59030b65024210188ee"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_layeringService"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a851653a0b3dfaa15204cda9c11c3ac66"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_mousePositionsOnScreenPerButton"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#ac4bae8bb262d9658719b638e18110589"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_screenScale"><param name="Local" value="class_novel_r_t_1_1_novel_interaction_service.html#a0c0e36d72d6a20507d94e819e7fc6173"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelLayeringService"><param name="Local" value="class_novel_r_t_1_1_novel_layering_service.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -108,6 +143,7 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="executeAllObjectBehaviours"><param name="Local" value="class_novel_r_t_1_1_novel_layering_service.html#a19431e5078ee8a3de6705750a4077882"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="sortLayerOrder"><param name="Local" value="class_novel_r_t_1_1_novel_layering_service.html#ad41c96ce1a8eea93581c7e2afde847f6"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="updateLayerInfo"><param name="Local" value="class_novel_r_t_1_1_novel_layering_service.html#aefc9463b3954c4ca4cf3fb7a4ba33257"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_layerMatrix"><param name="Local" value="class_novel_r_t_1_1_novel_layering_service.html#a2bc5ceedce65e4664a9270f4e49b6fa5"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelObject"><param name="Local" value="class_novel_r_t_1_1_novel_object.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -159,7 +195,18 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getTextRect"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#aced17a3275ff10e12684a895724d2d5c"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getWindow"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a2a41eb87d6defef930a4fd2c132e1d4a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="initialiseRendering"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#ab4f7e29cebb0d406a2a93fd326a3ba90"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="initializeRenderPipeline"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#af93e92469942121fd0aa9441d6203d49"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="loadShaders"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#aabefc94edce093d1ad01c307e56080aa"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="tearDown"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a8c048cfcd2156a3b52af49072c380914"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_basicFillRectProgramId"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a348923f9cd085f7cde1541f4ea2ce828"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_fontProgramId"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a410c1e09109c17dd315304117c2dc123"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_layeringService"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a4630a23c62978fd8f4807974ae64697a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_openGLContext"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#ac2e4ef79faf6dc3f877f9836645e039f"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_screenScale"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a3b785dfc66c7b41dd7c8ea58a037a2d5"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_texturedRectProgramId"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#ad8005a9f2b972818608f1b4fc25d7c7e"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_window"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#abca0a2159b449122d96b5eaa607e00d8"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_winHeight"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#a966367bd056bb65c7fa39ce8ea441bc3"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_winWidth"><param name="Local" value="class_novel_r_t_1_1_novel_rendering_service.html#abc36586a648c9578cb1836688f132e49"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelRenderObject"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -168,6 +215,7 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="configureObjectBuffers"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#a403c39538b8e36ca068004cfdaec367a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="drawObject"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#adb0347c87fc4626e2b848aa47f1a7065"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="executeObjectBehaviour"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#ae378bef8a19d6f952c579a7c4fcf3928"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="generateStandardBuffer"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#a8d2e0144195d9a4640cd8c35d77f73f2"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setRotation"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#a1881c0745d7036c4c37ff2584168c544"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setScale"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#a5c3ea09fd23be4e0b630866f01ada350"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setWorldSpacePosition"><param name="Local" value="class_novel_r_t_1_1_novel_render_object.html#a0ef4c0094c4d9585a7d54eedc15c0af0"><param name="ImageNumber" value="11"></OBJECT>
@@ -187,6 +235,13 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="runNovel"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="runOnUpdate"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="stopRunningOnUpdate"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_exitCode"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#ab8c3b7080471600e4d6cd18e3a65830f"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_layeringService"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a364bf7395bc2a29f4fb5ad06e2065e57"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_novelDebugService"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a1aacc04121b223de74d5c4e957b4fb53"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_novelInteractionService"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a2de597b21bc4b98353d1c419fdeeaa1a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_novelRenderer"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a1c20c780f7576e5a7a01ead8d6bfda61"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_stepTimer"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a0454effd1cd7dcb51a03c8a274ef40f4"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_updateSubscribers"><param name="Local" value="class_novel_r_t_1_1_novel_runner.html#a4faeedc814935d1a7c6d0c2d0b42a519"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="NovelTextRect"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -195,8 +250,17 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="drawObject"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#a278eb795ab742ee022028128f57f878d"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getColourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#aef1ac05b3a04f09b2b0987477aedb2df"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getText"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#acfa3ff2e19d940e11182162cd189b225"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="reloadText"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#adb87c3f70b888f3ed357875bcc77e819"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setColourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#aa562246380470d31e52d310adcfde837"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setText"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#a1631d1ddc9216cd7f371a6197c97e827"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_args"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#ad6edcfb905d527f6c4cfa45af28e1c2a"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_colourConfig"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#a12e0bd238bb9ac8259ec2a4333701de5"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_fontCharacters"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#ac900d3a9855d86a60721859c177cc0b6"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_fontFileDir"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#ad5db0980f4d47af75898ad8fbac26b13"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_fontSize"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#af70a5438f81630e0eba72a228a15e4ed"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_letterRects"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#ab548b5a044d9655918f173c7402a95d3"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_previousFontFileDir"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#a42c10d573a3d8477a766717db313c040"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_text"><param name="Local" value="class_novel_r_t_1_1_novel_text_rect.html#ad0378720dc4ebcd7fd67aa5aecdcca25"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="RGBAConfig"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -213,6 +277,10 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setB"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a3d5bb8ae473d1877fa35ddfaa0d5efad"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setG"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a4f18d09f9175013d75187fb20190e620"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setR"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#afc59902b5bd2bda3504aee4991631046"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_a"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a3e64e3e918ca4b1b51dc9406a1296fbf"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_b"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a9f4538b4ceec082711d3ec9d2a969e86"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_g"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a09198c666af25c1f90042aa313652f39"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_r"><param name="Local" value="class_novel_r_t_1_1_r_g_b_a_config.html#a9b63d3f36858daca1f86c8b3bd6e9b34"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="StepTimer"><param name="Local" value="class_novel_r_t_1_1_step_timer.html"><param name="ImageNumber" value="1"></OBJECT>
         <UL>
@@ -227,10 +295,25 @@
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getTotalSeconds"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a6f9064d63bbc4106c4bd91b343d2d83a"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="getTotalTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#ad307e504b5b90bc13dabcaf336461dfc"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="resetElapsedTime"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a15f5f70c558916a3f6d5730542bf5752"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="SecondsToTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a6abeebd9e3dc7fba5ed1b0d26e9d776d"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setIsFixedTimeStep"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#af24553aae55260bb38a83ff5f8fcff76"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setTargetElapsedSeconds"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#af082550d4452f8700241326844c92542"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="setTargetElapsedTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a435262dfc873e5cb2ebfd824b828b62f"><param name="ImageNumber" value="11"></OBJECT>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="tick"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#ae5b41c691ee69bf37a4c2c894979ccba"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="TicksToSeconds"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a17f2a7a0c24e3f257bd248db18fcd555"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_elapsedTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a5cfaf22dbf91bbb161cd16113cbbbfa9"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_frameCount"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a671676709ed0282bb33be1474eab11b2"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_framesPerSecond"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a11470d98576d276911567e80b803ab71"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_framesThisSecond"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a361c840679ea7225b059c7a49ed23d06"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_frequency"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a6eed25b8db49ebd1c9ae1248cb725eae"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_isFixedTimeStep"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#ab6906f93c9edb0112facd1b98fa9766c"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_lastCounter"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#afa5ef7997165bd66a5f4216eddb28fee"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_maxCounterDelta"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a86f33b279293c8a639477aeefa612cc3"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_remainingTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a1ee22e307e23bc024a2d26dd8ca0e429"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_secondCounter"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a1c1dca1eec1766a9f30c930bb4a580c9"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_targetElapsedTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#aad7dfaeda9cd85bc422a2253f8dc0d03"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="_totalTicks"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#ac335ccc8217018587857786dad71733b"><param name="ImageNumber" value="11"></OBJECT>
+        <LI><OBJECT type="text/sitemap"><param name="Name" value="TicksPerSecond"><param name="Local" value="class_novel_r_t_1_1_step_timer.html#a6f236bc14de73aa4db13436adb19a1ae"><param name="ImageNumber" value="11"></OBJECT>
         </UL>
       </UL>
     </UL>
@@ -269,6 +352,7 @@
     <UL>
     <LI><OBJECT type="text/sitemap"><param name="Name" value="All"><param name="Local" value="functions.html"><param name="ImageNumber" value="11"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Name" value="Functions"><param name="Local" value="functions_func.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Variables"><param name="Local" value="functions_vars.html"><param name="ImageNumber" value="11"></OBJECT>
     </UL>
   </UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="Files"><param name="Local" value="files.html"><param name="ImageNumber" value="1"></OBJECT>
