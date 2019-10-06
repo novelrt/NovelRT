@@ -17,13 +17,13 @@ public:
   /**
    * Executes the provided code upon update.
    *
-   * @param The code to execute on update.
+   * @param subscriber The code to execute on update.
    */
   void runOnUpdate(NovelUpdateSubscriber);
   /**
    * Stops the execution of the instantiated NovelRunner at the specified event.
    *
-   * @param The event at which the novel should stop running.
+   * @param subscriber The event at which the novel should stop running.
    */
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
