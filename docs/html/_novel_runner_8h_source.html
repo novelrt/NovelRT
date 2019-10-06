@@ -62,43 +62,45 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>NovelRT {</div>
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_novel_r_t_1_1_novel_runner.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_novel_r_t_1_1_novel_runner.html">NovelRunner</a> {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="keywordtype">void</span> runOnUpdate(NovelUpdateSubscriber);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keywordtype">void</span> stopRunningOnUpdate(NovelUpdateSubscriber);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRunner</a>(<span class="keywordtype">int</span>, <a class="code" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a>*, uint32_t targetFrameRate = 0);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keywordtype">int</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04">runNovel</a>();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_rendering_service.html">NovelRenderingService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#aae0603e16377a63e2c28bc8adf55e089">getRenderer</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_interaction_service.html">NovelInteractionService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a4d09751274dbc6432ec861b5e28f1907">getInteractionService</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_debug_service.html">NovelDebugService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a0b8be449542ea6af8b39c1da97bc0377">getDebugService</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <a class="code" href="class_novel_r_t_1_1_step_timer.html">StepTimer</a> _stepTimer;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  std::vector&lt;NovelUpdateSubscriber&gt; _updateSubscribers;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a>* _layeringService;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  std::unique_ptr&lt;NovelDebugService&gt; _novelDebugService;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  std::unique_ptr&lt;NovelRenderingService&gt; _novelRenderer;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  std::unique_ptr&lt;NovelInteractionService&gt; _novelInteractionService;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">int</span> _exitCode = 1;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif //NOVELRT_NOVELRUNNER_H</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78">runOnUpdate</a>(NovelUpdateSubscriber);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">stopRunningOnUpdate</a>(NovelUpdateSubscriber);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRunner</a>(<span class="keywordtype">int</span>, <a class="code" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a>*, uint32_t targetFrameRate = 0);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keywordtype">int</span> <a class="code" href="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04">runNovel</a>();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_rendering_service.html">NovelRenderingService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#aae0603e16377a63e2c28bc8adf55e089">getRenderer</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_interaction_service.html">NovelInteractionService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a4d09751274dbc6432ec861b5e28f1907">getInteractionService</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_debug_service.html">NovelDebugService</a>* <a class="code" href="class_novel_r_t_1_1_novel_runner.html#a0b8be449542ea6af8b39c1da97bc0377">getDebugService</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <a class="code" href="class_novel_r_t_1_1_step_timer.html">StepTimer</a> _stepTimer;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  std::vector&lt;NovelUpdateSubscriber&gt; _updateSubscribers;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <a class="code" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a>* _layeringService;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  std::unique_ptr&lt;NovelDebugService&gt; _novelDebugService;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  std::unique_ptr&lt;NovelRenderingService&gt; _novelRenderer;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  std::unique_ptr&lt;NovelInteractionService&gt; _novelInteractionService;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">int</span> _exitCode = 1;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif //NOVELRT_NOVELRUNNER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html">NovelRT::NovelRunner</a></div><div class="ttdoc">The base class for creating a Novel.</div><div class="ttdef"><b>Definition:</b> NovelRunner.h:15</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_aae0603e16377a63e2c28bc8adf55e089"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#aae0603e16377a63e2c28bc8adf55e089">NovelRT::NovelRunner::getRenderer</a></div><div class="ttdeci">NovelRenderingService * getRenderer() const</div><div class="ttdoc">The Rendering Service associated with this Runner.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:32</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_a245f093ae6bb0ab1e81cdaed456be896"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRT::NovelRunner::NovelRunner</a></div><div class="ttdeci">NovelRunner(int, NovelLayeringService *, uint32_t targetFrameRate=0)</div><div class="ttdoc">Instantiates the NovelRunner class with its presets.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:8</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_a4d09751274dbc6432ec861b5e28f1907"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#a4d09751274dbc6432ec861b5e28f1907">NovelRT::NovelRunner::getInteractionService</a></div><div class="ttdeci">NovelInteractionService * getInteractionService() const</div><div class="ttdoc">The Interaction Service associated with this Runner.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:56</div></div>
+<div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_aeb10449b010a462d626de18a56f94bf1"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">NovelRT::NovelRunner::stopRunningOnUpdate</a></div><div class="ttdeci">void stopRunningOnUpdate(NovelUpdateSubscriber)</div><div class="ttdoc">Stops the execution of the instantiated NovelRunner at the specified event.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:40</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_a0b8be449542ea6af8b39c1da97bc0377"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#a0b8be449542ea6af8b39c1da97bc0377">NovelRT::NovelRunner::getDebugService</a></div><div class="ttdeci">NovelDebugService * getDebugService() const</div><div class="ttdoc">The Debug Service associated with this Runner.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:60</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_layering_service_html"><div class="ttname"><a href="class_novel_r_t_1_1_novel_layering_service.html">NovelRT::NovelLayeringService</a></div><div class="ttdef"><b>Definition:</b> NovelLayeringService.h:13</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_ae298129e584e1ba9f2a9fbb6e4db2c04"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#ae298129e584e1ba9f2a9fbb6e4db2c04">NovelRT::NovelRunner::runNovel</a></div><div class="ttdeci">int runNovel()</div><div class="ttdoc">Starts the visual novel.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:15</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_step_timer_html"><div class="ttname"><a href="class_novel_r_t_1_1_step_timer.html">NovelRT::StepTimer</a></div><div class="ttdef"><b>Definition:</b> NovelStepTimer.h:15</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_debug_service_html"><div class="ttname"><a href="class_novel_r_t_1_1_novel_debug_service.html">NovelRT::NovelDebugService</a></div><div class="ttdef"><b>Definition:</b> NovelDebugService.h:11</div></div>
+<div class="ttc" id="aclass_novel_r_t_1_1_novel_runner_html_ae4ad18aa4750cb7f61181c4dfa2bab78"><div class="ttname"><a href="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78">NovelRT::NovelRunner::runOnUpdate</a></div><div class="ttdeci">void runOnUpdate(NovelUpdateSubscriber)</div><div class="ttdoc">Executes the provided code upon update.</div><div class="ttdef"><b>Definition:</b> NovelRunner.cpp:36</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_rendering_service_html"><div class="ttname"><a href="class_novel_r_t_1_1_novel_rendering_service.html">NovelRT::NovelRenderingService</a></div><div class="ttdef"><b>Definition:</b> NovelRenderingService.h:22</div></div>
 <div class="ttc" id="aclass_novel_r_t_1_1_novel_interaction_service_html"><div class="ttname"><a href="class_novel_r_t_1_1_novel_interaction_service.html">NovelRT::NovelInteractionService</a></div><div class="ttdef"><b>Definition:</b> NovelInteractionService.h:10</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Oct 5 2019 18:23:32 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Oct 6 2019 17:35:19 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>
