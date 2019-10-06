@@ -60,11 +60,11 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="memItemLeft" align="right" valign="top"><a id="ae4ad18aa4750cb7f61181c4dfa2bab78"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>runOnUpdate</b> (NovelUpdateSubscriber)</td></tr>
+<tr class="memitem:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78">runOnUpdate</a> (NovelUpdateSubscriber)</td></tr>
+<tr class="memdesc:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the provided code upon update.  <a href="class_novel_r_t_1_1_novel_runner.html#ae4ad18aa4750cb7f61181c4dfa2bab78">More...</a><br /></td></tr>
 <tr class="separator:ae4ad18aa4750cb7f61181c4dfa2bab78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb10449b010a462d626de18a56f94bf1"><td class="memItemLeft" align="right" valign="top"><a id="aeb10449b010a462d626de18a56f94bf1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stopRunningOnUpdate</b> (NovelUpdateSubscriber)</td></tr>
+<tr class="memitem:aeb10449b010a462d626de18a56f94bf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">stopRunningOnUpdate</a> (NovelUpdateSubscriber)</td></tr>
+<tr class="memdesc:aeb10449b010a462d626de18a56f94bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a Novel.">NovelRunner</a> at the specified event.  <a href="class_novel_r_t_1_1_novel_runner.html#aeb10449b010a462d626de18a56f94bf1">More...</a><br /></td></tr>
 <tr class="separator:aeb10449b010a462d626de18a56f94bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a245f093ae6bb0ab1e81cdaed456be896"><td class="memItemLeft" align="right" valign="top"><a id="a245f093ae6bb0ab1e81cdaed456be896"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_novel_r_t_1_1_novel_runner.html#a245f093ae6bb0ab1e81cdaed456be896">NovelRunner</a> (int, <a class="el" href="class_novel_r_t_1_1_novel_layering_service.html">NovelLayeringService</a> *, uint32_t targetFrameRate=0)</td></tr>
@@ -109,6 +109,58 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>stopRunningOnUpdate</
 
 </div>
 </div>
+<a id="ae4ad18aa4750cb7f61181c4dfa2bab78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4ad18aa4750cb7f61181c4dfa2bab78">&#9670;&nbsp;</a></span>runOnUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NovelRT::NovelRunner::runOnUpdate </td>
+          <td>(</td>
+          <td class="paramtype">NovelUpdateSubscriber&#160;</td>
+          <td class="paramname"><em>subscriber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Executes the provided code upon update. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>code to execute on update. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aeb10449b010a462d626de18a56f94bf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb10449b010a462d626de18a56f94bf1">&#9670;&nbsp;</a></span>stopRunningOnUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NovelRT::NovelRunner::stopRunningOnUpdate </td>
+          <td>(</td>
+          <td class="paramtype">NovelUpdateSubscriber&#160;</td>
+          <td class="paramname"><em>subscriber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stops the execution of the instantiated <a class="el" href="class_novel_r_t_1_1_novel_runner.html" title="The base class for creating a Novel.">NovelRunner</a> at the specified event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>event at which the novel should stop running. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>D:/Development/LEARNING/C++/NovelRT-Fork/src/<a class="el" href="_novel_runner_8h_source.html">NovelRunner.h</a></li>
 <li>D:/Development/LEARNING/C++/NovelRT-Fork/src/NovelRunner.cpp</li>
@@ -116,7 +168,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>stopRunningOnUpdate</
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Oct 5 2019 18:23:33 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Oct 6 2019 17:35:20 for NovelRT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.16
 </small></address>

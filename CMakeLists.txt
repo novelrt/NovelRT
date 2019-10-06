@@ -252,6 +252,8 @@ if (DOXYGEN_FOUND)
   set(DOCS_RESOURCES
     ${DOCS_IMAGES}
   )
+
+  file(REMOVE_RECURSE ${DOXYGEN_OUTPUT_DIR})
  
   #Replace variables inside @@ with the current values
   configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)

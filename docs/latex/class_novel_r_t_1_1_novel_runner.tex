@@ -12,12 +12,10 @@ The base class for creating a Novel.
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4dfa2bab78}\label{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4dfa2bab78}} 
-void {\bfseries run\+On\+Update} (Novel\+Update\+Subscriber)
-\item 
-\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}\label{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}} 
-void {\bfseries stop\+Running\+On\+Update} (Novel\+Update\+Subscriber)
-\item 
+void \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4dfa2bab78}{run\+On\+Update}} (Novel\+Update\+Subscriber)
+\begin{DoxyCompactList}\small\item\em Executes the provided code upon update. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}{stop\+Running\+On\+Update}} (Novel\+Update\+Subscriber)
+\begin{DoxyCompactList}\small\item\em Stops the execution of the instantiated \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} at the specified event. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}\label{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}} 
 \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner_a245f093ae6bb0ab1e81cdaed456be896}{Novel\+Runner}} (int, \mbox{\hyperlink{class_novel_r_t_1_1_novel_layering_service}{Novel\+Layering\+Service}} $\ast$, uint32\+\_\+t target\+Frame\+Rate=0)
 \begin{DoxyCompactList}\small\item\em Instantiates the \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} class with its presets. \end{DoxyCompactList}\item 
@@ -51,6 +49,36 @@ Starts the visual novel.
 \begin{DoxyReturn}{Returns}
 Exit code. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4dfa2bab78}\label{class_novel_r_t_1_1_novel_runner_ae4ad18aa4750cb7f61181c4dfa2bab78}} 
+\index{NovelRT::NovelRunner@{NovelRT::NovelRunner}!runOnUpdate@{runOnUpdate}}
+\index{runOnUpdate@{runOnUpdate}!NovelRT::NovelRunner@{NovelRT::NovelRunner}}
+\doxysubsubsection{\texorpdfstring{runOnUpdate()}{runOnUpdate()}}
+{\footnotesize\ttfamily void Novel\+R\+T\+::\+Novel\+Runner\+::run\+On\+Update (\begin{DoxyParamCaption}\item[{Novel\+Update\+Subscriber}]{subscriber }\end{DoxyParamCaption})}
+
+
+
+Executes the provided code upon update. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em The} & code to execute on update. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}\label{class_novel_r_t_1_1_novel_runner_aeb10449b010a462d626de18a56f94bf1}} 
+\index{NovelRT::NovelRunner@{NovelRT::NovelRunner}!stopRunningOnUpdate@{stopRunningOnUpdate}}
+\index{stopRunningOnUpdate@{stopRunningOnUpdate}!NovelRT::NovelRunner@{NovelRT::NovelRunner}}
+\doxysubsubsection{\texorpdfstring{stopRunningOnUpdate()}{stopRunningOnUpdate()}}
+{\footnotesize\ttfamily void Novel\+R\+T\+::\+Novel\+Runner\+::stop\+Running\+On\+Update (\begin{DoxyParamCaption}\item[{Novel\+Update\+Subscriber}]{subscriber }\end{DoxyParamCaption})}
+
+
+
+Stops the execution of the instantiated \mbox{\hyperlink{class_novel_r_t_1_1_novel_runner}{Novel\+Runner}} at the specified event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em The} & event at which the novel should stop running. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
