@@ -101,19 +101,19 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
   auto onChannel = _channelMap.find(soundName);
   if (onChannel != _channelMap.end())
   {
-    if (Mix_Playing(_channelMap[soundName]) == NovelUtilities::MIXER_TRUE)
+    if (Mix_Playing(_channelMap[soundName]) == MIXER_TRUE)
     {
       std::cout << "Already playing on channel " << _channelMap[soundName] << std::endl;
       return;
     }
 
-    if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
+    if (loops == MIXER_INFINITE_LOOP)
     {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_INFINITE_LOOP);
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_INFINITE_LOOP);
     }
-    else if (loops == NovelUtilities::MIXER_NO_LOOP)
+    else if (loops == MIXER_NO_LOOP)
     {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_NO_LOOP);
     }
     else
     {
@@ -125,13 +125,13 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
     _channelMap[soundName] = _nextChannel;
     incrementNextChannel();
 
-    if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
+    if (loops == MIXER_INFINITE_LOOP)
     {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_INFINITE_LOOP);
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_INFINITE_LOOP);
     }
-    else if (loops == NovelUtilities::MIXER_NO_LOOP)
+    else if (loops == MIXER_NO_LOOP)
     {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_NO_LOOP);
     }
     else
     {
@@ -149,7 +149,7 @@ void NovelAudioService::setSoundVolume(std::string soundName, float value) {
 }
 
 void NovelAudioService::setSoundPosition(std::string soundName, int angle, int distance) {
-  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL)
+  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetPosition(_channelMap[soundName], angle, distance);
   }
@@ -160,7 +160,7 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
 }
 
 void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
-    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL)
+    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetDistance(_channelMap[soundName], distance);
   }
@@ -171,7 +171,7 @@ void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
 }
 
 void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
-    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL)
+    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetPanning(_channelMap[soundName], leftChannelVolume, rightChannelVolume);
   }
@@ -194,15 +194,15 @@ void NovelAudioService::playMusic(std::string musicName, int loops) {
     existingMusic = _music.find(musicName);
     if (existingMusic == _music.end()) return;
   }
-  _channelMap[musicName] = NovelUtilities::NOVEL_MUSIC_CHANNEL;
+  _channelMap[musicName] = NOVEL_MUSIC_CHANNEL;
 
   if (loops == 0)
   {
-    Mix_PlayMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP);
+    Mix_PlayMusic(_music[musicName], MIXER_NO_LOOP);
   }
-  else if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
+  else if (loops == MIXER_INFINITE_LOOP)
   {
-    Mix_PlayMusic(_music[musicName], NovelUtilities::MIXER_INFINITE_LOOP);
+    Mix_PlayMusic(_music[musicName], MIXER_INFINITE_LOOP);
   }
   else
   {
@@ -231,7 +231,7 @@ void NovelAudioService::setMusicVolume(float value) {
 void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
   if (!Mix_PlayingMusic())
   {
-    Mix_FadeInMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP, ms);
+    Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
   }
   else
   {
@@ -242,7 +242,7 @@ void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
       {
         double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
         Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP, ms);
+        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
         break;
       }
       case MUS_MP3:
@@ -250,12 +250,12 @@ void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
         Mix_RewindMusic();
         double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
         Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP, ms);
+        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
         break;
       }
       default:
       {
-        Mix_FadeInMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP, ms);
+        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
         break;
       }
     }
@@ -303,7 +303,7 @@ void NovelAudioService::fadeMusicOut(int ms) {
 }
 
 void NovelAudioService::setGlobalVolume(float value) {
-  Mix_Volume(NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL, convertToMixVolume(value));
+  Mix_Volume(MIXER_NO_EXPLICIT_CHANNEL, convertToMixVolume(value));
   Mix_VolumeMusic(convertToMixVolume(value));
 }
 
@@ -333,7 +333,7 @@ std::string NovelAudioService::findByChannelMap(int channel) {
 
 NovelAudioService::~NovelAudioService() {
   Mix_HaltMusic();
-  Mix_HaltChannel(NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL);
+  Mix_HaltChannel(MIXER_NO_EXPLICIT_CHANNEL);
 
   std::map<std::string, Mix_Music*>::iterator musicIterator;
   for (musicIterator = _music.begin(); musicIterator != _music.end(); musicIterator++)
