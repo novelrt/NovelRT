@@ -6,6 +6,8 @@
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
+#include "NovelInteractionService.h"
+#include "NovelAudioService.h"
 
 extern "C" {
 #include <lua.h>
@@ -34,6 +36,8 @@ static int average(lua_State* luaState) {
 
 NovelRT::NovelBasicFillRect* basicFillRect;
 NovelRT::NovelImageRect* novelChanRect;
+NovelRT::NovelBasicFillRect* basicFillRect2;
+
 
 int main(int argc, char* argv[]) {
   //setenv("DISPLAY", "localhost:0", true);
@@ -61,6 +65,16 @@ int main(int argc, char* argv[]) {
   //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
   textRect->setText("RubyGnomer");
+  auto rectArgs2 = NovelRT::NovelCommonArgs();
+  rectArgs2.startingPosition = novelChanArgs.startingPosition;
+  rectArgs2.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
+  rectArgs2.layer = 0;
+  rectArgs2.orderInLayer = 1;
+  rectArgs2.startingRotation = 0.0f;
+
+  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs2);
+
+
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -78,10 +92,56 @@ int main(int argc, char* argv[]) {
     novelChanRect->setRotation(rotation);
   });
 
+  auto novelAudio = runner.getAudioService();
 
-  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs);
-  rect->subscribeToInteracted([]{novelChanRect->setActive(!novelChanRect->getActive());});
+  novelAudio->loadMusic("sparta.wav");
+  novelAudio->loadSound("w0nd0ws.wav");
+  novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
+  novelAudio->setGlobalVolume(0.5);
 
+
+  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs2);
+
+  rect->subscribeToInteracted([&novelAudio]{
+      std::cout << "Commencing SFX test..." << std::endl;
+      novelAudio->fadeMusicOut(500);
+      SDL_Delay(600);
+      std::cout << "Looping SFX three times." << std::endl;
+      novelAudio->playSound("w0nd0ws.wav", 3);
+      SDL_Delay(10948);
+      std::cout << "Playing SFX in pseudo-5 channel, Front-Right." << std::endl;
+      novelAudio->setSoundPosition("w0nd0ws.wav", 45, 127);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in pseudo-5 channel, Back-Right." << std::endl;
+      novelAudio->setSoundPosition("w0nd0ws.wav", 135, 127);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in pseudo-5 channel, Back-Left." << std::endl;
+      novelAudio->setSoundPosition("w0nd0ws.wav", 225, 127);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in pseudo-5 channel, Front-Left." << std::endl;
+      novelAudio->setSoundPosition("w0nd0ws.wav", 315, 127);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in pseudo-5 channel, Center." << std::endl;
+      novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in Stereo, pan left." << std::endl;
+      novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "Playing SFX in Stereo, pan right." << std::endl;
+      novelAudio->setSoundPanning("w0nd0ws.wav", 0, 255);
+      novelAudio->playSound("w0nd0ws.wav");
+      SDL_Delay(4316);
+      std::cout << "SFX test complete!" << std::endl;
+      novelAudio->playSound("jojo.wav");
+      SDL_Delay(7000);
+      novelAudio->fadeMusicIn("sparta.wav",0,5000);
+    });
 
   runner.runNovel();
 
