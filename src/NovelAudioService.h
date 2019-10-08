@@ -19,7 +19,12 @@ private:
   int _nextChannel;
   int _musicTime;
   int _musicPausedTime;
-  const int _mixingChannels = 2;
+  const int NOVEL_MIXER_CHANNELS = 2;
+  const int MIXER_TRUE = 1;
+  const int MIXER_INFINITE_LOOP = -1;
+  const int MIXER_NO_LOOP = 0;
+  const int MIXER_NO_EXPLICIT_CHANNEL = -1;
+  const int NOVEL_MUSIC_CHANNEL = -3;
   SoundBank _sounds;
   MusicBank _music;
   ChannelMap _channelMap;

@@ -22,7 +22,7 @@ bool NovelAudioService::initializeAudio() {
     std::cout << "ERROR: Cannot play audio!" << std::endl;
     std::cout << "SDL_Mixer Error: " << Mix_GetError() << std::endl;
   }
-  else if (Mix_AllocateChannels(_mixingChannels) < NovelUtilities::SDL_SUCCESS)
+  else if (Mix_AllocateChannels(NOVEL_MIXER_CHANNELS) < NovelUtilities::SDL_SUCCESS)
   {
     std::cout << "ERROR: Failed to allocate channels." << std::endl;
   }
@@ -314,7 +314,7 @@ int NovelAudioService::convertToMixVolume(float value) {
 
 void NovelAudioService::incrementNextChannel() {
   int nextChannelTest = _nextChannel + 1;
-  _nextChannel = (nextChannelTest >= _mixingChannels || nextChannelTest < 0) ? 0 : nextChannelTest;
+  _nextChannel = (nextChannelTest >= NOVEL_MIXER_CHANNELS || nextChannelTest < 0) ? 0 : nextChannelTest;
 }
 
 std::string NovelAudioService::findByChannelMap(int channel) {
