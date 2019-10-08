@@ -1,7 +1,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELRTMACROUTILITIES_H
-#define NOVELRT_NOVELRTMACROUTILITIES_H
+#ifndef NOVELRT_NOVELRTUTILITIES_H
+#define NOVELRT_NOVELRTUTILITIES_H
+ 
+namespace NovelRT {
+class NovelUtilities {
+public:
+  static const int SDL_SUCCESS = 0;
+  static const int MIXER_TRUE = 1;
+  static const int MIXER_INFINITE_LOOP = -1;
+  static const int MIXER_NO_LOOP = 0;
+  static const int MIXER_NO_EXPLICIT_CHANNEL = -1;
+  static const int NOVEL_MUSIC_CHANNEL = -3;
+  static const int NOVEL_NO_CHANNEL_AVAILABLE = -9;
+};
+}
 
 #define NOVELRT_EVENT(eventName, eventArgsType)                                                                   \
 public:                                                                                                           \
@@ -62,4 +75,4 @@ private:                                                                        
   }                                                                                                               \
 
 
-#endif //NOVELRT_NOVELRTMACROUTILITIES_H
+#endif //NOVELRT_NOVELRTUTILITIES_H
