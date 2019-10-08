@@ -2,7 +2,7 @@
 
 #ifndef NOVELRT_NOVELRTUTILITIES_H
 #define NOVELRT_NOVELRTUTILITIES_H
- 
+
 namespace NovelRT {
 class NovelUtilities {
 public:
@@ -12,7 +12,6 @@ public:
   static const int MIXER_NO_LOOP = 0;
   static const int MIXER_NO_EXPLICIT_CHANNEL = -1;
   static const int NOVEL_MUSIC_CHANNEL = -3;
-  static const int NOVEL_NO_CHANNEL_AVAILABLE = -9;
 };
 }
 

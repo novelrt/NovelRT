@@ -132,7 +132,7 @@ int NovelAudioService::getSoundChannel(std::string soundName) {
   if (existingSound == _channelMap.end())
   {
     std::cerr << "ERROR: Cannot get channel for sound " << soundName << std::endl;
-    return NovelUtilities::NOVEL_NO_CHANNEL_AVAILABLE;
+    return NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL;
   }
   return _channelMap[soundName];
 }
