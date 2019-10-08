@@ -34,34 +34,63 @@ bool NovelAudioService::initializeAudio() {
   return isInitialized;
 }
 
-void NovelAudioService::loadSound(std::string input) {
-  auto exists = _sounds.find(input);
-  if (exists != _sounds.end()) return;
-
-  Mix_Chunk* newSound = Mix_LoadWAV(input.c_str());
-  if (newSound != nullptr)
+void NovelAudioService::load(std::string input, bool isMusic) {
+  if (!isMusic)
   {
-    _sounds[input] = newSound;
+    auto exists = _sounds.find(input);
+    if (exists != _sounds.end()) return;
+
+    Mix_Chunk* newSound = Mix_LoadWAV(input.c_str());
+    if (newSound != nullptr)
+    {
+      _sounds[input] = newSound;
+    }
+    else
+    {
+      std::cerr << "ERROR: " <<Mix_GetError() << std::endl;
+    }
   }
   else
   {
-    std::cerr << "ERROR: " <<Mix_GetError() << std::endl;
+    auto exists = _music.find(input);
+    if (exists != _music.end()) return;
+
+    Mix_Music* newMusic = Mix_LoadMUS(input.c_str());
+    if (newMusic != nullptr)
+    {
+      _music[input] = newMusic;
+    }
+    else
+    {
+      std::cerr << "ERROR: " << Mix_GetError() << std::endl;
+    }
   }
 }
 
-void NovelAudioService::unloadSound(std::string input) {
-  auto existingSound = _sounds.find(input);
-  if (existingSound == _sounds.end()) return;
+void NovelAudioService::unload(std::string input, bool isMusic) {
+  if (!isMusic)
+  {
+    auto existingSound = _sounds.find(input);
+    if (existingSound == _sounds.end()) return;
 
-  Mix_FreeChunk(_sounds[input]);
-  _sounds.erase(existingSound);
+    Mix_FreeChunk(_sounds[input]);
+    _sounds.erase(existingSound);
+  }
+  else
+  {
+    auto existingMusic = _music.find(input);
+    if (existingMusic == _music.end()) return;
+
+    Mix_FreeMusic(_music[input]);
+    _music.erase(existingMusic);
+  }
 }
 
-void NovelAudioService::playSound(std::string soundName) {
+void NovelAudioService::playSound(std::string soundName, int loops) {
   auto existingSound = _sounds.find(soundName);
   if (existingSound == _sounds.end())
   {
-    loadSound(soundName);
+    load(soundName, false);
     existingSound = _sounds.find(soundName);
     if (existingSound == _sounds.end())
     {
@@ -70,15 +99,7 @@ void NovelAudioService::playSound(std::string soundName) {
   }
 
   auto onChannel = _channelMap.find(soundName);
-  if (onChannel == _channelMap.end())
-  {
-    _channelMap[soundName] = _nextChannel;
-    Mix_PlayChannel(_nextChannel, _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
-
-    int nextChannelTest = _nextChannel + 1;
-    _nextChannel = (nextChannelTest >= _mixingChannels || nextChannelTest < 0) ? 0 : nextChannelTest;
-  }
-  else
+  if (onChannel != _channelMap.end())
   {
     if (Mix_Playing(_channelMap[soundName]) == NovelUtilities::MIXER_TRUE)
     {
@@ -86,47 +107,43 @@ void NovelAudioService::playSound(std::string soundName) {
       return;
     }
 
-    Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
-  }
-
-}
-
-void NovelAudioService::playSound(std::string soundName, int loops) {
-  auto existingSound = _sounds.find(soundName);
-  if (existingSound == _sounds.end())
-  {
-    loadSound(soundName);
-    existingSound = _sounds.find(soundName);
-    if (existingSound == _sounds.end())
+    if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
     {
-      return;
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_INFINITE_LOOP);
     }
-  }
-
-  auto onChannel = _channelMap.find(soundName);
-  if (onChannel == _channelMap.end())
-  {
-    _channelMap[soundName] = _nextChannel;
-    Mix_PlayChannel(_nextChannel, _sounds[soundName], loops-1);
-    int nextChannelTest = _nextChannel + 1;
-    _nextChannel = (nextChannelTest >= _mixingChannels || nextChannelTest < 0) ? 0 : nextChannelTest;
+    else if (loops == NovelUtilities::MIXER_NO_LOOP)
+    {
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
+    }
+    else
+    {
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], loops-1);
+    }
   }
   else
   {
-    if (Mix_Playing(_channelMap[soundName]) == 1)
-    {
-      std::cout << "Already playing on channel " << _channelMap[soundName] << std::endl;
-      return;
-    }
-    Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], loops-1);
-  }
+    _channelMap[soundName] = _nextChannel;
+    incrementNextChannel();
 
+    if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
+    {
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_INFINITE_LOOP);
+    }
+    else if (loops == NovelUtilities::MIXER_NO_LOOP)
+    {
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], NovelUtilities::MIXER_NO_LOOP);
+    }
+    else
+    {
+      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], loops-1);
+    }
+  }
 }
 
 void NovelAudioService::stopSound(std::string soundName) {
   Mix_HaltChannel(_channelMap[soundName]);
 }
-
+/*
 int NovelAudioService::getSoundChannel(std::string soundName) {
   auto existingSound = _channelMap.find(soundName);
   if (existingSound == _channelMap.end())
@@ -135,7 +152,7 @@ int NovelAudioService::getSoundChannel(std::string soundName) {
     return NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL;
   }
   return _channelMap[soundName];
-}
+}*/
 
 void NovelAudioService::setSoundVolume(std::string soundName, float value) {
   Mix_VolumeChunk(_sounds[soundName], convertToMixVolume(value));
@@ -174,44 +191,8 @@ void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVo
   }
 }
 
-void NovelAudioService::loadMusic(std::string input) {
-  auto exists = _music.find(input);
-  if (exists != _music.end()) return;
-
-  Mix_Music* newMusic = Mix_LoadMUS(input.c_str());
-  if (newMusic != nullptr)
-  {
-    _music[input] = newMusic;
-  }
-  else
-  {
-    std::cerr << "ERROR: " << Mix_GetError() << std::endl;
-  }
-}
-
-void NovelAudioService::unloadMusic(std::string input) {
-  auto existingMusic = _music.find(input);
-  if (existingMusic == _music.end()) return;
-
-  Mix_FreeMusic(_music[input]);
-  _music.erase(existingMusic);
-}
-
-void NovelAudioService::playMusic() {
+void NovelAudioService::resumeMusic() {
   if (Mix_PausedMusic()) Mix_ResumeMusic();
-}
-
-void NovelAudioService::playMusic(std::string musicName) {
-  auto existingMusic = _music.find(musicName);
-  if (existingMusic == _music.end())
-  {
-    loadMusic(musicName);
-    existingMusic = _music.find(musicName);
-    if (existingMusic == _music.end()) return;
-  }
-  _channelMap[musicName] = NovelUtilities::NOVEL_MUSIC_CHANNEL;
-  Mix_PlayMusic(_music[musicName], NovelUtilities::MIXER_INFINITE_LOOP);
-  _musicTime = SDL_GetPerformanceCounter();
 }
 
 void NovelAudioService::playMusic(std::string musicName, int loops) {
@@ -219,12 +200,26 @@ void NovelAudioService::playMusic(std::string musicName, int loops) {
   auto existingMusic = _music.find(musicName);
   if (existingMusic == _music.end())
   {
-    loadMusic(musicName);
+    load(musicName, true);
     existingMusic = _music.find(musicName);
     if (existingMusic == _music.end()) return;
   }
   _channelMap[musicName] = NovelUtilities::NOVEL_MUSIC_CHANNEL;
-  Mix_PlayMusic(_music[musicName], loops-1);
+
+  if (loops == 0)
+  {
+    Mix_PlayMusic(_music[musicName], NovelUtilities::MIXER_NO_LOOP);
+  }
+  else if (loops == NovelUtilities::MIXER_INFINITE_LOOP)
+  {
+    Mix_PlayMusic(_music[musicName], NovelUtilities::MIXER_INFINITE_LOOP);
+  }
+  else
+  {
+    Mix_PlayMusic(_music[musicName], loops-1);
+  }
+
+
 }
 
 void NovelAudioService::pauseMusic() {
@@ -237,7 +232,6 @@ void NovelAudioService::pauseMusic() {
 
 void NovelAudioService::stopMusic() {
   Mix_HaltMusic();
-  _musicPausedTime = SDL_GetPerformanceCounter();
 }
 
 void NovelAudioService::setMusicVolume(float value) {
@@ -326,6 +320,11 @@ void NovelAudioService::setGlobalVolume(float value) {
 int NovelAudioService::convertToMixVolume(float value) {
   int converted = (value > 1.0f || value < 0.0f) ? 1.0f : (int)(SDL_MIX_MAXVOLUME * value);
   return converted;
+}
+
+void NovelAudioService::incrementNextChannel() {
+  int nextChannelTest = _nextChannel + 1;
+  _nextChannel = (nextChannelTest >= _mixingChannels || nextChannelTest < 0) ? 0 : nextChannelTest;
 }
 
 std::string NovelAudioService::findByChannelMap(int channel) {

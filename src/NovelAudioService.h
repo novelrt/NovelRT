@@ -26,25 +26,22 @@ private:
 
   int convertToMixVolume(float value);
   std::string findByChannelMap(int channel);
+  void incrementNextChannel();
 public:
   bool isInitialized;
 
   NovelAudioService();
   bool initializeAudio();
-  void loadSound(std::string input);
-  void unloadSound(std::string input);
-  void playSound(std::string soundName);
+  void load(std::string input, bool isMusic);
+  void unload(std::string input, bool isMusic);
   void playSound(std::string soundName, int loops);
   void stopSound(std::string soundName);
-  int getSoundChannel(std::string soundName);
+  //int getSoundChannel(std::string soundName);
   void setSoundVolume(std::string soundName, float val);
   void setSoundPosition(std::string soundName, int angle, int distance);
   void setSoundDistance(std::string soundName, int distance);
   void setSoundPanning(std::string soundName, int leftChannel, int rightChannel);
-  void loadMusic(std::string input);
-  void unloadMusic(std::string input);
-  void playMusic();
-  void playMusic(std::string musicName);
+  void resumeMusic();
   void playMusic(std::string musicName, int loops);
   void pauseMusic();
   void stopMusic();
