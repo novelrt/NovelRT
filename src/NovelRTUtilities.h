@@ -7,11 +7,6 @@ namespace NovelRT {
 class NovelUtilities {
 public:
   static const int SDL_SUCCESS = 0;
-  static const int MIXER_TRUE = 1;
-  static const int MIXER_INFINITE_LOOP = -1;
-  static const int MIXER_NO_LOOP = 0;
-  static const int MIXER_NO_EXPLICIT_CHANNEL = -1;
-  static const int NOVEL_MUSIC_CHANNEL = -3;
 };
 }
 
