@@ -1,4 +1,4 @@
-// Copyright ┬⌐ Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelAudioService.h"
 #include "NovelRTUtilities.h"
@@ -143,16 +143,6 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
 void NovelAudioService::stopSound(std::string soundName) {
   Mix_HaltChannel(_channelMap[soundName]);
 }
-/*
-int NovelAudioService::getSoundChannel(std::string soundName) {
-  auto existingSound = _channelMap.find(soundName);
-  if (existingSound == _channelMap.end())
-  {
-    std::cerr << "ERROR: Cannot get channel for sound " << soundName << std::endl;
-    return NovelUtilities::MIXER_NO_EXPLICIT_CHANNEL;
-  }
-  return _channelMap[soundName];
-}*/
 
 void NovelAudioService::setSoundVolume(std::string soundName, float value) {
   Mix_VolumeChunk(_sounds[soundName], convertToMixVolume(value));
