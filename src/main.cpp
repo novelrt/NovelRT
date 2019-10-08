@@ -37,9 +37,8 @@ static int average(lua_State *luaState)
   _putenv_s(name, value)
 #endif
 
-NovelRT::NovelBasicFillRect *basicFillRect;
+NovelRT::NovelBasicFillRect *playAudioButton;
 NovelRT::NovelImageRect *novelChanRect;
-NovelRT::NovelBasicFillRect *basicFillRect2;
 
 int main(int argc, char *argv[])
 {
@@ -62,20 +61,24 @@ int main(int argc, char *argv[])
   rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.layer = 0;
-  rectArgs.orderInLayer = 1;
+  rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  //basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs);
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
   textRect->setText("RubyGnomer");
-  auto rectArgs2 = NovelRT::NovelCommonArgs();
-  rectArgs2.startingPosition = novelChanArgs.startingPosition;
-  rectArgs2.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
-  rectArgs2.layer = 0;
-  rectArgs2.orderInLayer = 1;
-  rectArgs2.startingRotation = 0.0f;
 
-  basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs2);
+  auto playButtonArgs = NovelRT::NovelCommonArgs();
+  playButtonArgs.startingPosition = novelChanArgs.startingPosition;
+  playButtonArgs.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
+  playButtonArgs.layer = 0;
+  playButtonArgs.orderInLayer = 1;
+  playButtonArgs.startingRotation = 0.0f;
+
+  playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
+  playButtonArgs.orderInLayer = 1;
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
+  playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -100,7 +103,7 @@ int main(int argc, char *argv[])
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs2);
+  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
 
   rect->subscribeToInteracted([&novelAudio, &counter] {
