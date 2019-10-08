@@ -9,18 +9,21 @@
 #include "NovelInteractionService.h"
 #include "NovelAudioService.h"
 
-extern "C" {
+extern "C"
+{
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 }
 
-lua_State* L;
+lua_State *L;
 
-static int average(lua_State* luaState) {
+static int average(lua_State *luaState)
+{
   int n = lua_gettop(luaState);
   double sum = 0;
-  for (int i = 1; i <= n; i++) {
+  for (int i = 1; i <= n; i++)
+  {
     sum += lua_tonumber(luaState, i);
   }
   lua_pushnumber(luaState, sum / n);
@@ -30,16 +33,16 @@ static int average(lua_State* luaState) {
 
 #ifdef WIN32
 #define setenv(name, value, overwrite) \
-    static_assert(overwrite != 0);     \
-    _putenv_s(name, value)
+  static_assert(overwrite != 0);       \
+  _putenv_s(name, value)
 #endif
 
-NovelRT::NovelBasicFillRect* basicFillRect;
-NovelRT::NovelImageRect* novelChanRect;
-NovelRT::NovelBasicFillRect* basicFillRect2;
+NovelRT::NovelBasicFillRect *basicFillRect;
+NovelRT::NovelImageRect *novelChanRect;
+NovelRT::NovelBasicFillRect *basicFillRect2;
 
-
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
   //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
   luaL_openlibs(L);
@@ -74,8 +77,6 @@ int main(int argc, char* argv[]) {
 
   basicFillRect = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(0, 255, 255, 255), rectArgs2);
 
-
-
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
   runner.runOnUpdate([](double delta) {
@@ -94,57 +95,72 @@ int main(int argc, char* argv[]) {
 
   auto novelAudio = runner.getAudioService();
 
-  novelAudio->loadMusic("sparta.wav");
-  novelAudio->loadSound("w0nd0ws.wav");
+  novelAudio->load("sparta.wav", true);
+  novelAudio->load("w0nd0ws.wav", false);
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), rectArgs2);
+  auto counter = 0;
 
-  rect->subscribeToInteracted([&novelAudio]{
-      std::cout << "Commencing SFX test..." << std::endl;
-      novelAudio->fadeMusicOut(500);
-      SDL_Delay(600);
-      std::cout << "Looping SFX three times." << std::endl;
-      novelAudio->playSound("w0nd0ws.wav", 3);
-      SDL_Delay(10948);
-      std::cout << "Playing SFX in pseudo-5 channel, Front-Right." << std::endl;
-      novelAudio->setSoundPosition("w0nd0ws.wav", 45, 127);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in pseudo-5 channel, Back-Right." << std::endl;
-      novelAudio->setSoundPosition("w0nd0ws.wav", 135, 127);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in pseudo-5 channel, Back-Left." << std::endl;
-      novelAudio->setSoundPosition("w0nd0ws.wav", 225, 127);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in pseudo-5 channel, Front-Left." << std::endl;
-      novelAudio->setSoundPosition("w0nd0ws.wav", 315, 127);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in pseudo-5 channel, Center." << std::endl;
-      novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in Stereo, pan left." << std::endl;
-      novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "Playing SFX in Stereo, pan right." << std::endl;
-      novelAudio->setSoundPanning("w0nd0ws.wav", 0, 255);
-      novelAudio->playSound("w0nd0ws.wav");
-      SDL_Delay(4316);
-      std::cout << "SFX test complete!" << std::endl;
-      novelAudio->playSound("jojo.wav");
-      SDL_Delay(7000);
-      novelAudio->fadeMusicIn("sparta.wav",0,5000);
-    });
+  rect->subscribeToInteracted([&novelAudio, &counter] {
+    counter++;
+    switch (counter)
+    {
+      case 1:
+      {
+        novelAudio->fadeMusicOut(500);
+        std::cout << "Commencing Audio Test..." << std::endl;
+        std::cout << "Press the button to launch each test." << std::endl;
+        std::cout << "(Please wait for each test to finish for best results!)" << std::endl;
+        break;
+      }
+      case 2:
+      {
+        std::cout << std::endl << "Looping 3 times..." << std::endl;
+        novelAudio->playSound("w0nd0ws.wav", 3);
+        break;
+      }
+      case 3:
+      {
+        std::cout << "Pan Left (via Panning)..." << std::endl;
+        novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
+        novelAudio->playSound("w0nd0ws.wav", 0);
+        break;
+      }
+      case 4:
+      {
+        std::cout << "Pan Right (via 3D Position)..." << std::endl;
+        novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
+        novelAudio->playSound("w0nd0ws.wav", 0);
+        break;
+      }
+      case 5:
+      {
+        novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
+        std::cout << "Low Volume..." << std::endl;
+        novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
+        novelAudio->playSound("w0nd0ws.wav", 0);
+        break;
+      }
+      case 6:
+      {
+        novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
+        std::cout << "Success! Click once more to play music again." << std::endl;
+        novelAudio->setSoundVolume("w0nd0ws.wav", 64);
+        novelAudio->playSound("jojo.wav", 0);
+        break;
+      }
+      default:
+      {
+        counter = 0;
+        novelAudio->fadeMusicIn("sparta.wav", -1, 500);
+        break;
+      }
+    }
+  });
 
   runner.runNovel();
 
   return 0;
 }
-
