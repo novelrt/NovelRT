@@ -1,4 +1,4 @@
-// Copyright ┬⌐ Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELAUDIOSERVICE_H
 #define NOVELRT_NOVELAUDIOSERVICE_H
@@ -36,7 +36,6 @@ public:
   void unload(std::string input, bool isMusic);
   void playSound(std::string soundName, int loops);
   void stopSound(std::string soundName);
-  //int getSoundChannel(std::string soundName);
   void setSoundVolume(std::string soundName, float val);
   void setSoundPosition(std::string soundName, int angle, int distance);
   void setSoundDistance(std::string soundName, int distance);
