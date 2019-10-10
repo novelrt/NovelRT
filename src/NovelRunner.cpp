@@ -9,6 +9,7 @@ namespace NovelRT {
     :  _stepTimer(StepTimer(targetFrameRate)), _layeringService(layeringService), _novelDebugService(std::make_unique<NovelDebugService>(this)), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
   _novelRenderer->initialiseRendering(displayNumber);
   _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
+  _novelAudioService = std::make_unique<NovelAudioService>();
   _novelInteractionService->subscribeToQuit([this]{_exitCode = 0;});
 }
 
@@ -26,6 +27,7 @@ int NovelRunner::runNovel() {
 
   }
   _novelRenderer->tearDown();
+  _novelAudioService->~NovelAudioService();
   return _exitCode;
 }
 
@@ -59,5 +61,9 @@ NovelInteractionService* NovelRunner::getInteractionService() const {
 
 NovelDebugService* NovelRunner::getDebugService() const {
   return _novelDebugService.get();
+}
+
+NovelAudioService* NovelRunner::getAudioService() const {
+  return _novelAudioService.get();
 }
 }
