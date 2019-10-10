@@ -3,14 +3,17 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 
 [![Discord](https://img.shields.io/discord/543898968380145675?logo=discord&style=plastic)](https://discord.novelrt.dev/)
 
-## Future & Immediate Improvements
+## Current Features
 
-As it currently stands, only the C++ LLAPI exists in its base form.
+Currently, NovelRT supports the following in its base form:
+- Graphics LLAPI
+- Audio LLAPI
+
+## Future & Immediate Improvements
 
 Current features in development include:
 - C++ HLAPI
 - Lua 5.3 LLAPI
-- Audio
 - CoreCLR hosting
 - Ink narrative scripting language support
 
@@ -35,7 +38,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
 
 ## Contributing
-First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on. 
+First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on.
 
 **NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Discord via direct message or by contacting us via email at admin@novelrt.dev.**
 

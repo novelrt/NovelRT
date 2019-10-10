@@ -52,6 +52,7 @@ find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
+find_package(sdl2-mixer CONFIG REQUIRED)
 
 # lua doesn't provide native cmake support
 find_path(LUA_INCLUDE_DIR lua.h)
@@ -80,10 +81,11 @@ set(NOVELRT_HEADERS
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
   src/NovelRenderObject.h
-  src/NovelRTMacroUtilities.h
+  src/NovelRTUtilities.h
   src/NovelRunner.h
   src/NovelStepTimer.h
   src/NovelTextRect.h
+  src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
 )
@@ -103,6 +105,7 @@ set(NOVELRT_SOURCES
   src/NovelRunner.cpp
   src/NovelStepTimer.cpp
   src/NovelTextRect.cpp
+  src/NovelAudioService.cpp
   src/RGBAConfig.cpp
 )
 
@@ -112,6 +115,7 @@ set(NOVELRT_LINK_LIBRARIES
   glm
   SDL2::SDL2-static
   SDL2::SDL2_image
+  SDL2::SDL2_mixer
   SDL2::SDL2main
 )
 
@@ -159,11 +163,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND false)
       -Wall
       -Wextra
       -Wduplicate-enum
-      
+
       -Wlong-long
-      
+
       -Wnull-dereference
-      
+
       -Wdouble-promotion
       -Wshadow
       -Wformat=2
