@@ -10,15 +10,43 @@
 #include "NovelAudioService.h"
 
 namespace NovelRT {
+/**
+ * The base class for creating a visual novel.
+ */
 class NovelRunner {
 public:
+  /**
+   * Executes the provided code upon update.
+   *
+   * @param subscriber The code to execute on update.
+   */
   void runOnUpdate(NovelUpdateSubscriber);
+  /**
+   * Stops the execution of the instantiated NovelRunner at the specified event.
+   *
+   * @param subscriber The event at which the novel should stop running.
+   */
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
+  /**
+   * Instantiates the NovelRunner class with its presets.
+   *
+   * @param displayNumber The display on which to start the novel.
+   * @param layeringService The NovelLayeringService that NovelRunner should use.
+   * @param targetFrameRate The framerate that should be targeted and capped.
+   */
   explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
+
+  /**
+   * Starts the visual novel.
+   * @returns Exit code.
+   */
   int runNovel();
+  /// The Rendering Service associated with this Runner.
   NovelRenderingService* getRenderer() const;
+  /// The Interaction Service associated with this Runner
   NovelInteractionService* getInteractionService() const;
+  /// The Debug Service associated with this Runner.
   NovelDebugService* getDebugService() const;
   NovelAudioService* getAudioService() const;
 
