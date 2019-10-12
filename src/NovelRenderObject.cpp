@@ -9,7 +9,7 @@ namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) : NovelObject(layeringService, size, args),
+                                     const GLuint programId) : NovelWorldObject(layeringService, size, args),
                                                                _modelTransform(Lazy<glm::mat3>(std::function<glm::mat3()>(
                                                                    std::bind(&NovelRenderObject::generateModelTransform,
                                                                              this)))),
@@ -65,22 +65,22 @@ void NovelRenderObject::configureObjectBuffers() {
 }
 void NovelRenderObject::setSize(const GeoVector<float>& value) {
   _modelTransform.reset();
-  NovelObject::setSize(value);
+  NovelWorldObject::setSize(value);
   configureObjectBuffers();
 }
 void NovelRenderObject::setRotation(const float value) {
   _modelTransform.reset();
-  NovelObject::setRotation(value);
+  NovelWorldObject::setRotation(value);
   configureObjectBuffers();
 }
 void NovelRenderObject::setScale(const GeoVector<float>& value) {
   _modelTransform.reset();
-  NovelObject::setScale(value);
+  NovelWorldObject::setScale(value);
   configureObjectBuffers();
 }
 void NovelRenderObject::setPosition(const GeoVector<float>& value) {
   _modelTransform.reset();
-  NovelObject::setPosition(value);
+  NovelWorldObject::setPosition(value);
   configureObjectBuffers();
 }
 NovelRenderObject::~NovelRenderObject() {

@@ -2,7 +2,7 @@
 
 #ifndef NOVELRT_NOVELRENDEROBJECT_H
 #define NOVELRT_NOVELRENDEROBJECT_H
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 #include "Lazy.h"
 #include <string>
 #include <glad/glad.h>
@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 
 namespace NovelRT {
-class NovelRenderObject : public NovelObject {
+class NovelRenderObject : public NovelWorldObject {
 
 public:
   NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,

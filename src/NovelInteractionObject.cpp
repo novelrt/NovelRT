@@ -6,7 +6,7 @@ NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* la
                                                const NovelRT::GeoVector<float>& size,
                                                const NovelRT::NovelCommonArgs& args,
                                                const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
-    : NovelObject(layeringService, size, args) {
+    : NovelWorldObject(layeringService, size, args) {
   _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
 
 }

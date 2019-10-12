@@ -37,7 +37,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 }
 
 void NovelImageRect::setScale(const GeoVector<float>& value) {
-  NovelObject::_scale = value;
+  NovelWorldObject::_scale = value;
 }
 
 void NovelImageRect::drawObject() {

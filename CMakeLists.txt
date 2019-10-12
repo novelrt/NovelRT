@@ -62,7 +62,7 @@ find_library(LUA_LIBRARY lua)
 link_libraries(${LUA_LIBRARY})
 
 set(NOVELRT_HEADERS
-  src/NovelObject.h
+        src/NovelWorldObject.h
   src/GeoBounds.h
   src/GeoVector.h
   src/GraphicsCharacterRenderData.h
@@ -88,7 +88,7 @@ set(NOVELRT_HEADERS
   src/NovelCamera.h src/GeoMatrix4.h)
 
 set(NOVELRT_SOURCES
-  src/NovelObject.cpp
+        src/NovelWorldObject.cpp
   src/GeoBounds.cpp
   src/NovelBasicFillRect.cpp
   src/NovelBasicInteractionRect.cpp

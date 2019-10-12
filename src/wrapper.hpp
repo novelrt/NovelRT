@@ -13,7 +13,7 @@
 #include "NovelInteractionObject.h"
 #include "NovelInteractionService.h"
 #include "NovelLayeringService.h"
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 #include "NovelObjectSortComparison.h"
 #include "NovelRenderingService.h"
 #include "NovelRenderObject.h"

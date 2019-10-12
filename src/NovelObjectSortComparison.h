@@ -3,11 +3,11 @@
 #ifndef NOVELRT_NOVELOBJECTSORTCOMPARISON_H
 #define NOVELRT_NOVELOBJECTSORTCOMPARISON_H
 
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 namespace NovelRT {
 struct NovelObjectSortComparison {
 public:
-  inline bool operator()(NovelObject* lhs, NovelObject* rhs) const {
+  inline bool operator()(NovelWorldObject* lhs, NovelWorldObject* rhs) const {
     return lhs->getOrderInLayer() < rhs->getOrderInLayer();
   }
 };
