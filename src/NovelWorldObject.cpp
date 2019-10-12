@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 #include "GeoBounds.h"
 
 namespace NovelRT {
-NovelObject::NovelObject(NovelLayeringService* layeringService,
-                         const GeoVector<float>& size,
-                         const NovelCommonArgs& args) :
+NovelWorldObject::NovelWorldObject(NovelLayeringService* layeringService,
+                                   const GeoVector<float>& size,
+                                   const NovelCommonArgs& args) :
     _layeringService(layeringService) {
   setLayer(args.layer);
   setOrderInLayer(args.orderInLayer);
@@ -17,68 +17,68 @@ NovelObject::NovelObject(NovelLayeringService* layeringService,
   setActive(true);
 }
 
-NovelObject::~NovelObject() = default;
+NovelWorldObject::~NovelWorldObject() = default;
 
-GeoVector<float> NovelObject::getPosition() const {
+GeoVector<float> NovelWorldObject::getPosition() const {
   return _position;
 }
 
-void NovelObject::setPosition(const GeoVector<float>& value) {
+void NovelWorldObject::setPosition(const GeoVector<float>& value) {
   _position = value;
 }
 
-float NovelObject::getRotation() const {
+float NovelWorldObject::getRotation() const {
   return _rotation;
 }
 
-void NovelObject::setRotation(const float value) {
+void NovelWorldObject::setRotation(const float value) {
   _rotation = value;
 }
 
-GeoVector<float> NovelObject::getScale() const {
+GeoVector<float> NovelWorldObject::getScale() const {
   return _scale;
 }
 
-void NovelObject::setScale(const GeoVector<float>& value) {
+void NovelWorldObject::setScale(const GeoVector<float>& value) {
   _scale = value;
 }
 
-GeoVector<float> NovelObject::getSize() const {
+GeoVector<float> NovelWorldObject::getSize() const {
   return _size;
 }
 
-void NovelObject::setSize(const GeoVector<float>& value) {
+void NovelWorldObject::setSize(const GeoVector<float>& value) {
   _size = value;
 }
 
-bool NovelObject::getActive() const {
+bool NovelWorldObject::getActive() const {
   return _active;
 }
 
-void NovelObject::setActive(const bool value) {
+void NovelWorldObject::setActive(const bool value) {
   _active = value;
 }
 
-int NovelObject::getLayer() const {
+int NovelWorldObject::getLayer() const {
   return _layer;
 }
 
-void NovelObject::setLayer(const int value) {
+void NovelWorldObject::setLayer(const int value) {
   _layer = value;
   _layeringService->updateLayerInfo(value, this);
 
 }
 
-int NovelObject::getOrderInLayer() const {
+int NovelWorldObject::getOrderInLayer() const {
   return _orderInLayer;
 }
 
-void NovelObject::setOrderInLayer(const int value) {
+void NovelWorldObject::setOrderInLayer(const int value) {
   _orderInLayer = value;
   _layeringService->sortLayerOrder(getLayer());
 }
 
-/*GeoBounds NovelObject::getScreenSpaceObjectBounds() {
+/*GeoBounds NovelWorldObject::getScreenSpaceObjectBounds() {
   if(_isDirty) {
   _isDirty = false;
   GeoVector<float> position = getScreenSpacePosition();

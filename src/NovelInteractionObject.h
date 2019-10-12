@@ -4,12 +4,12 @@
 #define NOVELRT_NOVELINTERACTIONOBJECT_H
 #include <algorithm>
 #include <functional>
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 #include "KeyCode.h"
 #include "NovelRTMacroUtilities.h"
 
 namespace NovelRT {
-class NovelInteractionObject : public NovelObject {
+class NovelInteractionObject : public NovelWorldObject {
   friend class NovelInteractionService; //how to make shit tightly coupled oh god
 
 NOVELRT_PARAMETERLESS_EVENT(Interacted)

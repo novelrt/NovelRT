@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELOBJECT_H
-#define NOVELRT_NOVELOBJECT_H
+#ifndef NOVELRT_NOVELWORLDOBJECT_H
+#define NOVELRT_NOVELWORLDOBJECT_H
 #include "GeoVector.h"
 #include "NovelCommonArgs.h"
 #include "NovelLayeringService.h"
@@ -9,12 +9,12 @@
 
 namespace NovelRT {
 class NovelLayeringService;
-class NovelObject {
+class NovelWorldObject {
 public:
-  NovelObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
-              const NovelCommonArgs& args);
+  NovelWorldObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
+                   const NovelCommonArgs& args);
 
-  virtual ~NovelObject();
+  virtual ~NovelWorldObject();
 
   virtual GeoVector<float> getPosition() const;
 
@@ -59,4 +59,4 @@ protected:
 
 }
 
-#endif //NOVELRT_NOVELOBJECT_H
+#endif //NOVELRT_NOVELWORLDOBJECT_H

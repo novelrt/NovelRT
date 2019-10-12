@@ -6,19 +6,19 @@
 #include <map>
 #include <vector>
 #include <string_view>
-#include "NovelObject.h"
+#include "NovelWorldObject.h"
 
 namespace NovelRT {
-class NovelObject;
+class NovelWorldObject;
 class NovelLayeringService {
 public:
-  void updateLayerInfo(const int layer, NovelObject* targetObject, const bool migrate = true);
+  void updateLayerInfo(const int layer, NovelWorldObject* targetObject, const bool migrate = true);
   void sortLayerOrder(const int layer);
   void executeAllObjectBehaviours();
 
   ~NovelLayeringService();
 private:
-  std::map<int, std::vector<NovelObject*>> _layerMatrix;
+  std::map<int, std::vector<NovelWorldObject*>> _layerMatrix;
 };
 }
 #endif //NOVELRT_NOVELLAYERINGSERVICE_H
