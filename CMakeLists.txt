@@ -85,7 +85,7 @@ set(NOVELRT_HEADERS
   src/NovelTextRect.h
   src/RGBAConfig.h
   src/wrapper.hpp
-)
+  src/NovelCamera.h src/GeoMatrix4.h)
 
 set(NOVELRT_SOURCES
   src/NovelObject.cpp
@@ -103,7 +103,7 @@ set(NOVELRT_SOURCES
   src/NovelStepTimer.cpp
   src/NovelTextRect.cpp
   src/RGBAConfig.cpp
-)
+  src/NovelCamera.cpp)
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype

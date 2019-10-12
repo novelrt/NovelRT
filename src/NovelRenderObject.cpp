@@ -97,8 +97,8 @@ GLuint NovelRenderObject::generateStandardBuffer() {
   return tempBuffer;
 }
 glm::mat3 NovelRenderObject::generateModelTransform() {
-  auto size = (getSize() * getScale()).getValue();
-  auto position = getPosition().getValue();
+  auto size = (getSize() * getScale()).getVec2Value();
+  auto position = getPosition().getVec2Value();
   auto matrix3D = glm::mat4();
   glm::rotate(matrix3D, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
   glm::scale(matrix3D, glm::vec3(size, 1.0f));
