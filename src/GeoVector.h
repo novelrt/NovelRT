@@ -57,7 +57,7 @@ private:
 };
 
 template<typename T>
-GeoVector<T>::GeoVector(T x, T y) : _value(glm::vec2(x, y)) {
+GeoVector<T>::GeoVector(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {
 }
 
 template<typename T>
