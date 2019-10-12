@@ -20,17 +20,21 @@ public:
   inline GeoMatrix4<float> getViewMatrix() const {
     return _viewMatrix;
   }
+  
   inline void setViewMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
     _viewMatrix = value;
   }
+
   inline GeoMatrix4<float> getProjectionMatrix() const {
     return _projectionMatrix;
   }
+
   inline void setProjectionMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
     _projectionMatrix = value;
   }
+
   inline GeoMatrix4<float> getCameraUboMatrix() {
     return _cameraUboMatrix.getActual();
   }
