@@ -4,6 +4,11 @@ jobs:
     vmimage: ${{parameters.pool}}
   steps:
   - task: Bash@3
+    displayName: 'Run scripts/machine-setup.sh'
+    inputs:
+      targetType: filePath
+      filePath: ./scripts/machine-setup.sh
+  - task: Bash@3
     displayName: 'Run scripts/cibuild.sh'
     inputs:
       targetType: filePath
