@@ -11,6 +11,9 @@ class NovelCamera {
 private:
   struct CameraBlock {
     glm::mat4 cameraMatrix;
+    CameraBlock(glm::mat4 matrix) {
+      cameraMatrix = matrix;
+    }
   };
 
   GeoMatrix4<float> _viewMatrix;
