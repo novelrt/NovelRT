@@ -5,11 +5,12 @@
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
-  NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService, uint32_t targetFrameRate)
-    :  _stepTimer(StepTimer(targetFrameRate)), _layeringService(layeringService), _novelDebugService(std::make_unique<NovelDebugService>(this)), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+NovelRunner::NovelRunner(int displayNumber, uint32_t targetFrameRate)
+    : _stepTimer(StepTimer(targetFrameRate)), _layeringService(std::make_unique<NovelLayeringService>()), _novelDebugService(std::make_unique<NovelDebugService>(this)),
+      _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get())), _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get()))  {
+
   _novelRenderer->initialiseRendering(displayNumber);
-  _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService);
-  _novelInteractionService->subscribeToQuit([this]{_exitCode = 0;});
+  _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
 }
 
 int NovelRunner::runNovel() {
