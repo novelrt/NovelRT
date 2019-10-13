@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelRunner.h"
@@ -7,8 +7,7 @@
 namespace NovelRT {
 NovelRunner::NovelRunner(int displayNumber, uint32_t targetFrameRate)
     : _stepTimer(StepTimer(targetFrameRate)), _layeringService(std::make_unique<NovelLayeringService>()), _novelDebugService(std::make_unique<NovelDebugService>(this)),
-      _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get())), _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get()))  {
-
+      _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get())), _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get())), _novelAudioService(std::make_unique<NovelAudioService>())  {
   _novelRenderer->initialiseRendering(displayNumber);
   _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
 }
@@ -27,6 +26,7 @@ int NovelRunner::runNovel() {
 
   }
   _novelRenderer->tearDown();
+  _novelAudioService->~NovelAudioService();
   return _exitCode;
 }
 
@@ -60,5 +60,9 @@ NovelInteractionService* NovelRunner::getInteractionService() const {
 
 NovelDebugService* NovelRunner::getDebugService() const {
   return _novelDebugService.get();
+}
+
+NovelAudioService* NovelRunner::getAudioService() const {
+  return _novelAudioService.get();
 }
 }

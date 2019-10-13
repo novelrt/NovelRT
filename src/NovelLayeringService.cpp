@@ -5,7 +5,7 @@
 #include "NovelObjectSortComparison.h"
 
 namespace NovelRT {
-void NovelLayeringService::updateLayerInfo(const int layer, NovelWorldObject* targetObject, const bool migrate) {
+void NovelLayeringService::updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate) {
   if (migrate) {
     auto vec = _layerMatrix[targetObject->getLayer()];
     vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelWorldObject* x) {
@@ -21,7 +21,7 @@ void NovelLayeringService::updateLayerInfo(const int layer, NovelWorldObject* ta
   sortLayerOrder(layer);
 }
 
-void NovelLayeringService::sortLayerOrder(const int layer) {
+void NovelLayeringService::sortLayerOrder(int layer) {
   sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), NovelObjectSortComparison());
 }
 

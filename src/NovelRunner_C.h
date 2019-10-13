@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRUNNER_C_H
 #define NOVELRT_NOVELRUNNER_C_H
@@ -6,7 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef void (* NovelUpdateSubscriber)(const double);
+typedef void (* NovelUpdateSubscriber)(double);
 
 struct NovelRunner_C;
 typedef struct NovelRunner_C NovelRunner_t;

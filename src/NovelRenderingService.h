@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRENDERINGSERVICE_H
 #define NOVELRT_NOVELRENDERINGSERVICE_H
@@ -22,19 +22,19 @@ namespace NovelRT {
 class NovelRenderingService {
 public:
   NovelRenderingService(NovelLayeringService* layeringService);
-  int initialiseRendering(const int displayNumber);
+  int initialiseRendering(int displayNumber);
 
   void tearDown() const;
 
   NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
-                               const std::string_view filePath,
+                               std::string_view filePath,
                                const NovelCommonArgs& args,
                                const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
   NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
                                        const RGBAConfig& colourConfig,
                                        const NovelCommonArgs& args);
   NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
-                             const float fontSize,
+                             float fontSize,
                              const std::string& fontFilePath,
                              const NovelCommonArgs& args);
 
@@ -47,7 +47,7 @@ public:
 
 private:
 
-  bool initializeRenderPipeline(const int displayNumber);
+  bool initializeRenderPipeline(int displayNumber);
 
   NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;

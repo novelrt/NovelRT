@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELIMAGERECT_H
 #define NOVELRT_NOVELIMAGERECT_H
@@ -12,7 +12,7 @@ class NovelImageRect : public NovelRenderObject {
 public:
   NovelImageRect(NovelLayeringService* layeringService,
                  const GeoVector<float>& size,
-                 const std::string_view imageDir,
+                 std::string_view imageDir,
                  const NovelCommonArgs& args,
                  GLuint programId,
                  const RGBAConfig& colourTint);

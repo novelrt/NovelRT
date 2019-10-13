@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelTextRect.h"
@@ -82,11 +82,11 @@ void NovelTextRect::configureObjectBuffers() {
 }
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
-                             const float fontSize,
+                             float fontSize,
                              const std::string& fontFileDir,
                              const RGBAConfig& colourConfig,
                              const NovelCommonArgs& args,
-                             const GLuint programId) : NovelRenderObject(layeringService,
+                             GLuint programId) : NovelRenderObject(layeringService,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
                                                                          programId), _colourConfig(colourConfig),

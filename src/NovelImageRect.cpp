@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
@@ -9,9 +9,9 @@
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
-                               const std::string_view imageDir,
+                               std::string_view imageDir,
                                const NovelCommonArgs& args,
-                               const GLuint programId,
+                               GLuint programId,
                                const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
                                                                                  size,
                                                                                  args,

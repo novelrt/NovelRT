@@ -5,6 +5,7 @@
 #include "NovelInteractionObject.h"
 #include "KeyCode.h"
 #include "NovelBasicInteractionRect.h"
+#include "NovelRTUtilities.h"
 
 namespace NovelRT {
 class NovelInteractionService { friend class NovelInteractionObject;
