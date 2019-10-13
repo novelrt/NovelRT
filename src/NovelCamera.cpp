@@ -23,9 +23,7 @@ GeoMatrix4<float> NovelCamera::generateUboMatrix() {
 }
 
 NovelCamera::CameraBlock NovelCamera::generateCameraBlock() {
-  return CameraBlock{
-      .cameraMatrix = _cameraUboMatrix.getActual().getUnderlyingMatrix()
-  };
+  return CameraBlock(_cameraUboMatrix.getActual().getUnderlyingMatrix());
 }
 
 void NovelCamera::PushCameraMatrixToGPU(GLuint shaderProgramId) {
