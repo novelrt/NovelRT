@@ -79,17 +79,16 @@ function Generate {
   if [ -z "$remaining" ]; then
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      echo cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
-      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
     else
-      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
     fi
   else
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
     else
-      cmake -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
     fi
   fi
 
