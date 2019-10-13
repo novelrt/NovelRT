@@ -219,7 +219,7 @@ NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<floa
   return new NovelBasicFillRect(_layeringService, startingSize, colourConfig, args, _basicFillRectProgramId);
 }
 
-GeoVector<u_int32_t> NovelRenderingService::getScreenSize() const {
+GeoVector<uint32_t> NovelRenderingService::getScreenSize() const {
   return _screenSize;
 }
 }
