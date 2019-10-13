@@ -18,13 +18,17 @@ GeoVector<float> GeoBounds::getCornerInLocalSpace(int index) const {
   GeoVector<float> returnValue;
   auto size = getSize();
   switch (index) {
-  case 0:returnValue = GeoVector<float>(-(size.getX() / 2), -(size.getY() / 2));
+  case 0:
+    returnValue = GeoVector<float>(-(size.getX() / 2), -(size.getY() / 2));
     break;
-  case 1:returnValue = GeoVector<float>(+(size.getX() / 2), -(size.getY() / 2));
+  case 1:
+    returnValue = GeoVector<float>(+(size.getX() / 2), -(size.getY() / 2));
     break;
-  case 2:returnValue = GeoVector<float>(+(size.getX() / 2), +(size.getY() / 2));
+  case 2:
+    returnValue = GeoVector<float>(+(size.getX() / 2), +(size.getY() / 2));
     break;
-  case 3:returnValue = GeoVector<float>(-(size.getX() / 2), +(size.getY() / 2));
+  case 3:
+    returnValue = GeoVector<float>(-(size.getX() / 2), +(size.getY() / 2));
     break;
   }
 
