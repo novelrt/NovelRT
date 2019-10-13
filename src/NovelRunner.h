@@ -14,7 +14,7 @@ public:
   void runOnUpdate(NovelUpdateSubscriber);
   void stopRunningOnUpdate(NovelUpdateSubscriber);
 
-  explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
+  explicit NovelRunner(int displayNumber, uint32_t targetFrameRate = 0);
   int runNovel();
   NovelRenderingService* getRenderer() const;
   NovelInteractionService* getInteractionService() const;
@@ -23,7 +23,7 @@ public:
 private:
   StepTimer _stepTimer;
   std::vector<NovelUpdateSubscriber> _updateSubscribers;
-  NovelLayeringService* _layeringService;
+  std::unique_ptr<NovelLayeringService> _layeringService;
   std::unique_ptr<NovelDebugService> _novelDebugService;
   std::unique_ptr<NovelRenderingService> _novelRenderer;
   std::unique_ptr<NovelInteractionService> _novelInteractionService;
