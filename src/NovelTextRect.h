@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELTEXTRECT_H
 #define NOVELRT_NOVELTEXTRECT_H
@@ -12,11 +12,11 @@ namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
 public:
   NovelTextRect(NovelLayeringService* layeringService,
-                const float fontSize,
+                float fontSize,
                 const std::string& fontFileDir,
                 const RGBAConfig& colourConfig,
                 const NovelCommonArgs& args,
-                const GLuint programId);
+                GLuint programId);
 
   void drawObject() final;
 

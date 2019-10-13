@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See License.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRenderingService.h"
 
@@ -17,7 +17,7 @@
 #include <sstream>
 
 namespace NovelRT {
-bool NovelRenderingService::initializeRenderPipeline(const int displayNumber) {
+bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
     std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
@@ -165,7 +165,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   return programId;
 }
 
-int NovelRenderingService::initialiseRendering(const int displayNumber) {
+int NovelRenderingService::initialiseRendering(int displayNumber) {
   if (!initializeRenderPipeline(displayNumber)) {
     std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
     return 1;
@@ -193,14 +193,14 @@ void NovelRenderingService::endFrame() const {
 }
 
 NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
-                                                    const std::string_view filePath,
+                                                    std::string_view filePath,
                                                     const NovelCommonArgs& args,
                                                     const RGBAConfig& colourTint) {
   return new NovelImageRect(_layeringService, startingSize, filePath, args, _texturedRectProgramId, colourTint);
 }
 
 NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
-                                                  const float fontSize,
+                                                  float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
   return new NovelTextRect(_layeringService, fontSize, fontFilePath, colourConfig, args, _fontProgramId);

@@ -12,8 +12,8 @@ namespace NovelRT {
 class NovelWorldObject;
 class NovelLayeringService {
 public:
-  void updateLayerInfo(const int layer, NovelWorldObject* targetObject, const bool migrate = true);
-  void sortLayerOrder(const int layer);
+  void updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate = true);
+  void sortLayerOrder(int layer);
   void executeAllObjectBehaviours();
 
   ~NovelLayeringService();
