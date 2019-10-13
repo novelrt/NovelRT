@@ -31,6 +31,7 @@ public:
 
   inline void setViewMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
+    _cameraBlockObj.reset();
     _viewMatrix = value;
   }
 
@@ -40,6 +41,7 @@ public:
 
   inline void setProjectionMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
+    _cameraBlockObj.reset();
     _projectionMatrix = value;
   }
 
