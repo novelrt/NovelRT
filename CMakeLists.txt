@@ -64,7 +64,7 @@ link_libraries(${LUA_LIBRARY})
 find_package(Doxygen)
 
 set(NOVELRT_HEADERS
-        src/NovelWorldObject.h
+  src/NovelWorldObject.h
   src/GeoBounds.h
   src/GeoVector.h
   src/GraphicsCharacterRenderData.h
@@ -88,7 +88,8 @@ set(NOVELRT_HEADERS
   src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
-  src/NovelCamera.h src/GeoMatrix4.h)
+  src/NovelCamera.h
+  src/GeoMatrix4.h)
 
 set(NOVELRT_SOURCES
         src/NovelWorldObject.cpp
