@@ -38,7 +38,7 @@ public:
                              const std::string& fontFilePath,
                              const NovelCommonArgs& args);
 
-  GeoVector<u_int32_t> getScreenSize() const;
+  GeoVector<uint32_t> getScreenSize() const;
 
   void beginFrame() const;
   void endFrame() const;
