@@ -4,15 +4,23 @@
 #define NOVELRT_NOVELCAMERA_H
 #include "GeoMatrix4.h"
 #include "Lazy.h"
+#include <glad/glad.h>
 
 namespace NovelRT {
 class NovelCamera {
 private:
+  struct CameraBlock {
+    glm::mat4 cameraMatrix;
+  };
+
   GeoMatrix4<float> _viewMatrix;
   GeoMatrix4<float> _projectionMatrix;
   Lazy<GeoMatrix4<float>> _cameraUboMatrix;
+  Lazy<CameraBlock> _cameraBlockObj;
 
-  GeoMatrix4<float> genUboMatrix();
+  GeoMatrix4<float> generateUboMatrix();
+  CameraBlock generateCameraBlock();
+  Lazy<GLuint> _cameraUbo;
 
 public:
   NovelCamera();
@@ -20,7 +28,7 @@ public:
   inline GeoMatrix4<float> getViewMatrix() const {
     return _viewMatrix;
   }
-  
+
   inline void setViewMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
     _viewMatrix = value;
@@ -38,6 +46,8 @@ public:
   inline GeoMatrix4<float> getCameraUboMatrix() {
     return _cameraUboMatrix.getActual();
   }
+
+  void PushCameraMatrixToGPU(GLuint shaderProgramId);
 };
 }
 #endif //NOVELRT_NOVELCAMERA_H
