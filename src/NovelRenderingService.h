@@ -16,6 +16,7 @@
 #include "NovelBasicFillRect.h"
 #include "NovelTextRect.h"
 #include <glad/glad.h>
+#include "NovelCamera.h"
 
 namespace NovelRT {
 
@@ -47,6 +48,13 @@ public:
 
 private:
 
+  struct CameraBlock {
+    glm::mat4 cameraMatrix;
+    CameraBlock(glm::mat4 matrix) {
+      cameraMatrix = matrix;
+    }
+  };
+
   bool initializeRenderPipeline(int displayNumber);
 
   NovelLayeringService* _layeringService;
@@ -62,6 +70,12 @@ private:
   GLuint _fontProgramId;
 
   GeoVector<uint32_t> _screenSize;
+  Lazy<GLuint> _cameraObjectRenderUbo;
+  Lazy<CameraBlock> _cameraBlockObj;
+  NovelCamera _camera;
+
+  void pushUboToGPU(GLuint shaderProgramId);
+  CameraBlock generateCameraBlock();
 };
 
 }

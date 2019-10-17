@@ -210,7 +210,15 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService), _cameraObjectRenderUbo(std::function<GLuint()>([] {
+  GLuint tempHandle;
+  glGenBuffers(1, &tempHandle);
+  glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraBlock), nullptr, GL_STATIC_DRAW);
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+  glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
+  return tempHandle;
+})), _cameraBlockObj(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&NovelRenderingService::generateCameraBlock, this)))) {
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
@@ -221,5 +229,18 @@ NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<floa
 
 GeoVector<uint32_t> NovelRenderingService::getScreenSize() const {
   return _screenSize;
+}
+
+void NovelRenderingService::pushUboToGPU(GLuint shaderProgramId) {
+  GLuint cameraBufferIndex = glGetUniformBlockIndex(shaderProgramId, "cameraInformation");
+  glUniformBlockBinding(shaderProgramId, cameraBufferIndex, 0);
+  GLuint handle = _cameraObjectRenderUbo.getActual();
+  glBindBuffer(GL_UNIFORM_BUFFER, handle);
+  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), &_cameraBlockObj.getActual());
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+NovelRenderingService::CameraBlock NovelRenderingService::generateCameraBlock() {
+  return CameraBlock(_camera.getCameraUboMatrix().getUnderlyingMatrix());
 }
 }
