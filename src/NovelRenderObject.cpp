@@ -96,6 +96,7 @@ GLuint NovelRenderObject::generateStandardBuffer() {
   glGenBuffers(1, &tempBuffer);
   return tempBuffer;
 }
+
 glm::mat3 NovelRenderObject::generateModelTransform() {
   auto size = (getSize() * getScale()).getVec2Value();
   auto position = getPosition().getVec2Value();

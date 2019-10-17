@@ -4,38 +4,44 @@
 #define NOVELRT_NOVELCAMERA_H
 #include "GeoMatrix4.h"
 #include "Lazy.h"
-#include <glad/glad.h>
+#include "NovelRTUtilities.h"
+#include "CameraViewChangedEventArgs.h"
 
 namespace NovelRT {
 class NovelCamera {
-private:
-  struct CameraBlock {
-    glm::mat4 cameraMatrix;
-    CameraBlock(glm::mat4 matrix) {
-      cameraMatrix = matrix;
-    }
+
+  NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
+
+  //TODO: Look Im just trying to make this legal code okay?
+public:
+  enum CameraMode : unsigned int {
+    None,
+    Orthographic,
+    Perspective
   };
+
+private:
 
   GeoMatrix4<float> _viewMatrix;
   GeoMatrix4<float> _projectionMatrix;
   Lazy<GeoMatrix4<float>> _cameraUboMatrix;
-  Lazy<CameraBlock> _cameraBlockObj;
 
   GeoMatrix4<float> generateUboMatrix();
-  CameraBlock generateCameraBlock();
-  Lazy<GLuint> _cameraUbo;
+  CameraMode _cameraMode;
 
 public:
+
   NovelCamera();
 
   inline GeoMatrix4<float> getViewMatrix() const {
     return _viewMatrix;
   }
 
+  //TODO: Jeez this is written badly
   inline void setViewMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
-    _cameraBlockObj.reset();
     _viewMatrix = value;
+    raiseCameraViewChanged(CameraViewChangedEventArgs(getCameraUboMatrix()));
   }
 
   inline GeoMatrix4<float> getProjectionMatrix() const {
@@ -44,15 +50,13 @@ public:
 
   inline void setProjectionMatrix(GeoMatrix4<float> value) {
     _cameraUboMatrix.reset();
-    _cameraBlockObj.reset();
     _projectionMatrix = value;
+    raiseCameraViewChanged(CameraViewChangedEventArgs(getCameraUboMatrix()));
   }
 
   inline GeoMatrix4<float> getCameraUboMatrix() {
     return _cameraUboMatrix.getActual();
   }
-
-  void PushCameraMatrixToGPU(GLuint shaderProgramId);
 };
 }
 #endif //NOVELRT_NOVELCAMERA_H
