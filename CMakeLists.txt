@@ -38,7 +38,7 @@ set(NOVELRT_RESOURCES
 
 file(COPY ${NOVELRT_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
     file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
     add_compile_definitions(OPENGL_VERSION=2)
 else()
@@ -131,12 +131,11 @@ set(NOVELRT_EXECUTABLE_HEADERS
 )
 
 set(NOVELRT_EXECUTABLE_SOURCES
-  ${NOVELRT_SOURCES}
   src/main.cpp
 )
 
 set(NOVELRT_EXECUTABLE_LINK_LIBRARIES
-  ${NOVELRT_LINK_LIBRARIES}
+  NovelRTLib
 )
 
 add_executable(NovelRT ${NOVELRT_EXECUTABLE_HEADERS} ${NOVELRT_EXECUTABLE_SOURCES})
