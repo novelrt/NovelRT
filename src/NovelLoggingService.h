@@ -6,6 +6,8 @@
 #include <iostream>
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#define LEVEL_DEBUG SPDLOG_LEVEL_DEBUG
+
 namespace NovelRT {
 enum LogLevel {
   TRACE = SPDLOG_LEVEL_TRACE,
@@ -18,13 +20,14 @@ enum LogLevel {
 };
 
 class NovelLoggingService {
+private:
+  const std::string CONSOLE_LOG = "NovelRT_Console_Log";
 public:
-  void log(std::string message);
-  void logCritical(std::string errorMessage);
-  void logError(std::string errorMessage);
-  void logDebug(std::string debugMessage);
-  void logWarning(std::string warningMessage);
-  void setLogLevel();
+  NovelLoggingService(LogLevel level);
+  void log(std::string message, LogLevel level);
+  void logInternal(std::string message, LogLevel level);
+  void setLogLevel(LogLevel level);
+  void getLogLevel();
 };
 }
 
