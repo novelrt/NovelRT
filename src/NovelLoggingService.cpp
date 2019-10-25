@@ -6,6 +6,29 @@
 
 namespace NovelRT {
 
+NovelLoggingService::NovelLoggingService() {
+  try
+  {
+    auto console = spdlog::get(CONSOLE_LOG);
+    if (!console)
+    {
+      console = spdlog::stdout_color_mt(CONSOLE_LOG);
+    }
+    #ifndef NDEBUG
+    setLogLevel(LogLevel::TRACE);
+    #else
+    setLogLevel(LogLevel::INFO);
+    #endif
+    std::string lvl = spdlog::level::to_short_c_str(console->level());
+    console->info("\nNovelRT\nLog System Initialized!\nLogging at level: " + lvl);
+  }
+  catch (const spdlog::spdlog_ex &ex)
+  {
+    std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
+  }
+}
+
+
 NovelLoggingService::NovelLoggingService(LogLevel level) {
   try
   {
@@ -15,6 +38,8 @@ NovelLoggingService::NovelLoggingService(LogLevel level) {
       console = spdlog::stdout_color_mt(CONSOLE_LOG);
     }
     setLogLevel(level);
+    std::string lvl = spdlog::level::to_short_c_str(console->level());
+    console->info("\nNovelRT\nLog System Initialized!\nLogging at level: " + lvl);
   }
   catch (const spdlog::spdlog_ex &ex)
   {
@@ -63,7 +88,7 @@ void NovelLoggingService::log(std::string message, LogLevel level) {
 }
 
 void NovelLoggingService::logInternal(std::string message, LogLevel level) {
-#ifdef DEBUG
+#ifndef NDEBUG
   log(message, level);
 #endif
 }
@@ -115,5 +140,8 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
   }
 }
 
+std::shared_ptr<spdlog::logger> NovelLoggingService::getLogger(std::string name) {
+  return spdlog::get(name);
+}
 
 }

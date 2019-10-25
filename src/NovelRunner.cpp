@@ -2,11 +2,13 @@
 
 #include <iostream>
 #include "NovelRunner.h"
+#include "NovelLoggingService.h"
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService, uint32_t targetFrameRate)
     :  _stepTimer(StepTimer(targetFrameRate)), _layeringService(layeringService), _novelDebugService(std::make_unique<NovelDebugService>(this)), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+  _novelLoggingService = std::make_unique<NovelLoggingService>();
   _novelRenderer->initialiseRendering(displayNumber);
   _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
   _novelAudioService = std::make_unique<NovelAudioService>();
@@ -24,7 +26,6 @@ int NovelRunner::runNovel() {
     _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
     _novelInteractionService->ExecuteClickedInteractable();
-
   }
   _novelRenderer->tearDown();
   _novelAudioService->~NovelAudioService();
@@ -65,5 +66,9 @@ NovelDebugService* NovelRunner::getDebugService() const {
 
 NovelAudioService* NovelRunner::getAudioService() const {
   return _novelAudioService.get();
+}
+
+NovelLoggingService* NovelRunner::getLoggingService() const {
+  return _novelLoggingService.get();
 }
 }
