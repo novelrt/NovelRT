@@ -7,6 +7,7 @@ namespace NovelRT {
 class NovelUtilities {
 public:
   static const int SDL_SUCCESS = 0;
+  static inline const std::string CONSOLE_LOG = "NovelRT_Console_Log";
 };
 }
 

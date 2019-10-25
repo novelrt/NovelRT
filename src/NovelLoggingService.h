@@ -19,8 +19,9 @@ enum LogLevel {
 
 class NovelLoggingService {
 private:
-  const std::string CONSOLE_LOG = "NovelRT_Console_Log";
+
 public:
+  //const std::string CONSOLE_LOG = "NovelRT_Console_Log";
   NovelLoggingService();
   NovelLoggingService(LogLevel level);
   void log(std::string message, LogLevel level);
@@ -28,6 +29,7 @@ public:
   void setLogLevel(LogLevel level);
   std::shared_ptr<spdlog::logger> NovelLoggingService::getLogger(std::string name);
 };
+
 }
 
 #endif
