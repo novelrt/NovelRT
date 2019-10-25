@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "NovelLoggingService.h"
+#include "NovelRTUtilities.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace NovelRT {
@@ -9,10 +10,10 @@ namespace NovelRT {
 NovelLoggingService::NovelLoggingService() {
   try
   {
-    auto console = spdlog::get(CONSOLE_LOG);
+    auto console = spdlog::get(NovelUtilities::CONSOLE_LOG);
     if (!console)
     {
-      console = spdlog::stdout_color_mt(CONSOLE_LOG);
+      console = spdlog::stdout_color_mt(NovelUtilities::CONSOLE_LOG);
     }
     #ifndef NDEBUG
     setLogLevel(LogLevel::TRACE);
@@ -32,10 +33,10 @@ NovelLoggingService::NovelLoggingService() {
 NovelLoggingService::NovelLoggingService(LogLevel level) {
   try
   {
-    auto console = spdlog::get(CONSOLE_LOG);
+    auto console = spdlog::get(NovelUtilities::CONSOLE_LOG);
     if (!console)
     {
-      console = spdlog::stdout_color_mt(CONSOLE_LOG);
+      console = spdlog::stdout_color_mt(NovelUtilities::CONSOLE_LOG);
     }
     setLogLevel(level);
     std::string lvl = spdlog::level::to_short_c_str(console->level());
@@ -52,32 +53,32 @@ void NovelLoggingService::log(std::string message, LogLevel level) {
   {
   case SPDLOG_LEVEL_TRACE:
   {
-    spdlog::get(CONSOLE_LOG)->trace(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->trace(message);
     break;
   }
   case SPDLOG_LEVEL_DEBUG:
   {
-    spdlog::get(CONSOLE_LOG)->debug(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->debug(message);
     break;
   }
   case SPDLOG_LEVEL_INFO:
   {
-    spdlog::get(CONSOLE_LOG)->info(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->info(message);
     break;
   }
   case SPDLOG_LEVEL_WARN:
   {
-    spdlog::get(CONSOLE_LOG)->warn(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->warn(message);
     break;
   }
   case SPDLOG_LEVEL_ERROR:
   {
-    spdlog::get(CONSOLE_LOG)->error(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->error(message);
     break;
   }
   case SPDLOG_LEVEL_CRITICAL:
   {
-    spdlog::get(CONSOLE_LOG)->critical(message);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->critical(message);
     break;
   }
   default:
@@ -98,43 +99,43 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
   {
   case SPDLOG_LEVEL_TRACE:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::trace);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::trace);
     break;
   }
   case SPDLOG_LEVEL_DEBUG:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::debug);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::debug);
     break;
   }
   case SPDLOG_LEVEL_INFO:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
     break;
   }
   case SPDLOG_LEVEL_WARN:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::warn);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::warn);
     break;
   }
   case SPDLOG_LEVEL_ERROR:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::err);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::err);
     break;
   }
   case SPDLOG_LEVEL_CRITICAL:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::critical);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::critical);
     break;
   }
   case SPDLOG_LEVEL_OFF:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::off);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::off);
     break;
   }
   default:
   {
-    spdlog::get(CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
-    spdlog::get(CONSOLE_LOG)->info("Logging level invalid! Defaulting to INFO.");
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
+    spdlog::get(NovelUtilities::CONSOLE_LOG)->info("Logging level invalid! Defaulting to INFO.");
     break;
   }
   }
