@@ -38,7 +38,7 @@ set(NOVELRT_RESOURCES
 
 file(COPY ${NOVELRT_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
+If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
     file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
     add_compile_definitions(OPENGL_VERSION=2)
 else()
@@ -53,6 +53,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 # lua doesn't provide native cmake support
 find_path(LUA_INCLUDE_DIR lua.h)
@@ -77,6 +78,7 @@ set(NOVELRT_HEADERS
   src/NovelInteractionObject.h
   src/NovelInteractionService.h
   src/NovelLayeringService.h
+  src/NovelLoggingService.h
   src/NovelObject.h
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
@@ -99,6 +101,7 @@ set(NOVELRT_SOURCES
   src/NovelInteractionObject.cpp
   src/NovelInteractionService.cpp
   src/NovelLayeringService.cpp
+  src/NovelLoggingService.cpp
   src/NovelObject.cpp
   src/NovelRenderingService.cpp
   src/NovelRenderObject.cpp
@@ -117,6 +120,7 @@ set(NOVELRT_LINK_LIBRARIES
   SDL2::SDL2_image
   SDL2::SDL2_mixer
   SDL2::SDL2main
+  spdlog::spdlog
 )
 
 if(NOT WIN32)
@@ -131,19 +135,16 @@ set(NOVELRT_EXECUTABLE_HEADERS
 )
 
 set(NOVELRT_EXECUTABLE_SOURCES
+  ${NOVELRT_SOURCES}
   src/main.cpp
 )
 
 set(NOVELRT_EXECUTABLE_LINK_LIBRARIES
-  NovelRTLib
+  ${NOVELRT_LINK_LIBRARIES}
 )
 
 add_executable(NovelRT ${NOVELRT_EXECUTABLE_HEADERS} ${NOVELRT_EXECUTABLE_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_EXECUTABLE_LINK_LIBRARIES})
-
-if (WIN32)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
 
 set(NOVELRT_LIBRARY_HEADERS
   ${NOVELRT_HEADERS}

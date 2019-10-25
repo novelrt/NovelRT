@@ -8,6 +8,7 @@
 #include "NovelInteractionService.h"
 #include "NovelStepTimer.h"
 #include "NovelAudioService.h"
+#include "NovelLoggingService.h"
 
 namespace NovelRT {
 /**
@@ -49,6 +50,7 @@ public:
   /// The Debug Service associated with this Runner.
   NovelDebugService* getDebugService() const;
   NovelAudioService* getAudioService() const;
+  NovelLoggingService* getLoggingService() const;
 
 private:
   StepTimer _stepTimer;
@@ -58,6 +60,7 @@ private:
   std::unique_ptr<NovelRenderingService> _novelRenderer;
   std::unique_ptr<NovelInteractionService> _novelInteractionService;
   std::unique_ptr<NovelAudioService> _novelAudioService;
+  std::unique_ptr<NovelLoggingService> _novelLoggingService;
   int _exitCode = 1;
 };
 }

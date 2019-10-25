@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
+#include "NovelLoggingService.h"
 #include "NovelRenderingService.h"
 #include "NovelRunner.h"
 #include "NovelImageRect.h"
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
+  auto log = runner.getLoggingService();
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
@@ -105,35 +107,36 @@ int main(int argc, char *argv[])
 
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
+  auto loggingLevel = NovelRT::LogLevel::DEBUG;
 
-  rect->subscribeToInteracted([&novelAudio, &counter] {
+  rect->subscribeToInteracted([&novelAudio, &counter, &log, &loggingLevel] {
     counter++;
     switch (counter)
     {
       case 1:
       {
         novelAudio->fadeMusicOut(500);
-        std::cout << "Commencing Audio Test..." << std::endl;
-        std::cout << "Press the button to launch each test." << std::endl;
-        std::cout << "(Please wait for each test to finish for best results!)" << std::endl;
+        log->logInternal("Commencing Audio Test...", loggingLevel);
+        log->logInternal("Press the button to launch each test.", loggingLevel);
+        log->logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
         break;
       }
       case 2:
       {
-        std::cout << std::endl << "Looping 3 times..." << std::endl;
+        log->logInternal("Looping 3 times...", loggingLevel);
         novelAudio->playSound("w0nd0ws.wav", 3);
         break;
       }
       case 3:
       {
-        std::cout << "Pan Left (via Panning)..." << std::endl;
+        log->logInternal("Pan Left (via Panning)...", loggingLevel);
         novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
       }
       case 4:
       {
-        std::cout << "Pan Right (via 3D Position)..." << std::endl;
+        log->logInternal("Pan Right (via 3D Position)...", loggingLevel);
         novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
@@ -141,7 +144,7 @@ int main(int argc, char *argv[])
       case 5:
       {
         novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-        std::cout << "Low Volume..." << std::endl;
+        log->logInternal("Low Volume...", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
@@ -149,7 +152,7 @@ int main(int argc, char *argv[])
       case 6:
       {
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
-        std::cout << "Success! Click once more to play music again." << std::endl;
+        log->logInternal("Success! Click once more to play music again.", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 64);
         novelAudio->playSound("jojo.wav", 0);
         break;
