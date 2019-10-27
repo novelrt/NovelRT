@@ -15,13 +15,14 @@
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
 #include "NovelTextRect.h"
+#include "NovelAssetLoader.h"
 #include <glad/glad.h>
 
 namespace NovelRT {
 
 class NovelRenderingService {
 public:
-  NovelRenderingService(NovelLayeringService* layeringService);
+  NovelRenderingService(NovelLayeringService* layeringService, NovelAssetLoader* assetLoader);
   int initialiseRendering(int displayNumber);
 
   void tearDown() const;
@@ -50,6 +51,7 @@ private:
   bool initializeRenderPipeline(int displayNumber);
 
   NovelLayeringService* _layeringService;
+  NovelAssetLoader* _assetLoader;
   std::shared_ptr<SDL_Window> _window;
   SDL_GLContext _openGLContext;
   float _screenScale;

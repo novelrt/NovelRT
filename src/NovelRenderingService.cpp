@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include "AssetLoader.h"
+#include "NovelAssetLoader.h"
 
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
@@ -80,8 +80,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   // Read the Vertex Shader code from the file
   std::string vertexShaderCode = "";
 
-  AssetLoader loader;
-  vertexShaderCode = loader.LoadShader(vertexFilePath);
+  vertexShaderCode = _assetLoader->loadShader(vertexFilePath);
 
   if(vertexShaderCode == ""){
     std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
@@ -207,7 +206,8 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService, NovelAssetLoader* assetLoader) : _layeringService(layeringService), _assetLoader(assetLoader)
+{
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,

@@ -35,7 +35,7 @@ public:
    * @param layeringService The NovelLayeringService that NovelRunner should use.
    * @param targetFrameRate The framerate that should be targeted and capped.
    */
-  explicit NovelRunner(int, NovelLayeringService*, uint32_t targetFrameRate = 0);
+  explicit NovelRunner(int, NovelLayeringService*, char* pathArgument, uint32_t targetFrameRate = 0);
 
   /**
    * Starts the visual novel.
@@ -58,6 +58,7 @@ private:
   std::unique_ptr<NovelRenderingService> _novelRenderer;
   std::unique_ptr<NovelInteractionService> _novelInteractionService;
   std::unique_ptr<NovelAudioService> _novelAudioService;
+  std::unique_ptr<NovelAssetLoader> _novelAssetLoader;
   int _exitCode = 1;
 };
 }

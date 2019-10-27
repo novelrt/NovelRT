@@ -11,7 +11,7 @@ typedef void (* NovelUpdateSubscriber)(double);
 struct NovelRunner_C;
 typedef struct NovelRunner_C NovelRunner_t;
 
-NovelRunner_t* createRunner(int);
+//NovelRunner_t* createRunner(int);
 void destroyRunner(NovelRunner_t*);
 
 void runOnUpdate(NovelRunner_t*, NovelUpdateSubscriber);

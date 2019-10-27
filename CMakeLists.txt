@@ -21,22 +21,17 @@ set(NOVELRT_SCRIPTS
 )
 
 set(NOVELRT_SHADERS
-  src/BasicFragmentShader.glsl
-  src/BasicVertexShader.glsl
-  src/FontFragmentShader.glsl
-  src/FontVertexShader.glsl
-  src/TexturedFragmentShader.glsl
-  src/TexturedVertexShader.glsl
+  src/Shaders
 )
 
 set(NOVELRT_RESOURCES
   ${NOVELRT_FONTS}
   ${NOVELRT_IMAGES}
   ${NOVELRT_SCRIPTS}
-  ${NOVELRT_SHADERS}
 )
 
 file(COPY ${NOVELRT_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${NOVELRT_SHADERS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
     file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
@@ -88,7 +83,7 @@ set(NOVELRT_HEADERS
   src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
-  src/AssetLoader.h
+  src/NovelAssetLoader.h
 )
 
 set(NOVELRT_SOURCES
@@ -108,7 +103,7 @@ set(NOVELRT_SOURCES
   src/NovelTextRect.cpp
   src/NovelAudioService.cpp
   src/RGBAConfig.cpp
-  src/AssetLoader.cpp
+  src/NovelAssetLoader.cpp
 )
 
 set(NOVELRT_LINK_LIBRARIES
