@@ -88,6 +88,7 @@ set(NOVELRT_HEADERS
   src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
+  src/AssetLoader.h
 )
 
 set(NOVELRT_SOURCES
@@ -107,6 +108,7 @@ set(NOVELRT_SOURCES
   src/NovelTextRect.cpp
   src/NovelAudioService.cpp
   src/RGBAConfig.cpp
+  src/AssetLoader.cpp
 )
 
 set(NOVELRT_LINK_LIBRARIES

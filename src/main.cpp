@@ -8,6 +8,7 @@
 #include "NovelLayeringService.h"
 #include "NovelInteractionService.h"
 #include "NovelAudioService.h"
+#include "AssetLoader.h"
 
 extern "C"
 {
@@ -42,6 +43,9 @@ NovelRT::NovelImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
 {
+  //I choose this method to set the path to avoid the whole class being static. -Rob
+  NovelRT::AssetLoader::SetMasterPath(argv[0]);
+
   //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
   luaL_openlibs(L);

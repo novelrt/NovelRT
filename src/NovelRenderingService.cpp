@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include "AssetLoader.h"
 
 namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
@@ -77,15 +78,12 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
   // Read the Vertex Shader code from the file
-  std::string vertexShaderCode;
+  std::string vertexShaderCode = "";
 
-  std::ifstream VertexShaderStream(vertexFilePath, std::ios::in);
-  if(VertexShaderStream.is_open()){
-    std::stringstream sstr;
-    sstr << VertexShaderStream.rdbuf();
-    vertexShaderCode = sstr.str();
-    VertexShaderStream.close();
-  }else{
+  AssetLoader loader;
+  vertexShaderCode = loader.LoadShader(vertexFilePath);
+
+  if(vertexShaderCode == ""){
     std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
     getchar();
     return 0;
