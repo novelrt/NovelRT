@@ -7,6 +7,17 @@
 
 namespace NovelRT {
 
+NovelLoggingService* NovelLoggingService::logPointer = NULL;
+
+NovelLoggingService* NovelLoggingService::instance() {
+  if (!logPointer)
+  {
+    logPointer = new NovelLoggingService;
+  }
+
+  return logPointer;
+}
+
 NovelLoggingService::NovelLoggingService() {
   try
   {
@@ -29,7 +40,7 @@ NovelLoggingService::NovelLoggingService() {
   }
 }
 
-
+/*
 NovelLoggingService::NovelLoggingService(LogLevel level) {
   try
   {
@@ -47,6 +58,7 @@ NovelLoggingService::NovelLoggingService(LogLevel level) {
     std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
   }
 }
+*/
 
 void NovelLoggingService::log(std::string message, LogLevel level) {
   switch (level)
