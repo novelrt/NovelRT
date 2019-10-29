@@ -26,7 +26,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                })),
                                                                _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTint(colourTint){
+                                                               _colourTint(colourTint), _log() {
 
 }
 
@@ -130,7 +130,7 @@ void NovelImageRect::configureObjectBuffers() {
   SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
   if (surface == nullptr) {
-    std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" << std::endl;
+    _log.log("ERROR: File load returned a null pointer! Cannot load texture!", LogLevel::ERR);
     throw -1;
   }
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());

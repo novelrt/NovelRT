@@ -3,36 +3,30 @@
 #include <iostream>
 #include "NovelLoggingService.h"
 #include "NovelRTUtilities.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/async.h"
 
 namespace NovelRT {
-
-NovelLoggingService* NovelLoggingService::logPointer = NULL;
-
-NovelLoggingService* NovelLoggingService::instance() {
-  if (!logPointer)
-  {
-    logPointer = new NovelLoggingService;
-  }
-
-  return logPointer;
-}
 
 NovelLoggingService::NovelLoggingService() {
   try
   {
-    auto console = spdlog::get(NovelUtilities::CONSOLE_LOG);
-    if (!console)
+    _console = spdlog::get(NovelUtilities::CONSOLE_LOG);
+    if (_console == nullptr)
     {
-      console = spdlog::stdout_color_mt(NovelUtilities::CONSOLE_LOG);
+      _console = spdlog::stdout_logger_mt(NovelUtilities::CONSOLE_LOG);
+      spdlog::register_logger(_console);
     }
+
     #ifndef NDEBUG
     setLogLevel(LogLevel::TRACE);
     #else
     setLogLevel(LogLevel::INFO);
     #endif
-    std::string lvl = spdlog::level::to_short_c_str(console->level());
-    console->info("\nNovelRT\nLog System Initialized!\nLogging at level: " + lvl);
+    std::string lvl = spdlog::level::to_short_c_str(_console->level());
+
+     spdlog::set_error_handler([](const std::string& msg) {
+        std::cerr << "SPDLOG ERROR: " << msg << std::endl;
+    });
   }
   catch (const spdlog::spdlog_ex &ex)
   {
@@ -44,7 +38,7 @@ NovelLoggingService::NovelLoggingService() {
 NovelLoggingService::NovelLoggingService(LogLevel level) {
   try
   {
-    auto console = spdlog::get(NovelUtilities::CONSOLE_LOG);
+    auto console = _console;
     if (!console)
     {
       console = spdlog::stdout_color_mt(NovelUtilities::CONSOLE_LOG);
@@ -65,32 +59,32 @@ void NovelLoggingService::log(std::string message, LogLevel level) {
   {
   case SPDLOG_LEVEL_TRACE:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->trace(message);
+    _console->trace(message);
     break;
   }
   case SPDLOG_LEVEL_DEBUG:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->debug(message);
+    _console->debug(message);
     break;
   }
   case SPDLOG_LEVEL_INFO:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->info(message);
+    _console->info(message);
     break;
   }
   case SPDLOG_LEVEL_WARN:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->warn(message);
+    _console->warn(message);
     break;
   }
   case SPDLOG_LEVEL_ERROR:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->error(message);
+    _console->error(message);
     break;
   }
   case SPDLOG_LEVEL_CRITICAL:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->critical(message);
+    _console->critical(message);
     break;
   }
   default:
@@ -111,50 +105,46 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
   {
   case SPDLOG_LEVEL_TRACE:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::trace);
+    _console->set_level(spdlog::level::level_enum::trace);
     break;
   }
   case SPDLOG_LEVEL_DEBUG:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::debug);
+    _console->set_level(spdlog::level::level_enum::debug);
     break;
   }
   case SPDLOG_LEVEL_INFO:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
+    _console->set_level(spdlog::level::level_enum::info);
     break;
   }
   case SPDLOG_LEVEL_WARN:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::warn);
+    _console->set_level(spdlog::level::level_enum::warn);
     break;
   }
   case SPDLOG_LEVEL_ERROR:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::err);
+    _console->set_level(spdlog::level::level_enum::err);
     break;
   }
   case SPDLOG_LEVEL_CRITICAL:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::critical);
+    _console->set_level(spdlog::level::level_enum::critical);
     break;
   }
   case SPDLOG_LEVEL_OFF:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::off);
+    _console->set_level(spdlog::level::level_enum::off);
     break;
   }
   default:
   {
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->set_level(spdlog::level::level_enum::info);
-    spdlog::get(NovelUtilities::CONSOLE_LOG)->info("Logging level invalid! Defaulting to INFO.");
+    _console->set_level(spdlog::level::level_enum::info);
+    _console->info("Logging level invalid! Defaulting to INFO.");
     break;
   }
   }
-}
-
-std::shared_ptr<spdlog::logger> NovelLoggingService::getLogger(std::string name) {
-  return spdlog::get(name);
 }
 
 }

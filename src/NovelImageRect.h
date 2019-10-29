@@ -5,6 +5,7 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
+#include "NovelLoggingService.h"
 
 namespace NovelRT {
 
@@ -38,6 +39,7 @@ protected:
   void configureObjectBuffers() final;
 
 private:
+  NovelLoggingService _log;
   std::string _imageDir;
   std::string _previousImageDir;
   int _imageHandle;
