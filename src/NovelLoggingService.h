@@ -19,11 +19,11 @@ enum LogLevel {
 
 class NovelLoggingService {
 private:
-
-public:
-  //const std::string CONSOLE_LOG = "NovelRT_Console_Log";
   NovelLoggingService();
-  NovelLoggingService(LogLevel level);
+  static NovelLoggingService* logPointer;
+public:
+  static NovelLoggingService* instance();
+  //NovelLoggingService(LogLevel level);
   void log(std::string message, LogLevel level);
   void logInternal(std::string message, LogLevel level);
   void setLogLevel(LogLevel level);

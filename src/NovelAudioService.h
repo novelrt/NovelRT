@@ -7,7 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <map>
-#include "spdlog/logger.h"
+#include "NovelLoggingService.h"
 
 namespace NovelRT {
 class NovelAudioService {
@@ -29,7 +29,8 @@ private:
   SoundBank _sounds;
   MusicBank _music;
   ChannelMap _channelMap;
-  std::shared_ptr<spdlog::logger> _log;
+  NovelLoggingService* _log;
+  std::string _errorMessage;
 
   int convertToMixVolume(float value);
   std::string findByChannelMap(int channel);

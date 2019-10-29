@@ -2,32 +2,34 @@
 
 #include "NovelAudioService.h"
 #include "NovelRTUtilities.h"
-#include "NovelLoggingService.h"
 #include <iostream>
 #include <functional>
 
 namespace NovelRT {
 
-NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _log(spdlog::get(NovelUtilities::CONSOLE_LOG)) {
+NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _errorMessage("") {
   initializeAudio();
+  _log = NovelLoggingService::instance();
 }
 
 bool NovelAudioService::initializeAudio() {
   if (SDL_InitSubSystem(SDL_INIT_AUDIO) < NovelUtilities::SDL_SUCCESS)
   {
-    _log->error("ERROR: Cannot play audio!\n {}",SDL_GetError());
+    _errorMessage = SDL_GetError();
+    _log->log("ERROR: Cannot play audio!\n" + _errorMessage , LogLevel::ERR);
   }
   else if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < NovelUtilities::SDL_SUCCESS)
   {
-    _log->error("ERROR: Cannot play audio!\n {}", Mix_GetError());
+    _errorMessage = Mix_GetError();
+    _log->log("ERROR: Cannot play audio!\n" + _errorMessage, LogLevel::ERR);
   }
   else if (Mix_AllocateChannels(NOVEL_MIXER_CHANNELS) < NovelUtilities::SDL_SUCCESS)
   {
-    _log->error("ERROR: Failed to allocate channels.");
+    _log->log("ERROR: Failed to allocate channels.", LogLevel::ERR);
   }
   else
   {
-    _log->info("SDL2_Mixer Initialized.");
+    _log->log("SDL2_Mixer Initialized.", LogLevel::INFO);
     isInitialized = true;
   }
   return isInitialized;
@@ -46,7 +48,8 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _log->error("ERROR: {}", Mix_GetError());
+      _errorMessage = Mix_GetError();
+      _log->log("ERROR: " + _errorMessage, LogLevel::ERR);
     }
   }
   else
@@ -61,7 +64,8 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _log->error("ERROR: {}",Mix_GetError());
+      _errorMessage = Mix_GetError();
+      _log->log("ERROR: " + _errorMessage, LogLevel::ERR);
     }
   }
 }
@@ -102,7 +106,7 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
   {
     if (Mix_Playing(_channelMap[soundName]) == MIXER_TRUE)
     {
-      _log->warn("Already playing on channel {}. ",_channelMap[soundName]);
+      _log->log("Already playing on channel " + _channelMap[soundName], LogLevel::WARN);
       return;
     }
 
@@ -154,7 +158,8 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
   }
   else
   {
-    _log->error("ERROR: {} is not allocated to a channel already!",soundName);
+    _errorMessage = soundName + " is not allocated to a channel already!";
+    _log->log("ERROR: " + _errorMessage, LogLevel::ERR);
   }
 }
 
@@ -165,7 +170,8 @@ void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
   }
   else
   {
-    _log->error("ERROR: {} is not allocated to a channel already!",soundName);
+     _errorMessage = soundName + " is not allocated to a channel already!";
+    _log->log("ERROR: " + _errorMessage, LogLevel::ERR);
   }
 }
 
@@ -176,7 +182,8 @@ void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVo
   }
   else
   {
-    _log->error("ERROR: {} is not allocated to a channel already!",soundName);
+     _errorMessage = soundName + " is not allocated to a channel already!";
+    _log->log("ERROR: " + _errorMessage, LogLevel::ERR);
   }
 }
 
