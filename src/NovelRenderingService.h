@@ -11,6 +11,7 @@
 #include <functional>
 #include <memory>
 #include "RGBAConfig.h"
+#include "NovelLoggingService.h"
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
@@ -49,6 +50,7 @@ private:
 
   bool initializeRenderPipeline(int displayNumber);
 
+  NovelLoggingService _log;
   NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;
   SDL_GLContext _openGLContext;
@@ -61,6 +63,7 @@ private:
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
   GLuint _fontProgramId;
+  std::string _errorMessage;
 };
 
 }

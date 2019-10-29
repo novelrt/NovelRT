@@ -3,8 +3,11 @@
 #ifndef NOVELRT_NOVELLOGGINGSERVICE_H
 #define NOVELRT_NOVELLOGGINGSERVICE_H
 
+#define SPDLOG_DISABLE_TID_CACHING
+
 #include <iostream>
-#include "spdlog/sinks/stdout_color_sinks.h"
+
+#include "spdlog/sinks/stdout_sinks.h"
 
 namespace NovelRT {
 enum LogLevel {
@@ -19,15 +22,14 @@ enum LogLevel {
 
 class NovelLoggingService {
 private:
-  NovelLoggingService();
-  static NovelLoggingService* logPointer;
+  std::shared_ptr<spdlog::logger> _console;
+
 public:
-  static NovelLoggingService* instance();
-  //NovelLoggingService(LogLevel level);
+  NovelLoggingService();
+  ~NovelLoggingService() = default;
   void log(std::string message, LogLevel level);
   void logInternal(std::string message, LogLevel level);
   void setLogLevel(LogLevel level);
-  std::shared_ptr<spdlog::logger> NovelLoggingService::getLogger(std::string name);
 };
 
 }

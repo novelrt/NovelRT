@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
-  auto log = NovelRT::NovelLoggingService::instance();
+  //auto log = NovelRT::NovelLoggingService::instance();
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
@@ -107,36 +107,36 @@ int main(int argc, char *argv[])
 
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
-  auto loggingLevel = NovelRT::LogLevel::DEBUG;
+  //auto loggingLevel = NovelRT::LogLevel::DEBUG;
 
-  rect->subscribeToInteracted([&novelAudio, &counter, &log, &loggingLevel] {
+  rect->subscribeToInteracted([&novelAudio, &counter] {
     counter++;
     switch (counter)
     {
       case 1:
       {
         novelAudio->fadeMusicOut(500);
-        log->logInternal("Commencing Audio Test...", loggingLevel);
-        log->logInternal("Press the button to launch each test.", loggingLevel);
-        log->logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
+        //log->logInternal("Commencing Audio Test...", loggingLevel);
+        //log->logInternal("Press the button to launch each test.", loggingLevel);
+        //log->logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
         break;
       }
       case 2:
       {
-        log->logInternal("Looping 3 times...", loggingLevel);
+        //log->logInternal("Looping 3 times...", loggingLevel);
         novelAudio->playSound("w0nd0ws.wav", 3);
         break;
       }
       case 3:
       {
-        log->logInternal("Pan Left (via Panning)...", loggingLevel);
+        //log->logInternal("Pan Left (via Panning)...", loggingLevel);
         novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
       }
       case 4:
       {
-        log->logInternal("Pan Right (via 3D Position)...", loggingLevel);
+        //log->logInternal("Pan Right (via 3D Position)...", loggingLevel);
         novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
       case 5:
       {
         novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-        log->logInternal("Low Volume...", loggingLevel);
+        //log->logInternal("Low Volume...", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
       case 6:
       {
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
-        log->logInternal("Success! Click once more to play music again.", loggingLevel);
+        //log->logInternal("Success! Click once more to play music again.", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 64);
         novelAudio->playSound("jojo.wav", 0);
         break;

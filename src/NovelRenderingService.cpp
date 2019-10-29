@@ -20,7 +20,9 @@ namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-    std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
+    _errorMessage = "ERROR: could not initialize sdl2: " + std::string(SDL_GetError());
+    _errorMessage += SDL_GetError();
+    _log.log(_errorMessage, LogLevel::ERR);
     return false;
   }
 
@@ -34,7 +36,7 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
 
-  std::cout << _screenScale << std::endl;
+  _log.log(std::to_string(_screenScale), LogLevel::INFO);
 
 
   // create window
@@ -44,7 +46,9 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
       "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
   if (_window == nullptr) {
-    std::cerr << "could not create window: " << SDL_GetError() << std::endl;
+    _errorMessage = "Could not create window: ";
+    _errorMessage += SDL_GetError();
+    _log.log(_errorMessage, LogLevel::ERR);
 
     return false;
   }
@@ -52,14 +56,18 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
   SDL_GL_MakeCurrent(_window.get(), _openGLContext);
 
   if (!gladLoadGL()) {
-    std::cerr << "ERROR: Failed to initialise glad." << std::endl;
+    _log.log("ERROR: Failed to initialise glad.", LogLevel::ERR);
     return -1;
   }
 
-  std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
-  std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-
-
+#ifndef _WIN32
+  std::string glVersion = "GL_VERSION : ";
+  glVersion += (const char*) glGetString(GL_VERSION);
+  glVersion += "\nGL_SHADING_LANGUAGE_VERSION: ";
+  glVersion += (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+  _log.log(glVersion, LogLevel::INFO);
+  _log.log(glShadingVersion, LogLevel::INFO);
+#endif
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -86,7 +94,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     vertexShaderCode = sstr.str();
     VertexShaderStream.close();
   }else{
-    std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
+    _log.log("ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.", LogLevel::ERR);
     getchar();
     return 0;
   }
@@ -100,7 +108,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     fragmentShaderCode = stringStream.str();
     fragmentShaderStream.close();
   }else{
-    std::cerr << "ERROR: Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
+    _log.log("ERROR: Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.", LogLevel::ERR);
     getchar();
     return 0;
   }
@@ -109,7 +117,8 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   int infoLogLength;
 
   // Compile Vertex Shader
-  std::cout << "INFO: Compiling shader: " << vertexFilePath << "..." << std::endl;
+  std::string vertexInfo = "INFO: Compiling shader: " + vertexFilePath;
+  _log.log(vertexInfo, LogLevel::INFO);
   char const * vertexSourcePointer = vertexShaderCode.c_str();
   glShaderSource(vertexShaderId, 1, &vertexSourcePointer , nullptr);
   glCompileShader(vertexShaderId);
@@ -120,11 +129,13 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> vertexShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
-    std::cerr << "ERROR: " << &vertexShaderErrorMessage[0] << std::endl;
-  }
+    _errorMessage = &vertexShaderErrorMessage[0];
+    _log.log(_errorMessage, LogLevel::ERR);
+    }
 
   // Compile Fragment Shader
-  std::cout << "INFO: Compiling shader: " << fragmentFilePath << "..." << std::endl;
+  std::string fragmentInfo = "INFO: Compiling shader: " + fragmentFilePath;
+  _log.log(fragmentInfo, LogLevel::INFO);
   const char* FragmentSourcePointer = fragmentShaderCode.c_str();
   glShaderSource(fragmentShaderId, 1, &FragmentSourcePointer , nullptr);
   glCompileShader(fragmentShaderId);
@@ -135,11 +146,12 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> fragmentShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
-    std::cerr << "ERROR: " << &fragmentShaderErrorMessage[0] << std::endl;
+    _errorMessage = &fragmentShaderErrorMessage[0];
+    _log.log(_errorMessage, LogLevel::ERR);
   }
 
   // Link the program
-  std::cout << "INFO: Linking program..." << std::endl;
+  _log.log("INFO: Linking program...", LogLevel::INFO);
   GLuint programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
   glAttachShader(programId, fragmentShaderId);
@@ -151,7 +163,8 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> ProgramErrorMessage(infoLogLength+1);
     glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
-    std::cerr << "ERROR: " << &ProgramErrorMessage[0] << std::endl;
+    _errorMessage = &ProgramErrorMessage[0];
+    _log.log(_errorMessage, LogLevel::ERR);
   }
 
   glDetachShader(programId, vertexShaderId);
@@ -166,7 +179,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
 
 int NovelRenderingService::initialiseRendering(int displayNumber) {
   if (!initializeRenderPipeline(displayNumber)) {
-    std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
+    _log.log("Apologies, something went wrong. Reason: SDL could not initialise.", LogLevel::ERR);
     return 1;
   }
 
@@ -209,7 +222,8 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService), _errorMessage("") {
+  _log = NovelLoggingService();
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
