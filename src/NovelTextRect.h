@@ -7,6 +7,7 @@
 #include <string>
 #include "GraphicsCharacterRenderData.h"
 #include "NovelImageRect.h"
+#include "NovelLoggingService.h"
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
@@ -41,6 +42,7 @@ private:
   std::string _text = "";
   std::vector<NovelImageRect*> _letterRects;
   NovelCommonArgs _args;
+  NovelLoggingService _console;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

@@ -3,11 +3,9 @@
 #ifndef NOVELRT_NOVELLOGGINGSERVICE_H
 #define NOVELRT_NOVELLOGGINGSERVICE_H
 
-#define SPDLOG_DISABLE_TID_CACHING
-
 #include <iostream>
 
-#include "spdlog/sinks/stdout_sinks.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace NovelRT {
 enum LogLevel {
@@ -26,7 +24,7 @@ private:
 
 public:
   NovelLoggingService();
-  ~NovelLoggingService() = default;
+  NovelLoggingService(std::string core);
   void log(std::string message, LogLevel level);
   void logInternal(std::string message, LogLevel level);
   void setLogLevel(LogLevel level);

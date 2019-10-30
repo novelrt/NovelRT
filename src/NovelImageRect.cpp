@@ -5,6 +5,7 @@
 #include <iostream>
 #include "NovelImageRect.h"
 #include "GeoBounds.h"
+#include "NovelRTUtilities.h"
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
@@ -26,7 +27,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                })),
                                                                _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTint(colourTint), _log() {
+                                                               _colourTint(colourTint), _console(NovelUtilities::CONSOLE_LOG_GFX) {
 
 }
 
@@ -130,7 +131,7 @@ void NovelImageRect::configureObjectBuffers() {
   SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
   if (surface == nullptr) {
-    _log.log("ERROR: File load returned a null pointer! Cannot load texture!", LogLevel::ERR);
+    _console.log("File load returned a null pointer! Cannot load texture!", LogLevel::ERR);
     throw -1;
   }
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());

@@ -50,7 +50,7 @@ private:
 
   bool initializeRenderPipeline(int displayNumber);
 
-  NovelLoggingService _log;
+  NovelLoggingService _console;
   NovelLayeringService* _layeringService;
   std::shared_ptr<SDL_Window> _window;
   SDL_GLContext _openGLContext;

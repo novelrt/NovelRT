@@ -10,20 +10,19 @@ namespace NovelRT {
 NovelLoggingService::NovelLoggingService() {
   try
   {
-    _console = spdlog::get(NovelUtilities::CONSOLE_LOG);
+    _console = spdlog::get(NovelUtilities::CONSOLE_LOG_GENERIC);
     if (_console == nullptr)
     {
-      _console = spdlog::stdout_logger_mt(NovelUtilities::CONSOLE_LOG);
-      spdlog::register_logger(_console);
+        _console = spdlog::stdout_color_mt<spdlog::async_factory>(NovelUtilities::CONSOLE_LOG_GENERIC);
     }
 
     #ifndef NDEBUG
-    setLogLevel(LogLevel::TRACE);
+    setLogLevel(LogLevel::DEBUG);
     #else
     setLogLevel(LogLevel::INFO);
     #endif
-    std::string lvl = spdlog::level::to_short_c_str(_console->level());
 
+    //Set spdlog's error handler in case it fails.
      spdlog::set_error_handler([](const std::string& msg) {
         std::cerr << "SPDLOG ERROR: " << msg << std::endl;
     });
@@ -34,25 +33,31 @@ NovelLoggingService::NovelLoggingService() {
   }
 }
 
-/*
-NovelLoggingService::NovelLoggingService(LogLevel level) {
+NovelLoggingService::NovelLoggingService(std::string core) {
   try
   {
-    auto console = _console;
-    if (!console)
+    _console = spdlog::get(core);
+    if (_console == nullptr)
     {
-      console = spdlog::stdout_color_mt(NovelUtilities::CONSOLE_LOG);
+      _console = spdlog::stdout_color_mt<spdlog::async_factory>(core);
     }
-    setLogLevel(level);
-    std::string lvl = spdlog::level::to_short_c_str(console->level());
-    console->info("\nNovelRT\nLog System Initialized!\nLogging at level: " + lvl);
+
+#ifndef NDEBUG
+    setLogLevel(LogLevel::DEBUG);
+#else
+    setLogLevel(LogLevel::INFO);
+#endif
+
+    //Set spdlog's error handler in case it fails.
+    spdlog::set_error_handler([](const std::string& msg) {
+      std::cerr << "SPDLOG ERROR: " << msg << std::endl;
+    });
   }
-  catch (const spdlog::spdlog_ex &ex)
+  catch (const spdlog::spdlog_ex & ex)
   {
     std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
   }
 }
-*/
 
 void NovelLoggingService::log(std::string message, LogLevel level) {
   switch (level)
