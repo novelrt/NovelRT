@@ -7,7 +7,7 @@
 
 namespace NovelRT {
 
-NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _errorMessage(""), _console(NovelUtilities::CONSOLE_LOG_AUDIO) {
+NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _console(NovelUtilities::CONSOLE_LOG_AUDIO) {
   initializeAudio();
 }
 
@@ -45,8 +45,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _errorMessage = Mix_GetError();
-      _console.log(_errorMessage, LogLevel::ERR);
+      _console.log(std::string(Mix_GetError()), LogLevel::ERR);
     }
   }
   else
@@ -61,8 +60,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _errorMessage = Mix_GetError();
-      _console.log(_errorMessage, LogLevel::ERR);
+      _console.log(std::string(Mix_GetError()), LogLevel::ERR);
     }
   }
 }

@@ -210,7 +210,7 @@ std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
   return _window;
 }
 
-NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService), _errorMessage(""), _console(NovelUtilities::CONSOLE_LOG_GFX) {
+NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService), _console(NovelUtilities::CONSOLE_LOG_GFX) {
 }
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
