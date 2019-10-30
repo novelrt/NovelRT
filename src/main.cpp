@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
-  auto console = NovelRT::NovelLoggingService::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
+  auto console = NovelRT::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
