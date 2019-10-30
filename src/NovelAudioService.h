@@ -30,7 +30,6 @@ private:
   MusicBank _music;
   ChannelMap _channelMap;
   NovelLoggingService _console;
-  std::string _errorMessage;
 
   int convertToMixVolume(float value);
   std::string findByChannelMap(int channel);
