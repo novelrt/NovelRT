@@ -63,7 +63,6 @@ private:
   GLuint _basicFillRectProgramId;
   GLuint _texturedRectProgramId;
   GLuint _fontProgramId;
-  std::string _errorMessage;
 };
 
 }

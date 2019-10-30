@@ -19,9 +19,7 @@ namespace NovelRT {
 bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-    _errorMessage = "Could not initialize sdl2: " + std::string(SDL_GetError());
-    _errorMessage += SDL_GetError();
-    _console.log(_errorMessage, LogLevel::ERR);
+    _console.log("Could not initialize sdl2: " + std::string(SDL_GetError()), LogLevel::ERR);
     return false;
   }
 
@@ -35,7 +33,7 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
   SDL_GetCurrentDisplayMode(displayNumber, &displayData);
   _screenScale = (displayData.h * 0.7f) / 1080.0f;
 
-  _console.log(std::to_string(_screenScale), LogLevel::INFO);
+  _console.log("Screen Scale: " + std::to_string(_screenScale), LogLevel::INFO);
 
 
   // create window
@@ -45,9 +43,7 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
       "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
   if (_window == nullptr) {
-    _errorMessage = "Could not create window: ";
-    _errorMessage += SDL_GetError();
-    _console.log(_errorMessage, LogLevel::ERR);
+    _console.log("Could not create window: " + std::string(SDL_GetError()), LogLevel::ERR);
 
     return false;
   }
@@ -59,12 +55,10 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
     return -1;
   }
 
-  std::string glVersion = "GL_VERSION : ";
-  glVersion += (const char*) glGetString(GL_VERSION);
-  std::string glShading = "GL_SHADING_LANGUAGE_VERSION: ";
-  glShading += (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
-  _console.log(glVersion, LogLevel::INFO);
-  _console.log(glShading, LogLevel::INFO);
+  std::string glVersion = (const char*) glGetString(GL_VERSION);
+  std::string glShading = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+  _console.log("GL_VERSION: " + glVersion, LogLevel::INFO);
+  _console.log("GL_SHADING_LANGUAGE_VERSION: " + glShading, LogLevel::INFO);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -126,8 +120,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> vertexShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
-    _errorMessage = &vertexShaderErrorMessage[0];
-    _console.log(_errorMessage, LogLevel::ERR);
+    _console.log(std::string(&vertexShaderErrorMessage[0]), LogLevel::ERR);
     }
 
   // Compile Fragment Shader
@@ -143,8 +136,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> fragmentShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
-    _errorMessage = &fragmentShaderErrorMessage[0];
-    _console.log(_errorMessage, LogLevel::ERR);
+    _console.log(std::string(&fragmentShaderErrorMessage[0]), LogLevel::ERR);
   }
 
   // Link the program
@@ -160,8 +152,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   if ( infoLogLength > 0 ){
     std::vector<char> ProgramErrorMessage(infoLogLength+1);
     glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
-    _errorMessage = &ProgramErrorMessage[0];
-    _console.log(_errorMessage, LogLevel::ERR);
+    _console.log(std::string(&ProgramErrorMessage[0]), LogLevel::ERR);
   }
 
   glDetachShader(programId, vertexShaderId);
