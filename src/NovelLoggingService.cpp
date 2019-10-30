@@ -59,6 +59,28 @@ NovelLoggingService::NovelLoggingService(std::string core) {
   }
 }
 
+NovelLoggingService::NovelLoggingService(std::string core, LogLevel level) {
+  try
+  {
+    _console = spdlog::get(core);
+    if (_console == nullptr)
+    {
+      _console = spdlog::stdout_color_mt<spdlog::async_factory>(core);
+    }
+
+    setLogLevel(level);
+
+    //Set spdlog's error handler in case it fails.
+    spdlog::set_error_handler([](const std::string& msg) {
+      std::cerr << "SPDLOG ERROR: " << msg << std::endl;
+    });
+  }
+  catch (const spdlog::spdlog_ex & ex)
+  {
+    std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
+  }
+}
+
 void NovelLoggingService::log(std::string message, LogLevel level) {
   switch (level)
   {

@@ -25,6 +25,7 @@ private:
 public:
   NovelLoggingService();
   NovelLoggingService(std::string core);
+  NovelLoggingService(std::string core, LogLevel level);
   void log(std::string message, LogLevel level);
   void logInternal(std::string message, LogLevel level);
   void setLogLevel(LogLevel level);
