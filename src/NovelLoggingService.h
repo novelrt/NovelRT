@@ -9,25 +9,27 @@
 
 namespace NovelRT {
 enum LogLevel {
-  TRACE = SPDLOG_LEVEL_TRACE,
   DEBUG = SPDLOG_LEVEL_DEBUG,
   INFO = SPDLOG_LEVEL_INFO,
   WARN = SPDLOG_LEVEL_WARN,
   ERR = SPDLOG_LEVEL_ERROR,
-  CRITICAL = SPDLOG_LEVEL_CRITICAL,
   OFF = SPDLOG_LEVEL_OFF
 };
 
 class NovelLoggingService {
 private:
-  std::shared_ptr<spdlog::logger> _console;
+  std::shared_ptr<spdlog::logger> _logger;
 
 public:
   NovelLoggingService();
-  NovelLoggingService(std::string core);
-  NovelLoggingService(std::string core, LogLevel level);
-  void log(std::string message, LogLevel level);
-  void logInternal(std::string message, LogLevel level);
+  NovelLoggingService(const std::string& core);
+  NovelLoggingService(const std::string& core, LogLevel level);
+  void log(const std::string& message, LogLevel level);
+  void logInfo(const std::string& message);
+  void logError(const std::string& message);
+  void logWarning(const std::string& message);
+  void logDebug(const std::string& message);
+  void logInternal(const std::string& message, LogLevel level);
   void setLogLevel(LogLevel level);
 };
 

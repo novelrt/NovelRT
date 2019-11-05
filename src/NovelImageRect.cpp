@@ -27,7 +27,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                })),
                                                                _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTint(colourTint), _console(NovelUtilities::CONSOLE_LOG_GFX) {
+                                                               _colourTint(colourTint), _logger(NovelUtilities::CONSOLE_LOG_GFX) {
 
 }
 
@@ -131,7 +131,7 @@ void NovelImageRect::configureObjectBuffers() {
   SDL_Surface* surface = IMG_Load(_imageDir.c_str());
 
   if (surface == nullptr) {
-    _console.log("File load returned a null pointer! Cannot load texture!", LogLevel::ERR);
+    _logger.log("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.", LogLevel::ERR);
     throw -1;
   }
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());

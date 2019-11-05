@@ -39,7 +39,7 @@ protected:
   void configureObjectBuffers() final;
 
 private:
-  NovelLoggingService _console;
+  NovelLoggingService _logger;
   std::string _imageDir;
   std::string _previousImageDir;
   int _imageHandle;

@@ -10,10 +10,10 @@ namespace NovelRT {
 NovelLoggingService::NovelLoggingService() {
   try
   {
-    _console = spdlog::get(NovelUtilities::CONSOLE_LOG_GENERIC);
-    if (_console == nullptr)
+    _logger = spdlog::get(NovelUtilities::CONSOLE_LOG_GENERIC);
+    if (_logger == nullptr)
     {
-        _console = spdlog::stdout_color_mt<spdlog::async_factory>(NovelUtilities::CONSOLE_LOG_GENERIC);
+        _logger = spdlog::stdout_color_mt<spdlog::async_factory>(NovelUtilities::CONSOLE_LOG_GENERIC);
     }
 
     #ifndef NDEBUG
@@ -33,20 +33,20 @@ NovelLoggingService::NovelLoggingService() {
   }
 }
 
-NovelLoggingService::NovelLoggingService(std::string core) {
+NovelLoggingService::NovelLoggingService(const std::string& core) {
   try
   {
-    _console = spdlog::get(core);
-    if (_console == nullptr)
+    _logger = spdlog::get(core);
+    if (_logger == nullptr)
     {
-      _console = spdlog::stdout_color_mt<spdlog::async_factory>(core);
+      _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
     }
 
-#ifndef NDEBUG
+  #ifndef NDEBUG
     setLogLevel(LogLevel::DEBUG);
-#else
+  #else
     setLogLevel(LogLevel::INFO);
-#endif
+  #endif
 
     //Set spdlog's error handler in case it fails.
     spdlog::set_error_handler([](const std::string& msg) {
@@ -59,13 +59,13 @@ NovelLoggingService::NovelLoggingService(std::string core) {
   }
 }
 
-NovelLoggingService::NovelLoggingService(std::string core, LogLevel level) {
+NovelLoggingService::NovelLoggingService(const std::string& core, LogLevel level) {
   try
   {
-    _console = spdlog::get(core);
-    if (_console == nullptr)
+    _logger = spdlog::get(core);
+    if (_logger == nullptr)
     {
-      _console = spdlog::stdout_color_mt<spdlog::async_factory>(core);
+      _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
     }
 
     setLogLevel(level);
@@ -81,47 +81,27 @@ NovelLoggingService::NovelLoggingService(std::string core, LogLevel level) {
   }
 }
 
-void NovelLoggingService::log(std::string message, LogLevel level) {
+void NovelLoggingService::log(const std::string& message, LogLevel level) {
   switch (level)
   {
-  case SPDLOG_LEVEL_TRACE:
-  {
-    _console->trace(message);
-    break;
-  }
-  case SPDLOG_LEVEL_DEBUG:
-  {
-    _console->debug(message);
-    break;
-  }
-  case SPDLOG_LEVEL_INFO:
-  {
-    _console->info(message);
-    break;
-  }
-  case SPDLOG_LEVEL_WARN:
-  {
-    _console->warn(message);
-    break;
-  }
-  case SPDLOG_LEVEL_ERROR:
-  {
-    _console->error(message);
-    break;
-  }
-  case SPDLOG_LEVEL_CRITICAL:
-  {
-    _console->critical(message);
-    break;
-  }
-  default:
-  {
-    break;
-  }
+    case SPDLOG_LEVEL_DEBUG:
+      _logger->debug(message);
+      break;
+    case SPDLOG_LEVEL_INFO:
+      _logger->info(message);
+      break;
+    case SPDLOG_LEVEL_WARN:
+      _logger->warn(message);
+      break;
+    case SPDLOG_LEVEL_ERROR:
+      _logger->error(message);
+      break;
+    default:
+      break;
   }
 }
 
-void NovelLoggingService::logInternal(std::string message, LogLevel level) {
+void NovelLoggingService::logInternal(const std::string& message, LogLevel level) {
 #ifndef NDEBUG
   log(message, level);
 #endif
@@ -130,47 +110,25 @@ void NovelLoggingService::logInternal(std::string message, LogLevel level) {
 void NovelLoggingService::setLogLevel(LogLevel level) {
   switch (level)
   {
-  case SPDLOG_LEVEL_TRACE:
-  {
-    _console->set_level(spdlog::level::level_enum::trace);
-    break;
-  }
-  case SPDLOG_LEVEL_DEBUG:
-  {
-    _console->set_level(spdlog::level::level_enum::debug);
-    break;
-  }
-  case SPDLOG_LEVEL_INFO:
-  {
-    _console->set_level(spdlog::level::level_enum::info);
-    break;
-  }
-  case SPDLOG_LEVEL_WARN:
-  {
-    _console->set_level(spdlog::level::level_enum::warn);
-    break;
-  }
-  case SPDLOG_LEVEL_ERROR:
-  {
-    _console->set_level(spdlog::level::level_enum::err);
-    break;
-  }
-  case SPDLOG_LEVEL_CRITICAL:
-  {
-    _console->set_level(spdlog::level::level_enum::critical);
-    break;
-  }
-  case SPDLOG_LEVEL_OFF:
-  {
-    _console->set_level(spdlog::level::level_enum::off);
-    break;
-  }
-  default:
-  {
-    _console->set_level(spdlog::level::level_enum::info);
-    _console->info("Logging level invalid! Defaulting to INFO.");
-    break;
-  }
+    case SPDLOG_LEVEL_DEBUG:
+      _logger->set_level(spdlog::level::level_enum::debug);
+      break;
+    case SPDLOG_LEVEL_INFO:
+      _logger->set_level(spdlog::level::level_enum::info);
+      break;
+    case SPDLOG_LEVEL_WARN:
+      _logger->set_level(spdlog::level::level_enum::warn);
+      break;
+    case SPDLOG_LEVEL_ERROR:
+      _logger->set_level(spdlog::level::level_enum::err);
+      break;
+    case SPDLOG_LEVEL_OFF:
+      _logger->set_level(spdlog::level::level_enum::off);
+      break;
+    default:
+      _logger->set_level(spdlog::level::level_enum::info);
+      _logger->info("Logging level invalid! Defaulting to INFO.");
+      break;
   }
 }
 
