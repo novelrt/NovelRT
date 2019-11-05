@@ -28,11 +28,11 @@ void NovelTextRect::configureObjectBuffers() {
   if (_previousFontFileDir != _fontFileDir) {
     FT_Library freeTypeLoader;
     if (FT_Init_FreeType(&freeTypeLoader)) {
-      _console.log("Failed to initialise Freetype.", LogLevel::ERR);
+      _logger.log("Failed to initialise Freetype.", LogLevel::ERR);
     }
     FT_Face face;
     if (FT_New_Face(freeTypeLoader, _fontFileDir.c_str(), 0, &face))
-      _console.log("Failed to load font " + _fontFileDir + " via freeType!", LogLevel::ERR);
+      _logger.log("Failed to load font " + _fontFileDir + " via freeType!", LogLevel::ERR);
 
     FT_Set_Pixel_Sizes(face, 0, _fontSize);
 
@@ -42,7 +42,7 @@ void NovelTextRect::configureObjectBuffers() {
     for (GLubyte c = 0; c < 128; c++) {
       // Load character glyph
       if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-        _console.log("FREETYTPE: Failed to load Glyph", LogLevel::ERR);
+        _logger.log("FREETYTPE: Failed to load Glyph", LogLevel::ERR);
         continue;
       }
       // Generate texture
@@ -93,7 +93,7 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
                                                                          programId), _colourConfig(colourConfig),
-                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args), _console(NovelUtilities::CONSOLE_LOG_GFX) {
+                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args), _logger(NovelUtilities::CONSOLE_LOG_GFX) {
 
 }
 std::string NovelTextRect::getText() const {

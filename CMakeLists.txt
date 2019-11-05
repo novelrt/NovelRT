@@ -79,6 +79,7 @@ set(NOVELRT_HEADERS
   src/NovelInteractionObject.h
   src/NovelInteractionService.h
   src/NovelLayeringService.h
+  src/NovelLoggingService.h
   src/NovelObject.h
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
@@ -101,6 +102,7 @@ set(NOVELRT_SOURCES
   src/NovelInteractionObject.cpp
   src/NovelInteractionService.cpp
   src/NovelLayeringService.cpp
+  src/NovelLoggingService.cpp
   src/NovelObject.cpp
   src/NovelRenderingService.cpp
   src/NovelRenderObject.cpp

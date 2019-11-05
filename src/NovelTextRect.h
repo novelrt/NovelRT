@@ -42,7 +42,7 @@ private:
   std::string _text = "";
   std::vector<NovelImageRect*> _letterRects;
   NovelCommonArgs _args;
-  NovelLoggingService _console;
+  NovelLoggingService _logger;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

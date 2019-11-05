@@ -29,7 +29,7 @@ private:
   SoundBank _sounds;
   MusicBank _music;
   ChannelMap _channelMap;
-  NovelLoggingService _console;
+  NovelLoggingService _logger;
 
   int convertToMixVolume(float value);
   std::string findByChannelMap(int channel);
