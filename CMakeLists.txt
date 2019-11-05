@@ -38,7 +38,7 @@ set(NOVELRT_RESOURCES
 
 file(COPY ${NOVELRT_RESOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-If(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm") #TODO: check if the OPENGL_VERSION flag is actually still needed with the new setup
     file(GLOB CORECLR lib/CoreCLR/LinuxARM32/*)
     add_compile_definitions(OPENGL_VERSION=2)
 else()
@@ -70,6 +70,7 @@ set(NOVELRT_HEADERS
   src/GraphicsCharacterRenderData.h
   src/KeyCode.h
   src/Lazy.h
+  src/NovelAudioService.h
   src/NovelBasicFillRect.h
   src/NovelBasicInteractionRect.h
   src/NovelCommonArgs.h
@@ -78,7 +79,6 @@ set(NOVELRT_HEADERS
   src/NovelInteractionObject.h
   src/NovelInteractionService.h
   src/NovelLayeringService.h
-  src/NovelLoggingService.h
   src/NovelObject.h
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
@@ -87,13 +87,13 @@ set(NOVELRT_HEADERS
   src/NovelRunner.h
   src/NovelStepTimer.h
   src/NovelTextRect.h
-  src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
 )
 
 set(NOVELRT_SOURCES
   src/GeoBounds.cpp
+  src/NovelAudioService.cpp
   src/NovelBasicFillRect.cpp
   src/NovelBasicInteractionRect.cpp
   src/NovelDebugService.cpp
@@ -101,14 +101,12 @@ set(NOVELRT_SOURCES
   src/NovelInteractionObject.cpp
   src/NovelInteractionService.cpp
   src/NovelLayeringService.cpp
-  src/NovelLoggingService.cpp
   src/NovelObject.cpp
   src/NovelRenderingService.cpp
   src/NovelRenderObject.cpp
   src/NovelRunner.cpp
   src/NovelStepTimer.cpp
   src/NovelTextRect.cpp
-  src/NovelAudioService.cpp
   src/RGBAConfig.cpp
 )
 
@@ -135,16 +133,19 @@ set(NOVELRT_EXECUTABLE_HEADERS
 )
 
 set(NOVELRT_EXECUTABLE_SOURCES
-  ${NOVELRT_SOURCES}
   src/main.cpp
 )
 
 set(NOVELRT_EXECUTABLE_LINK_LIBRARIES
-  ${NOVELRT_LINK_LIBRARIES}
+  NovelRTLib
 )
 
 add_executable(NovelRT ${NOVELRT_EXECUTABLE_HEADERS} ${NOVELRT_EXECUTABLE_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_EXECUTABLE_LINK_LIBRARIES})
+
+if (WIN32)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 set(NOVELRT_LIBRARY_HEADERS
   ${NOVELRT_HEADERS}
