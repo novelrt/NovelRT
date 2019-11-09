@@ -5,6 +5,7 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
+#include "NovelAssetLoader.h"
 
 namespace NovelRT {
 
@@ -16,14 +17,16 @@ public:
                  std::string_view imageDir,
                  const NovelCommonArgs& args,
                  GLuint programId,
-                 const RGBAConfig& colourTint);
+                 const RGBAConfig& colourTint,
+                 NovelAssetLoader* assetLoader);
 
   NovelImageRect(NovelLayeringService* layeringService,
                  const float& screenScale,
                  const GeoVector<float>& size,
                  const NovelCommonArgs& args,
                  GLuint programId,
-                 const RGBAConfig& colourTint);
+                 const RGBAConfig& colourTint,
+                 NovelAssetLoader* assetLoader);
 
   void drawObject() final;
   void setScale(const GeoVector<float>& value) final;
@@ -49,6 +52,7 @@ private:
   Lazy<GLuint> _colourTintBuffer;
   RGBAConfig _colourTint;
   std::vector<GLfloat> _colourTintData;
+  NovelAssetLoader* _assetLoader;
 };
 
 }

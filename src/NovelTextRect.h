@@ -17,7 +17,8 @@ public:
                 const std::string& fontFileDir,
                 const RGBAConfig& colourConfig,
                 const NovelCommonArgs& args,
-                GLuint programId);
+                GLuint programId,
+                NovelAssetLoader* assetLoader);
 
   void drawObject() final;
 
@@ -41,6 +42,7 @@ private:
   std::string _text = "";
   std::vector<NovelImageRect*> _letterRects;
   NovelCommonArgs _args;
+  NovelAssetLoader* _assetLoader;
 };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H

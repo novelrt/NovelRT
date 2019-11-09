@@ -8,12 +8,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(OpenGL_GL_PREFERENCE GLVND)
 
 set(NOVELRT_FONTS
-  src/Gayathri-Regular.ttf
-  src/Raleway-Regular.ttf
+  src/Fonts
 )
 
 set(NOVELRT_IMAGES
-  novel-chan.png
+  src/Images
 )
 
 set(NOVELRT_SCRIPTS

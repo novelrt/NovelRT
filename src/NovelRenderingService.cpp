@@ -192,14 +192,14 @@ NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& star
                                                     std::string_view filePath,
                                                     const NovelCommonArgs& args,
                                                     const RGBAConfig& colourTint) {
-  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint);
+  return new NovelImageRect(_layeringService, _screenScale, startingSize, filePath, args, _texturedRectProgramId, colourTint, _assetLoader);
 }
 
 NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
                                                   float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
-  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId);
+  return new NovelTextRect(_layeringService, fontSize, _screenScale, fontFilePath, colourConfig, args, _fontProgramId, _assetLoader);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {

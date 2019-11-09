@@ -13,7 +13,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                std::string_view imageDir,
                                const NovelCommonArgs& args,
                                GLuint programId,
-                               const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
+                               const RGBAConfig& colourTint, NovelAssetLoader* assetLoader) : NovelRenderObject(layeringService,
                                                                                  screenScale,
                                                                                  size,
                                                                                  args,
@@ -26,7 +26,8 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                })),
                                                                _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTint(colourTint){
+                                                               _colourTint(colourTint),
+                                                               _assetLoader(assetLoader){
 
 }
 
@@ -35,7 +36,7 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                GLuint programId,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, screenScale, size, "", args, programId, colourTint) {
+                               const RGBAConfig& colourTint, NovelAssetLoader* assetLoader) : NovelImageRect(layeringService, screenScale, size, "", args, programId, colourTint, assetLoader) {
 
 }
 
@@ -127,7 +128,7 @@ void NovelImageRect::configureObjectBuffers() {
 
   _previousImageDir = _imageDir;
 
-  SDL_Surface* surface = IMG_Load(_imageDir.c_str());
+  SDL_Surface* surface = _assetLoader->loadImage(_imageDir);
 
   if (surface == nullptr) {
     std::cerr << "ERROR: File load returned a null pointer! Cannot load texture!" << std::endl;

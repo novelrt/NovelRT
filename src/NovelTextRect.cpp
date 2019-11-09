@@ -26,12 +26,7 @@ void NovelTextRect::configureObjectBuffers() {
 
   if (_previousFontFileDir != _fontFileDir) {
     FT_Library freeTypeLoader;
-    if (FT_Init_FreeType(&freeTypeLoader)) {
-      std::cerr << "ERROR: Failed to initialise Freetype." << std::endl;
-    }
-    FT_Face face;
-    if (FT_New_Face(freeTypeLoader, _fontFileDir.c_str(), 0, &face))
-      std::cout << "ERROR: Failed to load font " << _fontFileDir << " via freeType!" << std::endl;
+    FT_Face face = _assetLoader->loadFont(_fontFileDir, &freeTypeLoader);
 
     FT_Set_Pixel_Sizes(face, 0, _fontSize);
 
@@ -87,12 +82,13 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                              const std::string& fontFileDir,
                              const RGBAConfig& colourConfig,
                              const NovelCommonArgs& args,
-                             GLuint programId) : NovelRenderObject(layeringService,
+                             GLuint programId,
+                             NovelAssetLoader* assetLoader) : NovelRenderObject(layeringService,
                                                                          screenScale,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
                                                                          programId), _colourConfig(colourConfig),
-                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
+                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args), _assetLoader(assetLoader) {
 
 }
 std::string NovelTextRect::getText() const {
@@ -107,7 +103,8 @@ void NovelTextRect::setText(const std::string& value) {
                                               GeoVector<float>(50, 50),
                                               _args,
                                               _programId,
-                                              _colourConfig));
+                                              _colourConfig,
+                                              _assetLoader));
   }
 
   if (_bufferInitialised) {
