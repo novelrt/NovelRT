@@ -55,7 +55,7 @@ namespace NovelRT{
 
   Mix_Chunk* NovelAssetLoader::loadAudio(std::string filename)
   {
-    
+    return nullptr;
   }
 
 }
