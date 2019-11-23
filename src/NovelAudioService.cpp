@@ -4,6 +4,7 @@
 #include "NovelRTUtilities.h"
 #include <iostream>
 #include <functional>
+#include <stdexcept>
 
 namespace NovelRT {
 
@@ -12,23 +13,11 @@ NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicP
 }
 
 bool NovelAudioService::initializeAudio() {
-  if (SDL_InitSubSystem(SDL_INIT_AUDIO) < NovelUtilities::SDL_SUCCESS)
-  {
-    _logger.log("Cannot play audio: " + std::string(SDL_GetError()) , LogLevel::ERR);
-  }
-  else if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < NovelUtilities::SDL_SUCCESS)
-  {
-    _logger.log("Cannot play audio: " + std::string(Mix_GetError()), LogLevel::ERR);
-  }
-  else if (Mix_AllocateChannels(NOVEL_MIXER_CHANNELS) < NovelUtilities::SDL_SUCCESS)
-  {
-    _logger.log("Failed to allocate channels.", LogLevel::ERR);
-  }
-  else
-  {
-    _logger.log("SDL2_Mixer Initialized.", LogLevel::INFO);
-    isInitialized = true;
-  }
+  logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO, "Cannot play audio: " + std::string(SDL_GetError()));
+  logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048, "Cannot play audio: " + std::string(Mix_GetError()));
+  logIfMixerFailure(Mix_AllocateChannels, (Uint32)NOVEL_MIXER_CHANNELS, "Failed to allocate channels.");
+  _logger.log("SDL2_Mixer Initialized.", LogLevel::INFO);
+  isInitialized = true;
   return isInitialized;
 }
 
@@ -328,6 +317,31 @@ std::string NovelAudioService::findByChannelMap(int channel) {
 
   return nullptr;
 }
+
+void NovelAudioService::logIfSDLFailure(int (*function)(Uint32), Uint32 sdl_flag, std::string errorMessage) {
+  if (function(sdl_flag) < NovelUtilities::SDL_SUCCESS)
+  {
+    _logger.log(errorMessage, LogLevel::ERR);
+    throw std::runtime_error("Audio error occurred! Unable to continue.");
+  }
+}
+
+void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag, std::string errorMessage) {
+  if (function(mixerFlag) < NovelUtilities::SDL_SUCCESS)
+  {
+    _logger.log(errorMessage, LogLevel::ERR);
+    throw std::runtime_error("Audio error occurred! Unable to continue.");
+  }
+}
+
+void NovelAudioService::logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize, std::string errorMessage) {
+  if (function(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
+  {
+    _logger.log(errorMessage, LogLevel::ERR);
+    throw std::runtime_error("Audio error occurred! Unable to continue.");
+  }
+}
+
 
 NovelAudioService::~NovelAudioService() {
   Mix_HaltMusic();
