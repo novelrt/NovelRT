@@ -26,7 +26,7 @@ NovelLoggingService::NovelLoggingService() {
      spdlog::set_error_handler([](const std::string& msg) {
         std::cerr << "SPDLOG ERROR: " << msg << std::endl;
     });
-  } catch (const spdlog::spdlog_ex &ex)
+  } catch (const spdlog::spdlog_ex& ex)
   {
     std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
   }
