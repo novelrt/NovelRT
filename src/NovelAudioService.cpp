@@ -16,7 +16,7 @@ bool NovelAudioService::initializeAudio() {
   logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO, "Cannot play audio: " + getSDLError());
   logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048, "Cannot play audio: " + getMixerError());
   logIfMixerFailure(Mix_AllocateChannels, (Uint32)NOVEL_MIXER_CHANNELS, "Failed to allocate channels.");
-  _logger.log("SDL2_Mixer Initialized.", LogLevel::INFO);
+  _logger.logInfo("SDL2_Mixer Initialized.");
   isInitialized = true;
   return isInitialized;
 }
@@ -34,7 +34,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _logger.log(getMixerError(), LogLevel::ERR);
+      _logger.logError(getMixerError());
     }
   }
   else
@@ -49,7 +49,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _logger.log(getMixerError(), LogLevel::ERR);
+      _logger.logError(getMixerError());
     }
   }
 }
@@ -90,7 +90,7 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
   {
     if (Mix_Playing(_channelMap[soundName]) == MIXER_TRUE)
     {
-      _logger.log("Already playing on channel " + _channelMap[soundName], LogLevel::WARN);
+      _logger.logWarning("Already playing on channel " + _channelMap[soundName]);
       return;
     }
 
@@ -142,7 +142,7 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
   }
   else
   {
-    _logger.log(std::string(soundName) + " is not allocated to a channel already!", LogLevel::ERR);
+    _logger.logError(std::string(soundName) + " is not allocated to a channel already!");
   }
 }
 
@@ -321,7 +321,7 @@ std::string NovelAudioService::findByChannelMap(int channel) {
 void NovelAudioService::logIfSDLFailure(int (*function)(Uint32), Uint32 sdl_flag, std::string errorMessage) {
   if (function(sdl_flag) < NovelUtilities::SDL_SUCCESS)
   {
-    _logger.log(errorMessage, LogLevel::ERR);
+    _logger.logError(errorMessage);
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
@@ -329,7 +329,7 @@ void NovelAudioService::logIfSDLFailure(int (*function)(Uint32), Uint32 sdl_flag
 void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag, std::string errorMessage) {
   if (function(mixerFlag) < NovelUtilities::SDL_SUCCESS)
   {
-    _logger.log(errorMessage, LogLevel::ERR);
+    _logger.logError(errorMessage);
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
@@ -337,7 +337,7 @@ void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag, s
 void NovelAudioService::logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize, std::string errorMessage) {
   if (function(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
   {
-    _logger.log(errorMessage, LogLevel::ERR);
+    _logger.logError(errorMessage);
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
