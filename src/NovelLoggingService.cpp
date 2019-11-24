@@ -101,6 +101,22 @@ void NovelLoggingService::log(const std::string& message, LogLevel level) {
   }
 }
 
+void NovelLoggingService::logInfo(const std::string& message) {
+  _logger->info(message);
+}
+
+void NovelLoggingService::logError(const std::string& message) {
+  _logger->error(message);
+}
+
+void NovelLoggingService::logWarning(const std::string& message) {
+  _logger->warn(message);
+}
+
+void NovelLoggingService::logDebug(const std::string& message) {
+  _logger->debug(message);
+}
+
 void NovelLoggingService::logInternal(const std::string& message, LogLevel level) {
 #ifndef NDEBUG
   log(message, level);
