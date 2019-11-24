@@ -13,8 +13,8 @@ NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicP
 }
 
 bool NovelAudioService::initializeAudio() {
-  logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO, "Cannot play audio: " + std::string(SDL_GetError()));
-  logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048, "Cannot play audio: " + std::string(Mix_GetError()));
+  logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO, "Cannot play audio: " + getSDLError());
+  logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048, "Cannot play audio: " + getMixerError());
   logIfMixerFailure(Mix_AllocateChannels, (Uint32)NOVEL_MIXER_CHANNELS, "Failed to allocate channels.");
   _logger.log("SDL2_Mixer Initialized.", LogLevel::INFO);
   isInitialized = true;
@@ -34,7 +34,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _logger.log(std::string(Mix_GetError()), LogLevel::ERR);
+      _logger.log(getMixerError(), LogLevel::ERR);
     }
   }
   else
@@ -49,7 +49,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      _logger.log(std::string(Mix_GetError()), LogLevel::ERR);
+      _logger.log(getMixerError(), LogLevel::ERR);
     }
   }
 }
@@ -342,6 +342,13 @@ void NovelAudioService::logIfMixerFailure(int (*function)(int, Uint16, int, int)
   }
 }
 
+std::string NovelAudioService::getSDLError() {
+  return std::string(SDL_GetError());
+}
+
+std::string NovelAudioService::getMixerError() {
+  return std::string(Mix_GetError());
+}
 
 NovelAudioService::~NovelAudioService() {
   Mix_HaltMusic();
