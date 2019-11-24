@@ -37,6 +37,8 @@ private:
   void logIfSDLFailure(int (*function)(Uint32), Uint32 sdlFlag, std::string errorMessage);
   void logIfMixerFailure(int (*function)(int), int mixerFlag, std::string errorMessage);
   void logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize, std::string errorMessage);
+  std::string getSDLError();
+  std::string getMixerError();
 public:
   bool isInitialized;
 
