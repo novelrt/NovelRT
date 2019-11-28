@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_NOVELRTUTILITIES_H
 #define NOVELRT_NOVELRTUTILITIES_H
+#include <algorithm>
 
 namespace NovelRT {
 class NovelUtilities {
