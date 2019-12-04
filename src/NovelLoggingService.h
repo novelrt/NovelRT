@@ -15,7 +15,6 @@ enum LogLevel {
   ERR = SPDLOG_LEVEL_ERROR,
   OFF = SPDLOG_LEVEL_OFF
 };
-
 class NovelLoggingService {
 private:
   std::shared_ptr<spdlog::logger> _logger;
@@ -25,12 +24,15 @@ public:
   NovelLoggingService(const std::string& core);
   NovelLoggingService(const std::string& core, LogLevel level);
   void log(const std::string& message, LogLevel level);
-  void logInfo(const std::string& message);
-  void logError(const std::string& message);
+  void logInfoLine(const std::string& message);
+  void logErrorLine(const std::string& message);
+  template <typename T, typename ... TRest> void logInfo(T current, TRest ... next);
+  template <typename E, typename ... ERest> void logError(E current, ERest ... next);
   void logWarning(const std::string& message);
   void logDebug(const std::string& message);
   void logInternal(const std::string& message, LogLevel level);
   void setLogLevel(LogLevel level);
+
 };
 
 }

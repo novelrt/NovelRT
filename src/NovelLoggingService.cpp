@@ -4,6 +4,7 @@
 #include "NovelLoggingService.h"
 #include "NovelRTUtilities.h"
 #include "spdlog/async.h"
+#include <typeinfo>
 
 namespace NovelRT {
 
@@ -100,12 +101,22 @@ void NovelLoggingService::log(const std::string& message, LogLevel level) {
   }
 }
 
-void NovelLoggingService::logInfo(const std::string& message) {
+void NovelLoggingService::logInfoLine(const std::string& message) {
   _logger->info(message);
 }
 
-void NovelLoggingService::logError(const std::string& message) {
+void NovelLoggingService::logErrorLine(const std::string& message) {
   _logger->error(message);
+}
+
+template <typename T, typename ... TRest> inline void NovelLoggingService::logInfo(T current, TRest ... next) {
+  _logger->info(current);
+  logInfo(next ...);
+}
+
+template <typename E, typename ... ERest> inline void NovelLoggingService::logError(E current, ERest ... next) {
+  _logger->error(current);
+  logError(next ...);
 }
 
 void NovelLoggingService::logWarning(const std::string& message) {
