@@ -25,14 +25,36 @@ public:
   NovelLoggingService(const std::string& core, LogLevel level);
   void log(const std::string& message, LogLevel level);
   void logInfoLine(const std::string& message);
+  void logInfo();
   void logErrorLine(const std::string& message);
-  template <typename T, typename ... TRest> void logInfo(T current, TRest ... next);
-  template <typename E, typename ... ERest> void logError(E current, ERest ... next);
-  void logWarning(const std::string& message);
-  void logDebug(const std::string& message);
+  void logError();
+  void logWarningLine(const std::string& message);
+  void logWarning();
+  void logDebugLine(const std::string& message);
+  void logDebug();
   void logInternal(const std::string& message, LogLevel level);
   void setLogLevel(LogLevel level);
 
+  template <typename I, typename ... IRest>
+  void logInfo(I current, IRest ... next) {
+    _logger->info(current);
+    logInfo(next ...);
+  }
+  template <typename E, typename ... ERest>
+  void logError(E current, ERest ... next) {
+  _logger->error(current);
+  logError(next ...);
+  }
+  template <typename W, typename ... WRest>
+  void logWarning(W current, WRest ... next) {
+  _logger->warn(current);
+  logWarning(next ...);
+  }
+  template <typename D, typename ... DRest>
+  void logDebug(D current, DRest ... next) {
+  _logger->debug(current);
+  logDebug(next ...);
+  }
 };
 
 }
