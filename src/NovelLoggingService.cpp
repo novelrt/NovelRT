@@ -109,21 +109,11 @@ void NovelLoggingService::logErrorLine(const std::string& message) {
   _logger->error(message);
 }
 
-template <typename T, typename ... TRest> inline void NovelLoggingService::logInfo(T current, TRest ... next) {
-  _logger->info(current);
-  logInfo(next ...);
-}
-
-template <typename E, typename ... ERest> inline void NovelLoggingService::logError(E current, ERest ... next) {
-  _logger->error(current);
-  logError(next ...);
-}
-
-void NovelLoggingService::logWarning(const std::string& message) {
+void NovelLoggingService::logWarningLine(const std::string& message) {
   _logger->warn(message);
 }
 
-void NovelLoggingService::logDebug(const std::string& message) {
+void NovelLoggingService::logDebugLine(const std::string& message) {
   _logger->debug(message);
 }
 
@@ -157,5 +147,10 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
       break;
   }
 }
+
+void NovelLoggingService::logInfo() {}
+void NovelLoggingService::logError() {}
+void NovelLoggingService::logWarning() {}
+void NovelLoggingService::logDebug() {}
 
 }
