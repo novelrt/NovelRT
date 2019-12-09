@@ -18,6 +18,10 @@ enum LogLevel {
 class NovelLoggingService {
 private:
   std::shared_ptr<spdlog::logger> _logger;
+  inline void logDebug() {}
+  inline void logWarning() {}
+  inline void logError() {}
+  inline void logInfo() {}
 
 public:
   NovelLoggingService();
@@ -25,13 +29,9 @@ public:
   NovelLoggingService(const std::string& core, LogLevel level);
   void log(const std::string& message, LogLevel level);
   void logInfoLine(const std::string& message);
-  void logInfo();
   void logErrorLine(const std::string& message);
-  void logError();
   void logWarningLine(const std::string& message);
-  void logWarning();
   void logDebugLine(const std::string& message);
-  void logDebug();
   void logInternal(const std::string& message, LogLevel level);
   void setLogLevel(LogLevel level);
 
