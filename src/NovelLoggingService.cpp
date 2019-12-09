@@ -148,9 +148,9 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
   }
 }
 
-void NovelLoggingService::logInfo() {}
-void NovelLoggingService::logError() {}
-void NovelLoggingService::logWarning() {}
-void NovelLoggingService::logDebug() {}
+//void NovelLoggingService::logInfo() {}
+//void NovelLoggingService::logError() {}
+//void NovelLoggingService::logWarning() {}
+//void NovelLoggingService::logDebug() {}
 
 }
