@@ -21,8 +21,27 @@
 namespace NovelRT {
 
 class NovelRenderingService {
+
+private:
+  NovelLayeringService* _layeringService;
+  std::shared_ptr<SDL_Window> _window;
+  SDL_GLContext _openGLContext;
+  float _screenScale;
+
+  int _winWidth;
+  int _winHeight;
+
+  GLuint _basicFillRectProgramId;
+  GLuint _texturedRectProgramId;
+  GLuint _fontProgramId;
+
+  bool initializeRenderPipeline(int displayNumber);
+  GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
+
+
 public:
   NovelRenderingService(NovelLayeringService* layeringService);
+
   int initialiseRendering(int displayNumber);
 
   void tearDown() const;
@@ -45,25 +64,6 @@ public:
   void endFrame() const;
 
   std::shared_ptr<SDL_Window> getWindow() const;
-
-private:
-
-  bool initializeRenderPipeline(int displayNumber);
-
-  NovelLoggingService _logger;
-  NovelLayeringService* _layeringService;
-  std::shared_ptr<SDL_Window> _window;
-  SDL_GLContext _openGLContext;
-  float _screenScale;
-
-  int _winWidth;
-  int _winHeight;
-
-  GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
-  GLuint _basicFillRectProgramId;
-  GLuint _texturedRectProgramId;
-  GLuint _fontProgramId;
 };
-
 }
 #endif //NOVELRT_NOVELRENDERINGSERVICE_H

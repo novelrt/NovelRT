@@ -8,66 +8,60 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
-class NovelLayeringService;
-class NovelObject {
-public:
-  NovelObject(NovelLayeringService* layeringService, const float& screenScale, const GeoVector<float>& size,
-              const NovelCommonArgs& args);
+  class NovelLayeringService;
+  class NovelObject {
 
-  virtual ~NovelObject();
+  protected:
+    GeoVector<float> _position;
+    GeoVector<float> _scale;
+    GeoVector<float> _size;
+    float _rotation;
+    bool _active = true;
+    int _orderInLayer;
+    int _layer;
+    float _screenScale;
+    NovelLayeringService* _layeringService;
+    bool _isDirty = true;
+    GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0, 0), GeoVector<float>(0, 0), 0);
 
-  virtual GeoVector<float> getWorldSpacePosition() const;
+  public:
+    NovelObject(NovelLayeringService* layeringService,
+                const float& screenScale,
+                const GeoVector<float>& size,
+                const NovelCommonArgs& args);
+    virtual ~NovelObject();
 
-  virtual void setWorldSpacePosition(const GeoVector<float>& value);
+    virtual GeoVector<float> getWorldSpacePosition() const;
+    virtual void setWorldSpacePosition(const GeoVector<float>& value);
 
-  virtual GeoVector<float> getScreenSpacePosition() const;
+    virtual GeoVector<float> getScreenSpacePosition() const;
 
-  virtual float getRotation() const;
+    virtual float getRotation() const;
+    virtual void setRotation(float value);
 
-  virtual void setRotation(float value);
+    virtual GeoVector<float> getScale() const;
+    virtual void setScale(const GeoVector<float>& value);
 
-  virtual GeoVector<float> getScale() const;
+    virtual GeoVector<float> getWorldSpaceSize() const;
+    virtual void setWorldSpaceSize(const GeoVector<float>& value);
 
-  virtual void setScale(const GeoVector<float>& value);
+    virtual GeoVector<float> getScreenSpaceSize() const;
 
-  virtual GeoVector<float> getWorldSpaceSize() const;
+    virtual int getLayer() const;
+    virtual void setLayer(int value);
 
-  virtual void setWorldSpaceSize(const GeoVector<float>& value);
+    virtual int getOrderInLayer() const;
+    virtual void setOrderInLayer(int value);
 
-  virtual GeoVector<float> getScreenSpaceSize() const;
+    virtual bool getActive() const;
+    virtual void setActive(bool value);
 
-  virtual int getLayer() const;
+    virtual void executeObjectBehaviour() = 0;
 
-  virtual void setLayer(int value);
+    virtual GeoBounds getScreenSpaceObjectBounds();
 
-  virtual int getOrderInLayer() const;
-
-  virtual void setOrderInLayer(int value);
-
-  virtual bool getActive() const;
-
-  virtual void setActive(bool value);
-
-  virtual void executeObjectBehaviour() = 0;
-
-  virtual GeoBounds getScreenSpaceObjectBounds();
-
-  virtual float getScaleHypotenuseScalar() const;
-
-protected:
-  GeoVector<float> _position;
-  GeoVector<float> _scale;
-  GeoVector<float> _size;
-  float _rotation;
-  bool _active = true;
-  int _orderInLayer;
-  int _layer;
-  float _screenScale;
-  NovelLayeringService* _layeringService;
-  bool _isDirty = true;
-  GeoBounds _objectBounds = GeoBounds(GeoVector<float>(0,0), GeoVector<float>(0,0), 0);
-};
-
+    virtual float getScaleHypotenuseScalar() const;
+  };
 }
 
 #endif //NOVELRT_NOVELOBJECT_H
