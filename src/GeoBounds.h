@@ -6,16 +6,18 @@
 #include "GeoVector.h"
 #include <vector>
 namespace NovelRT {
-class GeoBounds {
-public:
-  GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
-  bool pointIsWithinBounds(const GeoVector<float>& point) const;
-  GeoVector<float> getCornerInWorldSpace(int index) const;
-  GeoVector<float> getCornerInOpenGLSurfaceSpace(int index, float screenScale) const;
-private:
-  std::vector<GeoVector<float>> _corners = std::vector<GeoVector<float>>(4);
-  void rotateToAngle(float rotationAngleValue);
-  GeoVector<float> _position;
-};
+  class GeoBounds {
+
+  private:
+    GeoVector<float> _position;
+    std::vector<GeoVector<float>> _corners = std::vector<GeoVector<float>>(4);
+    void rotateToAngle(float rotationAngleValue);
+
+  public:
+    GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
+    bool pointIsWithinBounds(const GeoVector<float>& point) const;
+    GeoVector<float> getCornerInWorldSpace(int index) const;
+    GeoVector<float> getCornerInOpenGLSurfaceSpace(int index, float screenScale) const;
+  };
 }
 #endif //NOVELRT_GEOBOUNDS_H

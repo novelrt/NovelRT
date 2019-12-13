@@ -7,30 +7,28 @@
 #include "RGBAConfig.h"
 
 namespace NovelRT {
-class NovelBasicFillRect : public NovelRenderObject {
-public:
-  NovelBasicFillRect(NovelLayeringService* layeringService,
-                     float screenScale,
-                     const GeoVector<float>& size,
-                     const RGBAConfig& fillColour,
-                     const NovelCommonArgs& args,
-                     GLuint programId);
+  class NovelBasicFillRect : public NovelRenderObject {
 
-  void drawObject() final;
+  private:
+    RGBAConfig _colourConfig;
+    Lazy<GLuint> _colourBuffer;
+    std::vector<GLfloat> _colourData;
 
-  RGBAConfig getColourConfig() const;
+  protected:
+    void configureObjectBuffers() final;
 
-  void setColourConfig(const RGBAConfig& value);
+  public:
+    NovelBasicFillRect(NovelLayeringService* layeringService,
+                       float screenScale,
+                       const GeoVector<float>& size,
+                       const RGBAConfig& fillColour,
+                       const NovelCommonArgs& args,
+                       GLuint programId);
 
-protected:
-  void configureObjectBuffers() final;
-
-private:
-
-  RGBAConfig _colourConfig;
-  Lazy<GLuint> _colourBuffer;
-  std::vector<GLfloat> _colourData;
-};
+    void drawObject() final;
+    RGBAConfig getColourConfig() const;
+    void setColourConfig(const RGBAConfig& value);
+  };
 }
 
 #endif //NOVELRT_NOVELRECT_H
