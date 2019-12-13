@@ -24,6 +24,7 @@ class NovelRenderingService {
 
 private:
   NovelLayeringService* _layeringService;
+  NovelLoggingService _logger;
   std::shared_ptr<SDL_Window> _window;
   SDL_GLContext _openGLContext;
   float _screenScale;

@@ -30,10 +30,15 @@ namespace NovelRT {
     SoundBank _sounds;
     MusicBank _music;
     ChannelMap _channelMap;
+    NovelLoggingService _logger;
 
     int convertToMixVolume(float value);
     std::string findByChannelMap(int channel);
+    std::string getSDLError();
     void incrementNextChannel();
+    void logIfSDLFailure(int (*function)(Uint32), Uint32 sdlFlag);
+    void logIfMixerFailure(int (*function)(int), int mixerFlag);
+    void logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize);
 
   public:
     bool isInitialized;
