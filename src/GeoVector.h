@@ -21,8 +21,6 @@ namespace NovelRT {
       _value = value;
     }
 
-
-
   public:
     GeoVector() {}
     GeoVector(T x, T y) : _value(glm::vec2(x, y)) {}
