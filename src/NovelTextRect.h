@@ -9,38 +9,39 @@
 #include "NovelImageRect.h"
 
 namespace NovelRT {
-class NovelTextRect : public NovelRenderObject {
-public:
-  NovelTextRect(NovelLayeringService* layeringService,
-                float fontSize,
-                float screenScale,
-                const std::string& fontFileDir,
-                const RGBAConfig& colourConfig,
-                const NovelCommonArgs& args,
-                GLuint programId);
+  class NovelTextRect : public NovelRenderObject {
 
-  void drawObject() final;
+  private:
+    RGBAConfig _colourConfig;
+    std::string _fontFileDir;
+    std::string _previousFontFileDir = "";
+    float _fontSize;
+    std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
+    std::string _text = "";
+    std::vector<NovelImageRect*> _letterRects;
+    NovelCommonArgs _args;
 
-  RGBAConfig getColourConfig() const;
+    void reloadText();
 
-  void setColourConfig(const RGBAConfig& value);
+  protected:
+    void configureObjectBuffers() final;
 
-  std::string getText() const;
-  void setText(const std::string& value);
+  public:
+    NovelTextRect(NovelLayeringService* layeringService,
+                  float fontSize,
+                  float screenScale,
+                  const std::string& fontFileDir,
+                  const RGBAConfig& colourConfig,
+                  const NovelCommonArgs& args,
+                  GLuint programId);
 
-protected:
-  void configureObjectBuffers() final;
-private:
-  void reloadText();
+    RGBAConfig getColourConfig() const;
+    void setColourConfig(const RGBAConfig& value);
 
-  RGBAConfig _colourConfig;
-  std::string _fontFileDir;
-  std::string _previousFontFileDir = "";
-  float _fontSize;
-  std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
-  std::string _text = "";
-  std::vector<NovelImageRect*> _letterRects;
-  NovelCommonArgs _args;
-};
+    std::string getText() const;
+    void setText(const std::string& value);
+
+    void drawObject() final;
+  };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H
