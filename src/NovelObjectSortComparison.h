@@ -5,11 +5,12 @@
 
 #include "NovelObject.h"
 namespace NovelRT {
-struct NovelObjectSortComparison {
-public:
-  inline bool operator()(NovelObject* lhs, NovelObject* rhs) const {
-    return lhs->getOrderInLayer() < rhs->getOrderInLayer();
-  }
-};
+  struct NovelObjectSortComparison {
+
+  public:
+    inline bool operator()(NovelObject* lhs, NovelObject* rhs) const {
+      return lhs->getOrderInLayer() < rhs->getOrderInLayer();
+    }
+  };
 }
 #endif //NOVELRT_NOVELOBJECTSORTCOMPARISON_H
