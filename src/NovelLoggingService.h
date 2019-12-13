@@ -4,7 +4,7 @@
 #define NOVELRT_NOVELLOGGINGSERVICE_H
 
 #include <iostream>
-
+#include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace NovelRT {
