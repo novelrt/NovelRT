@@ -7,26 +7,27 @@
 #include "NovelBasicInteractionRect.h"
 
 namespace NovelRT {
-class NovelInteractionService { friend class NovelInteractionObject;
-NOVELRT_PARAMETERLESS_EVENT(Quit)
-public:
-  NovelInteractionService(NovelLayeringService* layeringService, float screenScale);
+  class NovelInteractionService {
+    friend class NovelInteractionObject;
 
-  void consumePlayerInput();
+  private:
+    void HandleInteractionDraw(NovelInteractionObject* target);
+    NovelInteractionObject* _clickTarget;
+    std::map<KeyCode, bool> _keyStates;
+    std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
+    NovelLayeringService* _layeringService;
+    float _screenScale;
 
-  NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize,
-                                                     const NovelCommonArgs& args);
-  void ExecuteClickedInteractable();
+    NOVELRT_PARAMETERLESS_EVENT(Quit)
+  public:
+    NovelInteractionService(NovelLayeringService* layeringService, float screenScale);
 
-  //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
-private:
-  void HandleInteractionDraw(NovelInteractionObject* target);
-  NovelInteractionObject* _clickTarget;
-  std::map<KeyCode, bool> _keyStates;
-  std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
-  NovelLayeringService* _layeringService;
-  float _screenScale;
-};
+    void consumePlayerInput();
+    NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize,
+      const NovelCommonArgs& args);
+    void ExecuteClickedInteractable();
+    //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
+  };
 }
 
 #endif //NOVELRT_NOVELINPUTSERVICE_H
