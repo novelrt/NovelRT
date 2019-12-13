@@ -21,6 +21,7 @@ namespace NovelRT {
     std::string _text = "";
     std::vector<NovelImageRect*> _letterRects;
     NovelCommonArgs _args;
+    NovelLoggingService _logger;
 
     void reloadText();
 
