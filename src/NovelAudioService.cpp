@@ -34,7 +34,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-      //_logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
+      _logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
     }
   }
   else
@@ -49,7 +49,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
     }
     else
     {
-     // _logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
+      _logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
     }
   }
 }
@@ -147,7 +147,7 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
 }
 
 void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
-    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
+  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetDistance(_channelMap[soundName], distance);
   }
@@ -158,7 +158,7 @@ void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
 }
 
 void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
-    if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
+  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetPanning(_channelMap[soundName], leftChannelVolume, rightChannelVolume);
   }
@@ -173,7 +173,6 @@ void NovelAudioService::resumeMusic() {
 }
 
 void NovelAudioService::playMusic(std::string musicName, int loops) {
-
   auto existingMusic = _music.find(musicName);
   if (existingMusic == _music.end())
   {
@@ -250,7 +249,6 @@ void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
 }
 
 void NovelAudioService::fadeMusicIn(std::string musicName, int loops, int ms) {
-
   if (!Mix_PlayingMusic())
   {
     Mix_FadeInMusic(_music[musicName], loops-1, ms);
@@ -329,7 +327,7 @@ void NovelAudioService::logIfSDLFailure(int (*function)(Uint32), Uint32 sdl_flag
 void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag) {
   if (function(mixerFlag) < NovelUtilities::SDL_SUCCESS)
   {
-    _logger.logError("SDL Error: ", getSDLError());
+    _logger.logError("Mixer Error: ", getSDLError());
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
@@ -337,7 +335,7 @@ void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag) {
 void NovelAudioService::logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize) {
   if (function(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
   {
-    _logger.logError("SDL Error: ", getSDLError());
+    _logger.logError("Mixer Error: ", getSDLError());
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
