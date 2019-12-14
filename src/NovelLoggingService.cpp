@@ -147,10 +147,4 @@ void NovelLoggingService::setLogLevel(LogLevel level) {
       break;
   }
 }
-
-//void NovelLoggingService::logInfo() {}
-//void NovelLoggingService::logError() {}
-//void NovelLoggingService::logWarning() {}
-//void NovelLoggingService::logDebug() {}
-
 }
