@@ -8,43 +8,43 @@
 
 namespace NovelRT {
 
-class NovelImageRect : public NovelRenderObject {
-public:
-  NovelImageRect(NovelLayeringService* layeringService,
-                 const GeoVector<float>& size,
-                 std::string_view imageDir,
-                 const NovelCommonArgs& args,
-                 GLuint programId,
-                 const RGBAConfig& colourTint);
+  class NovelImageRect : public NovelRenderObject {
 
-  NovelImageRect(NovelLayeringService* layeringService,
-                 const GeoVector<float>& size,
-                 const NovelCommonArgs& args,
-                 GLuint programId,
-                 const RGBAConfig& colourTint);
+  private:
+    std::string _imageDir;
+    std::string _previousImageDir;
+    Lazy<GLuint> _textureId;
+    std::vector<GLfloat> _uvCoordinates;
+    Lazy<GLuint> _uvBuffer;
+    Lazy<GLuint> _colourTintBuffer;
+    RGBAConfig _colourTint;
+    std::vector<GLfloat> _colourTintData;
 
-  void drawObject() final;
-  void setScale(const GeoVector<float>& value) final;
+  protected:
+    void configureObjectBuffers() final;
 
-  void setTextureInternal(GLuint textureId);
+  public:
+    NovelImageRect(NovelLayeringService* layeringService,
+      const GeoVector<float>& size,
+      std::string_view imageDir,
+      const NovelCommonArgs& args,
+      GLuint programId,
+      const RGBAConfig& colourTint);
 
-  RGBAConfig getColourTintConfig() const;
-  void setColourTintConfig(const RGBAConfig& value);
-  ~NovelImageRect() override;
+    NovelImageRect(NovelLayeringService* layeringService,
+      const GeoVector<float>& size,
+      const NovelCommonArgs& args,
+      GLuint programId,
+      const RGBAConfig& colourTint);
 
-protected:
-  void configureObjectBuffers() final;
+    void drawObject() final;
+    void setScale(const GeoVector<float>& value) final;
 
-private:
-  std::string _imageDir;
-  std::string _previousImageDir;
-  Lazy<GLuint> _textureId;
-  std::vector<GLfloat> _uvCoordinates;
-  Lazy<GLuint> _uvBuffer;
-  Lazy<GLuint> _colourTintBuffer;
-  RGBAConfig _colourTint;
-  std::vector<GLfloat> _colourTintData;
-};
+    void setTextureInternal(GLuint textureId);
 
+    RGBAConfig getColourTintConfig() const;
+    void setColourTintConfig(const RGBAConfig& value);
+    ~NovelImageRect() override;
+  };
 }
 #endif //NOVELRT_NOVELIMAGERECT_H

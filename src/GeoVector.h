@@ -6,159 +6,89 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 namespace NovelRT {
-template<typename T>
-class GeoVector {
-  friend class NovelRenderObject;
-  template<typename U>
-  friend class GeoMatrix4;
-public:
-  GeoVector();
-  GeoVector(T x, T y);
+  template<typename T>
+  class GeoVector {
+    friend class NovelRenderObject;
+    template<typename U>
+    friend class GeoMatrix4;
+  private:
+    GeoVector(glm::vec<2, T> value) : _value(glm::vec<4, T>(value, 0, 0)) {}
+    GeoVector(glm::vec<4, T> value) : _value(value) {}
 
-  T getX() const;
+    inline glm::vec<2, T> getVec2Value() const {
+      return glm::vec<2, T>(_value.x, _value.y);
+    }
 
-  void setX(T value);
+    inline void GeoVector<T>::setVec2Value(glm::vec<2, T> value) {
+      _value.x = value.x;
+      _value.y = value.y;
+    }
 
-  T getY() const;
+    glm::vec<4, T> getVec4Value() const {
+      return _value;
+    }
 
-  void setY(T value);
+    void setVec4Value(glm::vec<4, T> value) {
+      _value = value;
+    }
 
-  inline GeoVector<T> operator+(const GeoVector<T>& other) const;
+    glm::vec<4, T> _value;
 
-  inline GeoVector<T> operator-(const GeoVector<T>& other) const;
+  public:
+    GeoVector() {}
+    GeoVector(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {}
 
-  inline GeoVector<T> operator*(const GeoVector<T>& other) const;
+    T getX() const {
+      return getVec2Value().x;
+    }
 
-  inline GeoVector<T> operator/(const GeoVector<T>& other) const;
+    void GeoVector<T>::setX(T value) {
+      _value.x = value;
+    }
 
-  inline GeoVector<T> operator+(const T other) const;
+    T getY() const {
+      return getVec2Value().y;
+    }
 
-  inline GeoVector<T> operator-(const T other) const;
+    void setY(T value) {
+      _value.y = value;
+    }
 
-  inline GeoVector<T> operator*(const T other) const;
+    inline GeoVector<T> operator+(const GeoVector<T>& other) const {
+      return GeoVector<T>(getVec2Value() + other.getVec2Value());
+    }
 
-  inline GeoVector<T> operator/(const T other) const;
+    inline GeoVector<T> operator-(const GeoVector<T>& other) const {
+      return GeoVector<T>(getVec2Value() - other.getVec2Value());
+    }
 
-  void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point);
+    inline GeoVector<T> operator*(const GeoVector<T>& other) const {
+      return GeoVector<T>(getVec2Value() * other.getVec2Value());
+    }
 
-private:
-  GeoVector(glm::vec<2, T> value);
-  GeoVector(glm::vec<4, T> value);
+    GeoVector<T> operator/(const GeoVector<T>& other) const {
+      return GeoVector<T>(getVec2Value() / other.getVec2Value());
+    }
 
-  inline glm::vec<2, T> getVec2Value() const;
+    inline GeoVector<T> operator+(const T other) const {
+      return GeoVector<T>(getVec2Value() + other);
+    }
 
-  inline void setVec2Value(glm::vec<2, T> value);
+    inline GeoVector<T> operator-(const T other) const {
+      return GeoVector<T>(getVec2Value() - other);
+    }
 
-  inline glm::vec<4, T> getVec4Value() const;
+    inline GeoVector<T> operator*(const T other) const {
+      return GeoVector<T>(getVec2Value() * other);
+    }
 
-  inline void setVec4Value(glm::vec<4, T> value);
+    GeoVector<T> operator/(const T other) const {
+      return GeoVector<T>(getVec2Value() / other);
+    }
 
-  glm::vec<4, T> _value;
-};
-
-template<typename T>
-GeoVector<T>::GeoVector(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {
+    void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
+      setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
+    }
+  };
 }
-
-template<typename T>
-GeoVector<T>::GeoVector(glm::vec<2, T> value) : _value(glm ::vec<4, T>(value, 0, 0)) {
-}
-
-template<typename T>
-GeoVector<T>::GeoVector(glm::vec<4, T> value) : _value(value) {
-
-}
-
-template<typename T>
-T GeoVector<T>::getX() const {
-  return getVec2Value().x;
-}
-
-template<typename T>
-void GeoVector<T>::setX(T value) {
-  _value.x = value;
-}
-
-template<typename T>
-T GeoVector<T>::getY() const {
-  return getVec2Value().y;
-}
-
-template<typename T>
-void GeoVector<T>::setY(T value) {
-  _value.y = value;
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator+(const GeoVector<T>& other) const {
-  return GeoVector<T>(getVec2Value() + other.getVec2Value());
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator-(const GeoVector<T>& other) const {
-  return GeoVector<T>(getVec2Value() - other.getVec2Value());
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator*(const GeoVector<T>& other) const {
-  return GeoVector<T>(getVec2Value() * other.getVec2Value());
-}
-
-template<typename T>
-GeoVector<T> GeoVector<T>::operator/(const GeoVector<T>& other) const {
-  return GeoVector<T>(getVec2Value() / other.getVec2Value());
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator+(const T other) const {
-  return GeoVector<T>(getVec2Value() + other);
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator-(const T other) const {
-  return GeoVector<T>(getVec2Value() - other);
-}
-
-template<typename T>
-inline GeoVector<T> GeoVector<T>::operator*(const T other) const {
-  return GeoVector<T>(getVec2Value() * other);
-}
-
-template<typename T>
-GeoVector<T> GeoVector<T>::operator/(const T other) const {
-  return GeoVector<T>(getVec2Value() / other);
-}
-template<typename T>
-GeoVector<T>::GeoVector() {
-
-}
-template<typename T>
-void GeoVector<T>::rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
-  setVec2Value(
-      glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
-}
-
-template<typename T>
-inline glm::vec<2, T> GeoVector<T>::getVec2Value() const {
-  return glm::vec<2, T>(_value.x, _value.y);
-}
-
-template<typename T>
-inline void GeoVector<T>::setVec2Value(glm::vec<2, T> value) {
-  _value.x = value.x;
-  _value.y = value.y;
-}
-
-template<typename T>
-glm::vec<4, T> GeoVector<T>::getVec4Value() const {
-  return _value;
-}
-
-template<typename T>
-void GeoVector<T>::setVec4Value(glm::vec<4, T> value) {
-  _value = value;
-}
-
-}
-
 #endif //NOVELRT_COORDINATEVECTOR_H
