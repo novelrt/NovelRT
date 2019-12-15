@@ -20,63 +20,63 @@
 
 namespace NovelRT {
 
-class NovelRenderingService {
-public:
-  NovelRenderingService(NovelLayeringService* layeringService);
-  int initialiseRendering(int displayNumber);
+  class NovelRenderingService {
+  private:
 
-  void tearDown() const;
+    struct CameraBlock {
+      glm::mat4 cameraMatrix;
+      CameraBlock(glm::mat4 matrix) {
+        cameraMatrix = matrix;
+      }
+    };
 
-  NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
-                               std::string_view filePath,
-                               const NovelCommonArgs& args,
-                               const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
-  NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
-                                       const RGBAConfig& colourConfig,
-                                       const NovelCommonArgs& args);
-  NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
-                             float fontSize,
-                             const std::string& fontFilePath,
-                             const NovelCommonArgs& args);
+    bool initializeRenderPipeline(int displayNumber);
 
-  GeoVector<uint32_t> getScreenSize() const;
+    NovelLayeringService* _layeringService;
+    std::shared_ptr<SDL_Window> _window;
+    SDL_GLContext _openGLContext;
 
-  void beginFrame() const;
-  void endFrame() const;
+    int _winWidth;
+    int _winHeight;
 
-  std::shared_ptr<SDL_Window> getWindow() const;
+    GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
+    GLuint _basicFillRectProgramId;
+    GLuint _texturedRectProgramId;
+    GLuint _fontProgramId;
 
-private:
+    GeoVector<uint32_t> _screenSize;
+    Lazy<GLuint> _cameraObjectRenderUbo;
+    Lazy<CameraBlock> _cameraBlockObj;
+    NovelCamera _camera;
 
-  struct CameraBlock {
-    glm::mat4 cameraMatrix;
-    CameraBlock(glm::mat4 matrix) {
-      cameraMatrix = matrix;
-    }
+    void pushUboToGPU(GLuint shaderProgramId);
+    CameraBlock generateCameraBlock();
+
+  public:
+    NovelRenderingService(NovelLayeringService* layeringService);
+    int initialiseRendering(int displayNumber);
+
+    void tearDown() const;
+
+    NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
+      std::string_view filePath,
+      const NovelCommonArgs& args,
+      const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
+      const RGBAConfig& colourConfig,
+      const NovelCommonArgs& args);
+    NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
+      float fontSize,
+      const std::string& fontFilePath,
+      const NovelCommonArgs& args);
+
+    GeoVector<uint32_t> getScreenSize() const;
+
+    void beginFrame() const;
+    void endFrame() const;
+
+    std::shared_ptr<SDL_Window> getWindow() const;
   };
-
-  bool initializeRenderPipeline(int displayNumber);
-
-  NovelLayeringService* _layeringService;
-  std::shared_ptr<SDL_Window> _window;
-  SDL_GLContext _openGLContext;
-
-  int _winWidth;
-  int _winHeight;
-
-  GLuint loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
-  GLuint _basicFillRectProgramId;
-  GLuint _texturedRectProgramId;
-  GLuint _fontProgramId;
-
-  GeoVector<uint32_t> _screenSize;
-  Lazy<GLuint> _cameraObjectRenderUbo;
-  Lazy<CameraBlock> _cameraBlockObj;
-  NovelCamera _camera;
-
-  void pushUboToGPU(GLuint shaderProgramId);
-  CameraBlock generateCameraBlock();
-};
 
 }
 #endif //NOVELRT_NOVELRENDERINGSERVICE_H

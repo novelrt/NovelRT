@@ -15,10 +15,9 @@ extern "C"
 #include <lauxlib.h>
 }
 
-lua_State *L;
+lua_State* L;
 
-static int average(lua_State *luaState)
-{
+static int average(lua_State *luaState) {
   int n = lua_gettop(luaState);
   double sum = 0;
   for (int i = 1; i <= n; i++)
@@ -74,7 +73,7 @@ int main(int argc, char *argv[])
   playButtonArgs.orderInLayer = 1;
   playButtonArgs.startingRotation = 0.0f;
 
-  playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
   playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
   playButtonArgs.orderInLayer = 1;
   auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);

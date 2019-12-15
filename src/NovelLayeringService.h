@@ -9,16 +9,17 @@
 #include "NovelWorldObject.h"
 
 namespace NovelRT {
-class NovelWorldObject;
-class NovelLayeringService {
-public:
-  void updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate = true);
-  void sortLayerOrder(int layer);
-  void executeAllObjectBehaviours();
+  class NovelWorldObject;
+  class NovelLayeringService {
+  private:
+    std::map<int, std::vector<NovelWorldObject*>> _layerMatrix;
 
-  ~NovelLayeringService();
-private:
-  std::map<int, std::vector<NovelWorldObject*>> _layerMatrix;
-};
+  public:
+    void updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate = true);
+    void sortLayerOrder(int layer);
+    void executeAllObjectBehaviours();
+
+    ~NovelLayeringService();
+  };
 }
 #endif //NOVELRT_NOVELLAYERINGSERVICE_H

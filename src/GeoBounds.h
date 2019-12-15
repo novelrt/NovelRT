@@ -6,25 +6,26 @@
 #include "GeoVector.h"
 #include <vector>
 #include "Lazy.h"
+#include "GeoVector.h"
 
 namespace NovelRT {
-class GeoBounds {
-public:
-  GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
-  bool pointIsWithinBounds(const GeoVector<float>& point) const;
-  GeoVector<float> getCornerInLocalSpace(int index) const;
-  GeoVector<float> getCornerInWorldSpace(int index) const;
-  GeoVector<float> getPosition() const;
-  void setPosition(const GeoVector<float>& value);
-  GeoVector<float> getSize() const;
-  void setSize(const GeoVector<float>& value);
-  float getRotation() const;
-  void setRotation(float value);
+  class GeoBounds {
+  private:
+    GeoVector<float> _position;
+    float _rotation;
+    GeoVector<float> _size;
 
-private:
-  GeoVector<float> _position;
-  float _rotation;
-  GeoVector<float> _size;
-};
+  public:
+    GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
+    bool pointIsWithinBounds(const GeoVector<float>& point) const;
+    GeoVector<float> getCornerInLocalSpace(int index) const;
+    GeoVector<float> getCornerInWorldSpace(int index) const;
+    GeoVector<float> getPosition() const;
+    void setPosition(const GeoVector<float>& value);
+    GeoVector<float> getSize() const;
+    void setSize(const GeoVector<float>& value);
+    float getRotation() const;
+    void setRotation(float value);
+  };
 }
 #endif //NOVELRT_GEOBOUNDS_H

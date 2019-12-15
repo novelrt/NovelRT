@@ -10,18 +10,8 @@
 #include <glm/glm.hpp>
 
 namespace NovelRT {
+
 class NovelRenderObject : public NovelWorldObject {
-
-public:
-  NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
-                    const NovelCommonArgs& args, const GLuint programId);
-
-  void executeObjectBehaviour() final;
-  void setSize(const GeoVector<float>& value) override;
-  void setRotation(const float value) override;
-  void setScale(const GeoVector<float>& value) override;
-  void setPosition(const GeoVector<float>& value) override;
-  virtual ~NovelRenderObject();
 
 protected:
   virtual void drawObject() = 0;
@@ -36,6 +26,16 @@ protected:
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
 
-};
+public:
+  NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
+                    const NovelCommonArgs& args, const GLuint programId);
+
+  void executeObjectBehaviour() final;
+  void setSize(const GeoVector<float>& value) override;
+  void setRotation(const float value) override;
+  void setScale(const GeoVector<float>& value) override;
+  void setPosition(const GeoVector<float>& value) override;
+  virtual ~NovelRenderObject();
+  };
 }
 #endif //NOVELRT_NOVELRENDEROBJECT_H
