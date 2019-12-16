@@ -5,7 +5,7 @@ layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec4 aColourTint;
 
 layout (std140) uniform finalViewMatrixBuffer {
-  mat4 modelViewProjection
+  mat4 modelViewProjection;
 };
 
 out vec2 texCoord;
