@@ -9,19 +9,11 @@ namespace NovelRT {
 NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                      const GeoVector<float>& size,
                                      const NovelCommonArgs& args,
-                                     const GLuint programId) : NovelWorldObject(layeringService, size, args),
+                                     ShaderProgram shaderProgram,
+                                     NovelCamera* camera) : NovelWorldObject(layeringService, size, args),
                                                                _modelTransform(Lazy<glm::mat3>(std::function<glm::mat3()>(
                                                                    std::bind(&NovelRenderObject::generateModelTransform,
                                                                              this)))),
- /*                                                              _modelTransformUniformBuffer(Lazy<GLuint>(std::function<GLuint()>([this]{
-                                                                 auto bla = _modelTransform.getActual();
-                                                                 GLuint ubo;
-                                                                 glGenBuffers(1, &ubo);
-                                                                 glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-                                                                 glBufferData(GL_UNIFORM_BUFFER, sizeof(bla), &bla, GL_DYNAMIC_DRAW);
-                                                                 glBindBuffer(GL_UNIFORM_BUFFER, 0);
-                                                                 return ubo;
-                                                               }))),*/
                                                                _vertexBuffer(Lazy<GLuint>(std::function<GLuint()>(
                                                                    generateStandardBuffer))),
                                                                _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([] {
@@ -29,7 +21,9 @@ NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
                                                                  glGenVertexArrays(1, &tempVao);
                                                                  return tempVao;
                                                                }))),
-                                                               _programId(programId) {
+                                                               _shaderProgram(shaderProgram),
+                                                               _camera(camera) {
+
 }
 
 void NovelRenderObject::executeObjectBehaviour() {

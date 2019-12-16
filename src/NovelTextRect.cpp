@@ -82,15 +82,18 @@ void NovelTextRect::configureObjectBuffers() {
 }
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
+                             const NovelCommonArgs& args,
+                             ShaderProgram shaderProgram,
+                             NovelCamera* camera,
                              float fontSize,
                              const std::string& fontFileDir,
-                             const RGBAConfig& colourConfig,
-                             const NovelCommonArgs& args,
-                             GLuint programId) : NovelRenderObject(layeringService,
+                             const RGBAConfig& colourConfig) : NovelRenderObject(layeringService,
                                                                          GeoVector<float>(200, 200),
                                                                          args,
-                                                                         programId), _colourConfig(colourConfig),
-                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
+                                                                         shaderProgram,
+                                                                         camera),
+                                                     _colourConfig(colourConfig),
+                                                     _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
 
 }
 std::string NovelTextRect::getText() const {
@@ -103,7 +106,8 @@ void NovelTextRect::setText(const std::string& value) {
     _letterRects.push_back(new NovelImageRect(_layeringService,
                                               GeoVector<float>(50, 50),
                                               _args,
-                                              _programId,
+                                              _shaderProgram,
+                                              _camera,
                                               _colourConfig));
   }
 

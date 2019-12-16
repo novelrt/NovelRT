@@ -9,13 +9,15 @@
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
-                               std::string_view imageDir,
                                const NovelCommonArgs& args,
-                               GLuint programId,
+                               ShaderProgram shaderProgram,
+                               NovelCamera* camera,
+                               const std::string& imageDir,
                                const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
                                                                                  size,
                                                                                  args,
-                                                                                 programId),
+                                                                                 shaderProgram,
+                                                                                 camera),
                                                                _imageDir(imageDir),
                                                                _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
@@ -31,8 +33,9 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                const GeoVector<float>& size,
                                const NovelCommonArgs& args,
-                               GLuint programId,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, size, "", args, programId, colourTint) {
+                               ShaderProgram shaderProgram,
+                               NovelCamera* camera,
+                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, size, args, shaderProgram, camera, "", colourTint) {
 
 }
 
@@ -44,7 +47,7 @@ void NovelImageRect::drawObject() {
   if (!getActive())
     return;
 
-  glUseProgram(_programId);
+  glUseProgram(_shaderProgram.shaderProgramId);
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);

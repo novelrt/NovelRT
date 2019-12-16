@@ -89,7 +89,10 @@ set(NOVELRT_HEADERS
   src/RGBAConfig.h
   src/wrapper.hpp
   src/NovelCamera.h
-  src/GeoMatrix4.h src/CameraViewChangedEventArgs.h)
+  src/GeoMatrix4.h
+  src/CameraViewChangedEventArgs.h
+  src/ShaderProgram.h
+  src/CameraBlock.h)
 
 set(NOVELRT_SOURCES
         src/NovelWorldObject.cpp

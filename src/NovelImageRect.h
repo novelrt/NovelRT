@@ -5,6 +5,7 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
+#include "ShaderProgram.h"
 
 namespace NovelRT {
 
@@ -26,15 +27,17 @@ namespace NovelRT {
   public:
     NovelImageRect(NovelLayeringService* layeringService,
       const GeoVector<float>& size,
-      std::string_view imageDir,
       const NovelCommonArgs& args,
-      GLuint programId,
+      ShaderProgram shaderProgram,
+      NovelCamera* camera,
+      const std::string& imageDir,
       const RGBAConfig& colourTint);
 
     NovelImageRect(NovelLayeringService* layeringService,
       const GeoVector<float>& size,
       const NovelCommonArgs& args,
-      GLuint programId,
+      ShaderProgram shaderProgram,
+      NovelCamera* camera,
       const RGBAConfig& colourTint);
 
     void drawObject() final;

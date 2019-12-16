@@ -4,7 +4,7 @@
 #define NOVELRT_KEYCODE_H
 
 namespace NovelRT {
-  enum KeyCode : unsigned int {
+  enum class KeyCode : unsigned int {
     Nothing = 0,
     LeftMouseButton = 323,
     RightMouseButton = 324

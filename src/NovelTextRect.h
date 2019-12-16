@@ -7,6 +7,7 @@
 #include <string>
 #include "GraphicsCharacterRenderData.h"
 #include "NovelImageRect.h"
+#include "ShaderProgram.h"
 
 namespace NovelRT {
 class NovelTextRect : public NovelRenderObject {
@@ -27,11 +28,12 @@ protected:
 
 public:
   NovelTextRect(NovelLayeringService* layeringService,
+                const NovelCommonArgs& args,
+                ShaderProgram programId,
+                NovelCamera* camera,
                 float fontSize,
                 const std::string& fontFileDir,
-                const RGBAConfig& colourConfig,
-                const NovelCommonArgs& args,
-                GLuint programId);
+                const RGBAConfig& colourConfig);
 
   void drawObject() final;
 

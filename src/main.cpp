@@ -35,7 +35,7 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-NovelRT::NovelBasicFillRect *playAudioButton;
+//NovelRT::NovelBasicFillRect *playAudioButton;
 NovelRT::NovelImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
@@ -73,9 +73,9 @@ int main(int argc, char *argv[])
   playButtonArgs.orderInLayer = 1;
   playButtonArgs.startingRotation = 0.0f;
 
-  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
-  playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
-  playButtonArgs.orderInLayer = 1;
+  //auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  //playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
+  //playButtonArgs.orderInLayer = 1;
   auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
   playAudioText->setText("Play Audio");
 

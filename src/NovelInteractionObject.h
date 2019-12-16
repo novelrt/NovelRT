@@ -15,7 +15,7 @@ namespace NovelRT {
     NOVELRT_PARAMETERLESS_EVENT(Interacted)
   private:
     std::function<void(NovelInteractionObject*)> _notifyHasBeenDrawnObject;
-    KeyCode _subscribedKey = LeftMouseButton;
+    KeyCode _subscribedKey = KeyCode::LeftMouseButton;
 
   public:
     NovelInteractionObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
