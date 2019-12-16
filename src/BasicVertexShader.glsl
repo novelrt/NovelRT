@@ -4,7 +4,7 @@ layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec4 vertexColour;
 
 layout (std140) uniform finalViewMatrixBuffer {
-  mat4 modelViewProjection
+  mat4 modelViewProjection;
 };
 
 out vec4 fragmentColour;
