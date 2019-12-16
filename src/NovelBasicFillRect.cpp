@@ -9,23 +9,18 @@ NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
                                        const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
                                        const NovelCommonArgs& args,
-                                       GLuint programId) :
-    NovelRenderObject(layeringService, size, args, programId), _colourConfig(fillColour),
-    _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {
-}
+                                       ShaderProgram shaderProgram,
+                                       NovelCamera* camera) :
+    NovelRenderObject(layeringService, size, args, shaderProgram, camera), _colourConfig(fillColour),
+    _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {}
 
 void NovelBasicFillRect::drawObject() {
   if (!getActive())
     return;
 
-  glUseProgram(_programId);
+  glUseProgram(_shaderProgram.shaderProgramId);
 
-/*  glBindBuffer(GL_UNIFORM_BUFFER, _modelTransformUniformBuffer.getActual());
-  GLvoid* p = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-  memcpy(p, &_modelTransform.getActual(), sizeof(_modelTransform.getActual()));
-  glUnmapBuffer(GL_UNIFORM_BUFFER);*/
-
-  glUniformMatrix3fv(1, 1, GL_FALSE, &_modelTransform.getActual()[0][0]);
+  glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
 
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(1);

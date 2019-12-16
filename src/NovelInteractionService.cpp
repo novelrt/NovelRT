@@ -6,13 +6,13 @@ namespace NovelRT {
 NovelInteractionService::NovelInteractionService(NovelLayeringService* layeringService)
     : _clickTarget(nullptr), _layeringService(layeringService) {
 
-  _mousePositionsOnScreenPerButton.insert({LeftMouseButton, GeoVector<float>(0, 0)});
-  _keyStates.insert({LeftMouseButton, false});
+  _mousePositionsOnScreenPerButton.insert({KeyCode::LeftMouseButton, GeoVector<float>(0, 0)});
+  _keyStates.insert({KeyCode::LeftMouseButton, false});
 }
 
 void NovelInteractionService::HandleInteractionDraw(NovelInteractionObject* target) {
   if (_keyStates[target->getSubscribedKey()]
-      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[LeftMouseButton])
+      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
           && target->getOrderInLayer() >= _clickTarget->getOrderInLayer())))
     _clickTarget = target;
@@ -31,9 +31,9 @@ void NovelInteractionService::consumePlayerInput() {
       return;
     case SDL_MOUSEBUTTONUP:
       if (event.button.button == SDL_BUTTON_LEFT) {
-        _mousePositionsOnScreenPerButton[LeftMouseButton].setX(event.button.x);
-        _mousePositionsOnScreenPerButton[LeftMouseButton].setY(event.button.y);
-        _keyStates[LeftMouseButton] = true;
+        _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setX(event.button.x);
+        _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setY(event.button.y);
+        _keyStates[KeyCode::LeftMouseButton] = true;
       }
       break;
     }

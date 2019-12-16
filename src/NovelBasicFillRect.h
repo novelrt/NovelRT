@@ -5,6 +5,8 @@
 
 #include "NovelRenderObject.h"
 #include "RGBAConfig.h"
+#include "ShaderProgram.h"
+#include "NovelCamera.h"
 
 namespace NovelRT {
   class NovelBasicFillRect : public NovelRenderObject {
@@ -22,7 +24,8 @@ namespace NovelRT {
                        const GeoVector<float>& size,
                        const RGBAConfig& fillColour,
                        const NovelCommonArgs& args,
-                       GLuint programId);
+                       ShaderProgram shaderProgram,
+                       NovelCamera* camera);
 
     void drawObject() final;
     RGBAConfig getColourConfig() const;

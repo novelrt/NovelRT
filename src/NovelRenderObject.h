@@ -8,6 +8,8 @@
 #include <glad/glad.h>
 #include <memory>
 #include <glm/glm.hpp>
+#include "ShaderProgram.h"
+#include "NovelCamera.h"
 
 namespace NovelRT {
 
@@ -22,13 +24,14 @@ protected:
   Lazy<glm::mat3> _modelTransform;
   Lazy<GLuint> _vertexBuffer;
   Lazy<GLuint> _vertexArrayObject;
-  GLuint _programId;
+  ShaderProgram _shaderProgram;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
+  NovelCamera* _camera;
 
 public:
   NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
-                    const NovelCommonArgs& args, const GLuint programId);
+                    const NovelCommonArgs& args, ShaderProgram shaderProgram, NovelCamera* camera);
 
   void executeObjectBehaviour() final;
   void setSize(const GeoVector<float>& value) override;

@@ -1,3 +1,4 @@
+#include "NovelRenderingService.h"
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRenderingService.h"
@@ -65,13 +66,13 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  _basicFillRectProgramId = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
-  _texturedRectProgramId = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
-  _fontProgramId = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
+  _basicFillRectProgram = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
+  _texturedRectProgram = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
+  _fontProgram = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
   return true;
 }
 
-GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::string fragmentFilePath){
+ShaderProgram NovelRenderingService::loadShaders(std::string vertexFilePath , std::string fragmentFilePath){
 
   // Create the shaders
   GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -88,8 +89,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     VertexShaderStream.close();
   }else{
     std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
-    getchar();
-    return 0;
+    throw EXIT_FAILURE;
   }
 
   // Read the Fragment Shader code from the file
@@ -102,8 +102,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     fragmentShaderStream.close();
   }else{
     std::cerr << "ERROR: Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
-    getchar();
-    return 0;
+    throw EXIT_FAILURE;
   }
 
   GLint Result = GL_FALSE;
@@ -122,6 +121,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     std::vector<char> vertexShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
     std::cerr << "ERROR: " << &vertexShaderErrorMessage[0] << std::endl;
+    throw EXIT_FAILURE;
   }
 
   // Compile Fragment Shader
@@ -137,6 +137,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     std::vector<char> fragmentShaderErrorMessage(infoLogLength+1);
     glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
     std::cerr << "ERROR: " << &fragmentShaderErrorMessage[0] << std::endl;
+    throw EXIT_FAILURE;
   }
 
   // Link the program
@@ -153,6 +154,7 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
     std::vector<char> ProgramErrorMessage(infoLogLength+1);
     glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
     std::cerr << "ERROR: " << &ProgramErrorMessage[0] << std::endl;
+    throw EXIT_FAILURE;
   }
 
   glDetachShader(programId, vertexShaderId);
@@ -161,14 +163,18 @@ GLuint NovelRenderingService::loadShaders(std::string vertexFilePath , std::stri
   glDeleteShader(vertexShaderId);
   glDeleteShader(fragmentShaderId);
 
+  ShaderProgram returnProg;
+  returnProg.shaderProgramId = programId;
+  returnProg.finalViewMatrixBufferUboId = _cameraObjectRenderUbo.getActual();
+  bindCameraUboForProgram(programId);
 
-  return programId;
+  return returnProg;
 }
 
 int NovelRenderingService::initialiseRendering(int displayNumber) {
   if (!initializeRenderPipeline(displayNumber)) {
     std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
-    return 1;
+    throw EXIT_FAILURE;
   }
 
   SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
@@ -177,8 +183,8 @@ int NovelRenderingService::initialiseRendering(int displayNumber) {
 }
 
 void NovelRenderingService::tearDown() const {
-  glDeleteProgram(_basicFillRectProgramId);
-  glDeleteProgram(_texturedRectProgramId);
+  glDeleteProgram(_basicFillRectProgram.shaderProgramId);
+  glDeleteProgram(_texturedRectProgram.shaderProgramId);
   SDL_DestroyWindow(getWindow().get());
   SDL_Quit();
 }
@@ -193,17 +199,17 @@ void NovelRenderingService::endFrame() const {
 }
 
 NovelImageRect* NovelRenderingService::getImageRect(const GeoVector<float>& startingSize,
-                                                    std::string_view filePath,
+                                                    const std::string& filePath,
                                                     const NovelCommonArgs& args,
                                                     const RGBAConfig& colourTint) {
-  return new NovelImageRect(_layeringService, startingSize, filePath, args, _texturedRectProgramId, colourTint);
+  return new NovelImageRect(_layeringService, startingSize, args, _texturedRectProgram, getCamera(), filePath, colourTint);
 }
 
 NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
                                                   float fontSize,
                                                   const std::string& fontFilePath,
                                                   const NovelCommonArgs& args) {
-  return new NovelTextRect(_layeringService, fontSize, fontFilePath, colourConfig, args, _fontProgramId);
+  return new NovelTextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
 }
 
 std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
@@ -218,29 +224,36 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
   glBindBuffer(GL_UNIFORM_BUFFER, 0);
   glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
   return tempHandle;
-})), _cameraBlockObj(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&NovelRenderingService::generateCameraBlock, this)))) {
-}
+})),
+_camera(std::make_unique<NovelCamera>()){}
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
                                                             const NovelCommonArgs& args) {
-  return new NovelBasicFillRect(_layeringService, startingSize, colourConfig, args, _basicFillRectProgramId);
+  return new NovelBasicFillRect(_layeringService, startingSize, colourConfig, args, _basicFillRectProgram, getCamera());
 }
 
 GeoVector<uint32_t> NovelRenderingService::getScreenSize() const {
   return _screenSize;
 }
 
-void NovelRenderingService::pushUboToGPU(GLuint shaderProgramId) {
-  GLuint cameraBufferIndex = glGetUniformBlockIndex(shaderProgramId, "cameraInformation");
-  glUniformBlockBinding(shaderProgramId, cameraBufferIndex, 0);
-  GLuint handle = _cameraObjectRenderUbo.getActual();
-  glBindBuffer(GL_UNIFORM_BUFFER, handle);
-  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), &_cameraBlockObj.getActual());
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+NovelCamera* NovelRenderingService::getCamera() const
+{
+  return _camera.get();
 }
 
-NovelRenderingService::CameraBlock NovelRenderingService::generateCameraBlock() {
-  return CameraBlock(_camera.getCameraUboMatrix().getUnderlyingMatrix());
+void NovelRenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+  GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+  glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+
+  //TODO: This is what handles buffering part of the data into the UBO, but this is only partial.
+  //GLuint handle = _cameraObjectRenderUbo.getActual();
+  //glBindBuffer(GL_UNIFORM_BUFFER, handle);
+  //glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), &_cameraBlockObj.getActual());
+  //glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
+
+//NovelRenderingService::CameraBlock NovelRenderingService::generateCameraBlock() {
+//  return CameraBlock(_camera.getCameraUboMatrix().getUnderlyingMatrix());
+//}
 }
