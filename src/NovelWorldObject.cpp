@@ -4,7 +4,6 @@
 
 namespace NovelRT {
 NovelWorldObject::NovelWorldObject(NovelLayeringService* layeringService,
-                                   const GeoVector<float>& size,
                                    const NovelCommonArgs& args) :
     _layeringService(layeringService) {
   setLayer(args.layer);
@@ -12,7 +11,6 @@ NovelWorldObject::NovelWorldObject(NovelLayeringService* layeringService,
   _layeringService->updateLayerInfo(getLayer(), this, true);
   setPosition(args.startingPosition);
   setRotation(args.startingRotation);
-  setSize(size);
   setScale(args.startingScale);
   setActive(true);
 }
@@ -41,14 +39,6 @@ GeoVector<float> NovelWorldObject::getScale() const {
 
 void NovelWorldObject::setScale(const GeoVector<float>& value) {
   _scale = value;
-}
-
-GeoVector<float> NovelWorldObject::getSize() const {
-  return _size;
-}
-
-void NovelWorldObject::setSize(const GeoVector<float>& value) {
-  _size = value;
 }
 
 bool NovelWorldObject::getActive() const {

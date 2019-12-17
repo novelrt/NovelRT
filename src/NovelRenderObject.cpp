@@ -12,10 +12,9 @@ namespace NovelRT {
   }
 
   NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-    const GeoVector<float>& size,
     const NovelCommonArgs& args,
     ShaderProgram shaderProgram,
-    NovelCamera* camera) : NovelWorldObject(layeringService, size, args),
+    NovelCamera* camera) : NovelWorldObject(layeringService, args),
                            _finalViewMatrixData(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&NovelRenderObject::generateViewData, this)))),
                            _vertexBuffer(Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
                            _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([] {
@@ -61,11 +60,6 @@ namespace NovelRT {
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
       }
 
-      void NovelRenderObject::setSize(const GeoVector<float>& value) {
-        _finalViewMatrixData.reset();
-        NovelWorldObject::setSize(value);
-        configureObjectBuffers();
-      }
       void NovelRenderObject::setRotation(const float value) {
         _finalViewMatrixData.reset();
         NovelWorldObject::setRotation(value);
@@ -100,7 +94,7 @@ namespace NovelRT {
         auto resultMatrix = GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
         resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
         resultMatrix = glm::rotate(resultMatrix, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-        resultMatrix = glm::scale(resultMatrix, glm::vec3((getSize() * getScale()).getVec2Value(), 1.0f));
+        resultMatrix = glm::scale(resultMatrix, glm::vec3(getScale().getVec2Value(), 1.0f));
 
         return CameraBlock(glm::transpose(_uboCameraData.cameraMatrix * resultMatrix));
       }

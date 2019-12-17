@@ -88,7 +88,6 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                              float fontSize,
                              const std::string& fontFileDir,
                              const RGBAConfig& colourConfig) : NovelRenderObject(layeringService,
-                                                                         GeoVector<float>(200, 200),
                                                                          args,
                                                                          shaderProgram,
                                                                          camera),
@@ -102,9 +101,10 @@ std::string NovelTextRect::getText() const {
 void NovelTextRect::setText(const std::string& value) {
   _text = value;
   int difference = _text.length() - _letterRects.size();
+  auto modifiedArgs = _args;
+  modifiedArgs.startingScale = GeoVector<float>(50, 50);
   for (int i = 0; i < difference; i++) {
     _letterRects.push_back(new NovelImageRect(_layeringService,
-                                              GeoVector<float>(50, 50),
                                               _args,
                                               _shaderProgram,
                                               _camera,
@@ -136,7 +136,7 @@ void NovelTextRect::reloadText() {
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
     target->setPosition(currentWorldPosition);
-    target->setSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
+    target->setScale(GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setActive(true);
     ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }

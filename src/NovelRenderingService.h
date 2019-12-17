@@ -51,14 +51,11 @@ namespace NovelRT {
 
     void tearDown() const;
 
-    NovelImageRect* getImageRect(const GeoVector<float>& startingSize,
-      const std::string& filePath,
+    NovelImageRect* getImageRect(const std::string& filePath,
       const NovelCommonArgs& args,
       const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 
-    NovelBasicFillRect* getBasicFillRect(const GeoVector<float>& startingSize,
-      const RGBAConfig& colourConfig,
-      const NovelCommonArgs& args);
+    NovelBasicFillRect* getBasicFillRect(const RGBAConfig& colourConfig, const NovelCommonArgs& args);
 
     NovelTextRect* getTextRect(const RGBAConfig& colourConfig,
       float fontSize,

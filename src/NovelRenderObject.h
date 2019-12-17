@@ -34,11 +34,10 @@ protected:
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
-  NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
+  NovelRenderObject(NovelLayeringService* layeringService,
                     const NovelCommonArgs& args, ShaderProgram shaderProgram, NovelCamera* camera);
 
   void executeObjectBehaviour() final;
-  void setSize(const GeoVector<float>& value) override;
   void setRotation(const float value) override;
   void setScale(const GeoVector<float>& value) override;
   void setPosition(const GeoVector<float>& value) override;

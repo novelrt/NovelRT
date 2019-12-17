@@ -52,8 +52,9 @@ int main(int argc, char *argv[])
   novelChanArgs.orderInLayer = 0;
   novelChanArgs.startingPosition.setX(1920 / 2);
   novelChanArgs.startingPosition.setY(1080 / 2);
+  novelChanArgs.startingScale = NovelRT::GeoVector<float>(456, 618);
 
-  novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;

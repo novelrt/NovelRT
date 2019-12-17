@@ -8,13 +8,11 @@
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                ShaderProgram shaderProgram,
                                NovelCamera* camera,
                                const std::string& imageDir,
                                const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
-                                                                                 size,
                                                                                  args,
                                                                                  shaderProgram,
                                                                                  camera),
@@ -31,11 +29,10 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 }
 
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const GeoVector<float>& size,
                                const NovelCommonArgs& args,
                                ShaderProgram shaderProgram,
                                NovelCamera* camera,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, size, args, shaderProgram, camera, "", colourTint) {
+                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
 
 }
 
