@@ -1,5 +1,4 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-
 #ifndef NOVELRT_NOVELWORLDOBJECT_H
 #define NOVELRT_NOVELWORLDOBJECT_H
 #include "GeoVector.h"
@@ -8,49 +7,47 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
-class NovelLayeringService;
-class NovelWorldObject {
-public:
-  NovelWorldObject(NovelLayeringService* layeringService, const NovelCommonArgs& args);
+  class NovelLayeringService;
+  class NovelWorldObject {
+  protected:
+    GeoVector<float> _position;
+    GeoVector<float> _scale;
+    float _rotation;
+    bool _active = true;
+    int _orderInLayer;
+    int _layer;
+    NovelLayeringService* _layeringService;
 
-  virtual ~NovelWorldObject();
+  public:
+    NovelWorldObject(NovelLayeringService* layeringService, const NovelCommonArgs& args);
 
-  virtual GeoVector<float> getPosition() const;
+    virtual ~NovelWorldObject();
 
-  virtual void setPosition(const GeoVector<float>& value);
+    virtual GeoVector<float> getPosition() const;
 
-  virtual float getRotation() const;
+    virtual void setPosition(const GeoVector<float>& value);
 
-  virtual void setRotation(float value);
+    virtual float getRotation() const;
 
-  virtual GeoVector<float> getScale() const;
+    virtual void setRotation(float value);
 
-  virtual void setScale(const GeoVector<float>& value);
+    virtual GeoVector<float> getScale() const;
 
-  virtual int getLayer() const;
+    virtual void setScale(const GeoVector<float>& value);
 
-  virtual void setLayer(int value);
+    virtual int getLayer() const;
 
-  virtual int getOrderInLayer() const;
+    virtual void setLayer(int value);
 
-  virtual void setOrderInLayer(int value);
+    virtual int getOrderInLayer() const;
 
-  virtual bool getActive() const;
+    virtual void setOrderInLayer(int value);
 
-  virtual void setActive(bool value);
+    virtual bool getActive() const;
 
-  virtual void executeObjectBehaviour() = 0;
+    virtual void setActive(bool value);
 
-protected:
-  GeoVector<float> _position;
-  GeoVector<float> _scale;
-  float _rotation;
-  bool _active = true;
-  int _orderInLayer;
-  int _layer;
-  NovelLayeringService* _layeringService;
-};
-
+    virtual void executeObjectBehaviour() = 0;
+  };
 }
-
 #endif //NOVELRT_NOVELWORLDOBJECT_H
