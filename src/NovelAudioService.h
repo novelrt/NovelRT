@@ -36,10 +36,9 @@ namespace NovelRT {
     std::string findByChannelMap(int channel);
     std::string getSDLError();
     void incrementNextChannel();
-    void logIfSDLFailure(int (*function)(Uint32), Uint32 sdlFlag);
-    void logIfMixerFailure(int (*function)(int), int mixerFlag);
-    void logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize);
-
+    void logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdlFlag);
+    void logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag);
+    void logIfMixerFailure(std::function<int(int,Uint16,int,int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize);
   public:
     bool isInitialized;
 
