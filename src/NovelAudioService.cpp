@@ -316,24 +316,24 @@ std::string NovelAudioService::findByChannelMap(int channel) {
   return nullptr;
 }
 
-void NovelAudioService::logIfSDLFailure(int (*function)(Uint32), Uint32 sdl_flag) {
-  if (function(sdl_flag) < NovelUtilities::SDL_SUCCESS)
+void NovelAudioService::logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdl_flag) {
+  if (sdlFunction(sdl_flag) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("SDL Error: ", getSDLError());
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
 
-void NovelAudioService::logIfMixerFailure(int (*function)(int), int mixerFlag) {
-  if (function(mixerFlag) < NovelUtilities::SDL_SUCCESS)
+void NovelAudioService::logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag) {
+  if (mixerFunction(mixerFlag) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("Mixer Error: ", getSDLError());
     throw std::runtime_error("Audio error occurred! Unable to continue.");
   }
 }
 
-void NovelAudioService::logIfMixerFailure(int (*function)(int, Uint16, int, int), int freq, Uint16 mixerFormat, int channels, int sampleSize) {
-  if (function(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
+void NovelAudioService::logIfMixerFailure(std::function<int(int, Uint16, int, int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize) {
+  if (mixerFunction(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("Mixer Error: ", getSDLError());
     throw std::runtime_error("Audio error occurred! Unable to continue.");
