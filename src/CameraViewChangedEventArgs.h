@@ -4,11 +4,11 @@
 #define NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
 #include "GeoMatrix4.h"
 namespace NovelRT {
-struct CameraViewChangedEventArgs {
-public:
-  const GeoMatrix4<float> cameraMatrix;
-  CameraViewChangedEventArgs(const GeoMatrix4<float>& newCameraMatrix) : cameraMatrix(newCameraMatrix){};
-};
+  struct CameraViewChangedEventArgs {
+  public:
+    const GeoMatrix4<float> cameraMatrix;
+    CameraViewChangedEventArgs(const GeoMatrix4<float>& newCameraMatrix) : cameraMatrix(newCameraMatrix) {};
+  };
 }
 
 #endif //NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
