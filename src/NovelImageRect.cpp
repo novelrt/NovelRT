@@ -48,6 +48,9 @@ void NovelImageRect::drawObject() {
     return;
 
   glUseProgram(_shaderProgram.shaderProgramId);
+  glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraBlock), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);

@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "NovelCamera.h"
+#include "CameraBlock.h"
 
 namespace NovelRT {
 
@@ -19,15 +20,18 @@ protected:
   virtual void drawObject() = 0;
   virtual void configureObjectBuffers();
   static GLuint generateStandardBuffer();
-  glm::mat3 generateModelTransform();
+  CameraBlock generateViewData();
+  CameraBlock generateCameraBlock();
 
-  Lazy<glm::mat3> _modelTransform;
   Lazy<GLuint> _vertexBuffer;
   Lazy<GLuint> _vertexArrayObject;
   ShaderProgram _shaderProgram;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
   NovelCamera* _camera;
+  CameraBlock _uboCameraData;
+  Lazy<CameraBlock> _finalViewMatrixData;
+  void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
   NovelRenderObject(NovelLayeringService* layeringService, const GeoVector<float>& size,

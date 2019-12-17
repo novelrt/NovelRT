@@ -42,7 +42,6 @@ void NovelInteractionService::consumePlayerInput() {
 
 NovelBasicInteractionRect* NovelInteractionService::getBasicInteractionRect(const GeoVector<float>& startingSize,
                                                                             const NovelCommonArgs& args) {
-  //return *new NovelBasicInteractionRect(_layeringService, _screenScale, startingSize, args, [this](NovelInteractionObject* x){ HandleInteractionDraw(x);});
   return new NovelBasicInteractionRect(_layeringService,
                                        startingSize,
                                        args,
