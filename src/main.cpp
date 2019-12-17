@@ -67,6 +67,14 @@ int main(int argc, char *argv[])
   auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
   textRect->setText("RubyGnomer");
 
+  auto lineArgs = rectArgs;
+  lineArgs.startingScale.setY(2.0f);
+  lineArgs.startingScale.setX(1000.0f);
+  lineArgs.startingPosition = rectArgs.startingPosition;
+  lineArgs.startingPosition.setY(lineArgs.startingPosition.getY() + 2);
+
+  auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
+
   auto playButtonArgs = NovelRT::NovelCommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
   playButtonArgs.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
