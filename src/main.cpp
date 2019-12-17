@@ -73,8 +73,9 @@ int main(int argc, char *argv[])
   playButtonArgs.layer = 0;
   playButtonArgs.orderInLayer = 1;
   playButtonArgs.startingRotation = 0.0f;
+  playButtonArgs.startingScale = NovelRT::GeoVector<float>(200, 200);
 
-  //auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
   //playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
   //playButtonArgs.orderInLayer = 1;
   //auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);

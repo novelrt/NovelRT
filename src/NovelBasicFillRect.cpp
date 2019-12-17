@@ -20,9 +20,11 @@ void NovelBasicFillRect::drawObject() {
   glUseProgram(_shaderProgram.shaderProgramId);
 
   glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraBlock), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+
 
   glBindVertexArray(_vertexArrayObject.getActual());
-  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
   glVertexAttribPointer(
       2,
@@ -33,7 +35,7 @@ void NovelBasicFillRect::drawObject() {
       nullptr
   );
 
-  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer.getActual());
   glVertexAttribPointer(
       3,
