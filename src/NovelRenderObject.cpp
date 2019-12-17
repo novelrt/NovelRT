@@ -38,10 +38,10 @@ namespace NovelRT {
       }
 
       void NovelRenderObject::configureObjectBuffers() {
-        auto topLeft = GeoVector<GLfloat>(-1.0f, 1.0f);
-        auto bottomRight = GeoVector<GLfloat>(1.0f, -1.0f);
-        auto topRight = GeoVector<GLfloat>(1.0f, 1.0f);
-        auto bottomLeft = GeoVector<GLfloat>(-1.0f, -1.0f);
+        auto topLeft = GeoVector<GLfloat>(-0.5f, 0.5f);
+        auto bottomRight = GeoVector<GLfloat>(0.5f, -0.5f);
+        auto topRight = GeoVector<GLfloat>(0.5f, 0.5f);
+        auto bottomLeft = GeoVector<GLfloat>(-0.5f, -0.5f);
 
         _vertexBufferData = {
             topLeft.getX(), topLeft.getY(), 0.0f,
@@ -96,13 +96,13 @@ namespace NovelRT {
       }
 
       CameraBlock NovelRenderObject::generateViewData() {
-        auto size = (getSize() * getScale()).getVec2Value();
         auto position = getPosition().getVec2Value();
-        auto matrix3D = glm::mat4();
-        glm::rotate(matrix3D, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-        glm::scale(matrix3D, glm::vec3(size, 1.0f));
-        glm::translate(matrix3D, glm::vec3(position, 0.0f));
-        return CameraBlock(matrix3D * _uboCameraData.cameraMatrix);
+        auto resultMatrix = GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
+        resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
+        resultMatrix = glm::rotate(resultMatrix, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+        resultMatrix = glm::scale(resultMatrix, glm::vec3(getScale().getVec2Value(), 1.0f));
+
+        return CameraBlock(glm::transpose(_uboCameraData.cameraMatrix * resultMatrix));
       }
 
       CameraBlock NovelRenderObject::generateCameraBlock() {

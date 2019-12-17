@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
   //auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
   //playAudioText->setText("Play Audio");
 
-  runner.getDebugService()->setIsFpsCounterVisible(true);
+  runner.getDebugService()->setIsFpsCounterVisible(false);
 
   runner.runOnUpdate([](double delta) {
     const float rotationAmount = 45.0f;
