@@ -70,23 +70,23 @@ namespace NovelRT {
       return GeoVector<T>(getVec2Value() / other.getVec2Value());
     }
 
-    inline GeoVector<T> operator+(const T other) const {
+    inline GeoVector<T> operator+(T other) const {
       return GeoVector<T>(getVec2Value() + other);
     }
 
-    inline GeoVector<T> operator-(const T other) const {
+    inline GeoVector<T> operator-(T other) const {
       return GeoVector<T>(getVec2Value() - other);
     }
 
-    inline GeoVector<T> operator*(const T other) const {
+    inline GeoVector<T> operator*(T other) const {
       return GeoVector<T>(getVec2Value() * other);
     }
 
-    GeoVector<T> operator/(const T other) const {
+    GeoVector<T> operator/(T other) const {
       return GeoVector<T>(getVec2Value() / other);
     }
 
-    void rotateToAngleAroundPoint(const T angleRotationValue, const GeoVector<T>& point) {
+    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) {
       setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
     }
   };
