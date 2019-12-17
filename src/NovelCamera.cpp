@@ -5,9 +5,7 @@
 
 namespace NovelRT {
   NovelCamera::NovelCamera() : _cameraUboMatrix(Lazy<GeoMatrix4<float>>(std::function<GeoMatrix4<float>()>(std::bind(&NovelCamera::generateUboMatrix,
-    this)))) {
-
-  }
+    this)))) {}
 
   GeoMatrix4<float> NovelCamera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
