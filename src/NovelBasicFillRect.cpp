@@ -27,18 +27,17 @@ void NovelBasicFillRect::drawObject() {
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
   glVertexAttribPointer(
-      2,
+      0,
       3,
       GL_FLOAT,
       GL_FALSE,
       0,
       nullptr
   );
-
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer.getActual());
   glVertexAttribPointer(
-      3,
+      1,
       4,
       GL_FLOAT,
       GL_FALSE,

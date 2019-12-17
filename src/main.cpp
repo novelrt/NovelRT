@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
-  rectArgs.startingPosition.setY(rectArgs.startingPosition.getY() - 400);
+  rectArgs.startingPosition.setY(rectArgs.startingPosition.getY());
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  //auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  //textRect->setText("RubyGnomer");
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  textRect->setText("RubyGnomer");
 
   auto playButtonArgs = NovelRT::NovelCommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
   //auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
   //playAudioText->setText("Play Audio");
 
-  runner.getDebugService()->setIsFpsCounterVisible(false);
+  runner.getDebugService()->setIsFpsCounterVisible(true);
 
   runner.runOnUpdate([](double delta) {
     const float rotationAmount = 45.0f;
