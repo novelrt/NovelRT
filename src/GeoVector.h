@@ -19,7 +19,7 @@ namespace NovelRT {
       return glm::vec<2, T>(_value.x, _value.y);
     }
 
-    inline void GeoVector<T>::setVec2Value(glm::vec<2, T> value) {
+    inline void setVec2Value(glm::vec<2, T> value) {
       _value.x = value.x;
       _value.y = value.y;
     }
@@ -42,7 +42,7 @@ namespace NovelRT {
       return getVec2Value().x;
     }
 
-    void GeoVector<T>::setX(T value) {
+    void setX(T value) {
       _value.x = value;
     }
 
