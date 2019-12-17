@@ -28,6 +28,7 @@ messageCallback(GLenum source,
 #include "NovelDebugService.h"
 #include "NovelRunner.h"
 
+  // During init, enable debug output
 namespace NovelRT {
   NovelDebugService::NovelDebugService(NovelRunner* runner) :
     _runner(runner),

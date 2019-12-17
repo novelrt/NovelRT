@@ -4,6 +4,7 @@
 #define NOVELRT_NOVELDEBUGSERVICE_H
 
 #include "NovelTextRect.h"
+#include <glad/glad.h>
 
 namespace NovelRT {
 
