@@ -46,7 +46,8 @@ bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
     return false;
   }
-
+  _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, wData, hData, 0)));
+  _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(wData / 1920.0f, hData / 1080.0f, 0.0f))));
   _screenSize = GeoVector<uint32_t>(static_cast<uint32_t>(glm::round(wData)), static_cast<uint32_t>(glm::round(hData)));
   std::cout << "INFO: Screen size is " << _screenSize.getX() << "x" << _screenSize.getY() << std::endl;
 
@@ -225,10 +226,7 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
   glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
   return tempHandle;
 })),
-_camera(std::make_unique<NovelCamera>()){
-  _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, _screenSize.getX(), _screenSize.getY(), 0)));
-  _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(_screenSize.getX() / 1920.0f, _screenSize.getY() / 1080.0f, 0.0f))));
-}
+_camera(std::make_unique<NovelCamera>()){}
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,

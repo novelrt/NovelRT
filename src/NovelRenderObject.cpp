@@ -100,7 +100,7 @@ namespace NovelRT {
         auto resultMatrix = GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
         resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
         resultMatrix = glm::rotate(resultMatrix, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-        resultMatrix = glm::scale(resultMatrix, glm::vec3(getScale().getVec2Value(), 1.0f));
+        resultMatrix = glm::scale(resultMatrix, glm::vec3((getSize() * getScale()).getVec2Value(), 1.0f));
 
         return CameraBlock(glm::transpose(_uboCameraData.cameraMatrix * resultMatrix));
       }
