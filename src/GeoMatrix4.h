@@ -9,7 +9,10 @@ namespace NovelRT {
 
 template<typename T>
 class GeoMatrix4 {
-  friend class NovelRenderingService;
+  friend class NovelRenderObject;
+  friend class NovelImageRect;
+  friend class NovelBasicFillRect;
+  friend class NovelTextRect;
 private:
   glm::mat<4, 4, T> _value;
 
