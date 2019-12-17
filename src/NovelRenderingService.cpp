@@ -17,23 +17,6 @@
 #include <fstream>
 #include <sstream>
 
-void GLAPIENTRY
-messageCallback(GLenum source,
-  GLenum type,
-  GLuint id,
-  GLenum severity,
-  GLsizei length,
-  const GLchar* message,
-  const void* userParam) {
-  if (severity < GL_DEBUG_SEVERITY_HIGH) {
-    return;
-  }
-
-  fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-    (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-    type, severity, message);
-}
-
 namespace NovelRT {
   bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
@@ -43,8 +26,8 @@ namespace NovelRT {
     }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 
@@ -75,9 +58,6 @@ namespace NovelRT {
       std::cerr << "ERROR: Failed to initialise glad." << std::endl;
       return -1;
     }
-
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(messageCallback, 0);
 
     std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;

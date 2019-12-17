@@ -130,8 +130,8 @@ void NovelTextRect::reloadText() {
     ch = match->second;
 
     auto currentWorldPosition = GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2) + ch.bearing.getX(),
-                                                 (ttfOrigin.getY() + (ch.bearing.getY() / 2))
-                                                     - ((ch.size.getY() - ch.bearing.getY()) / 2));
+                                                 (ttfOrigin.getY() - (ch.bearing.getY() / 2))
+                                                     + ((ch.size.getY() - ch.bearing.getY()) / 2));
 
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
