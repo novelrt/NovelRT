@@ -10,6 +10,9 @@ namespace NovelRT {
   }
 
   bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
+    if (point.getX() >= getCornerInWorldSpace(0).getX() && point.getX() <= getCornerInWorldSpace(2).getX() && point.getY() <= getCornerInWorldSpace(2).getY()
+      && point.getY() >= getCornerInWorldSpace(0).getY())
+      return true;
 
     return false;
   }
