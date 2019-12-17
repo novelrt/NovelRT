@@ -11,8 +11,7 @@ namespace NovelRT {
 class NovelLayeringService;
 class NovelWorldObject {
 public:
-  NovelWorldObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
-                   const NovelCommonArgs& args);
+  NovelWorldObject(NovelLayeringService* layeringService, const NovelCommonArgs& args);
 
   virtual ~NovelWorldObject();
 
@@ -27,10 +26,6 @@ public:
   virtual GeoVector<float> getScale() const;
 
   virtual void setScale(const GeoVector<float>& value);
-
-  virtual GeoVector<float> getSize() const;
-
-  virtual void setSize(const GeoVector<float>& value);
 
   virtual int getLayer() const;
 
@@ -49,7 +44,6 @@ public:
 protected:
   GeoVector<float> _position;
   GeoVector<float> _scale;
-  GeoVector<float> _size;
   float _rotation;
   bool _active = true;
   int _orderInLayer;

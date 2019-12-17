@@ -6,12 +6,11 @@
 namespace NovelRT {
 
 NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
-                                       const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
                                        const NovelCommonArgs& args,
                                        ShaderProgram shaderProgram,
                                        NovelCamera* camera) :
-    NovelRenderObject(layeringService, size, args, shaderProgram, camera), _colourConfig(fillColour),
+    NovelRenderObject(layeringService, args, shaderProgram, camera), _colourConfig(fillColour),
     _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {}
 
 void NovelBasicFillRect::drawObject() {

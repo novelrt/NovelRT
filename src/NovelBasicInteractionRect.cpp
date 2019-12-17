@@ -7,12 +7,12 @@ NovelBasicInteractionRect::NovelBasicInteractionRect(NovelLayeringService* layer
                                                      const GeoVector<float>& size,
                                                      const NovelCommonArgs& args,
                                                      const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject)
-    : NovelInteractionObject(layeringService, size, args, notifyHasBeenDrawnObject) {
+    : NovelInteractionObject(layeringService, args, notifyHasBeenDrawnObject) {
 
 }
 bool NovelBasicInteractionRect::validateInteractionPerimeter(const NovelRT::GeoVector<float>& mousePosition) const {
-  GeoVector<float> position = getPosition(); // * _screenScale;
-  GeoVector<float> size = getSize(); // * _screenScale;
+  GeoVector<float> position = getPosition();
+  GeoVector<float> size = getScale();
   return GeoBounds(position, size, getRotation()).pointIsWithinBounds(mousePosition);
 }
 }

@@ -26,7 +26,6 @@ namespace NovelRT {
 
   public:
     NovelImageRect(NovelLayeringService* layeringService,
-      const GeoVector<float>& size,
       const NovelCommonArgs& args,
       ShaderProgram shaderProgram,
       NovelCamera* camera,
@@ -34,7 +33,6 @@ namespace NovelRT {
       const RGBAConfig& colourTint);
 
     NovelImageRect(NovelLayeringService* layeringService,
-      const GeoVector<float>& size,
       const NovelCommonArgs& args,
       ShaderProgram shaderProgram,
       NovelCamera* camera,

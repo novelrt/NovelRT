@@ -3,10 +3,9 @@
 #include "NovelInteractionObject.h"
 namespace NovelRT {
 NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
-                                               const NovelRT::GeoVector<float>& size,
                                                const NovelRT::NovelCommonArgs& args,
                                                const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
-    : NovelWorldObject(layeringService, size, args) {
+    : NovelWorldObject(layeringService, args) {
   _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
 
 }

@@ -18,7 +18,7 @@ namespace NovelRT {
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
 
   public:
-    NovelInteractionObject(NovelLayeringService* layeringService, const GeoVector<float>& size,
+    NovelInteractionObject(NovelLayeringService* layeringService,
       const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;

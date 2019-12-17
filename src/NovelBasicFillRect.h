@@ -21,7 +21,6 @@ namespace NovelRT {
 
   public:
     NovelBasicFillRect(NovelLayeringService* layeringService,
-                       const GeoVector<float>& size,
                        const RGBAConfig& fillColour,
                        const NovelCommonArgs& args,
                        ShaderProgram shaderProgram,
