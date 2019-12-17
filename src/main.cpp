@@ -64,16 +64,16 @@ int main(int argc, char *argv[])
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  textRect->setText("RubyGnomer");
+  //auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  //textRect->setText("RubyGnomer");
 
-  auto lineArgs = rectArgs;
-  lineArgs.startingScale.setY(2.0f);
-  lineArgs.startingScale.setX(1000.0f);
-  lineArgs.startingPosition = rectArgs.startingPosition;
-  lineArgs.startingPosition.setY(lineArgs.startingPosition.getY() + 2);
+  //auto lineArgs = rectArgs;
+  //lineArgs.startingScale.setY(2.0f);
+  //lineArgs.startingScale.setX(1000.0f);
+  //lineArgs.startingPosition = rectArgs.startingPosition;
+  //lineArgs.startingPosition.setY(lineArgs.startingPosition.getY() + 2);
 
-  auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
+  //auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
 
   auto playButtonArgs = NovelRT::NovelCommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
@@ -84,10 +84,10 @@ int main(int argc, char *argv[])
   playButtonArgs.startingScale = NovelRT::GeoVector<float>(200, 200);
 
   auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
-  //playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
-  //playButtonArgs.orderInLayer = 1;
-  //auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
-  //playAudioText->setText("Play Audio");
+  playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
+  playButtonArgs.orderInLayer = 1;
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
+  playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -116,6 +116,7 @@ int main(int argc, char *argv[])
   auto counter = 0;
 
   rect->subscribeToInteracted([&novelAudio, &counter] {
+    std::cout << "TEST" << std::endl;
     counter++;
     switch (counter)
     {
