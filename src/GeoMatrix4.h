@@ -13,6 +13,7 @@ class GeoMatrix4 {
   friend class NovelImageRect;
   friend class NovelBasicFillRect;
   friend class NovelTextRect;
+  friend class NovelRenderingService;
 private:
   glm::mat<4, 4, T> _value;
 
@@ -20,11 +21,22 @@ private:
     return _value;
   }
 
-  explicit GeoMatrix4(glm::mat4 matrix);
+  explicit GeoMatrix4(glm::mat4 matrix) {
+    _value = matrix;
+  }
 
 public:
-  GeoMatrix4();
-  GeoMatrix4(GeoVector<T> x, GeoVector<T> y, GeoVector<T> z, GeoVector<T> w);
+  GeoMatrix4() {}
+
+  GeoMatrix4(GeoVector<T> x,
+    GeoVector<T> y,
+    GeoVector<T> z,
+    GeoVector<T> w) {
+    setX(x);
+    setY(y);
+    setZ(z);
+    setW(w);
+  }
 
   inline GeoVector<T> getX() const {
     return GeoVector<T>(_value[0]);
@@ -73,28 +85,11 @@ public:
   inline GeoMatrix4<T> operator/(const GeoMatrix4<T>& other) const {
     return GeoMatrix4<T>(getUnderlyingMatrix() / other.getUnderlyingMatrix());
   }
+
+  static GeoMatrix4<T> getDefaultIdentity() {
+    return GeoMatrix4<T>(glm::identity<glm::mat4>());
+  }
 };
-
-template<typename T>
-GeoMatrix4<T>::GeoMatrix4() {
-
-}
-
-template<typename T>
-GeoMatrix4<T>::GeoMatrix4(GeoVector<T> x,
-                          GeoVector<T> y,
-                          GeoVector<T> z,
-                          GeoVector<T> w) {
-  setX(x);
-  setY(y);
-  setZ(z);
-  setW(w);
-}
-
-template<typename T>
-GeoMatrix4<T>::GeoMatrix4(glm::mat4 matrix) {
-  _value = matrix;
-}
 }
 
 #endif //NOVELRT_GEOMATRIX4_H

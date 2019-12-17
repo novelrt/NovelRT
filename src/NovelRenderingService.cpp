@@ -225,7 +225,10 @@ NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringServi
   glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
   return tempHandle;
 })),
-_camera(std::make_unique<NovelCamera>()){}
+_camera(std::make_unique<NovelCamera>()){
+  _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, _screenSize.getX(), _screenSize.getY(), 0)));
+  _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(_screenSize.getX() / 1920.0f, _screenSize.getY() / 1080.0f, 0.0f))));
+}
 
 NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const GeoVector<float>& startingSize,
                                                             const RGBAConfig& colourConfig,
