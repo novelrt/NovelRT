@@ -17,7 +17,7 @@ namespace NovelRT {
     Lazy(std::function<T()> delegate) : _delegate(delegate) {}
     Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(std::make_unique<T>(eagerStartValue)) {}
 
-    T& Lazy<T>::getActual() {
+    T& getActual() {
       if (!isCreated()) _actual = std::make_unique<T>(_delegate());
 
       return *_actual;
