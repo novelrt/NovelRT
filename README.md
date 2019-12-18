@@ -36,6 +36,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 - glad
 - glm
 - freetype
+- spdlog
 
 *The minimum CMake version required for this project is 3.13.*
 
