@@ -11,6 +11,7 @@
 #include <functional>
 #include <memory>
 #include "RGBAConfig.h"
+#include "NovelLoggingService.h"
 #include "NovelLayeringService.h"
 #include "NovelImageRect.h"
 #include "NovelBasicFillRect.h"
@@ -26,7 +27,7 @@ namespace NovelRT {
   private:
 
     bool initializeRenderPipeline(int displayNumber);
-
+    NovelLoggingService _logger;
     NovelLayeringService* _layeringService;
     std::shared_ptr<SDL_Window> _window;
     SDL_GLContext _openGLContext;

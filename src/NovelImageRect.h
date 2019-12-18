@@ -5,6 +5,7 @@
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
+#include "NovelLoggingService.h"
 #include "ShaderProgram.h"
 
 namespace NovelRT {
@@ -20,6 +21,7 @@ namespace NovelRT {
     Lazy<GLuint> _colourTintBuffer;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
+    NovelLoggingService _logger;
 
   protected:
     void configureObjectBuffers() final;
