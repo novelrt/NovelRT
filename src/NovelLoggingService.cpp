@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "NovelLoggingService.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 #include "spdlog/async.h"
 #include <typeinfo>
 

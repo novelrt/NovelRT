@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELRTUTILITIES_H
-#define NOVELRT_NOVELRTUTILITIES_H
+#ifndef NOVELRT_NOVELUTILITIES_H
+#define NOVELRT_NOVELUTILITIES_H
 #include <algorithm>
 
 namespace NovelRT {
@@ -75,4 +75,4 @@ private:                                                                        
   }                                                                                                               \
 
 
-#endif //NOVELRT_NOVELRTUTILITIES_H
+#endif //NOVELRT_NOVELUTILITIES_H

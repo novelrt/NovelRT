@@ -84,7 +84,7 @@ set(NOVELRT_HEADERS
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
   src/NovelRenderObject.h
-  src/NovelRTUtilities.h
+  src/NovelUtilities.h
   src/NovelRunner.h
   src/NovelStepTimer.h
   src/NovelTextRect.h

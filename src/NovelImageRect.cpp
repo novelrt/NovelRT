@@ -5,7 +5,7 @@
 #include <iostream>
 #include "NovelImageRect.h"
 #include "GeoBounds.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,

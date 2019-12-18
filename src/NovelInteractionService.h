@@ -5,7 +5,7 @@
 #include "NovelInteractionObject.h"
 #include "KeyCode.h"
 #include "NovelBasicInteractionRect.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 
 namespace NovelRT {
   class NovelInteractionService {

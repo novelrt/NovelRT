@@ -11,7 +11,7 @@
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
