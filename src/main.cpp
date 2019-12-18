@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
+#include <string>
 #include "NovelLoggingService.h"
 #include "NovelRenderingService.h"
 #include "NovelRunner.h"
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
   lua_register(L, "average", average);
   luaL_dofile(L, "avg.lua");
   lua_close(L);
-  auto runner = NovelRT::NovelRunner(0);
+  auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
@@ -118,8 +119,9 @@ int main(int argc, char *argv[])
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console] {
+  rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
+    runner.getRenderer()->setWindowTitle("NovelRTTest - Count = " + std::to_string(counter));
     switch (counter) {
       case 1:
         novelAudio->fadeMusicOut(500);
