@@ -95,7 +95,8 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                                                                _fontFileDir(fontFileDir),
                                                                _args(args),
                                                                _colourConfig(colourConfig),
-                                                               _fontSize(fontSize), _logger(NovelUtilities::CONSOLE_LOG_GFX) {}
+                                                               _fontSize(fontSize),
+                                                               _logger(NovelUtilities::CONSOLE_LOG_GFX) {}
 
 std::string NovelTextRect::getText() const {
   return _text;

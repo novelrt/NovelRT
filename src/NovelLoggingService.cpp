@@ -31,8 +31,7 @@ namespace NovelRT {
   }
 
   NovelLoggingService::NovelLoggingService(const std::string& core) {
-    try
-    {
+    try {
       _logger = spdlog::get(core);
       if (_logger == nullptr) {
         _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
@@ -49,8 +48,7 @@ namespace NovelRT {
         std::cerr << "SPDLOG ERROR: " << msg << std::endl;
       });
     }
-    catch (const spdlog::spdlog_ex & ex)
-    {
+    catch (const spdlog::spdlog_ex & ex) {
       std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
     }
   }
