@@ -1,11 +1,10 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelRenderingService.h"
 #include "NovelRunner.h"
 #include "NovelImageRect.h"
 #include "NovelCommonArgs.h"
-#include "NovelLayeringService.h"
 #include "NovelInteractionService.h"
 #include "NovelAudioService.h"
 
@@ -16,10 +15,9 @@ extern "C"
 #include <lauxlib.h>
 }
 
-lua_State *L;
+lua_State* L;
 
-static int average(lua_State *luaState)
-{
+static int average(lua_State *luaState) {
   int n = lua_gettop(luaState);
   double sum = 0;
   for (int i = 1; i <= n; i++)
@@ -37,7 +35,7 @@ static int average(lua_State *luaState)
   _putenv_s(name, value)
 #endif
 
-NovelRT::NovelBasicFillRect *playAudioButton;
+//NovelRT::NovelBasicFillRect *playAudioButton;
 NovelRT::NovelImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
@@ -48,24 +46,34 @@ int main(int argc, char *argv[])
   lua_register(L, "average", average);
   luaL_dofile(L, "avg.lua");
   lua_close(L);
-  auto runner = NovelRT::NovelRunner(0, new NovelRT::NovelLayeringService());
+  auto runner = NovelRT::NovelRunner(0);
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
   novelChanArgs.startingPosition.setX(1920 / 2);
   novelChanArgs.startingPosition.setY(1080 / 2);
+  novelChanArgs.startingScale = NovelRT::GeoVector<float>(456, 618);
 
-  novelChanRect = runner.getRenderer()->getImageRect(NovelRT::GeoVector<float>(456, 618), "novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
 
   auto rectArgs = NovelRT::NovelCommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
+  rectArgs.startingPosition.setY(rectArgs.startingPosition.getY());
   rectArgs.layer = 0;
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  textRect->setText("RubyGnomer");
+  //auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  //textRect->setText("RubyGnomer");
+
+  //auto lineArgs = rectArgs;
+  //lineArgs.startingScale.setY(2.0f);
+  //lineArgs.startingScale.setX(1000.0f);
+  //lineArgs.startingPosition = rectArgs.startingPosition;
+  //lineArgs.startingPosition.setY(lineArgs.startingPosition.getY() + 2);
+
+  //auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
 
   auto playButtonArgs = NovelRT::NovelCommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
@@ -73,11 +81,13 @@ int main(int argc, char *argv[])
   playButtonArgs.layer = 0;
   playButtonArgs.orderInLayer = 1;
   playButtonArgs.startingRotation = 0.0f;
+  playButtonArgs.startingScale = NovelRT::GeoVector<float>(200, 200);
 
-  playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::GeoVector<float>(200, 200), NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
-  playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
+  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  auto playAudioTextArgs = playButtonArgs;
+  playAudioTextArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
   playButtonArgs.orderInLayer = 1;
-  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextArgs);
   playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);

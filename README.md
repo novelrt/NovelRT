@@ -48,7 +48,7 @@ First off, if you want to contribute, thanks! Tickets that are not being resolve
 **NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Discord via direct message or by contacting us via email at admin@novelrt.dev.**
 
 ## Licence
-Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See [LICENCE](LICENCE.md) in the repository root for more information.
+Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See [LICENCE](LICENCE.md) in the repository root for more information.
 
 
 ## Questions?

@@ -1,16 +1,16 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelRunner.h"
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
-  NovelRunner::NovelRunner(int displayNumber, NovelLayeringService* layeringService, uint32_t targetFrameRate)
-    :  _stepTimer(StepTimer(targetFrameRate)), _layeringService(layeringService), _novelDebugService(std::make_unique<NovelDebugService>(this)), _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService)) {
+NovelRunner::NovelRunner(int displayNumber, uint32_t targetFrameRate)
+    : _stepTimer(StepTimer(targetFrameRate)), _layeringService(std::make_unique<NovelLayeringService>()), _novelDebugService(std::make_unique<NovelDebugService>(this)),
+      _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get())), _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get())), _novelAudioService(std::make_unique<NovelAudioService>())  {
   _novelRenderer->initialiseRendering(displayNumber);
-  _novelInteractionService = std::make_unique<NovelInteractionService>(_layeringService, _novelRenderer->getScreenScale());
-  _novelAudioService = std::make_unique<NovelAudioService>();
-  _novelInteractionService->subscribeToQuit([this]{_exitCode = 0;});
+  _novelInteractionService->setScreenSize(_novelRenderer->getScreenSize());
+  _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
 }
 
 int NovelRunner::runNovel() {
@@ -24,8 +24,8 @@ int NovelRunner::runNovel() {
     _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
     _novelInteractionService->ExecuteClickedInteractable();
-
   }
+
   _novelRenderer->tearDown();
   _novelAudioService->~NovelAudioService();
   return _exitCode;

@@ -64,6 +64,7 @@ link_libraries(${LUA_LIBRARY})
 find_package(Doxygen QUIET)
 
 set(NOVELRT_HEADERS
+  src/NovelWorldObject.h
   src/GeoBounds.h
   src/GeoVector.h
   src/GraphicsCharacterRenderData.h
@@ -77,7 +78,6 @@ set(NOVELRT_HEADERS
   src/NovelInteractionObject.h
   src/NovelInteractionService.h
   src/NovelLayeringService.h
-  src/NovelObject.h
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
   src/NovelRenderObject.h
@@ -88,9 +88,14 @@ set(NOVELRT_HEADERS
   src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
-)
+  src/NovelCamera.h
+  src/GeoMatrix4.h
+  src/CameraViewChangedEventArgs.h
+  src/ShaderProgram.h
+  src/CameraBlock.h)
 
 set(NOVELRT_SOURCES
+        src/NovelWorldObject.cpp
   src/GeoBounds.cpp
   src/NovelBasicFillRect.cpp
   src/NovelBasicInteractionRect.cpp
@@ -99,7 +104,6 @@ set(NOVELRT_SOURCES
   src/NovelInteractionObject.cpp
   src/NovelInteractionService.cpp
   src/NovelLayeringService.cpp
-  src/NovelObject.cpp
   src/NovelRenderingService.cpp
   src/NovelRenderObject.cpp
   src/NovelRunner.cpp
@@ -107,7 +111,7 @@ set(NOVELRT_SOURCES
   src/NovelTextRect.cpp
   src/NovelAudioService.cpp
   src/RGBAConfig.cpp
-)
+  src/NovelCamera.cpp)
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
