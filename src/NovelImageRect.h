@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELIMAGERECT_H
 #define NOVELRT_NOVELIMAGERECT_H
@@ -6,6 +6,7 @@
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
 #include "NovelLoggingService.h"
+#include "ShaderProgram.h"
 
 namespace NovelRT {
 
@@ -14,9 +15,6 @@ namespace NovelRT {
   private:
     std::string _imageDir;
     std::string _previousImageDir;
-    int _imageHandle;
-    int _width;
-    int _height;
     Lazy<GLuint> _textureId;
     std::vector<GLfloat> _uvCoordinates;
     Lazy<GLuint> _uvBuffer;
@@ -30,29 +28,26 @@ namespace NovelRT {
 
   public:
     NovelImageRect(NovelLayeringService* layeringService,
-                   const float& screenScale,
-                   const GeoVector<float>& size,
-                   std::string_view imageDir,
-                   const NovelCommonArgs& args,
-                   GLuint programId,
-                   const RGBAConfig& colourTint);
+      const NovelCommonArgs& args,
+      ShaderProgram shaderProgram,
+      NovelCamera* camera,
+      const std::string& imageDir,
+      const RGBAConfig& colourTint);
 
     NovelImageRect(NovelLayeringService* layeringService,
-                   const float& screenScale,
-                   const GeoVector<float>& size,
-                   const NovelCommonArgs& args,
-                   GLuint programId,
-                   const RGBAConfig& colourTint);
-    ~NovelImageRect() override;
+      const NovelCommonArgs& args,
+      ShaderProgram shaderProgram,
+      NovelCamera* camera,
+      const RGBAConfig& colourTint);
 
+    void drawObject() final;
     void setScale(const GeoVector<float>& value) final;
 
     void setTextureInternal(GLuint textureId);
 
     RGBAConfig getColourTintConfig() const;
     void setColourTintConfig(const RGBAConfig& value);
-
-    void drawObject() final;
+    ~NovelImageRect() override;
   };
 }
 #endif //NOVELRT_NOVELIMAGERECT_H

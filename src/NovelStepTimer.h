@@ -1,7 +1,7 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 // This is based on the StepTimer provided in the DirectX ToolKit
-// Original code is available under the MIT License
+// Original code is available under the MIT Licence
 
 #ifndef NOVELRT_STEPTIMER_H
 #define NOVELRT_STEPTIMER_H

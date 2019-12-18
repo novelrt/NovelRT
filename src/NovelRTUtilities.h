@@ -1,7 +1,8 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELRTUTILITIES_H
 #define NOVELRT_NOVELRTUTILITIES_H
+#include <algorithm>
 
 namespace NovelRT {
 class NovelUtilities {
