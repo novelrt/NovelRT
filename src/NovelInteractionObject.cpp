@@ -16,7 +16,7 @@ void NovelInteractionObject::executeObjectBehaviour() {
 KeyCode NovelInteractionObject::getSubscribedKey() const {
   return _subscribedKey;
 }
-void NovelInteractionObject::setSubscribedKey(const KeyCode key) {
+void NovelInteractionObject::setSubscribedKey(KeyCode key) {
   _subscribedKey = key;
 }
 }

@@ -23,8 +23,7 @@ namespace NovelRT {
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;
     KeyCode getSubscribedKey() const;
-    void setSubscribedKey(const KeyCode key);
-
+    void setSubscribedKey(KeyCode key);
   };
 }
 #endif //NOVELRT_NOVELINTERACTIONOBJECT_H
