@@ -4,7 +4,7 @@
 #define NOVELRT_NOVELCAMERA_H
 #include "GeoMatrix4.h"
 #include "Lazy.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 #include "CameraViewChangedEventArgs.h"
 
 namespace NovelRT {

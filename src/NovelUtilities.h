@@ -1,13 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELRTUTILITIES_H
-#define NOVELRT_NOVELRTUTILITIES_H
+#ifndef NOVELRT_NOVELUTILITIES_H
+#define NOVELRT_NOVELUTILITIES_H
 #include <algorithm>
 
 namespace NovelRT {
 class NovelUtilities {
 public:
   static const int SDL_SUCCESS = 0;
+  static inline const std::string CONSOLE_LOG_GENERIC = "NovelRT";
+  static inline const std::string CONSOLE_LOG_APP = "Application";
+  static inline const std::string CONSOLE_LOG_GFX = "GFX";
+  static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
+  static inline const std::string CONSOLE_LOG_INPUT = "Input";
 };
 }
 
@@ -70,4 +75,4 @@ private:                                                                        
   }                                                                                                               \
 
 
-#endif //NOVELRT_NOVELRTUTILITIES_H
+#endif //NOVELRT_NOVELUTILITIES_H

@@ -7,6 +7,7 @@
 #include <string>
 #include "GraphicsCharacterRenderData.h"
 #include "NovelImageRect.h"
+#include "NovelLoggingService.h"
 #include "ShaderProgram.h"
 
 namespace NovelRT {
@@ -20,6 +21,7 @@ namespace NovelRT {
     std::vector<NovelImageRect*> _letterRects;
     std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     NovelCommonArgs _args;
+    NovelLoggingService _logger;
     RGBAConfig _colourConfig;
     float _fontSize;
 

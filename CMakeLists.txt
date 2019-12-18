@@ -53,6 +53,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 # lua doesn't provide native cmake support
 find_path(LUA_INCLUDE_DIR lua.h)
@@ -70,6 +71,7 @@ set(NOVELRT_HEADERS
   src/GraphicsCharacterRenderData.h
   src/KeyCode.h
   src/Lazy.h
+  src/NovelAudioService.h
   src/NovelBasicFillRect.h
   src/NovelBasicInteractionRect.h
   src/NovelCommonArgs.h
@@ -78,14 +80,14 @@ set(NOVELRT_HEADERS
   src/NovelInteractionObject.h
   src/NovelInteractionService.h
   src/NovelLayeringService.h
+  src/NovelLoggingService.h
   src/NovelObjectSortComparison.h
   src/NovelRenderingService.h
   src/NovelRenderObject.h
-  src/NovelRTUtilities.h
+  src/NovelUtilities.h
   src/NovelRunner.h
   src/NovelStepTimer.h
   src/NovelTextRect.h
-  src/NovelAudioService.h
   src/RGBAConfig.h
   src/wrapper.hpp
   src/NovelCamera.h
@@ -97,6 +99,7 @@ set(NOVELRT_HEADERS
 set(NOVELRT_SOURCES
         src/NovelWorldObject.cpp
   src/GeoBounds.cpp
+  src/NovelAudioService.cpp
   src/NovelBasicFillRect.cpp
   src/NovelBasicInteractionRect.cpp
   src/NovelDebugService.cpp
@@ -104,12 +107,12 @@ set(NOVELRT_SOURCES
   src/NovelInteractionObject.cpp
   src/NovelInteractionService.cpp
   src/NovelLayeringService.cpp
+  src/NovelLoggingService.cpp
   src/NovelRenderingService.cpp
   src/NovelRenderObject.cpp
   src/NovelRunner.cpp
   src/NovelStepTimer.cpp
   src/NovelTextRect.cpp
-  src/NovelAudioService.cpp
   src/RGBAConfig.cpp
   src/NovelCamera.cpp)
 
@@ -121,6 +124,7 @@ set(NOVELRT_LINK_LIBRARIES
   SDL2::SDL2_image
   SDL2::SDL2_mixer
   SDL2::SDL2main
+  spdlog::spdlog
 )
 
 if(NOT WIN32)

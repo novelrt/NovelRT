@@ -8,11 +8,10 @@
 
 #define GL_GLEXT_PROTOTYPES
 
-
-
 #include "GeoVector.h"
 #include "NovelBasicFillRect.h"
 #include "NovelImageRect.h"
+#include "NovelUtilities.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -21,7 +20,7 @@ namespace NovelRT {
   bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-      std::cerr << "ERROR: could not initialize sdl2: " << SDL_GetError() << std::endl;
+      _logger.logError("Could not initialize sdl2: ", std::string(SDL_GetError()));
       return false;
     }
 
@@ -42,25 +41,30 @@ namespace NovelRT {
       "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
     if (_window == nullptr) {
-      std::cerr << "could not create window: " << SDL_GetError() << std::endl;
+      _logger.logError("Could not create window: ", std::string(SDL_GetError()));
 
       return false;
     }
     _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, wData, hData, 0)));
     _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(wData / 1920.0f, hData / 1080.0f, 0.0f))));
     _screenSize = GeoVector<float>(wData, hData);
-    std::cout << "INFO: Screen size is " << _screenSize.getX() << "x" << _screenSize.getY() << std::endl;
+    std::string infoScreenSize = std::to_string((int)_screenSize.getX());
+    infoScreenSize.append("x");
+    infoScreenSize.append(std::to_string((int)_screenSize.getY()));
+    _logger.logInfo("Screen size:", infoScreenSize);
 
     _openGLContext = SDL_GL_CreateContext(_window.get());
     SDL_GL_MakeCurrent(_window.get(), _openGLContext);
 
     if (!gladLoadGL()) {
-      std::cerr << "ERROR: Failed to initialise glad." << std::endl;
+      _logger.logErrorLine("Failed to initialise glad.");
       return -1;
     }
 
-    std::cout << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::string glVersion = (const char*) glGetString(GL_VERSION);
+    std::string glShading = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    _logger.logInfoLine("GL_VERSION: " + glVersion);
+    _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -88,7 +92,7 @@ namespace NovelRT {
       VertexShaderStream.close();
     }
     else {
-      std::cerr << "ERROR: Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
+      _logger.logErrorLine("Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
       throw EXIT_FAILURE;
     }
 
@@ -102,7 +106,7 @@ namespace NovelRT {
       fragmentShaderStream.close();
     }
     else {
-      std::cerr << "ERROR: Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked." << std::endl;
+      _logger.logErrorLine("Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
       throw EXIT_FAILURE;
     }
 
@@ -110,7 +114,7 @@ namespace NovelRT {
     int infoLogLength;
 
     // Compile Vertex Shader
-    std::cout << "INFO: Compiling shader: " << vertexFilePath << "..." << std::endl;
+    _logger.logInfoLine("Compiling shader: " + vertexFilePath + "...");
     char const* vertexSourcePointer = vertexShaderCode.c_str();
     glShaderSource(vertexShaderId, 1, &vertexSourcePointer, nullptr);
     glCompileShader(vertexShaderId);
@@ -121,12 +125,12 @@ namespace NovelRT {
     if (infoLogLength > 0) {
       std::vector<char> vertexShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
-      std::cerr << "ERROR: " << &vertexShaderErrorMessage[0] << std::endl;
+      _logger.logErrorLine(std::string(&vertexShaderErrorMessage[0]));
       throw EXIT_FAILURE;
     }
 
     // Compile Fragment Shader
-    std::cout << "INFO: Compiling shader: " << fragmentFilePath << "..." << std::endl;
+    _logger.logInfoLine("Compiling shader: " + fragmentFilePath + "...");
     const char* FragmentSourcePointer = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderId, 1, &FragmentSourcePointer, nullptr);
     glCompileShader(fragmentShaderId);
@@ -137,12 +141,12 @@ namespace NovelRT {
     if (infoLogLength > 0) {
       std::vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
-      std::cerr << "ERROR: " << &fragmentShaderErrorMessage[0] << std::endl;
+      _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
       throw EXIT_FAILURE;
     }
 
     // Link the program
-    std::cout << "INFO: Linking program..." << std::endl;
+    _logger.logInfoLine("Linking program...");
     GLuint programId = glCreateProgram();
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
@@ -154,7 +158,7 @@ namespace NovelRT {
     if (infoLogLength > 0) {
       std::vector<char> ProgramErrorMessage(infoLogLength + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
-      std::cerr << "ERROR: " << &ProgramErrorMessage[0] << std::endl;
+      _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
       throw EXIT_FAILURE;
     }
 
@@ -174,7 +178,7 @@ namespace NovelRT {
 
   int NovelRenderingService::initialiseRendering(int displayNumber) {
     if (!initializeRenderPipeline(displayNumber)) {
-      std::cerr << "Apologies, something went wrong. Reason: SDL could not initialise." << std::endl;
+      _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw EXIT_FAILURE;
     }
 

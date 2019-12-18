@@ -7,6 +7,8 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <map>
+#include <typeinfo>
+#include "NovelLoggingService.h"
 
 namespace NovelRT {
   class NovelAudioService {
@@ -28,11 +30,15 @@ namespace NovelRT {
     SoundBank _sounds;
     MusicBank _music;
     ChannelMap _channelMap;
+    NovelLoggingService _logger;
 
     int convertToMixVolume(float value);
     std::string findByChannelMap(int channel);
+    std::string getSDLError();
     void incrementNextChannel();
-
+    void logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdlFlag);
+    void logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag);
+    void logIfMixerFailure(std::function<int(int,Uint16,int,int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize);
   public:
     bool isInitialized;
 

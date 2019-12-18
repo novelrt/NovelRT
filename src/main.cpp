@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
+#include "NovelLoggingService.h"
 #include "NovelRenderingService.h"
 #include "NovelRunner.h"
 #include "NovelImageRect.h"
@@ -35,7 +36,6 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-//NovelRT::NovelBasicFillRect *playAudioButton;
 NovelRT::NovelImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0);
+  auto console = NovelRT::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
   NovelRT::NovelCommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
@@ -64,8 +65,8 @@ int main(int argc, char *argv[])
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  //auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  //textRect->setText("RubyGnomer");
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  textRect->setText("RubyGnomer");
 
   //auto lineArgs = rectArgs;
   //lineArgs.startingScale.setY(2.0f);
@@ -115,61 +116,47 @@ int main(int argc, char *argv[])
 
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
+  auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  rect->subscribeToInteracted([&novelAudio, &counter] {
+  rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console] {
     counter++;
-    switch (counter)
-    {
+    switch (counter) {
       case 1:
-      {
         novelAudio->fadeMusicOut(500);
-        std::cout << "Commencing Audio Test..." << std::endl;
-        std::cout << "Press the button to launch each test." << std::endl;
-        std::cout << "(Please wait for each test to finish for best results!)" << std::endl;
+        console.logInternal("Commencing Audio Test...", loggingLevel);
+        console.logInternal("Press the button to launch each test.", loggingLevel);
+        console.logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
         break;
-      }
       case 2:
-      {
-        std::cout << std::endl << "Looping 3 times..." << std::endl;
+        console.logInternal("Looping 3 times...", loggingLevel);
         novelAudio->playSound("w0nd0ws.wav", 3);
         break;
-      }
       case 3:
-      {
-        std::cout << "Pan Left (via Panning)..." << std::endl;
+        console.logInternal("Pan Left (via Panning)...", loggingLevel);
         novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
-      }
       case 4:
-      {
-        std::cout << "Pan Right (via 3D Position)..." << std::endl;
+        console.logInternal("Pan Right (via 3D Position)...", loggingLevel);
         novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
-      }
       case 5:
-      {
         novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-        std::cout << "Low Volume..." << std::endl;
+        console.logInternal("Low Volume...", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
         novelAudio->playSound("w0nd0ws.wav", 0);
         break;
-      }
       case 6:
-      {
         novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
-        std::cout << "Success! Click once more to play music again." << std::endl;
+        console.logInternal("Success! Click once more to play music again.", loggingLevel);
         novelAudio->setSoundVolume("w0nd0ws.wav", 64);
         novelAudio->playSound("jojo.wav", 0);
         break;
-      }
       default:
-      {
         counter = 0;
         novelAudio->fadeMusicIn("sparta.wav", -1, 500);
         break;
-      }
     }
   });
 

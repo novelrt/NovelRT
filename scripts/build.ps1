@@ -105,7 +105,7 @@ try {
       }
     }
 
-    & $VcpkgExe install freetype glad glm lua sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] --triplet x64-windows
+    & $VcpkgExe install freetype glad glm lua sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] spdlog --triplet x64-windows
 
     if ($LastExitCode -ne 0) {
         throw "'vcpkg install' failed"
