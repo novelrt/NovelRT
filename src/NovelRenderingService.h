@@ -39,7 +39,7 @@ namespace NovelRT {
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
 
-    GeoVector<uint32_t> _screenSize;
+    GeoVector<float> _screenSize;
     Lazy<GLuint> _cameraObjectRenderUbo;
     std::unique_ptr<NovelCamera> _camera;
 
@@ -62,7 +62,7 @@ namespace NovelRT {
       const std::string& fontFilePath,
       const NovelCommonArgs& args);
 
-    GeoVector<uint32_t> getScreenSize() const;
+    GeoVector<float> getScreenSize() const;
 
     NovelCamera* getCamera() const;
 

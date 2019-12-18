@@ -84,9 +84,10 @@ int main(int argc, char *argv[])
   playButtonArgs.startingScale = NovelRT::GeoVector<float>(200, 200);
 
   auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
-  playButtonArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
+  auto playAudioTextArgs = playButtonArgs;
+  playAudioTextArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
   playButtonArgs.orderInLayer = 1;
-  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playButtonArgs);
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextArgs);
   playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
@@ -116,7 +117,6 @@ int main(int argc, char *argv[])
   auto counter = 0;
 
   rect->subscribeToInteracted([&novelAudio, &counter] {
-    std::cout << "TEST" << std::endl;
     counter++;
     switch (counter)
     {
