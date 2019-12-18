@@ -17,7 +17,7 @@
 #include <sstream>
 
 namespace NovelRT {
-  bool NovelRenderingService::initializeRenderPipeline(int displayNumber, std::string windowTitle) {
+  bool NovelRenderingService::initializeRenderPipeline(int displayNumber, const std::string& windowTitle) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
       _logger.logError("Could not initialize sdl2: ", std::string(SDL_GetError()));
@@ -176,7 +176,7 @@ namespace NovelRT {
     return returnProg;
   }
 
-  int NovelRenderingService::initialiseRendering(int displayNumber, std::string windowTitle) {
+  int NovelRenderingService::initialiseRendering(int displayNumber, const std::string& windowTitle) {
     if (!initializeRenderPipeline(displayNumber, windowTitle)) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw EXIT_FAILURE;
@@ -190,7 +190,7 @@ namespace NovelRT {
   std::string NovelRenderingService::getWindowTitle() const {
     return SDL_GetWindowTitle(getWindow().get());
   }
-  void NovelRenderingService::setWindowTitle(std::string value) {
+  void NovelRenderingService::setWindowTitle(const std::string& value) {
     return SDL_SetWindowTitle(getWindow().get(), value.c_str());
   }
 
