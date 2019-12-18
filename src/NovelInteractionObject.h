@@ -6,7 +6,7 @@
 #include <functional>
 #include "NovelWorldObject.h"
 #include "KeyCode.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 
 namespace NovelRT {
   class NovelInteractionObject : public NovelWorldObject {

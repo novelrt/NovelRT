@@ -18,7 +18,7 @@
 #include "NovelObjectSortComparison.h"
 #include "NovelRenderingService.h"
 #include "NovelRenderObject.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 #include "NovelRunner.h"
 #include "NovelTextRect.h"
 #include "RGBAConfig.h"

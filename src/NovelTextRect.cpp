@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "NovelTextRect.h"
-#include "NovelRTUtilities.h"
+#include "NovelUtilities.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
