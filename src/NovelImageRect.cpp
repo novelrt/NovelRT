@@ -25,7 +25,8 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
                                                                })),
                                                                _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
                                                                _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
-                                                               _colourTint(colourTint), _logger(NovelUtilities::CONSOLE_LOG_GFX) {
+                                                               _colourTint(colourTint),
+                                                               _logger(NovelUtilities::CONSOLE_LOG_GFX) {
 
 }
 
