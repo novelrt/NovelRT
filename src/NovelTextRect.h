@@ -14,14 +14,14 @@ namespace NovelRT {
   private:
     void reloadText();
 
-    RGBAConfig _colourConfig;
     std::string _fontFileDir;
     std::string _previousFontFileDir = "";
-    float _fontSize;
-    std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     std::string _text = "";
     std::vector<NovelImageRect*> _letterRects;
+    std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     NovelCommonArgs _args;
+    RGBAConfig _colourConfig;
+    float _fontSize;
 
   protected:
     void configureObjectBuffers() final;
