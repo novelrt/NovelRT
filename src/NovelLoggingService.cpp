@@ -9,26 +9,23 @@
 namespace NovelRT {
 
   NovelLoggingService::NovelLoggingService() {
-    try
-    {
+    try {
       _logger = spdlog::get(NovelUtilities::CONSOLE_LOG_GENERIC);
-      if (_logger == nullptr)
-      {
+      if (_logger == nullptr) {
           _logger = spdlog::stdout_color_mt<spdlog::async_factory>(NovelUtilities::CONSOLE_LOG_GENERIC);
       }
 
       #ifndef NDEBUG
-      setLogLevel(LogLevel::DEBUG);
+      setLogLevel(LogLevel::Debug);
       #else
-      setLogLevel(LogLevel::INFO);
+      setLogLevel(LogLevel::Info);
       #endif
 
       //Set spdlog's error handler in case it fails.
       spdlog::set_error_handler([](const std::string& msg) {
           std::cerr << "SPDLOG ERROR: " << msg << std::endl;
       });
-    } catch (const spdlog::spdlog_ex& ex)
-    {
+    } catch (const spdlog::spdlog_ex& ex) {
       std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
     }
   }
@@ -37,15 +34,14 @@ namespace NovelRT {
     try
     {
       _logger = spdlog::get(core);
-      if (_logger == nullptr)
-      {
+      if (_logger == nullptr) {
         _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
       }
 
     #ifndef NDEBUG
-      setLogLevel(LogLevel::DEBUG);
+      setLogLevel(LogLevel::Debug);
     #else
-      setLogLevel(LogLevel::INFO);
+      setLogLevel(LogLevel::Info);
     #endif
 
       //Set spdlog's error handler in case it fails.
@@ -60,11 +56,9 @@ namespace NovelRT {
   }
 
   NovelLoggingService::NovelLoggingService(const std::string& core, LogLevel level) {
-    try
-    {
+    try {
       _logger = spdlog::get(core);
-      if (_logger == nullptr)
-      {
+      if (_logger == nullptr) {
         _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
       }
 
@@ -75,25 +69,23 @@ namespace NovelRT {
         std::cerr << "SPDLOG ERROR: " << msg << std::endl;
       });
     }
-    catch (const spdlog::spdlog_ex & ex)
-    {
+    catch (const spdlog::spdlog_ex & ex) {
       std::cout << "Log System failed to initialize: " << ex.what() << std::endl;
     }
   }
 
   void NovelLoggingService::log(const std::string& message, LogLevel level) {
-    switch (level)
-    {
-      case SPDLOG_LEVEL_DEBUG:
+    switch (level) {
+      case LogLevel::Debug:
         _logger->debug(message);
         break;
-      case SPDLOG_LEVEL_INFO:
+      case LogLevel::Info:
         _logger->info(message);
         break;
-      case SPDLOG_LEVEL_WARN:
+      case LogLevel::Warn:
         _logger->warn(message);
         break;
-      case SPDLOG_LEVEL_ERROR:
+      case LogLevel::Err:
         _logger->error(message);
         break;
       default:
@@ -124,21 +116,20 @@ namespace NovelRT {
   }
 
   void NovelLoggingService::setLogLevel(LogLevel level) {
-    switch (level)
-    {
-      case SPDLOG_LEVEL_DEBUG:
+    switch (level) {
+      case LogLevel::Debug:
         _logger->set_level(spdlog::level::level_enum::debug);
         break;
-      case SPDLOG_LEVEL_INFO:
+      case LogLevel::Info:
         _logger->set_level(spdlog::level::level_enum::info);
         break;
-      case SPDLOG_LEVEL_WARN:
+      case LogLevel::Warn:
         _logger->set_level(spdlog::level::level_enum::warn);
         break;
-      case SPDLOG_LEVEL_ERROR:
+      case LogLevel::Err:
         _logger->set_level(spdlog::level::level_enum::err);
         break;
-      case SPDLOG_LEVEL_OFF:
+      case LogLevel::Off:
         _logger->set_level(spdlog::level::level_enum::off);
         break;
       default:

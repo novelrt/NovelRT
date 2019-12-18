@@ -8,12 +8,12 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace NovelRT {
-  enum LogLevel {
-    DEBUG = SPDLOG_LEVEL_DEBUG,
-    INFO = SPDLOG_LEVEL_INFO,
-    WARN = SPDLOG_LEVEL_WARN,
-    ERR = SPDLOG_LEVEL_ERROR,
-    OFF = SPDLOG_LEVEL_OFF
+  enum class LogLevel {
+    Debug = SPDLOG_LEVEL_DEBUG,
+    Info = SPDLOG_LEVEL_INFO,
+    Warn = SPDLOG_LEVEL_WARN,
+    Err = SPDLOG_LEVEL_ERROR,
+    Off = SPDLOG_LEVEL_OFF
   };
   class NovelLoggingService {
   private:

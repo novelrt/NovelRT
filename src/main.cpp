@@ -36,7 +36,6 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-//NovelRT::NovelBasicFillRect *playAudioButton;
 NovelRT::NovelImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
@@ -66,8 +65,8 @@ int main(int argc, char *argv[])
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  //auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
-  //textRect->setText("RubyGnomer");
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  textRect->setText("RubyGnomer");
 
   //auto lineArgs = rectArgs;
   //lineArgs.startingScale.setY(2.0f);
@@ -117,12 +116,11 @@ int main(int argc, char *argv[])
 
   auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
-  auto loggingLevel = NovelRT::LogLevel::DEBUG;
+  auto loggingLevel = NovelRT::LogLevel::Debug;
 
   rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console] {
     counter++;
-    switch (counter)
-    {
+    switch (counter) {
       case 1:
         novelAudio->fadeMusicOut(500);
         console.logInternal("Commencing Audio Test...", loggingLevel);

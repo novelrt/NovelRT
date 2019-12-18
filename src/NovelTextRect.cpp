@@ -28,11 +28,11 @@ void NovelTextRect::configureObjectBuffers() {
   if (_previousFontFileDir != _fontFileDir) {
     FT_Library freeTypeLoader;
     if (FT_Init_FreeType(&freeTypeLoader)) {
-      _logger.log("Failed to initialise Freetype.", LogLevel::ERR);
+      _logger.logErrorLine("Failed to initialise Freetype.");
     }
     FT_Face face;
     if (FT_New_Face(freeTypeLoader, _fontFileDir.c_str(), 0, &face))
-      _logger.log("Failed to load font " + _fontFileDir + " via freeType!", LogLevel::ERR);
+      _logger.logError("FREETYPE - Failed to load font: ", _fontFileDir);
 
     FT_Set_Pixel_Sizes(face, 0, _fontSize);
 
@@ -42,7 +42,7 @@ void NovelTextRect::configureObjectBuffers() {
     for (GLubyte c = 0; c < 128; c++) {
       // Load character glyph
       if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-        _logger.log("FREETYTPE: Failed to load Glyph", LogLevel::ERR);
+        _logger.logErrorLine("FREETYTPE: Failed to load Glyph");
         continue;
       }
       // Generate texture
