@@ -10,39 +10,39 @@
 #include "ShaderProgram.h"
 
 namespace NovelRT {
-class NovelTextRect : public NovelRenderObject {
-private:
-  void reloadText();
+  class NovelTextRect : public NovelRenderObject {
+  private:
+    void reloadText();
 
-  RGBAConfig _colourConfig;
-  std::string _fontFileDir;
-  std::string _previousFontFileDir = "";
-  float _fontSize;
-  std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
-  std::string _text = "";
-  std::vector<NovelImageRect*> _letterRects;
-  NovelCommonArgs _args;
+    RGBAConfig _colourConfig;
+    std::string _fontFileDir;
+    std::string _previousFontFileDir = "";
+    float _fontSize;
+    std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
+    std::string _text = "";
+    std::vector<NovelImageRect*> _letterRects;
+    NovelCommonArgs _args;
 
-protected:
-  void configureObjectBuffers() final;
+  protected:
+    void configureObjectBuffers() final;
 
-public:
-  NovelTextRect(NovelLayeringService* layeringService,
-                const NovelCommonArgs& args,
-                ShaderProgram programId,
-                NovelCamera* camera,
-                float fontSize,
-                const std::string& fontFileDir,
-                const RGBAConfig& colourConfig);
+  public:
+    NovelTextRect(NovelLayeringService* layeringService,
+      const NovelCommonArgs& args,
+      ShaderProgram programId,
+      NovelCamera* camera,
+      float fontSize,
+      const std::string& fontFileDir,
+      const RGBAConfig& colourConfig);
 
-  void drawObject() final;
+    void drawObject() final;
 
-  RGBAConfig getColourConfig() const;
+    RGBAConfig getColourConfig() const;
 
-  void setColourConfig(const RGBAConfig& value);
+    void setColourConfig(const RGBAConfig& value);
 
-  std::string getText() const;
-  void setText(const std::string& value);
-};
+    std::string getText() const;
+    void setText(const std::string& value);
+  };
 }
 #endif //NOVELRT_NOVELTEXTRECT_H
