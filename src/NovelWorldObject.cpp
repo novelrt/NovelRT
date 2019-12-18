@@ -53,17 +53,16 @@ int NovelWorldObject::getLayer() const {
   return _layer;
 }
 
-void NovelWorldObject::setLayer(const int value) {
+void NovelWorldObject::setLayer(int value) {
   _layer = value;
   _layeringService->updateLayerInfo(value, this);
-
 }
 
 int NovelWorldObject::getOrderInLayer() const {
   return _orderInLayer;
 }
 
-void NovelWorldObject::setOrderInLayer(const int value) {
+void NovelWorldObject::setOrderInLayer(int value) {
   _orderInLayer = value;
   _layeringService->sortLayerOrder(getLayer());
 }
