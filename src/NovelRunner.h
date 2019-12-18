@@ -3,6 +3,8 @@
 #ifndef NOVELRT_NOVELRUNNER_H
 #define NOVELRT_NOVELRUNNER_H
 
+#include <string>
+
 #include "NovelDebugService.h"
 #include "NovelRenderingService.h"
 #include "NovelInteractionService.h"
@@ -46,7 +48,7 @@ namespace NovelRT {
      * @param layeringService The NovelLayeringService that NovelRunner should use.
      * @param targetFrameRate The framerate that should be targeted and capped.
      */
-    explicit NovelRunner(int displayNumber, uint32_t targetFrameRate = 0);
+    explicit NovelRunner(int displayNumber, std::string windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0);
     /**
      * Starts the visual novel.
      * @returns Exit code.
