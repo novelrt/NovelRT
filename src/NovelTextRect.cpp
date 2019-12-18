@@ -91,10 +91,11 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                                                                          args,
                                                                          shaderProgram,
                                                                          camera),
-                                                     _colourConfig(colourConfig),
-                                                     _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
+                                                               _fontFileDir(fontFileDir),
+                                                               _args(args),
+                                                               _colourConfig(colourConfig),
+                                                               _fontSize(fontSize) {}
 
-}
 std::string NovelTextRect::getText() const {
   return _text;
 }
