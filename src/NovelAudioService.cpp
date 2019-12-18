@@ -90,7 +90,7 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
   {
     if (Mix_Playing(_channelMap[soundName]) == MIXER_TRUE)
     {
-      _logger.logWarning("Already playing on channel " + _channelMap[soundName]);
+      _logger.logWarningLine("Already playing on desired channel!");
       return;
     }
 
@@ -142,7 +142,7 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
   }
   else
   {
-    _logger.logErrorLine(soundName + " is not allocated to a channel already!");
+    _logger.logError("Sound is not allocated to a channel already: ", soundName);
   }
 }
 
@@ -153,7 +153,7 @@ void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
   }
   else
   {
-    _logger.logErrorLine(soundName + " is not allocated to a channel already!");
+    _logger.logError("Sound is not allocated to a channel already: ", soundName);
   }
 }
 
@@ -164,7 +164,7 @@ void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVo
   }
   else
   {
-    _logger.logErrorLine(soundName + " is not allocated to a channel already!");
+    _logger.logError("Sound is not allocated to a channel already: ", soundName);
   }
 }
 
