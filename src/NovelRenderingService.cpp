@@ -48,7 +48,7 @@ namespace NovelRT {
     }
     _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, wData, hData, 0)));
     _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(wData / 1920.0f, hData / 1080.0f, 0.0f))));
-    _screenSize = GeoVector<uint32_t>(static_cast<uint32_t>(glm::round(wData)), static_cast<uint32_t>(glm::round(hData)));
+    _screenSize = GeoVector<float>(wData, hData);
     std::cout << "INFO: Screen size is " << _screenSize.getX() << "x" << _screenSize.getY() << std::endl;
 
     _openGLContext = SDL_GL_CreateContext(_window.get());
@@ -231,7 +231,7 @@ namespace NovelRT {
       return new NovelBasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
     }
 
-    GeoVector<uint32_t> NovelRenderingService::getScreenSize() const {
+    GeoVector<float> NovelRenderingService::getScreenSize() const {
       return _screenSize;
     }
 

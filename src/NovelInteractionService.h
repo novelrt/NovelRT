@@ -17,6 +17,7 @@ namespace NovelRT {
     std::map<KeyCode, bool> _keyStates;
     std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
     NovelLayeringService* _layeringService;
+    GeoVector<float> _screenSize;
 
   public:
     NovelInteractionService(NovelLayeringService* layeringService);
@@ -26,6 +27,10 @@ namespace NovelRT {
     NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize,
       const NovelCommonArgs& args);
     void ExecuteClickedInteractable();
+
+    inline void setScreenSize(const GeoVector<float>& value) {
+      _screenSize = value;
+    }
 
     //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
   };

@@ -9,6 +9,7 @@ namespace NovelRT {
   template<typename T>
   class GeoVector {
     friend class NovelRenderObject;
+    friend class NovelInteractionService;
     template<typename U>
     friend class GeoMatrix4;
   private:

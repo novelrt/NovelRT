@@ -9,6 +9,7 @@ NovelRunner::NovelRunner(int displayNumber, uint32_t targetFrameRate)
     : _stepTimer(StepTimer(targetFrameRate)), _layeringService(std::make_unique<NovelLayeringService>()), _novelDebugService(std::make_unique<NovelDebugService>(this)),
       _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get())), _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get())), _novelAudioService(std::make_unique<NovelAudioService>())  {
   _novelRenderer->initialiseRendering(displayNumber);
+  _novelInteractionService->setScreenSize(_novelRenderer->getScreenSize());
   _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
 }
 
@@ -23,8 +24,8 @@ int NovelRunner::runNovel() {
     _layeringService->executeAllObjectBehaviours();
     _novelRenderer->endFrame();
     _novelInteractionService->ExecuteClickedInteractable();
-
   }
+
   _novelRenderer->tearDown();
   _novelAudioService->~NovelAudioService();
   return _exitCode;
