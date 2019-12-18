@@ -1,9 +1,10 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #ifndef NOVELRT_NOVELDEBUGSERVICE_H
 #define NOVELRT_NOVELDEBUGSERVICE_H
 
 #include "NovelTextRect.h"
+#include <glad/glad.h>
 
 namespace NovelRT {
 
