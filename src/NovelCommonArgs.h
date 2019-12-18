@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_NOVELCOMMONARGS_H
 #define NOVELRT_NOVELCOMMONARGS_H
+#include "GeoVector.h"
 
 namespace NovelRT {
   struct NovelCommonArgs {
