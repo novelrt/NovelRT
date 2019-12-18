@@ -17,7 +17,7 @@
 #include <sstream>
 
 namespace NovelRT {
-  bool NovelRenderingService::initializeRenderPipeline(int displayNumber) {
+  bool NovelRenderingService::initializeRenderPipeline(int displayNumber, const std::string& windowTitle) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
       _logger.logError("Could not initialize sdl2: ", std::string(SDL_GetError()));
@@ -38,7 +38,7 @@ namespace NovelRT {
     float wData = displayData.w * 0.7f;
     float hData = displayData.h * 0.7f;
     _window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(
-      "NovelRTTest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      windowTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
     if (_window == nullptr) {
       _logger.logError("Could not create window: ", std::string(SDL_GetError()));
@@ -61,8 +61,8 @@ namespace NovelRT {
       return -1;
     }
 
-    std::string glVersion = (const char*) glGetString(GL_VERSION);
-    std::string glShading = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    std::string glVersion = (const char*)glGetString(GL_VERSION);
+    std::string glShading = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
     _logger.logInfoLine("GL_VERSION: " + glVersion);
     _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
@@ -176,8 +176,8 @@ namespace NovelRT {
     return returnProg;
   }
 
-  int NovelRenderingService::initialiseRendering(int displayNumber) {
-    if (!initializeRenderPipeline(displayNumber)) {
+  int NovelRenderingService::initialiseRendering(int displayNumber, const std::string& windowTitle) {
+    if (!initializeRenderPipeline(displayNumber, windowTitle)) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw EXIT_FAILURE;
     }
@@ -185,6 +185,13 @@ namespace NovelRT {
     SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
 
     return 0;
+  }
+
+  std::string NovelRenderingService::getWindowTitle() const {
+    return SDL_GetWindowTitle(getWindow().get());
+  }
+  void NovelRenderingService::setWindowTitle(const std::string& value) {
+    return SDL_SetWindowTitle(getWindow().get(), value.c_str());
   }
 
   void NovelRenderingService::tearDown() const {
