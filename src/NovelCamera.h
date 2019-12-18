@@ -14,7 +14,7 @@ class NovelCamera {
 
   //TODO: Look Im just trying to make this legal code okay?
 public:
-  enum CameraMode : unsigned int {
+  enum class CameraMode : unsigned int {
     None,
     Orthographic,
     Perspective
