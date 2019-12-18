@@ -27,7 +27,7 @@ namespace NovelRT {
   class NovelRenderingService {
   private:
 
-    bool initializeRenderPipeline(int displayNumber, std::string windowTitle);
+    bool initializeRenderPipeline(int displayNumber, const std::string& windowTitle);
     NovelLoggingService _logger;
     NovelLayeringService* _layeringService;
     std::shared_ptr<SDL_Window> _window;
@@ -49,11 +49,11 @@ namespace NovelRT {
 
   public:
     NovelRenderingService(NovelLayeringService* layeringService);
-    int initialiseRendering(int displayNumber, std::string windowTitle);
+    int initialiseRendering(int displayNumber, const std::string& windowTitle);
 
 
     std::string getWindowTitle() const;
-    void setWindowTitle(std::string value);
+    void setWindowTitle(const std::string& value);
 
     void tearDown() const;
 
