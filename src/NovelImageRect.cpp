@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
@@ -8,16 +8,14 @@
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const float& screenScale,
-                               const GeoVector<float>& size,
-                               std::string_view imageDir,
                                const NovelCommonArgs& args,
-                               GLuint programId,
+                               ShaderProgram shaderProgram,
+                               NovelCamera* camera,
+                               const std::string& imageDir,
                                const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
-                                                                                 screenScale,
-                                                                                 size,
                                                                                  args,
-                                                                                 programId),
+                                                                                 shaderProgram,
+                                                                                 camera),
                                                                _imageDir(imageDir),
                                                                _textureId(Lazy<GLuint>([] {
                                                                  GLuint tempTexture;
@@ -31,27 +29,29 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 }
 
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const float& screenScale,
-                               const GeoVector<float>& size,
                                const NovelCommonArgs& args,
-                               GLuint programId,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, screenScale, size, "", args, programId, colourTint) {
+                               ShaderProgram shaderProgram,
+                               NovelCamera* camera,
+                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
 
 }
 
 void NovelImageRect::setScale(const GeoVector<float>& value) {
-  NovelObject::_scale = value;
+  NovelWorldObject::_scale = value;
 }
 
 void NovelImageRect::drawObject() {
   if (!getActive())
     return;
 
-  glUseProgram(_programId);
+  glUseProgram(_shaderProgram.shaderProgramId);
+  glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraBlock), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+
   glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
   glVertexAttribPointer(
       0,
       3,

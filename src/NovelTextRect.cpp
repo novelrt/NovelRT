@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
 #include "NovelTextRect.h"
@@ -82,31 +82,33 @@ void NovelTextRect::configureObjectBuffers() {
 }
 
 NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
-                             float fontSize,
-                             float screenScale,
-                             const std::string& fontFileDir,
-                             const RGBAConfig& colourConfig,
                              const NovelCommonArgs& args,
-                             GLuint programId) : NovelRenderObject(layeringService,
-                                                                         screenScale,
-                                                                         GeoVector<float>(200, 200),
+                             ShaderProgram shaderProgram,
+                             NovelCamera* camera,
+                             float fontSize,
+                             const std::string& fontFileDir,
+                             const RGBAConfig& colourConfig) : NovelRenderObject(layeringService,
                                                                          args,
-                                                                         programId), _colourConfig(colourConfig),
-                                                       _fontFileDir(fontFileDir), _fontSize(fontSize), _args(args) {
+                                                                         shaderProgram,
+                                                                         camera),
+                                                               _fontFileDir(fontFileDir),
+                                                               _args(args),
+                                                               _colourConfig(colourConfig),
+                                                               _fontSize(fontSize) {}
 
-}
 std::string NovelTextRect::getText() const {
   return _text;
 }
 void NovelTextRect::setText(const std::string& value) {
   _text = value;
   int difference = _text.length() - _letterRects.size();
+  auto modifiedArgs = _args;
+  modifiedArgs.startingScale = GeoVector<float>(50, 50);
   for (int i = 0; i < difference; i++) {
     _letterRects.push_back(new NovelImageRect(_layeringService,
-                                              _screenScale,
-                                              GeoVector<float>(50, 50),
                                               _args,
-                                              _programId,
+                                              _shaderProgram,
+                                              _camera,
                                               _colourConfig));
   }
 
@@ -116,7 +118,7 @@ void NovelTextRect::setText(const std::string& value) {
 }
 void NovelTextRect::reloadText() {
 
-  auto ttfOrigin = getWorldSpacePosition();
+  auto ttfOrigin = getPosition();
 
   int i = 0;
   for (const char& c : getText()) {
@@ -128,14 +130,14 @@ void NovelTextRect::reloadText() {
     }
     ch = match->second;
 
-    auto currentWorldPosition = GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2) + ch.bearing.getX(),
-                                                 (ttfOrigin.getY() + (ch.bearing.getY() / 2))
-                                                     - ((ch.size.getY() - ch.bearing.getY()) / 2));
+    auto currentWorldPosition = GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
+                                                 (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
+                                                     + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
 
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
-    target->setWorldSpacePosition(currentWorldPosition);
-    target->setWorldSpaceSize(GeoVector<float>(ch.size.getX(), ch.size.getY()));
+    target->setPosition(currentWorldPosition);
+    target->setScale(GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setActive(true);
     ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }

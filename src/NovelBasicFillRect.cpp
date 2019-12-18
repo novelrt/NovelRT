@@ -1,4 +1,4 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <iostream>
 #include "NovelBasicFillRect.h"
 #include "GeoBounds.h"
@@ -6,23 +6,26 @@
 namespace NovelRT {
 
 NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
-                                       float screenScale,
-                                       const GeoVector<float>& size,
                                        const RGBAConfig& fillColour,
                                        const NovelCommonArgs& args,
-                                       GLuint programId) :
-    NovelRenderObject(layeringService, screenScale, size, args, programId), _colourConfig(fillColour),
-    _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {
-}
+                                       ShaderProgram shaderProgram,
+                                       NovelCamera* camera) :
+    NovelRenderObject(layeringService, args, shaderProgram, camera), _colourConfig(fillColour),
+    _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {}
 
 void NovelBasicFillRect::drawObject() {
   if (!getActive())
     return;
 
-  glUseProgram(_programId);
+  glUseProgram(_shaderProgram.shaderProgramId);
+
+  glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraBlock), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+
+
   glBindVertexArray(_vertexArrayObject.getActual());
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, _buffer.getActual());
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
   glVertexAttribPointer(
       0,
       3,
@@ -31,7 +34,6 @@ void NovelBasicFillRect::drawObject() {
       0,
       nullptr
   );
-
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, _colourBuffer.getActual());
   glVertexAttribPointer(
