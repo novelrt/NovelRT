@@ -2,13 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "NovelLoggingService.h"
-#include "NovelRenderingService.h"
-#include "NovelRunner.h"
-#include "NovelImageRect.h"
-#include "NovelCommonArgs.h"
-#include "NovelInteractionService.h"
-#include "NovelAudioService.h"
+#include "NovelRT.h"
 
 extern "C"
 {
