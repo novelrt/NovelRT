@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NOVELRT_H
+#define NOVELRT_H
+
 #include "CameraBlock.h"
 #include "CameraViewChangedEventArgs.h"
 #include "GeoBounds.h"
@@ -30,3 +32,5 @@
 #include "RGBAConfig.h"
 #include "ShaderProgram.h"
 #include "wrapper.hpp"
+
+#endif NOVELRT_H
