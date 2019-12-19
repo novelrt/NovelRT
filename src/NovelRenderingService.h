@@ -21,39 +21,32 @@
 #include "NovelCamera.h"
 #include "ShaderProgram.h"
 #include "CameraBlock.h"
+#include "NovelWindowingService.h"
 
 namespace NovelRT {
 
   class NovelRenderingService {
   private:
 
-    bool initialiseRenderPipeline(int displayNumber, const std::string& windowTitle);
+    bool initialiseRenderPipeline();
     NovelLoggingService _logger;
-    NovelLayeringService* _layeringService;
-    std::shared_ptr<SDL_Window> _window;
+    NovelLayeringService* const _layeringService;
+    NovelWindowingService* const _windowingService;
     SDL_GLContext _openGLContext;
-
-    int _winWidth;
-    int _winHeight;
 
     ShaderProgram loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
     ShaderProgram _basicFillRectProgram;
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
 
-    GeoVector<float> _screenSize;
     Lazy<GLuint> _cameraObjectRenderUbo;
     std::unique_ptr<NovelCamera> _camera;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
   public:
-    NovelRenderingService(NovelLayeringService* layeringService);
-    int initialiseRendering(int displayNumber, const std::string& windowTitle);
-
-
-    std::string getWindowTitle() const;
-    void setWindowTitle(const std::string& value);
+    NovelRenderingService(NovelLayeringService* const layeringService, NovelWindowingService* const windowingService);
+    int initialiseRendering();
 
     void tearDown() const;
 
@@ -68,14 +61,10 @@ namespace NovelRT {
       const std::string& fontFilePath,
       const NovelCommonArgs& args);
 
-    GeoVector<float> getScreenSize() const;
-
     NovelCamera* getCamera() const;
 
     void beginFrame() const;
     void endFrame() const;
-
-    std::shared_ptr<SDL_Window> getWindow() const;
   };
 
 }

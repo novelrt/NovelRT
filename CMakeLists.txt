@@ -95,6 +95,7 @@ set(NOVELRT_HEADERS
   src/CameraViewChangedEventArgs.h
   src/ShaderProgram.h
   src/CameraBlock.h
+  src/NovelWindowingService.h
   src/NovelRT.h)
 
 set(NOVELRT_SOURCES
@@ -115,7 +116,8 @@ set(NOVELRT_SOURCES
   src/NovelStepTimer.cpp
   src/NovelTextRect.cpp
   src/RGBAConfig.cpp
-  src/NovelCamera.cpp)
+  src/NovelCamera.cpp
+  src/NovelWindowingService.cpp)
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
