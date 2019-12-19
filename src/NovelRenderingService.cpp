@@ -17,44 +17,25 @@
 #include <sstream>
 
 namespace NovelRT {
-  bool NovelRenderingService::initialiseRenderPipeline(int displayNumber, const std::string& windowTitle) {
-
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-      _logger.logError("Could not initialize sdl2: ", std::string(SDL_GetError()));
-      return false;
-    }
+  bool NovelRenderingService::initialiseRenderPipeline() {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-
-    SDL_DisplayMode displayData;
-    SDL_GetCurrentDisplayMode(displayNumber, &displayData);
+    auto windowSize = _windowingService->getWindowSize();
 
 
-    // create window
-    float wData = displayData.w * 0.7f;
-    float hData = displayData.h * 0.7f;
-    _window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(
-      windowTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN), &SDL_DestroyWindow);
-    if (_window == nullptr) {
-      _logger.logError("Could not create window: ", std::string(SDL_GetError()));
-
-      return false;
-    }
-    _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, wData, hData, 0)));
-    _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(wData / 1920.0f, hData / 1080.0f, 0.0f))));
-    _screenSize = GeoVector<float>(wData, hData);
-    std::string infoScreenSize = std::to_string((int)_screenSize.getX());
+    _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0)));
+    _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, 0.0f))));
+    std::string infoScreenSize = std::to_string((int)windowSize.getX());
     infoScreenSize.append("x");
-    infoScreenSize.append(std::to_string((int)_screenSize.getY()));
+    infoScreenSize.append(std::to_string((int)windowSize.getY()));
     _logger.logInfo("Screen size:", infoScreenSize);
 
-    _openGLContext = SDL_GL_CreateContext(_window.get());
-    SDL_GL_MakeCurrent(_window.get(), _openGLContext);
+    _openGLContext = SDL_GL_CreateContext(_windowingService->getWindow());
+    SDL_GL_MakeCurrent(_windowingService->getWindow(), _openGLContext);
 
     if (!gladLoadGL()) {
       _logger.logErrorLine("Failed to initialise glad.");
@@ -176,29 +157,18 @@ namespace NovelRT {
     return returnProg;
   }
 
-  int NovelRenderingService::initialiseRendering(int displayNumber, const std::string& windowTitle) {
-    if (!initialiseRenderPipeline(displayNumber, windowTitle)) {
+  int NovelRenderingService::initialiseRendering() {
+    if (!initialiseRenderPipeline()) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw std::runtime_error("Unable to continue! The engine cannot start without SDL2.");
     }
 
-    SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
-
     return 0;
-  }
-
-  std::string NovelRenderingService::getWindowTitle() const {
-    return SDL_GetWindowTitle(getWindow().get());
-  }
-  void NovelRenderingService::setWindowTitle(const std::string& value) {
-    return SDL_SetWindowTitle(getWindow().get(), value.c_str());
   }
 
   void NovelRenderingService::tearDown() const {
     glDeleteProgram(_basicFillRectProgram.shaderProgramId);
     glDeleteProgram(_texturedRectProgram.shaderProgramId);
-    SDL_DestroyWindow(getWindow().get());
-    SDL_Quit();
   }
 
   void NovelRenderingService::beginFrame() const {
@@ -207,7 +177,7 @@ namespace NovelRT {
   }
 
   void NovelRenderingService::endFrame() const {
-    SDL_GL_SwapWindow(_window.get());
+    SDL_GL_SwapWindow(_windowingService->getWindow());
   }
 
   NovelImageRect* NovelRenderingService::getImageRect(const std::string& filePath,
@@ -223,11 +193,9 @@ namespace NovelRT {
     return new NovelTextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  std::shared_ptr<SDL_Window> NovelRenderingService::getWindow() const {
-    return _window;
-  }
-
-  NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)), _layeringService(layeringService), _cameraObjectRenderUbo(std::function<GLuint()>([] {
+  NovelRenderingService::NovelRenderingService(NovelLayeringService* const layeringService, NovelWindowingService* const windowingService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)),
+                                                                                                                                             _layeringService(layeringService), _windowingService(windowingService),
+                                                                                                                                             _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
     glGenBuffers(1, &tempHandle);
     glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
@@ -240,10 +208,6 @@ namespace NovelRT {
 
     NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const NovelCommonArgs& args) {
       return new NovelBasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
-    }
-
-    GeoVector<float> NovelRenderingService::getScreenSize() const {
-      return _screenSize;
     }
 
     NovelCamera* NovelRenderingService::getCamera() const

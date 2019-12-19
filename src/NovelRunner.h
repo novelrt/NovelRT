@@ -21,9 +21,10 @@ namespace NovelRT {
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
     std::unique_ptr<NovelLayeringService> _layeringService;
     std::unique_ptr<NovelDebugService> _novelDebugService;
-    std::unique_ptr<NovelRenderingService> _novelRenderer;
     std::unique_ptr<NovelInteractionService> _novelInteractionService;
     std::unique_ptr<NovelAudioService> _novelAudioService;
+    std::unique_ptr<NovelWindowingService> _novelWindowingService;
+    std::unique_ptr<NovelRenderingService> _novelRenderer;
     int _exitCode = 1;
 
 

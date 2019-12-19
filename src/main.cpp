@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 
   rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
-    runner.getRenderer()->setWindowTitle("NovelRTTest - Count = " + std::to_string(counter));
+    //runner.getRenderer()->setWindowTitle("NovelRTTest - Count = " + std::to_string(counter));
     switch (counter) {
       case 1:
         novelAudio->fadeMusicOut(500);
