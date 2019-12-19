@@ -94,7 +94,8 @@ set(NOVELRT_HEADERS
   src/GeoMatrix4.h
   src/CameraViewChangedEventArgs.h
   src/ShaderProgram.h
-  src/CameraBlock.h)
+  src/CameraBlock.h
+  src/NovelRT.h)
 
 set(NOVELRT_SOURCES
         src/NovelWorldObject.cpp
