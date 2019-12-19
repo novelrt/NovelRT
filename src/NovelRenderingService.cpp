@@ -58,7 +58,7 @@ namespace NovelRT {
 
     if (!gladLoadGL()) {
       _logger.logErrorLine("Failed to initialise glad.");
-      return -1;
+      throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
     }
 
     std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
@@ -126,7 +126,7 @@ namespace NovelRT {
       std::vector<char> vertexShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&vertexShaderErrorMessage[0]));
-      throw EXIT_FAILURE;
+      throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
     }
 
     // Compile Fragment Shader
@@ -142,7 +142,7 @@ namespace NovelRT {
       std::vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
-      throw EXIT_FAILURE;
+      throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
     }
 
     // Link the program
@@ -159,7 +159,7 @@ namespace NovelRT {
       std::vector<char> ProgramErrorMessage(infoLogLength + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
-      throw EXIT_FAILURE;
+      throw std::runtime_error("Unable to continue! Please fix the specified error in the shader program.");
     }
 
     glDetachShader(programId, vertexShaderId);
@@ -179,7 +179,7 @@ namespace NovelRT {
   int NovelRenderingService::initialiseRendering(int displayNumber, const std::string& windowTitle) {
     if (!initialiseRenderPipeline(displayNumber, windowTitle)) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
-      throw EXIT_FAILURE;
+      throw std::runtime_error("Unable to continue! The engine cannot start without SDL2.");
     }
 
     SDL_GetWindowSize(getWindow().get(), &_winWidth, &_winHeight);
@@ -254,15 +254,5 @@ namespace NovelRT {
     void NovelRenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
       GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
       glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-
-      //TODO: This is what handles buffering part of the data into the UBO, but this is only partial.
-      //GLuint handle = _cameraObjectRenderUbo.getActual();
-      //glBindBuffer(GL_UNIFORM_BUFFER, handle);
-      //glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), &_cameraBlockObj.getActual());
-      //glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
-
-    //NovelRenderingService::CameraBlock NovelRenderingService::generateCameraBlock() {
-    //  return CameraBlock(_camera.getCameraUboMatrix().getUnderlyingMatrix());
-    //}
 }
