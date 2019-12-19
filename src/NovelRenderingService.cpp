@@ -17,7 +17,7 @@
 #include <sstream>
 
 namespace NovelRT {
-  bool NovelRenderingService::initializeRenderPipeline(int displayNumber, const std::string& windowTitle) {
+  bool NovelRenderingService::initialiseRenderPipeline(int displayNumber, const std::string& windowTitle) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
       _logger.logError("Could not initialize sdl2: ", std::string(SDL_GetError()));
@@ -61,8 +61,8 @@ namespace NovelRT {
       return -1;
     }
 
-    std::string glVersion = (const char*)glGetString(GL_VERSION);
-    std::string glShading = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+    std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
     _logger.logInfoLine("GL_VERSION: " + glVersion);
     _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
@@ -177,7 +177,7 @@ namespace NovelRT {
   }
 
   int NovelRenderingService::initialiseRendering(int displayNumber, const std::string& windowTitle) {
-    if (!initializeRenderPipeline(displayNumber, windowTitle)) {
+    if (!initialiseRenderPipeline(displayNumber, windowTitle)) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw EXIT_FAILURE;
     }
@@ -227,7 +227,7 @@ namespace NovelRT {
     return _window;
   }
 
-  NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _layeringService(layeringService), _cameraObjectRenderUbo(std::function<GLuint()>([] {
+  NovelRenderingService::NovelRenderingService(NovelLayeringService* layeringService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)), _layeringService(layeringService), _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
     glGenBuffers(1, &tempHandle);
     glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
