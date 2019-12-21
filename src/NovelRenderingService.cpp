@@ -1,17 +1,16 @@
-#include "NovelRenderingService.h"
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRenderingService.h"
+#include "../include/NovelRenderingService.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
 
-#include "GeoVector.h"
-#include "NovelBasicFillRect.h"
-#include "NovelImageRect.h"
-#include "NovelUtilities.h"
+#include "../include/GeoVector.h"
+#include "../include/NovelBasicFillRect.h"
+#include "../include/NovelImageRect.h"
+#include "../include/NovelUtilities.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>

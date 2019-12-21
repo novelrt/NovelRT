@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "NovelWindowingService.h"
-#include "NovelUtilities.h"
+#include "../include/NovelWindowingService.h"
+#include "../include/NovelUtilities.h"
 
 namespace NovelRT {
   NovelWindowingService::NovelWindowingService() : _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)){}

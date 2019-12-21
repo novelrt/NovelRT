@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "NovelLoggingService.h"
-#include "NovelUtilities.h"
+#include "../include/NovelLoggingService.h"
+#include "../include/NovelUtilities.h"
 #include "spdlog/async.h"
 #include <typeinfo>
 

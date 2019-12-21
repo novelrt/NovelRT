@@ -65,39 +65,39 @@ link_libraries(${LUA_LIBRARY})
 find_package(Doxygen QUIET)
 
 set(NOVELRT_HEADERS
-  src/NovelWorldObject.h
-  src/GeoBounds.h
-  src/GeoVector.h
-  src/GraphicsCharacterRenderData.h
-  src/KeyCode.h
-  src/Lazy.h
-  src/NovelAudioService.h
-  src/NovelBasicFillRect.h
-  src/NovelBasicInteractionRect.h
-  src/NovelCommonArgs.h
-  src/NovelDebugService.h
-  src/NovelImageRect.h
-  src/NovelInteractionObject.h
-  src/NovelInteractionService.h
-  src/NovelLayeringService.h
-  src/NovelLoggingService.h
-  src/NovelObjectSortComparison.h
-  src/NovelRenderingService.h
-  src/NovelRenderObject.h
-  src/NovelUtilities.h
-  src/NovelRunner.h
-  src/NovelStepTimer.h
-  src/NovelTextRect.h
-  src/RGBAConfig.h
-  src/wrapper.hpp
-  src/NovelCamera.h
-  src/GeoMatrix4.h
-  src/CameraViewChangedEventArgs.h
-  src/ShaderProgram.h
-  src/CameraBlock.h
-  src/NovelWindowingService.h
-  src/KeyState.h
-  src/NovelRT.h)
+  include/NovelWorldObject.h
+  include/GeoBounds.h
+  include/GeoVector.h
+  include/GraphicsCharacterRenderData.h
+  include/KeyCode.h
+  include/Lazy.h
+  include/NovelAudioService.h
+  include/NovelBasicFillRect.h
+  include/NovelBasicInteractionRect.h
+  include/NovelCommonArgs.h
+  include/NovelDebugService.h
+  include/NovelImageRect.h
+  include/NovelInteractionObject.h
+  include/NovelInteractionService.h
+  include/NovelLayeringService.h
+  include/NovelLoggingService.h
+  include/NovelObjectSortComparison.h
+  include/NovelRenderingService.h
+  include/NovelRenderObject.h
+  include/NovelUtilities.h
+  include/NovelRunner.h
+  include/NovelStepTimer.h
+  include/NovelTextRect.h
+  include/RGBAConfig.h
+  include/wrapper.hpp
+  include/NovelCamera.h
+  include/GeoMatrix4.h
+  include/CameraViewChangedEventArgs.h
+  include/ShaderProgram.h
+  include/CameraBlock.h
+  include/NovelWindowingService.h
+  include/KeyState.h
+  include/NovelRT.h)
 
 set(NOVELRT_SOURCES
         src/NovelWorldObject.cpp
@@ -159,7 +159,7 @@ endif()
 
 set(NOVELRT_LIBRARY_HEADERS
   ${NOVELRT_HEADERS}
-  src/NovelRunner_C.h
+  include/NovelRunner_C.h
 )
 
 set(NOVELRT_LIBRARY_SOURCES

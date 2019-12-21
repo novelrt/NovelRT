@@ -3,7 +3,7 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#include "NovelStepTimer.h"
+#include "../include/NovelStepTimer.h"
 #include <SDL2/SDL.h>
 
 namespace NovelRT {

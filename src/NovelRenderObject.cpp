@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "NovelRenderObject.h"
-#include "GeoBounds.h"
+#include "../include/NovelRenderObject.h"
+#include "../include/GeoBounds.h"
 #include <functional>
 
 namespace NovelRT {

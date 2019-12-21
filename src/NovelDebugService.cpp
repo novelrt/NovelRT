@@ -25,8 +25,8 @@ messageCallback(GLenum source,
   glDebugMessageCallback(messageCallback, 0);*/
 
 #include <limits>
-#include "NovelDebugService.h"
-#include "NovelRunner.h"
+#include "../include/NovelDebugService.h"
+#include "../include/NovelRunner.h"
 
 namespace NovelRT {
   NovelDebugService::NovelDebugService(NovelRunner* runner) :

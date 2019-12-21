@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "NovelTextRect.h"
-#include "NovelUtilities.h"
+#include "../include/NovelTextRect.h"
+#include "../include/NovelUtilities.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <algorithm>
-#include "NovelLayeringService.h"
-#include "NovelObjectSortComparison.h"
+#include "../include/NovelLayeringService.h"
+#include "../include/NovelObjectSortComparison.h"
 
 namespace NovelRT {
 void NovelLayeringService::updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate) {
