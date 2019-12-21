@@ -4,9 +4,9 @@
 #define NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
 
 #include <glad.h>
-#include "GeoVector.h"
+#include "../Maths/GeoVector.h"
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
 typedef std::conditional<sizeof(signed long) <= 4, GLuint, GLuint64>::type AdvanceInteger;
 struct GraphicsCharacterRenderData {
 public:

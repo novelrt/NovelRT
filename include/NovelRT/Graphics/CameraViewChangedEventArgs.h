@@ -2,8 +2,9 @@
 
 #ifndef NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
 #define NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
-#include "GeoMatrix4.h"
-namespace NovelRT {
+#include "../Maths/GeoMatrix4.h"
+
+namespace NovelRT::Graphics {
   struct CameraViewChangedEventArgs {
   public:
     const GeoMatrix4<float> cameraMatrix;

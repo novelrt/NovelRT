@@ -1,17 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELAUDIOSERVICE_H
-#define NOVELRT_NOVELAUDIOSERVICE_H
+#ifndef NOVELRT_AUDIOSERVICE_H
+#define NOVELRT_AUDIOSERVICE_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <map>
 #include <typeinfo>
-#include "NovelLoggingService.h"
+#include "../NovelLoggingService.h"
 
-namespace NovelRT {
-  class NovelAudioService {
+namespace NovelRT::Audio {
+  class AudioService {
 
     typedef std::map<std::string, Mix_Chunk*> SoundBank;
     typedef std::map<std::string, Mix_Music*> MusicBank;
@@ -42,8 +42,8 @@ namespace NovelRT {
   public:
     bool isInitialized;
 
-    NovelAudioService();
-    ~NovelAudioService();
+    AudioService();
+    ~AudioService();
 
     bool initializeAudio();
     void load(std::string input, bool isMusic);

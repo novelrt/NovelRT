@@ -3,7 +3,7 @@
 #define NOVELRT_CAMERABLOCK_H
 #include <glm/glm.hpp>
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
   struct CameraBlock {
     glm::mat4 cameraMatrix;
     CameraBlock(glm::mat4 matrix) {
