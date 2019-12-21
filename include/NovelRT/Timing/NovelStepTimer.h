@@ -3,13 +3,13 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#ifndef NOVELRT_STEPTIMER_H
-#define NOVELRT_STEPTIMER_H
+#ifndef NOVELRT_TIMING_STEPTIMER_H
+#define NOVELRT_TIMING_STEPTIMER_H
 
 #include <stdint.h>
 #include <vector>
 
-namespace NovelRT {
+namespace NovelRT::Timing {
   typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
 
   class StepTimer {
@@ -96,4 +96,4 @@ namespace NovelRT {
     void tick(const std::vector<NovelUpdateSubscriber>& update);
   };
 }
-#endif // NOVELRT_STEPTIMER_H
+#endif // NOVELRT_TIMING_STEPTIMER_H

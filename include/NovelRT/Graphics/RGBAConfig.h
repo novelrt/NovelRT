@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_RGBACONFIG_H
-#define NOVELRT_RGBACONFIG_H
+#ifndef NOVELRT_GRAPHICS_RGBACONFIG_H
+#define NOVELRT_GRAPHICS_RGBACONFIG_H
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
   class RGBAConfig {
 
   private:
@@ -36,4 +36,4 @@ namespace NovelRT {
   };
 }
 
-#endif //NOVELRT_RGBACONFIG_H
+#endif //NOVELRT_GRAPHICS_RGBACONFIG_H

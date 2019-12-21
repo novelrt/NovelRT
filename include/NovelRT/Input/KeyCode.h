@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_KEYCODE_H
-#define NOVELRT_KEYCODE_H
+#ifndef NOVELRT_INPUT_KEYCODE_H
+#define NOVELRT_INPUT_KEYCODE_H
 #include <stdint.h>
 #include <SDL2/SDL.h>
 
-namespace NovelRT {
+namespace NovelRT::Input {
   enum class KeyCode : uint32_t {
     Nothing = SDLK_UNKNOWN,
     LeftMouseButton = 323,
@@ -168,4 +168,4 @@ namespace NovelRT {
 
   };
 }
-#endif //NOVELRT_KEYCODE_H
+#endif //NOVELRT_INPUT_KEYCODE_H

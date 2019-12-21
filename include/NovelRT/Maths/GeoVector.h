@@ -1,15 +1,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_COORDINATEVECTOR_H
-#define NOVELRT_COORDINATEVECTOR_H
+#ifndef NOVELRT_MATHS_GEOVECTOR_H
+#define NOVELRT_MATHS_GEOVECTOR_H
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-namespace NovelRT {
+namespace NovelRT::Maths {
   template<typename T>
   class GeoVector {
-    friend class NovelRenderObject;
-    friend class NovelInteractionService;
+    friend class Graphics::RenderObject;
+    friend class Graphics::InteractionService;
     template<typename U>
     friend class GeoMatrix4;
   private:
@@ -92,4 +92,4 @@ namespace NovelRT {
     }
   };
 }
-#endif //NOVELRT_COORDINATEVECTOR_H
+#endif //NOVELRT_MATHS_GEOVECTOR_H

@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_LAZY_H
-#define NOVELRT_LAZY_H
+#ifndef NOVELRT_UTILITIES_LAZY_H
+#define NOVELRT_UTILITIES_LAZY_H
 #include <functional>
 #include <memory>
 
-namespace NovelRT {
+namespace NovelRT::Utilities {
   template<typename T>
   class Lazy {
 
@@ -33,4 +33,4 @@ namespace NovelRT {
   };
 }
 
-#endif //NOVELRT_LAZY_H
+#endif //NOVELRT_UTILITIES_LAZY_H

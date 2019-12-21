@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
-#define NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
+#ifndef NOVELRT_GRAPHICS_CAMERAVIEWCHANGEDEVENTARGS_H
+#define NOVELRT_GRAPHICS_CAMERAVIEWCHANGEDEVENTARGS_H
 #include "../Maths/GeoMatrix4.h"
 
 namespace NovelRT::Graphics {
@@ -12,4 +12,4 @@ namespace NovelRT::Graphics {
   };
 }
 
-#endif //NOVELRT_CAMERAVIEWCHANGEDEVENTARGS_H
+#endif //NOVELRT_GRAPHICS_CAMERAVIEWCHANGEDEVENTARGS_H

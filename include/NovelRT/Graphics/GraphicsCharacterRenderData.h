@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT LICENCE.md (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
-#define NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
+#ifndef NOVELRT_GRAPHICS_CHARACTERRENDERDATA_H
+#define NOVELRT_GRAPHICS_CHARACTERRENDERDATA_H
 
 #include <glad.h>
 #include "../Maths/GeoVector.h"
@@ -17,4 +17,4 @@ public:
 };
 }
 
-#endif //NOVELRT_GRAPHICSCHARACTERRENDERDATA_H
+#endif //NOVELRT_GRAPHICS_CHARACTERRENDERDATA_H

@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELCOMMONARGS_H
-#define NOVELRT_NOVELCOMMONARGS_H
-#include "GeoVector.h"
+#ifndef NOVELRT_UTILITIES_COMMONARGS_H
+#define NOVELRT_UTILITIES_COMMONARGS_H
+#include "../Maths/GeoVector.h"
 
-namespace NovelRT {
-  struct NovelCommonArgs {
+namespace NovelRT::Utilities {
+  struct CommonArgs {
 
   public:
     GeoVector<float> startingPosition = GeoVector<float>(0, 0);
@@ -14,8 +14,8 @@ namespace NovelRT {
     int layer = 0;
     int orderInLayer = 0;
 
-    NovelCommonArgs() {};
+    CommonArgs() {};
   };
 }
 
-#endif //NOVELRT_NOVELCOMMONARGS_H
+#endif //NOVELRT_UTILITIES_COMMONARGS_H

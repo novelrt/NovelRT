@@ -1,14 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_GEOBOUNDS_H
-#define NOVELRT_GEOBOUNDS_H
+#ifndef NOVELRT_MATHS_GEOBOUNDS_H
+#define NOVELRT_MATHS_GEOBOUNDS_H
 
 #include "GeoVector.h"
 #include <vector>
-#include "Lazy.h"
-#include "GeoVector.h"
+#include "../Lazy.h"
 
-namespace NovelRT {
+namespace NovelRT::Maths {
   class GeoBounds {
   private:
     GeoVector<float> _position;
@@ -28,4 +27,4 @@ namespace NovelRT {
     void setRotation(float value);
   };
 }
-#endif //NOVELRT_GEOBOUNDS_H
+#endif //NOVELRT_MATHS_GEOBOUNDS_H

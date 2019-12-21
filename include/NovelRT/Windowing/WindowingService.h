@@ -4,18 +4,18 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include <string>
-#include "NovelLoggingService.h"
-#include "GeoVector.h"
+#include "../LoggingService.h"
+#include "../Maths/GeoVector.h"
 
-namespace NovelRT {
-  class NovelWindowingService {
+namespace NovelRT::Windowing {
+  class WindowingService {
   private:
     GeoVector<float> _windowSize;
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
     NovelLoggingService _logger;
 
   public:
-    explicit NovelWindowingService();
+    explicit WindowingService();
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
     void tearDown();
 
