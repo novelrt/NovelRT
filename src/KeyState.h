@@ -1,4 +1,5 @@
 #ifndef NOVELRT_KEYSTATE_H
+#define NOVELRT_KEYSTATE_H
 #include <stdint.h>
 
 namespace NovelRT {
