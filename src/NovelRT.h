@@ -8,6 +8,7 @@
 #include "GeoVector.h"
 #include "GraphicsCharacterRenderData.h"
 #include "KeyCode.h"
+#include "KeyState.h"
 #include "Lazy.h"
 #include "NovelAudioService.h"
 #include "NovelBasicFillRect.h"
@@ -28,9 +29,9 @@
 #include "NovelStepTimer.h"
 #include "NovelTextRect.h"
 #include "NovelUtilities.h"
+#include "NovelWindowingService.h"
 #include "NovelWorldObject.h"
 #include "RGBAConfig.h"
 #include "ShaderProgram.h"
 #include "wrapper.hpp"
-
-#endif NOVELRT_H
+#endif //!NOVELRT_H
