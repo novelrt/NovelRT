@@ -31,7 +31,7 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-NovelRT::NovelImageRect *novelChanRect;
+NovelRT::ImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
-  NovelRT::NovelCommonArgs novelChanArgs;
+  NovelRT::CommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
   novelChanArgs.startingPosition.setX(1920 / 2);
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
   novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
 
-  auto rectArgs = NovelRT::NovelCommonArgs();
+  auto rectArgs = NovelRT::CommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.startingPosition.setY(rectArgs.startingPosition.getY());
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
   //auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
 
-  auto playButtonArgs = NovelRT::NovelCommonArgs();
+  auto playButtonArgs = NovelRT::CommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
   playButtonArgs.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
   playButtonArgs.layer = 0;

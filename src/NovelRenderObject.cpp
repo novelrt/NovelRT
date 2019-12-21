@@ -7,15 +7,15 @@
 
 namespace NovelRT {
 
-  void NovelRenderObject::OnCameraViewChanged(CameraViewChangedEventArgs args) {
+  void RenderObject::OnCameraViewChanged(CameraViewChangedEventArgs args) {
     _uboCameraData = CameraBlock(args.cameraMatrix.getUnderlyingMatrix());
   }
 
-  NovelRenderObject::NovelRenderObject(NovelLayeringService* layeringService,
-    const NovelCommonArgs& args,
+  RenderObject::RenderObject(LayeringService* layeringService,
+    const CommonArgs& args,
     ShaderProgram shaderProgram,
-    NovelCamera* camera) : NovelWorldObject(layeringService, args),
-                           _finalViewMatrixData(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&NovelRenderObject::generateViewData, this)))),
+    Camera* camera) : Transform(layeringService, args),
+                           _finalViewMatrixData(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&RenderObject::generateViewData, this)))),
                            _vertexBuffer(Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
                            _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([] {
                                                                                         GLuint tempVao;
@@ -28,7 +28,7 @@ namespace NovelRT {
     _camera->subscribeToCameraViewChanged([this](auto x) { OnCameraViewChanged(x); }); //TODO: Should we refactor the method into the lambda?
   }
 
-      void NovelRenderObject::executeObjectBehaviour() {
+      void RenderObject::executeObjectBehaviour() {
         if (!_bufferInitialised) {
           configureObjectBuffers();
           _bufferInitialised = true;
@@ -36,7 +36,7 @@ namespace NovelRT {
         drawObject();
       }
 
-      void NovelRenderObject::configureObjectBuffers() {
+      void RenderObject::configureObjectBuffers() {
         auto topLeft = GeoVector<GLfloat>(-0.5f, 0.5f);
         auto bottomRight = GeoVector<GLfloat>(0.5f, -0.5f);
         auto topRight = GeoVector<GLfloat>(0.5f, 0.5f);
@@ -60,22 +60,22 @@ namespace NovelRT {
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
       }
 
-      void NovelRenderObject::setRotation(const float value) {
+      void RenderObject::setRotation(const float value) {
         _finalViewMatrixData.reset();
-        NovelWorldObject::setRotation(value);
+        Transform::setRotation(value);
         configureObjectBuffers();
       }
-      void NovelRenderObject::setScale(const GeoVector<float>& value) {
+      void RenderObject::setScale(const GeoVector<float>& value) {
         _finalViewMatrixData.reset();
-        NovelWorldObject::setScale(value);
+        Transform::setScale(value);
         configureObjectBuffers();
       }
-      void NovelRenderObject::setPosition(const GeoVector<float>& value) {
+      void RenderObject::setPosition(const GeoVector<float>& value) {
         _finalViewMatrixData.reset();
-        NovelWorldObject::setPosition(value);
+        Transform::setPosition(value);
         configureObjectBuffers();
       }
-      NovelRenderObject::~NovelRenderObject() {
+      RenderObject::~RenderObject() {
         if (!_vertexArrayObject.isCreated())
           return;
 
@@ -83,13 +83,13 @@ namespace NovelRT {
         glDeleteVertexArrays(1, &vao);
       }
 
-      GLuint NovelRenderObject::generateStandardBuffer() {
+      GLuint RenderObject::generateStandardBuffer() {
         GLuint tempBuffer;
         glGenBuffers(1, &tempBuffer);
         return tempBuffer;
       }
 
-      CameraBlock NovelRenderObject::generateViewData() {
+      CameraBlock RenderObject::generateViewData() {
         auto position = getPosition().getVec2Value();
         auto resultMatrix = GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
         resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
@@ -99,7 +99,7 @@ namespace NovelRT {
         return CameraBlock(glm::transpose(_uboCameraData.cameraMatrix * resultMatrix));
       }
 
-      CameraBlock NovelRenderObject::generateCameraBlock() {
+      CameraBlock RenderObject::generateCameraBlock() {
         return CameraBlock(_camera->getCameraUboMatrix().getUnderlyingMatrix());
       }
 }

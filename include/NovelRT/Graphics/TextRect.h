@@ -28,7 +28,7 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    TextRect(NovelLayeringService* layeringService,
+    TextRect(LayeringService* layeringService,
       const CommonArgs& args,
       ShaderProgram programId,
       Camera* camera,

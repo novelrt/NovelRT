@@ -29,22 +29,22 @@ messageCallback(GLenum source,
 #include "../include/NovelRunner.h"
 
 namespace NovelRT {
-  NovelDebugService::NovelDebugService(NovelRunner* runner) :
+  DebugService::DebugService(NovelRunner* runner) :
     _runner(runner),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {
   }
 
-  bool NovelDebugService::getIsFpsCounterVisible() const {
+  bool DebugService::getIsFpsCounterVisible() const {
     return (_fpsCounter != nullptr) && _fpsCounter->getActive();
   }
 
-  void NovelDebugService::setIsFpsCounterVisible(bool value) {
+  void DebugService::setIsFpsCounterVisible(bool value) {
     if (_fpsCounter == nullptr) {
       if (value) {
         auto yellow = RGBAConfig(255, 255, 0, 255);
 
-        auto textArgs = NovelCommonArgs();
+        auto textArgs = CommonArgs();
         textArgs.startingPosition = GeoVector<float>(0, 1080 - 16);
         textArgs.layer = std::numeric_limits<int32_t>::max();
         textArgs.orderInLayer = std::numeric_limits<int32_t>::max();
@@ -58,14 +58,14 @@ namespace NovelRT {
     }
   }
 
-  void NovelDebugService::setFramesPerSecond(uint32_t value) {
+  void DebugService::setFramesPerSecond(uint32_t value) {
     if (_framesPerSecond != value) {
       _framesPerSecond = value;
       updateFpsCounter();
     }
   }
 
-  void NovelDebugService::updateFpsCounter() {
+  void DebugService::updateFpsCounter() {
     if (_fpsCounter != nullptr) {
       char fpsText[16];
       snprintf(fpsText, 16, "%u fps", _framesPerSecond);

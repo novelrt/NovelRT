@@ -3,14 +3,14 @@
 #include "../include/NovelBasicInteractionRect.h"
 #include "../include/GeoBounds.h"
 namespace NovelRT {
-NovelBasicInteractionRect::NovelBasicInteractionRect(NovelLayeringService* layeringService,
+BasicInteractionRect::BasicInteractionRect(LayeringService* layeringService,
                                                      const GeoVector<float>& size,
-                                                     const NovelCommonArgs& args,
-                                                     const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject)
-    : NovelInteractionObject(layeringService, args, notifyHasBeenDrawnObject) {
+                                                     const CommonArgs& args,
+                                                     const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
+    : InteractionObject(layeringService, args, notifyHasBeenDrawnObject) {
 
 }
-bool NovelBasicInteractionRect::validateInteractionPerimeter(const NovelRT::GeoVector<float>& mousePosition) const {
+bool BasicInteractionRect::validateInteractionPerimeter(const NovelRT::GeoVector<float>& mousePosition) const {
   GeoVector<float> position = getPosition();
   GeoVector<float> size = getScale();
   return GeoBounds(position, size, getRotation()).pointIsWithinBounds(mousePosition);

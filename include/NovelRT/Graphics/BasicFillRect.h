@@ -9,7 +9,7 @@
 #include "NovelCamera.h"
 
 namespace NovelRT::Graphics {
-  class BasicFillRect : public NovelRenderObject {
+  class BasicFillRect : public RenderObject {
 
   private:
     RGBAConfig _colourConfig;
@@ -20,9 +20,9 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    BasicFillRect(NovelLayeringService* layeringService,
+    BasicFillRect(LayeringService* layeringService,
                        const RGBAConfig& fillColour,
-                       const NovelCommonArgs& args,
+                       const CommonArgs& args,
                        ShaderProgram shaderProgram,
                        Camera* camera);
 

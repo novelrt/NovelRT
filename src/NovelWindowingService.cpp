@@ -3,9 +3,9 @@
 #include "../include/NovelUtilities.h"
 
 namespace NovelRT {
-  NovelWindowingService::NovelWindowingService() : _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)){}
+  WindowingService::WindowingService() : _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)){}
 
-  void NovelWindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
+  void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
       _logger.logError("Could not initialize SDL2: ", std::string(SDL_GetError()));
       throw std::runtime_error("Unable to continue! SDL2 failed to initialise.");
@@ -29,7 +29,7 @@ namespace NovelRT {
       throw std::runtime_error("Unable to continue! Window could not be created.");
     }
   }
-  void NovelWindowingService::tearDown() {
+  void WindowingService::tearDown() {
     SDL_DestroyWindow(getWindow());
     SDL_Quit();
   }

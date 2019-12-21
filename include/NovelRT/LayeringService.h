@@ -9,13 +9,13 @@
 #include "NovelWorldObject.h"
 
 namespace NovelRT {
-  class NovelWorldObject;
+  class Transform;
   class LayeringService {
   private:
-    std::map<int, std::vector<NovelWorldObject*>> _layerMatrix;
+    std::map<int, std::vector<Transform*>> _layerMatrix;
 
   public:
-    void updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate = true);
+    void updateLayerInfo(int layer, Transform* targetObject, bool migrate = true);
     void sortLayerOrder(int layer);
     void executeAllObjectBehaviours();
 

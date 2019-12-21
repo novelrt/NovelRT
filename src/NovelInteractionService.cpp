@@ -4,14 +4,14 @@
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT {
-  NovelInteractionService::NovelInteractionService(NovelLayeringService* const layeringService)
+  InteractionService::InteractionService(LayeringService* const layeringService)
     : _clickTarget(nullptr), _layeringService(layeringService) {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, GeoVector<float>(0, 0) });
     _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
     _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
   }
 
-  void NovelInteractionService::HandleInteractionDraw(NovelInteractionObject* target) {
+  void InteractionService::HandleInteractionDraw(InteractionObject* target) {
     if (_keyStates[target->getSubscribedKey()] != KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
@@ -19,7 +19,7 @@ namespace NovelRT {
       _clickTarget = target;
   }
 
-  void NovelInteractionService::consumePlayerInput() {
+  void InteractionService::consumePlayerInput() {
     SDL_Event sdlEvent;
 
     for (auto& pair : _keyStates) {
@@ -89,14 +89,14 @@ namespace NovelRT {
     }
   }
 
-  NovelBasicInteractionRect* NovelInteractionService::getBasicInteractionRect(const GeoVector<float>& startingSize,
-    const NovelCommonArgs& args) {
-    return new NovelBasicInteractionRect(_layeringService,
+  BasicInteractionRect* InteractionService::getBasicInteractionRect(const GeoVector<float>& startingSize,
+    const CommonArgs& args) {
+    return new BasicInteractionRect(_layeringService,
       startingSize,
       args,
-      [this](NovelInteractionObject* x) { HandleInteractionDraw(x); });
+      [this](InteractionObject* x) { HandleInteractionDraw(x); });
   }
-  void NovelInteractionService::ExecuteClickedInteractable() {
+  void InteractionService::ExecuteClickedInteractable() {
     if (_clickTarget == nullptr) return;
 
     _clickTarget->raiseInteracted();

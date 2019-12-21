@@ -3,8 +3,8 @@
 #include "../include/GeoBounds.h"
 
 namespace NovelRT {
-  NovelWorldObject::NovelWorldObject(NovelLayeringService* layeringService,
-    const NovelCommonArgs& args) :
+  Transform::Transform(LayeringService* layeringService,
+    const CommonArgs& args) :
     _layeringService(layeringService) {
     setLayer(args.layer);
     setOrderInLayer(args.orderInLayer);
@@ -15,54 +15,54 @@ namespace NovelRT {
     setActive(true);
   }
 
-  NovelWorldObject::~NovelWorldObject() = default;
+  Transform::~Transform() = default;
 
-  GeoVector<float> NovelWorldObject::getPosition() const {
+  GeoVector<float> Transform::getPosition() const {
     return _position;
   }
 
-  void NovelWorldObject::setPosition(const GeoVector<float>& value) {
+  void Transform::setPosition(const GeoVector<float>& value) {
     _position = value;
   }
 
-  float NovelWorldObject::getRotation() const {
+  float Transform::getRotation() const {
     return _rotation;
   }
 
-  void NovelWorldObject::setRotation(const float value) {
+  void Transform::setRotation(const float value) {
     _rotation = value;
   }
 
-  GeoVector<float> NovelWorldObject::getScale() const {
+  GeoVector<float> Transform::getScale() const {
     return _scale;
   }
 
-  void NovelWorldObject::setScale(const GeoVector<float>& value) {
+  void Transform::setScale(const GeoVector<float>& value) {
     _scale = value;
   }
 
-  bool NovelWorldObject::getActive() const {
+  bool Transform::getActive() const {
     return _active;
   }
 
-  void NovelWorldObject::setActive(const bool value) {
+  void Transform::setActive(const bool value) {
     _active = value;
   }
 
-  int NovelWorldObject::getLayer() const {
+  int Transform::getLayer() const {
     return _layer;
   }
 
-  void NovelWorldObject::setLayer(int value) {
+  void Transform::setLayer(int value) {
     _layer = value;
     _layeringService->updateLayerInfo(value, this);
   }
 
-  int NovelWorldObject::getOrderInLayer() const {
+  int Transform::getOrderInLayer() const {
     return _orderInLayer;
   }
 
-  void NovelWorldObject::setOrderInLayer(int value) {
+  void Transform::setOrderInLayer(int value) {
     _orderInLayer = value;
     _layeringService->sortLayerOrder(getLayer());
   }

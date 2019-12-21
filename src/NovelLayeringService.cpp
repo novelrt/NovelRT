@@ -5,27 +5,27 @@
 #include "../include/NovelObjectSortComparison.h"
 
 namespace NovelRT {
-void NovelLayeringService::updateLayerInfo(int layer, NovelWorldObject* targetObject, bool migrate) {
+void LayeringService::updateLayerInfo(int layer, Transform* targetObject, bool migrate) {
   if (migrate) {
     auto vec = _layerMatrix[targetObject->getLayer()];
-    vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const NovelWorldObject* x) {
+    vec.erase(std::remove_if(vec.begin(), vec.end(), [targetObject](const Transform* x) {
       auto result = x == targetObject;
       return result;
     }), vec.end());
   }
   auto it = _layerMatrix.find(layer);
   if (it == _layerMatrix.end()) {
-    _layerMatrix.insert({layer, std::vector<NovelWorldObject*>()});
+    _layerMatrix.insert({layer, std::vector<Transform*>()});
   }
   _layerMatrix[layer].push_back(targetObject);
   sortLayerOrder(layer);
 }
 
-void NovelLayeringService::sortLayerOrder(int layer) {
-  std::sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), NovelWorldObjectSortComparison());
+void LayeringService::sortLayerOrder(int layer) {
+  std::sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), TransformSortComparison());
 }
 
-void NovelLayeringService::executeAllObjectBehaviours() {
+void LayeringService::executeAllObjectBehaviours() {
 
   for (const auto& value : _layerMatrix) {
     for (const auto& renderObj : value.second) {
@@ -33,7 +33,7 @@ void NovelLayeringService::executeAllObjectBehaviours() {
     }
   }
 }
-NovelLayeringService::~NovelLayeringService() {
+LayeringService::~LayeringService() {
   for (const auto& value : _layerMatrix) {
     for (const auto& renderObj : value.second) {
       delete renderObj;

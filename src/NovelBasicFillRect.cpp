@@ -5,15 +5,15 @@
 
 namespace NovelRT {
 
-NovelBasicFillRect::NovelBasicFillRect(NovelLayeringService* layeringService,
+BasicFillRect::BasicFillRect(LayeringService* layeringService,
                                        const RGBAConfig& fillColour,
-                                       const NovelCommonArgs& args,
+                                       const CommonArgs& args,
                                        ShaderProgram shaderProgram,
-                                       NovelCamera* camera) :
-    NovelRenderObject(layeringService, args, shaderProgram, camera), _colourConfig(fillColour),
+                                       Camera* camera) :
+    RenderObject(layeringService, args, shaderProgram, camera), _colourConfig(fillColour),
     _colourBuffer(Lazy<GLuint>(generateStandardBuffer)) {}
 
-void NovelBasicFillRect::drawObject() {
+void BasicFillRect::drawObject() {
   if (!getActive())
     return;
 
@@ -52,15 +52,15 @@ void NovelBasicFillRect::drawObject() {
 
 }
 
-RGBAConfig NovelBasicFillRect::getColourConfig() const {
+RGBAConfig BasicFillRect::getColourConfig() const {
   return _colourConfig;
 }
-void NovelBasicFillRect::setColourConfig(const RGBAConfig& value) {
+void BasicFillRect::setColourConfig(const RGBAConfig& value) {
   _colourConfig = value;
   configureObjectBuffers();
 }
-void NovelBasicFillRect::configureObjectBuffers() {
-  NovelRenderObject::configureObjectBuffers();
+void BasicFillRect::configureObjectBuffers() {
+  RenderObject::configureObjectBuffers();
 
   auto config = getColourConfig();
   auto rScalar = config.getRScalar();
