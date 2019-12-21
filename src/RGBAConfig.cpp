@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "RGBAConfig.h"
+#include "../include/RGBAConfig.h"
 
 namespace NovelRT {
 RGBAConfig::RGBAConfig(int r, int g, int b, int a) {

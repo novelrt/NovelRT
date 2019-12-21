@@ -3,9 +3,9 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "NovelImageRect.h"
-#include "GeoBounds.h"
-#include "NovelUtilities.h"
+#include "../include/NovelImageRect.h"
+#include "../include/GeoBounds.h"
+#include "../include/NovelUtilities.h"
 
 namespace NovelRT {
 NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,

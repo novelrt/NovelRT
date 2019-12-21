@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "NovelInteractionService.h"
-#include "NovelInteractionService.h"
+#include "../include/NovelInteractionService.h"
+#include "../include/NovelInteractionService.h"
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT {

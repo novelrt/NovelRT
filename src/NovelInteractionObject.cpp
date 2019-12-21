@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelInteractionObject.h"
+#include "../include/NovelInteractionObject.h"
 namespace NovelRT {
 NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
                                                const NovelRT::NovelCommonArgs& args,

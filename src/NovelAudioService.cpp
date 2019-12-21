@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelAudioService.h"
-#include "NovelUtilities.h"
+#include "../include/NovelAudioService.h"
+#include "../include/NovelUtilities.h"
 #include <iostream>
 #include <functional>
 #include <stdexcept>

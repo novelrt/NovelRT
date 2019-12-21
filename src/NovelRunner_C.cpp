@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRunner.h"
-#include "NovelRunner_C.h"
+#include "../include/NovelRunner.h"
+#include "../include/NovelRunner_C.h"
 
 extern "C" {
 NovelRunner_t* createRunner(int displayNumber) {
