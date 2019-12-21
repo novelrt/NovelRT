@@ -22,7 +22,7 @@ void NovelLayeringService::updateLayerInfo(int layer, NovelWorldObject* targetOb
 }
 
 void NovelLayeringService::sortLayerOrder(int layer) {
-  sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), NovelWorldObjectSortComparison());
+  std::sort(_layerMatrix[layer].begin(), _layerMatrix[layer].end(), NovelWorldObjectSortComparison());
 }
 
 void NovelLayeringService::executeAllObjectBehaviours() {

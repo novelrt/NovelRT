@@ -2,12 +2,12 @@
 
 #ifndef NOVELRT_NOVELCAMERA_H
 #define NOVELRT_NOVELCAMERA_H
-#include "GeoMatrix4.h"
-#include "Lazy.h"
-#include "NovelUtilities.h"
+#include "../Maths/GeoMatrix4.h"
+#include "../Lazy.h"
+#include "../Utilities/NovelUtilities.h"
 #include "CameraViewChangedEventArgs.h"
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
   class NovelCamera {
 
     NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
