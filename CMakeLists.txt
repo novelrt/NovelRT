@@ -63,6 +63,7 @@ find_library(LUA_LIBRARY lua)
 link_libraries(${LUA_LIBRARY})
 
 find_package(Doxygen QUIET)
+include_directories(include)
 
 set(NOVELRT_HEADERS
   include/NovelRT/Transform.h
@@ -99,7 +100,7 @@ set(NOVELRT_HEADERS
   include/NovelRT.h)
 
 set(NOVELRT_SOURCES
-        src/NovelWorldObject.cpp
+  src/NovelWorldObject.cpp
   src/GeoBounds.cpp
   src/NovelAudioService.cpp
   src/NovelBasicFillRect.cpp

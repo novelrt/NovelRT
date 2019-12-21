@@ -4,9 +4,10 @@
 #define NOVELRT_INPUT_INTERACTIONOBJECT_H
 #include <algorithm>
 #include <functional>
-#include "../NovelWorldObject.h"
+#include "../Transform.h"
 #include "KeyCode.h"
-#include "NovelUtilities.h"
+#include "../Utilities/Misc.h"
+#include "../Utilities/CommonArgs.h"
 
 namespace NovelRT::Input {
   class InteractionObject : public Transform {
@@ -18,10 +19,9 @@ namespace NovelRT::Input {
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
 
   public:
-    InteractionObject(LayeringService* layeringService,
-      const CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+    InteractionObject(LayeringService* layeringService, const Utilities::CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
     void executeObjectBehaviour() final;
-    virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;
+    virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
     KeyCode getSubscribedKey() const;
     void setSubscribedKey(KeyCode key);
   };

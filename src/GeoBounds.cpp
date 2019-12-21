@@ -3,7 +3,7 @@
 #include <math.h>
 
 namespace NovelRT::Maths {
-  GeoBounds::GeoBounds(const NovelRT::GeoVector<float>& position, const NovelRT::GeoVector<float>& size, float rotation) :
+  GeoBounds::GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation) :
     _position(position),
     _rotation(rotation),
     _size(size) {

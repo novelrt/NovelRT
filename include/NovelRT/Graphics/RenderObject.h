@@ -2,14 +2,14 @@
 
 #ifndef NOVELRT_GRAPHICS_RENDEROBJECT_H
 #define NOVELRT_GRAPHICS_RENDEROBJECT_H
-#include "NovelWorldObject.h"
-#include "../Lazy.h"
+#include "../Transform.h"
+#include "../Utilities/Lazy.h"
 #include <string>
 #include <glad/glad.h>
 #include <memory>
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-#include "NovelCamera.h"
+#include "Camera.h"
 #include "CameraBlock.h"
 
 namespace NovelRT {
@@ -23,8 +23,8 @@ protected:
   CameraBlock generateViewData();
   CameraBlock generateCameraBlock();
 
-  Lazy<GLuint> _vertexBuffer;
-  Lazy<GLuint> _vertexArrayObject;
+  Utilities::Lazy<GLuint> _vertexBuffer;
+  Utilities::Lazy<GLuint> _vertexArrayObject;
   ShaderProgram _shaderProgram;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;

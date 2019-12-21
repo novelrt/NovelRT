@@ -25,8 +25,7 @@ messageCallback(GLenum source,
   glDebugMessageCallback(messageCallback, 0);*/
 
 #include <limits>
-#include "../include/NovelDebugService.h"
-#include "../include/NovelRunner.h"
+#include <NovelRT.h>
 
 namespace NovelRT {
   DebugService::DebugService(NovelRunner* runner) :
@@ -42,10 +41,10 @@ namespace NovelRT {
   void DebugService::setIsFpsCounterVisible(bool value) {
     if (_fpsCounter == nullptr) {
       if (value) {
-        auto yellow = RGBAConfig(255, 255, 0, 255);
+        auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-        auto textArgs = CommonArgs();
-        textArgs.startingPosition = GeoVector<float>(0, 1080 - 16);
+        auto textArgs = Utilities::CommonArgs();
+        textArgs.startingPosition = Maths::GeoVector<float>(0, 1080 - 16);
         textArgs.layer = std::numeric_limits<int32_t>::max();
         textArgs.orderInLayer = std::numeric_limits<int32_t>::max();
 

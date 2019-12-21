@@ -5,7 +5,7 @@
 
 #include "GeoVector.h"
 #include <vector>
-#include "../Lazy.h"
+#include "../Utilities/Lazy.h"
 
 namespace NovelRT::Maths {
   class GeoBounds {

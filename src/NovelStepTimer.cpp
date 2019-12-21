@@ -3,10 +3,10 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#include "../include/NovelStepTimer.h"
+#include <NovelRT.h>
 #include <SDL2/SDL.h>
 
-namespace NovelRT {
+namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
     _frequency(SDL_GetPerformanceFrequency()),
     _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),

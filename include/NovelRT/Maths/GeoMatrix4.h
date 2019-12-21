@@ -11,7 +11,7 @@ namespace NovelRT::Maths {
   class GeoMatrix4 {
     friend class Graphics::RenderObject;
     friend class Graphics::ImageRect;
-    friend class Graphics::FillRect;
+    friend class Graphics::BasicFillRect;
     friend class Graphics::TextRect;
     friend class Graphics::RenderingService;
   private:

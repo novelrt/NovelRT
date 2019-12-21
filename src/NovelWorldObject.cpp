@@ -1,10 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../include/NovelWorldObject.h"
-#include "../include/GeoBounds.h"
+#include <NovelRT.h>
 
 namespace NovelRT {
   Transform::Transform(LayeringService* layeringService,
-    const CommonArgs& args) :
+    const Utilities::CommonArgs& args) :
     _layeringService(layeringService) {
     setLayer(args.layer);
     setOrderInLayer(args.orderInLayer);

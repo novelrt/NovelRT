@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../include/NovelInteractionService.h"
-#include "../include/NovelInteractionService.h"
+
+#include <NovelRT.h>
 #include <SDL2/SDL_events.h>
 
-namespace NovelRT {
+namespace NovelRT::Input {
   InteractionService::InteractionService(LayeringService* const layeringService)
     : _clickTarget(nullptr), _layeringService(layeringService) {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, GeoVector<float>(0, 0) });
@@ -33,7 +33,7 @@ namespace NovelRT {
         raiseQuit();
         return;
       case SDL_MOUSEBUTTONDOWN: {
-        auto result = GeoVector<float>(GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
+        auto result = Maths::GeoVector<float>(Maths::GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
 
         if (sdlEvent.button.button == SDL_BUTTON_LEFT) {
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setX(result.getX());

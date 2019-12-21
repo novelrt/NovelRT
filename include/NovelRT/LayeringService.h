@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 #include <string_view>
-#include "NovelWorldObject.h"
+#include "Transform.h"
 
 namespace NovelRT {
   class Transform;

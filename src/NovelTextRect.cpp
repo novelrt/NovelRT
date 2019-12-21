@@ -1,12 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "../include/NovelTextRect.h"
-#include "../include/NovelUtilities.h"
+#include <NovelRT.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
 void TextRect::drawObject() {
   return;
 }
@@ -68,8 +67,8 @@ void TextRect::configureObjectBuffers() {
       // Now store character for later use
       GraphicsCharacterRenderData character = {
           textureId,
-          GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+          Maths::GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+          Maths::GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
           static_cast<AdvanceInteger>(face->glyph->advance.x)
       };
       _fontCharacters.insert(std::pair<GLchar, GraphicsCharacterRenderData>(c, character));
@@ -83,7 +82,7 @@ void TextRect::configureObjectBuffers() {
 }
 
 TextRect::TextRect(LayeringService* layeringService,
-                             const CommonArgs& args,
+                             const Utilities::CommonArgs& args,
                              ShaderProgram shaderProgram,
                              Camera* camera,
                              float fontSize,

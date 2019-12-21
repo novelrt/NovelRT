@@ -27,11 +27,11 @@ namespace NovelRT::Input {
 
     void consumePlayerInput();
 
-    BasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize, const CommonArgs& args);
+    BasicInteractionRect* getBasicInteractionRect(const Maths::GeoVector<float>& startingSize, const Utilities::CommonArgs& args);
 
     void ExecuteClickedInteractable();
 
-    inline void setScreenSize(const GeoVector<float>& value) {
+    inline void setScreenSize(const Maths::GeoVector<float>& value) {
       _screenSize = value;
     }
   };

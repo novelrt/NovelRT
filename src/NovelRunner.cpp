@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "../include/NovelRunner.h"
+#include <NovelRT.h>
 #include <SDL2/SDL.h>
 
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate)
-    : _stepTimer(StepTimer(targetFrameRate)),
+    : _stepTimer(Timing::StepTimer(targetFrameRate)),
     _layeringService(std::make_unique<LayeringService>()),
     _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<InteractionService>(_layeringService.get())),
-    _novelAudioService(std::make_unique<AudioService>()),
+    _novelInteractionService(std::make_unique<Input::InteractionService>(_layeringService.get())),
+    _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelWindowingService(std::make_unique<WindowingService>()),
     _novelRenderer(std::make_unique<RenderingService>(_layeringService.get(), _novelWindowingService.get())) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
