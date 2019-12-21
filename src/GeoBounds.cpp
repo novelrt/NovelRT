@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../include/GeoBounds.h"
+#include <NovelRT.h>
 #include <math.h>
 
-namespace NovelRT {
+namespace NovelRT::Maths {
   GeoBounds::GeoBounds(const NovelRT::GeoVector<float>& position, const NovelRT::GeoVector<float>& size, float rotation) :
     _position(position),
     _rotation(rotation),
