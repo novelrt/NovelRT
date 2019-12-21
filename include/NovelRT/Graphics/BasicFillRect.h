@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_GRAPHICS_NOVELRECT_H
-#define NOVELRT_GRAPHICS_NOVELRECT_H
+#ifndef NOVELRT_GRAPHICS_BASICFILLRECT_H
+#define NOVELRT_GRAPHICS_BASICFILLRECT_H
 
-#include "NovelRenderObject.h"
+#include "RenderObject.h"
 #include "RGBAConfig.h"
 #include "ShaderProgram.h"
 #include "NovelCamera.h"
@@ -24,7 +24,7 @@ namespace NovelRT::Graphics {
                        const RGBAConfig& fillColour,
                        const NovelCommonArgs& args,
                        ShaderProgram shaderProgram,
-                       NovelCamera* camera);
+                       Camera* camera);
 
     void drawObject() final;
     RGBAConfig getColourConfig() const;
@@ -32,4 +32,4 @@ namespace NovelRT::Graphics {
   };
 }
 
-#endif //NOVELRT_GRAPHICS_NOVELRECT_H
+#endif //NOVELRT_GRAPHICS_BASICFILLRECT_H

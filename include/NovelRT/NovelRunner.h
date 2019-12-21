@@ -6,10 +6,10 @@
 #include <string>
 
 #include "NovelDebugService.h"
-#include "NovelRenderingService.h"
-#include "NovelInteractionService.h"
-#include "NovelStepTimer.h"
-#include "NovelAudioService.h"
+#include "Graphics/NovelRenderingService.h"
+#include "Input/NovelInteractionService.h"
+#include "Timing/NovelStepTimer.h"
+#include "Audio/NovelAudioService.h"
 
 namespace NovelRT {
 /**
@@ -19,11 +19,11 @@ namespace NovelRT {
   private:
     StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
-    std::unique_ptr<NovelLayeringService> _layeringService;
-    std::unique_ptr<NovelDebugService> _novelDebugService;
+    std::unique_ptr<LayeringService> _layeringService;
+    std::unique_ptr<DebugService> _novelDebugService;
     std::unique_ptr<NovelInteractionService> _novelInteractionService;
-    std::unique_ptr<NovelAudioService> _novelAudioService;
-    std::unique_ptr<NovelWindowingService> _novelWindowingService;
+    std::unique_ptr<AudioService> _novelAudioService;
+    std::unique_ptr<WindowingService> _novelWindowingService;
     std::unique_ptr<NovelRenderingService> _novelRenderer;
     int _exitCode = 1;
 
@@ -46,7 +46,7 @@ namespace NovelRT {
      * Instantiates the NovelRunner class with its presets.
      *
      * @param displayNumber The display on which to start the novel.
-     * @param layeringService The NovelLayeringService that NovelRunner should use.
+     * @param layeringService The LayeringService that NovelRunner should use.
      * @param targetFrameRate The framerate that should be targeted and capped.
      */
     explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0);
@@ -61,8 +61,8 @@ namespace NovelRT {
     /// The Interaction Service associated with this Runner
     NovelInteractionService* getInteractionService() const;
     /// The Debug Service associated with this Runner.
-    NovelDebugService* getDebugService() const;
-    NovelAudioService* getAudioService() const;
+    DebugService* getDebugService() const;
+    AudioService* getAudioService() const;
   };
 }
 

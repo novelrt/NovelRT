@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELRENDEROBJECT_H
-#define NOVELRT_NOVELRENDEROBJECT_H
+#ifndef NOVELRT_GRAPHICS_RENDEROBJECT_H
+#define NOVELRT_GRAPHICS_RENDEROBJECT_H
 #include "NovelWorldObject.h"
-#include "Lazy.h"
+#include "../Lazy.h"
 #include <string>
 #include <glad/glad.h>
 #include <memory>
@@ -14,7 +14,7 @@
 
 namespace NovelRT {
 
-class NovelRenderObject : public NovelWorldObject {
+class RenderObject : public NovelWorldObject {
 
 protected:
   virtual void drawObject() = 0;
@@ -28,20 +28,20 @@ protected:
   ShaderProgram _shaderProgram;
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
-  NovelCamera* _camera;
+  Camera* _camera;
   CameraBlock _uboCameraData;
   Lazy<CameraBlock> _finalViewMatrixData;
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
-  NovelRenderObject(NovelLayeringService* layeringService,
-                    const NovelCommonArgs& args, ShaderProgram shaderProgram, NovelCamera* camera);
+  RenderObject(NovelLayeringService* layeringService,
+                    const CommonArgs& args, ShaderProgram shaderProgram, Camera* camera);
 
   void executeObjectBehaviour() final;
   void setRotation(const float value) override;
   void setScale(const GeoVector<float>& value) override;
   void setPosition(const GeoVector<float>& value) override;
-  virtual ~NovelRenderObject();
+  virtual ~RenderObject();
   };
 }
-#endif //NOVELRT_NOVELRENDEROBJECT_H
+#endif //NOVELRT_GRAPHICS_RENDEROBJECT_H

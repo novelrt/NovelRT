@@ -3,14 +3,14 @@
 #ifndef NOVELRT_NOVELDEBUGSERVICE_H
 #define NOVELRT_NOVELDEBUGSERVICE_H
 
-#include "NovelTextRect.h"
+#include "Graphics/TextRect.h"
 #include <glad/glad.h>
 
 namespace NovelRT {
 
   typedef class NovelRunner NovelRunner;
 
-  class NovelDebugService {
+  class DebugService {
 
   private:
     NovelRunner* _runner;
@@ -20,7 +20,7 @@ namespace NovelRT {
     void updateFpsCounter();
 
   public:
-    NovelDebugService(NovelRunner* runner);
+    DebugService(NovelRunner* runner);
 
     bool getIsFpsCounterVisible() const;
     void setIsFpsCounterVisible(bool value);

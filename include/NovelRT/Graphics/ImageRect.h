@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELIMAGERECT_H
-#define NOVELRT_NOVELIMAGERECT_H
+#ifndef NOVELRT_GRAPHICS_IMAGERECT_H
+#define NOVELRT_GRAPHICS_IMAGERECT_H
 
 #include "RGBAConfig.h"
 #include "NovelRenderObject.h"
 #include "NovelLoggingService.h"
 #include "ShaderProgram.h"
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
 
-  class NovelImageRect : public NovelRenderObject {
+  class ImageRect : public NovelRenderObject {
 
   private:
     std::string _imageDir;
@@ -27,17 +27,17 @@ namespace NovelRT {
     void configureObjectBuffers() final;
 
   public:
-    NovelImageRect(NovelLayeringService* layeringService,
+    ImageRect(NovelLayeringService* layeringService,
       const NovelCommonArgs& args,
       ShaderProgram shaderProgram,
-      NovelCamera* camera,
+      Camera* camera,
       const std::string& imageDir,
       const RGBAConfig& colourTint);
 
-    NovelImageRect(NovelLayeringService* layeringService,
+    ImageRect(NovelLayeringService* layeringService,
       const NovelCommonArgs& args,
       ShaderProgram shaderProgram,
-      NovelCamera* camera,
+      Camera* camera,
       const RGBAConfig& colourTint);
 
     void drawObject() final;
@@ -47,7 +47,7 @@ namespace NovelRT {
 
     RGBAConfig getColourTintConfig() const;
     void setColourTintConfig(const RGBAConfig& value);
-    ~NovelImageRect() override;
+    ~ImageRect() override;
   };
 }
-#endif //NOVELRT_NOVELIMAGERECT_H
+#endif //NOVELRT_GRAPHICS_IMAGERECT_H

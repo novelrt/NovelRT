@@ -1,19 +1,19 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_GEOMATRIX4_H
-#define NOVELRT_GEOMATRIX4_H
+#ifndef NOVELRT_MATHS_GEOMATRIX4_H
+#define NOVELRT_MATHS_GEOMATRIX4_H
 #include <glm/glm.hpp>
 #include "GeoVector.h"
 
-namespace NovelRT {
+namespace NovelRT::Maths {
 
   template<typename T>
   class GeoMatrix4 {
-    friend class NovelRenderObject;
-    friend class NovelImageRect;
-    friend class NovelBasicFillRect;
-    friend class NovelTextRect;
-    friend class NovelRenderingService;
+    friend class Graphics::RenderObject;
+    friend class Graphics::ImageRect;
+    friend class Graphics::FillRect;
+    friend class Graphics::TextRect;
+    friend class Graphics::RenderingService;
   private:
     glm::mat<4, 4, T> _value;
 
@@ -92,4 +92,4 @@ namespace NovelRT {
   };
 }
 
-#endif //NOVELRT_GEOMATRIX4_H
+#endif //NOVELRT_MATHS_GEOMATRIX4_H

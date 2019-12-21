@@ -1,26 +1,25 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-
-#ifndef NOVELRT_NOVELTEXTRECT_H
-#define NOVELRT_NOVELTEXTRECT_H
+#ifndef NOVELRT_GRAPHICS_TEXTRECT_H
+#define NOVELRT_GRAPHICS_TEXTRECT_H
 #include "NovelRenderObject.h"
 #include "RGBAConfig.h"
 #include <string>
 #include "GraphicsCharacterRenderData.h"
-#include "NovelImageRect.h"
-#include "NovelLoggingService.h"
+#include "ImageRect.h"
+#include "../NovelLoggingService.h"
 #include "ShaderProgram.h"
 
-namespace NovelRT {
-  class NovelTextRect : public NovelRenderObject {
+namespace NovelRT::Graphics {
+  class TextRect : public RenderObject {
   private:
     void reloadText();
 
     std::string _fontFileDir;
     std::string _previousFontFileDir = "";
     std::string _text = "";
-    std::vector<NovelImageRect*> _letterRects;
+    std::vector<ImageRect*> _letterRects;
     std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
-    NovelCommonArgs _args;
+    CommonArgs _args;
     NovelLoggingService _logger;
     RGBAConfig _colourConfig;
     float _fontSize;
@@ -29,10 +28,10 @@ namespace NovelRT {
     void configureObjectBuffers() final;
 
   public:
-    NovelTextRect(NovelLayeringService* layeringService,
-      const NovelCommonArgs& args,
+    TextRect(NovelLayeringService* layeringService,
+      const CommonArgs& args,
       ShaderProgram programId,
-      NovelCamera* camera,
+      Camera* camera,
       float fontSize,
       const std::string& fontFileDir,
       const RGBAConfig& colourConfig);
@@ -47,4 +46,4 @@ namespace NovelRT {
     void setText(const std::string& value);
   };
 }
-#endif //NOVELRT_NOVELTEXTRECT_H
+#endif //NOVELRT_GRAPHICS_TEXTRECT_H

@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELUTILITIES_H
-#define NOVELRT_NOVELUTILITIES_H
+#ifndef NOVELRT_UTILITIES_MISC_H
+#define NOVELRT_UTILITIES_MISC_H
 #include <algorithm>
 
-namespace NovelRT {
-class NovelUtilities {
+namespace NovelRT::Utilities {
+class Misc {
 public:
   static const int SDL_SUCCESS = 0;
   static inline const std::string CONSOLE_LOG_GENERIC = "NovelRT";
@@ -75,4 +75,4 @@ private:                                                                        
   }                                                                                                               \
 
 
-#endif //NOVELRT_NOVELUTILITIES_H
+#endif //NOVELRT_UTILITIES_MISC_H

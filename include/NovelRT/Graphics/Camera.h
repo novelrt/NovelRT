@@ -1,14 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELCAMERA_H
-#define NOVELRT_NOVELCAMERA_H
+#ifndef NOVELRT_GRAPHICS_CAMERA_H
+#define NOVELRT_GRAPHICS_CAMERA_H
 #include "../Maths/GeoMatrix4.h"
 #include "../Lazy.h"
 #include "../Utilities/NovelUtilities.h"
 #include "CameraViewChangedEventArgs.h"
 
 namespace NovelRT::Graphics {
-  class NovelCamera {
+  class Camera {
 
     NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
 
@@ -31,7 +31,7 @@ namespace NovelRT::Graphics {
 
   public:
 
-    NovelCamera();
+    Camera();
 
     inline GeoMatrix4<float> getViewMatrix() const {
       return _viewMatrix;
@@ -59,4 +59,4 @@ namespace NovelRT::Graphics {
     }
   };
 }
-#endif //NOVELRT_NOVELCAMERA_H
+#endif //NOVELRT_GRAPHICS_CAMERA_H

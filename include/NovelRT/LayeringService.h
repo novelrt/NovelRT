@@ -10,7 +10,7 @@
 
 namespace NovelRT {
   class NovelWorldObject;
-  class NovelLayeringService {
+  class LayeringService {
   private:
     std::map<int, std::vector<NovelWorldObject*>> _layerMatrix;
 
@@ -19,7 +19,7 @@ namespace NovelRT {
     void sortLayerOrder(int layer);
     void executeAllObjectBehaviours();
 
-    ~NovelLayeringService();
+    ~LayeringService();
   };
 }
 #endif //NOVELRT_NOVELLAYERINGSERVICE_H

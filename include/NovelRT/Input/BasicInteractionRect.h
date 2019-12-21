@@ -4,12 +4,12 @@
 #define NOVELRT_NOVELBASICINTERACTIONRECT_H
 
 #include "NovelInteractionObject.h"
-namespace NovelRT {
+namespace NovelRT::Input {
 
-  class NovelBasicInteractionRect : public NovelInteractionObject {
+  class BasicInteractionRect : public InteractionObject {
   public:
-    NovelBasicInteractionRect(NovelLayeringService* layeringService, const GeoVector<float>& size,
-      const NovelCommonArgs& args, const std::function<void(NovelInteractionObject*)> notifyHasBeenDrawnObject);
+    BasicInteractionRect(NovelLayeringService* layeringService, const GeoVector<float>& size,
+      const CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
     bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const override;
   };
 }

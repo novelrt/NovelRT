@@ -8,8 +8,8 @@
 #include "GeoBounds.h"
 
 namespace NovelRT {
-  class NovelLayeringService;
-  class NovelWorldObject {
+  class LayeringService;
+  class Transform {
   protected:
     GeoVector<float> _position;
     GeoVector<float> _scale;
@@ -17,12 +17,12 @@ namespace NovelRT {
     bool _active = true;
     int _orderInLayer;
     int _layer;
-    NovelLayeringService* _layeringService;
+    LayeringService* _layeringService;
 
   public:
-    NovelWorldObject(NovelLayeringService* layeringService, const NovelCommonArgs& args);
+    Transform(LayeringService* layeringService, const CommonArgs& args);
 
-    virtual ~NovelWorldObject();
+    virtual ~Transform();
 
     virtual GeoVector<float> getPosition() const;
 
