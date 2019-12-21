@@ -65,38 +65,37 @@ link_libraries(${LUA_LIBRARY})
 find_package(Doxygen QUIET)
 
 set(NOVELRT_HEADERS
-  include/NovelWorldObject.h
-  include/GeoBounds.h
-  include/GeoVector.h
-  include/GraphicsCharacterRenderData.h
-  include/KeyCode.h
-  include/Lazy.h
-  include/NovelAudioService.h
-  include/NovelBasicFillRect.h
-  include/NovelBasicInteractionRect.h
-  include/NovelCommonArgs.h
-  include/NovelDebugService.h
-  include/NovelImageRect.h
-  include/NovelInteractionObject.h
-  include/NovelInteractionService.h
-  include/NovelLayeringService.h
-  include/NovelLoggingService.h
-  include/NovelWorldObjectSortComparison.h
-  include/NovelRenderingService.h
-  include/NovelRenderObject.h
-  include/NovelUtilities.h
-  include/NovelRunner.h
-  include/NovelStepTimer.h
-  include/NovelTextRect.h
-  include/RGBAConfig.h
-  include/wrapper.hpp
-  include/NovelCamera.h
-  include/GeoMatrix4.h
-  include/CameraViewChangedEventArgs.h
-  include/ShaderProgram.h
-  include/CameraBlock.h
-  include/NovelWindowingService.h
-  include/KeyState.h
+  include/NovelRT/Transform.h
+  include/NovelRT/Maths/GeoBounds.h
+  include/NovelRT/Maths/GeoVector.h
+  include/NovelRT/Graphics/GraphicsCharacterRenderData.h
+  include/NovelRT/Input/KeyCode.h
+  include/NovelRT/Utilities/Lazy.h
+  include/NovelRT/Audio/AudioService.h
+  include/NovelRT/Graphics/BasicFillRect.h
+  include/NovelRT/Input/BasicInteractionRect.h
+  include/NovelRT/Utilities/CommonArgs.h
+  include/NovelRT/DebugService.h
+  include/NovelRT/Graphics/ImageRect.h
+  include/NovelRT/Input/InteractionObject.h
+  include/NovelRT/Input/InteractionService.h
+  include/NovelRT/LayeringService.h
+  include/NovelRT/LoggingService.h
+  include/NovelRT/TransformSortComparison.h
+  include/NovelRT/Graphics/RenderingService.h
+  include/NovelRT/Graphics/RenderObject.h
+  include/NovelRT/Utilities/Misc.h
+  include/NovelRT/NovelRunner.h
+  include/NovelRT/Timing/StepTimer.h
+  include/NovelRT/Graphics/TextRect.h
+  include/NovelRT/Graphics/RGBAConfig.h
+  include/NovelRT/Graphics/Camera.h
+  include/NovelRT/Maths/GeoMatrix4.h
+  include/NovelRT/Graphics/CameraViewChangedEventArgs.h
+  include/NovelRT/Graphics/ShaderProgram.h
+  include/NovelRT/Graphics/CameraBlock.h
+  include/NovelRT/Windowing/WindowingService.h
+  include/NovelRT/Input/KeyState.h
   include/NovelRT.h)
 
 set(NOVELRT_SOURCES
@@ -159,7 +158,7 @@ endif()
 
 set(NOVELRT_LIBRARY_HEADERS
   ${NOVELRT_HEADERS}
-  include/NovelRunner_C.h
+  include/NovelRT/NovelRT-C/NovelRunner_C.h
 )
 
 set(NOVELRT_LIBRARY_SOURCES
