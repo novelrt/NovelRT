@@ -96,6 +96,7 @@ set(NOVELRT_HEADERS
   src/ShaderProgram.h
   src/CameraBlock.h
   src/NovelWindowingService.h
+  src/KeyState.h
   src/NovelRT.h)
 
 set(NOVELRT_SOURCES
