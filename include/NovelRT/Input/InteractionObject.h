@@ -9,7 +9,7 @@
 #include "NovelUtilities.h"
 
 namespace NovelRT::Input {
-  class InteractionObject : public NovelWorldObject {
+  class InteractionObject : public Transform {
     friend class InteractionService; //how to make shit tightly coupled oh god
 
     NOVELRT_PARAMETERLESS_EVENT(Interacted)
@@ -18,7 +18,7 @@ namespace NovelRT::Input {
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
 
   public:
-    InteractionObject(NovelLayeringService* layeringService,
+    InteractionObject(LayeringService* layeringService,
       const CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const = 0;

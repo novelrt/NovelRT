@@ -8,12 +8,12 @@
 #include "../include/NovelUtilities.h"
 
 namespace NovelRT {
-NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const NovelCommonArgs& args,
+ImageRect::ImageRect(LayeringService* layeringService,
+                               const CommonArgs& args,
                                ShaderProgram shaderProgram,
-                               NovelCamera* camera,
+                               Camera* camera,
                                const std::string& imageDir,
-                               const RGBAConfig& colourTint) : NovelRenderObject(layeringService,
+                               const RGBAConfig& colourTint) : RenderObject(layeringService,
                                                                                  args,
                                                                                  shaderProgram,
                                                                                  camera),
@@ -30,19 +30,19 @@ NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
 
 }
 
-NovelImageRect::NovelImageRect(NovelLayeringService* layeringService,
-                               const NovelCommonArgs& args,
+ImageRect::ImageRect(LayeringService* layeringService,
+                               const CommonArgs& args,
                                ShaderProgram shaderProgram,
-                               NovelCamera* camera,
-                               const RGBAConfig& colourTint) : NovelImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
+                               Camera* camera,
+                               const RGBAConfig& colourTint) : ImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
 
 }
 
-void NovelImageRect::setScale(const GeoVector<float>& value) {
-  NovelWorldObject::_scale = value;
+void ImageRect::setScale(const GeoVector<float>& value) {
+  Transform::_scale = value;
 }
 
-void NovelImageRect::drawObject() {
+void ImageRect::drawObject() {
   if (!getActive())
     return;
 
@@ -91,8 +91,8 @@ void NovelImageRect::drawObject() {
   glBindVertexArray(0);
 }
 
-void NovelImageRect::configureObjectBuffers() {
-  NovelRenderObject::configureObjectBuffers();
+void ImageRect::configureObjectBuffers() {
+  RenderObject::configureObjectBuffers();
 
   _uvCoordinates = {
       0.0f, 1.0f,
@@ -153,7 +153,7 @@ void NovelImageRect::configureObjectBuffers() {
   SDL_FreeSurface(surface);
 }
 
-void NovelImageRect::setTextureInternal(GLuint textureId) {
+void ImageRect::setTextureInternal(GLuint textureId) {
   _imageDir = "";
   _textureId = Lazy<GLuint>(textureId, []{
     GLuint tempBuffer;
@@ -161,14 +161,14 @@ void NovelImageRect::setTextureInternal(GLuint textureId) {
     return tempBuffer;
   });
 }
-RGBAConfig NovelImageRect::getColourTintConfig() const {
+RGBAConfig ImageRect::getColourTintConfig() const {
   return _colourTint;
 }
-void NovelImageRect::setColourTintConfig(const RGBAConfig& value) {
+void ImageRect::setColourTintConfig(const RGBAConfig& value) {
   _colourTint = value;
 }
 
-NovelImageRect::~NovelImageRect() {
+ImageRect::~ImageRect() {
   if(_imageDir.empty() && !_textureId.isCreated()) return;
 
   auto textureId = _textureId.getActual();

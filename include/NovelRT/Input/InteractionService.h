@@ -19,11 +19,11 @@ namespace NovelRT::Input {
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
     std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
-    NovelLayeringService* const _layeringService;
+    LayeringService* const _layeringService;
     GeoVector<float> _screenSize;
 
   public:
-    InteractionService(NovelLayeringService* const layeringService);
+    InteractionService(LayeringService* const layeringService);
 
     void consumePlayerInput();
 

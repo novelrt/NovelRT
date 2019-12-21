@@ -2,21 +2,21 @@
 
 #include "../include/NovelInteractionObject.h"
 namespace NovelRT {
-NovelInteractionObject::NovelInteractionObject(NovelRT::NovelLayeringService* layeringService,
-                                               const NovelRT::NovelCommonArgs& args,
-                                               const std::function<void(NovelRT::NovelInteractionObject*)> notifyHasBeenDrawnObject)
-    : NovelWorldObject(layeringService, args) {
+InteractionObject::InteractionObject(NovelRT::LayeringService* layeringService,
+                                               const NovelRT::CommonArgs& args,
+                                               const std::function<void(NovelRT::InteractionObject*)> notifyHasBeenDrawnObject)
+    : Transform(layeringService, args) {
   _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
 
 }
 
-void NovelInteractionObject::executeObjectBehaviour() {
+void InteractionObject::executeObjectBehaviour() {
   _notifyHasBeenDrawnObject(this);
 }
-KeyCode NovelInteractionObject::getSubscribedKey() const {
+KeyCode InteractionObject::getSubscribedKey() const {
   return _subscribedKey;
 }
-void NovelInteractionObject::setSubscribedKey(KeyCode key) {
+void InteractionObject::setSubscribedKey(KeyCode key) {
   _subscribedKey = key;
 }
 }

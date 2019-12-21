@@ -7,12 +7,12 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate)
     : _stepTimer(StepTimer(targetFrameRate)),
-    _layeringService(std::make_unique<NovelLayeringService>()),
-    _novelDebugService(std::make_unique<NovelDebugService>(this)),
-    _novelInteractionService(std::make_unique<NovelInteractionService>(_layeringService.get())),
-    _novelAudioService(std::make_unique<NovelAudioService>()),
-    _novelWindowingService(std::make_unique<NovelWindowingService>()),
-    _novelRenderer(std::make_unique<NovelRenderingService>(_layeringService.get(), _novelWindowingService.get())) {
+    _layeringService(std::make_unique<LayeringService>()),
+    _novelDebugService(std::make_unique<DebugService>(this)),
+    _novelInteractionService(std::make_unique<InteractionService>(_layeringService.get())),
+    _novelAudioService(std::make_unique<AudioService>()),
+    _novelWindowingService(std::make_unique<WindowingService>()),
+    _novelRenderer(std::make_unique<RenderingService>(_layeringService.get(), _novelWindowingService.get())) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
@@ -33,11 +33,11 @@ namespace NovelRT {
     }
 
     _novelRenderer->tearDown();
-    _novelAudioService->~NovelAudioService();
+    _novelAudioService->~AudioService();
     return _exitCode;
   }
 
-  NovelRenderingService* NovelRunner::getRenderer() const {
+  RenderingService* NovelRunner::getRenderer() const {
     return _novelRenderer.get();
   }
 
@@ -62,15 +62,15 @@ namespace NovelRT {
     }
   }
 
-  NovelInteractionService* NovelRunner::getInteractionService() const {
+  InteractionService* NovelRunner::getInteractionService() const {
     return _novelInteractionService.get();
   }
 
-  NovelDebugService* NovelRunner::getDebugService() const {
+  DebugService* NovelRunner::getDebugService() const {
     return _novelDebugService.get();
   }
 
-  NovelAudioService* NovelRunner::getAudioService() const {
+  AudioService* NovelRunner::getAudioService() const {
     return _novelAudioService.get();
   }
 }

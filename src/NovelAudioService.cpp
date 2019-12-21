@@ -8,11 +8,11 @@
 
 namespace NovelRT {
 
-NovelAudioService::NovelAudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(NovelUtilities::CONSOLE_LOG_AUDIO) {
+AudioService::AudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(NovelUtilities::CONSOLE_LOG_AUDIO) {
   initializeAudio();
 }
 
-bool NovelAudioService::initializeAudio() {
+bool AudioService::initializeAudio() {
   logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO);
   logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048);
   logIfMixerFailure(Mix_AllocateChannels, (Uint32)NOVEL_MIXER_CHANNELS);
@@ -21,7 +21,7 @@ bool NovelAudioService::initializeAudio() {
   return isInitialized;
 }
 
-void NovelAudioService::load(std::string input, bool isMusic) {
+void AudioService::load(std::string input, bool isMusic) {
   if (!isMusic)
   {
     auto exists = _sounds.find(input);
@@ -54,7 +54,7 @@ void NovelAudioService::load(std::string input, bool isMusic) {
   }
 }
 
-void NovelAudioService::unload(std::string input, bool isMusic) {
+void AudioService::unload(std::string input, bool isMusic) {
   if (!isMusic)
   {
     auto existingSound = _sounds.find(input);
@@ -73,7 +73,7 @@ void NovelAudioService::unload(std::string input, bool isMusic) {
   }
 }
 
-void NovelAudioService::playSound(std::string soundName, int loops) {
+void AudioService::playSound(std::string soundName, int loops) {
   auto existingSound = _sounds.find(soundName);
   if (existingSound == _sounds.end())
   {
@@ -127,15 +127,15 @@ void NovelAudioService::playSound(std::string soundName, int loops) {
   }
 }
 
-void NovelAudioService::stopSound(std::string soundName) {
+void AudioService::stopSound(std::string soundName) {
   Mix_HaltChannel(_channelMap[soundName]);
 }
 
-void NovelAudioService::setSoundVolume(std::string soundName, float value) {
+void AudioService::setSoundVolume(std::string soundName, float value) {
   Mix_VolumeChunk(_sounds[soundName], convertToMixVolume(value));
 }
 
-void NovelAudioService::setSoundPosition(std::string soundName, int angle, int distance) {
+void AudioService::setSoundPosition(std::string soundName, int angle, int distance) {
   if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetPosition(_channelMap[soundName], angle, distance);
@@ -146,7 +146,7 @@ void NovelAudioService::setSoundPosition(std::string soundName, int angle, int d
   }
 }
 
-void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
+void AudioService::setSoundDistance(std::string soundName, int distance) {
   if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetDistance(_channelMap[soundName], distance);
@@ -157,7 +157,7 @@ void NovelAudioService::setSoundDistance(std::string soundName, int distance) {
   }
 }
 
-void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
+void AudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
   if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
   {
     Mix_SetPanning(_channelMap[soundName], leftChannelVolume, rightChannelVolume);
@@ -168,11 +168,11 @@ void NovelAudioService::setSoundPanning(std::string soundName, int leftChannelVo
   }
 }
 
-void NovelAudioService::resumeMusic() {
+void AudioService::resumeMusic() {
   if (Mix_PausedMusic()) Mix_ResumeMusic();
 }
 
-void NovelAudioService::playMusic(std::string musicName, int loops) {
+void AudioService::playMusic(std::string musicName, int loops) {
   auto existingMusic = _music.find(musicName);
   if (existingMusic == _music.end())
   {
@@ -198,7 +198,7 @@ void NovelAudioService::playMusic(std::string musicName, int loops) {
 
 }
 
-void NovelAudioService::pauseMusic() {
+void AudioService::pauseMusic() {
   if (!Mix_PausedMusic())
   {
     Mix_PauseMusic();
@@ -206,15 +206,15 @@ void NovelAudioService::pauseMusic() {
   }
 }
 
-void NovelAudioService::stopMusic() {
+void AudioService::stopMusic() {
   Mix_HaltMusic();
 }
 
-void NovelAudioService::setMusicVolume(float value) {
+void AudioService::setMusicVolume(float value) {
   Mix_VolumeMusic(convertToMixVolume(value));
 }
 
-void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
+void AudioService::fadeMusicInOnce(std::string musicName, int ms) {
   if (!Mix_PlayingMusic())
   {
     Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
@@ -248,7 +248,7 @@ void NovelAudioService::fadeMusicInOnce(std::string musicName, int ms) {
   }
 }
 
-void NovelAudioService::fadeMusicIn(std::string musicName, int loops, int ms) {
+void AudioService::fadeMusicIn(std::string musicName, int loops, int ms) {
   if (!Mix_PlayingMusic())
   {
     Mix_FadeInMusic(_music[musicName], loops-1, ms);
@@ -282,27 +282,27 @@ void NovelAudioService::fadeMusicIn(std::string musicName, int loops, int ms) {
   }
 }
 
-void NovelAudioService::fadeMusicOut(int ms) {
+void AudioService::fadeMusicOut(int ms) {
   Mix_FadeOutMusic(ms);
   _musicPausedTime = SDL_GetPerformanceCounter();
 }
 
-void NovelAudioService::setGlobalVolume(float value) {
+void AudioService::setGlobalVolume(float value) {
   Mix_Volume(MIXER_NO_EXPLICIT_CHANNEL, convertToMixVolume(value));
   Mix_VolumeMusic(convertToMixVolume(value));
 }
 
-int NovelAudioService::convertToMixVolume(float value) {
+int AudioService::convertToMixVolume(float value) {
   int converted = (value > 1.0f || value < 0.0f) ? 1.0f : (int)(SDL_MIX_MAXVOLUME * value);
   return converted;
 }
 
-void NovelAudioService::incrementNextChannel() {
+void AudioService::incrementNextChannel() {
   int nextChannelTest = _nextChannel + 1;
   _nextChannel = (nextChannelTest >= NOVEL_MIXER_CHANNELS || nextChannelTest < 0) ? 0 : nextChannelTest;
 }
 
-std::string NovelAudioService::findByChannelMap(int channel) {
+std::string AudioService::findByChannelMap(int channel) {
   auto it = _channelMap.begin();
   while (it != _channelMap.end())
   {
@@ -316,7 +316,7 @@ std::string NovelAudioService::findByChannelMap(int channel) {
   return nullptr;
 }
 
-void NovelAudioService::logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdl_flag) {
+void AudioService::logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdl_flag) {
   if (sdlFunction(sdl_flag) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("SDL Error: ", getSDLError());
@@ -324,7 +324,7 @@ void NovelAudioService::logIfSDLFailure(std::function<int(Uint32)> sdlFunction, 
   }
 }
 
-void NovelAudioService::logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag) {
+void AudioService::logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag) {
   if (mixerFunction(mixerFlag) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("Mixer Error: ", getSDLError());
@@ -332,7 +332,7 @@ void NovelAudioService::logIfMixerFailure(std::function<int(int)> mixerFunction,
   }
 }
 
-void NovelAudioService::logIfMixerFailure(std::function<int(int, Uint16, int, int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize) {
+void AudioService::logIfMixerFailure(std::function<int(int, Uint16, int, int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize) {
   if (mixerFunction(freq, mixerFormat, channels, sampleSize) < NovelUtilities::SDL_SUCCESS)
   {
     _logger.logError("Mixer Error: ", getSDLError());
@@ -340,11 +340,11 @@ void NovelAudioService::logIfMixerFailure(std::function<int(int, Uint16, int, in
   }
 }
 
-std::string NovelAudioService::getSDLError() {
+std::string AudioService::getSDLError() {
   return std::string(SDL_GetError());
 }
 
-NovelAudioService::~NovelAudioService() {
+AudioService::~AudioService() {
   Mix_HaltMusic();
   Mix_HaltChannel(MIXER_NO_EXPLICIT_CHANNEL);
 

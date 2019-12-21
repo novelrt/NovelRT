@@ -4,10 +4,10 @@
 #include <glm/glm.hpp>
 
 namespace NovelRT {
-  NovelCamera::NovelCamera() : _cameraUboMatrix(Lazy<GeoMatrix4<float>>(std::function<GeoMatrix4<float>()>(std::bind(&NovelCamera::generateUboMatrix,
+  Camera::Camera() : _cameraUboMatrix(Lazy<GeoMatrix4<float>>(std::function<GeoMatrix4<float>()>(std::bind(&Camera::generateUboMatrix,
     this)))) {}
 
-  GeoMatrix4<float> NovelCamera::generateUboMatrix() {
+  GeoMatrix4<float> Camera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
   }
 }

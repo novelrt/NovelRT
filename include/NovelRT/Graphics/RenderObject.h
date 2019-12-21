@@ -14,7 +14,7 @@
 
 namespace NovelRT {
 
-class RenderObject : public NovelWorldObject {
+class RenderObject : public Transform {
 
 protected:
   virtual void drawObject() = 0;
@@ -34,7 +34,7 @@ protected:
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
-  RenderObject(NovelLayeringService* layeringService,
+  RenderObject(LayeringService* layeringService,
                     const CommonArgs& args, ShaderProgram shaderProgram, Camera* camera);
 
   void executeObjectBehaviour() final;

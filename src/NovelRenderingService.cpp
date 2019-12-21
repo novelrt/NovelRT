@@ -16,7 +16,7 @@
 #include <sstream>
 
 namespace NovelRT {
-  bool NovelRenderingService::initialiseRenderPipeline() {
+  bool RenderingService::initialiseRenderPipeline() {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -55,7 +55,7 @@ namespace NovelRT {
     return true;
   }
 
-  ShaderProgram NovelRenderingService::loadShaders(std::string vertexFilePath, std::string fragmentFilePath) {
+  ShaderProgram RenderingService::loadShaders(std::string vertexFilePath, std::string fragmentFilePath) {
 
     // Create the shaders
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -156,7 +156,7 @@ namespace NovelRT {
     return returnProg;
   }
 
-  int NovelRenderingService::initialiseRendering() {
+  int RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
       _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
       throw std::runtime_error("Unable to continue! The engine cannot start without SDL2.");
@@ -165,34 +165,34 @@ namespace NovelRT {
     return 0;
   }
 
-  void NovelRenderingService::tearDown() const {
+  void RenderingService::tearDown() const {
     glDeleteProgram(_basicFillRectProgram.shaderProgramId);
     glDeleteProgram(_texturedRectProgram.shaderProgramId);
   }
 
-  void NovelRenderingService::beginFrame() const {
+  void RenderingService::beginFrame() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
   }
 
-  void NovelRenderingService::endFrame() const {
+  void RenderingService::endFrame() const {
     SDL_GL_SwapWindow(_windowingService->getWindow());
   }
 
-  NovelImageRect* NovelRenderingService::getImageRect(const std::string& filePath,
-    const NovelCommonArgs& args,
+  ImageRect* RenderingService::getImageRect(const std::string& filePath,
+    const CommonArgs& args,
     const RGBAConfig& colourTint) {
-    return new NovelImageRect(_layeringService, args, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return new ImageRect(_layeringService, args, _texturedRectProgram, getCamera(), filePath, colourTint);
   }
 
-  NovelTextRect* NovelRenderingService::getTextRect(const RGBAConfig& colourConfig,
+  TextRect* RenderingService::getTextRect(const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath,
-    const NovelCommonArgs& args) {
-    return new NovelTextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    const CommonArgs& args) {
+    return new TextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  NovelRenderingService::NovelRenderingService(NovelLayeringService* const layeringService, NovelWindowingService* const windowingService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)),
+  RenderingService::RenderingService(LayeringService* const layeringService, WindowingService* const windowingService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)),
                                                                                                                                              _layeringService(layeringService), _windowingService(windowingService),
                                                                                                                                              _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
@@ -203,18 +203,18 @@ namespace NovelRT {
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
     return tempHandle;
     })),
-    _camera(std::make_unique<NovelCamera>()) {}
+    _camera(std::make_unique<Camera>()) {}
 
-    NovelBasicFillRect* NovelRenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const NovelCommonArgs& args) {
-      return new NovelBasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
+    BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const CommonArgs& args) {
+      return new BasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
     }
 
-    NovelCamera* NovelRenderingService::getCamera() const
+    Camera* RenderingService::getCamera() const
     {
       return _camera.get();
     }
 
-    void NovelRenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+    void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
       GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
       glUniformBlockBinding(shaderProgramId, uboIndex, 0);
     }

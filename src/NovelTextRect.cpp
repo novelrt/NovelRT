@@ -7,20 +7,20 @@
 #include FT_FREETYPE_H
 
 namespace NovelRT {
-void NovelTextRect::drawObject() {
+void TextRect::drawObject() {
   return;
 }
 
-RGBAConfig NovelTextRect::getColourConfig() const {
+RGBAConfig TextRect::getColourConfig() const {
   return _colourConfig;
 }
 
-void NovelTextRect::setColourConfig(const RGBAConfig& value) {
+void TextRect::setColourConfig(const RGBAConfig& value) {
   _colourConfig = value;
   configureObjectBuffers();
 }
 
-void NovelTextRect::configureObjectBuffers() {
+void TextRect::configureObjectBuffers() {
 
   if (_fontCharacters.size() > 0)
     _fontCharacters.clear();
@@ -82,13 +82,13 @@ void NovelTextRect::configureObjectBuffers() {
   reloadText();
 }
 
-NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
-                             const NovelCommonArgs& args,
+TextRect::TextRect(LayeringService* layeringService,
+                             const CommonArgs& args,
                              ShaderProgram shaderProgram,
-                             NovelCamera* camera,
+                             Camera* camera,
                              float fontSize,
                              const std::string& fontFileDir,
-                             const RGBAConfig& colourConfig) : NovelRenderObject(layeringService,
+                             const RGBAConfig& colourConfig) : RenderObject(layeringService,
                                                                          args,
                                                                          shaderProgram,
                                                                          camera),
@@ -98,16 +98,16 @@ NovelTextRect::NovelTextRect(NovelLayeringService* layeringService,
                                                                _fontSize(fontSize),
                                                                _logger(NovelUtilities::CONSOLE_LOG_GFX) {}
 
-std::string NovelTextRect::getText() const {
+std::string TextRect::getText() const {
   return _text;
 }
-void NovelTextRect::setText(const std::string& value) {
+void TextRect::setText(const std::string& value) {
   _text = value;
   int difference = _text.length() - _letterRects.size();
   auto modifiedArgs = _args;
   modifiedArgs.startingScale = GeoVector<float>(50, 50);
   for (int i = 0; i < difference; i++) {
-    _letterRects.push_back(new NovelImageRect(_layeringService,
+    _letterRects.push_back(new ImageRect(_layeringService,
                                               _args,
                                               _shaderProgram,
                                               _camera,
@@ -118,7 +118,7 @@ void NovelTextRect::setText(const std::string& value) {
     reloadText();
   }
 }
-void NovelTextRect::reloadText() {
+void TextRect::reloadText() {
 
   auto ttfOrigin = getPosition();
 
@@ -150,7 +150,7 @@ void NovelTextRect::reloadText() {
   auto beginIt = _letterRects.begin() + i;
   auto endIt = _letterRects.end();
 
-  auto unusedRects = std::vector<NovelImageRect*>(beginIt, endIt);
+  auto unusedRects = std::vector<ImageRect*>(beginIt, endIt);
   for (auto rect : unusedRects) {
     rect->setActive(false);
   }

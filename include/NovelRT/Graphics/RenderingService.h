@@ -30,8 +30,8 @@ namespace NovelRT::Graphics {
 
     bool initialiseRenderPipeline();
     NovelLoggingService _logger;
-    NovelLayeringService* const _layeringService;
-    NovelWindowingService* const _windowingService;
+    LayeringService* const _layeringService;
+    WindowingService* const _windowingService;
     SDL_GLContext _openGLContext;
 
     ShaderProgram loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
@@ -45,7 +45,7 @@ namespace NovelRT::Graphics {
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
   public:
-    RenderingService(NovelLayeringService* const layeringService, NovelWindowingService* const windowingService);
+    RenderingService(LayeringService* const layeringService, WindowingService* const windowingService);
     int initialiseRendering();
 
     void tearDown() const;

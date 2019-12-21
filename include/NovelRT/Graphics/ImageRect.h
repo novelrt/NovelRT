@@ -10,7 +10,7 @@
 
 namespace NovelRT::Graphics {
 
-  class ImageRect : public NovelRenderObject {
+  class ImageRect : public RenderObject {
 
   private:
     std::string _imageDir;
@@ -27,15 +27,15 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    ImageRect(NovelLayeringService* layeringService,
-      const NovelCommonArgs& args,
+    ImageRect(LayeringService* layeringService,
+      const CommonArgs& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const std::string& imageDir,
       const RGBAConfig& colourTint);
 
-    ImageRect(NovelLayeringService* layeringService,
-      const NovelCommonArgs& args,
+    ImageRect(LayeringService* layeringService,
+      const CommonArgs& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const RGBAConfig& colourTint);
