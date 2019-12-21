@@ -6,33 +6,34 @@
 #include "KeyCode.h"
 #include "NovelBasicInteractionRect.h"
 #include "NovelUtilities.h"
+#include "KeyState.h"
 
 namespace NovelRT {
   class NovelInteractionService {
     friend class NovelInteractionObject;
+
     NOVELRT_PARAMETERLESS_EVENT(Quit)
+
   private:
     void HandleInteractionDraw(NovelInteractionObject* target);
     NovelInteractionObject* _clickTarget;
-    std::map<KeyCode, bool> _keyStates;
+    std::map<KeyCode, KeyState> _keyStates;
     std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
-    NovelLayeringService* _layeringService;
+    NovelLayeringService* const _layeringService;
     GeoVector<float> _screenSize;
 
   public:
-    NovelInteractionService(NovelLayeringService* layeringService);
+    NovelInteractionService(NovelLayeringService* const layeringService);
 
     void consumePlayerInput();
 
-    NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize,
-      const NovelCommonArgs& args);
+    NovelBasicInteractionRect* getBasicInteractionRect(const GeoVector<float>& startingSize, const NovelCommonArgs& args);
+
     void ExecuteClickedInteractable();
 
     inline void setScreenSize(const GeoVector<float>& value) {
       _screenSize = value;
     }
-
-    //NovelInteractionObject getInteractionRect(const NovelCommonArgs& args);
   };
 }
 
