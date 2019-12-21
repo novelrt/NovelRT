@@ -3,8 +3,9 @@
 #ifndef NOVELRT_GRAPHICS_CAMERA_H
 #define NOVELRT_GRAPHICS_CAMERA_H
 #include "../Maths/GeoMatrix4.h"
-#include "../Lazy.h"
-#include "../Utilities/NovelUtilities.h"
+#include "../Utilities/Lazy.h"
+#include "../Utilities/Misc.h"
+#include "../Maths/GeoVector.h"
 #include "CameraViewChangedEventArgs.h"
 
 namespace NovelRT::Graphics {
@@ -22,39 +23,39 @@ namespace NovelRT::Graphics {
 
   private:
 
-    GeoMatrix4<float> _viewMatrix;
-    GeoMatrix4<float> _projectionMatrix;
-    Lazy<GeoMatrix4<float>> _cameraUboMatrix;
+    Maths::GeoMatrix4<float> _viewMatrix;
+    Maths::GeoMatrix4<float> _projectionMatrix;
+    Utilities::Lazy<Maths::GeoMatrix4<float>> _cameraUboMatrix;
 
-    GeoMatrix4<float> generateUboMatrix();
+    Maths::GeoMatrix4<float> generateUboMatrix();
     CameraMode _cameraMode;
 
   public:
 
     Camera();
 
-    inline GeoMatrix4<float> getViewMatrix() const {
+    inline Maths::GeoMatrix4<float> getViewMatrix() const {
       return _viewMatrix;
     }
 
     //TODO: Jeez this is written badly
-    inline void setViewMatrix(GeoMatrix4<float> value) {
+    inline void setViewMatrix(Maths::GeoMatrix4<float> value) {
       _cameraUboMatrix.reset();
       _viewMatrix = value;
       raiseCameraViewChanged(CameraViewChangedEventArgs(getCameraUboMatrix()));
     }
 
-    inline GeoMatrix4<float> getProjectionMatrix() const {
+    inline Maths::GeoMatrix4<float> getProjectionMatrix() const {
       return _projectionMatrix;
     }
 
-    inline void setProjectionMatrix(GeoMatrix4<float> value) {
+    inline void setProjectionMatrix(Maths::GeoMatrix4<float> value) {
       _cameraUboMatrix.reset();
       _projectionMatrix = value;
       raiseCameraViewChanged(CameraViewChangedEventArgs(getCameraUboMatrix()));
     }
 
-    inline GeoMatrix4<float> getCameraUboMatrix() {
+    inline Maths::GeoMatrix4<float> getCameraUboMatrix() {
       return _cameraUboMatrix.getActual();
     }
   };

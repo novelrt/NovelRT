@@ -8,9 +8,9 @@ namespace NovelRT::Utilities {
   struct CommonArgs {
 
   public:
-    GeoVector<float> startingPosition = GeoVector<float>(0, 0);
+    Maths::GeoVector<float> startingPosition = Maths::GeoVector<float>(0, 0);
     float startingRotation = 0;
-    GeoVector<float> startingScale = GeoVector<float>(1.0f, 1.0f);
+    Maths::GeoVector<float> startingScale = Maths::GeoVector<float>(1.0f, 1.0f);
     int layer = 0;
     int orderInLayer = 0;
 

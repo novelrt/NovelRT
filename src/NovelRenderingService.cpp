@@ -1,21 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../include/NovelRenderingService.h"
+#include <NovelRT.h>
 
 #include <SDL2/SDL.h>
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
 
-#include "../include/GeoVector.h"
-#include "../include/NovelBasicFillRect.h"
-#include "../include/NovelImageRect.h"
-#include "../include/NovelUtilities.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
   bool RenderingService::initialiseRenderPipeline() {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
@@ -26,8 +22,8 @@ namespace NovelRT {
     auto windowSize = _windowingService->getWindowSize();
 
 
-    _camera->setProjectionMatrix(GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0)));
-    _camera->setViewMatrix(GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, 0.0f))));
+    _camera->setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0)));
+    _camera->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, 0.0f))));
     std::string infoScreenSize = std::to_string((int)windowSize.getX());
     infoScreenSize.append("x");
     infoScreenSize.append(std::to_string((int)windowSize.getY()));

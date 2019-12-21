@@ -7,7 +7,7 @@
 namespace NovelRT::Graphics {
   struct CameraViewChangedEventArgs {
   public:
-    const GeoMatrix4<float> cameraMatrix;
+    const Maths::GeoMatrix4<float> cameraMatrix;
     CameraViewChangedEventArgs(const GeoMatrix4<float>& newCameraMatrix) : cameraMatrix(newCameraMatrix) {};
   };
 }

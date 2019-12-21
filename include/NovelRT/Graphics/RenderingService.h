@@ -4,24 +4,25 @@
 #define NOVELRT_GRAPHICS_RENDERINGSERVICE_H
 
 #include <SDL2/SDL.h>
-#include "GeoVector.h"
-#include "NovelCommonArgs.h"
+#include "../Maths/GeoVector.h"
+#include "..Utilities/CommonArgs.h"
+#include "../Windowing/WindowingService.h"
+#include "../Utilities/Lazy.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <functional>
 #include <memory>
 #include "RGBAConfig.h"
-#include "NovelLoggingService.h"
-#include "NovelLayeringService.h"
-#include "NovelImageRect.h"
+#include "../LoggingService.h"
+#include "../LayeringService.h"
+#include "ImageRect.h"
 #include "BasicFillRect.h"
 #include "TextRect.h"
 #include <glad/glad.h>
-#include "NovelCamera.h"
+#include "Camera.h"
 #include "ShaderProgram.h"
 #include "CameraBlock.h"
-#include "../Windowing/NovelWindowingService.h"
 
 namespace NovelRT::Graphics {
 
@@ -29,9 +30,9 @@ namespace NovelRT::Graphics {
   private:
 
     bool initialiseRenderPipeline();
-    NovelLoggingService _logger;
+    LoggingService _logger;
     LayeringService* const _layeringService;
-    WindowingService* const _windowingService;
+    Windowing::WindowingService* const _windowingService;
     SDL_GLContext _openGLContext;
 
     ShaderProgram loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
@@ -39,27 +40,27 @@ namespace NovelRT::Graphics {
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
 
-    Lazy<GLuint> _cameraObjectRenderUbo;
+    Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::unique_ptr<Camera> _camera;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
   public:
-    RenderingService(LayeringService* const layeringService, WindowingService* const windowingService);
+    RenderingService(LayeringService* const layeringService, Windowing::WindowingService* const windowingService);
     int initialiseRendering();
 
     void tearDown() const;
 
     ImageRect* getImageRect(const std::string& filePath,
-      const CommonArgs& args,
+      const Utilities::CommonArgs& args,
       const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 
-    BasicFillRect* getBasicFillRect(const RGBAConfig& colourConfig, const CommonArgs& args);
+    BasicFillRect* getBasicFillRect(const RGBAConfig& colourConfig, const Utilities::CommonArgs& args);
 
     TextRect* getTextRect(const RGBAConfig& colourConfig,
       float fontSize,
       const std::string& fontFilePath,
-      const CommonArgs& args);
+      const Utilities::CommonArgs& args);
 
     Camera* getCamera() const;
 

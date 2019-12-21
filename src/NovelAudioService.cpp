@@ -1,12 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../include/NovelAudioService.h"
-#include "../include/NovelUtilities.h"
+#include <NovelRT.h>
 #include <iostream>
 #include <functional>
 #include <stdexcept>
 
-namespace NovelRT {
+namespace NovelRT::Audio {
 
 AudioService::AudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(NovelUtilities::CONSOLE_LOG_AUDIO) {
   initializeAudio();

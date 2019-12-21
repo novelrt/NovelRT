@@ -1,6 +1,7 @@
-#ifndef RT_H
-#define RT_H
+#ifndef NOVELRT_H
+#define NOVELRT_H
 
+#include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
 #include "NovelRT/Maths/GeoBounds.h"
@@ -24,13 +25,12 @@
 #include "NovelRT/TransformSortComparison.h"
 #include "NovelRT/Graphics/RenderingService.h"
 #include "NovelRT/Graphics/RenderObject.h"
-#include "NovelRT/NovelRT-C/NovelRunner.h"
+#include "NovelRT/NovelRunner.h"
 #include "NovelRT/NovelRT-C/NovelRunner_C.h"
 #include "NovelRT/Timing/StepTimer.h"
 #include "NovelRT/Graphics/TextRect.h"
 #include "NovelRT/Utilities/Misc.h"
 #include "NovelRT/Windowing/WindowingService.h"
-#include "NovelRT/WorldObject.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
-#endif //!RT_H
+#endif //!NOVELRT_H

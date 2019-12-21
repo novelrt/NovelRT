@@ -3,14 +3,17 @@
 #ifndef NOVELRT_INPUT_BASICINTERACTIONRECT_H
 #define NOVELRT_INPUT_BASICINTERACTIONRECT_H
 
-#include "NovelInteractionObject.h"
+#include "InteractionObject.h"
+#include "../Maths/GeoVector.h"
+#include "../Utilities/CommonArgs.h"
+
 namespace NovelRT::Input {
 
   class BasicInteractionRect : public InteractionObject {
   public:
-    BasicInteractionRect(LayeringService* layeringService, const GeoVector<float>& size,
-      const CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
-    bool validateInteractionPerimeter(const GeoVector<float>& mousePosition) const override;
+    BasicInteractionRect(LayeringService* layeringService, const Maths::GeoVector<float>& size,
+      const Utilities::CommonArgs& args, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+    bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const override;
   };
 }
 #endif //NOVELRT_INPUT_BASICINTERACTIONRECT_H

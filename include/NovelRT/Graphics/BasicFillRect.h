@@ -3,17 +3,15 @@
 #ifndef NOVELRT_GRAPHICS_BASICFILLRECT_H
 #define NOVELRT_GRAPHICS_BASICFILLRECT_H
 
-#include "RenderObject.h"
-#include "RGBAConfig.h"
-#include "ShaderProgram.h"
-#include "NovelCamera.h"
+#include "../Utilities/CommonArgs.h"
+#include "../Utilities/Lazy.h"
 
 namespace NovelRT::Graphics {
   class BasicFillRect : public RenderObject {
 
   private:
-    RGBAConfig _colourConfig;
-    Lazy<GLuint> _colourBuffer;
+    Utilities::RGBAConfig _colourConfig;
+    Utilities::Lazy<GLuint> _colourBuffer;
     std::vector<GLfloat> _colourData;
 
   protected:
@@ -22,7 +20,7 @@ namespace NovelRT::Graphics {
   public:
     BasicFillRect(LayeringService* layeringService,
                        const RGBAConfig& fillColour,
-                       const CommonArgs& args,
+                       const Utilities::CommonArgs& args,
                        ShaderProgram shaderProgram,
                        Camera* camera);
 

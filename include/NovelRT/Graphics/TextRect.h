@@ -1,12 +1,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #ifndef NOVELRT_GRAPHICS_TEXTRECT_H
 #define NOVELRT_GRAPHICS_TEXTRECT_H
-#include "NovelRenderObject.h"
+#include "RenderObject.h"
 #include "RGBAConfig.h"
 #include <string>
 #include "GraphicsCharacterRenderData.h"
 #include "ImageRect.h"
-#include "../NovelLoggingService.h"
+#include "../LoggingService.h"
 #include "ShaderProgram.h"
 
 namespace NovelRT::Graphics {

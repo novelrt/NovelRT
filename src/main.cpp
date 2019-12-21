@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "../include/NovelRT.h"
+#include <NovelRT.h>
 
 extern "C"
 {

@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "../include/NovelLoggingService.h"
-#include "../include/NovelUtilities.h"
+#include <NovelRT.h>
 #include "spdlog/async.h"
 #include <typeinfo>
 
@@ -10,9 +9,9 @@ namespace NovelRT {
 
   NovelLoggingService::NovelLoggingService() {
     try {
-      _logger = spdlog::get(NovelUtilities::CONSOLE_LOG_GENERIC);
+      _logger = spdlog::get(Utilities::Misc::CONSOLE_LOG_GENERIC);
       if (_logger == nullptr) {
-          _logger = spdlog::stdout_color_mt<spdlog::async_factory>(NovelUtilities::CONSOLE_LOG_GENERIC);
+          _logger = spdlog::stdout_color_mt<spdlog::async_factory>(Utilities::Misc::CONSOLE_LOG_GENERIC);
       }
 
       #ifndef NDEBUG

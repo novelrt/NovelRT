@@ -2,17 +2,17 @@
 
 #ifndef NOVELRT_NOVELWORLDOBJECT_H
 #define NOVELRT_NOVELWORLDOBJECT_H
-#include "GeoVector.h"
-#include "NovelCommonArgs.h"
-#include "NovelLayeringService.h"
-#include "GeoBounds.h"
+#include "Maths/GeoVector.h"
+#include "Utilities/CommonArgs.h"
+#include "LayeringService.h"
+#include "Maths/GeoBounds.h"
 
 namespace NovelRT {
   class LayeringService;
   class Transform {
   protected:
-    GeoVector<float> _position;
-    GeoVector<float> _scale;
+    Maths::GeoVector<float> _position;
+    Maths::GeoVector<float> _scale;
     float _rotation;
     bool _active = true;
     int _orderInLayer;
@@ -20,21 +20,21 @@ namespace NovelRT {
     LayeringService* _layeringService;
 
   public:
-    Transform(LayeringService* layeringService, const CommonArgs& args);
+    Transform(LayeringService* layeringService, const Utilities::CommonArgs& args);
 
     virtual ~Transform();
 
-    virtual GeoVector<float> getPosition() const;
+    virtual Maths::GeoVector<float> getPosition() const;
 
-    virtual void setPosition(const GeoVector<float>& value);
+    virtual void setPosition(const Maths::GeoVector<float>& value);
 
     virtual float getRotation() const;
 
     virtual void setRotation(float value);
 
-    virtual GeoVector<float> getScale() const;
+    virtual Maths::GeoVector<float> getScale() const;
 
-    virtual void setScale(const GeoVector<float>& value);
+    virtual void setScale(const Maths::GeoVector<float>& value);
 
     virtual int getLayer() const;
 

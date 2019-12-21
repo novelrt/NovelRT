@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../include/NovelWindowingService.h"
-#include "../include/NovelUtilities.h"
+#include <NovelRT.h>
 
-namespace NovelRT {
+namespace NovelRT::Windowing {
   WindowingService::WindowingService() : _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)){}
 
   void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
@@ -22,7 +21,7 @@ namespace NovelRT {
       wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
     _window = std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(window, SDL_DestroyWindow);
-    _windowSize = GeoVector<float>(wData, hData);
+    _windowSize = Maths::GeoVector<float>(wData, hData);
 
     if (_window == nullptr) {
       _logger.logError("Could not create window: ", std::string(SDL_GetError()));

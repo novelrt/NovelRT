@@ -4,9 +4,10 @@
 #define NOVELRT_GRAPHICS_IMAGERECT_H
 
 #include "RGBAConfig.h"
-#include "NovelRenderObject.h"
-#include "NovelLoggingService.h"
+#include "RenderObject.h"
+#include "../LoggingService.h"
 #include "ShaderProgram.h"
+#include "../Utilities/Lazy.h"
 
 namespace NovelRT::Graphics {
 
@@ -15,13 +16,13 @@ namespace NovelRT::Graphics {
   private:
     std::string _imageDir;
     std::string _previousImageDir;
-    Lazy<GLuint> _textureId;
+    Utilities::Lazy<GLuint> _textureId;
     std::vector<GLfloat> _uvCoordinates;
-    Lazy<GLuint> _uvBuffer;
-    Lazy<GLuint> _colourTintBuffer;
+    Utilities::Lazy<GLuint> _uvBuffer;
+    Utilities::Lazy<GLuint> _colourTintBuffer;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
-    NovelLoggingService _logger;
+    LoggingService _logger;
 
   protected:
     void configureObjectBuffers() final;

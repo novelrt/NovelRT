@@ -1,11 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <iostream>
-#include "../include/NovelRenderObject.h"
-#include "../include/GeoBounds.h"
+#include <NovelRT.h>
 #include <functional>
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
 
   void RenderObject::OnCameraViewChanged(CameraViewChangedEventArgs args) {
     _uboCameraData = CameraBlock(args.cameraMatrix.getUnderlyingMatrix());

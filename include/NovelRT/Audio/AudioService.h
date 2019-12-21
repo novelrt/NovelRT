@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 #include <typeinfo>
-#include "../NovelLoggingService.h"
+#include "../LoggingService.h"
 
 namespace NovelRT::Audio {
   class AudioService {

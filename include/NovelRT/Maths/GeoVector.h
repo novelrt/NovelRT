@@ -5,11 +5,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
+
 namespace NovelRT::Maths {
   template<typename T>
   class GeoVector {
     friend class Graphics::RenderObject;
-    friend class Graphics::InteractionService;
+    friend class Input::InteractionService;
     template<typename U>
     friend class GeoMatrix4;
   private:
