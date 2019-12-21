@@ -81,7 +81,7 @@ set(NOVELRT_HEADERS
   include/NovelInteractionService.h
   include/NovelLayeringService.h
   include/NovelLoggingService.h
-  include/NovelObjectSortComparison.h
+  include/NovelWorldObjectSortComparison.h
   include/NovelRenderingService.h
   include/NovelRenderObject.h
   include/NovelUtilities.h
