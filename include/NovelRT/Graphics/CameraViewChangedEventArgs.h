@@ -2,13 +2,12 @@
 
 #ifndef NOVELRT_GRAPHICS_CAMERAVIEWCHANGEDEVENTARGS_H
 #define NOVELRT_GRAPHICS_CAMERAVIEWCHANGEDEVENTARGS_H
-#include "../Maths/GeoMatrix4.h"
 
 namespace NovelRT::Graphics {
   struct CameraViewChangedEventArgs {
   public:
     const Maths::GeoMatrix4<float> cameraMatrix;
-    CameraViewChangedEventArgs(const GeoMatrix4<float>& newCameraMatrix) : cameraMatrix(newCameraMatrix) {};
+    CameraViewChangedEventArgs(const Maths::GeoMatrix4<float>& newCameraMatrix) : cameraMatrix(newCameraMatrix) {};
   };
 }
 

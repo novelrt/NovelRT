@@ -2,12 +2,6 @@
 
 #ifndef NOVELRT_GRAPHICS_CAMERA_H
 #define NOVELRT_GRAPHICS_CAMERA_H
-#include "../Maths/GeoMatrix4.h"
-#include "../Utilities/Lazy.h"
-#include "../Utilities/Misc.h"
-#include "../Maths/GeoVector.h"
-#include "CameraViewChangedEventArgs.h"
-
 namespace NovelRT::Graphics {
   class Camera {
 

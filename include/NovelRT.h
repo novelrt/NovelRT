@@ -1,6 +1,51 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
+template<typename T>
+class NovelRT::Maths::GeoVector;
+template<typename T>
+class NovelRT::Maths::GeoMatrix4;
+template<typename T>
+class NovelRT::Utilities::Lazy;
+
+typedef NovelRT::DebugService DebugService;
+typedef NovelRT::LayeringService LayeringService;
+typedef NovelRT::LoggingService LoggingService;
+typedef NovelRT::NovelRunner NovelRunner;
+typedef NovelRT::Transform Transform;
+typedef NovelRT::TransformSortComparison TransformSortComparison;
+
+typedef NovelRT::Audio::AudioService AudioService;
+
+typedef NovelRT::Graphics::BasicFillRect BasicFillRect;
+typedef NovelRT::Graphics::Camera Camera;
+typedef NovelRT::Graphics::CameraBlock CameraBlock;
+typedef NovelRT::Graphics::CameraViewChangedEventArgs CameraViewChangedEventArgs;
+typedef NovelRT::Graphics::GraphicsCharacterRenderData GraphicsCharacterRenderData;
+typedef NovelRT::Graphics::ImageRect ImageRect;
+typedef NovelRT::Graphics::RenderingSerivce RenderingService;
+typedef NovelRT::Graphics::RenderObject RenderObject;
+typedef NovelRT::Graphics::RGBAConfig RGBAConfig;
+typedef NovelRT::Graphics::ShaderProgram ShaderProgram;
+typedef NovelRT::Graphics::TextRect TextRect;
+
+typedef NovelRT::Input::BasicInteractionRect BasicInteractionRect;
+typedef NovelRT::Input::InteractionObject InteractionObject;
+typedef NovelRT::Input::InteractionService InteractionService;
+typedef NovelRT::Input::KeyCode KeyCode;
+typedef NovelRT::Input::KeyState KeyState;
+
+typedef NovelRT::Maths::GeoBounds GeoBounds;
+
+typedef NovelRT::Timing::StepTimer StepTimer;
+
+typedef NovelRT::Utilities::CommonArgs CommonArgs;
+typedef NovelRT::Utilities::Misc Misc;
+
+typedef NovelRT::Windowing::WindowingService WindowingService;
+
+
+
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
@@ -33,4 +78,6 @@
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
+
+
 #endif //!NOVELRT_H

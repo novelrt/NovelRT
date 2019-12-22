@@ -31,7 +31,7 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-NovelRT::ImageRect *novelChanRect;
+NovelRT::Graphics::ImageRect *novelChanRect;
 
 int main(int argc, char *argv[])
 {
@@ -42,17 +42,17 @@ int main(int argc, char *argv[])
   luaL_dofile(L, "avg.lua");
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
-  auto console = NovelRT::NovelLoggingService(NovelRT::NovelUtilities::CONSOLE_LOG_APP);
-  NovelRT::CommonArgs novelChanArgs;
+  auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
+  NovelRT::Utilities::CommonArgs novelChanArgs;
   novelChanArgs.layer = 0;
   novelChanArgs.orderInLayer = 0;
   novelChanArgs.startingPosition.setX(1920 / 2);
   novelChanArgs.startingPosition.setY(1080 / 2);
-  novelChanArgs.startingScale = NovelRT::GeoVector<float>(456, 618);
+  novelChanArgs.startingScale = NovelRT::Maths::GeoVector<float>(456, 618);
 
-  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
-  auto rectArgs = NovelRT::CommonArgs();
+  auto rectArgs = NovelRT::Utilities::CommonArgs();
   rectArgs.startingPosition = novelChanArgs.startingPosition;
   rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
   rectArgs.startingPosition.setY(rectArgs.startingPosition.getY());
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   rectArgs.orderInLayer = 2;
   rectArgs.startingRotation = 0.0f;
 
-  auto textRect = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
   textRect->setText("RubyGnomer");
 
   //auto lineArgs = rectArgs;
@@ -71,19 +71,19 @@ int main(int argc, char *argv[])
 
   //auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
 
-  auto playButtonArgs = NovelRT::CommonArgs();
+  auto playButtonArgs = NovelRT::Utilities::CommonArgs();
   playButtonArgs.startingPosition = novelChanArgs.startingPosition;
   playButtonArgs.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
   playButtonArgs.layer = 0;
   playButtonArgs.orderInLayer = 1;
   playButtonArgs.startingRotation = 0.0f;
-  playButtonArgs.startingScale = NovelRT::GeoVector<float>(200, 200);
+  playButtonArgs.startingScale = NovelRT::Maths::GeoVector<float>(200, 200);
 
-  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), playButtonArgs);
+  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::Graphics::RGBAConfig(255, 0, 0, 255), playButtonArgs);
   auto playAudioTextArgs = playButtonArgs;
   playAudioTextArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
   playButtonArgs.orderInLayer = 1;
-  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextArgs);
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextArgs);
   playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::GeoVector<float>(200, 200), playButtonArgs);
+  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::Maths::GeoVector<float>(200, 200), playButtonArgs);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 

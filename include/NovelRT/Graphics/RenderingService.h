@@ -4,25 +4,12 @@
 #define NOVELRT_GRAPHICS_RENDERINGSERVICE_H
 
 #include <SDL2/SDL.h>
-#include "../Maths/GeoVector.h"
-#include "..Utilities/CommonArgs.h"
-#include "../Windowing/WindowingService.h"
-#include "../Utilities/Lazy.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <functional>
 #include <memory>
-#include "RGBAConfig.h"
-#include "../LoggingService.h"
-#include "../LayeringService.h"
-#include "ImageRect.h"
-#include "BasicFillRect.h"
-#include "TextRect.h"
 #include <glad/glad.h>
-#include "Camera.h"
-#include "ShaderProgram.h"
-#include "CameraBlock.h"
 
 namespace NovelRT::Graphics {
 

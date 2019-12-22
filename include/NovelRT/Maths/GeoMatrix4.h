@@ -3,7 +3,6 @@
 #ifndef NOVELRT_MATHS_GEOMATRIX4_H
 #define NOVELRT_MATHS_GEOMATRIX4_H
 #include <glm/glm.hpp>
-#include "GeoVector.h"
 
 namespace NovelRT::Maths {
 

@@ -2,7 +2,6 @@
 
 #ifndef NOVELRT_UTILITIES_COMMONARGS_H
 #define NOVELRT_UTILITIES_COMMONARGS_H
-#include "../Maths/GeoVector.h"
 
 namespace NovelRT::Utilities {
   struct CommonArgs {

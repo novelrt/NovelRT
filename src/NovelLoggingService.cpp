@@ -7,7 +7,7 @@
 
 namespace NovelRT {
 
-  NovelLoggingService::NovelLoggingService() {
+  LoggingService::LoggingService() {
     try {
       _logger = spdlog::get(Utilities::Misc::CONSOLE_LOG_GENERIC);
       if (_logger == nullptr) {
@@ -29,7 +29,7 @@ namespace NovelRT {
     }
   }
 
-  NovelLoggingService::NovelLoggingService(const std::string& core) {
+  LoggingService::LoggingService(const std::string& core) {
     try {
       _logger = spdlog::get(core);
       if (_logger == nullptr) {
@@ -52,7 +52,7 @@ namespace NovelRT {
     }
   }
 
-  NovelLoggingService::NovelLoggingService(const std::string& core, LogLevel level) {
+  LoggingService::LoggingService(const std::string& core, LogLevel level) {
     try {
       _logger = spdlog::get(core);
       if (_logger == nullptr) {
@@ -71,7 +71,7 @@ namespace NovelRT {
     }
   }
 
-  void NovelLoggingService::log(const std::string& message, LogLevel level) {
+  void LoggingService::log(const std::string& message, LogLevel level) {
     switch (level) {
       case LogLevel::Debug:
         _logger->debug(message);
@@ -90,29 +90,29 @@ namespace NovelRT {
     }
   }
 
-  void NovelLoggingService::logInfoLine(const std::string& message) {
+  void LoggingService::logInfoLine(const std::string& message) {
     _logger->info(message);
   }
 
-  void NovelLoggingService::logErrorLine(const std::string& message) {
+  void LoggingService::logErrorLine(const std::string& message) {
     _logger->error(message);
   }
 
-  void NovelLoggingService::logWarningLine(const std::string& message) {
+  void LoggingService::logWarningLine(const std::string& message) {
     _logger->warn(message);
   }
 
-  void NovelLoggingService::logDebugLine(const std::string& message) {
+  void LoggingService::logDebugLine(const std::string& message) {
     _logger->debug(message);
   }
 
-  void NovelLoggingService::logInternal(const std::string& message, LogLevel level) {
+  void LoggingService::logInternal(const std::string& message, LogLevel level) {
   #ifndef NDEBUG
     log(message, level);
   #endif
   }
 
-  void NovelLoggingService::setLogLevel(LogLevel level) {
+  void LoggingService::setLogLevel(LogLevel level) {
     switch (level) {
       case LogLevel::Debug:
         _logger->set_level(spdlog::level::level_enum::debug);

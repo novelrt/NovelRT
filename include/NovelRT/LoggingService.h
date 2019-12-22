@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELLOGGINGSERVICE_H
-#define NOVELRT_NOVELLOGGINGSERVICE_H
+#ifndef NOVELRT_LOGGINGSERVICE_H
+#define NOVELRT_LOGGINGSERVICE_H
 
 #include <iostream>
 #include "spdlog/spdlog.h"
@@ -15,7 +15,7 @@ namespace NovelRT {
     Err = SPDLOG_LEVEL_ERROR,
     Off = SPDLOG_LEVEL_OFF
   };
-  class NovelLoggingService {
+  class LoggingService {
   private:
     std::shared_ptr<spdlog::logger> _logger;
     inline void logDebug() {}
@@ -24,9 +24,9 @@ namespace NovelRT {
     inline void logInfo() {}
 
   public:
-    NovelLoggingService();
-    NovelLoggingService(const std::string& core);
-    NovelLoggingService(const std::string& core, LogLevel level);
+    LoggingService();
+    LoggingService(const std::string& core);
+    LoggingService(const std::string& core, LogLevel level);
     void log(const std::string& message, LogLevel level);
     void logInfoLine(const std::string& message);
     void logErrorLine(const std::string& message);
