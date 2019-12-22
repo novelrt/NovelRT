@@ -17,25 +17,25 @@ namespace NovelRT::Graphics {
       shaderProgram,
       camera),
     _imageDir(imageDir),
-    _textureId(Lazy<GLuint>([] {
+    _textureId(Utilities::Lazy<GLuint>([] {
     GLuint tempTexture;
     glGenTextures(1, &tempTexture);
     return tempTexture;
       })),
-    _uvBuffer(Lazy<GLuint>(generateStandardBuffer)),
-        _colourTintBuffer(Lazy<GLuint>(generateStandardBuffer)),
+    _uvBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
+        _colourTintBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
         _colourTint(colourTint),
-        _logger(NovelUtilities::CONSOLE_LOG_GFX) {}
+        _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
       ImageRect::ImageRect(LayeringService* layeringService,
-        const CommonArgs& args,
+        const Utilities::CommonArgs& args,
         ShaderProgram shaderProgram,
         Camera* camera,
         const RGBAConfig& colourTint) : ImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
 
       }
 
-      void ImageRect::setScale(const GeoVector<float>& value) {
+      void ImageRect::setScale(const Maths::GeoVector<float>& value) {
         Transform::_scale = value;
       }
 
@@ -152,7 +152,7 @@ namespace NovelRT::Graphics {
 
       void ImageRect::setTextureInternal(GLuint textureId) {
         _imageDir = "";
-        _textureId = Lazy<GLuint>(textureId, [] {
+        _textureId = Utilities::Lazy<GLuint>(textureId, [] {
           GLuint tempBuffer;
           glGenBuffers(1, &tempBuffer);
           return tempBuffer;

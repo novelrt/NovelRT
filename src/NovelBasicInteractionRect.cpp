@@ -2,7 +2,7 @@
 
 #include <NovelRT.h>
 
-namespace NovelRT::Graphics {
+namespace NovelRT::Input {
   BasicInteractionRect::BasicInteractionRect(LayeringService* layeringService,
     const Maths::GeoVector<float>& size,
     const Utilities::CommonArgs& args,

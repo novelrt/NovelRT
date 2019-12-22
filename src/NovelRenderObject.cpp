@@ -11,12 +11,12 @@ namespace NovelRT::Graphics {
   }
 
   RenderObject::RenderObject(LayeringService* layeringService,
-    const CommonArgs& args,
+    const Utilities::CommonArgs& args,
     ShaderProgram shaderProgram,
     Camera* camera) : Transform(layeringService, args),
-                           _finalViewMatrixData(Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&RenderObject::generateViewData, this)))),
-                           _vertexBuffer(Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
-                           _vertexArrayObject(Lazy<GLuint>(std::function<GLuint()>([] {
+                           _finalViewMatrixData(Utilities::Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&RenderObject::generateViewData, this)))),
+                           _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
+                           _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
                                                                                         GLuint tempVao;
                                                                                         glGenVertexArrays(1, &tempVao);
                                                                                         return tempVao;
@@ -36,10 +36,10 @@ namespace NovelRT::Graphics {
       }
 
       void RenderObject::configureObjectBuffers() {
-        auto topLeft = GeoVector<GLfloat>(-0.5f, 0.5f);
-        auto bottomRight = GeoVector<GLfloat>(0.5f, -0.5f);
-        auto topRight = GeoVector<GLfloat>(0.5f, 0.5f);
-        auto bottomLeft = GeoVector<GLfloat>(-0.5f, -0.5f);
+        auto topLeft = Maths::GeoVector<GLfloat>(-0.5f, 0.5f);
+        auto bottomRight = Maths::GeoVector<GLfloat>(0.5f, -0.5f);
+        auto topRight = Maths::GeoVector<GLfloat>(0.5f, 0.5f);
+        auto bottomLeft = Maths::GeoVector<GLfloat>(-0.5f, -0.5f);
 
         _vertexBufferData = {
             topLeft.getX(), topLeft.getY(), 0.0f,
@@ -64,12 +64,12 @@ namespace NovelRT::Graphics {
         Transform::setRotation(value);
         configureObjectBuffers();
       }
-      void RenderObject::setScale(const GeoVector<float>& value) {
+      void RenderObject::setScale(const Maths::GeoVector<float>& value) {
         _finalViewMatrixData.reset();
         Transform::setScale(value);
         configureObjectBuffers();
       }
-      void RenderObject::setPosition(const GeoVector<float>& value) {
+      void RenderObject::setPosition(const Maths::GeoVector<float>& value) {
         _finalViewMatrixData.reset();
         Transform::setPosition(value);
         configureObjectBuffers();
@@ -90,7 +90,7 @@ namespace NovelRT::Graphics {
 
       CameraBlock RenderObject::generateViewData() {
         auto position = getPosition().getVec2Value();
-        auto resultMatrix = GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
+        auto resultMatrix = Maths::GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
         resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
         resultMatrix = glm::rotate(resultMatrix, glm::radians(getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
         resultMatrix = glm::scale(resultMatrix, glm::vec3(getScale().getVec2Value(), 1.0f));

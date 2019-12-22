@@ -159,12 +159,12 @@ endif()
 
 set(NOVELRT_LIBRARY_HEADERS
   ${NOVELRT_HEADERS}
-  include/NovelRT/NovelRT-C/NovelRunner_C.h
+  #include/NovelRT/NovelRT-C/NovelRunner_C.h
 )
 
 set(NOVELRT_LIBRARY_SOURCES
   ${NOVELRT_SOURCES}
-  src/NovelRunner_C.cpp
+  #src/NovelRunner_C.cpp
 )
 
 set(NOVELRT_LIBRARY_LINK_LIBRARIES
