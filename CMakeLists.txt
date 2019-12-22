@@ -100,25 +100,25 @@ set(NOVELRT_HEADERS
   include/NovelRT.h)
 
 set(NOVELRT_SOURCES
-  src/NovelWorldObject.cpp
-  src/GeoBounds.cpp
-  src/NovelAudioService.cpp
-  src/NovelBasicFillRect.cpp
-  src/NovelBasicInteractionRect.cpp
-  src/NovelDebugService.cpp
-  src/NovelImageRect.cpp
-  src/NovelInteractionObject.cpp
-  src/NovelInteractionService.cpp
-  src/NovelLayeringService.cpp
-  src/NovelLoggingService.cpp
-  src/NovelRenderingService.cpp
-  src/NovelRenderObject.cpp
-  src/NovelRunner.cpp
-  src/NovelStepTimer.cpp
-  src/NovelTextRect.cpp
-  src/RGBAConfig.cpp
-  src/NovelCamera.cpp
-  src/NovelWindowingService.cpp)
+  src/NovelRT/Transform.cpp
+  src/NovelRT/Maths/GeoBounds.cpp
+  src/NovelRT/Audio/AudioService.cpp
+  src/NovelRT/Graphics/BasicFillRect.cpp
+  src/NovelRT/Input/BasicInteractionRect.cpp
+  src/NovelRT/DebugService.cpp
+  src/NovelRT/Graphics/ImageRect.cpp
+  src/NovelRT/Input/InteractionObject.cpp
+  src/NovelRT/Input/InteractionService.cpp
+  src/NovelRT/LayeringService.cpp
+  src/NovelRT/LoggingService.cpp
+  src/NovelRT/Graphics/RenderingService.cpp
+  src/NovelRT/Graphics/RenderObject.cpp
+  src/NovelRT/NovelRunner.cpp
+  src/NovelRT/Timing/StepTimer.cpp
+  src/NovelRT/Graphics/TextRect.cpp
+  src/NovelRT/Graphics/RGBAConfig.cpp
+  src/NovelRT/Graphics/Camera.cpp
+  src/NovelRT/Windowing/WindowingService.cpp)
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
