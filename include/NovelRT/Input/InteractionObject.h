@@ -4,10 +4,6 @@
 #define NOVELRT_INPUT_INTERACTIONOBJECT_H
 #include <algorithm>
 #include <functional>
-#include "../Transform.h"
-#include "KeyCode.h"
-#include "../Utilities/Misc.h"
-#include "../Utilities/CommonArgs.h"
 
 namespace NovelRT::Input {
   class InteractionObject : public Transform {

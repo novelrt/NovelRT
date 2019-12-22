@@ -6,7 +6,6 @@
 #include <map>
 #include <vector>
 #include <string_view>
-#include "Transform.h"
 
 namespace NovelRT {
   class Transform;

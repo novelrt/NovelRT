@@ -2,10 +2,6 @@
 
 #ifndef NOVELRT_NOVELWORLDOBJECT_H
 #define NOVELRT_NOVELWORLDOBJECT_H
-#include "Maths/GeoVector.h"
-#include "Utilities/CommonArgs.h"
-#include "LayeringService.h"
-#include "Maths/GeoBounds.h"
 
 namespace NovelRT {
   class LayeringService;

@@ -2,11 +2,6 @@
 
 #ifndef NOVELRT_INPUT_INTERACTIONSERVICE_H
 #define NOVELRT_INPUT_INTERACTIONSERVICE_H
-#include "NovelInteractionObject.h"
-#include "KeyCode.h"
-#include "NovelBasicInteractionRect.h"
-#include "NovelUtilities.h"
-#include "KeyState.h"
 
 namespace NovelRT::Input {
   class InteractionService {

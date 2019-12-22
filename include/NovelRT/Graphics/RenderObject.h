@@ -2,17 +2,12 @@
 
 #ifndef NOVELRT_GRAPHICS_RENDEROBJECT_H
 #define NOVELRT_GRAPHICS_RENDEROBJECT_H
-#include "../Transform.h"
-#include "../Utilities/Lazy.h"
 #include <string>
 #include <glad/glad.h>
 #include <memory>
 #include <glm/glm.hpp>
-#include "ShaderProgram.h"
-#include "Camera.h"
-#include "CameraBlock.h"
 
-namespace NovelRT {
+namespace NovelRT::Graphics {
 
 class RenderObject : public Transform {
 
@@ -30,17 +25,17 @@ protected:
   bool _bufferInitialised = false;
   Camera* _camera;
   CameraBlock _uboCameraData;
-  Lazy<CameraBlock> _finalViewMatrixData;
+  Utilities::Lazy<CameraBlock> _finalViewMatrixData;
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
   RenderObject(LayeringService* layeringService,
-                    const CommonArgs& args, ShaderProgram shaderProgram, Camera* camera);
+                    const Utilities::CommonArgs& args, ShaderProgram shaderProgram, Camera* camera);
 
   void executeObjectBehaviour() final;
   void setRotation(const float value) override;
-  void setScale(const GeoVector<float>& value) override;
-  void setPosition(const GeoVector<float>& value) override;
+  void setScale(const Maths::GeoVector<float>& value) override;
+  void setPosition(const Maths::GeoVector<float>& value) override;
   virtual ~RenderObject();
   };
 }

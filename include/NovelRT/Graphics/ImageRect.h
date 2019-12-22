@@ -3,12 +3,6 @@
 #ifndef NOVELRT_GRAPHICS_IMAGERECT_H
 #define NOVELRT_GRAPHICS_IMAGERECT_H
 
-#include "RGBAConfig.h"
-#include "RenderObject.h"
-#include "../LoggingService.h"
-#include "ShaderProgram.h"
-#include "../Utilities/Lazy.h"
-
 namespace NovelRT::Graphics {
 
   class ImageRect : public RenderObject {
@@ -42,7 +36,7 @@ namespace NovelRT::Graphics {
       const RGBAConfig& colourTint);
 
     void drawObject() final;
-    void setScale(const GeoVector<float>& value) final;
+    void setScale(const Maths::GeoVector<float>& value) final;
 
     void setTextureInternal(GLuint textureId);
 

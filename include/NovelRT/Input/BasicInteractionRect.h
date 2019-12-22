@@ -3,10 +3,6 @@
 #ifndef NOVELRT_INPUT_BASICINTERACTIONRECT_H
 #define NOVELRT_INPUT_BASICINTERACTIONRECT_H
 
-#include "InteractionObject.h"
-#include "../Maths/GeoVector.h"
-#include "../Utilities/CommonArgs.h"
-
 namespace NovelRT::Input {
 
   class BasicInteractionRect : public InteractionObject {

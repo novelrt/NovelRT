@@ -3,9 +3,7 @@
 #ifndef NOVELRT_MATHS_GEOBOUNDS_H
 #define NOVELRT_MATHS_GEOBOUNDS_H
 
-#include "GeoVector.h"
 #include <vector>
-#include "../Utilities/Lazy.h"
 
 namespace NovelRT::Maths {
   class GeoBounds {

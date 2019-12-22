@@ -8,7 +8,6 @@
 #include <string>
 #include <map>
 #include <typeinfo>
-#include "../LoggingService.h"
 
 namespace NovelRT::Audio {
   class AudioService {
@@ -30,7 +29,7 @@ namespace NovelRT::Audio {
     SoundBank _sounds;
     MusicBank _music;
     ChannelMap _channelMap;
-    NovelLoggingService _logger;
+    LoggingService _logger;
 
     int convertToMixVolume(float value);
     std::string findByChannelMap(int channel);

@@ -4,12 +4,8 @@
 #define NOVELRT_NOVELRUNNER_H
 
 #include <string>
-
-#include "NovelDebugService.h"
-#include "Graphics/NovelRenderingService.h"
-#include "Input/NovelInteractionService.h"
-#include "Timing/NovelStepTimer.h"
-#include "Audio/NovelAudioService.h"
+#include <vector>
+#include <memory>
 
 namespace NovelRT {
 /**
@@ -17,14 +13,14 @@ namespace NovelRT {
  */
   class NovelRunner {
   private:
-    StepTimer _stepTimer;
+    Timing::StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
     std::unique_ptr<LayeringService> _layeringService;
     std::unique_ptr<DebugService> _novelDebugService;
-    std::unique_ptr<NovelInteractionService> _novelInteractionService;
-    std::unique_ptr<AudioService> _novelAudioService;
-    std::unique_ptr<WindowingService> _novelWindowingService;
-    std::unique_ptr<NovelRenderingService> _novelRenderer;
+    std::unique_ptr<Input::InteractionService> _novelInteractionService;
+    std::unique_ptr<Audio::AudioService> _novelAudioService;
+    std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
+    std::unique_ptr<Graphics::RenderingService> _novelRenderer;
     int _exitCode = 1;
 
 

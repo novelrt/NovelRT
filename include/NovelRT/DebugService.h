@@ -3,7 +3,6 @@
 #ifndef NOVELRT_NOVELDEBUGSERVICE_H
 #define NOVELRT_NOVELDEBUGSERVICE_H
 
-#include "Graphics/TextRect.h"
 #include <glad/glad.h>
 
 namespace NovelRT {

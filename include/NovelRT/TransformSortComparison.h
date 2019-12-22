@@ -3,7 +3,6 @@
 #ifndef NOVELRT_NOVELWORLDOBJECTSORTCOMPARISON_H
 #define NOVELRT_NOVELWORLDOBJECTSORTCOMPARISON_H
 
-#include "Transform.h"
 namespace NovelRT {
   struct TransformSortComparison {
 

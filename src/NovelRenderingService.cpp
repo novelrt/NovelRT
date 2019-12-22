@@ -176,7 +176,7 @@ namespace NovelRT::Graphics {
   }
 
   ImageRect* RenderingService::getImageRect(const std::string& filePath,
-    const CommonArgs& args,
+    const Utilities::CommonArgs& args,
     const RGBAConfig& colourTint) {
     return new ImageRect(_layeringService, args, _texturedRectProgram, getCamera(), filePath, colourTint);
   }
@@ -184,11 +184,11 @@ namespace NovelRT::Graphics {
   TextRect* RenderingService::getTextRect(const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath,
-    const CommonArgs& args) {
+    const Utilities::CommonArgs& args) {
     return new TextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  RenderingService::RenderingService(LayeringService* const layeringService, WindowingService* const windowingService) : _logger(NovelLoggingService(NovelUtilities::CONSOLE_LOG_GFX)),
+  RenderingService::RenderingService(LayeringService* const layeringService, Windowing::WindowingService* const windowingService) : _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
                                                                                                                                              _layeringService(layeringService), _windowingService(windowingService),
                                                                                                                                              _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
@@ -201,7 +201,7 @@ namespace NovelRT::Graphics {
     })),
     _camera(std::make_unique<Camera>()) {}
 
-    BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const CommonArgs& args) {
+    BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const Utilities::CommonArgs& args) {
       return new BasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
     }
 

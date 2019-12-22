@@ -3,14 +3,12 @@
 #ifndef NOVELRT_GRAPHICS_BASICFILLRECT_H
 #define NOVELRT_GRAPHICS_BASICFILLRECT_H
 
-#include "../Utilities/CommonArgs.h"
-#include "../Utilities/Lazy.h"
 
 namespace NovelRT::Graphics {
   class BasicFillRect : public RenderObject {
 
   private:
-    Utilities::RGBAConfig _colourConfig;
+    RGBAConfig _colourConfig;
     Utilities::Lazy<GLuint> _colourBuffer;
     std::vector<GLfloat> _colourData;
 
