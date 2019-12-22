@@ -7,7 +7,7 @@
 
 namespace NovelRT::Audio {
 
-AudioService::AudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(NovelUtilities::CONSOLE_LOG_AUDIO) {
+AudioService::AudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO) {
   initializeAudio();
 }
 

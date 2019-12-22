@@ -13,9 +13,9 @@ namespace NovelRT::Input {
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
-    std::map<KeyCode, GeoVector<float>> _mousePositionsOnScreenPerButton;
+    std::map<KeyCode, Maths::GeoVector<float>> _mousePositionsOnScreenPerButton;
     LayeringService* const _layeringService;
-    GeoVector<float> _screenSize;
+    Maths::GeoVector<float> _screenSize;
 
   public:
     InteractionService(LayeringService* const layeringService);

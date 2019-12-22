@@ -6,7 +6,7 @@
 #include <SDL2/SDL.h>
 
 namespace NovelRT::Input {
-  enum class KeyCode : uint32_t {
+  enum class KeyCode : int32_t {
     Nothing = SDLK_UNKNOWN,
     LeftMouseButton = 323,
     RightMouseButton = 324,
