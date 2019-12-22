@@ -8,41 +8,41 @@ class NovelRT::Maths::GeoMatrix4;
 template<typename T>
 class NovelRT::Utilities::Lazy;
 
-typedef NovelRT::DebugService DebugService;
-typedef NovelRT::LayeringService LayeringService;
-typedef NovelRT::LoggingService LoggingService;
-typedef NovelRT::NovelRunner NovelRunner;
-typedef NovelRT::Transform Transform;
-typedef NovelRT::TransformSortComparison TransformSortComparison;
+typedef class NovelRT::DebugService DebugService;
+typedef class NovelRT::LayeringService LayeringService;
+typedef class NovelRT::LoggingService LoggingService;
+typedef class NovelRT::NovelRunner NovelRunner;
+typedef class NovelRT::Transform Transform;
+typedef class NovelRT::TransformSortComparison TransformSortComparison;
 
-typedef NovelRT::Audio::AudioService AudioService;
+typedef class NovelRT::Audio::AudioService AudioService;
 
-typedef NovelRT::Graphics::BasicFillRect BasicFillRect;
-typedef NovelRT::Graphics::Camera Camera;
-typedef NovelRT::Graphics::CameraBlock CameraBlock;
-typedef NovelRT::Graphics::CameraViewChangedEventArgs CameraViewChangedEventArgs;
-typedef NovelRT::Graphics::GraphicsCharacterRenderData GraphicsCharacterRenderData;
-typedef NovelRT::Graphics::ImageRect ImageRect;
-typedef NovelRT::Graphics::RenderingSerivce RenderingService;
-typedef NovelRT::Graphics::RenderObject RenderObject;
-typedef NovelRT::Graphics::RGBAConfig RGBAConfig;
-typedef NovelRT::Graphics::ShaderProgram ShaderProgram;
-typedef NovelRT::Graphics::TextRect TextRect;
+typedef class NovelRT::Graphics::BasicFillRect BasicFillRect;
+typedef class NovelRT::Graphics::Camera Camera;
+typedef class NovelRT::Graphics::CameraBlock CameraBlock;
+typedef class NovelRT::Graphics::CameraViewChangedEventArgs CameraViewChangedEventArgs;
+typedef class NovelRT::Graphics::GraphicsCharacterRenderData GraphicsCharacterRenderData;
+typedef class NovelRT::Graphics::ImageRect ImageRect;
+typedef class NovelRT::Graphics::RenderingSerivce RenderingService;
+typedef class NovelRT::Graphics::RenderObject RenderObject;
+typedef class NovelRT::Graphics::RGBAConfig RGBAConfig;
+typedef class NovelRT::Graphics::ShaderProgram ShaderProgram;
+typedef class NovelRT::Graphics::TextRect TextRect;
 
-typedef NovelRT::Input::BasicInteractionRect BasicInteractionRect;
-typedef NovelRT::Input::InteractionObject InteractionObject;
-typedef NovelRT::Input::InteractionService InteractionService;
-typedef NovelRT::Input::KeyCode KeyCode;
-typedef NovelRT::Input::KeyState KeyState;
+typedef class NovelRT::Input::BasicInteractionRect BasicInteractionRect;
+typedef class NovelRT::Input::InteractionObject InteractionObject;
+typedef class NovelRT::Input::InteractionService InteractionService;
+typedef enum class NovelRT::Input::KeyCode KeyCode;
+typedef enum class NovelRT::Input::KeyState KeyState;
 
-typedef NovelRT::Maths::GeoBounds GeoBounds;
+typedef class NovelRT::Maths::GeoBounds GeoBounds;
 
-typedef NovelRT::Timing::StepTimer StepTimer;
+typedef class NovelRT::Timing::StepTimer StepTimer;
 
-typedef NovelRT::Utilities::CommonArgs CommonArgs;
-typedef NovelRT::Utilities::Misc Misc;
+typedef class NovelRT::Utilities::CommonArgs CommonArgs;
+typedef class NovelRT::Utilities::Misc Misc;
 
-typedef NovelRT::Windowing::WindowingService WindowingService;
+typedef class NovelRT::Windowing::WindowingService WindowingService;
 
 
 
