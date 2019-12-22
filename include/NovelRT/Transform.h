@@ -4,7 +4,6 @@
 #define NOVELRT_NOVELWORLDOBJECT_H
 
 namespace NovelRT {
-  class LayeringService;
   class Transform {
   protected:
     Maths::GeoVector<float> _position;

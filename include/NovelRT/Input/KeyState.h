@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 namespace NovelRT::Input {
-  enum class KeyState : uint32_t {
+  enum class KeyState : int32_t {
     Idle = 0,
     KeyDown = 1,
     KeyDownHeld = 2,

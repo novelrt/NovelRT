@@ -1,83 +1,113 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
-template<typename T>
-class NovelRT::Maths::GeoVector;
-template<typename T>
-class NovelRT::Maths::GeoMatrix4;
-template<typename T>
-class NovelRT::Utilities::Lazy;
+namespace NovelRT::Maths
+{
+  template<typename T>
+  class GeoVector;
 
-typedef class NovelRT::DebugService DebugService;
-typedef class NovelRT::LayeringService LayeringService;
-typedef class NovelRT::LoggingService LoggingService;
-typedef class NovelRT::NovelRunner NovelRunner;
-typedef class NovelRT::Transform Transform;
-typedef class NovelRT::TransformSortComparison TransformSortComparison;
+  template<typename T>
+  class GeoMatrix4;
 
-typedef class NovelRT::Audio::AudioService AudioService;
+  typedef class GeoBounds GeoBounds;
+}
 
-typedef class NovelRT::Graphics::BasicFillRect BasicFillRect;
-typedef class NovelRT::Graphics::Camera Camera;
-typedef class NovelRT::Graphics::CameraBlock CameraBlock;
-typedef class NovelRT::Graphics::CameraViewChangedEventArgs CameraViewChangedEventArgs;
-typedef class NovelRT::Graphics::GraphicsCharacterRenderData GraphicsCharacterRenderData;
-typedef class NovelRT::Graphics::ImageRect ImageRect;
-typedef class NovelRT::Graphics::RenderingSerivce RenderingService;
-typedef class NovelRT::Graphics::RenderObject RenderObject;
-typedef class NovelRT::Graphics::RGBAConfig RGBAConfig;
-typedef class NovelRT::Graphics::ShaderProgram ShaderProgram;
-typedef class NovelRT::Graphics::TextRect TextRect;
+namespace NovelRT
+{
+  typedef class Transform Transform;
+  typedef struct TransformSortComparison TransformSortComparison;
+  typedef class DebugService DebugService;
+  typedef class LayeringService LayeringService;
+  typedef class LoggingService LoggingService;
+  typedef class NovelRunner NovelRunner;
+}
 
-typedef class NovelRT::Input::BasicInteractionRect BasicInteractionRect;
-typedef class NovelRT::Input::InteractionObject InteractionObject;
-typedef class NovelRT::Input::InteractionService InteractionService;
-typedef enum class NovelRT::Input::KeyCode KeyCode;
-typedef enum class NovelRT::Input::KeyState KeyState;
+namespace NovelRT::Audio
+{
+  typedef class AudioService AudioService;
+}
 
-typedef class NovelRT::Maths::GeoBounds GeoBounds;
+namespace NovelRT::Graphics
+{
+  typedef class BasicFillRect BasicFillRect;
+  typedef class Camera Camera;
+  typedef struct CameraBlock CameraBlock;
+  typedef class CameraViewChangedEventArgs CameraViewChangedEventArgs;
+  typedef struct GraphicsCharacterRenderData GraphicsCharacterRenderData;
+  typedef class ImageRect ImageRect;
+  typedef class RenderingSerivce RenderingService;
+  typedef class RenderObject RenderObject;
+  typedef class RGBAConfig RGBAConfig;
+  typedef struct ShaderProgram ShaderProgram;
+  typedef class TextRect TextRect;
+}
 
-typedef class NovelRT::Timing::StepTimer StepTimer;
+namespace NovelRT::Input
+{
+  typedef class BasicInteractionRect BasicInteractionRect;
+  typedef class InteractionObject InteractionObject;
+  typedef class InteractionService InteractionService;
+  typedef enum class KeyCode KeyCode;
+  typedef enum class KeyState KeyState;
+}
 
-typedef class NovelRT::Utilities::CommonArgs CommonArgs;
-typedef class NovelRT::Utilities::Misc Misc;
+namespace NovelRT::Timing
+{
+  typedef class StepTimer StepTimer;
+}
 
-typedef class NovelRT::Windowing::WindowingService WindowingService;
+namespace NovelRT::Utilities
+{
+  template<typename T>
+  class Lazy;
 
+  typedef struct CommonArgs CommonArgs;
+  typedef class Misc Misc;
+}
 
+namespace NovelRT::Windowing
+{
+  typedef class WindowingService WindowingService;
+}
 
-#include "NovelRT/Transform.h"
-#include "NovelRT/Graphics/CameraBlock.h"
-#include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
-#include "NovelRT/Maths/GeoBounds.h"
-#include "NovelRT/Maths/GeoMatrix4.h"
-#include "NovelRT/Maths/GeoVector.h"
-#include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
+//enums
 #include "NovelRT/Input/KeyCode.h"
 #include "NovelRT/Input/KeyState.h"
+
+//value types
+#include "NovelRT/Maths/GeoVector.h"
+#include "NovelRT/Maths/GeoMatrix4.h"
+#include "NovelRT/Maths/GeoBounds.h"
+#include "NovelRT/Transform.h"
+#include "NovelRT/TransformSortComparison.h"
+#include "NovelRT/Graphics/CameraBlock.h"
+#include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
+#include "NovelRT/Graphics/ShaderProgram.h"
+
+#include "NovelRT/LoggingService.h"
+#include "NovelRT/LayeringService.h"
+#include "NovelRT/Timing/StepTimer.h"
+#include "NovelRT/NovelRunner.h"
+#include "NovelRT/DebugService.h"
+
+#include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Utilities/CommonArgs.h"
-#include "NovelRT/DebugService.h"
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/InteractionService.h"
-#include "NovelRT/LayeringService.h"
-#include "NovelRT/LoggingService.h"
-#include "NovelRT/TransformSortComparison.h"
 #include "NovelRT/Graphics/RenderingService.h"
 #include "NovelRT/Graphics/RenderObject.h"
-#include "NovelRT/NovelRunner.h"
 #include "NovelRT/NovelRT-C/NovelRunner_C.h"
-#include "NovelRT/Timing/StepTimer.h"
+
 #include "NovelRT/Graphics/TextRect.h"
 #include "NovelRT/Utilities/Misc.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
-#include "NovelRT/Graphics/ShaderProgram.h"
 
 
 #endif //!NOVELRT_H
