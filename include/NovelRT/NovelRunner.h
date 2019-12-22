@@ -53,12 +53,12 @@ namespace NovelRT {
 
     int runNovel();
     /// The Rendering Service associated with this Runner.
-    NovelRenderingService* getRenderer() const;
+    Graphics::RenderingService* getRenderer() const;
     /// The Interaction Service associated with this Runner
-    NovelInteractionService* getInteractionService() const;
+    Input::InteractionService* getInteractionService() const;
     /// The Debug Service associated with this Runner.
     DebugService* getDebugService() const;
-    AudioService* getAudioService() const;
+    Audio::AudioService* getAudioService() const;
   };
 }
 

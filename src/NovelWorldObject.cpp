@@ -16,11 +16,11 @@ namespace NovelRT {
 
   Transform::~Transform() = default;
 
-  GeoVector<float> Transform::getPosition() const {
+  Maths::GeoVector<float> Transform::getPosition() const {
     return _position;
   }
 
-  void Transform::setPosition(const GeoVector<float>& value) {
+  void Transform::setPosition(const Maths::GeoVector<float>& value) {
     _position = value;
   }
 
@@ -32,11 +32,11 @@ namespace NovelRT {
     _rotation = value;
   }
 
-  GeoVector<float> Transform::getScale() const {
+  Maths::GeoVector<float> Transform::getScale() const {
     return _scale;
   }
 
-  void Transform::setScale(const GeoVector<float>& value) {
+  void Transform::setScale(const Maths::GeoVector<float>& value) {
     _scale = value;
   }
 

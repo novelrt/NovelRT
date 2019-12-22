@@ -1,6 +1,8 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
+
+typedef void (*NovelUpdateSubscriber)(double);
 namespace NovelRT::Maths
 {
   template<typename T>
@@ -78,36 +80,37 @@ namespace NovelRT::Windowing
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
+#include "NovelRT/Utilities/CommonArgs.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/TransformSortComparison.h"
 #include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
+#include "NovelRT/Graphics/RGBAConfig.h"
+#include "NovelRT/Utilities/Lazy.h"
+#include "NovelRT/Utilities/Misc.h"
 
 #include "NovelRT/LoggingService.h"
 #include "NovelRT/LayeringService.h"
 #include "NovelRT/Timing/StepTimer.h"
 #include "NovelRT/NovelRunner.h"
-#include "NovelRT/DebugService.h"
 
 #include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
-#include "NovelRT/Utilities/Lazy.h"
-#include "NovelRT/Audio/AudioService.h"
-#include "NovelRT/Graphics/BasicFillRect.h"
-#include "NovelRT/Input/BasicInteractionRect.h"
 #include "NovelRT/Graphics/Camera.h"
-#include "NovelRT/Utilities/CommonArgs.h"
-#include "NovelRT/Graphics/ImageRect.h"
-#include "NovelRT/Input/InteractionObject.h"
-#include "NovelRT/Input/InteractionService.h"
-#include "NovelRT/Graphics/RenderingService.h"
 #include "NovelRT/Graphics/RenderObject.h"
-#include "NovelRT/NovelRT-C/NovelRunner_C.h"
-
+#include "NovelRT/Graphics/BasicFillRect.h"
+#include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
-#include "NovelRT/Utilities/Misc.h"
+
+#include "NovelRT/Input/InteractionObject.h"
+#include "NovelRT/Input/BasicInteractionRect.h"
+
+#include "NovelRT/Audio/AudioService.h"
+#include "NovelRT/DebugService.h"
+#include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
-#include "NovelRT/Graphics/RGBAConfig.h"
+#include "NovelRT/Graphics/RenderingService.h"
+
 
 
 #endif //!NOVELRT_H
