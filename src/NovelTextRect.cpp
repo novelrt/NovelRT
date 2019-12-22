@@ -95,7 +95,7 @@ TextRect::TextRect(LayeringService* layeringService,
                                                                _args(args),
                                                                _colourConfig(colourConfig),
                                                                _fontSize(fontSize),
-                                                               _logger(NovelUtilities::CONSOLE_LOG_GFX) {}
+                                                               _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
 std::string TextRect::getText() const {
   return _text;
@@ -104,7 +104,7 @@ void TextRect::setText(const std::string& value) {
   _text = value;
   int difference = _text.length() - _letterRects.size();
   auto modifiedArgs = _args;
-  modifiedArgs.startingScale = GeoVector<float>(50, 50);
+  modifiedArgs.startingScale = Maths::GeoVector<float>(50, 50);
   for (int i = 0; i < difference; i++) {
     _letterRects.push_back(new ImageRect(_layeringService,
                                               _args,
@@ -131,14 +131,14 @@ void TextRect::reloadText() {
     }
     ch = match->second;
 
-    auto currentWorldPosition = GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
+    auto currentWorldPosition = Maths::GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
                                                  (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
                                                      + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
 
     auto target = _letterRects[i++];
     target->setTextureInternal(ch.textureId);
     target->setPosition(currentWorldPosition);
-    target->setScale(GeoVector<float>(ch.size.getX(), ch.size.getY()));
+    target->setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
     target->setActive(true);
     ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
   }

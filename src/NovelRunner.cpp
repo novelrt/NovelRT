@@ -37,7 +37,7 @@ namespace NovelRT {
     return _exitCode;
   }
 
-  RenderingService* NovelRunner::getRenderer() const {
+  Graphics::RenderingService* NovelRunner::getRenderer() const {
     return _novelRenderer.get();
   }
 
@@ -62,7 +62,7 @@ namespace NovelRT {
     }
   }
 
-  InteractionService* NovelRunner::getInteractionService() const {
+  Input::InteractionService* NovelRunner::getInteractionService() const {
     return _novelInteractionService.get();
   }
 
@@ -70,7 +70,7 @@ namespace NovelRT {
     return _novelDebugService.get();
   }
 
-  AudioService* NovelRunner::getAudioService() const {
+  Audio::AudioService* NovelRunner::getAudioService() const {
     return _novelAudioService.get();
   }
 }

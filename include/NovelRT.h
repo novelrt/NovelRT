@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
   typedef class CameraViewChangedEventArgs CameraViewChangedEventArgs;
   typedef struct GraphicsCharacterRenderData GraphicsCharacterRenderData;
   typedef class ImageRect ImageRect;
-  typedef class RenderingSerivce RenderingService;
+  typedef class RenderingService RenderingService;
   typedef class RenderObject RenderObject;
   typedef class RGBAConfig RGBAConfig;
   typedef struct ShaderProgram ShaderProgram;

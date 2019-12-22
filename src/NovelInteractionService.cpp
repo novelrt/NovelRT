@@ -6,7 +6,7 @@
 namespace NovelRT::Input {
   InteractionService::InteractionService(LayeringService* const layeringService)
     : _clickTarget(nullptr), _layeringService(layeringService) {
-    _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, GeoVector<float>(0, 0) });
+    _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
     _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
     _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
   }
@@ -62,7 +62,7 @@ namespace NovelRT::Input {
         break;
       case SDL_MOUSEBUTTONUP: {
         if (sdlEvent.button.button == SDL_BUTTON_LEFT) {
-          auto result = GeoVector<float>(GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
+          auto result = Maths::GeoVector<float>(Maths::GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setX(result.getX());
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setY(result.getY());
           _keyStates[KeyCode::LeftMouseButton] = KeyState::KeyUp;
@@ -89,8 +89,8 @@ namespace NovelRT::Input {
     }
   }
 
-  BasicInteractionRect* InteractionService::getBasicInteractionRect(const GeoVector<float>& startingSize,
-    const CommonArgs& args) {
+  BasicInteractionRect* InteractionService::getBasicInteractionRect(const Maths::GeoVector<float>& startingSize,
+    const Utilities::CommonArgs& args) {
     return new BasicInteractionRect(_layeringService,
       startingSize,
       args,
