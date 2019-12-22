@@ -8,7 +8,7 @@
 namespace NovelRT::Windowing {
   class WindowingService {
   private:
-    GeoVector<float> _windowSize;
+    Maths::GeoVector<float> _windowSize;
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
     LoggingService _logger;
 
@@ -29,7 +29,7 @@ namespace NovelRT::Windowing {
       return SDL_SetWindowTitle(getWindow(), value.c_str());
     }
 
-    inline GeoVector<float> getWindowSize() const {
+    inline Maths::GeoVector<float> getWindowSize() const {
       return _windowSize;
     }
   };

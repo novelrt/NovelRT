@@ -14,7 +14,7 @@ namespace NovelRT::Graphics {
     std::string _text = "";
     std::vector<ImageRect*> _letterRects;
     std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
-    CommonArgs _args;
+    Utilities::CommonArgs _args;
     LoggingService _logger;
     RGBAConfig _colourConfig;
     float _fontSize;
@@ -24,7 +24,7 @@ namespace NovelRT::Graphics {
 
   public:
     TextRect(LayeringService* layeringService,
-      const CommonArgs& args,
+      const Utilities::CommonArgs& args,
       ShaderProgram programId,
       Camera* camera,
       float fontSize,

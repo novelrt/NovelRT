@@ -23,14 +23,14 @@ namespace NovelRT::Graphics {
 
   public:
     ImageRect(LayeringService* layeringService,
-      const CommonArgs& args,
+      const Utilities::CommonArgs& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const std::string& imageDir,
       const RGBAConfig& colourTint);
 
     ImageRect(LayeringService* layeringService,
-      const CommonArgs& args,
+      const Utilities::CommonArgs& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const RGBAConfig& colourTint);
