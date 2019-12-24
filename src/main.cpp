@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
   runner.runOnUpdate([](double delta) {
     const float rotationAmount = 45.0f;
 
-    auto rotation = novelChanRect->getRotation();
+    auto rotation = novelChanRect->getTransform().getRotation();
     rotation += rotationAmount * (float)delta;
 
     if (rotation > 360.0f)
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       rotation -= 360.0f;
     }
 
-    novelChanRect->setRotation(rotation);
+    novelChanRect->getTransform().setRotation(rotation);
   });
 
   auto novelAudio = runner.getAudioService();
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-  auto rect = runner.getInteractionService()->getBasicInteractionRect(NovelRT::Maths::GeoVector<float>(200, 200), playButtonArgs);
+  auto rect = runner.getInteractionService()->createBasicInteractionRect(playButtonArgs);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 

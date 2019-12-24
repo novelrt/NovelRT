@@ -18,7 +18,6 @@ namespace NovelRT::Graphics {
 
     bool initialiseRenderPipeline();
     LoggingService _logger;
-    LayeringService* const _layeringService;
     Windowing::WindowingService* const _windowingService;
     SDL_GLContext _openGLContext;
 
@@ -33,7 +32,7 @@ namespace NovelRT::Graphics {
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
   public:
-    RenderingService(LayeringService* const layeringService, Windowing::WindowingService* const windowingService);
+    RenderingService(Windowing::WindowingService* const windowingService);
     int initialiseRendering();
 
     void tearDown() const;

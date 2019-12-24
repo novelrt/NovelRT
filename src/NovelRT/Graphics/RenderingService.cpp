@@ -178,19 +178,20 @@ namespace NovelRT::Graphics {
   ImageRect* RenderingService::getImageRect(const std::string& filePath,
     const Utilities::CommonArgs& args,
     const RGBAConfig& colourTint) {
-    return new ImageRect(_layeringService, args, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return new ImageRect(args, _texturedRectProgram, getCamera(), filePath, colourTint);
   }
 
   TextRect* RenderingService::getTextRect(const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath,
     const Utilities::CommonArgs& args) {
-    return new TextRect(_layeringService, args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    return new TextRect(args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  RenderingService::RenderingService(LayeringService* const layeringService, Windowing::WindowingService* const windowingService) : _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-                                                                                                                                             _layeringService(layeringService), _windowingService(windowingService),
-                                                                                                                                             _cameraObjectRenderUbo(std::function<GLuint()>([] {
+  RenderingService::RenderingService(Windowing::WindowingService* const windowingService) :
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
+    _windowingService(windowingService),
+    _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
     glGenBuffers(1, &tempHandle);
     glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
@@ -198,20 +199,20 @@ namespace NovelRT::Graphics {
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(CameraBlock));
     return tempHandle;
-    })),
+      })),
     _camera(std::make_unique<Camera>()) {}
 
-    BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const Utilities::CommonArgs& args) {
-      return new BasicFillRect(_layeringService, colourConfig, args, _basicFillRectProgram, getCamera());
-    }
+      BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const Utilities::CommonArgs& args) {
+        return new BasicFillRect(colourConfig, args, _basicFillRectProgram, getCamera());
+      }
 
-    Camera* RenderingService::getCamera() const
-    {
-      return _camera.get();
-    }
+      Camera* RenderingService::getCamera() const
+      {
+        return _camera.get();
+      }
 
-    void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-      GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-      glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-    }
+      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+      }
 }

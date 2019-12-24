@@ -14,17 +14,16 @@ namespace NovelRT::Input {
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
     std::map<KeyCode, Maths::GeoVector<float>> _mousePositionsOnScreenPerButton;
-    LayeringService* const _layeringService;
     Maths::GeoVector<float> _screenSize;
 
   public:
-    InteractionService(LayeringService* const layeringService);
+    InteractionService();
 
     void consumePlayerInput();
 
-    BasicInteractionRect* getBasicInteractionRect(const Maths::GeoVector<float>& startingSize, const Utilities::CommonArgs& args);
+    BasicInteractionRect* createBasicInteractionRect(const Transform& transform);
 
-    void ExecuteClickedInteractable();
+    void executeClickedInteractable();
 
     inline void setScreenSize(const Maths::GeoVector<float>& value) {
       _screenSize = value;

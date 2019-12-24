@@ -7,12 +7,11 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate)
     : _stepTimer(Timing::StepTimer(targetFrameRate)),
-    _layeringService(std::make_unique<LayeringService>()),
     _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<Input::InteractionService>(_layeringService.get())),
+    _novelInteractionService(std::make_unique<Input::InteractionService>()),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(_layeringService.get(), _novelWindowingService.get())) {
+    _novelRenderer(std::make_unique<Graphics::RenderingService>(_novelWindowingService.get())) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
@@ -27,9 +26,8 @@ namespace NovelRT {
       _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
       _novelInteractionService->consumePlayerInput();
       _novelRenderer->beginFrame();
-      _layeringService->executeAllObjectBehaviours();
       _novelRenderer->endFrame();
-      _novelInteractionService->ExecuteClickedInteractable();
+      _novelInteractionService->executeClickedInteractable();
     }
 
     _novelRenderer->tearDown();

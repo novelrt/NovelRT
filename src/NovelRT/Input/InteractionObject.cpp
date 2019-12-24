@@ -2,12 +2,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  InteractionObject::InteractionObject(LayeringService* layeringService,
-    const Utilities::CommonArgs& args,
-    const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
-    : Transform(layeringService, args) {
+  InteractionObject::InteractionObject(const Transform& transform, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
+    : WorldObject(transform) {
     _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
-
   }
 
   void InteractionObject::executeObjectBehaviour() {

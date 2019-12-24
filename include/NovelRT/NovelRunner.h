@@ -15,7 +15,6 @@ namespace NovelRT {
   private:
     Timing::StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
-    std::unique_ptr<LayeringService> _layeringService;
     std::unique_ptr<DebugService> _novelDebugService;
     std::unique_ptr<Input::InteractionService> _novelInteractionService;
     std::unique_ptr<Audio::AudioService> _novelAudioService;

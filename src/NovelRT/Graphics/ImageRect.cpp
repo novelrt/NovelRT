@@ -6,14 +6,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  ImageRect::ImageRect(LayeringService* layeringService,
-    const Utilities::CommonArgs& args,
+  ImageRect::ImageRect(const Transform& transform,
     ShaderProgram shaderProgram,
     Camera* camera,
     const std::string& imageDir,
     const RGBAConfig& colourTint) :
-    RenderObject(layeringService,
-      args,
+    RenderObject(transform,
       shaderProgram,
       camera),
     _imageDir(imageDir),
@@ -27,16 +25,10 @@ namespace NovelRT::Graphics {
         _colourTint(colourTint),
         _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
-      ImageRect::ImageRect(LayeringService* layeringService,
-        const Utilities::CommonArgs& args,
+      ImageRect::ImageRect(const Transform& transform,
         ShaderProgram shaderProgram,
         Camera* camera,
-        const RGBAConfig& colourTint) : ImageRect(layeringService, args, shaderProgram, camera, "", colourTint) {
-
-      }
-
-      void ImageRect::setScale(const Maths::GeoVector<float>& value) {
-        Transform::_scale = value;
+        const RGBAConfig& colourTint) : ImageRect(transform, shaderProgram, camera, "", colourTint) {
       }
 
       void ImageRect::drawObject() {

@@ -2,9 +2,7 @@
 #define NOVELRT_H
 
 
-typedef void (*NovelUpdateSubscriber)(double);
-namespace NovelRT::Maths
-{
+namespace NovelRT::Maths {
   template<typename T>
   class GeoVector;
 
@@ -14,23 +12,20 @@ namespace NovelRT::Maths
   typedef class GeoBounds GeoBounds;
 }
 
-namespace NovelRT
-{
+namespace NovelRT {
+  typedef void (*NovelUpdateSubscriber)(double);
   typedef class Transform Transform;
   typedef struct TransformSortComparison TransformSortComparison;
   typedef class DebugService DebugService;
-  typedef class LayeringService LayeringService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
 }
 
-namespace NovelRT::Audio
-{
+namespace NovelRT::Audio {
   typedef class AudioService AudioService;
 }
 
-namespace NovelRT::Graphics
-{
+namespace NovelRT::Graphics {
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
   typedef struct CameraBlock CameraBlock;
@@ -44,8 +39,7 @@ namespace NovelRT::Graphics
   typedef class TextRect TextRect;
 }
 
-namespace NovelRT::Input
-{
+namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
@@ -53,13 +47,11 @@ namespace NovelRT::Input
   typedef enum class KeyState KeyState;
 }
 
-namespace NovelRT::Timing
-{
+namespace NovelRT::Timing {
   typedef class StepTimer StepTimer;
 }
 
-namespace NovelRT::Utilities
-{
+namespace NovelRT::Utilities {
   template<typename T>
   class Lazy;
 
@@ -67,8 +59,7 @@ namespace NovelRT::Utilities
   typedef class Misc Misc;
 }
 
-namespace NovelRT::Windowing
-{
+namespace NovelRT::Windowing {
   typedef class WindowingService WindowingService;
 }
 
@@ -82,7 +73,6 @@ namespace NovelRT::Windowing
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Utilities/CommonArgs.h"
 #include "NovelRT/Transform.h"
-#include "NovelRT/TransformSortComparison.h"
 #include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
@@ -91,9 +81,9 @@ namespace NovelRT::Windowing
 #include "NovelRT/Utilities/Misc.h"
 
 #include "NovelRT/LoggingService.h"
-#include "NovelRT/LayeringService.h"
 #include "NovelRT/Timing/StepTimer.h"
 #include "NovelRT/NovelRunner.h"
+#include "NovelRT/WorldObject.h"
 
 #include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
 #include "NovelRT/Graphics/Camera.h"

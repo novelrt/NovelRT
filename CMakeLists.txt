@@ -80,9 +80,7 @@ set(NOVELRT_HEADERS
   include/NovelRT/Graphics/ImageRect.h
   include/NovelRT/Input/InteractionObject.h
   include/NovelRT/Input/InteractionService.h
-  include/NovelRT/LayeringService.h
   include/NovelRT/LoggingService.h
-  include/NovelRT/TransformSortComparison.h
   include/NovelRT/Graphics/RenderingService.h
   include/NovelRT/Graphics/RenderObject.h
   include/NovelRT/Utilities/Misc.h
@@ -97,6 +95,7 @@ set(NOVELRT_HEADERS
   include/NovelRT/Graphics/CameraBlock.h
   include/NovelRT/Windowing/WindowingService.h
   include/NovelRT/Input/KeyState.h
+  include/NovelRT/WorldObject.h
   include/NovelRT.h)
 
 set(NOVELRT_SOURCES
@@ -109,7 +108,6 @@ set(NOVELRT_SOURCES
   src/NovelRT/Graphics/ImageRect.cpp
   src/NovelRT/Input/InteractionObject.cpp
   src/NovelRT/Input/InteractionService.cpp
-  src/NovelRT/LayeringService.cpp
   src/NovelRT/LoggingService.cpp
   src/NovelRT/Graphics/RenderingService.cpp
   src/NovelRT/Graphics/RenderObject.cpp
@@ -118,7 +116,8 @@ set(NOVELRT_SOURCES
   src/NovelRT/Graphics/TextRect.cpp
   src/NovelRT/Graphics/RGBAConfig.cpp
   src/NovelRT/Graphics/Camera.cpp
-  src/NovelRT/Windowing/WindowingService.cpp)
+  src/NovelRT/Windowing/WindowingService.cpp
+  src/NovelRT/WorldObject.cpp)
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
