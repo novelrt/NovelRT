@@ -7,7 +7,9 @@
 
 namespace NovelRT::Graphics {
   void TextRect::drawObject() {
-    return;
+    for (auto& rect : _letterRects) {
+      rect->executeObjectBehaviour();
+    }
   }
 
   RGBAConfig TextRect::getColourConfig() const {
