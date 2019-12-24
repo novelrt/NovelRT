@@ -65,7 +65,7 @@ link_libraries(${LUA_LIBRARY})
 find_package(Doxygen QUIET)
 include_directories(include)
 
-set(NOVELRT_HEADERS
+set(NOVELRT_LIBRARY_HEADERS
   include/NovelRT/Transform.h
   include/NovelRT/Maths/GeoBounds.h
   include/NovelRT/Maths/GeoVector.h
@@ -97,7 +97,7 @@ set(NOVELRT_HEADERS
   include/NovelRT/WorldObject.h
   include/NovelRT.h)
 
-set(NOVELRT_SOURCES
+set(NOVELRT_LIBRARY_SOURCES
   src/NovelRT/Transform.cpp
   src/NovelRT/Maths/GeoBounds.cpp
   src/NovelRT/Audio/AudioService.cpp
@@ -154,14 +154,6 @@ target_link_libraries(NovelRT ${NOVELRT_EXECUTABLE_LINK_LIBRARIES})
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
-
-set(NOVELRT_LIBRARY_HEADERS
-  ${NOVELRT_HEADERS}
-)
-
-set(NOVELRT_LIBRARY_SOURCES
-  ${NOVELRT_SOURCES}
-)
 
 set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
