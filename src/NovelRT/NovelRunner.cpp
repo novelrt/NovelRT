@@ -26,6 +26,7 @@ namespace NovelRT {
       _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
       _novelInteractionService->consumePlayerInput();
       _novelRenderer->beginFrame();
+      raiseSceneConstructionRequested();
       _novelRenderer->endFrame();
       _novelInteractionService->executeClickedInteractable();
     }
