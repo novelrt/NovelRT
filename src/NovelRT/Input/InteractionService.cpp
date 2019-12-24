@@ -4,15 +4,16 @@
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT::Input {
-  InteractionService::InteractionService()
-    : _clickTarget(nullptr) {
+  InteractionService::InteractionService() :
+    _clickTarget(nullptr),
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
     _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
     _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[target->getSubscribedKey()] != KeyState::KeyDown
+    if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && _clickTarget == nullptr)
       _clickTarget = target;
@@ -22,7 +23,10 @@ namespace NovelRT::Input {
     SDL_Event sdlEvent;
 
     for (auto& pair : _keyStates) {
+
+      if (pair.second == KeyState::KeyDown) _keyStates[pair.first] = KeyState::KeyDownHeld;
       if (pair.second != KeyState::KeyUp) continue;
+
       pair.second = KeyState::Idle;
     }
 
@@ -33,28 +37,17 @@ namespace NovelRT::Input {
         return;
       case SDL_MOUSEBUTTONDOWN: {
         auto result = Maths::GeoVector<float>(Maths::GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
-
         if (sdlEvent.button.button == SDL_BUTTON_LEFT) {
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setX(result.getX());
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setY(result.getY());
 
-          if (_keyStates[KeyCode::LeftMouseButton] == KeyState::KeyDown) {
-            _keyStates[KeyCode::LeftMouseButton] = KeyState::KeyDownHeld;
-          }
-          else {
-            _keyStates[KeyCode::LeftMouseButton] = KeyState::KeyDown;
-          }
+          _keyStates[KeyCode::LeftMouseButton] = KeyState::KeyDown;
         }
         else if (sdlEvent.button.button == SDL_BUTTON_RIGHT) {
           _mousePositionsOnScreenPerButton[KeyCode::RightMouseButton].setX(result.getX());
           _mousePositionsOnScreenPerButton[KeyCode::RightMouseButton].setY(result.getY());
 
-          if (_keyStates[KeyCode::RightMouseButton] == KeyState::KeyDown) {
-            _keyStates[KeyCode::RightMouseButton] = KeyState::KeyDownHeld;
-          }
-          else {
-            _keyStates[KeyCode::RightMouseButton] = KeyState::KeyDown;
-          }
+          _keyStates[KeyCode::RightMouseButton] = KeyState::KeyDown;
         }
 
       }
@@ -66,19 +59,15 @@ namespace NovelRT::Input {
           _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setY(result.getY());
           _keyStates[KeyCode::LeftMouseButton] = KeyState::KeyUp;
         }
+      }
         break;
-      case SDL_KEYDOWN:
+      case SDL_KEYDOWN: {
         auto keyDownCode = static_cast<KeyCode>(sdlEvent.key.keysym.sym); //TODO: This is gonna break in certain situations. New input system should be implemented ASAP.
         _keyStates.insert({ keyDownCode, KeyState::Idle });
-        if (_keyStates[keyDownCode] == KeyState::KeyDown) {
-          _keyStates[keyDownCode] = KeyState::KeyDownHeld;
-        }
-        else {
-          _keyStates[keyDownCode] = KeyState::KeyDown;
-        }
+        _keyStates[keyDownCode] = KeyState::KeyDown;
 
       }
-         break;
+        break;
       case SDL_KEYUP: {
         auto keyUpCode = static_cast<KeyCode>(sdlEvent.key.keysym.sym); //TODO: This is gonna break in certain situations. New input system should be implemented ASAP.
         _keyStates[keyUpCode] = KeyState::KeyUp;

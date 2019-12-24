@@ -36,6 +36,7 @@ NovelRT::Graphics::TextRect* textRect;
 NovelRT::Graphics::BasicFillRect* lineRect;
 NovelRT::Graphics::BasicFillRect* playAudioButton;
 NovelRT::Graphics::TextRect* playAudioText;
+NovelRT::Input::BasicInteractionRect* interactionRect;
 
 int main(int argc, char *argv[])
 {
@@ -78,6 +79,7 @@ int main(int argc, char *argv[])
 
     auto rotation = novelChanRect->getTransform().getRotation();
     rotation += rotationAmount * (float)delta;
+    novelChanRect->getTransform().setRotation(rotation);
 
     if (rotation > 360.0f)
     {
@@ -94,13 +96,13 @@ int main(int argc, char *argv[])
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-  auto rect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform);
+  interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
+  interactionRect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
-    console.logInternal("Test button!", loggingLevel);
+    console.log("Test button!", loggingLevel);
     //switch (counter) {
     //  case 1:
     //    novelAudio->fadeMusicOut(500);
@@ -147,6 +149,7 @@ int main(int argc, char *argv[])
     lineRect->executeObjectBehaviour();
     playAudioButton->executeObjectBehaviour();
     playAudioText->executeObjectBehaviour();
+    interactionRect->executeObjectBehaviour();
     });
 
   runner.runNovel();

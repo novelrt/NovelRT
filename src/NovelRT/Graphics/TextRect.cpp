@@ -23,10 +23,9 @@ namespace NovelRT::Graphics {
 
   void TextRect::configureObjectBuffers() {
 
-    if (_fontCharacters.size() > 0)
-      _fontCharacters.clear();
-
     if (_previousFontFileDir != _fontFileDir) {
+      if (_fontCharacters.size() > 0)
+        _fontCharacters.clear();
       FT_Library freeTypeLoader;
       if (FT_Init_FreeType(&freeTypeLoader)) {
         _logger.logErrorLine("Failed to initialise Freetype.");
