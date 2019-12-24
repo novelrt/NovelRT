@@ -28,8 +28,6 @@ namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
-  typedef enum class KeyCode KeyCode;
-  typedef enum class KeyState KeyState;
 }
 
 namespace NovelRT::Timing {
