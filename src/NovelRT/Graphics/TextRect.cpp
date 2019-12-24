@@ -81,18 +81,17 @@ namespace NovelRT::Graphics {
     reloadText();
   }
 
-  TextRect::TextRect(const Utilities::CommonArgs& args,
+  TextRect::TextRect(const Transform& transform,
     ShaderProgram shaderProgram,
     Camera* camera,
     float fontSize,
     const std::string& fontFileDir,
     const RGBAConfig& colourConfig) :
     RenderObject(
-      args,
+      transform,
       shaderProgram,
       camera),
     _fontFileDir(fontFileDir),
-    _args(args),
     _colourConfig(colourConfig),
     _fontSize(fontSize),
     _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
@@ -103,11 +102,11 @@ namespace NovelRT::Graphics {
   void TextRect::setText(const std::string& value) {
     _text = value;
     int difference = _text.length() - _letterRects.size();
-    auto modifiedArgs = _args;
-    modifiedArgs.startingScale = Maths::GeoVector<float>(50, 50);
+    auto modifiedTransform = getTransform();
+    modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
     for (int i = 0; i < difference; i++) {
       _letterRects.push_back(new ImageRect(
-        _args,
+        modifiedTransform,
         _shaderProgram,
         _camera,
         _colourConfig));

@@ -14,7 +14,7 @@ namespace NovelRT {
     int _layer;
 
   public:
-    Transform(const Utilities::CommonArgs& args);
+    Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale);
 
   inline Maths::GeoVector<float> getPosition() const {
     return _position;

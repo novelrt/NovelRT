@@ -75,7 +75,6 @@ set(NOVELRT_HEADERS
   include/NovelRT/Audio/AudioService.h
   include/NovelRT/Graphics/BasicFillRect.h
   include/NovelRT/Input/BasicInteractionRect.h
-  include/NovelRT/Utilities/CommonArgs.h
   include/NovelRT/DebugService.h
   include/NovelRT/Graphics/ImageRect.h
   include/NovelRT/Input/InteractionObject.h

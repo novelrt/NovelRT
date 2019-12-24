@@ -176,16 +176,16 @@ namespace NovelRT::Graphics {
   }
 
   ImageRect* RenderingService::getImageRect(const std::string& filePath,
-    const Utilities::CommonArgs& args,
+    const Transform& transform,
     const RGBAConfig& colourTint) {
-    return new ImageRect(args, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return new ImageRect(transform, _texturedRectProgram, getCamera(), filePath, colourTint);
   }
 
   TextRect* RenderingService::getTextRect(const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath,
-    const Utilities::CommonArgs& args) {
-    return new TextRect(args, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    const Transform& transform) {
+    return new TextRect(transform, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
   RenderingService::RenderingService(Windowing::WindowingService* const windowingService) :
@@ -202,17 +202,16 @@ namespace NovelRT::Graphics {
       })),
     _camera(std::make_unique<Camera>()) {}
 
-      BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const Utilities::CommonArgs& args) {
-        return new BasicFillRect(colourConfig, args, _basicFillRectProgram, getCamera());
-      }
+  BasicFillRect* RenderingService::getBasicFillRect(const RGBAConfig& colourConfig, const Transform& transform) {
+    return new BasicFillRect(colourConfig, transform, _basicFillRectProgram, getCamera());
+  }
 
-      Camera* RenderingService::getCamera() const
-      {
-        return _camera.get();
-      }
+  Camera* RenderingService::getCamera() const {
+    return _camera.get();
+  }
 
-      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-      }
+  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+    GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+    glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+  }
 }

@@ -43,47 +43,27 @@ int main(int argc, char *argv[])
   lua_close(L);
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
-  NovelRT::Utilities::CommonArgs novelChanArgs;
-  novelChanArgs.layer = 0;
-  novelChanArgs.orderInLayer = 0;
-  novelChanArgs.startingPosition.setX(1920 / 2);
-  novelChanArgs.startingPosition.setY(1080 / 2);
-  novelChanArgs.startingScale = NovelRT::Maths::GeoVector<float>(456, 618);
 
-  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanArgs, NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+  auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 0, NovelRT::Maths::GeoVector<float>(456, 618));
 
-  auto rectArgs = NovelRT::Utilities::CommonArgs();
-  rectArgs.startingPosition = novelChanArgs.startingPosition;
-  rectArgs.startingPosition.setX(rectArgs.startingPosition.getX() + 400);
-  rectArgs.startingPosition.setY(rectArgs.startingPosition.getY());
-  rectArgs.layer = 0;
-  rectArgs.orderInLayer = 2;
-  rectArgs.startingRotation = 0.0f;
+  novelChanRect = runner.getRenderer()->getImageRect("novel-chan.png", novelChanTransform, NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
-  auto textRect = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rectArgs);
+  auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
+
+  auto textRect = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf", rubyGnomerTextTransform);
   textRect->setText("RubyGnomer");
 
-  //auto lineArgs = rectArgs;
-  //lineArgs.startingScale.setY(2.0f);
-  //lineArgs.startingScale.setX(1000.0f);
-  //lineArgs.startingPosition = rectArgs.startingPosition;
-  //lineArgs.startingPosition.setY(lineArgs.startingPosition.getY() + 2);
+  auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(2.0f, 1000.0f));
 
-  //auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::RGBAConfig(255, 0, 0, 255), lineArgs);
+  auto lineRect = runner.getRenderer()->getBasicFillRect(NovelRT::Graphics::RGBAConfig(255, 0, 0, 255), lineTransform);
 
-  auto playButtonArgs = NovelRT::Utilities::CommonArgs();
-  playButtonArgs.startingPosition = novelChanArgs.startingPosition;
-  playButtonArgs.startingPosition.setX(rectArgs.startingPosition.getX() - 800);
-  playButtonArgs.layer = 0;
-  playButtonArgs.orderInLayer = 1;
-  playButtonArgs.startingRotation = 0.0f;
-  playButtonArgs.startingScale = NovelRT::Maths::GeoVector<float>(200, 200);
-
-  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::Graphics::RGBAConfig(255, 0, 0, 255), playButtonArgs);
-  auto playAudioTextArgs = playButtonArgs;
-  playAudioTextArgs.startingPosition.setX(playButtonArgs.startingPosition.getX() - 75);
-  playButtonArgs.orderInLayer = 1;
-  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextArgs);
+  auto playButtonTransform = NovelRT::Transform(novelChanTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(200, 200));
+  auto playAudioButton = runner.getRenderer()->getBasicFillRect(NovelRT::Graphics::RGBAConfig(255, 0, 0, 255), playButtonTransform);
+  auto playAudioTextTransform = playButtonTransform;
+  auto vec = playButtonTransform.getPosition();
+  vec.setX(playButtonTransform.getPosition().getX() - 75);
+  playAudioTextTransform.setPosition(vec);
+  auto playAudioText = runner.getRenderer()->getTextRect(NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf", playAudioTextTransform);
   playAudioText->setText("Play Audio");
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
@@ -109,51 +89,51 @@ int main(int argc, char *argv[])
   novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
   novelAudio->setGlobalVolume(0.5);
 
-  auto rect = runner.getInteractionService()->createBasicInteractionRect(playButtonArgs);
+  auto rect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
   rect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
-    //runner.getRenderer()->setWindowTitle("NovelRTTest - Count = " + std::to_string(counter));
-    switch (counter) {
-      case 1:
-        novelAudio->fadeMusicOut(500);
-        console.logInternal("Commencing Audio Test...", loggingLevel);
-        console.logInternal("Press the button to launch each test.", loggingLevel);
-        console.logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
-        break;
-      case 2:
-        console.logInternal("Looping 3 times...", loggingLevel);
-        novelAudio->playSound("w0nd0ws.wav", 3);
-        break;
-      case 3:
-        console.logInternal("Pan Left (via Panning)...", loggingLevel);
-        novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 4:
-        console.logInternal("Pan Right (via 3D Position)...", loggingLevel);
-        novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 5:
-        novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-        console.logInternal("Low Volume...", loggingLevel);
-        novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 6:
-        novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
-        console.logInternal("Success! Click once more to play music again.", loggingLevel);
-        novelAudio->setSoundVolume("w0nd0ws.wav", 64);
-        novelAudio->playSound("jojo.wav", 0);
-        break;
-      default:
-        counter = 0;
-        novelAudio->fadeMusicIn("sparta.wav", -1, 500);
-        break;
-    }
+    console.logInternal("Test button!", loggingLevel);
+    //switch (counter) {
+    //  case 1:
+    //    novelAudio->fadeMusicOut(500);
+    //    console.logInternal("Commencing Audio Test...", loggingLevel);
+    //    console.logInternal("Press the button to launch each test.", loggingLevel);
+    //    console.logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
+    //    break;
+    //  case 2:
+    //    console.logInternal("Looping 3 times...", loggingLevel);
+    //    novelAudio->playSound("w0nd0ws.wav", 3);
+    //    break;
+    //  case 3:
+    //    console.logInternal("Pan Left (via Panning)...", loggingLevel);
+    //    novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
+    //    novelAudio->playSound("w0nd0ws.wav", 0);
+    //    break;
+    //  case 4:
+    //    console.logInternal("Pan Right (via 3D Position)...", loggingLevel);
+    //    novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
+    //    novelAudio->playSound("w0nd0ws.wav", 0);
+    //    break;
+    //  case 5:
+    //    novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
+    //    console.logInternal("Low Volume...", loggingLevel);
+    //    novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
+    //    novelAudio->playSound("w0nd0ws.wav", 0);
+    //    break;
+    //  case 6:
+    //    novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
+    //    console.logInternal("Success! Click once more to play music again.", loggingLevel);
+    //    novelAudio->setSoundVolume("w0nd0ws.wav", 64);
+    //    novelAudio->playSound("jojo.wav", 0);
+    //    break;
+    //  default:
+    //    counter = 0;
+    //    novelAudio->fadeMusicIn("sparta.wav", -1, 500);
+    //    break;
+    //}
   });
 
   runner.runNovel();
