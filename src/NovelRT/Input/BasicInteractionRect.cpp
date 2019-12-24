@@ -3,17 +3,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  BasicInteractionRect::BasicInteractionRect(LayeringService* layeringService,
-    const Maths::GeoVector<float>& size,
-    const Utilities::CommonArgs& args,
-    const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
-    : InteractionObject(layeringService, args, notifyHasBeenDrawnObject) {
-
-  }
+  BasicInteractionRect::BasicInteractionRect(const Transform& transform, const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
+    : InteractionObject(transform, notifyHasBeenDrawnObject) {}
 
   bool BasicInteractionRect::validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const {
-    auto position = getPosition();
-    auto size = getScale();
-    return Maths::GeoBounds(position, size, getRotation()).pointIsWithinBounds(mousePosition);
+    auto position = getTransformReadonly().getPosition();
+    auto size = getTransformReadonly().getScale();
+    return Maths::GeoBounds(position, size, getTransformReadonly().getRotation()).pointIsWithinBounds(mousePosition);
   }
 }

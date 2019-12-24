@@ -12,38 +12,33 @@ namespace NovelRT {
     bool _active = true;
     int _orderInLayer;
     int _layer;
-    LayeringService* _layeringService;
 
   public:
-    Transform(LayeringService* layeringService, const Utilities::CommonArgs& args);
+    Transform(const Utilities::CommonArgs& args);
 
-    virtual ~Transform();
+  inline Maths::GeoVector<float> getPosition() const {
+    return _position;
+  }
 
-    virtual Maths::GeoVector<float> getPosition() const;
+  inline void setPosition(const Maths::GeoVector<float>& value) {
+    _position = value;
+  }
 
-    virtual void setPosition(const Maths::GeoVector<float>& value);
+  inline float getRotation() const {
+    return _rotation;
+  }
 
-    virtual float getRotation() const;
+  inline void setRotation(const float value) {
+    _rotation = value;
+  }
 
-    virtual void setRotation(float value);
+  inline Maths::GeoVector<float> getScale() const {
+    return _scale;
+  }
 
-    virtual Maths::GeoVector<float> getScale() const;
-
-    virtual void setScale(const Maths::GeoVector<float>& value);
-
-    virtual int getLayer() const;
-
-    virtual void setLayer(int value);
-
-    virtual int getOrderInLayer() const;
-
-    virtual void setOrderInLayer(int value);
-
-    virtual bool getActive() const;
-
-    virtual void setActive(bool value);
-
-    virtual void executeObjectBehaviour() = 0;
+  inline void setScale(const Maths::GeoVector<float>& value) {
+    _scale = value;
+  }
   };
 }
 #endif //NOVELRT_NOVELWORLDOBJECT_H

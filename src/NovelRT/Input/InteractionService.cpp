@@ -4,8 +4,8 @@
 #include <SDL2/SDL_events.h>
 
 namespace NovelRT::Input {
-  InteractionService::InteractionService(LayeringService* const layeringService)
-    : _clickTarget(nullptr), _layeringService(layeringService) {
+  InteractionService::InteractionService()
+    : _clickTarget(nullptr) {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
     _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
     _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
@@ -14,8 +14,7 @@ namespace NovelRT::Input {
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
     if (_keyStates[target->getSubscribedKey()] != KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
-      && (_clickTarget == nullptr || (target->getLayer() >= _clickTarget->getLayer()
-        && target->getOrderInLayer() >= _clickTarget->getOrderInLayer())))
+      && _clickTarget == nullptr)
       _clickTarget = target;
   }
 
@@ -89,14 +88,10 @@ namespace NovelRT::Input {
     }
   }
 
-  BasicInteractionRect* InteractionService::getBasicInteractionRect(const Maths::GeoVector<float>& startingSize,
-    const Utilities::CommonArgs& args) {
-    return new BasicInteractionRect(_layeringService,
-      startingSize,
-      args,
-      [this](InteractionObject* x) { HandleInteractionDraw(x); });
+  BasicInteractionRect* InteractionService::createBasicInteractionRect(const Transform& transform) {
+    return new BasicInteractionRect(transform, [this](InteractionObject* x) { HandleInteractionDraw(x); });
   }
-  void InteractionService::ExecuteClickedInteractable() {
+  void InteractionService::executeClickedInteractable() {
     if (_clickTarget == nullptr) return;
 
     _clickTarget->raiseInteracted();

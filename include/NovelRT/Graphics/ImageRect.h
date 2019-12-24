@@ -22,21 +22,18 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    ImageRect(LayeringService* layeringService,
-      const Utilities::CommonArgs& args,
+    ImageRect(const Transform& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const std::string& imageDir,
       const RGBAConfig& colourTint);
 
-    ImageRect(LayeringService* layeringService,
-      const Utilities::CommonArgs& args,
+    ImageRect(const Transform& args,
       ShaderProgram shaderProgram,
       Camera* camera,
       const RGBAConfig& colourTint);
 
     void drawObject() final;
-    void setScale(const Maths::GeoVector<float>& value) final;
 
     void setTextureInternal(GLuint textureId);
 

@@ -9,7 +9,7 @@
 
 namespace NovelRT::Graphics {
 
-class RenderObject : public Transform {
+class RenderObject : public WorldObject {
 
 protected:
   virtual void drawObject() = 0;
@@ -29,13 +29,9 @@ protected:
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:
-  RenderObject(LayeringService* layeringService,
-                    const Utilities::CommonArgs& args, ShaderProgram shaderProgram, Camera* camera);
+  RenderObject(const Transform& transform, ShaderProgram shaderProgram, Camera* camera);
 
   void executeObjectBehaviour() final;
-  void setRotation(const float value) override;
-  void setScale(const Maths::GeoVector<float>& value) override;
-  void setPosition(const Maths::GeoVector<float>& value) override;
   virtual ~RenderObject();
   };
 }
