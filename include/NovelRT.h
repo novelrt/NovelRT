@@ -75,6 +75,4 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
 
-
-
 #endif //!NOVELRT_H
