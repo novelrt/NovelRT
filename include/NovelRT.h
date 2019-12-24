@@ -1,21 +1,10 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
-
-namespace NovelRT::Maths {
-  template<typename T>
-  class GeoVector;
-
-  template<typename T>
-  class GeoMatrix4;
-
-  typedef class GeoBounds GeoBounds;
-}
-
 namespace NovelRT {
   typedef void (*NovelUpdateSubscriber)(double);
-  typedef class Transform Transform;
-  typedef struct TransformSortComparison TransformSortComparison;
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
@@ -28,14 +17,10 @@ namespace NovelRT::Audio {
 namespace NovelRT::Graphics {
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
-  typedef struct CameraBlock CameraBlock;
   typedef class CameraViewChangedEventArgs CameraViewChangedEventArgs;
-  typedef struct GraphicsCharacterRenderData GraphicsCharacterRenderData;
   typedef class ImageRect ImageRect;
   typedef class RenderingService RenderingService;
   typedef class RenderObject RenderObject;
-  typedef class RGBAConfig RGBAConfig;
-  typedef struct ShaderProgram ShaderProgram;
   typedef class TextRect TextRect;
 }
 
@@ -49,13 +34,6 @@ namespace NovelRT::Input {
 
 namespace NovelRT::Timing {
   typedef class StepTimer StepTimer;
-}
-
-namespace NovelRT::Utilities {
-  template<typename T>
-  class Lazy;
-
-  typedef class Misc Misc;
 }
 
 namespace NovelRT::Windowing {
