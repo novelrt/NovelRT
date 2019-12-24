@@ -43,12 +43,9 @@ namespace NovelRT {
       if (value) {
         auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-        auto textArgs = Utilities::CommonArgs();
-        textArgs.startingPosition = Maths::GeoVector<float>(0, 1080 - 16);
-        textArgs.layer = std::numeric_limits<int32_t>::max();
-        textArgs.orderInLayer = std::numeric_limits<int32_t>::max();
+        auto transform = Transform(Maths::GeoVector<float>(0, 1080 - 16), 0, Maths::GeoVector<float>(1.0f, 1.0f));
 
-        _fpsCounter = _runner->getRenderer()->getTextRect(yellow, 16, "Gayathri-Regular.ttf", textArgs);
+        _fpsCounter = _runner->getRenderer()->getTextRect(yellow, 16, "Gayathri-Regular.ttf", transform);
         updateFpsCounter();
       }
     }

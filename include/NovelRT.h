@@ -55,7 +55,6 @@ namespace NovelRT::Utilities {
   template<typename T>
   class Lazy;
 
-  typedef struct CommonArgs CommonArgs;
   typedef class Misc Misc;
 }
 
@@ -71,7 +70,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
-#include "NovelRT/Utilities/CommonArgs.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"

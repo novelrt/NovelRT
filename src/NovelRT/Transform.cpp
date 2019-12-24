@@ -2,9 +2,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  Transform::Transform(const Utilities::CommonArgs& args) {
-    setPosition(args.startingPosition);
-    setRotation(args.startingRotation);
-    setScale(args.startingScale);
+  Transform::Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) {
+    setPosition(position);
+    setRotation(rotation);
+    setScale(scale);
   }
 }

@@ -26,7 +26,7 @@ namespace NovelRT::Graphics {
   }
 
   void RenderObject::executeObjectBehaviour() {
-    if (!_bufferInitialised) {
+    if (!_bufferInitialised || _isDirty) {
       configureObjectBuffers();
       _bufferInitialised = true;
     }
