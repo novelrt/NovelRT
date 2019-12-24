@@ -26,10 +26,15 @@ namespace NovelRT::Graphics {
   }
 
   void RenderObject::executeObjectBehaviour() {
-    if (!_bufferInitialised || _isDirty) {
+    if (_isDirty) {
+      _finalViewMatrixData.reset();
+      _bufferInitialised = false;
+      _isDirty = false;
+    }
+
+    if (!_bufferInitialised) {
       configureObjectBuffers();
       _bufferInitialised = true;
-      _isDirty = false;
     }
     drawObject();
   }

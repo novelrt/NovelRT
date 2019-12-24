@@ -15,6 +15,7 @@ namespace NovelRT::Input {
     std::map<KeyCode, KeyState> _keyStates;
     std::map<KeyCode, Maths::GeoVector<float>> _mousePositionsOnScreenPerButton;
     Maths::GeoVector<float> _screenSize;
+    LoggingService _logger;
 
   public:
     InteractionService();
