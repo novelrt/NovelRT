@@ -12,6 +12,9 @@ namespace NovelRT {
  * The base class for creating a visual novel.
  */
   class NovelRunner {
+
+  NOVELRT_PARAMETERLESS_EVENT(SceneConstructionRequested)
+
   private:
     Timing::StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;

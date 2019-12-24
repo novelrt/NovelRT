@@ -29,6 +29,7 @@ namespace NovelRT::Graphics {
     if (!_bufferInitialised || _isDirty) {
       configureObjectBuffers();
       _bufferInitialised = true;
+      _isDirty = false;
     }
     drawObject();
   }
