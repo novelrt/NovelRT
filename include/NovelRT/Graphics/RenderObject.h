@@ -15,8 +15,8 @@ protected:
   virtual void drawObject() = 0;
   virtual void configureObjectBuffers();
   static GLuint generateStandardBuffer();
-  CameraBlock generateViewData();
-  CameraBlock generateCameraBlock();
+  Maths::GeoMatrix4<float> generateViewData();
+  Maths::GeoMatrix4<float> generateCameraBlock();
 
   Utilities::Lazy<GLuint> _vertexBuffer;
   Utilities::Lazy<GLuint> _vertexArrayObject;
@@ -24,8 +24,8 @@ protected:
   std::vector<GLfloat> _vertexBufferData;
   bool _bufferInitialised = false;
   Camera* _camera;
-  CameraBlock _uboCameraData;
-  Utilities::Lazy<CameraBlock> _finalViewMatrixData;
+  Maths::GeoMatrix4<float> _uboCameraData;
+  Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
   void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
 public:

@@ -7,12 +7,12 @@
 namespace NovelRT::Graphics {
 
   void RenderObject::OnCameraViewChanged(CameraViewChangedEventArgs args) {
-    _uboCameraData = CameraBlock(args.cameraMatrix.getUnderlyingMatrix());
+    _uboCameraData = args.cameraMatrix;
   }
 
   RenderObject::RenderObject(const Transform& transform, ShaderProgram shaderProgram, Camera* camera) :
     WorldObject(transform),
-    _finalViewMatrixData(Utilities::Lazy<CameraBlock>(std::function<CameraBlock()>(std::bind(&RenderObject::generateViewData, this)))),
+    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
     GLuint tempVao;
@@ -21,7 +21,7 @@ namespace NovelRT::Graphics {
       }))),
     _shaderProgram(shaderProgram),
     _camera(camera),
-    _uboCameraData(CameraBlock(_camera->getCameraUboMatrix().getUnderlyingMatrix())) {
+    _uboCameraData(_camera->getCameraUboMatrix()) {
     _camera->subscribeToCameraViewChanged([this](auto x) { OnCameraViewChanged(x); }); //TODO: Should we refactor the method into the lambda?
   }
 
@@ -76,17 +76,17 @@ namespace NovelRT::Graphics {
     return tempBuffer;
   }
 
-  CameraBlock RenderObject::generateViewData() {
+  Maths::GeoMatrix4<float> RenderObject::generateViewData() {
     auto position = getTransform().getPosition().getVec2Value();
     auto resultMatrix = Maths::GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
     resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
     resultMatrix = glm::rotate(resultMatrix, glm::radians(getTransform().getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
     resultMatrix = glm::scale(resultMatrix, glm::vec3(getTransform().getScale().getVec2Value(), 1.0f));
 
-    return CameraBlock(glm::transpose(_uboCameraData.cameraMatrix * resultMatrix));
+    return Maths::GeoMatrix4<float>(glm::transpose(_uboCameraData.getUnderlyingMatrix() * resultMatrix));
   }
 
-  CameraBlock RenderObject::generateCameraBlock() {
-    return CameraBlock(_camera->getCameraUboMatrix().getUnderlyingMatrix());
+  Maths::GeoMatrix4<float> RenderObject::generateCameraBlock() {
+    return _camera->getCameraUboMatrix();
   }
 }

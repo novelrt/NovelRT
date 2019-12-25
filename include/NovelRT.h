@@ -58,7 +58,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Transform.h"
-#include "NovelRT/Graphics/CameraBlock.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"

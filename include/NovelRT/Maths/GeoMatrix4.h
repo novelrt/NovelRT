@@ -13,6 +13,7 @@ namespace NovelRT::Maths {
     friend class Graphics::BasicFillRect;
     friend class Graphics::TextRect;
     friend class Graphics::RenderingService;
+    friend class Graphics::Camera;
   private:
     glm::mat<4, 4, T> _value;
 

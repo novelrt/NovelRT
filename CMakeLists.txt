@@ -91,7 +91,6 @@ set(NOVELRT_LIBRARY_HEADERS
   include/NovelRT/Maths/GeoMatrix4.h
   include/NovelRT/Graphics/CameraViewChangedEventArgs.h
   include/NovelRT/Graphics/ShaderProgram.h
-  include/NovelRT/Graphics/CameraBlock.h
   include/NovelRT/Windowing/WindowingService.h
   include/NovelRT/Input/KeyState.h
   include/NovelRT/WorldObject.h
