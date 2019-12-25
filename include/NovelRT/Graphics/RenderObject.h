@@ -2,9 +2,9 @@
 
 #ifndef NOVELRT_GRAPHICS_RENDEROBJECT_H
 #define NOVELRT_GRAPHICS_RENDEROBJECT_H
-#include <string>
-#include <glad/glad.h>
-#include <memory>
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT::Graphics {
 

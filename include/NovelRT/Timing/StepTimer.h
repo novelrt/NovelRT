@@ -5,6 +5,9 @@
 
 #ifndef NOVELRT_TIMING_STEPTIMER_H
 #define NOVELRT_TIMING_STEPTIMER_H
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT::Timing {
   class StepTimer {

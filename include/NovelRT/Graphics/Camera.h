@@ -2,6 +2,9 @@
 
 #ifndef NOVELRT_GRAPHICS_CAMERA_H
 #define NOVELRT_GRAPHICS_CAMERA_H
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT::Graphics {
   class Camera {
