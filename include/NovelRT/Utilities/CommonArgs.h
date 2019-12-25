@@ -2,6 +2,9 @@
 
 #ifndef NOVELRT_UTILITIES_COMMONARGS_H
 #define NOVELRT_UTILITIES_COMMONARGS_H
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT::Utilities {
   struct CommonArgs {

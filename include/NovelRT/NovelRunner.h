@@ -2,10 +2,9 @@
 
 #ifndef NOVELRT_NOVELRUNNER_H
 #define NOVELRT_NOVELRUNNER_H
-
-#include <string>
-#include <vector>
-#include <memory>
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT {
 /**

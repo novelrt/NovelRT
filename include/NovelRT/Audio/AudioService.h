@@ -2,6 +2,9 @@
 
 #ifndef NOVELRT_AUDIOSERVICE_H
 #define NOVELRT_AUDIOSERVICE_H
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 //TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
 namespace NovelRT::Audio {

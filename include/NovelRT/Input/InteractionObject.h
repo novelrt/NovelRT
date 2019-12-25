@@ -2,6 +2,9 @@
 
 #ifndef NOVELRT_INPUT_INTERACTIONOBJECT_H
 #define NOVELRT_INPUT_INTERACTIONOBJECT_H
+#ifndef NOVELRT_H
+#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#endif
 
 namespace NovelRT::Input {
   class InteractionObject : public WorldObject {
