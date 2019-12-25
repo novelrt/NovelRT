@@ -8,7 +8,7 @@ namespace NovelRT::Graphics {
 
     NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
 
-      //TODO: Look Im just trying to make this legal code okay?
+  //TODO: Look Im just trying to make this legal code okay?
   public:
     enum class CameraMode : unsigned int {
       None,
