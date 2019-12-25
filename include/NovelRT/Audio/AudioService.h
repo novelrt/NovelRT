@@ -3,18 +3,13 @@
 #ifndef NOVELRT_AUDIOSERVICE_H
 #define NOVELRT_AUDIOSERVICE_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 #include <string>
 #include <map>
 #include <typeinfo>
 
+//TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
 namespace NovelRT::Audio {
   class AudioService {
-
-    typedef std::map<std::string, Mix_Chunk*> SoundBank;
-    typedef std::map<std::string, Mix_Music*> MusicBank;
-    typedef std::map<std::string, int> ChannelMap;
 
   private:
     int _nextChannel;

@@ -7,8 +7,6 @@
 
 namespace NovelRT {
 
-  typedef class NovelRunner NovelRunner;
-
   class DebugService {
 
   private:

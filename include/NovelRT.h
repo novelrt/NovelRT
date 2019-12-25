@@ -3,18 +3,29 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
+#include <type_traits>
+#include <map>
+#include <string>
+#include <glad.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
 namespace NovelRT {
-  typedef void (*NovelUpdateSubscriber)(double);
+  typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
 }
 
 namespace NovelRT::Audio {
+  typedef std::map<std::string, Mix_Chunk*> SoundBank;
+  typedef std::map<std::string, Mix_Music*> MusicBank;
+  typedef std::map<std::string, int> ChannelMap;
   typedef class AudioService AudioService;
 }
 
 namespace NovelRT::Graphics {
+  typedef std::conditional<sizeof(signed long) <= 4, GLuint, GLuint64>::type AdvanceInteger;
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
   typedef class CameraViewChangedEventArgs CameraViewChangedEventArgs;
