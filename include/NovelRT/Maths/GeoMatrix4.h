@@ -2,7 +2,6 @@
 
 #ifndef NOVELRT_MATHS_GEOMATRIX4_H
 #define NOVELRT_MATHS_GEOMATRIX4_H
-#include <glm/glm.hpp>
 
 namespace NovelRT::Maths {
 

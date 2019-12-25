@@ -5,7 +5,6 @@
 
 namespace NovelRT::Utilities {
   struct CommonArgs {
-
   public:
     Maths::GeoVector<float> startingPosition = Maths::GeoVector<float>(0, 0);
     float startingRotation = 0;

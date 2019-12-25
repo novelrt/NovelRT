@@ -4,7 +4,6 @@
 #define NOVELRT_INPUT_BASICINTERACTIONRECT_H
 
 namespace NovelRT::Input {
-
   class BasicInteractionRect : public InteractionObject {
   public:
     BasicInteractionRect(const Transform& transform, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);

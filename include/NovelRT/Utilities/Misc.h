@@ -2,18 +2,17 @@
 
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
-#include <algorithm>
 
 namespace NovelRT::Utilities {
-class Misc {
-public:
-  static const int SDL_SUCCESS = 0;
-  static inline const std::string CONSOLE_LOG_GENERIC = "NovelRT";
-  static inline const std::string CONSOLE_LOG_APP = "Application";
-  static inline const std::string CONSOLE_LOG_GFX = "GFX";
-  static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
-  static inline const std::string CONSOLE_LOG_INPUT = "Input";
-};
+  class Misc {
+  public:
+    static const int SDL_SUCCESS = 0;
+    static inline const std::string CONSOLE_LOG_GENERIC = "NovelRT";
+    static inline const std::string CONSOLE_LOG_APP = "Application";
+    static inline const std::string CONSOLE_LOG_GFX = "GFX";
+    static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
+    static inline const std::string CONSOLE_LOG_INPUT = "Input";
+  };
 }
 
 #define NOVELRT_EVENT(eventName, eventArgsType)                                                                   \

@@ -9,6 +9,19 @@
 #include <glad.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <string>
+#include <map>
+#include <typeinfo>
+#include <vector>
+#include <functional>
+#include <algorithm>
+#include <memory>
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <stdint.h>
+#include <iostream>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace NovelRT {
   typedef void (*NovelUpdateSubscriber)(double deltaSeconds);

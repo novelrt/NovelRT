@@ -2,9 +2,6 @@
 #ifndef NOVELRT_GRAPHICS_TEXTRECT_H
 #define NOVELRT_GRAPHICS_TEXTRECT_H
 
-#include <string>
-#include <map>
-
 namespace NovelRT::Graphics {
   class TextRect : public RenderObject {
   private:

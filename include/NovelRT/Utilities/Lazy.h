@@ -2,8 +2,6 @@
 
 #ifndef NOVELRT_UTILITIES_LAZY_H
 #define NOVELRT_UTILITIES_LAZY_H
-#include <functional>
-#include <memory>
 
 namespace NovelRT::Utilities {
   template<typename T>

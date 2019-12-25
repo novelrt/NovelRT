@@ -6,13 +6,8 @@
 #ifndef NOVELRT_TIMING_STEPTIMER_H
 #define NOVELRT_TIMING_STEPTIMER_H
 
-#include <stdint.h>
-#include <vector>
-
 namespace NovelRT::Timing {
-
   class StepTimer {
-
   private:
     const uint64_t _frequency;
     const uint64_t _maxCounterDelta;
