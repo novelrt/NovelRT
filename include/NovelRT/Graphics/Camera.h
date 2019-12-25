@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_GRAPHICS_CAMERA_H
 #define NOVELRT_GRAPHICS_CAMERA_H
+
 namespace NovelRT::Graphics {
   class Camera {
 
