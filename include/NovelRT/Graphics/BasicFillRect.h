@@ -3,7 +3,6 @@
 #ifndef NOVELRT_GRAPHICS_BASICFILLRECT_H
 #define NOVELRT_GRAPHICS_BASICFILLRECT_H
 
-
 namespace NovelRT::Graphics {
   class BasicFillRect : public RenderObject {
 

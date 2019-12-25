@@ -2,8 +2,6 @@
 
 #ifndef NOVELRT_INPUT_INTERACTIONOBJECT_H
 #define NOVELRT_INPUT_INTERACTIONOBJECT_H
-#include <algorithm>
-#include <functional>
 
 namespace NovelRT::Input {
   class InteractionObject : public WorldObject {

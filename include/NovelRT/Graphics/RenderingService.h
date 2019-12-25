@@ -3,19 +3,9 @@
 #ifndef NOVELRT_GRAPHICS_RENDERINGSERVICE_H
 #define NOVELRT_GRAPHICS_RENDERINGSERVICE_H
 
-#include <SDL2/SDL.h>
-#include <string>
-#include <vector>
-#include <map>
-#include <functional>
-#include <memory>
-#include <glad/glad.h>
-
 namespace NovelRT::Graphics {
-
   class RenderingService {
   private:
-
     bool initialiseRenderPipeline();
     LoggingService _logger;
     Windowing::WindowingService* const _windowingService;
@@ -48,6 +38,5 @@ namespace NovelRT::Graphics {
     void beginFrame() const;
     void endFrame() const;
   };
-
 }
 #endif //NOVELRT_GRAPHICS_RENDERINGSERVICE_H

@@ -2,9 +2,6 @@
 
 #ifndef NOVELRT_MATHS_GEOVECTOR_H
 #define NOVELRT_MATHS_GEOVECTOR_H
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
 
 namespace NovelRT::Maths {
   template<typename T>

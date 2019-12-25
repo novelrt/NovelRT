@@ -3,8 +3,6 @@
 #ifndef NOVELRT_NOVELDEBUGSERVICE_H
 #define NOVELRT_NOVELDEBUGSERVICE_H
 
-#include <glad/glad.h>
-
 namespace NovelRT {
 
   class DebugService {

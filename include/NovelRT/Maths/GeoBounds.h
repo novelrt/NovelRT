@@ -3,8 +3,6 @@
 #ifndef NOVELRT_MATHS_GEOBOUNDS_H
 #define NOVELRT_MATHS_GEOBOUNDS_H
 
-#include <vector>
-
 namespace NovelRT::Maths {
   class GeoBounds {
   private:

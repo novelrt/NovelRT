@@ -3,10 +3,6 @@
 #ifndef NOVELRT_LOGGINGSERVICE_H
 #define NOVELRT_LOGGINGSERVICE_H
 
-#include <iostream>
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-
 namespace NovelRT {
   enum class LogLevel {
     Debug = SPDLOG_LEVEL_DEBUG,

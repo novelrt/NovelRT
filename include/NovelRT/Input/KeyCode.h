@@ -2,8 +2,6 @@
 
 #ifndef NOVELRT_INPUT_KEYCODE_H
 #define NOVELRT_INPUT_KEYCODE_H
-#include <stdint.h>
-#include <SDL2/SDL.h>
 
 namespace NovelRT::Input {
   enum class KeyCode : int32_t {

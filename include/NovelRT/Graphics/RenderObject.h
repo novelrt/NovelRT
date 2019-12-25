@@ -5,7 +5,6 @@
 #include <string>
 #include <glad/glad.h>
 #include <memory>
-#include <glm/glm.hpp>
 
 namespace NovelRT::Graphics {
 
