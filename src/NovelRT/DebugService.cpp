@@ -1,6 +1,5 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-
 //TODO: Resolve older solution for this if possible.
 //DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
 /*void GLAPIENTRY
@@ -24,7 +23,6 @@ messageCallback(GLenum source,
 /*    glEnable( GL_DEBUG_OUTPUT );
   glDebugMessageCallback(messageCallback, 0);*/
 
-#include <limits>
 #include <NovelRT.h>
 
 namespace NovelRT {

@@ -1,15 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
-
-#include <SDL2/SDL.h>
-#include <iostream>
-
 #define GL_GLEXT_PROTOTYPES
-
-#include <algorithm>
-#include <fstream>
-#include <sstream>
 
 namespace NovelRT::Graphics {
   bool RenderingService::initialiseRenderPipeline() {

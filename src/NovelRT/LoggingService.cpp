@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <NovelRT.h>
-#include "spdlog/async.h"
-#include <typeinfo>
 
 namespace NovelRT {
 

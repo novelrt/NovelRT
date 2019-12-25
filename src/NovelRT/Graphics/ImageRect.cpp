@@ -1,8 +1,5 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_image.h>
-#include <iostream>
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {

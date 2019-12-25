@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <NovelRT.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 namespace NovelRT::Graphics {
   void TextRect::drawObject() {

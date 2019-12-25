@@ -1,9 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include <iostream>
-#include <string>
 #include <NovelRT.h>
 
+//TODO: What do I do with these?
 extern "C"
 {
 #include <lua.h>
