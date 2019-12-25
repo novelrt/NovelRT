@@ -96,6 +96,8 @@ set(NOVELRT_LIBRARY_HEADERS
   include/NovelRT/WorldObject.h
   include/NovelRT.h)
 
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_HEADERS})
+
 set(NOVELRT_LIBRARY_SOURCES
   src/NovelRT/Transform.cpp
   src/NovelRT/Maths/GeoBounds.cpp
@@ -116,6 +118,8 @@ set(NOVELRT_LIBRARY_SOURCES
   src/NovelRT/Graphics/Camera.cpp
   src/NovelRT/Windowing/WindowingService.cpp
   src/NovelRT/WorldObject.cpp)
+
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_SOURCES})
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
