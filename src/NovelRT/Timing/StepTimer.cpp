@@ -4,7 +4,6 @@
 // Original code is available under the MIT Licence
 
 #include <NovelRT.h>
-#include <SDL2/SDL.h>
 
 namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
