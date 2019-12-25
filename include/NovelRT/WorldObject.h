@@ -11,10 +11,13 @@ namespace NovelRT {
   private:
     Transform _transform;
     bool _active;
+    int _layer;
+
   protected:
     bool _isDirty;
+
   public:
-    WorldObject(const Transform& transform);
+    WorldObject(const Transform& transform, int layer);
 
     inline Transform& getTransform() {
       _isDirty = true;
@@ -23,6 +26,14 @@ namespace NovelRT {
 
     inline const Transform& getTransformReadonly() const {
       return _transform;
+    }
+
+    inline int getLayer() const {
+      return _layer;
+    }
+
+    inline void setLayer(int value) {
+      _layer = value;
     }
 
     virtual bool getActive() const;

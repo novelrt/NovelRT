@@ -2,8 +2,8 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  InteractionObject::InteractionObject(const Transform& transform, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
-    : WorldObject(transform) {
+  InteractionObject::InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
+    : WorldObject(transform, layer) {
     _notifyHasBeenDrawnObject = notifyHasBeenDrawnObject;
   }
 

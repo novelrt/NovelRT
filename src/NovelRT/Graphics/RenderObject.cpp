@@ -8,8 +8,8 @@ namespace NovelRT::Graphics {
     _uboCameraData = args.cameraMatrix;
   }
 
-  RenderObject::RenderObject(const Transform& transform, ShaderProgram shaderProgram, Camera* camera) :
-    WorldObject(transform),
+  RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera) :
+    WorldObject(transform, layer),
     _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
@@ -77,7 +77,7 @@ namespace NovelRT::Graphics {
   Maths::GeoMatrix4<float> RenderObject::generateViewData() {
     auto position = getTransform().getPosition().getVec2Value();
     auto resultMatrix = Maths::GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
-    resultMatrix = glm::translate(resultMatrix, glm::vec3(position, 0.0f));
+    resultMatrix = glm::translate(resultMatrix, glm::vec3(position, getLayer()));
     resultMatrix = glm::rotate(resultMatrix, glm::radians(getTransform().getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
     resultMatrix = glm::scale(resultMatrix, glm::vec3(getTransform().getScale().getVec2Value(), 1.0f));
 

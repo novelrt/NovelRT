@@ -4,11 +4,13 @@
 
 namespace NovelRT::Graphics {
   ImageRect::ImageRect(const Transform& transform,
+    int layer,
     ShaderProgram shaderProgram,
     Camera* camera,
     const std::string& imageDir,
     const RGBAConfig& colourTint) :
     RenderObject(transform,
+      layer,
       shaderProgram,
       camera),
     _imageDir(imageDir),
@@ -23,9 +25,10 @@ namespace NovelRT::Graphics {
         _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
       ImageRect::ImageRect(const Transform& transform,
+        int layer,
         ShaderProgram shaderProgram,
         Camera* camera,
-        const RGBAConfig& colourTint) : ImageRect(transform, shaderProgram, camera, "", colourTint) {
+        const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, "", colourTint) {
       }
 
       void ImageRect::drawObject() {

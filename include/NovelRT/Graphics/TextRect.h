@@ -25,6 +25,7 @@ namespace NovelRT::Graphics {
 
   public:
     TextRect(const Transform& transform,
+      int layer,
       ShaderProgram programId,
       Camera* camera,
       float fontSize,

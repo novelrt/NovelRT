@@ -9,7 +9,7 @@
 namespace NovelRT::Input {
   class BasicInteractionRect : public InteractionObject {
   public:
-    BasicInteractionRect(const Transform& transform, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+    BasicInteractionRect(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
 
     bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const override;
   };

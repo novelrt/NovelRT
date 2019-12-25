@@ -7,31 +7,30 @@
 #endif
 
 namespace NovelRT::Graphics {
+  class RenderObject : public WorldObject {
 
-class RenderObject : public WorldObject {
+  protected:
+    virtual void drawObject() = 0;
+    virtual void configureObjectBuffers();
+    static GLuint generateStandardBuffer();
+    Maths::GeoMatrix4<float> generateViewData();
+    Maths::GeoMatrix4<float> generateCameraBlock();
 
-protected:
-  virtual void drawObject() = 0;
-  virtual void configureObjectBuffers();
-  static GLuint generateStandardBuffer();
-  Maths::GeoMatrix4<float> generateViewData();
-  Maths::GeoMatrix4<float> generateCameraBlock();
+    Utilities::Lazy<GLuint> _vertexBuffer;
+    Utilities::Lazy<GLuint> _vertexArrayObject;
+    ShaderProgram _shaderProgram;
+    std::vector<GLfloat> _vertexBufferData;
+    bool _bufferInitialised = false;
+    Camera* _camera;
+    Maths::GeoMatrix4<float> _uboCameraData;
+    Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
+    void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
-  Utilities::Lazy<GLuint> _vertexBuffer;
-  Utilities::Lazy<GLuint> _vertexArrayObject;
-  ShaderProgram _shaderProgram;
-  std::vector<GLfloat> _vertexBufferData;
-  bool _bufferInitialised = false;
-  Camera* _camera;
-  Maths::GeoMatrix4<float> _uboCameraData;
-  Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
-  void OnCameraViewChanged(CameraViewChangedEventArgs args);
+  public:
+    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera);
 
-public:
-  RenderObject(const Transform& transform, ShaderProgram shaderProgram, Camera* camera);
-
-  void executeObjectBehaviour() final;
-  virtual ~RenderObject();
+    void executeObjectBehaviour() final;
+    virtual ~RenderObject();
   };
 }
 #endif //NOVELRT_GRAPHICS_RENDEROBJECT_H
