@@ -16,7 +16,7 @@ namespace NovelRT::Input {
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
 
   public:
-    InteractionObject(const Transform& transform, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+    InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
     KeyCode getSubscribedKey() const;

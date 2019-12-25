@@ -18,10 +18,11 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    BasicFillRect(const RGBAConfig& fillColour,
-                  const Transform& args,
-                  ShaderProgram shaderProgram,
-                  Camera* camera);
+    BasicFillRect(const Transform& transform,
+      int layer,
+      Camera* camera,
+      ShaderProgram shaderProgram,
+      const RGBAConfig& fillColour);
 
     void drawObject() final;
     RGBAConfig getColourConfig() const;

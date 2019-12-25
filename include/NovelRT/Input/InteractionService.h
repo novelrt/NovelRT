@@ -25,7 +25,7 @@ namespace NovelRT::Input {
 
     void consumePlayerInput();
 
-    BasicInteractionRect* createBasicInteractionRect(const Transform& transform);
+    BasicInteractionRect* createBasicInteractionRect(const Transform& transform, int layer);
 
     void executeClickedInteractable();
 

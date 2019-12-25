@@ -81,6 +81,7 @@ namespace NovelRT::Graphics {
   }
 
   TextRect::TextRect(const Transform& transform,
+    int layer,
     ShaderProgram shaderProgram,
     Camera* camera,
     float fontSize,
@@ -88,6 +89,7 @@ namespace NovelRT::Graphics {
     const RGBAConfig& colourConfig) :
     RenderObject(
       transform,
+      layer,
       shaderProgram,
       camera),
     _fontFileDir(fontFileDir),
@@ -106,6 +108,7 @@ namespace NovelRT::Graphics {
     for (int i = 0; i < difference; i++) {
       _letterRects.push_back(new ImageRect(
         modifiedTransform,
+        getLayer(),
         _shaderProgram,
         _camera,
         _colourConfig));

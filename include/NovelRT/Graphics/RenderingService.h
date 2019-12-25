@@ -30,11 +30,11 @@ namespace NovelRT::Graphics {
 
     void tearDown() const;
 
-    ImageRect* getImageRect(const std::string& filePath, const Transform& transform, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    ImageRect* getImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 
-    BasicFillRect* getBasicFillRect(const RGBAConfig& colourConfig, const Transform& transform);
+    BasicFillRect* getBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig);
 
-    TextRect* getTextRect(const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath, const Transform& args);
+    TextRect* getTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
 
     Camera* getCamera() const;
 
