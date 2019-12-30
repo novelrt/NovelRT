@@ -15,7 +15,7 @@ namespace NovelRT::Graphics {
 
 
     _camera->setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0)));
-    _camera->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, 0.0f))));
+    _camera->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
     std::string infoScreenSize = std::to_string((int)windowSize.getX());
     infoScreenSize.append("x");
     infoScreenSize.append(std::to_string((int)windowSize.getY()));
