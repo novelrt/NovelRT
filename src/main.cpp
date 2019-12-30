@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   auto vec = playButtonTransform.getPosition();
   vec.setX(playButtonTransform.getPosition().getX() - 75);
   playAudioTextTransform.setPosition(vec);
-  playAudioText = runner.getRenderer()->createTextRect(playAudioTextTransform, 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
+  playAudioText = runner.getRenderer()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
   playAudioText->setText("Play Audio");
 
   auto theRealMvpTransform = playButtonTransform;
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
   memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
 
-  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, -1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
@@ -158,13 +158,16 @@ int main(int argc, char *argv[])
   });
 
   runner.subscribeToSceneConstructionRequested([] {
-    playAudioText->executeObjectBehaviour(); //Im aware this produces a funky test screen, I chose deliberately to render the text first for ensuring the depth test was obvious
+
+    playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
     playAudioButton->executeObjectBehaviour();
 
-    //playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
+    playAudioText->executeObjectBehaviour();
 
-    //memeInteractionRect->executeObjectBehaviour();
-    //interactionRect->executeObjectBehaviour();
+    memeInteractionRect->executeObjectBehaviour();
+
+
+    interactionRect->executeObjectBehaviour();
 
     //novelChanRect->executeObjectBehaviour();
     //textRect->executeObjectBehaviour();
