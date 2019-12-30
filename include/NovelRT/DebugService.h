@@ -12,7 +12,7 @@ namespace NovelRT {
 
   private:
     NovelRunner* _runner;
-    Graphics::TextRect* _fpsCounter;
+    std::unique_ptr<Graphics::TextRect> _fpsCounter;
     uint32_t _framesPerSecond;
 
     void updateFpsCounter();
