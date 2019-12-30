@@ -76,8 +76,8 @@ namespace NovelRT::Input {
     }
   }
 
-  BasicInteractionRect* InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
-    return new BasicInteractionRect(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });
+  std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
+    return std::make_unique<BasicInteractionRect>(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });
   }
   void InteractionService::executeClickedInteractable() {
     if (_clickTarget == nullptr) return;

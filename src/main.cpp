@@ -30,14 +30,14 @@ static int average(lua_State *luaState) {
   _putenv_s(name, value)
 #endif
 
-NovelRT::Graphics::ImageRect* novelChanRect;
-NovelRT::Graphics::TextRect* textRect;
-NovelRT::Graphics::BasicFillRect* lineRect;
-NovelRT::Graphics::BasicFillRect* playAudioButton;
-NovelRT::Graphics::BasicFillRect* playAudioButtonTwoElectricBoogaloo;
-NovelRT::Graphics::TextRect* playAudioText;
-NovelRT::Input::BasicInteractionRect* interactionRect;
-NovelRT::Input::BasicInteractionRect* memeInteractionRect;
+std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
+std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
+std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
+std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButton;
+std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoogaloo;
+std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
+std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
+std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
 int main(int argc, char *argv[])
 {
@@ -52,25 +52,25 @@ int main(int argc, char *argv[])
 
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 0, NovelRT::Maths::GeoVector<float>(456, 618));
 
-  novelChanRect = runner.getRenderer()->getImageRect(novelChanTransform, 0, "novel-chan.png", NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 0, "novel-chan.png", NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
   auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
 
-  textRect = runner.getRenderer()->getTextRect(rubyGnomerTextTransform, -1, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf");
+  textRect = runner.getRenderer()->createTextRect(rubyGnomerTextTransform, -1, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf");
   textRect->setText("RubyGnomer");
 
   auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
-  lineRect = runner.getRenderer()->getBasicFillRect(lineTransform, 2, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+  lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 2, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
-  playAudioButton = runner.getRenderer()->getBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+  playAudioButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
   playAudioTextTransform.setScale(NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
   auto vec = playButtonTransform.getPosition();
   vec.setX(playButtonTransform.getPosition().getX() - 75);
   playAudioTextTransform.setPosition(vec);
-  playAudioText = runner.getRenderer()->getTextRect(playAudioTextTransform, 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
+  playAudioText = runner.getRenderer()->createTextRect(playAudioTextTransform, 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
   playAudioText->setText("Play Audio");
 
   auto theRealMvpTransform = playButtonTransform;
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
   memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
 
-  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->getBasicFillRect(theRealMvpTransform, -1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, -1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
 
 
   runner.getDebugService()->setIsFpsCounterVisible(true);

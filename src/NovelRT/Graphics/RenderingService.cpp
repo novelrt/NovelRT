@@ -167,19 +167,19 @@ namespace NovelRT::Graphics {
     SDL_GL_SwapWindow(_windowingService->getWindow());
   }
 
-  ImageRect* RenderingService::getImageRect(const Transform& transform,
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
     int layer,
     const std::string& filePath,
     const RGBAConfig& colourTint) {
-    return new ImageRect(transform, layer, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), filePath, colourTint);
   }
 
-  TextRect* RenderingService::getTextRect(const Transform& transform,
+  std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
     int layer,
     const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
-    return new TextRect(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
   RenderingService::RenderingService(Windowing::WindowingService* const windowingService) :
@@ -196,16 +196,16 @@ namespace NovelRT::Graphics {
       })),
     _camera(std::make_unique<Camera>()) {}
 
-      BasicFillRect* RenderingService::getBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
-        return new BasicFillRect(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
-      }
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+    return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
+  }
 
-      Camera* RenderingService::getCamera() const {
-        return _camera.get();
-      }
+  Camera* RenderingService::getCamera() const {
+    return _camera.get();
+  }
 
-      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-      }
+  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+    GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+    glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+  }
 }

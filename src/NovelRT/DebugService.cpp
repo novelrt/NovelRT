@@ -43,7 +43,7 @@ namespace NovelRT {
 
         auto transform = Transform(Maths::GeoVector<float>(0, 1080 - 16), 0, Maths::GeoVector<float>(1.0f, 1.0f));
 
-        _fpsCounter = _runner->getRenderer()->getTextRect(transform, -1, yellow, 16, "Gayathri-Regular.ttf");
+        _fpsCounter = _runner->getRenderer()->createTextRect(transform, -1, yellow, 16, "Gayathri-Regular.ttf");
         updateFpsCounter();
       }
     }
