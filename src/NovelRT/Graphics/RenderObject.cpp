@@ -43,13 +43,14 @@ namespace NovelRT::Graphics {
     auto topRight = Maths::GeoVector<GLfloat>(0.5f, 0.5f);
     auto bottomLeft = Maths::GeoVector<GLfloat>(-0.5f, -0.5f);
 
+    auto zScaled = getLayer() / 100.0f;
     _vertexBufferData = {
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
-        topRight.getX(), topRight.getY(), 0.0f,
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomLeft.getX(), bottomLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
+        topLeft.getX(), topLeft.getY(), zScaled,
+        bottomRight.getX(), bottomRight.getY(), zScaled,
+        topRight.getX(), topRight.getY(), zScaled,
+        topLeft.getX(), topLeft.getY(), zScaled,
+        bottomLeft.getX(), bottomLeft.getY(), zScaled,
+        bottomRight.getX(), bottomRight.getY(), zScaled,
     };
 
     _vertexArrayObject.getActual(); //this is just here to force initialisation.
