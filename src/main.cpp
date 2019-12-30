@@ -158,11 +158,13 @@ int main(int argc, char *argv[])
   });
 
   runner.subscribeToSceneConstructionRequested([] {
-    playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
+    playAudioText->executeObjectBehaviour(); //Im aware this produces a funky test screen, I chose deliberately to render the text first for ensuring the depth test was obvious
     playAudioButton->executeObjectBehaviour();
-    memeInteractionRect->executeObjectBehaviour();
-    playAudioText->executeObjectBehaviour();
-    interactionRect->executeObjectBehaviour();
+
+    //playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
+
+    //memeInteractionRect->executeObjectBehaviour();
+    //interactionRect->executeObjectBehaviour();
 
     //novelChanRect->executeObjectBehaviour();
     //textRect->executeObjectBehaviour();
