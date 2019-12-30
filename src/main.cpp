@@ -34,8 +34,10 @@ NovelRT::Graphics::ImageRect* novelChanRect;
 NovelRT::Graphics::TextRect* textRect;
 NovelRT::Graphics::BasicFillRect* lineRect;
 NovelRT::Graphics::BasicFillRect* playAudioButton;
+NovelRT::Graphics::BasicFillRect* playAudioButtonTwoElectricBoogaloo;
 NovelRT::Graphics::TextRect* playAudioText;
 NovelRT::Input::BasicInteractionRect* interactionRect;
+NovelRT::Input::BasicInteractionRect* memeInteractionRect;
 
 int main(int argc, char *argv[])
 {
@@ -71,6 +73,16 @@ int main(int argc, char *argv[])
   playAudioText = runner.getRenderer()->getTextRect(playAudioTextTransform, 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
   playAudioText->setText("Play Audio");
 
+  auto theRealMvpTransform = playButtonTransform;
+  auto whatever = playButtonTransform.getPosition();
+  whatever.setX(whatever.getX() + 50);
+  theRealMvpTransform.setPosition(whatever);
+
+  memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
+
+  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->getBasicFillRect(theRealMvpTransform, -1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+
+
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
   runner.runOnUpdate([](double delta) {
@@ -98,6 +110,9 @@ int main(int argc, char *argv[])
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
+
+  memeInteractionRect->subscribeToInteracted([&console] {
+    console.logDebug("WAHEYYY"); });
 
   interactionRect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
@@ -143,8 +158,12 @@ int main(int argc, char *argv[])
   });
 
   runner.subscribeToSceneConstructionRequested([] {
-    playAudioText->executeObjectBehaviour();
+    playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
     playAudioButton->executeObjectBehaviour();
+    memeInteractionRect->executeObjectBehaviour();
+    playAudioText->executeObjectBehaviour();
+    interactionRect->executeObjectBehaviour();
+
     //novelChanRect->executeObjectBehaviour();
     //textRect->executeObjectBehaviour();
     //lineRect->executeObjectBehaviour();
