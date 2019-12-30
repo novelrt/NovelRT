@@ -34,6 +34,9 @@ namespace NovelRT::Graphics {
     _logger.logInfoLine("GL_VERSION: " + glVersion);
     _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
