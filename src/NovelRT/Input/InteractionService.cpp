@@ -14,7 +14,7 @@ namespace NovelRT::Input {
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
     if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
-      && _clickTarget == nullptr)
+      && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer())))
       _clickTarget = target;
   }
 
