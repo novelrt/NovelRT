@@ -50,18 +50,18 @@ int main(int argc, char *argv[])
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
 
-  auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 0, NovelRT::Maths::GeoVector<float>(456, 618));
+  auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
-  novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 0, "novel-chan.png", NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 3, "novel-chan.png", NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
   auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
 
-  textRect = runner.getRenderer()->createTextRect(rubyGnomerTextTransform, -1, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf");
+  textRect = runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf");
   textRect->setText("RubyGnomer");
 
   auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
-  lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 2, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+  lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
   playAudioButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
@@ -172,11 +172,9 @@ int main(int argc, char *argv[])
 
     interactionRect->executeObjectBehaviour();
 
-    //novelChanRect->executeObjectBehaviour();
-    //textRect->executeObjectBehaviour();
-    //lineRect->executeObjectBehaviour();
-
-    //interactionRect->executeObjectBehaviour();
+    novelChanRect->executeObjectBehaviour();
+    textRect->executeObjectBehaviour();
+    lineRect->executeObjectBehaviour();
     });
 
   runner.runNovel();
