@@ -159,10 +159,13 @@ int main(int argc, char *argv[])
 
   runner.subscribeToSceneConstructionRequested([] {
 
-    playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
+
     playAudioButton->executeObjectBehaviour();
 
+    playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
+
     playAudioText->executeObjectBehaviour();
+
 
     memeInteractionRect->executeObjectBehaviour();
 
