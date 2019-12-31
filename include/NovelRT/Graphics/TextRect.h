@@ -34,7 +34,13 @@ namespace NovelRT::Graphics {
 
     void drawObject() final;
 
-    RGBAConfig getColourConfig() const;
+    inline const RGBAConfig& TextRect::getColourConfigReadonly() const {
+      return _colourConfig;
+    }
+
+    inline RGBAConfig& TextRect::getColourConfig() {
+      return _colourConfig;
+    }
 
     void setColourConfig(const RGBAConfig& value);
 

@@ -53,7 +53,7 @@ namespace NovelRT::Graphics {
       raiseCameraViewChanged(CameraViewChangedEventArgs(getCameraUboMatrix()));
     }
 
-    inline Maths::GeoMatrix4<float> getCameraUboMatrix() {
+    inline Maths::GeoMatrix4<float> getCameraUboMatrix() { //TODO: I'm unsure about getters like these since its coming from a Lazy. Thoughts?
       return _cameraUboMatrix.getActual();
     }
   };

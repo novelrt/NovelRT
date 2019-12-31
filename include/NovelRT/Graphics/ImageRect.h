@@ -9,6 +9,7 @@
 namespace NovelRT::Graphics {
 
   class ImageRect : public RenderObject {
+    friend class TextRect;
 
   private:
     std::string _imageDir;
@@ -20,6 +21,8 @@ namespace NovelRT::Graphics {
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
     LoggingService _logger;
+
+    void setTextureInternal(GLuint textureId);
 
   protected:
     void configureObjectBuffers() final;
@@ -40,9 +43,8 @@ namespace NovelRT::Graphics {
 
     void drawObject() final;
 
-    void setTextureInternal(GLuint textureId);
-
-    RGBAConfig getColourTintConfig() const;
+    const RGBAConfig& getColourTintConfigReadonly() const;
+    RGBAConfig& getColourTint();
     void setColourTintConfig(const RGBAConfig& value);
     ~ImageRect() override;
   };
