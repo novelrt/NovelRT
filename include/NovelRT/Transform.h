@@ -19,7 +19,11 @@ namespace NovelRT {
   public:
     Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale);
 
-  inline Maths::GeoVector<float> getPosition() const {
+  inline const Maths::GeoVector<float>& getPositionReadonly() const {
+    return _position;
+  }
+
+  inline Maths::GeoVector<float>& getPosition() {
     return _position;
   }
 
@@ -35,7 +39,11 @@ namespace NovelRT {
     _rotation = value;
   }
 
-  inline Maths::GeoVector<float> getScale() const {
+  inline const Maths::GeoVector<float>& getScaleReadonly() const {
+    return _scale;
+  }
+
+  inline Maths::GeoVector<float>& getScale() {
     return _scale;
   }
 

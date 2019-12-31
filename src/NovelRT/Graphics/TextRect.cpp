@@ -10,10 +10,6 @@ namespace NovelRT::Graphics {
     }
   }
 
-  RGBAConfig TextRect::getColourConfig() const {
-    return _colourConfig;
-  }
-
   void TextRect::setColourConfig(const RGBAConfig& value) {
     _colourConfig = value;
     configureObjectBuffers();
@@ -120,7 +116,7 @@ namespace NovelRT::Graphics {
   }
   void TextRect::reloadText() {
 
-    auto ttfOrigin = getTransform().getPosition();
+    auto ttfOrigin = getTransform().getPositionReadonly();
 
     int i = 0;
     for (const char& c : getText()) {

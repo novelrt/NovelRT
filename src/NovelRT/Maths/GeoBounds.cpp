@@ -38,7 +38,7 @@ namespace NovelRT::Maths {
       break;
     }
 
-    returnValue.rotateToAngleAroundPoint(getRotation(), getPosition());
+    returnValue.rotateToAngleAroundPoint(getRotation(), getPositionReadonly());
     return returnValue;
   }
 
@@ -46,7 +46,7 @@ namespace NovelRT::Maths {
     return _position + getCornerInLocalSpace(index);
   }
 
-  GeoVector<float> GeoBounds::getPosition() const {
+  GeoVector<float> GeoBounds::getPositionReadonly() const {
     return _position;
   }
 
