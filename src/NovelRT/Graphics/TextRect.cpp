@@ -1,6 +1,5 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include <iostream>
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
@@ -146,9 +145,8 @@ namespace NovelRT::Graphics {
     auto beginIt = _letterRects.begin() + i;
     auto endIt = _letterRects.end();
 
-    auto unusedRects = std::vector<ImageRect*>(beginIt, endIt);
-    for (auto rect : unusedRects) {
-      rect->setActive(false);
-    }
+    std::for_each(beginIt, endIt, [](const std::unique_ptr<ImageRect>& ptr) {
+      ptr->setActive(false);
+      });
   }
 }
