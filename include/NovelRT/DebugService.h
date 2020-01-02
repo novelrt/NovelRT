@@ -18,6 +18,8 @@ namespace NovelRT {
 
     void updateFpsCounter();
 
+    void onSceneConstruction();
+
   public:
     DebugService(NovelRunner* runner);
 

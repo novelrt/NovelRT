@@ -30,6 +30,7 @@ namespace NovelRT {
     _runner(runner),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {
+    runner->subscribeToSceneConstructionRequested(std::bind(&DebugService::onSceneConstruction, this));
   }
 
   bool DebugService::getIsFpsCounterVisible() const {
@@ -43,7 +44,7 @@ namespace NovelRT {
 
         auto transform = Transform(Maths::GeoVector<float>(0, 1080 - 16), 0, Maths::GeoVector<float>(1.0f, 1.0f));
 
-        _fpsCounter = _runner->getRenderer()->createTextRect(transform, -1, yellow, 16, "Gayathri-Regular.ttf");
+        _fpsCounter = _runner->getRenderer()->createTextRect(transform, 0, yellow, 16, "Gayathri-Regular.ttf");
         updateFpsCounter();
       }
     }
@@ -65,5 +66,11 @@ namespace NovelRT {
       snprintf(fpsText, 16, "%u fps", _framesPerSecond);
       _fpsCounter->setText(fpsText);
     }
+  }
+
+  void DebugService::onSceneConstruction() {
+    if (_fpsCounter == nullptr) return;
+
+    _fpsCounter->executeObjectBehaviour();
   }
 }
