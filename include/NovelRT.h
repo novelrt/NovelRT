@@ -3,16 +3,11 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
-#include <math.h>
+//stdlib
+#include <cmath>
 #include <type_traits>
 #include <map>
 #include <string>
-#include <glad.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_events.h>
 #include <string>
 #include <map>
 #include <typeinfo>
@@ -20,16 +15,32 @@
 #include <functional>
 #include <algorithm>
 #include <memory>
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include <stdint.h>
 #include <iostream>
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
 #include <limits>
+
+//Freetype
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+//glad
+#include <glad.h>
+
+//GLM
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+
+//SDL2
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_events.h>
+
+//spdlog
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/async.h"
