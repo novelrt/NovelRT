@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
@@ -75,6 +76,5 @@ private:                                                                        
             return result;                                                                                        \
     }), _##eventName##EventDelegates.end());                                                                      \
   }                                                                                                               \
-
 
 #endif //NOVELRT_UTILITIES_MISC_H

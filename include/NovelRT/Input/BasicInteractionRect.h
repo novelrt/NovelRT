@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_INPUT_BASICINTERACTIONRECT_H
 #define NOVELRT_INPUT_BASICINTERACTIONRECT_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
@@ -14,4 +15,5 @@ namespace NovelRT::Input {
     bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const override;
   };
 }
+
 #endif //NOVELRT_INPUT_BASICINTERACTIONRECT_H

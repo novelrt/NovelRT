@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_INPUT_KEYCODE_H
 #define NOVELRT_INPUT_KEYCODE_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
@@ -169,4 +170,5 @@ namespace NovelRT::Input {
 
   };
 }
+
 #endif //NOVELRT_INPUT_KEYCODE_H

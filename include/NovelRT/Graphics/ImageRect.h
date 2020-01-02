@@ -2,12 +2,12 @@
 
 #ifndef NOVELRT_GRAPHICS_IMAGERECT_H
 #define NOVELRT_GRAPHICS_IMAGERECT_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
 namespace NovelRT::Graphics {
-
   class ImageRect : public RenderObject {
     friend class TextRect;
 
@@ -49,4 +49,5 @@ namespace NovelRT::Graphics {
     ~ImageRect() override;
   };
 }
+
 #endif //NOVELRT_GRAPHICS_IMAGERECT_H
