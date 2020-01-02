@@ -16,7 +16,7 @@ namespace NovelRT::Graphics {
     std::string _fontFileDir;
     std::string _previousFontFileDir = "";
     std::string _text = "";
-    std::vector<ImageRect*> _letterRects;
+    std::vector<std::unique_ptr<ImageRect>> _letterRects;
     std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     LoggingService _logger;
     RGBAConfig _colourConfig;

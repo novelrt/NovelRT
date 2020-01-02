@@ -102,7 +102,7 @@ namespace NovelRT::Graphics {
     auto modifiedTransform = getTransform();
     modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
     for (int i = 0; i < difference; i++) {
-      _letterRects.push_back(new ImageRect(
+      _letterRects.push_back(std::make_unique<ImageRect>(
         modifiedTransform,
         getLayer(),
         _shaderProgram,
@@ -132,7 +132,7 @@ namespace NovelRT::Graphics {
         (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
         + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
 
-      auto target = _letterRects[i++];
+      auto& target = _letterRects.at(i++);
       target->setTextureInternal(ch.textureId);
       target->getTransform().setPosition(currentWorldPosition);
       target->getTransform().setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
