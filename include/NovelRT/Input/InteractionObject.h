@@ -9,7 +9,7 @@
 
 namespace NovelRT::Input {
   class InteractionObject : public WorldObject {
-    friend class InteractionService; //how to make shit tightly coupled oh god
+    friend class InteractionService;
 
     NOVELRT_PARAMETERLESS_EVENT(Interacted)
   private:
