@@ -99,11 +99,13 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
 
-#include "NovelRT/LoggingService.h"
+//base types
+#include "NovelRT/LoggingService.h" //this isn't in the services section due to include order/dependencies.
 #include "NovelRT/Timing/StepTimer.h"
 #include "NovelRT/NovelRunner.h"
 #include "NovelRT/WorldObject.h"
 
+//Graphics types
 #include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/RenderObject.h"
@@ -111,9 +113,11 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
 
+//Input types
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
 
+//Engine service types
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
 #include "NovelRT/Input/InteractionService.h"
