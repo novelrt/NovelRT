@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_INPUT_KEYSTATE_H
 #define NOVELRT_INPUT_KEYSTATE_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
@@ -14,6 +15,7 @@ namespace NovelRT::Input {
     KeyUp = 3,
   };
 }
+
 #endif // !NOVELRT_INPUT_KEYSTATE_H
 
 

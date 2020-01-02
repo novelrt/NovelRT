@@ -2,12 +2,14 @@
 
 #ifndef NOVELRT_GRAPHICS_TEXTRECT_H
 #define NOVELRT_GRAPHICS_TEXTRECT_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
 namespace NovelRT::Graphics {
   class TextRect : public RenderObject {
+
   private:
     void reloadText();
 
@@ -48,4 +50,5 @@ namespace NovelRT::Graphics {
     void setText(const std::string& value);
   };
 }
+
 #endif //NOVELRT_GRAPHICS_TEXTRECT_H

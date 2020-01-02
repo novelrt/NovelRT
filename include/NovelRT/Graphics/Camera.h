@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_GRAPHICS_CAMERA_H
 #define NOVELRT_GRAPHICS_CAMERA_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
@@ -9,7 +10,7 @@
 namespace NovelRT::Graphics {
   class Camera {
 
-    NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
+  NOVELRT_EVENT(CameraViewChanged, CameraViewChangedEventArgs)
 
   //TODO: Look Im just trying to make this legal code okay?
   public:
@@ -58,4 +59,5 @@ namespace NovelRT::Graphics {
     }
   };
 }
+
 #endif //NOVELRT_GRAPHICS_CAMERA_H

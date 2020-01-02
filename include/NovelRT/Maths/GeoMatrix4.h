@@ -2,6 +2,7 @@
 
 #ifndef NOVELRT_MATHS_GEOMATRIX4_H
 #define NOVELRT_MATHS_GEOMATRIX4_H
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
