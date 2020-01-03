@@ -19,7 +19,7 @@ namespace NovelRT::Maths {
     bool pointIsWithinBounds(const GeoVector<float>& point) const;
     GeoVector<float> getCornerInLocalSpace(int index) const;
     GeoVector<float> getCornerInWorldSpace(int index) const;
-    GeoVector<float> getPositionReadonly() const;
+    GeoVector<float> getPosition() const;
     void setPosition(const GeoVector<float>& value);
     GeoVector<float> getSize() const;
     void setSize(const GeoVector<float>& value);

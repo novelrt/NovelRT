@@ -117,7 +117,7 @@ namespace NovelRT::Graphics {
   }
   void TextRect::reloadText() {
 
-    auto ttfOrigin = getTransform().getPositionReadonly();
+    auto ttfOrigin = getTransform().getPosition();
 
     int i = 0;
     for (const char& c : getText()) {

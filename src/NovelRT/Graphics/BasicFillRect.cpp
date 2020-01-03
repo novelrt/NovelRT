@@ -51,7 +51,7 @@ namespace NovelRT::Graphics {
 
   }
 
-  const RGBAConfig& BasicFillRect::getColourConfigReadonly() const {
+  const RGBAConfig& BasicFillRect::getColourConfig() const {
     return _colourConfig;
   }
   RGBAConfig& BasicFillRect::getColourConfig() {
@@ -64,7 +64,7 @@ namespace NovelRT::Graphics {
   void BasicFillRect::configureObjectBuffers() {
     RenderObject::configureObjectBuffers();
 
-    auto config = getColourConfigReadonly();
+    auto config = getColourConfig();
     auto rScalar = config.getRScalar();
     auto gScalar = config.getGScalar();
     auto bScalar = config.getBScalar();

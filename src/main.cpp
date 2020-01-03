@@ -55,27 +55,27 @@ int main(int argc, char *argv[])
 
   novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 3, "novel-chan.png", NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
-  auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPositionReadonly().getX() + 400, novelChanTransform.getPositionReadonly().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
+  auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
 
   textRect = runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, "Gayathri-Regular.ttf");
   textRect->setText("RubyGnomer");
 
-  auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPositionReadonly(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
+  auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
   lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
-  auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPositionReadonly().getX() - 500, novelChanTransform.getPositionReadonly().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
+  auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
   playAudioButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
   playAudioTextTransform.setScale(NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
-  auto vec = playButtonTransform.getPositionReadonly();
-  vec.setX(playButtonTransform.getPositionReadonly().getX() - 75);
+  auto vec = playButtonTransform.getPosition();
+  vec.setX(playButtonTransform.getPosition().getX() - 75);
   playAudioTextTransform.setPosition(vec);
   playAudioText = runner.getRenderer()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, "Gayathri-Regular.ttf");
   playAudioText->setText("Play Audio");
 
   auto theRealMvpTransform = playButtonTransform;
-  auto whatever = playButtonTransform.getPositionReadonly();
+  auto whatever = playButtonTransform.getPosition();
   whatever.setX(whatever.getX() + 50);
   theRealMvpTransform.setPosition(whatever);
 
