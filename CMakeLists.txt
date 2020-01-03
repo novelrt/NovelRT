@@ -66,57 +66,57 @@ find_package(Doxygen QUIET)
 include_directories(include)
 
 set(NOVELRT_LIBRARY_HEADERS
+  include/NovelRT.h
+  include/NovelRT/DebugService.h
+  include/NovelRT/LoggingService.h
+  include/NovelRT/NovelRunner.h
   include/NovelRT/Transform.h
-  include/NovelRT/Maths/GeoBounds.h
-  include/NovelRT/Maths/GeoVector.h
-  include/NovelRT/Graphics/GraphicsCharacterRenderData.h
-  include/NovelRT/Input/KeyCode.h
-  include/NovelRT/Utilities/Lazy.h
+  include/NovelRT/WorldObject.h
   include/NovelRT/Audio/AudioService.h
   include/NovelRT/Graphics/BasicFillRect.h
-  include/NovelRT/Input/BasicInteractionRect.h
-  include/NovelRT/DebugService.h
+  include/NovelRT/Graphics/Camera.h
+  include/NovelRT/Graphics/GraphicsCharacterRenderData.h
   include/NovelRT/Graphics/ImageRect.h
-  include/NovelRT/Input/InteractionObject.h
-  include/NovelRT/Input/InteractionService.h
-  include/NovelRT/LoggingService.h
   include/NovelRT/Graphics/RenderingService.h
   include/NovelRT/Graphics/RenderObject.h
-  include/NovelRT/Utilities/Misc.h
-  include/NovelRT/NovelRunner.h
-  include/NovelRT/Timing/StepTimer.h
-  include/NovelRT/Graphics/TextRect.h
   include/NovelRT/Graphics/RGBAConfig.h
-  include/NovelRT/Graphics/Camera.h
-  include/NovelRT/Maths/GeoMatrix4.h
   include/NovelRT/Graphics/ShaderProgram.h
-  include/NovelRT/Windowing/WindowingService.h
+  include/NovelRT/Graphics/TextRect.h
+  include/NovelRT/Input/BasicInteractionRect.h
+  include/NovelRT/Input/InteractionObject.h
+  include/NovelRT/Input/InteractionService.h
+  include/NovelRT/Input/KeyCode.h
   include/NovelRT/Input/KeyState.h
-  include/NovelRT/WorldObject.h
-  include/NovelRT.h)
+  include/NovelRT/Maths/GeoBounds.h
+  include/NovelRT/Maths/GeoMatrix4.h
+  include/NovelRT/Maths/GeoVector.h
+  include/NovelRT/Timing/StepTimer.h
+  include/NovelRT/Utilities/Lazy.h
+  include/NovelRT/Utilities/Misc.h
+  include/NovelRT/Windowing/WindowingService.h)
 
   source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_HEADERS})
 
 set(NOVELRT_LIBRARY_SOURCES
+  src/NovelRT/DebugService.cpp
+  src/NovelRT/LoggingService.cpp
+  src/NovelRT/NovelRunner.cpp
   src/NovelRT/Transform.cpp
-  src/NovelRT/Maths/GeoBounds.cpp
+  src/NovelRT/WorldObject.cpp
   src/NovelRT/Audio/AudioService.cpp
   src/NovelRT/Graphics/BasicFillRect.cpp
-  src/NovelRT/Input/BasicInteractionRect.cpp
-  src/NovelRT/DebugService.cpp
+  src/NovelRT/Graphics/Camera.cpp
   src/NovelRT/Graphics/ImageRect.cpp
-  src/NovelRT/Input/InteractionObject.cpp
-  src/NovelRT/Input/InteractionService.cpp
-  src/NovelRT/LoggingService.cpp
   src/NovelRT/Graphics/RenderingService.cpp
   src/NovelRT/Graphics/RenderObject.cpp
-  src/NovelRT/NovelRunner.cpp
-  src/NovelRT/Timing/StepTimer.cpp
-  src/NovelRT/Graphics/TextRect.cpp
   src/NovelRT/Graphics/RGBAConfig.cpp
-  src/NovelRT/Graphics/Camera.cpp
-  src/NovelRT/Windowing/WindowingService.cpp
-  src/NovelRT/WorldObject.cpp)
+  src/NovelRT/Graphics/TextRect.cpp
+  src/NovelRT/Input/BasicInteractionRect.cpp
+  src/NovelRT/Input/InteractionObject.cpp
+  src/NovelRT/Input/InteractionService.cpp
+  src/NovelRT/Maths/GeoBounds.cpp
+  src/NovelRT/Timing/StepTimer.cpp
+  src/NovelRT/Windowing/WindowingService.cpp)
 
   source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_SOURCES})
 
