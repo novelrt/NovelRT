@@ -52,6 +52,8 @@ namespace NovelRT::Graphics {
     inline bool getWasModifiedLastFrame() {
       return !_cameraUboMatrix.isCreated();
     }
+
+    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize);
   };
 }
 

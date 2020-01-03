@@ -12,10 +12,8 @@ namespace NovelRT::Graphics {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     auto windowSize = _windowingService->getWindowSize();
+    _camera = Camera::createDefaultOrthographicProjection(windowSize);
 
-
-    _camera->setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
-    _camera->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
     std::string infoScreenSize = std::to_string((int)windowSize.getX());
     infoScreenSize.append("x");
     infoScreenSize.append(std::to_string((int)windowSize.getY()));
@@ -197,7 +195,7 @@ namespace NovelRT::Graphics {
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
     return tempHandle;
       })),
-    _camera(std::make_unique<Camera>()) {}
+    _camera(nullptr) {}
 
   std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
