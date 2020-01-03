@@ -4,10 +4,6 @@
 
 namespace NovelRT::Graphics {
 
-  void RenderObject::OnCameraViewChanged(CameraViewChangedEventArgs args) {
-    _uboCameraData = args.cameraMatrix;
-  }
-
   RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera) :
     WorldObject(transform, layer),
     _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))),
@@ -18,12 +14,12 @@ namespace NovelRT::Graphics {
     return tempVao;
       }))),
     _shaderProgram(shaderProgram),
-    _camera(camera),
-    _uboCameraData(_camera->getCameraUboMatrix()) {
-    _camera->subscribeToCameraViewChanged([this](auto x) { OnCameraViewChanged(x); }); //TODO: Should we refactor the method into the lambda?
+    _camera(camera) {
   }
 
   void RenderObject::executeObjectBehaviour() {
+    if (_camera->getWasModifiedLastFrame()) _isDirty = true;
+    
     if (_isDirty) {
       _finalViewMatrixData.reset();
       _bufferInitialised = false;
@@ -80,7 +76,7 @@ namespace NovelRT::Graphics {
     resultMatrix = glm::rotate(resultMatrix, glm::radians(getTransform().getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
     resultMatrix = glm::scale(resultMatrix, glm::vec3(getTransform().getScaleReadonly().getVec2Value(), 1.0f));
 
-    return Maths::GeoMatrix4<float>(glm::transpose(_uboCameraData.getUnderlyingMatrix() * resultMatrix));
+    return Maths::GeoMatrix4<float>(glm::transpose(_camera->getCameraUboMatrix().getUnderlyingMatrix() * resultMatrix));
   }
 
   Maths::GeoMatrix4<float> RenderObject::generateCameraBlock() {
