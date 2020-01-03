@@ -3,8 +3,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate)
-    : _stepTimer(Timing::StepTimer(targetFrameRate)),
+  NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
+    _exitCode(1),
+    _stepTimer(Timing::StepTimer(targetFrameRate)),
     _novelDebugService(std::make_unique<DebugService>(this)),
     _novelInteractionService(std::make_unique<Input::InteractionService>()),
     _novelAudioService(std::make_unique<Audio::AudioService>()),

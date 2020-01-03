@@ -14,8 +14,8 @@ namespace NovelRT::Graphics {
     void reloadText();
 
     std::string _fontFileDir;
-    std::string _previousFontFileDir = "";
-    std::string _text = "";
+    std::string _previousFontFileDir;
+    std::string _text;
     std::vector<std::unique_ptr<ImageRect>> _letterRects;
     std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     LoggingService _logger;

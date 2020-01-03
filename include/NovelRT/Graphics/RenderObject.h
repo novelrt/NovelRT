@@ -21,7 +21,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<GLuint> _vertexArrayObject;
     ShaderProgram _shaderProgram;
     std::vector<GLfloat> _vertexBufferData;
-    bool _bufferInitialised = false;
+    bool _bufferInitialised;
     Camera* _camera;
     Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
 

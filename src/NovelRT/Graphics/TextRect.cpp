@@ -88,9 +88,11 @@ namespace NovelRT::Graphics {
       shaderProgram,
       camera),
     _fontFileDir(fontFileDir),
+    _previousFontFileDir(""),
+    _text(""),
+    _logger(Utilities::Misc::CONSOLE_LOG_GFX),
     _colourConfig(colourConfig),
-    _fontSize(fontSize),
-    _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
+    _fontSize(fontSize) {}
 
   std::string TextRect::getText() const {
     return _text;

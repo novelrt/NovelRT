@@ -6,7 +6,6 @@ namespace NovelRT::Graphics {
 
   RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera) :
     WorldObject(transform, layer),
-    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
     GLuint tempVao;
@@ -14,8 +13,9 @@ namespace NovelRT::Graphics {
     return tempVao;
       }))),
     _shaderProgram(shaderProgram),
-    _camera(camera) {
-  }
+    _bufferInitialised(false),
+    _camera(camera),
+    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))){}
 
   void RenderObject::executeObjectBehaviour() {
     if (_camera->getWasModifiedLastFrame()) _isDirty = true;

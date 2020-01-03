@@ -16,6 +16,7 @@ namespace NovelRT {
   NOVELRT_PARAMETERLESS_EVENT(SceneConstructionRequested)
 
   private:
+    int _exitCode;
     Timing::StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
     std::unique_ptr<DebugService> _novelDebugService;
@@ -23,7 +24,6 @@ namespace NovelRT {
     std::unique_ptr<Audio::AudioService> _novelAudioService;
     std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
     std::unique_ptr<Graphics::RenderingService> _novelRenderer;
-    int _exitCode = 1;
 
 
   public:

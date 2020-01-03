@@ -13,8 +13,8 @@ namespace NovelRT::Input {
 
     NOVELRT_PARAMETERLESS_EVENT(Interacted)
   private:
-    std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
+    std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
 
   public:
     InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
