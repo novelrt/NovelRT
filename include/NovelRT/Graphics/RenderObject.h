@@ -23,9 +23,7 @@ namespace NovelRT::Graphics {
     std::vector<GLfloat> _vertexBufferData;
     bool _bufferInitialised = false;
     Camera* _camera;
-    Maths::GeoMatrix4<float> _uboCameraData;
     Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
-    void OnCameraViewChanged(CameraViewChangedEventArgs args);
 
   public:
     RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera);
