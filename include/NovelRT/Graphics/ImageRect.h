@@ -43,8 +43,8 @@ namespace NovelRT::Graphics {
 
     void drawObject() final;
 
-    const RGBAConfig& getColourTintConfigReadonly() const;
-    RGBAConfig& getColourTint();
+    const RGBAConfig& getColourTintConfig() const;
+    RGBAConfig& getColourTintConfig();
     void setColourTintConfig(const RGBAConfig& value);
     ~ImageRect() override;
   };

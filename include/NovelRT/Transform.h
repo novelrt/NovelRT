@@ -20,7 +20,7 @@ namespace NovelRT {
   public:
     Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale);
 
-    inline const Maths::GeoVector<float>& getPositionReadonly() const {
+    inline const Maths::GeoVector<float>& getPosition() const {
       return _position;
     }
 
@@ -40,7 +40,7 @@ namespace NovelRT {
       _rotation = value;
     }
 
-    inline const Maths::GeoVector<float>& getScaleReadonly() const {
+    inline const Maths::GeoVector<float>& getScale() const {
       return _scale;
     }
 

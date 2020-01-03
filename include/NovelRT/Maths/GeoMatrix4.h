@@ -45,7 +45,7 @@ namespace NovelRT::Maths {
       return GeoVector<T>(_value[0]);
     }
 
-    inline void setX(GeoVector<T> value) {
+    inline void setX(const GeoVector<T>& value) {
       _value[0] = value.getVec4Value();
     }
 
@@ -53,7 +53,7 @@ namespace NovelRT::Maths {
       return GeoVector<T>(_value[1]);
     }
 
-    inline void setY(GeoVector<T> value) {
+    inline void setY(const GeoVector<T>& value) {
       _value[1] = value.getVec4Value();
     }
 
@@ -61,7 +61,7 @@ namespace NovelRT::Maths {
       return GeoVector<T>(_value[2]);
     }
 
-    inline void setZ(GeoVector<T> value) {
+    inline void setZ(const GeoVector<T>& value) {
       _value[2] = value.getVec4Value();
     }
 
@@ -69,7 +69,7 @@ namespace NovelRT::Maths {
       return GeoVector<T>(_value[3]);
     }
 
-    inline void setW(GeoVector<T> value) {
+    inline void setW(const GeoVector<T>& value) {
       _value[3] = value.getVec4Value();
     }
 

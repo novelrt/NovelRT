@@ -26,7 +26,7 @@ namespace NovelRT::Graphics {
       const RGBAConfig& fillColour);
 
     void drawObject() final;
-    const RGBAConfig& getColourConfigReadonly() const;
+    const RGBAConfig& getColourConfig() const;
     RGBAConfig& getColourConfig();
     void setColourConfig(const RGBAConfig& value);
   };
