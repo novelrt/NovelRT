@@ -6,6 +6,13 @@ namespace NovelRT::Graphics {
   Camera::Camera() : _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&Camera::generateUboMatrix,
     this)))) {}
 
+  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize) {
+	  auto returnVal = std::make_unique<Camera>();
+    returnVal->setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
+    returnVal->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+    return returnVal;
+  }
+
   Maths::GeoMatrix4<float> Camera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
   }
