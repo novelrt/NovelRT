@@ -13,10 +13,10 @@ namespace NovelRT::Utilities {
 
   private:
     std::function<T()> _delegate;
-    std::unique_ptr<T> _actual = nullptr;
+    std::unique_ptr<T> _actual;
 
   public:
-    Lazy(std::function<T()> delegate) : _delegate(delegate) {}
+    Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(nullptr) {}
     Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(std::make_unique<T>(eagerStartValue)) {}
 
     T& getActual() {
