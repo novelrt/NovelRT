@@ -63,7 +63,6 @@ namespace NovelRT::Graphics {
   typedef std::conditional<sizeof(signed long) <= 4, GLuint, GLuint64>::type AdvanceInteger;
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
-  typedef class CameraViewChangedEventArgs CameraViewChangedEventArgs;
   typedef class ImageRect ImageRect;
   typedef class RenderingService RenderingService;
   typedef class RenderObject RenderObject;
@@ -106,7 +105,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/WorldObject.h"
 
 //Graphics types
-#include "NovelRT/Graphics/CameraViewChangedEventArgs.h"
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"

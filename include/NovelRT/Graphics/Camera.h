@@ -19,20 +19,28 @@ namespace NovelRT::Graphics {
   public:
     Camera();
 
-    inline Maths::GeoMatrix4<float> getViewMatrix() const {
+    inline Maths::GeoMatrix4<float>& getViewMatrix() {
       return _viewMatrix;
     }
 
-    inline void setViewMatrix(Maths::GeoMatrix4<float> value) {
+    inline const Maths::GeoMatrix4<float>& getViewMatrix() const {
+      return _viewMatrix;
+    }
+
+    inline void setViewMatrix(const Maths::GeoMatrix4<float>& value) {
       _cameraUboMatrix.reset();
       _viewMatrix = value;
     }
 
-    inline Maths::GeoMatrix4<float> getProjectionMatrix() const {
+    inline Maths::GeoMatrix4<float>& getProjectionMatrix() {
       return _projectionMatrix;
     }
 
-    inline void setProjectionMatrix(Maths::GeoMatrix4<float> value) {
+    inline const Maths::GeoMatrix4<float>& getProjectionMatrix() const {
+      return _projectionMatrix;
+    }
+
+    inline void setProjectionMatrix(const Maths::GeoMatrix4<float>& value) {
       _cameraUboMatrix.reset();
       _projectionMatrix = value;
     }

@@ -14,6 +14,7 @@ namespace NovelRT::Maths {
     friend class Input::InteractionService;
     template<typename U>
     friend class GeoMatrix4;
+
   private:
     GeoVector(glm::vec<2, T> value) : _value(glm::vec<4, T>(value, 0, 0)) {}
     GeoVector(glm::vec<4, T> value) : _value(value) {}

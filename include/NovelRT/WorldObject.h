@@ -25,7 +25,7 @@ namespace NovelRT {
       return _transform;
     }
 
-    inline const Transform& getTransformReadonly() const {
+    inline const Transform& getTransform() const {
       return _transform;
     }
 

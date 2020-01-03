@@ -36,7 +36,7 @@ namespace NovelRT::Graphics {
 
     void drawObject() final;
 
-    inline const RGBAConfig& getColourConfigReadonly() const {
+    inline const RGBAConfig& getColourConfig() const {
       return _colourConfig;
     }
 
