@@ -72,6 +72,14 @@ namespace NovelRT::Input {
         _keyStates[keyUpCode] = KeyState::KeyUp;
       }
         break;
+
+      case SDL_WINDOWEVENT: {
+        if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+          _logger.log("Resize input detected! notifying...", LogLevel::Info);
+          raiseResizeInputDetected(Maths::GeoVector<float>(sdlEvent.window.data1, sdlEvent.window.data2));
+        }
+      }
+        break;
       }
     }
   }

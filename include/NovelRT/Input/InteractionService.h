@@ -12,6 +12,7 @@ namespace NovelRT::Input {
     friend class InteractionObject;
 
     NOVELRT_PARAMETERLESS_EVENT(Quit)
+    NOVELRT_EVENT(ResizeInputDetected, Maths::GeoVector<float>)
 
   private:
     void HandleInteractionDraw(InteractionObject* target);
