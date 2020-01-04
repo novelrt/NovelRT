@@ -61,6 +61,7 @@ namespace NovelRT {
     /// The Debug Service associated with this Runner.
     DebugService* getDebugService() const;
     Audio::AudioService* getAudioService() const;
+    Windowing::WindowingService* getWindowingService() const;
   };
 }
 

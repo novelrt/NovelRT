@@ -9,6 +9,10 @@
 
 namespace NovelRT::Windowing {
   class WindowingService {
+
+  NOVELRT_EVENT(WindowResized, Maths::GeoVector<float>)
+  NOVELRT_PARAMETERLESS_EVENT(WindowClosed)
+
   private:
     Maths::GeoVector<float> _windowSize;
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;

@@ -28,8 +28,11 @@ namespace NovelRT::Windowing {
       _logger.logError("Could not create window: ", std::string(SDL_GetError()));
       throw std::runtime_error("Unable to continue! Window could not be created.");
     }
+
+    raiseWindowResized(_windowSize);
   }
   void WindowingService::tearDown() {
+    raiseWindowClosed();
     SDL_DestroyWindow(getWindow());
     SDL_Quit();
   }

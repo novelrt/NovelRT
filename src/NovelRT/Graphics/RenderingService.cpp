@@ -4,14 +4,14 @@
 #define GL_GLEXT_PROTOTYPES
 
 namespace NovelRT::Graphics {
-  bool RenderingService::initialiseRenderPipeline() {
+  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    auto windowSize = _windowingService->getWindowSize();
+    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
     _camera = Camera::createDefaultOrthographicProjection(windowSize);
 
     std::string infoScreenSize = std::to_string((int)windowSize.getX());
@@ -19,32 +19,39 @@ namespace NovelRT::Graphics {
     infoScreenSize.append(std::to_string((int)windowSize.getY()));
     _logger.logInfo("Screen size:", infoScreenSize);
 
-    _openGLContext = SDL_GL_CreateContext(_windowingService->getWindow());
-    SDL_GL_MakeCurrent(_windowingService->getWindow(), _openGLContext);
 
-    if (!gladLoadGL()) {
-      _logger.logErrorLine("Failed to initialise glad.");
-      throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
+    if (completeLaunch) {
+      _openGLContext = SDL_GL_CreateContext(_runner->getWindowingService()->getWindow());
+      SDL_GL_MakeCurrent(_runner->getWindowingService()->getWindow(), _openGLContext);
+
+      if (!gladLoadGL()) {
+        _logger.logErrorLine("Failed to initialise glad.");
+        throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
+      }
+
+      std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+      std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+      _logger.logInfoLine("GL_VERSION: " + glVersion);
+      _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
+
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LESS);
+
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      _basicFillRectProgram = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
+      _texturedRectProgram = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
+      _fontProgram = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
+    }
+    else {
+      glViewport(0, 0, windowSize.getX(), windowSize.getY());
     }
 
-    std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-    std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-    _logger.logInfoLine("GL_VERSION: " + glVersion);
-    _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    _basicFillRectProgram = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
-    _texturedRectProgram = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
-    _fontProgram = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
     return true;
   }
 
-  ShaderProgram RenderingService::loadShaders(std::string vertexFilePath, std::string fragmentFilePath) {
+  ShaderProgram RenderingService::loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath) {
 
     // Create the shaders
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -166,7 +173,7 @@ namespace NovelRT::Graphics {
   }
 
   void RenderingService::endFrame() const {
-    SDL_GL_SwapWindow(_windowingService->getWindow());
+    SDL_GL_SwapWindow(_runner->getWindowingService()->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
@@ -184,9 +191,9 @@ namespace NovelRT::Graphics {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  RenderingService::RenderingService(Windowing::WindowingService* const windowingService) :
+  RenderingService::RenderingService(NovelRunner* const runner) :
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-    _windowingService(windowingService),
+    _runner(runner),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
     GLuint tempHandle;
     glGenBuffers(1, &tempHandle);
@@ -196,18 +203,24 @@ namespace NovelRT::Graphics {
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
     return tempHandle;
       })),
-    _camera(nullptr) {}
-
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
-    return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
+    _camera(nullptr) {
+    auto ptr = _runner->getWindowingService();
+    ptr->subscribeToWindowResized([this](auto input) {
+      initialiseRenderPipeline(false, &input);
+      });
   }
 
-  Camera* RenderingService::getCamera() const {
-    return _camera.get();
-  }
 
-  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-    GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-    glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-  }
+      std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+        return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
+      }
+
+      Camera* RenderingService::getCamera() const {
+        return _camera.get();
+      }
+
+      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+      }
 }
