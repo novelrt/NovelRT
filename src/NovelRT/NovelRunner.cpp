@@ -9,8 +9,8 @@ namespace NovelRT {
     _novelDebugService(std::make_unique<DebugService>(this)),
     _novelInteractionService(std::make_unique<Input::InteractionService>()),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
-    _novelWindowingService(std::make_unique<Windowing::WindowingService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(_novelWindowingService.get())) {
+    _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
+    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
