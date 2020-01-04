@@ -12,7 +12,6 @@ namespace NovelRT::Graphics {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
-    _camera = Camera::createDefaultOrthographicProjection(windowSize);
 
     std::string infoScreenSize = std::to_string((int)windowSize.getX());
     infoScreenSize.append("x");
@@ -21,6 +20,7 @@ namespace NovelRT::Graphics {
 
 
     if (completeLaunch) {
+      _camera = Camera::createDefaultOrthographicProjection(windowSize);
       _openGLContext = SDL_GL_CreateContext(_runner->getWindowingService()->getWindow());
       SDL_GL_MakeCurrent(_runner->getWindowingService()->getWindow(), _openGLContext);
 
@@ -45,6 +45,7 @@ namespace NovelRT::Graphics {
       _fontProgram = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
     }
     else {
+      _camera->forceResize(windowSize);
       glViewport(0, 0, windowSize.getX(), windowSize.getY());
     }
 

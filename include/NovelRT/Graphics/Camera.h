@@ -19,6 +19,7 @@ namespace NovelRT::Graphics {
     CameraFrameState _cameraFrameState;
 
     void initialiseCameraForFrame();
+    void forceResize(const Maths::GeoVector<float>& windowSize);
 
   public:
     Camera();
