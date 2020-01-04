@@ -26,4 +26,9 @@ namespace NovelRT::Graphics {
         _cameraFrameState = CameraFrameState::Unmodified;
     }
   }
+
+  void Camera::forceResize(const Maths::GeoVector<float>& windowSize) {
+    setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
+    setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+  }
 }
