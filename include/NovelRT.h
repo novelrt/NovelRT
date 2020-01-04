@@ -86,6 +86,7 @@ namespace NovelRT::Windowing {
 //enums
 #include "NovelRT/Input/KeyCode.h"
 #include "NovelRT/Input/KeyState.h"
+#include "NovelRT/Graphics/CameraFrameState.h"
 
 //value types
 #include "NovelRT/Maths/GeoVector.h"
