@@ -30,7 +30,7 @@ namespace NovelRT {
       _novelInteractionService->executeClickedInteractable();
     }
 
-    _novelRenderer->tearDown();
+    _novelWindowingService->tearDown();
     _novelAudioService->~AudioService();
     return _exitCode;
   }
@@ -70,5 +70,8 @@ namespace NovelRT {
 
   Audio::AudioService* NovelRunner::getAudioService() const {
     return _novelAudioService.get();
+  }
+  Windowing::WindowingService* NovelRunner::getWindowingService() const {
+	  return _novelWindowingService.get();
   }
 }

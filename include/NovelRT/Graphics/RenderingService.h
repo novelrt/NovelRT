@@ -10,12 +10,12 @@
 namespace NovelRT::Graphics {
   class RenderingService {
   private:
-    bool initialiseRenderPipeline();
+    bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
-    Windowing::WindowingService* const _windowingService;
+    NovelRunner* const _runner;
     SDL_GLContext _openGLContext;
 
-    ShaderProgram loadShaders(std::string vertexFilePath, std::string fragmentFilePath);
+    ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
     ShaderProgram _basicFillRectProgram;
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
@@ -26,7 +26,7 @@ namespace NovelRT::Graphics {
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
   public:
-    RenderingService(Windowing::WindowingService* const windowingService);
+    RenderingService(NovelRunner* const runner);
     int initialiseRendering();
 
     void tearDown() const;
