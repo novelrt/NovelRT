@@ -18,7 +18,7 @@ namespace NovelRT::Graphics {
     _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))){}
 
   void RenderObject::executeObjectBehaviour() {
-    if (_camera->getWasModifiedLastFrame()) _isDirty = true;
+    if (_camera->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
     
     if (_isDirty) {
       _finalViewMatrixData.reset();

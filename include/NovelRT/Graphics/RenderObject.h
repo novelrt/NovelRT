@@ -9,7 +9,6 @@
 
 namespace NovelRT::Graphics {
   class RenderObject : public WorldObject {
-
   protected:
     virtual void drawObject() = 0;
     virtual void configureObjectBuffers();

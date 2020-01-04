@@ -9,12 +9,16 @@
 
 namespace NovelRT::Graphics {
   class Camera {
+    friend class RenderingService;
 
   private:
     Maths::GeoMatrix4<float> _viewMatrix;
     Maths::GeoMatrix4<float> _projectionMatrix;
     Utilities::Lazy<Maths::GeoMatrix4<float>> _cameraUboMatrix;
     Maths::GeoMatrix4<float> generateUboMatrix();
+    CameraFrameState _cameraFrameState;
+
+    void initialiseCameraForFrame();
 
   public:
     Camera();
@@ -49,8 +53,8 @@ namespace NovelRT::Graphics {
       return _cameraUboMatrix.getActual();
     }
 
-    inline bool getWasModifiedLastFrame() {
-      return !_cameraUboMatrix.isCreated();
+    inline CameraFrameState getFrameState() const {
+      return _cameraFrameState;
     }
 
     static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize);

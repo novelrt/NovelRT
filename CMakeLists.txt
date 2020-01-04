@@ -75,6 +75,7 @@ set(NOVELRT_LIBRARY_HEADERS
   include/NovelRT/Audio/AudioService.h
   include/NovelRT/Graphics/BasicFillRect.h
   include/NovelRT/Graphics/Camera.h
+  include/NovelRT/Graphics/CameraFrameState.h
   include/NovelRT/Graphics/GraphicsCharacterRenderData.h
   include/NovelRT/Graphics/ImageRect.h
   include/NovelRT/Graphics/RenderingService.h
