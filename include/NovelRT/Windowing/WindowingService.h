@@ -43,7 +43,16 @@ namespace NovelRT::Windowing {
     }
 
     inline Maths::GeoVector<float> getWindowSize() const {
-      return _windowSize;
+      /*
+      TODO: its only done this way due to a bug in SDL2.
+      Its not something we can fix. See relevant bug ticket and GLFW proposal ticket for further information.
+      If we go ahead with that, we will switch back to the private field.
+      */
+      int x = 0;
+      int y = 0;
+      SDL_GetWindowSize(getWindow(), &x, &y); 
+
+      return Maths::GeoVector<float>(x, y);
     }
   };
 }

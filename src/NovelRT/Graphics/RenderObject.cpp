@@ -54,7 +54,7 @@ namespace NovelRT::Graphics {
 
     // Give our vertices to OpenGL.
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
-      }
+  }
 
   RenderObject::~RenderObject() {
     if (!_vertexArrayObject.isCreated()) return;

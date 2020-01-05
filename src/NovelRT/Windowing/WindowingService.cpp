@@ -5,9 +5,11 @@
 namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
     _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)),
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
     _runner(runner) {
-    runner->getInteractionService()->unsubscribeFromResizeInputDetected([this](auto value) {
+    runner->getInteractionService()->subscribeToResizeInputDetected([this](auto value) {
       _windowSize = value;
+      _logger.logInfo("New size detected! Notifying GFX and other members...");
       raiseWindowResized(_windowSize); });
   }
 
