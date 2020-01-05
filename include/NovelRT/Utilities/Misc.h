@@ -16,6 +16,7 @@ namespace NovelRT::Utilities {
     static inline const std::string CONSOLE_LOG_GFX = "GFX";
     static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
     static inline const std::string CONSOLE_LOG_INPUT = "Input";
+    static inline const std::string CONSOLE_LOG_WINDOWING = "WindowManager";
   };
 }
 
