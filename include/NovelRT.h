@@ -60,7 +60,6 @@ namespace NovelRT::Audio {
 }
 
 namespace NovelRT::Graphics {
-  typedef std::conditional<sizeof(signed long) <= 4, GLuint, GLuint64>::type AdvanceInteger;
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
   typedef class ImageRect ImageRect;
@@ -109,6 +108,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
+#include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
 
