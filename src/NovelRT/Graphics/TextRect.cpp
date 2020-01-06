@@ -58,12 +58,13 @@ namespace NovelRT::Graphics {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
         // Now store character for later use
         GraphicsCharacterRenderData character = {
             textureId,
             Maths::GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             Maths::GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            static_cast<AdvanceInteger>(face->glyph->advance.x)
+            GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
         };
         _fontCharacters.insert(std::pair<GLchar, GraphicsCharacterRenderData>(c, character));
       }
