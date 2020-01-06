@@ -74,7 +74,7 @@ namespace NovelRT::Input {
         break;
 
       case SDL_WINDOWEVENT: {
-        if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+        if (sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
           _logger.log("Resize input detected! notifying subscribers...", LogLevel::Info);
           raiseResizeInputDetected(Maths::GeoVector<float>(sdlEvent.window.data1, sdlEvent.window.data2));
         }
