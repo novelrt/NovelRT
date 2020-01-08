@@ -44,23 +44,23 @@ if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-add_library(libNovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
-target_link_libraries(libNovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
+add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
+target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
 file(GLOB_RECURSE NOVELRT_LIB_FONT_RESOURCES CONFIGURE_DEPENDS Resources/Fonts/*.ttf)
 file(GLOB_RECURSE NOVELRT_LIB_IMAGE_RESOURCES CONFIGURE_DEPENDS Resources/Images/*.png)
 file(GLOB_RECURSE NOVELRT_LIB_SCRIPT_RESOURCES CONFIGURE_DEPENDS Resources/Scripts/*.lua)
 file(GLOB_RECURSE NOVELRT_LIB_SHADER_RESOURCES CONFIGURE_DEPENDS Resources/Shaders/*.glsl)
 
-add_custom_command(TARGET libNovelRT POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:libNovelRT>/Resources/Fonts
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_FONT_RESOURCES} $<TARGET_FILE_DIR:libNovelRT>/Resources/Fonts
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:libNovelRT>/Resources/Images
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_IMAGE_RESOURCES} $<TARGET_FILE_DIR:libNovelRT>/Resources/Images
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:libNovelRT>/Resources/Scripts
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SCRIPT_RESOURCES} $<TARGET_FILE_DIR:libNovelRT>/Resources/Scripts
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:libNovelRT>/Resources/Shaders
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SHADER_RESOURCES} $<TARGET_FILE_DIR:libNovelRT>/Resources/Shaders
+add_custom_command(TARGET NovelRT POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_FONT_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
+  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Images
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_IMAGE_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Images
+  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Scripts
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SCRIPT_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Scripts
+  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SHADER_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
 )
 
 # Docs
