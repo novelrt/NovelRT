@@ -17,6 +17,12 @@ namespace NovelRT::Utilities {
     static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
     static inline const std::string CONSOLE_LOG_INPUT = "Input";
     static inline const std::string CONSOLE_LOG_WINDOWING = "WindowManager";
+
+    static std::filesystem::path getExecutablePath();
+
+    static std::filesystem::path getExecutableDirPath() {
+      return getExecutablePath().parent_path();
+    }
   };
 }
 
