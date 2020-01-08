@@ -36,6 +36,7 @@ if(NOT WIN32)
   set(NOVELRT_LIB_LINK_LIBRARIES
     ${NOVELRT_LIB_LINK_LIBRARIES}
     m
+    stdc++fs
   )
 endif()
 
