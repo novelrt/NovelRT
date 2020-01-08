@@ -63,59 +63,64 @@ find_library(LUA_LIBRARY lua)
 link_libraries(${LUA_LIBRARY})
 
 find_package(Doxygen QUIET)
+include_directories(include)
 
-set(NOVELRT_HEADERS
-  src/NovelWorldObject.h
-  src/GeoBounds.h
-  src/GeoVector.h
-  src/GraphicsCharacterRenderData.h
-  src/KeyCode.h
-  src/Lazy.h
-  src/NovelAudioService.h
-  src/NovelBasicFillRect.h
-  src/NovelBasicInteractionRect.h
-  src/NovelCommonArgs.h
-  src/NovelDebugService.h
-  src/NovelImageRect.h
-  src/NovelInteractionObject.h
-  src/NovelInteractionService.h
-  src/NovelLayeringService.h
-  src/NovelLoggingService.h
-  src/NovelObjectSortComparison.h
-  src/NovelRenderingService.h
-  src/NovelRenderObject.h
-  src/NovelUtilities.h
-  src/NovelRunner.h
-  src/NovelStepTimer.h
-  src/NovelTextRect.h
-  src/RGBAConfig.h
-  src/wrapper.hpp
-  src/NovelCamera.h
-  src/GeoMatrix4.h
-  src/CameraViewChangedEventArgs.h
-  src/ShaderProgram.h
-  src/CameraBlock.h
-  src/NovelRT.h)
+set(NOVELRT_LIBRARY_HEADERS
+  include/NovelRT.h
+  include/NovelRT/DebugService.h
+  include/NovelRT/LoggingService.h
+  include/NovelRT/NovelRunner.h
+  include/NovelRT/Transform.h
+  include/NovelRT/WorldObject.h
+  include/NovelRT/Audio/AudioService.h
+  include/NovelRT/Graphics/BasicFillRect.h
+  include/NovelRT/Graphics/Camera.h
+  include/NovelRT/Graphics/CameraFrameState.h
+  include/NovelRT/Graphics/GraphicsCharacterRenderData.h
+  include/NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h
+  include/NovelRT/Graphics/ImageRect.h
+  include/NovelRT/Graphics/RenderingService.h
+  include/NovelRT/Graphics/RenderObject.h
+  include/NovelRT/Graphics/RGBAConfig.h
+  include/NovelRT/Graphics/ShaderProgram.h
+  include/NovelRT/Graphics/TextRect.h
+  include/NovelRT/Input/BasicInteractionRect.h
+  include/NovelRT/Input/InteractionObject.h
+  include/NovelRT/Input/InteractionService.h
+  include/NovelRT/Input/KeyCode.h
+  include/NovelRT/Input/KeyState.h
+  include/NovelRT/Maths/GeoBounds.h
+  include/NovelRT/Maths/GeoMatrix4.h
+  include/NovelRT/Maths/GeoVector.h
+  include/NovelRT/Timing/StepTimer.h
+  include/NovelRT/Utilities/Lazy.h
+  include/NovelRT/Utilities/Misc.h
+  include/NovelRT/Windowing/WindowingService.h)
 
-set(NOVELRT_SOURCES
-        src/NovelWorldObject.cpp
-  src/GeoBounds.cpp
-  src/NovelAudioService.cpp
-  src/NovelBasicFillRect.cpp
-  src/NovelBasicInteractionRect.cpp
-  src/NovelDebugService.cpp
-  src/NovelImageRect.cpp
-  src/NovelInteractionObject.cpp
-  src/NovelInteractionService.cpp
-  src/NovelLayeringService.cpp
-  src/NovelLoggingService.cpp
-  src/NovelRenderingService.cpp
-  src/NovelRenderObject.cpp
-  src/NovelRunner.cpp
-  src/NovelStepTimer.cpp
-  src/NovelTextRect.cpp
-  src/RGBAConfig.cpp
-  src/NovelCamera.cpp)
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_HEADERS})
+
+set(NOVELRT_LIBRARY_SOURCES
+  src/NovelRT/DebugService.cpp
+  src/NovelRT/LoggingService.cpp
+  src/NovelRT/NovelRunner.cpp
+  src/NovelRT/Transform.cpp
+  src/NovelRT/WorldObject.cpp
+  src/NovelRT/Audio/AudioService.cpp
+  src/NovelRT/Graphics/BasicFillRect.cpp
+  src/NovelRT/Graphics/Camera.cpp
+  src/NovelRT/Graphics/ImageRect.cpp
+  src/NovelRT/Graphics/RenderingService.cpp
+  src/NovelRT/Graphics/RenderObject.cpp
+  src/NovelRT/Graphics/RGBAConfig.cpp
+  src/NovelRT/Graphics/TextRect.cpp
+  src/NovelRT/Input/BasicInteractionRect.cpp
+  src/NovelRT/Input/InteractionObject.cpp
+  src/NovelRT/Input/InteractionService.cpp
+  src/NovelRT/Maths/GeoBounds.cpp
+  src/NovelRT/Timing/StepTimer.cpp
+  src/NovelRT/Windowing/WindowingService.cpp)
+
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${NOVELRT_LIBRARY_SOURCES})
 
 set(NOVELRT_LINK_LIBRARIES
   Freetype::Freetype
@@ -144,7 +149,7 @@ set(NOVELRT_EXECUTABLE_SOURCES
 )
 
 set(NOVELRT_EXECUTABLE_LINK_LIBRARIES
-  NovelRTLib
+  libNovelRT
 )
 
 add_executable(NovelRT ${NOVELRT_EXECUTABLE_HEADERS} ${NOVELRT_EXECUTABLE_SOURCES})
@@ -153,16 +158,6 @@ target_link_libraries(NovelRT ${NOVELRT_EXECUTABLE_LINK_LIBRARIES})
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
-
-set(NOVELRT_LIBRARY_HEADERS
-  ${NOVELRT_HEADERS}
-  src/NovelRunner_C.h
-)
-
-set(NOVELRT_LIBRARY_SOURCES
-  ${NOVELRT_SOURCES}
-  src/NovelRunner_C.cpp
-)
 
 set(NOVELRT_LIBRARY_LINK_LIBRARIES
   ${NOVELRT_LINK_LIBRARIES}
@@ -246,8 +241,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND false)
   endif ()
 endif ()
 
-add_library(NovelRTLib SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
-target_link_libraries(NovelRTLib ${NOVELRT_LIBRARY_LINK_LIBRARIES})
+add_library(libNovelRT SHARED ${NOVELRT_LIBRARY_HEADERS} ${NOVELRT_LIBRARY_SOURCES})
+target_link_libraries(libNovelRT ${NOVELRT_LIBRARY_LINK_LIBRARIES})
 
 # Docs
 
