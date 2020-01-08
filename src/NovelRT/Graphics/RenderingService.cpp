@@ -51,16 +51,19 @@ namespace NovelRT::Graphics {
     return true;
   }
 
-  ShaderProgram RenderingService::loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath) {
+  ShaderProgram RenderingService::loadShaders(const std::string& vertexFileName, const std::string& fragmentFileName) {
 
     // Create the shaders
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
+    std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
+    std::filesystem::path shadersDirPath = executableDirPath / "Resources" / "Shaders";
+
     // Read the Vertex Shader code from the file
     std::string vertexShaderCode;
 
-    std::ifstream VertexShaderStream(vertexFilePath, std::ios::in);
+    std::ifstream VertexShaderStream(shadersDirPath / vertexFileName, std::ios::in);
     if (VertexShaderStream.is_open()) {
       std::stringstream sstr;
       sstr << VertexShaderStream.rdbuf();
@@ -74,7 +77,7 @@ namespace NovelRT::Graphics {
 
     // Read the Fragment Shader code from the file
     std::string fragmentShaderCode;
-    std::ifstream fragmentShaderStream(fragmentFilePath, std::ios::in);
+    std::ifstream fragmentShaderStream(shadersDirPath / fragmentFileName, std::ios::in);
     if (fragmentShaderStream.is_open()) {
       std::stringstream stringStream;
       stringStream << fragmentShaderStream.rdbuf();
@@ -90,7 +93,7 @@ namespace NovelRT::Graphics {
     int infoLogLength;
 
     // Compile Vertex Shader
-    _logger.logInfoLine("Compiling shader: " + vertexFilePath + "...");
+    _logger.logInfoLine("Compiling shader: " + vertexFileName + "...");
     char const* vertexSourcePointer = vertexShaderCode.c_str();
     glShaderSource(vertexShaderId, 1, &vertexSourcePointer, nullptr);
     glCompileShader(vertexShaderId);
@@ -106,7 +109,7 @@ namespace NovelRT::Graphics {
     }
 
     // Compile Fragment Shader
-    _logger.logInfoLine("Compiling shader: " + fragmentFilePath + "...");
+    _logger.logInfoLine("Compiling shader: " + fragmentFileName + "...");
     const char* FragmentSourcePointer = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderId, 1, &FragmentSourcePointer, nullptr);
     glCompileShader(fragmentShaderId);
