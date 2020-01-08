@@ -3,24 +3,24 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
-//stdlib
+//cstdlib
 #include <cmath>
-#include <type_traits>
-#include <map>
-#include <string>
-#include <string>
-#include <map>
-#include <typeinfo>
-#include <vector>
-#include <functional>
+#include <cstdint>
+
+//stdlib
 #include <algorithm>
-#include <memory>
-#include <stdint.h>
-#include <iostream>
-#include <stdexcept>
 #include <fstream>
-#include <sstream>
+#include <functional>
+#include <iostream>
 #include <limits>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <typeinfo>
+#include <type_traits>
+#include <vector>
 
 //Freetype
 #include <ft2build.h>
