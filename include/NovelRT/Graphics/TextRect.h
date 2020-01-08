@@ -48,6 +48,9 @@ namespace NovelRT::Graphics {
 
     std::string getText() const;
     void setText(const std::string& value);
+
+    void setActive(bool value) override;
+
   };
 }
 

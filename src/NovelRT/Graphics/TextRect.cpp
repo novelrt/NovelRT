@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
+#include <NovelRT/Graphics/TextRect.h>
 
 namespace NovelRT::Graphics {
   void TextRect::drawObject() {
@@ -104,12 +105,14 @@ namespace NovelRT::Graphics {
     auto modifiedTransform = getTransform();
     modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
     for (int i = 0; i < difference; i++) {
-      _letterRects.push_back(std::make_unique<ImageRect>(
-        modifiedTransform,
-        getLayer(),
-        _shaderProgram,
-        _camera,
-        _colourConfig));
+      auto rect = std::make_unique<ImageRect>(
+          modifiedTransform,
+          getLayer(),
+          _shaderProgram,
+          _camera,
+          _colourConfig);
+      rect->setActive(getActive());
+      _letterRects.push_back(std::move(rect));
     }
 
     if (_bufferInitialised) {
@@ -151,5 +154,10 @@ namespace NovelRT::Graphics {
     std::for_each(beginIt, endIt, [](const std::unique_ptr<ImageRect>& ptr) {
       ptr->setActive(false);
       });
+  }
+
+  void TextRect::setActive(bool value) {
+    WorldObject::setActive(value);
+    std::for_each(_letterRects.begin(), _letterRects.end(), [&value](auto& x){x->setActive(value);});
   }
 }
