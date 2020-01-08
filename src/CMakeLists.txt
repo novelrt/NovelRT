@@ -6,13 +6,6 @@ find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-# lua doesn't provide native cmake support
-find_path(LUA_INCLUDE_DIR lua.h)
-include_directories(${LUA_INCLUDE_DIR})
-
-find_library(LUA_LIBRARY lua)
-link_libraries(${LUA_LIBRARY})
-
 find_package(Doxygen QUIET)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
@@ -32,16 +25,27 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   spdlog::spdlog
 )
 
-if(NOT WIN32)
-  set(NOVELRT_LIB_LINK_LIBRARIES
-    ${NOVELRT_LIB_LINK_LIBRARIES}
-    m
-    stdc++fs
-  )
-endif()
+# lua doesn't provide native cmake support
+
+find_path(LUA_INCLUDE_DIRS lua.h)
+include_directories(${LUA_INCLUDE_DIRS})
+
+find_library(LUA_LIBRARY NAMES liblua lua)
+link_libraries(${LUA_LIBRARY})
+
+# nethost doesn't provide native cmake support
+
+find_path(NETHOST_INCLUDE_DIRS nethost.h)
+include_directories(${NETHOST_INCLUDE_DIRS})
+
+find_library(NETHOST_LIBRARY NAMES libnethost nethost)
+link_libraries(${NETHOST_LIBRARY})
 
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else()
+  link_libraries(m)
+  link_libraries(stdc++fs)
 endif()
 
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
