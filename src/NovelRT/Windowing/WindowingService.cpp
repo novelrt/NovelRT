@@ -42,7 +42,9 @@ namespace NovelRT::Windowing {
 
     glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
     glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
-      auto thisPtr = reinterpret_cast<WindowingService*>(window);
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
       thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
       thisPtr->raiseWindowResized(thisPtr->_windowSize); });
