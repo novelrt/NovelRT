@@ -6,12 +6,7 @@ namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner) {
-    runner->getInteractionService()->subscribeToResizeInputDetected([this](auto value) {
-      _windowSize = value;
-      _logger.logInfo("New size detected! Notifying GFX and other members...");
-      raiseWindowResized(_windowSize); });
-  }
+    _runner(runner) {}
 
   void WindowingService::errorCallback(int, const char* error) {
     _logger.logError("Could not initialize GLFW: ", error);
@@ -22,6 +17,7 @@ namespace NovelRT::Windowing {
       const char* err = "";
       glfwGetError(&err);
       _logger.logError("GLFW ERROR: ", err);
+      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -40,11 +36,17 @@ namespace NovelRT::Windowing {
     glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
     _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
-    _windowSize = Maths::GeoVector<float>(wData, hData);
-
     if (_window == nullptr) {
       throw std::runtime_error("Unable to continue! Window could not be created.");
     }
+
+    glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
+    glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(window);
+      thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
+      thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
+      thisPtr->raiseWindowResized(thisPtr->_windowSize); });
+    _windowSize = Maths::GeoVector<float>(wData, hData);
   }
   void WindowingService::tearDown() {
     raiseWindowClosed();

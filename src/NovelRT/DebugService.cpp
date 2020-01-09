@@ -26,7 +26,7 @@ messageCallback(GLenum source,
 #include <NovelRT.h>
 
 namespace NovelRT {
-  DebugService::DebugService(NovelRunner* runner) :
+  DebugService::DebugService(NovelRunner* const runner) :
     _runner(runner),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {

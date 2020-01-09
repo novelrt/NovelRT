@@ -10,9 +10,9 @@
 namespace NovelRT::Input {
   enum class KeyState : int32_t {
     Idle = 0,
-    KeyDown = 1,
-    KeyDownHeld = 2,
-    KeyUp = 3,
+    KeyDown = GLFW_PRESS,
+    KeyDownHeld = GLFW_REPEAT,
+    KeyUp = GLFW_RELEASE,
   };
 }
 

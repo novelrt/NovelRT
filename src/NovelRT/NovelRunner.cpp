@@ -6,10 +6,10 @@ namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
     _exitCode(1),
     _stepTimer(Timing::StepTimer(targetFrameRate)),
-    _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<Input::InteractionService>()),
-    _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
+    _novelDebugService(std::make_unique<DebugService>(this)),
+    _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
+    _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();

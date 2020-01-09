@@ -12,7 +12,7 @@ namespace NovelRT {
   class DebugService {
 
   private:
-    NovelRunner* _runner;
+    NovelRunner* const _runner;
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
     uint32_t _framesPerSecond;
 
@@ -21,7 +21,7 @@ namespace NovelRT {
     void onSceneConstruction();
 
   public:
-    DebugService(NovelRunner* runner);
+    DebugService(NovelRunner* const runner);
 
     bool getIsFpsCounterVisible() const;
     void setIsFpsCounterVisible(bool value);
