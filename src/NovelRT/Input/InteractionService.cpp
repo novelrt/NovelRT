@@ -9,6 +9,9 @@ namespace NovelRT::Input {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
     _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
     _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
+    //glfwSetKeyCallback();
+    //glfwSetMouseButtonCallback();
+    //TODO: enable and add callbacks for mouse buttons and keyboard events
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
@@ -18,6 +21,10 @@ namespace NovelRT::Input {
       _clickTarget = target;
   }
 
+  void InteractionService::consumePlayerInput() {
+    glfwPollEvents();
+  }
+/*
   void InteractionService::consumePlayerInput() {
     SDL_Event sdlEvent;
 
@@ -83,6 +90,7 @@ namespace NovelRT::Input {
       }
     }
   }
+*/
 
   std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
     return std::make_unique<BasicInteractionRect>(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });
