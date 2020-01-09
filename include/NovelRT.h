@@ -30,6 +30,10 @@
 //glad
 #include <glad.h>
 
+//GLFW3
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>

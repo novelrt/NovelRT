@@ -15,9 +15,10 @@ namespace NovelRT::Windowing {
 
   private:
     Maths::GeoVector<float> _windowSize;
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
+    std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
     NovelRunner* _runner;
+    std::string _windowTitle;
 
   public:
     explicit WindowingService(NovelRunner* const runner);
@@ -29,16 +30,17 @@ namespace NovelRT::Windowing {
     }
 
     inline std::string getWindowTitle() const {
-      return SDL_GetWindowTitle(getWindow());
+      return _windowTitle;
     }
 
     inline void setWindowTitle(const std::string& value) {
-      return SDL_SetWindowTitle(getWindow(), value.c_str());
+      _windowTitle = value;
+      return glfwSetWindowTitle(getWindow(), _windowTitle.c_str());
     }
 
     inline void setWindowSize(const Maths::GeoVector<float>& value) {
       _windowSize = value;
-      SDL_SetWindowSize(getWindow(), value.getX(), value.getY());
+      glfwSetWindowSize(getWindow(), value.getX(), value.getY());
       raiseWindowResized(_windowSize);
     }
 
