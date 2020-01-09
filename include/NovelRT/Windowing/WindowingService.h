@@ -27,7 +27,7 @@ namespace NovelRT::Windowing {
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
     void tearDown();
 
-    inline SDL_Window* getWindow() const {
+    inline GLFWwindow* getWindow() const {
       return _window.get();
     }
 

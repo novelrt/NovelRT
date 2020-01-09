@@ -33,8 +33,8 @@ namespace NovelRT::Windowing {
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
     // create window
-    float wData = displayData.w * 0.7f;
-    float hData = displayData.h * 0.7f;
+    float wData = displayData->width * 0.7f;
+    float hData = displayData->height * 0.7f;
     auto window = glfwCreateWindow(wData,hData, _windowTitle.c_str(), NULL, NULL);
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
     glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
@@ -49,6 +49,6 @@ namespace NovelRT::Windowing {
   void WindowingService::tearDown() {
     raiseWindowClosed();
     glfwDestroyWindow(getWindow());
-    glfwTerminate()
+    glfwTerminate();
   }
 }
