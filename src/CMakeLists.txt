@@ -1,5 +1,6 @@
 find_package(Freetype REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
@@ -24,6 +25,7 @@ source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_SOURCES})
 set(NOVELRT_LIB_LINK_LIBRARIES
   Freetype::Freetype
   glad::glad
+  glfw
   glm
   SDL2::SDL2-static
   SDL2::SDL2_image
