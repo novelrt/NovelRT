@@ -17,7 +17,7 @@ namespace NovelRT::Windowing {
     Maths::GeoVector<float> _windowSize;
     std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
-    NovelRunner* _runner;
+    NovelRunner* const _runner;
     std::string _windowTitle;
 
     void errorCallback(int, const char* error);

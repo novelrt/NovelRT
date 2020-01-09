@@ -10,11 +10,13 @@
 namespace NovelRT::Input {
   class InteractionService {
     friend class InteractionObject;
+    friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
     NOVELRT_PARAMETERLESS_EVENT(Quit)
-    NOVELRT_EVENT(ResizeInputDetected, Maths::GeoVector<float>)
 
   private:
+    NovelRunner* const _runner;
+
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
@@ -23,7 +25,7 @@ namespace NovelRT::Input {
     LoggingService _logger;
 
   public:
-    InteractionService();
+    InteractionService(NovelRunner* const runner);
 
     void consumePlayerInput();
 

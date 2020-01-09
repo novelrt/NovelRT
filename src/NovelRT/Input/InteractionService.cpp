@@ -3,7 +3,8 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  InteractionService::InteractionService() :
+  InteractionService::InteractionService(NovelRunner* const runner) :
+    _runner(runner),
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
     _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
@@ -12,6 +13,15 @@ namespace NovelRT::Input {
     //glfwSetKeyCallback();
     //glfwSetMouseButtonCallback();
     //TODO: enable and add callbacks for mouse buttons and keyboard events
+
+
+    //auto window = runner->getWindowingService()->getWindow();
+    //glfwSetWindowUserPointer(window, this);
+    //glfwSetKeyCallback(window, [](auto window, int key, int scancode, int action, int mods) {
+    //  auto thisPtr = reinterpret_cast<InteractionService*>(window);
+    //  auto result = thisPtr->_keyStates.find(static_cast<KeyCode>(scancode));
+    //  thisPtr->_logger.logDebug("Hello lambda!");
+    //  });
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
