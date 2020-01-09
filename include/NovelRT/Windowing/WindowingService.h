@@ -20,6 +20,8 @@ namespace NovelRT::Windowing {
     NovelRunner* _runner;
     std::string _windowTitle;
 
+    void errorCallback(int, const char* error);
+
   public:
     explicit WindowingService(NovelRunner* const runner);
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
