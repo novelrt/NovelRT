@@ -2,10 +2,15 @@ find_package(Freetype REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(openal CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+
+if(WIN32)
+  find_package(openal CONFIG REQUIRED)
+else()
+  find_package(openal-soft CONFIG REQURED)
+endif()
 
 # lua doesn't provide native cmake support
 find_path(LUA_INCLUDE_DIR lua.h)
