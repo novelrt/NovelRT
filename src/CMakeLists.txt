@@ -9,7 +9,7 @@ find_package(spdlog CONFIG REQUIRED)
 if(WIN32)
   find_package(openal CONFIG REQUIRED)
 else()
-  find_package(openal-soft CONFIG REQURED)
+  find_package(openal-soft CONFIG REQUIRED)
 endif()
 
 # lua doesn't provide native cmake support
