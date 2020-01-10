@@ -30,6 +30,7 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   OpenAL::OpenAL
   SDL2::SDL2-static
   SDL2::SDL2_image
+  SDL2::SDL2main
   spdlog::spdlog
 )
 

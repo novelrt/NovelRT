@@ -8,11 +8,7 @@ set(NOVELRT_SAMPLES_LINK_LIBRARIES
   NovelRT
 )
 
-if(WIN32)
-  add_executable(NovelRTSamples WIN32 ${NOVELRT_SAMPLES_HEADERS} ${NOVELRT_SAMPLES_SOURCES})
-else()
-  add_executable(NovelRTSamples ${NOVELRT_SAMPLES_HEADERS} ${NOVELRT_SAMPLES_SOURCES})
-endif()
+add_executable(NovelRTSamples ${NOVELRT_SAMPLES_HEADERS} ${NOVELRT_SAMPLES_SOURCES})
 target_link_libraries(NovelRTSamples ${NOVELRT_SAMPLES_LINK_LIBRARIES})
 
 add_custom_command(TARGET NovelRTSamples POST_BUILD
