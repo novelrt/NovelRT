@@ -23,6 +23,9 @@ namespace NovelRT::Input {
     std::map<KeyCode, Maths::GeoVector<float>> _mousePositionsOnScreenPerButton;
     Maths::GeoVector<float> _screenSize;
     LoggingService _logger;
+    void processKeyState(KeyCode code, KeyState state);
+    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector<float>& mousePosition);
+    void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
     InteractionService(NovelRunner* const runner);
