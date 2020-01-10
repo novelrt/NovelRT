@@ -13,7 +13,7 @@ namespace NovelRT::Windowing {
   }
 
   void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
-    if(!glfwInit()) {
+    if (!glfwInit()) {
       const char* err = "";
       glfwGetError(&err);
       _logger.logError("GLFW ERROR: ", err);
@@ -31,7 +31,7 @@ namespace NovelRT::Windowing {
     // create window
     float wData = displayData->width * 0.7f;
     float hData = displayData->height * 0.7f;
-    auto window = glfwCreateWindow(wData,hData, _windowTitle.c_str(), NULL, NULL);
+    auto window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), NULL, NULL);
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
     glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
@@ -49,6 +49,25 @@ namespace NovelRT::Windowing {
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
       thisPtr->raiseWindowResized(thisPtr->_windowSize); });
     _windowSize = Maths::GeoVector<float>(wData, hData);
+
+    glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+      double x = 0, y = 0;
+      glfwGetCursorPos(window, &x, &y);
+      thisPtr->_runner->getInteractionService()->acceptMouseButtonClickPush(mouseButton, action, Maths::GeoVector<float>(static_cast<float>(x), static_cast<float>(y)));
+      });
+
+
+
+    glfwSetKeyCallback(_window.get(), [](auto window, auto key, auto scancode, auto action, auto mods) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      thisPtr->_runner->getInteractionService()->acceptKeyboardInputBindingPush(key, action);
+      });
+
+
   }
   void WindowingService::tearDown() {
     raiseWindowClosed();

@@ -120,7 +120,8 @@ int main(int argc, char *argv[])
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
   memeInteractionRect->subscribeToInteracted([&console] {
-    console.logDebug("WAHEYYY"); });
+    console.logDebug("WAHEYYY");
+    });
 
   interactionRect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
     counter++;
