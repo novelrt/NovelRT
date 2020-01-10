@@ -16,10 +16,13 @@ namespace NovelRT::Input {
     switch (state) {
     case KeyState::KeyDown:
       if (_keyStates.at(code) == KeyState::KeyDown) {
+        _logger.logDebug("Held reached!");
         _keyStates.at(code) = KeyState::KeyDownHeld;
       }
       else if (_keyStates.at(code) != KeyState::KeyDownHeld) {
+        _logger.logDebug("KeyState before: ", _keyStates.at(code));
         _keyStates.at(code) = KeyState::KeyDown;
+        _logger.logDebug("KeyState after: ", _keyStates.at(code));
       }
       break;
     case KeyState::KeyUp:
@@ -46,12 +49,13 @@ namespace NovelRT::Input {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
 
-    _mousePositionsOnScreenPerButton.at(keyCode) = mousePosition;
+    _mousePositionsOnScreenPerButton.at(keyCode) = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
     processKeyState(keyCode, keyState);
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
+    if (_keyStates[KeyCode::LeftMouseButton] == KeyState::KeyDown) _logger.logDebug(std::to_string(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].getX()) + " " + std::to_string(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].getY()));
     if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer())))
@@ -79,7 +83,7 @@ namespace NovelRT::Input {
           raiseQuit();
           return;
         case SDL_MOUSEBUTTONDOWN: {
-          auto result = Maths::GeoVector<float>(Maths::GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y).getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f)));
+          auto result = Maths::GeoVector<float>(Maths::GeoVector<float>(sdlEvent.button.x, sdlEvent.button.y));
           if (sdlEvent.button.button == SDL_BUTTON_LEFT) {
             _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setX(result.getX());
             _mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].setY(result.getY());
