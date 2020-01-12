@@ -106,13 +106,13 @@ namespace NovelRT::DotNet {
     })),
     _hostfxr(Lazy<void*>(std::function(loadHostFxr))),
     _hostfxr_initialize_for_runtime_config(Lazy<hostfxr_initialize_for_runtime_config_fn>([&, this] {
-      return static_cast<hostfxr_initialize_for_runtime_config_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_initialize_for_runtime_config"));
+      return reinterpret_cast<hostfxr_initialize_for_runtime_config_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_initialize_for_runtime_config"));
     })),
     _hostfxr_get_runtime_delegate(Lazy<hostfxr_get_runtime_delegate_fn>([&, this] {
-      return static_cast<hostfxr_get_runtime_delegate_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_get_runtime_delegate"));
+      return reinterpret_cast<hostfxr_get_runtime_delegate_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_get_runtime_delegate"));
     })),
     _hostfxr_close(Lazy<hostfxr_close_fn>([&, this] {
-      return static_cast<hostfxr_close_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_close"));
+      return reinterpret_cast<hostfxr_close_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_close"));
     })),
     _load_assembly_and_get_function_pointer(Lazy<load_assembly_and_get_function_pointer_fn>([&, this] {
       void* load_assembly_and_get_function_pointer = nullptr;
@@ -124,7 +124,7 @@ namespace NovelRT::DotNet {
         throw -1;
       }
 
-      return static_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
+      return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
     })) {
   }
 
@@ -142,7 +142,7 @@ namespace NovelRT::DotNet {
   }
 
   void RuntimeService::initialize() {
-    auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
-    initializeFunction();
+    auto initializeFunction = getFunction<void(int)>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action`1[[System.Int32, System.Private.Corelib]], System.Private.Corelib"));
+    initializeFunction(5);
   }
 }

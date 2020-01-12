@@ -6,9 +6,10 @@ namespace NovelRT.DotNet
 {
     public static class RuntimeService
     {
-        public static void Initialize()
+        public static void Initialize(int x)
         {
             Console.WriteLine($"Hello from .NET v{Environment.Version}!");
+			Console.WriteLine(x);
         }
     }
 }
