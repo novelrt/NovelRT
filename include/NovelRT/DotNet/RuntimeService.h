@@ -22,9 +22,18 @@ namespace NovelRT::DotNet {
     ~RuntimeService();
 
     template <class _Fty>
-    std::function<_Fty> getFunction(const char_t* assemblyPath, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
+    std::function<_Fty> getFunction(const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
+      std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+      std::filesystem::path assemblyPath = executableDirPath / assemblyName;
+
+#if defined(WIN32)
+      const char_t* assembly_path = assemblyPath .c_str();
+#else
+      const char_t* assembly_path = assemblyPath.string().c_str();
+#endif
+
       void* delegate;
-      int result = _load_assembly_and_get_function_pointer.getActual()(assemblyPath, typeName, methodName, delegateTypeName, nullptr, &delegate);
+      int result = _load_assembly_and_get_function_pointer.getActual()(assembly_path, typeName, methodName, delegateTypeName, nullptr, &delegate);
 
       if (result != 0)
       {
@@ -34,6 +43,8 @@ namespace NovelRT::DotNet {
 
       return std::function<_Fty>(static_cast<_Fty*>(delegate));
     }
+
+    void initialize();
   };
 }
 

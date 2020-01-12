@@ -4,7 +4,7 @@
 
 #include <nethost.h>
 
-#if defined(_WIN32)
+#if defined(WIN32)
 #include <Windows.h>
 #else
 #include <dlfcn.h>
@@ -12,7 +12,7 @@
 
 using namespace NovelRT::Utilities;
 
-#if defined(_WIN32)
+#if defined(WIN32)
   #define STR(s) L ## s
   #define CH(c) L ## c
 #else
@@ -84,7 +84,17 @@ namespace NovelRT::DotNet {
   RuntimeService::RuntimeService() :
     _hostContextHandle(Lazy<hostfxr_handle>([&, this] {
       hostfxr_handle hostContextHandle = nullptr;
-      int result = _hostfxr_initialize_for_runtime_config.getActual()(STR("NovelRT.runtimeconfig.json"), nullptr, &hostContextHandle);
+
+      std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+      std::filesystem::path runtimeConfigJsonPath = executableDirPath / "NovelRT.DotNet.runtimeconfig.json";
+
+#if defined(WIN32)
+      const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
+#else
+      const char_t* runtime_config_path = runtimeConfigJsonPath.string().c_str();
+#endif
+
+      int result = _hostfxr_initialize_for_runtime_config.getActual()(runtime_config_path, nullptr, &hostContextHandle);
 
       if (result != 0)
       {
@@ -118,8 +128,7 @@ namespace NovelRT::DotNet {
     })) {
   }
 
-  RuntimeService::~RuntimeService()
-  {
+  RuntimeService::~RuntimeService() {
     if (_hostContextHandle.isCreated())
     {
       int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
@@ -130,5 +139,10 @@ namespace NovelRT::DotNet {
     {
       closeNativeLibrary(_hostfxr.getActual());
     }
+  }
+
+  void RuntimeService::initialize() {
+    auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
+    initializeFunction();
   }
 }
