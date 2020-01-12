@@ -57,6 +57,7 @@ file(GLOB_RECURSE NOVELRT_LIB_SCRIPT_RESOURCES CONFIGURE_DEPENDS Resources/Scrip
 file(GLOB_RECURSE NOVELRT_LIB_SHADER_RESOURCES CONFIGURE_DEPENDS Resources/Shaders/*.glsl)
 
 add_custom_command(TARGET NovelRT POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.runtimeconfig.json $<TARGET_FILE_DIR:NovelRT>
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_FONT_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Images
