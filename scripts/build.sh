@@ -179,6 +179,21 @@ if $ci; then
     echo "'vcpkg install' failed"
     return "$LASTEXITCODE"
   fi
+
+  export DOTNET_CLI_TELEMETRY_OPTOUT=1
+  export DOTNET_MULTILEVEL_LOOKUP=0
+  export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
+  DotNetInstallScript="$ArtifactsDir/dotnet-install.sh"
+  wget -O "$DotNetInstallScript" "https://dot.net/v1/dotnet-install.sh"
+
+  DotNetInstallDirectory="$ArtifactsDir/dotnet"
+  CreateDirectory "$DotNetInstallDirectory"
+
+  . "$DotNetInstallScript" --channel 3.1 --version latest --install-dir "$DotNetInstallDirectory"
+  . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
+
+  PATH="$DotNetInstallDirectory:$PATH:"
 fi
 
 if $generate; then
