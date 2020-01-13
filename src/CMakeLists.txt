@@ -4,9 +4,14 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(libpng CONFIG REQUIRED)
+
+if(WIN32)
+  find_package(openal CONFIG REQUIRED)
+else()
+  find_package(openal-soft CONFIG REQUIRED)
+endif()
 
 # lua doesn't provide native cmake support
 find_path(LUA_INCLUDE_DIR lua.h)
@@ -28,9 +33,9 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   glad::glad
   glfw
   glm
+  OpenAL::OpenAL
   SDL2::SDL2-static
   SDL2::SDL2_image
-  SDL2::SDL2_mixer
   SDL2::SDL2main
   spdlog::spdlog
   png
