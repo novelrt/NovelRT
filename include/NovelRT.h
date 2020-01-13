@@ -50,6 +50,9 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/async.h"
 
+//libpng
+#include "png.h"
+
 namespace NovelRT {
   typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
   typedef class DebugService DebugService;
@@ -98,6 +101,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
+#include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
 #include "NovelRT/Utilities/Lazy.h"
