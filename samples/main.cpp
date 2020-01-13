@@ -108,25 +108,24 @@ int main(int argc, char *argv[])
     novelChanRect->getTransform().setRotation(rotation);
   });
 
-  auto novelAudio = runner.getAudioService();
+  //auto novelAudio = runner.getAudioService();
 
-  novelAudio->load("sparta.wav", true);
-  novelAudio->load("w0nd0ws.wav", false);
-  novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
-  novelAudio->setGlobalVolume(0.5);
+  //novelAudio->load("sparta.wav", true);
+  //novelAudio->load("w0nd0ws.wav", false);
+  //novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
+  //novelAudio->setGlobalVolume(0.5);
 
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
   memeInteractionRect->subscribeToInteracted([&console] {
-    console.logDebug("WAHEYYY");
-    });
+    console.logDebug("WAHEYYY"); });
 
-  interactionRect->subscribeToInteracted([&novelAudio, &counter, &loggingLevel, &console, &runner] {
+  interactionRect->subscribeToInteracted([&counter, &loggingLevel, &console, &runner] {
     counter++;
     console.log("Test button!", loggingLevel);
-    switch (counter) {
+    /*switch (counter) {
       case 1:
         novelAudio->fadeMusicOut(500);
         console.logInternal("Commencing Audio Test...", loggingLevel);
@@ -163,7 +162,7 @@ int main(int argc, char *argv[])
         counter = 0;
         novelAudio->fadeMusicIn("sparta.wav", -1, 500);
         break;
-    }
+    }*/
   });
 
   runner.subscribeToSceneConstructionRequested([] {
