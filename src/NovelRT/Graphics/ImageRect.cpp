@@ -184,7 +184,7 @@ namespace NovelRT::Graphics {
           throw std::runtime_error("Unable to continue! File failed to load for texture.");
         }
 
-        for (int i = data.height; i < data.height; i++) {
+        for (int i = 0; i < data.height; i++) {
           auto row = data.height - 1 - i;
           data.rowPointers[row] = rawImage + i * rowBytes;
         }
