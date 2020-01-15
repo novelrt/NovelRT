@@ -167,16 +167,24 @@ namespace NovelRT::Graphics {
 
         png_read_update_info(png, info);
 
-        //Props to Kenny for debugging this without asking me and saving me the mental strain lmao
+        
         auto rowBytes = png_get_rowbytes(png, info);
-        auto rawImage = reinterpret_cast<png_bytep>(malloc(rowBytes * data.height * sizeof(png_byte)));
+        auto bpp = (unsigned int)(rowBytes) / data.width;
+
+        //Allows us to get the final image data, not interlaced.
+        png_set_interlace_handling(png);
+
+        //Props to Kenny for debugging this without asking me and saving me the mental strain lmao
+        auto pixelBufferAmount = (data.width * data.height * bpp);
+        auto rawImage = new unsigned char[pixelBufferAmount]; //We allocate the pixel buffer here.
         if (rawImage == nullptr) {
           png_destroy_read_struct(&png, &info, (png_infopp)NULL);
           fclose(cFile);
           throw std::runtime_error("Couldn't allocate space for PNG!");
         }
 
-        data.rowPointers = reinterpret_cast<png_bytep*>(malloc(sizeof(png_bytep) * data.height)); //father, have mercy on me
+        data.rowPointers = new png_bytep[data.height];  //Setup row pointer array and set it into the pixel buffer.
+        unsigned char* p = rawImage;
 
         //TODO: Proper error check on data.rowPointers
         if (data.rowPointers == nullptr) {
@@ -185,12 +193,13 @@ namespace NovelRT::Graphics {
         }
 
         for (int i = 0; i < data.height; i++) {
-          auto row = data.height - 1 - i;
-          data.rowPointers[row] = rawImage + i * rowBytes;
+          data.rowPointers[i] = p;
+          p += data.width * bpp;
         }
 
-
+        //Read all the rows (data will flow into the pixel buffer)
         png_read_image(png, data.rowPointers);
+        png_read_end(png, info);  //Finish reading the file - this will also check for corruption
 
         glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
 
