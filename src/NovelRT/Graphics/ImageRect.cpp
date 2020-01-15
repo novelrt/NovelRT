@@ -167,15 +167,25 @@ namespace NovelRT::Graphics {
 
         png_read_update_info(png, info);
 
-        if (data.rowPointers != nullptr) {
-          _logger.logError("Image at path " + _imageDir + " appears to, somehow, be preloading data! Aborting..."); //we should NEVER enter here
-          throw std::runtime_error("Unable to continue! File failed to load for texture.");
+        //Props to Kenny for debugging this without asking me and saving me the mental strain lmao
+        auto rowBytes = png_get_rowbytes(png, info);
+        auto rawImage = reinterpret_cast<png_bytep>(malloc(rowBytes * data.height * sizeof(png_byte)));
+        if (rawImage == nullptr) {
+          png_destroy_read_struct(&png, &info, (png_infopp)NULL);
+          fclose(cFile);
+          throw std::runtime_error("Couldn't allocate space for PNG!");
         }
 
         data.rowPointers = reinterpret_cast<png_bytep*>(malloc(sizeof(png_bytep) * data.height)); //father, have mercy on me
 
+        //TODO: Proper error check on data.rowPointers
+        if (data.rowPointers == nullptr) {
+          _logger.logErrorLine("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
+          throw std::runtime_error("Unable to continue! File failed to load for texture.");
+        }
+
         for (int i = 0; i < data.height; i++) {
-          data.rowPointers[i] = reinterpret_cast<png_byte*>(malloc(png_get_rowbytes(png, info))); //for I have sinned - RubyNova
+          data.rowPointers[data.height - 1 - i] = rawImage + i * rowBytes;
         }
 
         png_read_image(png, data.rowPointers);
@@ -189,7 +199,7 @@ namespace NovelRT::Graphics {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, mode, data.width, data.height, 0, mode, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(data.rowPointers));
+        glTexImage2D(GL_TEXTURE_2D, 0, mode, data.width, data.height, 0, mode, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(rawImage));
         glGenerateMipmap(GL_TEXTURE_2D);
 
         fclose(cFile);
