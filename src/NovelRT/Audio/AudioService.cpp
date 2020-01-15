@@ -4,16 +4,24 @@
 
 namespace NovelRT::Audio {
 
-AudioService::AudioService() {
-  initializeAudio();
-}
-
-bool AudioService::initializeAudio() {
-  return false;
+AudioService::AudioService() : _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_AUDIO)) {
+  auto device = alcOpenDevice(NULL);
+  if (!device) {
+    throw std::runtime_error("Could not get audio devices!");
+  }
+  auto context = alcCreateContext(device, NULL);
+  alcMakeContextCurrent(context);
+  isInitialized = true;
+  _logger.logInfoLine("OpenAL Initialized");
 }
 
 
 AudioService::~AudioService() {
+  auto context = alcGetCurrentContext();
+  auto device = alcGetContextsDevice(context);
+  alcMakeContextCurrent(NULL);
+  alcDestroyContext(context);
+  alcCloseDevice(device);
 }
 
 }
