@@ -58,34 +58,12 @@ static void closeNativeLibrary(void* nativeLibrary)
 #endif
 }
 
-static void* loadHostFxr() {
-  size_t buffer_size;
-  int result = get_hostfxr_path(nullptr, &buffer_size, nullptr);
-
-  if (result != HostApiBufferTooSmall)
-  {
-    std::cerr << "ERROR: failed to locate hostfxr" << std::endl;
-    throw - 1;
-  }
-
-  auto buffer = std::vector<char_t>(buffer_size);
-  result = get_hostfxr_path(buffer.data(), &buffer_size, nullptr);
-
-  if (result != 0)
-  {
-    std::cerr << "ERROR: failed to locate hostfxr" << std::endl;
-    throw - 1;
-  }
-
-  return loadNativeLibrary(buffer.data());
-}
-
 namespace NovelRT::DotNet {
   RuntimeService::RuntimeService() :
     _hostContextHandle(Lazy<hostfxr_handle>([&, this] {
       hostfxr_handle hostContextHandle = nullptr;
 
-      std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+      std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
       std::filesystem::path runtimeConfigJsonPath = executableDirPath / "NovelRT.DotNet.runtimeconfig.json";
 
 #if defined(WIN32)
@@ -98,13 +76,33 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        std::cerr << "ERROR: failed to initialize the runtime" << std::endl;
-        throw -1;
+        _logger.logError("Failed to initialize the runtime: ", result);
+        throw std::runtime_error("Failed to initialize the runtime");
       }
 
       return hostContextHandle;
     })),
-    _hostfxr(Lazy<void*>(std::function(loadHostFxr))),
+    _hostfxr(Lazy<void*>([&, this] {
+      size_t buffer_size;
+      int result = get_hostfxr_path(nullptr, &buffer_size, nullptr);
+
+      if (result != HostApiBufferTooSmall)
+      {
+        _logger.logError("Failed to locate hostfxr: ", result);
+        throw std::runtime_error("Failed to locate hostfxr");
+      }
+
+      auto buffer = std::vector<char_t>(buffer_size);
+      result = get_hostfxr_path(buffer.data(), &buffer_size, nullptr);
+
+      if (result != 0)
+      {
+        _logger.logError("Failed to locate hostfxr: ", result);
+        throw std::runtime_error("Failed to locate hostfxr");
+      }
+
+      return loadNativeLibrary(buffer.data());
+    })),
     _hostfxr_initialize_for_runtime_config(Lazy<hostfxr_initialize_for_runtime_config_fn>([&, this] {
       return reinterpret_cast<hostfxr_initialize_for_runtime_config_fn>(getNativeExport(_hostfxr.getActual(), "hostfxr_initialize_for_runtime_config"));
     })),
@@ -120,12 +118,13 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        std::cerr << "ERROR: failed to initialize the runtime" << std::endl;
-        throw -1;
+        _logger.logError("Failed to initialize the runtime: ", result);
+        throw std::runtime_error("Failed to initialize the runtime");
       }
 
       return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
-    })) {
+    })),
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_DOTNET)) {
   }
 
   RuntimeService::~RuntimeService() {
