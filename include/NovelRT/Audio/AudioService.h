@@ -13,13 +13,13 @@ namespace NovelRT::Audio {
   private:
     LoggingService _logger;
 
+
    public:
     bool isInitialized;
 
     AudioService();
     ~AudioService();
 
-    bool initializeAudio();
     };
 }
 
