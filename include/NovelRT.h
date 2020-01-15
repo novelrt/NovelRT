@@ -34,6 +34,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
+//nethost
+#include <coreclr_delegates.h>
+#include <hostfxr.h>
+
 //SDL2
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -58,6 +62,10 @@ namespace NovelRT::Audio {
   typedef std::map<std::string, Mix_Music*> MusicBank;
   typedef std::map<std::string, int> ChannelMap;
   typedef class AudioService AudioService;
+}
+
+namespace NovelRT::DotNet {
+  typedef class RuntimeService RuntimeService;
 }
 
 namespace NovelRT::Graphics {
@@ -120,6 +128,7 @@ namespace NovelRT::Windowing {
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
+#include "NovelRT/DotNet/RuntimeService.h"
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
