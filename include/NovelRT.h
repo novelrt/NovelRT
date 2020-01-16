@@ -41,6 +41,9 @@
 //OpenAL
 #include <AL/al.h>
 #include <AL/alc.h>
+//nethost
+#include <coreclr_delegates.h>
+#include <hostfxr.h>
 
 //SDL2
 #include <SDL2/SDL.h>
@@ -64,6 +67,10 @@ namespace NovelRT {
 
 namespace NovelRT::Audio {
   typedef class AudioService AudioService;
+}
+
+namespace NovelRT::DotNet {
+  typedef class RuntimeService RuntimeService;
 }
 
 namespace NovelRT::Graphics {
@@ -127,6 +134,7 @@ namespace NovelRT::Windowing {
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
+#include "NovelRT/DotNet/RuntimeService.h"
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"

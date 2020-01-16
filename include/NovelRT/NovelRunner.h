@@ -19,10 +19,11 @@ namespace NovelRT {
     int _exitCode;
     Timing::StepTimer _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
-    std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
     std::unique_ptr<DebugService> _novelDebugService;
     std::unique_ptr<Input::InteractionService> _novelInteractionService;
     std::unique_ptr<Audio::AudioService> _novelAudioService;
+    std::unique_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
+    std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
     std::unique_ptr<Graphics::RenderingService> _novelRenderer;
 
 
@@ -61,6 +62,7 @@ namespace NovelRT {
     /// The Debug Service associated with this Runner.
     DebugService* getDebugService() const;
     Audio::AudioService* getAudioService() const;
+    DotNet::RuntimeService* getDotNetRuntimeService() const;
     Windowing::WindowingService* getWindowingService() const;
   };
 }

@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
   lua_register(L, "average", average);
   luaL_dofile(L, (scriptsDirPath / "avg.lua").string().c_str());
   lua_close(L);
+
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
 
@@ -183,7 +184,9 @@ int main(int argc, char *argv[])
     novelChanRect->executeObjectBehaviour();
     textRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
-    });
+  });
+
+  runner.getDotNetRuntimeService()->initialize();
 
   runner.runNovel();
 

@@ -12,13 +12,6 @@ else()
   find_package(openal-soft CONFIG REQUIRED)
 endif()
 
-# lua doesn't provide native cmake support
-find_path(LUA_INCLUDE_DIR lua.h)
-include_directories(${LUA_INCLUDE_DIR})
-
-find_library(LUA_LIBRARY lua)
-link_libraries(${LUA_LIBRARY})
-
 find_package(Doxygen QUIET)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
@@ -39,25 +32,36 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   png
 )
 
-if(NOT WIN32)
-  set(NOVELRT_LIB_LINK_LIBRARIES
-    ${NOVELRT_LIB_LINK_LIBRARIES}
-    m
-    stdc++fs
-  )
-endif()
+# lua doesn't provide native cmake support
+
+find_path(LUA_INCLUDE_DIRS lua.h)
+include_directories(${LUA_INCLUDE_DIRS})
+
+find_library(LUA_LIBRARY NAMES liblua lua)
+link_libraries(${LUA_LIBRARY})
+
+# nethost doesn't provide native cmake support
+
+find_path(NETHOST_INCLUDE_DIRS nethost.h)
+include_directories(${NETHOST_INCLUDE_DIRS})
+
+find_library(NETHOST_LIBRARY NAMES libnethost nethost)
+link_libraries(${NETHOST_LIBRARY})
 
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else()
+  link_libraries(m)
+  link_libraries(stdc++fs)
 endif()
 
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
-file(GLOB_RECURSE NOVELRT_LIB_FONT_RESOURCES CONFIGURE_DEPENDS Resources/Fonts/*.ttf)
-file(GLOB_RECURSE NOVELRT_LIB_IMAGE_RESOURCES CONFIGURE_DEPENDS Resources/Images/*.png)
-file(GLOB_RECURSE NOVELRT_LIB_SCRIPT_RESOURCES CONFIGURE_DEPENDS Resources/Scripts/*.lua)
-file(GLOB_RECURSE NOVELRT_LIB_SHADER_RESOURCES CONFIGURE_DEPENDS Resources/Shaders/*.glsl)
+file(GLOB NOVELRT_LIB_FONT_RESOURCES CONFIGURE_DEPENDS Resources/Fonts/*.ttf)
+file(GLOB NOVELRT_LIB_IMAGE_RESOURCES CONFIGURE_DEPENDS Resources/Images/*.png)
+file(GLOB NOVELRT_LIB_SCRIPT_RESOURCES CONFIGURE_DEPENDS Resources/Scripts/*.lua)
+file(GLOB NOVELRT_LIB_SHADER_RESOURCES CONFIGURE_DEPENDS Resources/Shaders/*.glsl)
 
 add_custom_command(TARGET NovelRT POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
@@ -69,6 +73,35 @@ add_custom_command(TARGET NovelRT POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SHADER_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
 )
+
+# NovelRT.DotNet
+
+set(NOVELRT_DOTNET_CSPROJ ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet/NovelRT.DotNet.csproj)
+
+file(GLOB NOVELRT_DOTNET_CSHARP_FILES CONFIGURE_DEPENDS NovelRT.DotNet/*.cs)
+file(GLOB NOVELRT_DOTNET_JSON_FILES CONFIGURE_DEPENDS NovelRT.DotNet/*.json)
+
+if("${CMAKE_BUILD_TYPE}" AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  set(NOVELRT_DOTNET_CONFIGURATION Release)
+  set(NOVELRT_DOTNET_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+else()
+  set(NOVELRT_DOTNET_CONFIGURATION Debug)
+  set(NOVELRT_DOTNET_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/Debug)
+endif()
+
+set(NOVELRT_DOTNET_OUTPUTS
+  ${NOVELRT_DOTNET_OUTDIR}/NovelRT.DotNet.deps.json
+  ${NOVELRT_DOTNET_OUTDIR}/NovelRT.DotNet.dll
+  ${NOVELRT_DOTNET_OUTDIR}/NovelRT.DotNet.pdb
+)
+
+add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
+  COMMAND dotnet build ${NOVELRT_DOTNET_CSPROJ} /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=${NOVELRT_DOTNET_OUTDIR}
+  MAIN_DEPENDENCY ${NOVELRT_DOTNET_CSPROJ}
+  DEPENDS ${NOVELRT_DOTNET_CSHARP_FILES} ${NOVELRT_DOTNET_JSON_FILES}
+)
+
+add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS})
 
 # Docs
 
