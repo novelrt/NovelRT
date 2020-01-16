@@ -12,8 +12,6 @@ namespace NovelRT::Input {
     friend class InteractionObject;
     friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
-    NOVELRT_PARAMETERLESS_EVENT(Quit)
-
   private:
     NovelRunner* const _runner;
 

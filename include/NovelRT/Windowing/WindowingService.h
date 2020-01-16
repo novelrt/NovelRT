@@ -11,7 +11,7 @@ namespace NovelRT::Windowing {
   class WindowingService {
 
   NOVELRT_EVENT(WindowResized, Maths::GeoVector<float>)
-  NOVELRT_PARAMETERLESS_EVENT(WindowClosed)
+  NOVELRT_PARAMETERLESS_EVENT(WindowTornDown)
 
   private:
     Maths::GeoVector<float> _windowSize;
@@ -19,6 +19,7 @@ namespace NovelRT::Windowing {
     LoggingService _logger;
     NovelRunner* const _runner;
     std::string _windowTitle;
+    bool _isTornDown;
 
     void errorCallback(int, const char* error);
 
