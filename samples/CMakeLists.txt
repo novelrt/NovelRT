@@ -9,6 +9,7 @@ set(NOVELRT_SAMPLES_LINK_LIBRARIES
 )
 
 add_executable(NovelRTSamples ${NOVELRT_SAMPLES_HEADERS} ${NOVELRT_SAMPLES_SOURCES})
+add_dependencies(NovelRTSamples NovelRT NovelRTDotNet NovelRTResources)
 target_link_libraries(NovelRTSamples ${NOVELRT_SAMPLES_LINK_LIBRARIES})
 
 add_custom_command(TARGET NovelRTSamples POST_BUILD
