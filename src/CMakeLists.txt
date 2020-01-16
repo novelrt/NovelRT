@@ -53,14 +53,14 @@ target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
 #NovelRT.Resources
 
-file(GLOB NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS LIST_DIRECTORIES false
+file(GLOB_RECURSE NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS
   Resources/Fonts/*.ttf
   Resources/Images/*.png
   Resources/Scripts/*.lua
   Resources/Shaders/*.glsl
 )
 
-file(GLOB NOVELRT_RESOURCE_OUTPUTS CONFIGURE_DEPENDS LIST_DIRECTORIES false RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+file(GLOB_RECURSE NOVELRT_RESOURCE_OUTPUTS CONFIGURE_DEPENDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   Resources/Fonts/*.ttf
   Resources/Images/*.png
   Resources/Scripts/*.lua
@@ -84,7 +84,10 @@ else()
   set(NOVELRT_DOTNET_CONFIGURATION Debug)
 endif()
 
-file(GLOB NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS NovelRT.DotNet/*.cs NovelRT.DotNet/*.json)
+file(GLOB_RECURSE NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS
+  NovelRT.DotNet/*.cs
+  NovelRT.DotNet/*.json
+)
 
 set(NOVELRT_DOTNET_OUTPUTS
   NovelRT.DotNet.deps.json
