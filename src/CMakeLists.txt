@@ -51,28 +51,32 @@ endif()
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
-file(GLOB NOVELRT_LIB_FONT_RESOURCES CONFIGURE_DEPENDS Resources/Fonts/*.ttf)
-file(GLOB NOVELRT_LIB_IMAGE_RESOURCES CONFIGURE_DEPENDS Resources/Images/*.png)
-file(GLOB NOVELRT_LIB_SCRIPT_RESOURCES CONFIGURE_DEPENDS Resources/Scripts/*.lua)
-file(GLOB NOVELRT_LIB_SHADER_RESOURCES CONFIGURE_DEPENDS Resources/Shaders/*.glsl)
+#NovelRT.Resources
 
-add_custom_command(TARGET NovelRT POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_FONT_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Fonts
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Images
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_IMAGE_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Images
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Scripts
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SCRIPT_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Scripts
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NOVELRT_LIB_SHADER_RESOURCES} $<TARGET_FILE_DIR:NovelRT>/Resources/Shaders
+file(GLOB NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS LIST_DIRECTORIES false
+  Resources/Fonts/*.ttf
+  Resources/Images/*.png
+  Resources/Scripts/*.lua
+  Resources/Shaders/*.glsl
 )
+
+file(GLOB NOVELRT_RESOURCE_OUTPUTS CONFIGURE_DEPENDS LIST_DIRECTORIES false RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  Resources/Fonts/*.ttf
+  Resources/Images/*.png
+  Resources/Scripts/*.lua
+  Resources/Shaders/*.glsl
+)
+
+add_custom_command(OUTPUT ${NOVELRT_RESOURCE_OUTPUTS}
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources $<TARGET_FILE_DIR:NovelRT>/Resources
+  DEPENDS ${NOVELRT_RESOURCE_INPUTS}
+)
+
+add_custom_target(NovelRTResources ALL DEPENDS ${NOVELRT_RESOURCE_OUTPUTS})
 
 # NovelRT.DotNet
 
 set(NOVELRT_DOTNET_CSPROJ ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet/NovelRT.DotNet.csproj)
-
-file(GLOB NOVELRT_DOTNET_CSHARP_FILES CONFIGURE_DEPENDS NovelRT.DotNet/*.cs)
-file(GLOB NOVELRT_DOTNET_JSON_FILES CONFIGURE_DEPENDS NovelRT.DotNet/*.json)
 
 if("${CMAKE_BUILD_TYPE}" AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   set(NOVELRT_DOTNET_CONFIGURATION Release)
@@ -80,8 +84,11 @@ else()
   set(NOVELRT_DOTNET_CONFIGURATION Debug)
 endif()
 
+file(GLOB NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS NovelRT.DotNet/*.cs NovelRT.DotNet/*.json)
+
 set(NOVELRT_DOTNET_OUTPUTS
   NovelRT.DotNet.deps.json
+  NovelRT.DotNet.runtimeconfig.json
   NovelRT.DotNet.dll
   NovelRT.DotNet.pdb
 )
@@ -89,7 +96,7 @@ set(NOVELRT_DOTNET_OUTPUTS
 add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
   COMMAND dotnet build ${NOVELRT_DOTNET_CSPROJ} /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=$<TARGET_FILE_DIR:NovelRT>
   MAIN_DEPENDENCY ${NOVELRT_DOTNET_CSPROJ}
-  DEPENDS ${NOVELRT_DOTNET_CSHARP_FILES} ${NOVELRT_DOTNET_JSON_FILES}
+  DEPENDS ${NOVELRT_DOTNET_INPUTS}
 )
 
 add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS})
