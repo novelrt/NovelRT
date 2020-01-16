@@ -25,8 +25,9 @@ namespace NovelRT::Input {
         _logger.logDebug("KeyState after: ", _keyStates.at(code));
       }
       break;
+    case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      _keyStates.at(code) = state; //lmao
+      _keyStates.at(code) = (_keyStates.at(code) == KeyState::KeyUp)? KeyState::Idle : state; //lmao
       break;
     }
   }
@@ -55,7 +56,6 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[KeyCode::LeftMouseButton] == KeyState::KeyDown) _logger.logDebug(std::to_string(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].getX()) + " " + std::to_string(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton].getY()));
     if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer())))
@@ -63,6 +63,8 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::consumePlayerInput() {
+    processKeyState(KeyCode::LeftMouseButton, _keyStates.at(KeyCode::LeftMouseButton));
+
     glfwPollEvents();
   }
   /*

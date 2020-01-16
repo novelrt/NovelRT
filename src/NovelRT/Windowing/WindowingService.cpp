@@ -53,6 +53,7 @@ namespace NovelRT::Windowing {
     glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
       if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
       double x = 0, y = 0;
       glfwGetCursorPos(window, &x, &y);
       thisPtr->_runner->getInteractionService()->acceptMouseButtonClickPush(mouseButton, action, Maths::GeoVector<float>(static_cast<float>(x), static_cast<float>(y)));
