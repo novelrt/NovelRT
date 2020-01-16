@@ -212,8 +212,8 @@ namespace NovelRT::Graphics {
         glGenerateMipmap(GL_TEXTURE_2D);
 
         fclose(cFile);
-        free(rawImage);
-        free(data.rowPointers);  //TODO: Yikes
+        delete[] rawImage;
+        delete[] data.rowPointers;
         png_destroy_read_struct(&png, &info, nullptr);
       }
 
