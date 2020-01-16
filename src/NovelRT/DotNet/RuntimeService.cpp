@@ -141,7 +141,7 @@ namespace NovelRT::DotNet {
   }
 
   void RuntimeService::initialize() {
-    auto initializeFunction = getFunction<void(int)>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action`1[[System.Int32, System.Private.Corelib]], System.Private.Corelib"));
-    initializeFunction(5);
+    auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
+    initializeFunction();
   }
 }
