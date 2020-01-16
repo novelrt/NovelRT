@@ -6,7 +6,7 @@ namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner) {}
+    _runner(runner), _isTornDown(false) {}
 
   void WindowingService::errorCallback(int, const char* error) {
     _logger.logError("Could not initialize GLFW: ", error);
@@ -41,6 +41,16 @@ namespace NovelRT::Windowing {
     }
 
     glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
+
+
+    glfwSetWindowCloseCallback(_window.get(), [](auto window) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      thisPtr->tearDown();
+      thisPtr->raiseWindowTornDown();
+      });
+
     glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
       if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
@@ -71,7 +81,10 @@ namespace NovelRT::Windowing {
 
   }
   void WindowingService::tearDown() {
-    raiseWindowClosed();
+    if (_isTornDown) return;
+
+    _isTornDown = true;
+
     glfwDestroyWindow(getWindow());
     glfwTerminate();
   }

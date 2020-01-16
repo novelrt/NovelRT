@@ -15,7 +15,7 @@ namespace NovelRT {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
-    _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
+    _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
   }
 
   int NovelRunner::runNovel() {
