@@ -51,7 +51,11 @@ endif()
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
-#NovelRT.Resources
+add_custom_command(TARGET NovelRT POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.txt
+)
+
+# NovelRT.Resources
 
 file(GLOB_RECURSE NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS
   Resources/Fonts/*.ttf
@@ -59,20 +63,19 @@ file(GLOB_RECURSE NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS
   Resources/Scripts/*.lua
   Resources/Shaders/*.glsl
 )
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_RESOURCE_INPUTS})
 
-file(GLOB_RECURSE NOVELRT_RESOURCE_OUTPUTS CONFIGURE_DEPENDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-  Resources/Fonts/*.ttf
-  Resources/Images/*.png
-  Resources/Scripts/*.lua
-  Resources/Shaders/*.glsl
+set(NOVELRT_RESOURCE_OUTPUTS
+  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTResources.txt
 )
 
 add_custom_command(OUTPUT ${NOVELRT_RESOURCE_OUTPUTS}
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Resources $<TARGET_FILE_DIR:NovelRT>/Resources
+  COMMAND ${CMAKE_COMMAND} -E touch ${NOVELRT_RESOURCE_OUTPUTS}
   DEPENDS ${NOVELRT_RESOURCE_INPUTS}
 )
 
-add_custom_target(NovelRTResources ALL DEPENDS ${NOVELRT_RESOURCE_OUTPUTS})
+add_custom_target(NovelRTResources ALL DEPENDS ${NOVELRT_RESOURCE_OUTPUTS} SOURCES ${NOVELRT_RESOURCE_INPUTS})
 
 # NovelRT.DotNet
 
@@ -86,23 +89,23 @@ endif()
 
 file(GLOB_RECURSE NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS
   NovelRT.DotNet/*.cs
-  NovelRT.DotNet/*.json
+  NovelRT.DotNet/NovelRT.DotNet.runtimeconfig.json
 )
+list(FILTER NOVELRT_DOTNET_INPUTS EXCLUDE REGEX NovelRT\.DotNet/obj/.*)
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_DOTNET_INPUTS})
 
 set(NOVELRT_DOTNET_OUTPUTS
-  NovelRT.DotNet.deps.json
-  NovelRT.DotNet.runtimeconfig.json
-  NovelRT.DotNet.dll
-  NovelRT.DotNet.pdb
+  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTDotNet.txt
 )
 
 add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
   COMMAND dotnet build ${NOVELRT_DOTNET_CSPROJ} /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=$<TARGET_FILE_DIR:NovelRT>
+  COMMAND ${CMAKE_COMMAND} -E touch ${NOVELRT_DOTNET_OUTPUTS}
   MAIN_DEPENDENCY ${NOVELRT_DOTNET_CSPROJ}
   DEPENDS ${NOVELRT_DOTNET_INPUTS}
 )
 
-add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS})
+add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS} SOURCES ${NOVELRT_DOTNET_INPUTS})
 
 # Docs
 
