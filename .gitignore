@@ -82,6 +82,10 @@ artifacts/
 build/
 cmake-build-*/
 
+# .NET
+bin/
+obj/
+
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
