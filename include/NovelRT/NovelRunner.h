@@ -25,6 +25,7 @@ namespace NovelRT {
     std::unique_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
     std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
     std::unique_ptr<Graphics::RenderingService> _novelRenderer;
+    LoggingService _loggingService;
 
 
   public:
@@ -64,6 +65,8 @@ namespace NovelRT {
     Audio::AudioService* getAudioService() const;
     DotNet::RuntimeService* getDotNetRuntimeService() const;
     Windowing::WindowingService* getWindowingService() const;
+
+    ~NovelRunner();
   };
 }
 

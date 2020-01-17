@@ -12,6 +12,12 @@ namespace NovelRT {
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
     _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    if (!glfwInit()) {
+      const char* err = "";
+      glfwGetError(&err);
+       _loggingService.logError("GLFW ERROR: ", err);
+      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
+    }
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
@@ -72,10 +78,16 @@ namespace NovelRT {
   Audio::AudioService* NovelRunner::getAudioService() const {
     return _novelAudioService.get();
   }
+
   DotNet::RuntimeService* NovelRunner::getDotNetRuntimeService() const {
     return _novelDotNetRuntimeService.get();
   }
+
   Windowing::WindowingService* NovelRunner::getWindowingService() const {
 	  return _novelWindowingService.get();
+  }
+
+  NovelRunner::~NovelRunner() {
+    glfwTerminate();
   }
 }
