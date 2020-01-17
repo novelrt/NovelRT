@@ -45,11 +45,6 @@
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
 
-//SDL2
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_events.h>
-
 //spdlog
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"

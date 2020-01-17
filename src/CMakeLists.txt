@@ -8,7 +8,7 @@ find_package(libpng CONFIG REQUIRED)
 if(WIN32)
   find_package(openal CONFIG REQUIRED)
 else()
-  find_package(openal-soft CONFIG REQUIRED)
+  find_package(OpenAL CONFIG REQUIRED)
 endif()
 
 find_package(Doxygen QUIET)
