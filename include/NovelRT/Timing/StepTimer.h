@@ -13,7 +13,7 @@
 namespace NovelRT::Timing {
   class StepTimer {
   private:
-    uint64_t _frequency;
+    const uint64_t _frequency;
     const uint64_t _maxCounterDelta;
 
     uint64_t _lastCounter;
@@ -91,7 +91,6 @@ namespace NovelRT::Timing {
     }
 
     void resetElapsedTime();
-    void initializeValues();
     void tick(const std::vector<NovelUpdateSubscriber>& update);
   };
 }
