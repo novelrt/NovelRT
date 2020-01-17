@@ -7,9 +7,9 @@
 
 namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
-    _frequency(SDL_GetPerformanceFrequency()),
+    _frequency(glfwGetTimerFrequency()),
     _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),
-    _lastCounter(SDL_GetPerformanceCounter()),
+    _lastCounter(glfwGetTime()),
     _secondCounter(0),
     _remainingTicks(0),
     _elapsedTicks(0),
@@ -22,7 +22,7 @@ namespace NovelRT::Timing {
   }
 
   void StepTimer::resetElapsedTime() {
-    _lastCounter = SDL_GetPerformanceCounter();
+    _lastCounter = glfwGetTime();
     _secondCounter = 0;
     _remainingTicks = 0;
     _framesPerSecond = 0;
@@ -31,7 +31,7 @@ namespace NovelRT::Timing {
 
   void StepTimer::tick(const std::vector<NovelUpdateSubscriber>& update) {
 
-    auto currentCounter = SDL_GetPerformanceCounter();
+    auto currentCounter = glfwGetTime();
     auto counterDelta = currentCounter - _lastCounter;
 
     _lastCounter = currentCounter;
