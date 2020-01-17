@@ -13,13 +13,6 @@ namespace NovelRT::Windowing {
   }
 
   void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
-    if (!glfwInit()) {
-      const char* err = "";
-      glfwGetError(&err);
-      _logger.logError("GLFW ERROR: ", err);
-      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
-    }
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
@@ -86,6 +79,5 @@ namespace NovelRT::Windowing {
     _isTornDown = true;
 
     glfwDestroyWindow(getWindow());
-    glfwTerminate();
   }
 }
