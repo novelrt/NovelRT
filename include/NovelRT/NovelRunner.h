@@ -17,7 +17,7 @@ namespace NovelRT {
 
   private:
     int _exitCode;
-    Timing::StepTimer _stepTimer;
+    Utilities::Lazy<Timing::StepTimer> _stepTimer;
     std::vector<NovelUpdateSubscriber> _updateSubscribers;
     std::unique_ptr<DebugService> _novelDebugService;
     std::unique_ptr<Input::InteractionService> _novelInteractionService;

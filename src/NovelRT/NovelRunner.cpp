@@ -5,7 +5,7 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
     _exitCode(1),
-    _stepTimer(Timing::StepTimer(targetFrameRate)),
+    _stepTimer(std::function<Timing::StepTimer()>([targetFrameRate] {return Timing::StepTimer(targetFrameRate); })),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
     _novelDebugService(std::make_unique<DebugService>(this)),
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
@@ -13,7 +13,6 @@ namespace NovelRT {
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
     _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
-    _stepTimer.initializeValues();
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
     _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
@@ -23,8 +22,8 @@ namespace NovelRT {
     uint32_t lastFramesPerSecond = 0;
 
     while (_exitCode) {
-      _stepTimer.tick(_updateSubscribers);
-      _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
+      _stepTimer.getActual().tick(_updateSubscribers);
+      _novelDebugService->setFramesPerSecond(_stepTimer.getActual().getFramesPerSecond());
       _novelInteractionService->consumePlayerInput();
       _novelRenderer->beginFrame();
       raiseSceneConstructionRequested();
