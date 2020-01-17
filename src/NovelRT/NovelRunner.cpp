@@ -13,6 +13,7 @@ namespace NovelRT {
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
     _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
+    _stepTimer.initializeValues();
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
     _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
