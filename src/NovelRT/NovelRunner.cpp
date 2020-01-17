@@ -5,7 +5,7 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
     _exitCode(1),
-    _stepTimer(std::function<Timing::StepTimer()>([targetFrameRate] {return Timing::StepTimer(targetFrameRate); })),
+    _stepTimer(Utilities::Lazy<Timing::StepTimer>(std::function<Timing::StepTimer()>([targetFrameRate] {return Timing::StepTimer(targetFrameRate); }))),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
     _novelDebugService(std::make_unique<DebugService>(this)),
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
