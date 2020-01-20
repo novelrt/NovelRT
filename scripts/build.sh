@@ -172,7 +172,7 @@ if $ci; then
     fi
   fi
 
-  "$VcpkgExe" install freetype glad glfw3 glm lua nethost openal-soft spdlog
+  "$VcpkgExe" install freetype glad glfw3 glm libsndfile lua nethost openal-soft spdlog
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then

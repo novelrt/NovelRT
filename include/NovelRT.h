@@ -41,6 +41,10 @@
 //OpenAL
 #include <AL/al.h>
 #include <AL/alc.h>
+
+//LibSndfile
+#include <sndfile.h>
+
 //nethost
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
@@ -61,6 +65,8 @@ namespace NovelRT {
 }
 
 namespace NovelRT::Audio {
+  typedef std::map<std::string, ALuint> SoundBank;
+  typedef std::map<std::string, ALuint> MusicBank;
   typedef class AudioService AudioService;
 }
 
