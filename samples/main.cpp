@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
   std::filesystem::path fontsDirPath = resourcesDirPath / "Fonts";
   std::filesystem::path imagesDirPath = resourcesDirPath / "Images";
   std::filesystem::path scriptsDirPath = resourcesDirPath / "Scripts";
+  std::filesystem::path soundsDirPath = resourcesDirPath / "Sounds";
 
   //setenv("DISPLAY", "localhost:0", true);
   L = luaL_newstate();
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
-
+  auto audio = runner.getAudioService();
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
   novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
@@ -120,50 +121,17 @@ int main(int argc, char *argv[])
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
+  auto audioService = runner.getAudioService();
+  audioService->initializeAudio();
+  audioService->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
+  audioService->playMusic((soundsDirPath / "wiosna.ogg").string(), 0);
+
   memeInteractionRect->subscribeToInteracted([&console] {
     console.logDebug("WAHEYYY"); });
 
   interactionRect->subscribeToInteracted([&counter, &loggingLevel, &console, &runner] {
     counter++;
     console.log("Test button!", loggingLevel);
-    /*switch (counter) {
-      case 1:
-        novelAudio->fadeMusicOut(500);
-        console.logInternal("Commencing Audio Test...", loggingLevel);
-        console.logInternal("Press the button to launch each test.", loggingLevel);
-        console.logInternal("(Please wait for each test to finish for best results!)", loggingLevel);
-        break;
-      case 2:
-        console.logInternal("Looping 3 times...", loggingLevel);
-        novelAudio->playSound("w0nd0ws.wav", 3);
-        break;
-      case 3:
-        console.logInternal("Pan Left (via Panning)...", loggingLevel);
-        novelAudio->setSoundPanning("w0nd0ws.wav", 255, 0);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 4:
-        console.logInternal("Pan Right (via 3D Position)...", loggingLevel);
-        novelAudio->setSoundPosition("w0nd0ws.wav", 90, 127);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 5:
-        novelAudio->setSoundPosition("w0nd0ws.wav", 0, 0);
-        console.logInternal("Low Volume...", loggingLevel);
-        novelAudio->setSoundVolume("w0nd0ws.wav", 0.25);
-        novelAudio->playSound("w0nd0ws.wav", 0);
-        break;
-      case 6:
-        novelAudio->setSoundVolume("w0nd0ws.wav", 0.5);
-        console.logInternal("Success! Click once more to play music again.", loggingLevel);
-        novelAudio->setSoundVolume("w0nd0ws.wav", 64);
-        novelAudio->playSound("jojo.wav", 0);
-        break;
-      default:
-        counter = 0;
-        novelAudio->fadeMusicIn("sparta.wav", -1, 500);
-        break;
-    }*/
   });
 
   runner.subscribeToSceneConstructionRequested([] {
