@@ -215,7 +215,6 @@ AudioService::~AudioService() {
   alDeleteSources(1, &_soundSource);
   alDeleteSources(1, &_musicSource);
   alcMakeContextCurrent(nullptr);
-  _logger.logDebug(getALError());
   alcDestroyContext(_context.getActual());
   alcCloseDevice(_device.getActual());
 }
