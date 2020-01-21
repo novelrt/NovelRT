@@ -30,10 +30,10 @@ namespace NovelRT {
     while (_exitCode) {
       _stepTimer.getActual().tick(_updateSubscribers);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual().getFramesPerSecond());
-      _novelInteractionService->consumePlayerInput();
       _novelRenderer->beginFrame();
       raiseSceneConstructionRequested();
       _novelRenderer->endFrame();
+      _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();
     }
 
