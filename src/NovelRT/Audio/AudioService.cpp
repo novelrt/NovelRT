@@ -209,11 +209,15 @@ AudioService::~AudioService() {
   if (!_sounds.empty()) {
     _sounds.clear();
   }
-  if (_context.getActual() != nullptr) {
-    alcMakeContextCurrent(nullptr);
-    alcDestroyContext(_context.getActual());
-    alcCloseDevice(_device.getActual());
-  }
+
+  if (!_context.isCreated()) return;
+
+  alDeleteSources(1, &_soundSource);
+  alDeleteSources(1, &_musicSource);
+  alcMakeContextCurrent(nullptr);
+  _logger.logDebug(getALError());
+  alcDestroyContext(_context.getActual());
+  alcCloseDevice(_device.getActual());
 }
 
 }
