@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  auto audioService = runner.getAudioService();
-  audioService->initializeAudio();
-  audioService->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
-  audioService->playMusic((soundsDirPath / "wiosna.ogg").string(), 0);
+  runner.getAudioService()->initializeAudio();
+
+  //audioService->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
+  //audioService->playMusic((soundsDirPath / "wiosna.ogg").string(), 0);
 
   memeInteractionRect->subscribeToInteracted([&console] {
     console.logDebug("WAHEYYY"); });
