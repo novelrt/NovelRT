@@ -11,10 +11,15 @@
 namespace NovelRT::Audio {
   class AudioService {
   private:
-    const ALfloat _pitch = 10.0f;
-    ALuint _musicSource;
-    ALuint _soundSource;
+    const ALfloat _pitch = 1.0f;
+    
     LoggingService _logger;
+    ALint _musicNumberOfLoops;
+    ALuint _musicSource;
+    ALint _musicSourceState;
+    ALint _soundNumberOfLoops;
+    ALuint _soundSource;
+    ALint _soundSourceState;
     SoundBank _sounds;
     MusicBank _music;
     std::string _deviceName;
@@ -36,14 +41,13 @@ namespace NovelRT::Audio {
     void playSound(std::string soundName, int loops);
     void stopSound(std::string soundName);
     void setSoundVolume(std::string soundName, float val);
-    void setSoundPosition(std::string soundName, int angle, int distance);
-    void setSoundDistance(std::string soundName, int distance);
-    void setSoundPanning(std::string soundName, int leftChannel, int rightChannel);
+    void setSoundPosition(std::string soundName, float posX, float posY);
     void resumeMusic();
     void playMusic(std::string musicName, int loops);
     void pauseMusic();
     void stopMusic();
     void setMusicVolume(float value);
+    void checkSources();
   };
 }
 
