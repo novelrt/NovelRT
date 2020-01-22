@@ -8,19 +8,20 @@
 #endif
 
 namespace NovelRT::Utilities {
-  template<typename T>
+  template<typename T, typename Deleter = std::default_delete<T>>
   class Lazy {
-
   private:
     std::function<T()> _delegate;
-    std::unique_ptr<T> _actual;
+    std::unique_ptr<T, Deleter> _actual;
 
   public:
     Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(nullptr) {}
-    Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(std::make_unique<T>(eagerStartValue)) {}
+    Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T, Deleter>(new T(eagerStartValue))) {}
 
     T& getActual() {
-      if (!isCreated()) _actual = std::make_unique<T>(_delegate());
+      if (!isCreated()) {
+        _actual = std::unique_ptr<T, Deleter>(new T(_delegate()));
+      }
 
       return *_actual;
     }
@@ -34,5 +35,4 @@ namespace NovelRT::Utilities {
     }
   };
 }
-
 #endif //NOVELRT_UTILITIES_LAZY_H
