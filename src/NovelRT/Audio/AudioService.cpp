@@ -64,6 +64,11 @@ ALuint AudioService::readFile(std::string input) {
 }
 
 void AudioService::load(std::string input, bool isMusic) {
+  if (!isInitialised) {
+    _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::load. You cannot load new audio when the service is not initialised.");
+  }
+
   if (!isMusic) {
     auto exists = _sounds.find(input);
     if (exists != _sounds.end()) return;
@@ -88,6 +93,11 @@ void AudioService::load(std::string input, bool isMusic) {
 }
 
 void AudioService::unload(std::string input, bool isMusic) {
+  if (!isInitialised) {
+    _logger.logError("Cannot unload audio from memory while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::unload. You cannot unload audio when the service is not initialised.");
+  }
+
   if (!isMusic)
   {
     auto existingSound = _sounds.find(input);
@@ -115,6 +125,11 @@ void AudioService::unload(std::string input, bool isMusic) {
 }
 
 void AudioService::playSound(std::string soundName, int loops) {
+  if (!isInitialised) {
+    _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playSound. You cannot play a sound when the AudioService is not initialised.");
+  }
+
   alSourcei(_soundSource, AL_BUFFER, _sounds[soundName]);
   alSourcef(_soundSource, AL_PITCH, _pitch);
   alSourcePlay(_soundSource);
@@ -123,10 +138,20 @@ void AudioService::playSound(std::string soundName, int loops) {
 }
 
 void AudioService::stopSound(std::string soundName) {
+  if (!isInitialised) {
+    _logger.logError("Cannot stop a nonexistent sound! the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopSound. You cannot stop a sound when the AudioService is not initialised.");
+  }
+
   alSourceStop(_soundSource);
 }
 
 void AudioService::setSoundVolume(std::string soundName, float value) {
+  if (!isInitialised) {
+    _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
+  }
+
   if (value > 1.0f) {
     alSourcef(_soundSource, AL_GAIN, 1.0f);
   } else if (value <= 0.0f) {
@@ -149,10 +174,20 @@ void AudioService::setSoundPanning(std::string soundName, int leftChannelVolume,
 }
 
 void AudioService::resumeMusic() {
+  if (!isInitialised) {
+    _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
+  }
+
   alSourcePlay(_musicSource);
 }
 
 void AudioService::playMusic(std::string musicName, int loops) {
+  if (!isInitialised) {
+    _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
+  }
+
   auto buf = _music[musicName];
   alSourcei(_musicSource, AL_BUFFER, buf);
   //alSourcef(_musicSource, AL_PITCH, _pitch);
@@ -162,14 +197,29 @@ void AudioService::playMusic(std::string musicName, int loops) {
 }
 
 void AudioService::pauseMusic() {
+  if (!isInitialised) {
+    _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::pauseMusic. You cannot pause a sound when the AudioService is not initialised.");
+  }
+
   alSourcePause(_musicSource);
 }
 
 void AudioService::stopMusic() {
+  if (!isInitialised) {
+    _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopMusic. You cannot stop a sound when the AudioService is not initialised.");
+  }
+
   alSourceStop(_musicSource);
 }
 
 void AudioService::setMusicVolume(float value) {
+  if (!isInitialised) {
+    _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setMusicVolume. You cannot modify a sound when the AudioService is not initialised.");
+  }
+
   if (value > 1.0f) {
     alSourcef(_musicSource, AL_GAIN, 1.0f);
   }
@@ -206,14 +256,14 @@ std::string AudioService::getALError() {
 }
 
 AudioService::~AudioService() {
+  if (!_context.isCreated()) return;
+
   if (!_music.empty()) {
     _music.clear();
   }
   if (!_sounds.empty()) {
     _sounds.clear();
   }
-
-  if (!_context.isCreated()) return;
 
   alDeleteSources(1, &_soundSource);
   alDeleteSources(1, &_musicSource);
