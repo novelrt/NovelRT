@@ -35,6 +35,7 @@ namespace NovelRT {
       _novelRenderer->endFrame();
       _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();
+      _novelAudioService->checkSources();
     }
 
     _novelWindowingService->tearDown();

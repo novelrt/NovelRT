@@ -21,7 +21,7 @@ AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(x);
   })), isInitialised(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
-    _musicSource(), _soundSource() {
+    _musicSource(), _musicSourceState(0), _soundSource(), _soundSourceState(0) {
 }
 
 bool AudioService::initializeAudio() {
@@ -63,6 +63,11 @@ ALuint AudioService::readFile(std::string input) {
   return buffer;
 }
 
+
+/*Note: Due to the current design, this will currently block the thread it is being called on.
+  If it is called on the main thread, please do all loading of audio files at the start of
+  the engine (after NovelRunner has been created).
+*/
 void AudioService::load(std::string input, bool isMusic) {
   if (!isInitialised) {
     _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
@@ -130,16 +135,24 @@ void AudioService::playSound(std::string soundName, int loops) {
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playSound. You cannot play a sound when the AudioService is not initialised.");
   }
 
+  alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
+  if (_soundSourceState == AL_PLAYING) {
+    alSourceStop(_soundSource);
+    alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
+  }
   alSourcei(_soundSource, AL_BUFFER, _sounds[soundName]);
-  alSourcef(_soundSource, AL_PITCH, _pitch);
+  if (loops == -1 || loops > 0) {
+    _soundNumberOfLoops = loops;
+    alSourcei(_soundSource, AL_LOOPING, AL_TRUE);
+  } else {
+    alSourcei(_soundSource, AL_LOOPING, AL_FALSE);
+  }
   alSourcePlay(_soundSource);
-
-  //Add loop logic
 }
 
 void AudioService::stopSound(std::string soundName) {
   if (!isInitialised) {
-    _logger.logError("Cannot stop a nonexistent sound! the service is uninitialised! Aborting...");
+    _logger.logError("Cannot stop a nonexistent sound! The service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopSound. You cannot stop a sound when the AudioService is not initialised.");
   }
 
@@ -161,21 +174,21 @@ void AudioService::setSoundVolume(std::string soundName, float value) {
   }
 }
 
-void AudioService::setSoundPosition(std::string soundName, int angle, int distance) {
-  //TODO
-}
+//Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector<float> here...
+//This also has no effect if the buffer is more than one channel (not Mono)
+void AudioService::setSoundPosition(std::string soundName, float posX, float posY)
+{
+  if (!isInitialised) {
+    _logger.logError("Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopSound. You cannot stop a sound when the AudioService is not initialised.");
+  }
 
-void AudioService::setSoundDistance(std::string soundName, int distance) {
-  //TODO
-}
-
-void AudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
-  //TODO
+  alSource3f(_soundSource, AL_POSITION, posX, posY, 0.0f);
 }
 
 void AudioService::resumeMusic() {
   if (!isInitialised) {
-    _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
+    _logger.logError("Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
   }
 
@@ -188,12 +201,21 @@ void AudioService::playMusic(std::string musicName, int loops) {
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
   }
 
+  alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+  if (_soundSourceState == AL_PLAYING) {
+    alSourceStop(_musicSource);
+    alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+  }
   auto buf = _music[musicName];
   alSourcei(_musicSource, AL_BUFFER, buf);
-  //alSourcef(_musicSource, AL_PITCH, _pitch);
+  if (loops == -1 || loops > 0)
+  {
+    _musicNumberOfLoops = loops;
+    alSourcei(_musicSource, AL_LOOPING, AL_TRUE);
+  } else {
+    alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
+  }
   alSourcePlay(_musicSource);
-
-  //Add loop logic
 }
 
 void AudioService::pauseMusic() {
@@ -231,6 +253,40 @@ void AudioService::setMusicVolume(float value) {
   }
 }
 
+void AudioService::checkSources() {
+  //Changing the init check as I don't want this to kill the Runner.
+  if (isInitialised) {
+    
+    int musicLoop = 0;
+    int soundLoop = 0;
+    alGetSourcei(_musicSource, AL_LOOPING, &musicLoop);
+    alGetSourcei(_soundSource, AL_LOOPING, &soundLoop);
+
+    if (soundLoop == AL_TRUE) {
+      alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
+      //Pretty sure there's a better way to check this...
+      if (_soundSourceState == AL_STOPPED && (_soundNumberOfLoops > 0 || _soundNumberOfLoops == -1)) {
+        if (_soundNumberOfLoops > 0) {
+          _soundNumberOfLoops--;
+        }
+        alSourceRewind(_soundSource);
+        alSourcePlay(_soundSource);
+      }
+    }
+    if (musicLoop == AL_TRUE) {
+      alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+      if (_musicSourceState == AL_STOPPED && (_musicNumberOfLoops > 0 || _musicNumberOfLoops == -1)) {
+        if (_musicNumberOfLoops > 0) {
+          _musicNumberOfLoops--;
+        }
+        alSourceRewind(_musicSource);
+        alSourcePlay(_musicSource);
+      }
+    }
+
+  }
+}
+
 std::string AudioService::getALError() {
   auto err = alGetError();
   switch (err) {
@@ -250,7 +306,7 @@ std::string AudioService::getALError() {
       return std::string("The requested operation resulted in OpenAL running out of memory.");
     }
     default: {
-      return std::string("");
+      return nullptr;
     }
   }
 }

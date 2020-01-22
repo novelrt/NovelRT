@@ -60,6 +60,10 @@ int main(int argc, char *argv[])
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
   auto audio = runner.getAudioService();
+  audio->initializeAudio();
+  audio->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
+  audio->load((soundsDirPath / "jojo.ogg").string(), false);
+
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
   novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
@@ -87,7 +91,7 @@ int main(int argc, char *argv[])
   auto whatever = playButtonTransform.getPosition();
   whatever.setX(whatever.getX() + 50);
   theRealMvpTransform.setPosition(whatever);
-
+  
   memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
 
   playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
@@ -110,28 +114,17 @@ int main(int argc, char *argv[])
     novelChanRect->getTransform().setRotation(rotation);
   });
 
-  //auto novelAudio = runner.getAudioService();
-
-  //novelAudio->load("sparta.wav", true);
-  //novelAudio->load("w0nd0ws.wav", false);
-  //novelAudio->fadeMusicIn("sparta.wav", -1, 5000);
-  //novelAudio->setGlobalVolume(0.5);
-
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
   auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  runner.getAudioService()->initializeAudio();
-
-  //audioService->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
-  //audioService->playMusic((soundsDirPath / "wiosna.ogg").string(), 0);
-
   memeInteractionRect->subscribeToInteracted([&console] {
     console.logDebug("WAHEYYY"); });
 
-  interactionRect->subscribeToInteracted([&counter, &loggingLevel, &console, &runner] {
+  interactionRect->subscribeToInteracted([&counter, &loggingLevel, &console, &audio, &soundsDirPath] {
     counter++;
     console.log("Test button!", loggingLevel);
+    audio->playSound((soundsDirPath / "jojo.ogg").string(), 0);
   });
 
   runner.subscribeToSceneConstructionRequested([] {
@@ -155,6 +148,7 @@ int main(int argc, char *argv[])
   });
 
   runner.getDotNetRuntimeService()->initialize();
+  audio->playMusic((soundsDirPath / "wiosna.ogg").string(), -1);
 
   runner.runNovel();
 
