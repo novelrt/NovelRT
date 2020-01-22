@@ -11,6 +11,10 @@
 namespace NovelRT::Audio {
   class AudioService {
   private:
+    //these need to be up here because of how C++ handles member order as opposed to C#'s approach
+    void deleteDevice(ALCdevice* ptr);
+    void deleteContext(ALCcontext* ptr);
+
     const ALfloat _pitch = 10.0f;
     ALuint _musicSource;
     ALuint _soundSource;
@@ -18,8 +22,8 @@ namespace NovelRT::Audio {
     SoundBank _sounds;
     MusicBank _music;
     std::string _deviceName;
-    Utilities::Lazy<ALCdevice*> _device;
-    Utilities::Lazy<ALCcontext*> _context;
+    Utilities::Lazy<ALCdevice*, decltype(&AudioService::deleteDevice)> _device;
+    Utilities::Lazy<ALCcontext*, decltype(&AudioService::deleteContext)> _context;
 
     ALuint readFile(std::string input);
     std::string getALError();
