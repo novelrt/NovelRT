@@ -3,29 +3,24 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Audio {
-void AudioService::deleteContext(ALCcontext* ptr) {
-  alcMakeContextCurrent(nullptr);
-  alcDestroyContext(ptr);
-}
-
-void AudioService::deleteDevice(ALCdevice* ptr) {
-  alcCloseDevice(ptr);
-}
-
-AudioService::AudioService() : _device(Utilities::Lazy<ALCdevice*, decltype(&AudioService::deleteDevice)>(std::function<ALCdevice*()>([this] {
+AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
       throw std::runtime_error("OpenAL: Could not get audio devices!");
     }
     return device;
-  }))), _context(Utilities::Lazy<ALCcontext*, decltype(&AudioService::deleteContext)>(std::function<ALCcontext*()>([this] {
+  }), [](auto x) { alcCloseDevice(x); })),
+  _context(Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>>(std::function<ALCcontext*()>([this] {
     auto context = alcCreateContext(_device.getActual(), nullptr);
     alcMakeContextCurrent(context);
     isInitialised = true;
     _deviceName = alcGetString(_device.getActual(), ALC_DEVICE_SPECIFIER);
     _logger.logInfo("OpenAL Initialized on device: ", _deviceName);
     return context;
-  }))), isInitialised(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+  }), [](auto x) {
+    alcMakeContextCurrent(nullptr);
+    alcDestroyContext(x);
+  })), isInitialised(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
     _musicSource(), _soundSource() {
 }
 
