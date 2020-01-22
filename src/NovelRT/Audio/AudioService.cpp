@@ -218,6 +218,7 @@ AudioService::~AudioService() {
   alDeleteSources(1, &_soundSource);
   alDeleteSources(1, &_musicSource);
 
+  //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
   _context.reset();
   _device.reset();
 }
