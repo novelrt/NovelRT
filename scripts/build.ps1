@@ -105,11 +105,26 @@ try {
       }
     }
 
-    & $VcpkgExe install freetype glad glm lua sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] spdlog --triplet x64-windows
+    & $VcpkgExe install freetype glad glm lua nethost sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] spdlog --triplet x64-windows
 
     if ($LastExitCode -ne 0) {
         throw "'vcpkg install' failed"
     }
+
+    $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
+    $env:DOTNET_MULTILEVEL_LOOKUP = 0
+    $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+
+    $DotNetInstallScript = Join-Path -Path $ArtifactsDir -ChildPath "dotnet-install.ps1"
+    Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile $DotNetInstallScript -UseBasicParsing
+
+    $DotNetInstallDirectory = Join-Path -Path $ArtifactsDir -ChildPath "dotnet"
+    Create-Directory -Path $DotNetInstallDirectory
+
+    & $DotNetInstallScript -Channel 3.1 -Version latest -InstallDir $DotNetInstallDirectory
+    & $DotNetInstallScript -Channel 2.1 -Version latest -InstallDir $DotNetInstallDirectory -Runtime dotnet
+
+    $env:PATH="$DotNetInstallDirectory;$env:PATH"
   }
 
   if ($generate) {
