@@ -9,3 +9,4 @@ include_directories(include)
 
 add_subdirectory(src)
 add_subdirectory(samples)
+add_subdirectory(doxygen)
