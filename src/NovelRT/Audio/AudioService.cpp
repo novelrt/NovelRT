@@ -111,18 +111,20 @@ void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
   }
 
   if (!isMusic) {
-    alDeleteBuffers(1, *handle);
+    auto file = *handle;
+    alDeleteBuffers(1, &file);
     if (alGetError() != AL_NO_ERROR) {
       alSourcei(_soundSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, *handle);
+      alDeleteBuffers(1, &file);
     }
     _sounds.erase(handle);
   }
   else {
-    alDeleteBuffers(1, *handle);
+    auto file = *handle;
+    alDeleteBuffers(1, &file);
     if (alGetError() != AL_NO_ERROR) {
       alSourcei(_musicSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, *handle);
+      alDeleteBuffers(1, &file);
     }
     _music.erase(handle);
   }
