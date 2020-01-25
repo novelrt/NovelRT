@@ -4,14 +4,10 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(libpng CONFIG REQUIRED)
 find_package(LibSndFile CONFIG REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 
-if(WIN32)
-  find_package(openal CONFIG REQUIRED)
-else()
-  find_package(OpenAL CONFIG REQUIRED)
-endif()
 
 find_package(Doxygen QUIET)
 
@@ -28,9 +24,14 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   glm
   OpenAL::OpenAL
   png
-  sndfile-shared
   spdlog::spdlog
 )
+
+if (WIN32)
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-shared)
+else()
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-static)
+endif()
 
 # lua doesn't provide native cmake support
 
