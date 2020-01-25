@@ -14,10 +14,10 @@ namespace NovelRT::Audio {
     const ALfloat _pitch = 1.0f;
     
     LoggingService _logger;
-    ALint _musicNumberOfLoops;
+    ALint _musicLoopAmount;
     ALuint _musicSource;
     ALint _musicSourceState;
-    ALint _soundNumberOfLoops;
+    ALint _soundLoopAmount;
     ALuint _soundSource;
     ALint _soundSourceState;
     SoundBank _sounds;
@@ -36,14 +36,14 @@ namespace NovelRT::Audio {
     ~AudioService();
 
     bool initializeAudio();
-    void load(std::string input, bool isMusic);
-    void unload(std::string input, bool isMusic);
-    void playSound(std::string soundName, int loops);
-    void stopSound(std::string soundName);
-    void setSoundVolume(std::string soundName, float val);
-    void setSoundPosition(std::string soundName, float posX, float posY);
+    std::vector<ALuint>::iterator load(std::string input, bool isMusic);
+    void unload(std::vector<ALuint>::iterator handle, bool isMusic);
+    void playSound(std::vector<ALuint>::iterator handle, int loops);
+    void stopSound();
+    void setSoundVolume(float val);
+    void setSoundPosition(float posX, float posY);
     void resumeMusic();
-    void playMusic(std::string musicName, int loops);
+    void playMusic(std::vector<ALuint>::iterator handle, int loops);
     void pauseMusic();
     void stopMusic();
     void setMusicVolume(float value);
