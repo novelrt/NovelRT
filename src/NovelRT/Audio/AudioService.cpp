@@ -118,6 +118,7 @@ void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
       alDeleteBuffers(1, &file);
     }
     _sounds.erase(handle);
+    _logger.logDebugLine("Deleted requested sound buffer.");
   }
   else {
     auto file = *handle;
@@ -127,6 +128,7 @@ void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
       alDeleteBuffers(1, &file);
     }
     _music.erase(handle);
+    _logger.logDebugLine("Deleted requested music buffer.");
   }
 }
 
@@ -333,6 +335,13 @@ AudioService::~AudioService() {
 
   alDeleteSources(1, &_soundSource);
   alDeleteSources(1, &_musicSource);
+
+  for (auto it = _sounds.begin(); it != _sounds.end(); it++) {
+    unload(it, false);
+  }
+  for (auto it = _music.begin(); it != _music.end(); it++) {
+    unload(it, true);
+  }
 
   //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
   _context.reset();
