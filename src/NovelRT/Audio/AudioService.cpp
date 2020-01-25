@@ -111,34 +111,20 @@ void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
   }
 
   if (!isMusic) {
-    /*auto existing = std::find(_sounds.begin(), _sounds.end(), fileHandle);
-    if (existing == _sounds.end()) {
-      _logger.logErrorLine("Could not find handle to remove for requested sound file!");
-      return;
+    alDeleteBuffers(1, *handle);
+    if (alGetError() != AL_NO_ERROR) {
+      alSourcei(_soundSource, AL_BUFFER, 0);
+      alDeleteBuffers(1, *handle);
     }
-    else {*/
-      alDeleteBuffers(1, handle._Ptr);
-      if (alGetError() != AL_NO_ERROR) {
-        alSourcei(_soundSource, AL_BUFFER, 0);
-        alDeleteBuffers(1, handle._Ptr);
-      }
-      _sounds.erase(handle);
-    //}
+    _sounds.erase(handle);
   }
   else {
-    //auto existing = std::find(_music.begin(), _music.end(), fileHandle);
-    //if (existing == _music.end()) {
-    //  _logger.logErrorLine("Could not find handle to remove for requested music file!");
-    //  return;
-    //}
-    //else {
-      alDeleteBuffers(1, handle._Ptr);
-      if (alGetError() != AL_NO_ERROR) {
-        alSourcei(_musicSource, AL_BUFFER, 0);
-        alDeleteBuffers(1, handle._Ptr);
-      }
-      _music.erase(handle);
-    //}
+    alDeleteBuffers(1, *handle);
+    if (alGetError() != AL_NO_ERROR) {
+      alSourcei(_musicSource, AL_BUFFER, 0);
+      alDeleteBuffers(1, *handle);
+    }
+    _music.erase(handle);
   }
 }
 
@@ -278,7 +264,7 @@ void AudioService::setMusicVolume(float value) {
 void AudioService::checkSources() {
   //Changing the init check as I don't want this to kill the Runner.
   if (isInitialised) {
-    
+
     int musicLoop = 0;
     int soundLoop = 0;
     alGetSourcei(_musicSource, AL_LOOPING, &musicLoop);
