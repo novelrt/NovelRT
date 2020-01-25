@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
   auto audio = runner.getAudioService();
   audio->initializeAudio();
-  audio->load((soundsDirPath / "wiosna.ogg").string(), true);  //Yikes...need to change this ASAP.
-  audio->load((soundsDirPath / "jojo.ogg").string(), false);
+  //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
+  //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
 
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
@@ -115,16 +115,15 @@ int main(int argc, char *argv[])
   });
 
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
-  auto counter = 0;
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
   memeInteractionRect->subscribeToInteracted([&console] {
     console.logDebug("WAHEYYY"); });
 
-  interactionRect->subscribeToInteracted([&counter, &loggingLevel, &console, &audio, &soundsDirPath] {
-    counter++;
+  //If uncommenting the call, pass &jojo to the subscription next to &audio.
+  interactionRect->subscribeToInteracted([&loggingLevel, &console, &audio] {
     console.log("Test button!", loggingLevel);
-    audio->playSound((soundsDirPath / "jojo.ogg").string(), 0);
+    //audio->playSound(jojo, 0);
   });
 
   runner.subscribeToSceneConstructionRequested([] {
@@ -148,7 +147,7 @@ int main(int argc, char *argv[])
   });
 
   runner.getDotNetRuntimeService()->initialize();
-  audio->playMusic((soundsDirPath / "wiosna.ogg").string(), -1);
+  //audio->playMusic(bgm, -1);
 
   runner.runNovel();
 

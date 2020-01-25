@@ -63,76 +63,94 @@ ALuint AudioService::readFile(std::string input) {
   return buffer;
 }
 
-
 /*Note: Due to the current design, this will currently block the thread it is being called on.
   If it is called on the main thread, please do all loading of audio files at the start of
   the engine (after NovelRunner has been created).
 */
-void AudioService::load(std::string input, bool isMusic) {
+std::vector<ALuint>::iterator AudioService::load(std::string input, bool isMusic) {
   if (!isInitialised) {
     _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::load. You cannot load new audio when the service is not initialised.");
   }
+  auto newBuffer = readFile(input);
+
+  //Sorry Matt, nullptr types are incompatible to ALuint according to VS.
+  if (newBuffer == NULL) {
+    _logger.logError("Could not load audio file: ", getALError());
+    return _sounds.end();
+  }
 
   if (!isMusic) {
-    auto exists = _sounds.find(input);
-    if (exists != _sounds.end()) return;
-
-    auto newSound = readFile(input);
-    if (newSound != NULL) {
-      _sounds[input] = newSound;
+    auto it = std::find(_sounds.begin(), _sounds.end(), newBuffer);
+    if (it != _sounds.end()) {
+      alDeleteBuffers(1, &newBuffer);
+      return it;
     } else {
-      _logger.logError("OpenAL error occurred during load. Error: ", getALError());
+      _sounds.push_back(newBuffer);
+      it = std::find(_sounds.begin(), _sounds.end(), newBuffer);
+      return it;
     }
   } else {
-    auto exists = _music.find(input);
-    if (exists != _music.end()) return;
-
-    auto newMusic = readFile(input);
-    if (newMusic != NULL) {
-      _music[input] = newMusic;
-    } else {
-      _logger.logError("OpenAL error occurred during load. Error: ", getALError());
+    auto it = std::find(_music.begin(), _music.end(), newBuffer);
+    if (it != _music.end()) {
+      alDeleteBuffers(1, &newBuffer);
+      return it;
+    }
+    else {
+      _music.push_back(newBuffer);
+      it = std::find(_music.begin(), _music.end(), newBuffer);
+      return it;
     }
   }
 }
 
-void AudioService::unload(std::string input, bool isMusic) {
+void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
   if (!isInitialised) {
     _logger.logError("Cannot unload audio from memory while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::unload. You cannot unload audio when the service is not initialised.");
   }
 
-  if (!isMusic)
-  {
-    auto existingSound = _sounds.find(input);
-    if (existingSound == _sounds.end()) return;
-
-    alDeleteBuffers(1, &_sounds[input]);
-    if (alGetError() != AL_NO_ERROR) {
-      alSourcei(_soundSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, &_sounds[input]);
+  if (!isMusic) {
+    /*auto existing = std::find(_sounds.begin(), _sounds.end(), fileHandle);
+    if (existing == _sounds.end()) {
+      _logger.logErrorLine("Could not find handle to remove for requested sound file!");
+      return;
     }
-    _sounds.erase(existingSound);
+    else {*/
+      alDeleteBuffers(1, handle._Ptr);
+      if (alGetError() != AL_NO_ERROR) {
+        alSourcei(_soundSource, AL_BUFFER, 0);
+        alDeleteBuffers(1, handle._Ptr);
+      }
+      _sounds.erase(handle);
+    //}
   }
-  else
-  {
-    auto existingMusic = _music.find(input);
-    if (existingMusic == _music.end()) return;
-
-    alDeleteBuffers(1, &_music[input]);
-    if (alGetError() != AL_NO_ERROR) {
-      alSourcei(_musicSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, &_music[input]);
-    }
-    _music.erase(existingMusic);
+  else {
+    //auto existing = std::find(_music.begin(), _music.end(), fileHandle);
+    //if (existing == _music.end()) {
+    //  _logger.logErrorLine("Could not find handle to remove for requested music file!");
+    //  return;
+    //}
+    //else {
+      alDeleteBuffers(1, handle._Ptr);
+      if (alGetError() != AL_NO_ERROR) {
+        alSourcei(_musicSource, AL_BUFFER, 0);
+        alDeleteBuffers(1, handle._Ptr);
+      }
+      _music.erase(handle);
+    //}
   }
 }
 
-void AudioService::playSound(std::string soundName, int loops) {
+void AudioService::playSound(std::vector<ALuint>::iterator handle, int loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playSound. You cannot play a sound when the AudioService is not initialised.");
+  }
+
+  if (*handle == NULL) {
+    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    return;
   }
 
   alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
@@ -140,9 +158,9 @@ void AudioService::playSound(std::string soundName, int loops) {
     alSourceStop(_soundSource);
     alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
   }
-  alSourcei(_soundSource, AL_BUFFER, _sounds[soundName]);
+  alSourcei(_soundSource, AL_BUFFER, *handle);
   if (loops == -1 || loops > 0) {
-    _soundNumberOfLoops = loops;
+    _soundLoopAmount = loops;
     alSourcei(_soundSource, AL_LOOPING, AL_TRUE);
   } else {
     alSourcei(_soundSource, AL_LOOPING, AL_FALSE);
@@ -150,7 +168,7 @@ void AudioService::playSound(std::string soundName, int loops) {
   alSourcePlay(_soundSource);
 }
 
-void AudioService::stopSound(std::string soundName) {
+void AudioService::stopSound() {
   if (!isInitialised) {
     _logger.logError("Cannot stop a nonexistent sound! The service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopSound. You cannot stop a sound when the AudioService is not initialised.");
@@ -159,7 +177,7 @@ void AudioService::stopSound(std::string soundName) {
   alSourceStop(_soundSource);
 }
 
-void AudioService::setSoundVolume(std::string soundName, float value) {
+void AudioService::setSoundVolume(float value) {
   if (!isInitialised) {
     _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
@@ -176,7 +194,7 @@ void AudioService::setSoundVolume(std::string soundName, float value) {
 
 //Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector<float> here...
 //This also has no effect if the buffer is more than one channel (not Mono)
-void AudioService::setSoundPosition(std::string soundName, float posX, float posY)
+void AudioService::setSoundPosition(float posX, float posY)
 {
   if (!isInitialised) {
     _logger.logError("Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
@@ -195,10 +213,15 @@ void AudioService::resumeMusic() {
   alSourcePlay(_musicSource);
 }
 
-void AudioService::playMusic(std::string musicName, int loops) {
+void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
+  }
+
+  if (*handle == NULL) {
+    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    return;
   }
 
   alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
@@ -206,11 +229,10 @@ void AudioService::playMusic(std::string musicName, int loops) {
     alSourceStop(_musicSource);
     alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
   }
-  auto buf = _music[musicName];
-  alSourcei(_musicSource, AL_BUFFER, buf);
+  alSourcei(_musicSource, AL_BUFFER, *handle);
   if (loops == -1 || loops > 0)
   {
-    _musicNumberOfLoops = loops;
+    _musicLoopAmount = loops;
     alSourcei(_musicSource, AL_LOOPING, AL_TRUE);
   } else {
     alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
@@ -265,9 +287,9 @@ void AudioService::checkSources() {
     if (soundLoop == AL_TRUE) {
       alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
       //Pretty sure there's a better way to check this...
-      if (_soundSourceState == AL_STOPPED && (_soundNumberOfLoops > 0 || _soundNumberOfLoops == -1)) {
-        if (_soundNumberOfLoops > 0) {
-          _soundNumberOfLoops--;
+      if (_soundSourceState == AL_STOPPED && (_soundLoopAmount > 0 || _soundLoopAmount == -1)) {
+        if (_soundLoopAmount > 0) {
+          _soundLoopAmount--;
         }
         alSourceRewind(_soundSource);
         alSourcePlay(_soundSource);
@@ -275,9 +297,9 @@ void AudioService::checkSources() {
     }
     if (musicLoop == AL_TRUE) {
       alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-      if (_musicSourceState == AL_STOPPED && (_musicNumberOfLoops > 0 || _musicNumberOfLoops == -1)) {
-        if (_musicNumberOfLoops > 0) {
-          _musicNumberOfLoops--;
+      if (_musicSourceState == AL_STOPPED && (_musicLoopAmount > 0 || _musicLoopAmount == -1)) {
+        if (_musicLoopAmount > 0) {
+          _musicLoopAmount--;
         }
         alSourceRewind(_musicSource);
         alSourcePlay(_musicSource);

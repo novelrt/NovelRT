@@ -65,8 +65,8 @@ namespace NovelRT {
 }
 
 namespace NovelRT::Audio {
-  typedef std::map<std::string, ALuint> SoundBank;
-  typedef std::map<std::string, ALuint> MusicBank;
+  typedef std::vector<ALuint> SoundBank;
+  typedef std::vector<ALuint> MusicBank;
   typedef class AudioService AudioService;
 }
 
