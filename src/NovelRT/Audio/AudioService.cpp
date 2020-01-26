@@ -104,30 +104,30 @@ std::vector<ALuint>::iterator AudioService::load(std::string input, bool isMusic
   }
 }
 
-void AudioService::unload(std::vector<ALuint>::iterator handle, bool isMusic) {
+void AudioService::unload(ALuint handle, bool isMusic) {
   if (!isInitialised) {
     _logger.logError("Cannot unload audio from memory while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::unload. You cannot unload audio when the service is not initialised.");
   }
 
   if (!isMusic) {
-    auto file = *handle;
-    alDeleteBuffers(1, &file);
+    alDeleteBuffers(1, &handle);
     if (alGetError() != AL_NO_ERROR) {
       alSourcei(_soundSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, &file);
+      alDeleteBuffers(1, &handle);
     }
-    _sounds.erase(handle);
+    auto buffer = std::find(_sounds.begin(), _sounds.end(), handle);
+    _sounds.erase(buffer);
     _logger.logDebugLine("Deleted requested sound buffer.");
   }
   else {
-    auto file = *handle;
-    alDeleteBuffers(1, &file);
+    alDeleteBuffers(1, &handle);
     if (alGetError() != AL_NO_ERROR) {
       alSourcei(_musicSource, AL_BUFFER, 0);
-      alDeleteBuffers(1, &file);
+      alDeleteBuffers(1, &handle);
     }
-    _music.erase(handle);
+    auto buffer = std::find(_music.begin(), _music.end(), handle);
+    _music.erase(buffer);
     _logger.logDebugLine("Deleted requested music buffer.");
   }
 }
@@ -336,11 +336,11 @@ AudioService::~AudioService() {
   alDeleteSources(1, &_soundSource);
   alDeleteSources(1, &_musicSource);
 
-  for (auto it = _sounds.begin(); it != _sounds.end(); it++) {
-    unload(it, false);
+  for (auto sound : _sounds) {
+    unload(sound, false);
   }
-  for (auto it = _music.begin(); it != _music.end(); it++) {
-    unload(it, true);
+  for (auto musicObject : _music) {
+    unload(musicObject, true);
   }
 
   //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
