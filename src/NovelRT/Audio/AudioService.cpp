@@ -6,7 +6,8 @@ namespace NovelRT::Audio {
 AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
-      throw std::runtime_error("OpenAL: Could not get audio devices!");
+      _logger.logError("OpenAL device creation failed!", getALError());
+      throw std::runtime_error("OpenAL failed to create an audio device! Aborting...");
     }
     return device;
   }), [](auto x) { alcCloseDevice(x); })),
@@ -48,7 +49,7 @@ ALuint AudioService::readFile(std::string input) {
 
   std::vector<uint16_t> data;
   std::vector<short> readBuffer;
-  readBuffer.resize(4096);
+  readBuffer.resize(_bufferSize);
 
   size_t readSize = 0;
 
