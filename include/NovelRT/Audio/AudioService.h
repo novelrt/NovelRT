@@ -11,6 +11,7 @@
 namespace NovelRT::Audio {
   class AudioService {
   private:
+    const int _bufferSize = 2048;
     const ALfloat _pitch = 1.0f;
     
     LoggingService _logger;
