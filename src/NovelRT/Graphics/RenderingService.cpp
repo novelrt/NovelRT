@@ -17,7 +17,7 @@ namespace NovelRT::Graphics {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
       glfwMakeContextCurrent(_runner->getWindowingService()->getWindow());
 
-      if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+      if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
         throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
       }
