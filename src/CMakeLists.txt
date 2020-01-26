@@ -1,9 +1,10 @@
 find_package(Freetype REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(sdl2-image CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
+find_package(libpng CONFIG REQUIRED)
+find_package(LibSndFile CONFIG REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
@@ -15,13 +16,18 @@ source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_SOURCES})
 set(NOVELRT_LIB_LINK_LIBRARIES
   Freetype::Freetype
   glad::glad
+  glfw
   glm
-  SDL2::SDL2-static
-  SDL2::SDL2_image
-  SDL2::SDL2_mixer
-  SDL2::SDL2main
+  OpenAL::OpenAL
+  png
   spdlog::spdlog
 )
+
+if (WIN32)
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-shared)
+else()
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-static)
+endif()
 
 # lua doesn't provide native cmake support
 

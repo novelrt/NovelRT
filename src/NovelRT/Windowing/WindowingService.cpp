@@ -4,42 +4,80 @@
 
 namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
-    _window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(nullptr, SDL_DestroyWindow)),
+    _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner) {
-    runner->getInteractionService()->subscribeToResizeInputDetected([this](auto value) {
-      _windowSize = value;
-      _logger.logInfo("New size detected! Notifying GFX and other members...");
-      raiseWindowResized(_windowSize); });
+    _runner(runner), _isTornDown(false) {}
+
+  void WindowingService::errorCallback(int, const char* error) {
+    _logger.logError("Could not initialize GLFW: ", error);
   }
 
   void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-      _logger.logError("Could not initialize SDL2: ", std::string(SDL_GetError()));
-      throw std::runtime_error("Unable to continue! SDL2 failed to initialise.");
-    }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+    glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
 
-    SDL_DisplayMode displayData;
-    SDL_GetCurrentDisplayMode(displayNumber, &displayData);
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
     // create window
-    float wData = displayData.w * 0.7f;
-    float hData = displayData.h * 0.7f;
-    auto window = SDL_CreateWindow(
-      windowTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      wData, hData, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    float wData = displayData->width * 0.7f;
+    float hData = displayData->height * 0.7f;
+    auto window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
+    glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
-    _window = std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(window, SDL_DestroyWindow);
-    _windowSize = Maths::GeoVector<float>(wData, hData);
-
+    _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
     if (_window == nullptr) {
-      _logger.logError("Could not create window: ", std::string(SDL_GetError()));
       throw std::runtime_error("Unable to continue! Window could not be created.");
     }
+
+    glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
+
+
+    glfwSetWindowCloseCallback(_window.get(), [](auto window) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      thisPtr->tearDown();
+      thisPtr->raiseWindowTornDown();
+      });
+
+    glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
+      thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
+      thisPtr->raiseWindowResized(thisPtr->_windowSize); });
+    _windowSize = Maths::GeoVector<float>(wData, hData);
+
+    glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      double x = 0, y = 0;
+      glfwGetCursorPos(window, &x, &y);
+      thisPtr->_runner->getInteractionService()->acceptMouseButtonClickPush(mouseButton, action, Maths::GeoVector<float>(static_cast<float>(x), static_cast<float>(y)));
+      });
+
+
+
+    glfwSetKeyCallback(_window.get(), [](auto window, auto key, auto scancode, auto action, auto mods) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+
+      thisPtr->_runner->getInteractionService()->acceptKeyboardInputBindingPush(key, action);
+      });
+
+
   }
   void WindowingService::tearDown() {
-    raiseWindowClosed();
-    SDL_DestroyWindow(getWindow());
-    SDL_Quit();
+    if (_isTornDown) return;
+
+    _isTornDown = true;
+
+    glfwDestroyWindow(getWindow());
   }
 }

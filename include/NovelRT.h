@@ -30,25 +30,32 @@
 //glad
 #include <glad.h>
 
+//GLFW3
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+
+//OpenAL
+#include <AL/al.h>
+#include <AL/alc.h>
+
+//LibSndfile
+#include <sndfile.h>
 
 //nethost
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
 
-//SDL2
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_events.h>
-
 //spdlog
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/async.h"
+
+//libpng
+#include "png.h"
 
 namespace NovelRT {
   typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
@@ -58,9 +65,8 @@ namespace NovelRT {
 }
 
 namespace NovelRT::Audio {
-  typedef std::map<std::string, Mix_Chunk*> SoundBank;
-  typedef std::map<std::string, Mix_Music*> MusicBank;
-  typedef std::map<std::string, int> ChannelMap;
+  typedef std::vector<ALuint> SoundBank;
+  typedef std::vector<ALuint> MusicBank;
   typedef class AudioService AudioService;
 }
 
@@ -102,6 +108,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
+#include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
 #include "NovelRT/Utilities/Lazy.h"

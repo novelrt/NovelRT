@@ -5,34 +5,40 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
     _exitCode(1),
-    _stepTimer(Timing::StepTimer(targetFrameRate)),
+    _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
+    _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
     _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<Input::InteractionService>()),
+    _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
     _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    if (!glfwInit()) {
+      const char* err = "";
+      glfwGetError(&err);
+       _loggingService.logError("GLFW ERROR: ", err);
+      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
+    }
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
-    _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
+    _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
   }
 
   int NovelRunner::runNovel() {
     uint32_t lastFramesPerSecond = 0;
 
     while (_exitCode) {
-      _stepTimer.tick(_updateSubscribers);
-      _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
-      _novelInteractionService->consumePlayerInput();
+      _stepTimer.getActual()->tick(_updateSubscribers);
+      _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
       raiseSceneConstructionRequested();
       _novelRenderer->endFrame();
+      _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();
+      _novelAudioService->checkSources();
     }
 
     _novelWindowingService->tearDown();
-    _novelAudioService->~AudioService();
     return _exitCode;
   }
 
@@ -72,10 +78,16 @@ namespace NovelRT {
   Audio::AudioService* NovelRunner::getAudioService() const {
     return _novelAudioService.get();
   }
+
   DotNet::RuntimeService* NovelRunner::getDotNetRuntimeService() const {
     return _novelDotNetRuntimeService.get();
   }
+
   Windowing::WindowingService* NovelRunner::getWindowingService() const {
 	  return _novelWindowingService.get();
+  }
+
+  NovelRunner::~NovelRunner() {
+    glfwTerminate();
   }
 }

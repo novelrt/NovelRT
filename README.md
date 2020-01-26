@@ -29,14 +29,16 @@ For information on Ink, check it out from [here](https://github.com/inkle/ink).
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything. If you wish to attempt to build a basic visual novel with the existing C++ API, you must first `git clone` this repository and set up vcpkg, which you can find out more about [here](https://github.com/microsoft/vcpkg).
 
 ### Our dependency list currently includes:
-- sdl2
-- sdl2-mixer
-- sdl2-image
-- Lua 5.3
-- glad
+- GLAD
+- GLFW
 - glm
-- freetype
+- Freetype
+- Libsndfile
+- libpng
+- Lua 5.3
+- OpenAL-Soft
 - spdlog
+(and their respective dependencies)
 
 *The minimum CMake version required for this project is 3.13.*
 

@@ -6,11 +6,6 @@
 namespace NovelRT::Graphics {
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
     auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
 
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
@@ -20,10 +15,9 @@ namespace NovelRT::Graphics {
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
-      _openGLContext = SDL_GL_CreateContext(_runner->getWindowingService()->getWindow());
-      SDL_GL_MakeCurrent(_runner->getWindowingService()->getWindow(), _openGLContext);
+      glfwMakeContextCurrent(_runner->getWindowingService()->getWindow());
 
-      if (!gladLoadGL()) {
+      if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
         throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
       }
@@ -157,8 +151,8 @@ namespace NovelRT::Graphics {
 
   int RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
-      _logger.logErrorLine("Apologies, something went wrong. Reason: SDL could not initialise.");
-      throw std::runtime_error("Unable to continue! The engine cannot start without SDL2.");
+      _logger.logErrorLine("Apologies, something went wrong.");
+      throw std::runtime_error("Unable to continue! The engine cannot start without GLAD/GLFW3.");
     }
 
     return 0;
@@ -176,7 +170,7 @@ namespace NovelRT::Graphics {
   }
 
   void RenderingService::endFrame() const {
-    SDL_GL_SwapWindow(_runner->getWindowingService()->getWindow());
+    glfwSwapBuffers(_runner->getWindowingService()->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
