@@ -133,8 +133,8 @@ namespace NovelRT::Input {
 
     //The next two should only be used when checking MouseEvents
 
-      LeftMouseButton = GLFW_MOUSE_BUTTON_LEFT,
-      RightMouseButton = GLFW_MOUSE_BUTTON_RIGHT
+    LeftMouseButton = GLFW_MOUSE_BUTTON_LEFT,
+    RightMouseButton = GLFW_MOUSE_BUTTON_RIGHT
   };
 }
 
