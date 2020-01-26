@@ -13,7 +13,6 @@ namespace NovelRT::Graphics {
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
     NovelRunner* const _runner;
-    SDL_GLContext _openGLContext;
 
     ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
     ShaderProgram _basicFillRectProgram;

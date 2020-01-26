@@ -11,34 +11,39 @@ namespace NovelRT::Windowing {
   class WindowingService {
 
   NOVELRT_EVENT(WindowResized, Maths::GeoVector<float>)
-  NOVELRT_PARAMETERLESS_EVENT(WindowClosed)
+  NOVELRT_PARAMETERLESS_EVENT(WindowTornDown)
 
   private:
     Maths::GeoVector<float> _windowSize;
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
+    std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
-    NovelRunner* _runner;
+    NovelRunner* const _runner;
+    std::string _windowTitle;
+    bool _isTornDown;
+
+    void errorCallback(int, const char* error);
 
   public:
     explicit WindowingService(NovelRunner* const runner);
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
     void tearDown();
 
-    inline SDL_Window* getWindow() const {
+    inline GLFWwindow* getWindow() const {
       return _window.get();
     }
 
     inline std::string getWindowTitle() const {
-      return SDL_GetWindowTitle(getWindow());
+      return _windowTitle;
     }
 
     inline void setWindowTitle(const std::string& value) {
-      return SDL_SetWindowTitle(getWindow(), value.c_str());
+      _windowTitle = value;
+      return glfwSetWindowTitle(getWindow(), _windowTitle.c_str());
     }
 
     inline void setWindowSize(const Maths::GeoVector<float>& value) {
       _windowSize = value;
-      SDL_SetWindowSize(getWindow(), value.getX(), value.getY());
+      glfwSetWindowSize(getWindow(), value.getX(), value.getY());
       raiseWindowResized(_windowSize);
     }
 

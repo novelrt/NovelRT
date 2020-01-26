@@ -172,7 +172,7 @@ if $ci; then
     fi
   fi
 
-  "$VcpkgExe" install freetype glad glm lua nethost sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] spdlog
+  "$VcpkgExe" install freetype glad glfw3 glm libsndfile lua nethost openal-soft spdlog
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
