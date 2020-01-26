@@ -12,7 +12,7 @@ namespace NovelRT::Utilities {
   std::filesystem::path Misc::getExecutablePath() {
 #if defined(WIN32)
       wchar_t path[MAX_PATH + 1];
-      auto pathLength = GetModuleFileNameW(NULL, path, MAX_PATH);
+      auto pathLength = GetModuleFileNameW(nullptr, path, MAX_PATH);
 
       if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
       {

@@ -178,7 +178,7 @@ namespace NovelRT::Graphics {
         auto pixelBufferAmount = (data.width * data.height * bpp);
         auto rawImage = new unsigned char[pixelBufferAmount]; //We allocate the pixel buffer here.
         if (rawImage == nullptr) {
-          png_destroy_read_struct(&png, &info, (png_infopp)NULL);
+          png_destroy_read_struct(&png, &info, (png_infopp)nullptr);
           fclose(cFile);
           throw std::runtime_error("Couldn't allocate space for PNG!");
         }

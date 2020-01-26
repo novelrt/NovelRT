@@ -24,7 +24,7 @@ namespace NovelRT::Windowing {
     // create window
     float wData = displayData->width * 0.7f;
     float hData = displayData->height * 0.7f;
-    auto window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), NULL, NULL);
+    auto window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
     glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
