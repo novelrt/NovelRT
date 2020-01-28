@@ -59,7 +59,6 @@
 
 namespace NovelRT {
   typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
-  typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
 }
@@ -68,6 +67,10 @@ namespace NovelRT::Audio {
   typedef std::vector<ALuint> SoundBank;
   typedef std::vector<ALuint> MusicBank;
   typedef class AudioService AudioService;
+}
+
+namespace NovelRT::Debug {
+  typedef class DebugService DebugService;
 }
 
 namespace NovelRT::DotNet {
@@ -135,7 +138,7 @@ namespace NovelRT::Windowing {
 
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
-#include "NovelRT/DebugService.h"
+#include "NovelRT/Debug/DebugService.h"
 #include "NovelRT/DotNet/RuntimeService.h"
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"

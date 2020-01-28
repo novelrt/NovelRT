@@ -1,13 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_NOVELDEBUGSERVICE_H
-#define NOVELRT_NOVELDEBUGSERVICE_H
+#ifndef NOVELRT_DEBUG_NOVELDEBUGSERVICE_H
+#define NOVELRT_DEBUG_NOVELDEBUGSERVICE_H
 
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT {
+namespace NovelRT::Debug {
 
   class DebugService {
 
@@ -15,6 +15,7 @@ namespace NovelRT {
     NovelRunner* const _runner;
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
     uint32_t _framesPerSecond;
+    MetricsLevel _metricsLevel;
 
     void updateFpsCounter();
 
@@ -26,6 +27,9 @@ namespace NovelRT {
     bool getIsFpsCounterVisible() const;
     void setIsFpsCounterVisible(bool value);
 
+    MetricsLevel getMetricsLevel() const;
+    void setMetricsLevel(const MetricsLevel& value);
+
     inline uint32_t getFramesPerSecond() const {
       return _framesPerSecond;
     }
@@ -33,4 +37,4 @@ namespace NovelRT {
   };
 }
 
-#endif // NOVELRT_NOVELDEBUGSERVICE_H
+#endif // NOVELRT_DEBUG_NOVELDEBUGSERVICE_H

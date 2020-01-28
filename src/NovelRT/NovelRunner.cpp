@@ -7,7 +7,7 @@ namespace NovelRT {
     _exitCode(1),
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
-    _novelDebugService(std::make_unique<DebugService>(this)),
+    _novelDebugService(std::make_unique<Debug::DebugService>(this)),
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
@@ -71,7 +71,7 @@ namespace NovelRT {
     return _novelInteractionService.get();
   }
 
-  DebugService* NovelRunner::getDebugService() const {
+  Debug::DebugService* NovelRunner::getDebugService() const {
     return _novelDebugService.get();
   }
 

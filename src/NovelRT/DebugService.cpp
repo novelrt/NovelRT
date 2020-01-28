@@ -25,11 +25,12 @@ messageCallback(GLenum source,
 
 #include <NovelRT.h>
 
-namespace NovelRT {
+namespace NovelRT::Debug {
   DebugService::DebugService(NovelRunner* const runner) :
     _runner(runner),
     _fpsCounter(nullptr),
-    _framesPerSecond(0) {
+    _framesPerSecond(0),
+    _metricsLevel(MetricsLevel::None) {
     runner->subscribeToSceneConstructionRequested(std::bind(&DebugService::onSceneConstruction, this));
   }
 
@@ -54,6 +55,14 @@ namespace NovelRT {
     else {
       _fpsCounter->setActive(value);
     }
+  }
+
+  MetricsLevel DebugService::getMetricsLevel() const {
+    return _metricsLevel;
+  }
+
+  void DebugService::setMetricsLevel(const MetricsLevel& value) {
+    _metricsLevel = value;
   }
 
   void DebugService::setFramesPerSecond(uint32_t value) {
