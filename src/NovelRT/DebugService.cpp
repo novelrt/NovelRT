@@ -34,6 +34,14 @@ namespace NovelRT::Debug {
     runner->subscribeToSceneConstructionRequested(std::bind(&DebugService::onSceneConstruction, this));
   }
 
+  void DebugService::recordMetrics() {
+    if (_metricsLevel >= MetricsLevel::FramesPerSecond) {
+      if (_runner->getStepTimer()) {
+        setFramesPerSecond(_runner->getStepTimer()->getFramesPerSecond());
+      }
+    }
+  }
+
   bool DebugService::getIsFpsCounterVisible() const {
     return (_fpsCounter != nullptr) && _fpsCounter->getActive();
   }

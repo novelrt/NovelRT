@@ -65,6 +65,7 @@ namespace NovelRT {
     Audio::AudioService* getAudioService() const;
     DotNet::RuntimeService* getDotNetRuntimeService() const;
     Windowing::WindowingService* getWindowingService() const;
+    Timing::StepTimer* getStepTimer();
 
     ~NovelRunner();
   };

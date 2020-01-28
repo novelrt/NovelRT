@@ -87,6 +87,10 @@ namespace NovelRT {
 	  return _novelWindowingService.get();
   }
 
+  Timing::StepTimer* NovelRunner::getStepTimer() {
+    return _stepTimer.getActual();
+  }
+
   NovelRunner::~NovelRunner() {
     glfwTerminate();
   }

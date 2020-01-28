@@ -24,6 +24,8 @@ namespace NovelRT::Debug {
   public:
     DebugService(NovelRunner* const runner);
 
+    void recordMetrics();
+
     bool getIsFpsCounterVisible() const;
     void setIsFpsCounterVisible(bool value);
 
