@@ -6,13 +6,15 @@ namespace NovelRT::Input {
   InteractionService::InteractionService(NovelRunner* const runner) :
     _runner(runner),
     _clickTarget(nullptr),
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
-    _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
-    _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
-    _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
-  }
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT))
+  {}
 
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
+    if (!_keyStates.count(code)) {
+      _keyStates.insert({ code, state });
+      return;
+    }
+
     switch (state) {
     case KeyState::KeyDown:
       if (_keyStates.at(code) == KeyState::KeyDown) {
@@ -47,8 +49,14 @@ namespace NovelRT::Input {
   void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector<float>& mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
+    auto value = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
-    _mousePositionsOnScreenPerButton.at(keyCode) = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
+    if (!_mousePositionsOnScreenPerButton.count(keyCode)) {
+      _mousePositionsOnScreenPerButton.insert({ keyCode, value });
+    }
+    else {
+      _mousePositionsOnScreenPerButton.at(keyCode) = value;
+    }
 
     processKeyState(keyCode, keyState);
   }
@@ -57,8 +65,8 @@ namespace NovelRT::Input {
     if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
       && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer()))) {
-        _logger.logDebug("Valid click target detected! Executing...");
-        _clickTarget = target;
+      _logger.logDebug("Valid click target detected! Executing...");
+      _clickTarget = target;
     }
   }
 
