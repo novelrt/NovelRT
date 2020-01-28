@@ -98,6 +98,7 @@ namespace NovelRT::Windowing {
 }
 
 //enums
+#include "NovelRT/Debug/MetricsLevel.h"
 #include "NovelRT/Input/KeyCode.h"
 #include "NovelRT/Input/KeyState.h"
 #include "NovelRT/Graphics/CameraFrameState.h"
