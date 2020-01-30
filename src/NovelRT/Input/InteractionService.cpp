@@ -10,23 +10,25 @@ namespace NovelRT::Input {
   {}
 
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
-    if (!_keyStates.count(code)) {
+    auto result = _keyStates.find(code);
+    
+    if (result == _keyStates.end()) {
       _keyStates.insert({ code, state });
       return;
     }
 
     switch (state) {
     case KeyState::KeyDown:
-      if (_keyStates.at(code) == KeyState::KeyDown) {
-        _keyStates.at(code) = KeyState::KeyDownHeld;
+      if (result->second == KeyState::KeyDown) {
+        result->second = KeyState::KeyDownHeld;
       }
-      else if (_keyStates.at(code) != KeyState::KeyDownHeld) {
-        _keyStates.at(code) = KeyState::KeyDown;
+      else if (result->second != KeyState::KeyDownHeld) {
+        result->second = KeyState::KeyDown;
       }
       break;
     case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      _keyStates.at(code) = (_keyStates.at(code) == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
+      result->second = (result->second == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
       break;
     }
   }
@@ -51,11 +53,13 @@ namespace NovelRT::Input {
     auto keyCode = static_cast<KeyCode>(button);
     auto value = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
-    if (!_mousePositionsOnScreenPerButton.count(keyCode)) {
+    auto result = _mousePositionsOnScreenPerButton.find(keyCode);
+
+    if (result == _mousePositionsOnScreenPerButton.end()) {
       _mousePositionsOnScreenPerButton.insert({ keyCode, value });
     }
     else {
-      _mousePositionsOnScreenPerButton.at(keyCode) = value;
+      result->second = value;
     }
 
     processKeyState(keyCode, keyState);
