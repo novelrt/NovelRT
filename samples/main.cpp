@@ -115,6 +115,9 @@ int main(int argc, char *argv[])
   });
 
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
+  memeInteractionRect->setSubscribedKey(NovelRT::Input::KeyCode::LeftMouseButton);
+  interactionRect->setSubscribedKey(NovelRT::Input::KeyCode::RightMouseButton);
+
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
   memeInteractionRect->subscribeToInteracted([&console] {
