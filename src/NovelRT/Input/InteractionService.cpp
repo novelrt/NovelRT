@@ -37,12 +37,14 @@ namespace NovelRT::Input {
     }
   }
 
-  void InteractionService::tryProcessMouseState(KeyCode code) {
-    auto result = _keyStates.find(code);
+  void InteractionService::processMouseStates() {
+    for (int i = (int)KeyCode::FirstMouseButton; i < (int)KeyCode::LastMouseButton; i++) {
+      auto keyCode = static_cast<KeyCode>(i);
+      auto result = _keyStates.find(keyCode);
 
-    if (result != _keyStates.end() && (result->first >= KeyCode::FirstMouseButton && result->first <= KeyCode::LastMouseButton)) {
+      if (result == _keyStates.end()) continue;
       processKeyState(result->first, result->second);
-    }
+    }   
   }
 
   void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
@@ -89,9 +91,7 @@ namespace NovelRT::Input {
   }
 
 void InteractionService::consumePlayerInput() {
-  for (auto it : _keyStates) {
-    tryProcessMouseState(it.first);
-  }
+  processMouseStates();
   glfwPollEvents();
 }
 
