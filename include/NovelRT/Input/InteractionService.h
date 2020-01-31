@@ -23,7 +23,7 @@ namespace NovelRT::Input {
     LoggingService _logger;
     void validateIfKeyCached(KeyCode code);
     void processKeyState(KeyCode code, KeyState state);
-    void tryProcessMouseState(KeyCode code);
+    void processMouseStates();
     void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector<float>& mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 
