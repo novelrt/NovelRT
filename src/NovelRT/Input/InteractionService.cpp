@@ -6,27 +6,45 @@ namespace NovelRT::Input {
   InteractionService::InteractionService(NovelRunner* const runner) :
     _runner(runner),
     _clickTarget(nullptr),
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
-    _mousePositionsOnScreenPerButton.insert({ KeyCode::LeftMouseButton, Maths::GeoVector<float>(0, 0) });
-    _keyStates.insert({ KeyCode::LeftMouseButton, KeyState::Idle });
-    _keyStates.insert({ KeyCode::RightMouseButton, KeyState::Idle });
-  }
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT))
+  {}
 
+  void InteractionService::validateIfKeyCached(KeyCode code) {
+    auto result = _keyStates.find(code);
+
+    if (result == _keyStates.end()) {
+      _keyStates.insert({ code, KeyState::Idle });
+    }
+  }
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
+    validateIfKeyCached(code);
+
+    auto result = _keyStates.find(code);
+
     switch (state) {
     case KeyState::KeyDown:
-      if (_keyStates.at(code) == KeyState::KeyDown) {
-        _keyStates.at(code) = KeyState::KeyDownHeld;
+      if (result->second == KeyState::KeyDown) {
+        result->second = KeyState::KeyDownHeld;
       }
-      else if (_keyStates.at(code) != KeyState::KeyDownHeld) {
-        _keyStates.at(code) = KeyState::KeyDown;
+      else if (result->second != KeyState::KeyDownHeld) {
+        result->second = KeyState::KeyDown;
       }
       break;
     case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      _keyStates.at(code) = (_keyStates.at(code) == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
+      result->second = (result->second == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
       break;
     }
+  }
+
+  void InteractionService::processMouseStates() {
+    for (int i = (int)KeyCode::FirstMouseButton; i < (int)KeyCode::LastMouseButton; i++) {
+      auto keyCode = static_cast<KeyCode>(i);
+      auto result = _keyStates.find(keyCode);
+
+      if (result == _keyStates.end()) continue;
+      processKeyState(result->first, result->second);
+    }   
   }
 
   void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
@@ -41,31 +59,41 @@ namespace NovelRT::Input {
       return;
     }
 
+    validateIfKeyCached(keyCode);
     processKeyState(keyCode, keyState);
   }
 
   void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector<float>& mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
+    auto value = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
-    _mousePositionsOnScreenPerButton.at(keyCode) = mousePosition.getVec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
+    auto result = _mousePositionsOnScreenPerButton.find(keyCode);
 
+    if (result == _mousePositionsOnScreenPerButton.end()) {
+      _mousePositionsOnScreenPerButton.insert({ keyCode, value });
+    }
+    else {
+      result->second = value;
+    }
+
+    validateIfKeyCached(keyCode);
     processKeyState(keyCode, keyState);
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
     if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
-      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[KeyCode::LeftMouseButton])
+      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[target->getSubscribedKey()])
       && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer()))) {
-        _logger.logDebug("Valid click target detected! Executing...");
-        _clickTarget = target;
+      _logger.logDebug("Valid click target detected! Executing...");
+      _clickTarget = target;
     }
   }
 
-  void InteractionService::consumePlayerInput() {
-    processKeyState(KeyCode::LeftMouseButton, _keyStates.at(KeyCode::LeftMouseButton));
-    glfwPollEvents();
-  }
+void InteractionService::consumePlayerInput() {
+  processMouseStates();
+  glfwPollEvents();
+}
 
   std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
     return std::make_unique<BasicInteractionRect>(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });

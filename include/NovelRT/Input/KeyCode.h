@@ -131,10 +131,18 @@ namespace NovelRT::Input {
 
     MenuKey = GLFW_KEY_MENU,
 
-    //The next two should only be used when checking MouseEvents
+    //The next members should only be used when checking MouseEvents
 
     LeftMouseButton = GLFW_MOUSE_BUTTON_LEFT,
-    RightMouseButton = GLFW_MOUSE_BUTTON_RIGHT
+    RightMouseButton = GLFW_MOUSE_BUTTON_RIGHT,
+    MiddleMouseButton = GLFW_MOUSE_BUTTON_MIDDLE,
+    MouseButtonFour = GLFW_MOUSE_BUTTON_4,
+    MouseButtonFive = GLFW_MOUSE_BUTTON_5,
+    MouseButtonSix = GLFW_MOUSE_BUTTON_6,
+    MouseButtonSeven = GLFW_MOUSE_BUTTON_7,
+    MouseButtonEight = GLFW_MOUSE_BUTTON_8,
+    FirstMouseButton = LeftMouseButton,
+    LastMouseButton = GLFW_MOUSE_BUTTON_LAST
   };
 }
 
