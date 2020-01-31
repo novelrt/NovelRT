@@ -133,4 +133,11 @@ namespace NovelRT {
         break;
     }
   }
+
+  void LoggingService::throwIfNullPtr(const void* const object, const std::string& exceptionMessage)
+  {
+    if (object != nullptr) return;
+    logError(exceptionMessage);
+    throw std::runtime_error(exceptionMessage);
+  }
 }

@@ -58,12 +58,7 @@ namespace NovelRT::Windowing {
 #endif
 
         window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
-
-        if (window == nullptr)
-        {
-          _logger.logError("Failed to create OpenGL v4.3 context using native API");
-          throw std::runtime_error("Unable to continue! Window could not be created.");
-        }
+        _logger.throwIfNullPtr(window, "Failed to create OpenGL v4.3 context using native API");
       }
     }
 
@@ -79,7 +74,7 @@ namespace NovelRT::Windowing {
 
     glfwSetWindowCloseCallback(_window.get(), [](auto window) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
-      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+      thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->tearDown();
       thisPtr->raiseWindowTornDown();
@@ -87,7 +82,7 @@ namespace NovelRT::Windowing {
 
     glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
-      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+      thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
@@ -96,7 +91,7 @@ namespace NovelRT::Windowing {
 
     glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
-      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+      thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       double x = 0, y = 0;
       glfwGetCursorPos(window, &x, &y);
@@ -107,7 +102,7 @@ namespace NovelRT::Windowing {
 
     glfwSetKeyCallback(_window.get(), [](auto window, auto key, auto scancode, auto action, auto mods) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
-      if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+      thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->_runner->getInteractionService()->acceptKeyboardInputBindingPush(key, action);
       });
