@@ -34,6 +34,7 @@ static int average(lua_State *luaState) {
 std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
 std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
 std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
+std::unique_ptr<NovelRT::Graphics::BasicFillRect> myBasicFillRect;
 std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButton;
 std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoogaloo;
 std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
@@ -76,6 +77,10 @@ int main(int argc, char *argv[])
   auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
   lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+
+
+  auto myTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1, 1), 0.0f, NovelRT::Maths::GeoVector<float>(200, 300));
+  myBasicFillRect = runner.getRenderer()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
   playAudioButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
@@ -146,6 +151,7 @@ int main(int argc, char *argv[])
 
     novelChanRect->executeObjectBehaviour();
     textRect->executeObjectBehaviour();
+    myBasicFillRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
   });
 
