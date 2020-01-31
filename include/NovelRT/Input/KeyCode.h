@@ -141,6 +141,8 @@ namespace NovelRT::Input {
     MouseButtonSix = GLFW_MOUSE_BUTTON_6,
     MouseButtonSeven = GLFW_MOUSE_BUTTON_7,
     MouseButtonEight = GLFW_MOUSE_BUTTON_8,
+    FirstMouseButton = LeftMouseButton,
+    LastMouseButton = GLFW_MOUSE_BUTTON_LAST
   };
 }
 
