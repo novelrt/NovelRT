@@ -33,6 +33,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 - GLFW
 - glm
 - Freetype
+- Harfbuzz (due to a vcpkg bug: see #127)
 - Libsndfile
 - libpng
 - Lua 5.3
