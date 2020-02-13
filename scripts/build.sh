@@ -158,7 +158,6 @@ if $ci; then
 
   if [ ! -d "$VcpkgInstallDir" ]; then
      git clone https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
-	 git checkout port/freetype-regression
   fi
 
   VcpkgExe="$VcpkgInstallDir/vcpkg"
