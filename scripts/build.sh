@@ -157,9 +157,11 @@ if $ci; then
   VcpkgInstallDir="$ArtifactsDir/vcpkg"
 
   if [ ! -d "$VcpkgInstallDir" ]; then
-	 git remote -v
+	 current="${0%/*}"
      git clone -b "port/freetype-regression" https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
+	 cd "$VcpkgInstallDir"
 	 git remote -v
+	 cd "$current"
   fi
 
   VcpkgExe="$VcpkgInstallDir/vcpkg"
