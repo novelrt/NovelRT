@@ -157,7 +157,7 @@ if $ci; then
   VcpkgInstallDir="$ArtifactsDir/vcpkg"
 
   if [ ! -d "$VcpkgInstallDir" ]; then
-     git clone https://github.com/microsoft/vcpkg "$VcpkgInstallDir"
+     git clone -b "port/freetype-regression" https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
   fi
 
   VcpkgExe="$VcpkgInstallDir/vcpkg"
