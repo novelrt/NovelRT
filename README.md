@@ -6,7 +6,7 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 | Windows x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
 | Ubuntu x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
 
-[![Discord](https://img.shields.io/discord/543898968380145675?logo=discord&style=plastic)](https://discord.novelrt.dev/)
+[![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
 ## Current Features
 
