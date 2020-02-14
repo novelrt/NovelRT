@@ -115,9 +115,20 @@ endif()
 
 # NovelRT Installation
 
-install(TARGETS NovelRT)
+install(TARGETS NovelRT
+        EXPORT NovelRTConfig
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+)
 
 install(DIRECTORY ../include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h"
+)
+
+install(EXPORT NovelRTConfig
+        DESTINATION lib/cmake/NovelRT
+        FILE NovelRTConfig.cmake
 )
