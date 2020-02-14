@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function Build() {
-  & cmake --build $BuildDir
+  & cmake --build $BuildDir --config $configuration
 
   if ($LastExitCode -ne 0) {
     throw "'Build' failed"
@@ -33,7 +33,7 @@ function Generate() {
     $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile" + $remaining
   }
 
-  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_INSTALL_PREFIX=$InstallDir $remaining
+  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
 
   if ($LastExitCode -ne 0) {
     throw "'Generate' failed"
@@ -58,7 +58,7 @@ function Help() {
 }
 
 function Install() {
-  & cmake --install $BuildDir
+  & cmake --install $BuildDir --config $configuration
 
   if ($LastExitCode -ne 0) {
     throw "'Install' failed"

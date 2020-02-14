@@ -110,3 +110,15 @@ add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
 )
 
 add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS} SOURCES ${NOVELRT_DOTNET_INPUTS})
+
+# NovelRT Installation
+
+install(TARGETS NovelRT
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+)
+
+install(DIRECTORY ../include/
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.h"
+)
