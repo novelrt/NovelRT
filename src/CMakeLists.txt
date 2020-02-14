@@ -135,7 +135,7 @@ install(TARGETS NovelRT
         INCLUDES DESTINATION include
 )
 
-install(DIRECTORY ../include/
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../include/"
         DESTINATION include
         FILES_MATCHING PATTERN "*.h"
 )
@@ -147,4 +147,8 @@ install(FILES "${NOVELRT_VERSION_CONFIG}" "${NOVELRT_PROJECT_CONFIG}"
 install(EXPORT NovelRTTargets
         DESTINATION "${NOVELRT_CONFIG_DIR}"
         NAMESPACE "NovelRT::"
+)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
+        DESTINATION Resources
 )
