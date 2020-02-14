@@ -115,10 +115,7 @@ endif()
 
 # NovelRT Installation
 
-install(TARGETS NovelRT
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
-)
+install(TARGETS NovelRT)
 
 install(DIRECTORY ../include/
         DESTINATION include
