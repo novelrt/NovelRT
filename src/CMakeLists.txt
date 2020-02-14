@@ -113,10 +113,22 @@ if (NOT NOVELRT_SKIP_DOTNET)
   add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS} SOURCES ${NOVELRT_DOTNET_INPUTS})
 endif()
 
+# NovelRT Package
+
+include(CMakePackageConfigHelpers)
+
+set(NOVELRT_CONFIG_DIR "lib/cmake")
+
+set(NOVELRT_VERSION_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/NovelRTConfigVersion.cmake")
+write_basic_package_version_file("${NOVELRT_VERSION_CONFIG}" COMPATIBILITY SameMajorVersion)
+
+set(NOVELRT_PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/NovelRTConfig.cmake")
+configure_package_config_file("Config.cmake.in" "${NOVELRT_PROJECT_CONFIG}" INSTALL_DESTINATION "${NOVELRT_CONFIG_DIR}")
+
 # NovelRT Installation
 
 install(TARGETS NovelRT
-        EXPORT NovelRTConfig
+        EXPORT NovelRTTargets
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
@@ -128,7 +140,11 @@ install(DIRECTORY ../include/
         FILES_MATCHING PATTERN "*.h"
 )
 
-install(EXPORT NovelRTConfig
-        DESTINATION lib/cmake/NovelRT
-        FILE NovelRTConfig.cmake
+install(FILES "${NOVELRT_VERSION_CONFIG}" "${NOVELRT_PROJECT_CONFIG}"
+        DESTINATION "${NOVELRT_CONFIG_DIR}"
+)
+
+install(EXPORT NovelRTTargets
+        DESTINATION "${NOVELRT_CONFIG_DIR}"
+        NAMESPACE "NovelRT::"
 )
