@@ -59,6 +59,14 @@ namespace NovelRT::Maths {
       _value.y = value;
     }
 
+    inline bool operator==(const GeoVector<T>& other) const {
+      return getVec2Value() == other.getVec2Value();
+    }
+
+    inline bool operator!=(const GeoVector<T>& other) const {
+      return getVec2Value() != other.getVec2Value();
+    }
+
     inline GeoVector<T> operator+(const GeoVector<T>& other) const {
       return GeoVector<T>(getVec2Value() + other.getVec2Value());
     }

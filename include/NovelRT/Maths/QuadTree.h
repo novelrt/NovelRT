@@ -9,31 +9,64 @@ namespace NovelRT::Maths {
   template <typename TQuadTreePoint>
   class QuadTree {
   private:
-    static const int32_t CAPACITY = 4;
+    static const int32_t POINT_CAPACITY = 4;
 
     static const int32_t TOP_LEFT = 0;
     static const int32_t TOP_RIGHT = 1;
     static const int32_t BOTTOM_LEFT = 2;
     static const int32_t BOTTOM_RIGHT = 3;
 
+    typedef std::array<TQuadTreePoint*, POINT_CAPACITY> TPoints;
+    typedef std::array<std::unique_ptr<QuadTree>, 4> TChildren;
+
     GeoBounds _bounds;
-    TQuadTreePoint* _points[CAPACITY];
-    std::unique_ptr<QuadTree> _children[4];
+    TPoints _points;
+    TChildren _children;
+    uint32_t _pointCount;
 
   public:
     explicit QuadTree(GeoBounds bounds) noexcept :
       _bounds(bounds),
-      _points({}),
-      _children({}) {
+      _points(TPoints()),
+      _children(TChildren()),
+      _pointCount(0) {
       static_assert(std::is_base_of<QuadTreePoint, TQuadTreePoint>::value, "Type argument for TQuadTreePoint must inherit NovelRT::Maths::QuadTreePoint!");
     }
 
-    bool tryInsert(const TQuadTreePoint* const point) noexcept {
-      if (point == nullptr || !_treeBounds.pointIsWithinBounds(point->getPosition())) return false;
+    const GeoBounds& getBounds() const noexcept {
+      return _bounds;
+    }
+
+    const TQuadTreePoint* getPoint(uint32_t index) const noexcept {
+      return (index < _pointCount) ? _points[index] : nullptr;
+    }
+
+    uint32_t getPointCount() const noexcept {
+      return _pointCount;
+    }
+
+    QuadTree* getTopLeft() const noexcept {
+      return _children[TOP_LEFT].get();
+    }
+
+    QuadTree* getTopRight() const noexcept {
+      return _children[TOP_RIGHT].get();
+    }
+
+    QuadTree* getBottomLeft() const noexcept {
+      return _children[BOTTOM_LEFT].get();
+    }
+
+    QuadTree* getBottomRight() const noexcept {
+      return _children[BOTTOM_RIGHT].get();
+    }
+
+    bool tryInsert(TQuadTreePoint* point) noexcept {
+      if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition())) return false;
 
       if (_children[TOP_LEFT] == nullptr) {
-        if (_nodeObjects.size() < NODE_CAPACITY) {
-          _nodeObjects.emplace_back(point);
+        if (_pointCount < POINT_CAPACITY) {
+          _points[_pointCount++] = point;
           return true;
         }
         subdivideTree();
@@ -54,20 +87,20 @@ namespace NovelRT::Maths {
       const GeoVector<float> BOTTOM_LEFT_SCALE = GeoVector<float>(-0.5, -0.5);
       const GeoVector<float> BOTTOM_RIGHT_SCALE = GeoVector<float>(+0.5, -0.5);
 
-      GeoVector size = _bounds.getSize() / 2;
-      GeoVector position = _bounds.getPosition();
+      GeoVector size = getBounds().getSize() / 2;
+      GeoVector position = getBounds().getPosition();
 
-      _children[TOP_LEFT] = std::make_unique(new QuadTree(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0)));
-      _children[TOP_RIGHT] = std::make_unique(new QuadTree(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0)));
-      _children[BOTTOM_LEFT] = std::make_unique(new QuadTree(GeoBounds(position + (size * BOTTOM_LEFT_SCALE), size, 0)));
-      _children[BOTTOM_RIGHT] = std::make_unique(new QuadTree(GeoBounds(position + (size * BOTTOM_RIGHT_SCALE), size, 0)));
+      _children[TOP_LEFT] = std::unique_ptr<QuadTree>(new QuadTree(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0)));
+      _children[TOP_RIGHT] = std::unique_ptr<QuadTree>(new QuadTree(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0)));
+      _children[BOTTOM_LEFT] = std::unique_ptr<QuadTree>(new QuadTree(GeoBounds(position + (size * BOTTOM_LEFT_SCALE), size, 0)));
+      _children[BOTTOM_RIGHT] = std::unique_ptr<QuadTree>(new QuadTree(GeoBounds(position + (size * BOTTOM_RIGHT_SCALE), size, 0)));
 
       for (auto point : _points) {
         auto result = tryInsert(point);
         assert(result);
       }
 
-      _points = {};
+      _pointCount = 0;
     }
   };
 }
