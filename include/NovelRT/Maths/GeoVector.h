@@ -12,6 +12,7 @@ namespace NovelRT::Maths {
   class GeoVector {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
+    friend class GeoBounds;
     template<typename U>
     friend class GeoMatrix4;
 

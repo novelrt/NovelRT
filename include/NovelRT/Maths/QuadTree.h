@@ -19,19 +19,25 @@ namespace NovelRT::Maths {
     std::unique_ptr<QuadTree> _bottomRight;
 
   public:
-    explicit QuadTree(GeoBounds treeBounds) noexcept : _treeBounds(treeBounds), _nodeObjects(std::vector<T>()) {
+    explicit QuadTree(GeoBounds treeBounds) noexcept :
+      _treeBounds(treeBounds),
+      _nodeObjects(std::vector<T>()),
+      _topLeft(std::unique_ptr<QuadTree>(nullptr)),
+      _topRight(std::unique_ptr<QuadTree>(nullptr)),
+      _bottomLeft(std::unique_ptr<QuadTree>(nullptr)),
+      _bottomRight(std::unique_ptr<QuadTree>(nullptr)) {
       static_assert(std::is_base_of<QuadTreeNode, T>::value, "Type argument for T must inherit NovelRT::Maths::QuadTreeNode!");
     }
 
     bool tryInsertNodeObject(const T* const target) noexcept {
-      if(target == nullptr || !_treeBounds.pointIsWithinBounds(target->getPosition())) return false;
+      if (target == nullptr || !_treeBounds.pointIsWithinBounds(target->getPosition())) return false;
 
       if (_nodeObjects.size() < NODE_CAPACITY && _topLeft == nullptr) {
         _nodeObjects.emplace_back(target);
         return true;
       }
 
-      if(_topLeft == nullptr) subdivideTree();
+      if (_topLeft == nullptr) subdivideTree();
 
       //TODO: Refactor this omd
       if (_topLeft->tryInsertNodeObject(target)) return true;
@@ -41,6 +47,10 @@ namespace NovelRT::Maths {
 
       //it should never reach here, but we also can't really afford to throw in this particular code path I don't think
       return false;
+    }
+
+    void subdivideTree() noexcept {
+
     }
 
   };
