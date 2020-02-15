@@ -28,6 +28,18 @@ namespace NovelRT::Maths {
     float getRotation() const;
     void setRotation(float value);
     GeoVector<float> getExtents() const;
+
+    inline bool operator==(const GeoBounds& other) const {
+      return _position == other._position
+          && _size == other._size
+          && _rotation == other._rotation;
+    }
+
+    inline bool operator!=(const GeoBounds& other) const {
+      return _position != other._position
+        || _size != other._size
+        || _rotation != other._rotation;
+    }
   };
 }
 
