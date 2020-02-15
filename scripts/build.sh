@@ -56,9 +56,9 @@ done
 
 function Build {
   if [ -z "$remaining" ]; then
-    cmake --build "$BuildDir"
+    cmake --build "$BuildDir" --config "$configuration"
   else
-    cmake --build "$BuildDir" "${remaining[@]}"
+    cmake --build "$BuildDir" --config "$configuration" "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?
@@ -79,16 +79,16 @@ function Generate {
   if [ -z "$remaining" ]; then
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
     else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
     fi
   else
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
     else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
     fi
   fi
 
@@ -118,9 +118,9 @@ function Help {
 
 function Install {
   if [ -z "$remaining" ]; then
-    cmake --install "$BuildDir"
+    cmake --install "$BuildDir" --config "$configuration"
   else
-    cmake --install "$BuildDir" "${remaining[@]}"
+    cmake --install "$BuildDir" --config "$configuration" "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?
