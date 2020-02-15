@@ -106,7 +106,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
-#include "NovelRT/Maths/QuadTreeNode.h"
+#include "NovelRT/Maths/QuadTreePoint.h"
 #include "NovelRT/Maths/QuadTree.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"

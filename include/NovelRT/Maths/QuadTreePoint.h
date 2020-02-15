@@ -6,7 +6,7 @@
 #endif
 
 namespace NovelRT::Maths {
-  class QuadTreeNode {
+  class QuadTreePoint {
   public:
     virtual GeoVector<float>& getPosition() const noexcept = 0;
   };
