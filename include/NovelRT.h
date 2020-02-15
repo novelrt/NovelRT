@@ -75,6 +75,7 @@ namespace NovelRT::DotNet {
 }
 
 namespace NovelRT::Graphics {
+  typedef class Texture Texture;
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
   typedef class ImageRect ImageRect;
@@ -87,6 +88,10 @@ namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
+}
+
+namespace NovelRT::Animation {
+  typedef class SpriteAnimator SpriteAnimator;
 }
 
 namespace NovelRT::Timing {
@@ -120,8 +125,12 @@ namespace NovelRT::Windowing {
 #include "NovelRT/NovelRunner.h"
 #include "NovelRT/WorldObject.h"
 
+//Animation types
+#include "NovelRT/Animation/SpriteAnimator.h"
+
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
+#include "NovelRT/Graphics/Texture.h"
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
