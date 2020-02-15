@@ -14,10 +14,10 @@ namespace NovelRT::Graphics {
   private:
     std::string _imageDir;
     std::string _previousImageDir;
-    Utilities::Lazy<GLuint> _textureId;
     std::vector<GLfloat> _uvCoordinates;
     Utilities::Lazy<GLuint> _uvBuffer;
     Utilities::Lazy<GLuint> _colourTintBuffer;
+    Texture* _texture;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
     LoggingService _logger;
