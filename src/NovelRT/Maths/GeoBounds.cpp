@@ -6,8 +6,8 @@ namespace NovelRT::Maths {
   GeoBounds::GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation) :
     _position(position),
     _rotation(rotation),
-    _size(size) {
-  }
+    _size(size),
+    _extents(_size / 2.0f){}
 
   bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
     auto corner0 = getCornerInWorldSpace(0);
@@ -18,6 +18,19 @@ namespace NovelRT::Maths {
       return true;
 
     return false;
+  }
+
+  bool GeoBounds::intersectsWith(const GeoBounds& otherBounds) const {
+    if (getRotation() != 0.0f) throw std::runtime_error("Box intersection does not currently support rotated bounds. AABB support only.");
+
+    auto minA = getPosition() - getExtents();
+    auto maxA = getPosition() + getExtents();
+
+    auto minB = otherBounds.getPosition() - otherBounds.getExtents();
+    auto maxB = otherBounds.getPosition() + otherBounds.getExtents();
+
+    auto result = glm::greaterThan(minA.getVec2Value(), maxB.getVec2Value()) | glm::greaterThan(minB.getVec2Value(), maxA.getVec2Value());
+    return glm::any(result);
   }
 
   GeoVector<float> GeoBounds::getCornerInLocalSpace(int index) const {
@@ -65,5 +78,8 @@ namespace NovelRT::Maths {
   }
   void GeoBounds::setRotation(float value) {
     _rotation = value;
+  }
+  GeoVector<float> GeoBounds::getExtents() const {
+    return _extents;
   }
 }
