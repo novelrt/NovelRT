@@ -1,3 +1,5 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+
 #ifndef NOVELRT_ANIMATION_SPRITEANIMATOR_H
 #define NOVELRT_ANIMATION_SPRITEANIMATOR_H
 
@@ -7,30 +9,23 @@
 
 namespace NovelRT::Animation {
 
-  struct SpriteAnimatorState {
-  public:
-    std::vector<SpriteAnimatorFrame> frames;
-    std::map<SpriteAnimatorState, std::vector, std::function<bool()>> transitions;
-  };
-
-  struct SpriteAnimatorFrame {
-  public:
-    Graphics::Texture texture;
-    std::function<void()> onFrameEnter;
-    std::function<void()> onFrameExit;
-  };
-
   class SpriteAnimator {
   private:
-    NovelRunner* _runner;
-    std::vector<SpriteAnimatorState> _states;
+    NovelRunner* _runner; //I'm a bit worried about this, but whatever, just want it working for now
+    Graphics::ImageRect* _rect;
+    AnimatorPlayState _animatorState;
+    std::function<void(double)> _animationUpdateHandle;
+    std::vector<std::shared_ptr<SpriteAnimatorState>> _states;
+
+
+    void constructAnimation(double delta);
 
   public:
-    explicit SpriteAnimator(NovelRunner* runner) noexcept;
+    explicit SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept;
     void play();
     void pause();
     void stop();
   };
 }
 
-#endif
+#endif //!NOVELRT_ANIMATION_SPRITEANIMATOR_H

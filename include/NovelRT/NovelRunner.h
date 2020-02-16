@@ -14,11 +14,12 @@ namespace NovelRT {
   class NovelRunner {
 
   NOVELRT_PARAMETERLESS_EVENT(SceneConstructionRequested)
+  NOVELRT_VALUE_EVENT(Update, double)
 
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
-    std::vector<NovelUpdateSubscriber> _updateSubscribers;
+    //std::vector<NovelUpdateSubscriber> _updateSubscribers;
     std::unique_ptr<DebugService> _novelDebugService;
     std::unique_ptr<Input::InteractionService> _novelInteractionService;
     std::unique_ptr<Audio::AudioService> _novelAudioService;
@@ -34,13 +35,13 @@ namespace NovelRT {
      *
      * @param subscriber The code to execute on update.
      */
-    void runOnUpdate(NovelUpdateSubscriber);
-    /**
-     * Stops the execution of the instantiated NovelRunner at the specified event.
-     *
-     * @param subscriber The event at which the novel should stop running.
-     */
-    void stopRunningOnUpdate(NovelUpdateSubscriber);
+    //void runOnUpdate(NovelUpdateSubscriber);
+    ///**
+    // * Stops the execution of the instantiated NovelRunner at the specified event.
+    // *
+    // * @param subscriber The event at which the novel should stop running.
+    // */
+    //void stopRunningOnUpdate(NovelUpdateSubscriber);
 
     /**
      * Instantiates the NovelRunner class with its presets.

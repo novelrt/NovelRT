@@ -138,7 +138,7 @@ namespace NovelRT::Graphics {
         + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
-      target->setTextureInternal(ch.textureId);
+      target->setTextureInternal(ch);
       target->getTransform().setPosition(currentWorldPosition);
       target->getTransform().setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
       target->setActive(true);

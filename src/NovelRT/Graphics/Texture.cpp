@@ -1,4 +1,16 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include <NovelRT.h>
+
 namespace NovelRT::Graphics {
+  Texture::Texture() :
+    _textureId(Utilities::Lazy<GLuint>([] {
+    GLuint tempTexture;
+    glGenTextures(1, &tempTexture);
+    return tempTexture;
+    })),
+    _logger(Utilities::Misc::CONSOLE_LOG_GFX){}
+
   void Texture::loadPngAsTexture(const std::string& file) {
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 

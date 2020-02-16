@@ -27,34 +27,63 @@ namespace NovelRT::Utilities {
   };
 }
 
-#define NOVELRT_EVENT(eventName, eventArgsType)                                                                   \
-public:                                                                                                           \
-  void subscribeTo##eventName(std::function<void(const eventArgsType&)> delegate) {                               \
-    _##eventName##EventDelegates.push_back(delegate);                                                             \
-  }                                                                                                               \
-  void unsubscribeFrom##eventName(std::function<void(const eventArgsType&)> delegate) {                           \
-    _##eventName##EventDelegates.erase(std::remove_if(_##eventName##EventDelegates.begin(),                       \
-          _##eventName##EventDelegates.end(), [delegate](const std::function<void(const eventArgsType&)> x) {     \
-            auto result = x.target<void(const eventArgsType&)>() == delegate.target<void(const eventArgsType&)>();\
-            return result;                                                                                        \
-    }), _##eventName##EventDelegates.end());                                                                      \
-  }                                                                                                               \
-protected:                                                                                                        \
-  void raise##eventName(const eventArgsType& eventArgs) {                                                         \
-    erase##eventName##NullSubscribers();                                                                          \
-    for (auto& delegate : _##eventName##EventDelegates) {                                                         \
-      delegate(eventArgs);                                                                                        \
-    }                                                                                                             \
-  }                                                                                                               \
-private:                                                                                                          \
-  std::vector<std::function<void(const eventArgsType&)>> _##eventName##EventDelegates;                            \
-  void erase##eventName##NullSubscribers() {                                                                      \
-        _##eventName##EventDelegates.erase(std::remove_if(_##eventName##EventDelegates.begin(),                   \
-            _##eventName##EventDelegates.end(), [](std::function<void(const eventArgsType&)> x) {                 \
-            auto result = x == nullptr;                                                                           \
-            return result;                                                                                        \
-    }), _##eventName##EventDelegates.end());                                                                      \
-  }                                                                                                               \
+#define NOVELRT_EVENT(eventName, eventArgsType)                                                                    \
+public:                                                                                                            \
+  void subscribeTo##eventName(std::function<void(const eventArgsType&)> delegate) {                                \
+    _i##eventName##EventDelegates.push_back(delegate);                                                             \
+  }                                                                                                                \
+  void unsubscribeFrom##eventName(std::function<void(const eventArgsType&)> delegate) {                            \
+    _i##eventName##EventDelegates.erase(std::remove_if(_i##eventName##EventDelegates.begin(),                      \
+          _i##eventName##EventDelegates.end(), [delegate](const std::function<void(const eventArgsType&)> x) {     \
+            auto result = x.target<void(const eventArgsType&)>() == delegate.target<void(const eventArgsType&)>(); \
+            return result;                                                                                         \
+    }), _i##eventName##EventDelegates.end());                                                                      \
+  }                                                                                                                \
+protected:                                                                                                         \
+  void raise##eventName(const eventArgsType& eventArgs) {                                                          \
+    erase##eventName##NullSubscribers();                                                                           \
+    for (auto& delegate : _i##eventName##EventDelegates) {                                                         \
+      delegate(eventArgs);                                                                                         \
+    }                                                                                                              \
+  }                                                                                                                \
+private:                                                                                                           \
+  std::vector<std::function<void(const eventArgsType&)>> _i##eventName##EventDelegates;                            \
+  void erase##eventName##NullSubscribers() {                                                                       \
+        _i##eventName##EventDelegates.erase(std::remove_if(_i##eventName##EventDelegates.begin(),                  \
+            _i##eventName##EventDelegates.end(), [](std::function<void(const eventArgsType&)> x) {                 \
+            auto result = x == nullptr;                                                                            \
+            return result;                                                                                         \
+    }), _i##eventName##EventDelegates.end());                                                                      \
+  }                                                                                                                \
+
+#define NOVELRT_VALUE_EVENT(eventName, eventArgsType)                                                          \
+public:                                                                                                            \
+  void subscribeTo##eventName(std::function<void(eventArgsType)> delegate) {                                      \
+    _i##eventName##EventDelegates.push_back(delegate);                                                             \
+  }                                                                                                                \
+  void unsubscribeFrom##eventName(std::function<void(eventArgsType)> delegate) {                                  \
+    _i##eventName##EventDelegates.erase(std::remove_if(_i##eventName##EventDelegates.begin(),                      \
+          _i##eventName##EventDelegates.end(), [delegate](std::function<void(eventArgsType)> x) {           \
+            auto result = x.target<void(eventArgsType)>() == delegate.target<void(eventArgsType)>();             \
+            return result;                                                                                         \
+    }), _i##eventName##EventDelegates.end());                                                                      \
+  }                                                                                                                \
+protected:                                                                                                         \
+  void raise##eventName(eventArgsType eventArgs) {                                                          \
+    erase##eventName##NullSubscribers();                                                                           \
+    for (auto& delegate : _i##eventName##EventDelegates) {                                                         \
+      delegate(eventArgs);                                                                                         \
+    }                                                                                                              \
+  }                                                                                                                \
+private:                                                                                                           \
+  std::vector<std::function<void(eventArgsType)>> _i##eventName##EventDelegates;                            \
+  void erase##eventName##NullSubscribers() {                                                                       \
+        _i##eventName##EventDelegates.erase(std::remove_if(_i##eventName##EventDelegates.begin(),                  \
+            _i##eventName##EventDelegates.end(), [](std::function<void(eventArgsType)> x) {                 \
+            auto result = x == nullptr;                                                                            \
+            return result;                                                                                         \
+    }), _i##eventName##EventDelegates.end());                                                                      \
+  }                                                                                                                \
 
 #define NOVELRT_PARAMETERLESS_EVENT(eventName)                                                                    \
 public:                                                                                                           \
