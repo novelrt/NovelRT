@@ -110,8 +110,8 @@ namespace NovelRT::Graphics {
 
     // Check Fragment Shader
     glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
+    if (Result != GL_TRUE) {
+      glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
@@ -127,8 +127,8 @@ namespace NovelRT::Graphics {
 
     // Check the program
     glGetProgramiv(programId, GL_LINK_STATUS, &Result);
-    glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
+    if (Result != GL_TRUE) {
+      glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> ProgramErrorMessage(infoLogLength + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
