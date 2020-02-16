@@ -22,9 +22,16 @@ namespace NovelRT::Graphics {
         throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
       }
 
+      std::string glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+      _logger.logInfoLine("GL_VENDOR: " + glVendor);
+
+      std::string glRenderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+      _logger.logInfoLine("GL_RENDERER: " + glRenderer);
+
       std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-      std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
       _logger.logInfoLine("GL_VERSION: " + glVersion);
+
+      std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
       _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
       glEnable(GL_DEPTH_TEST);
@@ -110,8 +117,8 @@ namespace NovelRT::Graphics {
 
     // Check Fragment Shader
     glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
+    if (Result != GL_TRUE) {
+      glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
@@ -127,8 +134,8 @@ namespace NovelRT::Graphics {
 
     // Check the program
     glGetProgramiv(programId, GL_LINK_STATUS, &Result);
-    glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
+    if (Result != GL_TRUE) {
+      glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> ProgramErrorMessage(infoLogLength + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
