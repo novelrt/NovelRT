@@ -22,9 +22,16 @@ namespace NovelRT::Graphics {
         throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
       }
 
+      std::string glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+      _logger.logInfoLine("GL_VENDOR: " + glVendor);
+
+      std::string glRenderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+      _logger.logInfoLine("GL_RENDERER: " + glRenderer);
+
       std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-      std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
       _logger.logInfoLine("GL_VERSION: " + glVersion);
+
+      std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
       _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
 
       glEnable(GL_DEPTH_TEST);
