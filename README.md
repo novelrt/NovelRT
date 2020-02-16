@@ -36,6 +36,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 - Libsndfile
 - libpng
 - Lua 5.3
+- nethost
 - OpenAL-Soft
 - spdlog
 (and their respective dependencies)
