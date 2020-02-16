@@ -113,7 +113,7 @@ namespace NovelRT::Maths {
         for (uint32_t index = 0; index < getPointCount(); index++) {
           auto point = getPoint(index);
           if (bounds.pointIsWithinBounds(point->getPosition())) {
-            intersectingPoints.push_back(point);
+            intersectingPoints.emplace_back(point);
           }
         }
       } else {
