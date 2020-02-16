@@ -28,7 +28,7 @@ namespace NovelRT {
     uint32_t lastFramesPerSecond = 0;
 
     while (_exitCode) {
-      _stepTimer.getActual()->tick(_updateSubscribers);
+      _stepTimer.getActual()->tick(_iUpdateEventDelegates);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
       raiseSceneConstructionRequested();
@@ -46,26 +46,26 @@ namespace NovelRT {
     return _novelRenderer.get();
   }
 
-  void NovelRunner::runOnUpdate(NovelUpdateSubscriber subscriber) {
-    _updateSubscribers.push_back(subscriber);
-  }
+  //void NovelRunner::runOnUpdate(NovelUpdateSubscriber subscriber) {
+  //  _updateSubscribers.push_back(subscriber);
+  //}
 
-  void NovelRunner::stopRunningOnUpdate(NovelUpdateSubscriber subscriber) {
-    if (std::find(
-      _updateSubscribers.begin(),
-      _updateSubscribers.end(),
-      subscriber) != _updateSubscribers.end()) {
-      _updateSubscribers.erase(std::remove_if(
-        _updateSubscribers.begin(),
-        _updateSubscribers.end(),
-        [subscriber](NovelUpdateSubscriber existingSubscriber) {
-          return subscriber == existingSubscriber;
-        }));
-    }
-    else {
-      return;
-    }
-  }
+  //void NovelRunner::stopRunningOnUpdate(NovelUpdateSubscriber subscriber) {
+  //  if (std::find(
+  //    _updateSubscribers.begin(),
+  //    _updateSubscribers.end(),
+  //    subscriber) != _updateSubscribers.end()) {
+  //    _updateSubscribers.erase(std::remove_if(
+  //      _updateSubscribers.begin(),
+  //      _updateSubscribers.end(),
+  //      [subscriber](NovelUpdateSubscriber existingSubscriber) {
+  //        return subscriber == existingSubscriber;
+  //      }));
+  //  }
+  //  else {
+  //    return;
+  //  }
+  //}
 
   Input::InteractionService* NovelRunner::getInteractionService() const {
     return _novelInteractionService.get();

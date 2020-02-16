@@ -17,12 +17,12 @@ namespace NovelRT::Graphics {
     std::vector<GLfloat> _uvCoordinates;
     Utilities::Lazy<GLuint> _uvBuffer;
     Utilities::Lazy<GLuint> _colourTintBuffer;
-    Texture* _texture;
+    std::shared_ptr<Texture> _texture;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
     LoggingService _logger;
 
-    void setTextureInternal(GLuint textureId);
+    void setTextureInternal(std::shared_ptr<Texture> texture);
 
   protected:
     void configureObjectBuffers() final;

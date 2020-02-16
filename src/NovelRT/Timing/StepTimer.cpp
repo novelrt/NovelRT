@@ -29,7 +29,7 @@ namespace NovelRT::Timing {
     _framesThisSecond = 0;
   }
 
-  void StepTimer::tick(const std::vector<NovelUpdateSubscriber>& update) {
+  void StepTimer::tick(const std::vector<std::function<void(double)>>& update) {
     auto currentCounter = glfwGetTimerValue();
     auto counterDelta = currentCounter - _lastCounter;
 

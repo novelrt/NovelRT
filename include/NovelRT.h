@@ -19,6 +19,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
@@ -58,10 +59,13 @@
 #include "png.h"
 
 namespace NovelRT {
-  typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
+}
+
+namespace NovelRT::Animation {
+  typedef class SpriteAnimator SpriteAnimator;
 }
 
 namespace NovelRT::Audio {
@@ -90,10 +94,6 @@ namespace NovelRT::Input {
   typedef class InteractionService InteractionService;
 }
 
-namespace NovelRT::Animation {
-  typedef class SpriteAnimator SpriteAnimator;
-}
-
 namespace NovelRT::Timing {
   typedef class StepTimer StepTimer;
 }
@@ -108,6 +108,8 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/CameraFrameState.h"
 
 //value types
+#include "NovelRT/Animation/AnimatorPlayState.h"
+#include "NovelRT/Animation/SpriteAnimatorFrame.h"
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
@@ -126,6 +128,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/WorldObject.h"
 
 //Animation types
+#include "NovelRT/Animation/SpriteAnimatorState.h"
 #include "NovelRT/Animation/SpriteAnimator.h"
 
 //Graphics types

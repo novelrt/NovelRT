@@ -14,11 +14,6 @@ namespace NovelRT::Graphics {
       shaderProgram,
       camera),
     _imageDir(imageDir),
-    _textureId(Utilities::Lazy<GLuint>([] {
-    GLuint tempTexture;
-    glGenTextures(1, &tempTexture);
-    return tempTexture;
-      })),
     _uvBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
     _colourTintBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
     _colourTint(colourTint),
@@ -39,7 +34,7 @@ namespace NovelRT::Graphics {
      glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
 
-     glBindTexture(GL_TEXTURE_2D, _texture.getActual());
+     glBindTexture(GL_TEXTURE_2D, _texture->getTextureIdInternal());
      glBindVertexArray(_vertexArrayObject.getActual());
      glEnableVertexAttribArray(0);
      glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
@@ -122,13 +117,9 @@ namespace NovelRT::Graphics {
 
    }
 
-   void ImageRect::setTextureInternal(GLuint textureId) {
+   void ImageRect::setTextureInternal(std::shared_ptr<Texture> texture) {
      _imageDir = "";
-     _textureId = Utilities::Lazy<GLuint>(textureId, [] {
-       GLuint tempBuffer;
-       glGenBuffers(1, &tempBuffer);
-       return tempBuffer;
-       });
+     _texture = texture;
    }
    const RGBAConfig& ImageRect::getColourTintConfig() const {
      return _colourTint;
@@ -139,12 +130,4 @@ namespace NovelRT::Graphics {
    void ImageRect::setColourTintConfig(const RGBAConfig& value) {
      _colourTint = value;
    }
-
-   ImageRect::~ImageRect() {
-     if (_imageDir.empty() && !_textureId.isCreated()) return;
-
-     auto textureId = _textureId.getActual();
-     glDeleteTextures(1, &textureId);
-   }
-
 }
