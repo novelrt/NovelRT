@@ -4,7 +4,8 @@
 
 namespace NovelRT::Graphics {
   FontSet::FontSet(NovelRunner* runner, Atom id) noexcept :
-    _id(0),
+    _runner(runner),
+    _id(id),
     _fontFile("") {
 
   }

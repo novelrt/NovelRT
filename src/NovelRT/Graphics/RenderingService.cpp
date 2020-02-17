@@ -246,7 +246,7 @@ namespace NovelRT::Graphics {
         return result;
       }
 
-      auto returnValue = std::make_shared<Texture>(Texture(_runner, _nextId++));
+      auto returnValue = std::make_shared<Texture>(_runner, _nextId++);
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
@@ -254,7 +254,7 @@ namespace NovelRT::Graphics {
     }
 
     //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<Texture>(Texture(_runner, _nextId++));
+    auto returnValue = std::make_shared<Texture>(_runner, _nextId++);
     std::weak_ptr<Texture> valueForMap = returnValue;
     _textureCache.emplace(returnValue->getId(), valueForMap);
 
@@ -269,19 +269,11 @@ namespace NovelRT::Graphics {
 
         return result;
       }
-
-      auto returnValue = std::make_shared<FontSet>(FontSet(_runner, _nextId++));
-      std::weak_ptr<FontSet> valueForMap = returnValue;
-      _fontCache.emplace(returnValue->getId(), valueForMap);
-      returnValue->loadFontAsTextureSet(fileTarget, fontSize);
-      return returnValue;
     }
 
-    //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<FontSet>(FontSet(_runner, _nextId++));
-    std::weak_ptr<FontSet> valueForMap = returnValue;
-    _fontCache.emplace(returnValue->getId(), valueForMap);
-
+    auto returnValue = std::make_shared<FontSet>(_runner, _nextId++);
+    _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
+    returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;
   }
 }
