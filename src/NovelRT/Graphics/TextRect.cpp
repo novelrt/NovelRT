@@ -62,11 +62,12 @@ namespace NovelRT::Graphics {
 
         // Now store character for later use
         GraphicsCharacterRenderData character = {
-            textureId,
+            std::make_shared<Texture>(Texture()),
             Maths::GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             Maths::GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
             GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
         };
+        character.texture->setTextureIdInternal(textureId);
         _fontCharacters.insert(std::pair<GLchar, GraphicsCharacterRenderData>(c, character));
       }
       FT_Done_Face(face);
@@ -138,7 +139,7 @@ namespace NovelRT::Graphics {
         + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
-      target->setTextureInternal(ch);
+      target->setTextureInternal(ch.texture);
       target->getTransform().setPosition(currentWorldPosition);
       target->getTransform().setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
       target->setActive(true);

@@ -12,6 +12,8 @@ namespace NovelRT::Graphics {
     _logger(Utilities::Misc::CONSOLE_LOG_GFX){}
 
   void Texture::loadPngAsTexture(const std::string& file) {
+    if (_textureId.isCreated()) throw std::runtime_error("This texture has already been initialised with data. Please make a new texture!");
+
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
     auto cFile = fopen(file.c_str(), "rb");
@@ -109,5 +111,12 @@ namespace NovelRT::Graphics {
     delete[] rawImage;
     delete[] data.rowPointers;
     png_destroy_read_struct(&png, &info, nullptr);
+  }
+
+  Texture::~Texture() {
+    if (!_textureId.isCreated()) return;
+
+    auto textureId = _textureId.getActual();
+    glDeleteTextures(1, &textureId);
   }
 }
