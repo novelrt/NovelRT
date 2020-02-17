@@ -4,6 +4,7 @@
 #define GL_GLEXT_PROTOTYPES
 
 namespace NovelRT::Graphics {
+  std::atomic_uintptr_t RenderingService::_nextId(0);
 
   RenderingService::RenderingService(NovelRunner* const runner) :
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
@@ -272,14 +273,14 @@ namespace NovelRT::Graphics {
       auto returnValue = std::make_shared<FontSet>(FontSet(_runner, _nextId++));
       std::weak_ptr<FontSet> valueForMap = returnValue;
       _fontCache.emplace(returnValue->getId(), valueForMap);
-      returnValue->loadFontAsTexture(fileTarget, fontSize);
+      returnValue->loadFontAsTextureSet(fileTarget, fontSize);
       return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<FontSet>(Texture(_runner, _nextId++));
+    auto returnValue = std::make_shared<FontSet>(FontSet(_runner, _nextId++));
     std::weak_ptr<FontSet> valueForMap = returnValue;
-    _textureCache.emplace(returnValue->getId(), valueForMap);
+    _fontCache.emplace(returnValue->getId(), valueForMap);
 
     return returnValue;
   }
