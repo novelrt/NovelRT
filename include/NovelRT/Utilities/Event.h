@@ -39,7 +39,7 @@ namespace NovelRT::Utilities {
     }
   };
 
-  template <typename... TArgs> std::atomic_uintptr_t EventHandler<TArgs...>::_nextId(0);
+  template <typename... TArgs> std::atomic_uintptr_t EventHandler<TArgs...>::_nextId(1);
 
   template<typename... TArgs>
   class Event {
