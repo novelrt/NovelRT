@@ -72,6 +72,8 @@ namespace NovelRT::DotNet {
       const char_t* runtime_config_path = runtimeConfigJsonPath.string().c_str();
 #endif
 
+      _logger.logInfo("Initializing the runtime using: " + runtimeConfigJsonPath.string());
+
       int result = _hostfxr_initialize_for_runtime_config.getActual()(runtime_config_path, nullptr, &hostContextHandle);
 
       if (result != 0)

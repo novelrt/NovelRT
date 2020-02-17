@@ -11,7 +11,8 @@ namespace NovelRT {
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)),
+  SceneConstructionRequested(Utilities::Event<>()){
     if (!glfwInit()) {
       const char* err = "";
       glfwGetError(&err);
@@ -21,7 +22,7 @@ namespace NovelRT {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
-    _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
+    _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
   }
 
   int NovelRunner::runNovel() {
@@ -31,7 +32,7 @@ namespace NovelRT {
       _stepTimer.getActual()->tick(_iUpdateEventDelegates);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
-      raiseSceneConstructionRequested();
+      SceneConstructionRequested();
       _novelRenderer->endFrame();
       _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();

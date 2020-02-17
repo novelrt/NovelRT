@@ -13,9 +13,6 @@ namespace NovelRT {
  */
   class NovelRunner {
 
-  NOVELRT_PARAMETERLESS_EVENT(SceneConstructionRequested)
-  NOVELRT_VALUE_EVENT(Update, double)
-
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
@@ -30,6 +27,8 @@ namespace NovelRT {
 
 
   public:
+    Utilities::Event<> SceneConstructionRequested;
+
     /**
      * Executes the provided code upon update.
      *
