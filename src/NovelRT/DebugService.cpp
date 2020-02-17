@@ -30,7 +30,7 @@ namespace NovelRT {
     _runner(runner),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {
-    runner->subscribeToSceneConstructionRequested(std::bind(&DebugService::onSceneConstruction, this));
+    runner->SceneConstructionRequested += std::bind(&DebugService::onSceneConstruction, this);
   }
 
   bool DebugService::getIsFpsCounterVisible() const {

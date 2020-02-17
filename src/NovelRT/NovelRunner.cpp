@@ -21,7 +21,7 @@ namespace NovelRT {
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
-    _novelWindowingService->subscribeToWindowTornDown([this] { _exitCode = 0; });
+    _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
   }
 
   int NovelRunner::runNovel() {
@@ -31,7 +31,7 @@ namespace NovelRT {
       _stepTimer.getActual()->tick(_updateSubscribers);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
-      raiseSceneConstructionRequested();
+      SceneConstructionRequested();
       _novelRenderer->endFrame();
       _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();
