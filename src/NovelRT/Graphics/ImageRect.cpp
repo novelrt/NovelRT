@@ -114,6 +114,8 @@ namespace NovelRT::Graphics {
 
      _previousImageDir = _imageDir;
 
+     _texture = std::make_shared<Texture>(Texture());
+     _texture->loadPngAsTexture(_imageDir);
 
    }
 
