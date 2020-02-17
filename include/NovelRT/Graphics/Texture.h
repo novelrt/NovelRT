@@ -16,9 +16,15 @@ namespace NovelRT::Graphics {
     inline GLuint getTextureIdInternal() noexcept {
       return _textureId.getActual();
     }
+
+    inline void setTextureIdInternal(GLuint textureId) noexcept {
+      _textureId.reset(textureId);
+    }
+
   public:
     Texture();
     void loadPngAsTexture(const std::string& file);
+    ~Texture();
   };
 }
 
