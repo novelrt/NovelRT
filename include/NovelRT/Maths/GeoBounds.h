@@ -13,10 +13,12 @@ namespace NovelRT::Maths {
     GeoVector<float> _position;
     float _rotation;
     GeoVector<float> _size;
+    GeoVector<float> _extents;
 
   public:
     GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
     bool pointIsWithinBounds(const GeoVector<float>& point) const;
+    bool intersectsWith(const GeoBounds& otherBounds) const;
     GeoVector<float> getCornerInLocalSpace(int index) const;
     GeoVector<float> getCornerInWorldSpace(int index) const;
     GeoVector<float> getPosition() const;
@@ -25,6 +27,19 @@ namespace NovelRT::Maths {
     void setSize(const GeoVector<float>& value);
     float getRotation() const;
     void setRotation(float value);
+    GeoVector<float> getExtents() const;
+
+    inline bool operator==(const GeoBounds& other) const {
+      return _position == other._position
+          && _size == other._size
+          && _rotation == other._rotation;
+    }
+
+    inline bool operator!=(const GeoBounds& other) const {
+      return _position != other._position
+        || _size != other._size
+        || _rotation != other._rotation;
+    }
   };
 }
 
