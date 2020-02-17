@@ -3,7 +3,9 @@
 
 namespace NovelRT::Input {
   InteractionObject::InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
-    : WorldObject(transform, layer), _subscribedKey(KeyCode::LeftMouseButton), _notifyHasBeenDrawnObject(notifyHasBeenDrawnObject) {}
+    : WorldObject(transform, layer), _subscribedKey(KeyCode::LeftMouseButton), _notifyHasBeenDrawnObject(notifyHasBeenDrawnObject),
+      Interacted(Utilities::Event<>()) {
+  }
 
   void InteractionObject::executeObjectBehaviour() {
     _notifyHasBeenDrawnObject(this);
