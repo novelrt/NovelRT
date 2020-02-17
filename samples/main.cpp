@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
-  runner.runOnUpdate([](double delta) {
+  runner.Update += [](double delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
     }
 
     novelChanRect->getTransform().setRotation(rotation);
-  });
+  };
 
   interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
   memeInteractionRect->setSubscribedKey(NovelRT::Input::KeyCode::LeftMouseButton);
