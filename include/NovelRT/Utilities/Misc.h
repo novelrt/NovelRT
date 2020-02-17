@@ -64,7 +64,7 @@ public:                                                                         
   void unsubscribeFrom##eventName(std::function<void(eventArgsType)> delegate) {                                  \
     _i##eventName##EventDelegates.erase(std::remove_if(_i##eventName##EventDelegates.begin(),                      \
           _i##eventName##EventDelegates.end(), [delegate](std::function<void(eventArgsType)> x) {           \
-            auto result = x.target<void(eventArgsType)>() == delegate.target<void(eventArgsType)>();             \
+            auto result = x.target<void(*)(eventArgsType)>() == delegate.target<void(*)(eventArgsType)>();             \
             return result;                                                                                         \
     }), _i##eventName##EventDelegates.end());                                                                      \
   }                                                                                                                \
