@@ -45,7 +45,7 @@ namespace NovelRT::Graphics {
   public:
     FontSet(NovelRunner* runner, Atom id) noexcept;
 
-    void loadFontAsTexture(const std::string& file, float fontSize);
+    void loadFontAsTextureSet(const std::string& file, float fontSize);
 
     inline std::string getFontFile() const noexcept {
       return _fontFile;

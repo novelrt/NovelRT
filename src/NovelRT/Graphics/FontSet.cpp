@@ -9,7 +9,7 @@ namespace NovelRT::Graphics {
 
   }
 
-  void FontSet::loadFontAsTexture(const std::string& file, float fontSize) {
+  void FontSet::loadFontAsTextureSet(const std::string& file, float fontSize) {
     if (!_fontFile.empty()) {
       _logger.logErrorLine("This FontSet has already been initialised with data. Please make a new FontSet!");
       throw std::runtime_error("Unable to continue! Cannot overwrite FontSet!");

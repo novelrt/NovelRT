@@ -99,11 +99,7 @@ int main(int argc, char *argv[])
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
-<<<<<<< HEAD
-  runner.subscribeToUpdate([](double delta) {
-=======
   runner.Update += [](double delta) {
->>>>>>> master
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
