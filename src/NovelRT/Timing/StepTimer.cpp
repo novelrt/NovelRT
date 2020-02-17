@@ -8,7 +8,7 @@
 namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
     _frequency(glfwGetTimerFrequency()),
-    _maxCounterDelta((uint64_t)(_frequency* maxSecondDelta)),
+    _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),
     _lastCounter(glfwGetTimerValue()),
     _secondCounter(0),
     _remainingTicks(0),
@@ -46,7 +46,7 @@ namespace NovelRT::Timing {
 
     _lastCounter = currentCounter;
     _secondCounter += counterDelta;
-    
+
     auto lastFrameCount = _frameCount;
 
     if (_isFixedTimeStep) {
@@ -77,8 +77,7 @@ namespace NovelRT::Timing {
           subscriber(secondsDelta);
         }
       }
-    }
-    else {
+    } else {
       // variable timestep update logic
 
       _elapsedTicks = ticksDelta;
