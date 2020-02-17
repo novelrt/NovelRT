@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
       })),
     _camera(nullptr) {
     auto ptr = _runner->getWindowingService();
-    ptr->subscribeToWindowResized([this](auto input) {
+    ptr->WindowResized += ([this](auto input) {
       initialiseRenderPipeline(false, &input);
       });
   }
