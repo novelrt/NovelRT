@@ -114,6 +114,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
+#include "NovelRT/Utilities/Event.h"
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
 
