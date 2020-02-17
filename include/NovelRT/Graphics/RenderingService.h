@@ -29,7 +29,6 @@ namespace NovelRT::Graphics {
 
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
     std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
-    std::queue<std::string> _keysForRemoval;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 

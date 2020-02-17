@@ -19,7 +19,7 @@ namespace NovelRT::Animation {
   }
 
   void SpriteAnimator::play() {
-    _runner->subscribeToUpdate(_animationUpdateHandle);
+    _runner(_animationUpdateHandle);
     _animatorState = AnimatorPlayState::Playing;
   }
 
@@ -28,7 +28,7 @@ namespace NovelRT::Animation {
   }
 
   void SpriteAnimator::stop() {
-    _runner->unsubscribeFromUpdate(_animationUpdateHandle);
+    _runner->(_animationUpdateHandle);
     _animatorState = AnimatorPlayState::Stopped;
   }
 }
