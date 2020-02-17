@@ -14,6 +14,7 @@ configuration='Debug'
 generate=false
 help=false
 install=false
+test=false
 remaining=''
 
 while [[ $# -gt 0 ]]; do
@@ -41,6 +42,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --install)
       install=true
+      shift 1
+      ;;
+    --test)
+      test=true
       shift 1
       ;;
     *)
@@ -109,6 +114,7 @@ function Help {
   echo "  --build                   Build repository"
   echo "  --generate                Generate CMake cache"
   echo "  --install                 Install repository"
+  echo "  --test                    Test repository"
   echo ""
   echo "Advanced settings:"
   echo "  --ci                      Set when running on CI server"
@@ -131,6 +137,24 @@ function Install {
   fi
 }
 
+function Test {
+  pushd "$TestDir"
+
+  if [ -z "$remaining" ]; then
+    ctest --build-config "$configuration" --output-on-failure
+  else
+    ctest --build-config "$configuration" --output-on-failure "${remaining[@]}"
+  fi
+
+  LASTEXITCODE=$?
+  popd
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    echo "'Test' failed"
+    return "$LASTEXITCODE"
+  fi
+}
+
 if $help; then
   Help
   exit 0
@@ -140,6 +164,7 @@ if $ci; then
   build=true
   generate=true
   install=true
+  test=true
 fi
 
 RepoRoot="$ScriptRoot/.."
@@ -152,6 +177,9 @@ CreateDirectory "$BuildDir"
 
 InstallDir="$ArtifactsDir/install/$configuration"
 CreateDirectory "$InstallDir"
+
+TestDir="$BuildDir/tests"
+CreateDirectory "$TestDir"
 
 if $ci; then
   VcpkgInstallDir="$ArtifactsDir/vcpkg"
@@ -172,7 +200,7 @@ if $ci; then
     fi
   fi
 
-  "$VcpkgExe" install freetype glad glfw3 glm libsndfile lua nethost openal-soft spdlog
+  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -206,6 +234,14 @@ fi
 
 if $build; then
   Build
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    return "$LASTEXITCODE"
+  fi
+fi
+
+if $test; then
+  Test
 
   if [ "$LASTEXITCODE" != 0 ]; then
     return "$LASTEXITCODE"

@@ -101,7 +101,7 @@ void InteractionService::consumePlayerInput() {
   void InteractionService::executeClickedInteractable() {
     if (_clickTarget == nullptr) return;
 
-    _clickTarget->raiseInteracted();
+    _clickTarget->Interacted();
     _clickTarget = nullptr;
   }
 }
