@@ -22,7 +22,7 @@ TEST(EventTest, unsubscribeNonexistingRemovesZero)
   auto event = Event<>();
   event += [](){};
 
-  EventHandler<> OnEvent = [](){};
+  EventHandler<> OnEvent = std::function<void()>([](){});
   event -= OnEvent;
 
   EXPECT_EQ(1, event.getHandlerCount());
@@ -32,7 +32,7 @@ TEST(EventTest, subscribeTwiceAddsTwo)
 {
   auto event = Event<>();
 
-  EventHandler<> OnEvent = [](){};
+  EventHandler<> OnEvent = std::function<void()>([](){});
   event += OnEvent;
   event += OnEvent;
 
@@ -43,7 +43,7 @@ TEST(EventTest, unsubscribeExistingRemovesOne)
 {
   auto event = Event<>();
 
-  EventHandler<> OnEvent = [](){};
+  EventHandler<> OnEvent = std::function<void()>([](){});
   event += OnEvent;
   event += OnEvent;
 
@@ -57,10 +57,10 @@ TEST(EventTest, unsubscribeRemovesMatchingVersion1)
 
   int counter = 0;
 
-  EventHandler<> OnEvent1 = [&counter]() { counter = 1; };
+  EventHandler<> OnEvent1 = std::function<void()>([&counter]() { counter = 1; });
   event += OnEvent1;
 
-  EventHandler<> OnEvent2 = [&counter]() { counter = 2; };
+  EventHandler<> OnEvent2 = std::function<void()>([&counter]() { counter = 2; });
   event += OnEvent2;
 
   event -= OnEvent2;
@@ -75,10 +75,10 @@ TEST(EventTest, unsubscribeRemovesMatchingVersion2)
 
   int counter = 0;
 
-  EventHandler<> OnEvent1 = [&counter]() { counter = 1; };
+  EventHandler<> OnEvent1 = std::function<void()>([&counter]() { counter = 1; });
   event += OnEvent1;
 
-  EventHandler<> OnEvent2 = [&counter]() { counter = 2; };
+  EventHandler<> OnEvent2 = std::function<void()>([&counter]() { counter = 2; });
   event += OnEvent2;
 
   event -= OnEvent1;
