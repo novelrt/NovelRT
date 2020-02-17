@@ -120,16 +120,17 @@ int main(int argc, char *argv[])
 
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  memeInteractionRect->subscribeToInteracted([&console] {
-    console.logDebug("WAHEYYY"); });
+  memeInteractionRect->Interacted += [&console] {
+    console.logDebug("WAHEYYY");
+  };
 
   //If uncommenting the call, pass &jojo to the subscription next to &audio.
-  interactionRect->subscribeToInteracted([&loggingLevel, &console, &audio] {
+  interactionRect->Interacted += [&loggingLevel, &console, &audio] {
     console.log("Test button!", loggingLevel);
     //audio->playSound(jojo, 0);
-  });
+  };
 
-  runner.subscribeToSceneConstructionRequested([] {
+  runner.SceneConstructionRequested += [] {
 
 
     playAudioButton->executeObjectBehaviour();
@@ -147,7 +148,7 @@ int main(int argc, char *argv[])
     novelChanRect->executeObjectBehaviour();
     textRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
-  });
+  };
 
   runner.getDotNetRuntimeService()->initialize();
   //audio->playMusic(bgm, -1);
