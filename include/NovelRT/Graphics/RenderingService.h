@@ -9,7 +9,11 @@
 
 namespace NovelRT::Graphics {
   class RenderingService {
+    friend class ImageRect;
+    friend class TextRect;
+    friend class Texture;
   private:
+    static std::atomic_uintptr_t _nextId;
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
     NovelRunner* const _runner;
@@ -22,7 +26,14 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::unique_ptr<Camera> _camera;
 
+    std::map<Atom, std::weak_ptr<Texture>> _textureCache;
+    std::queue<std::string> _keysForRemoval;
+
     void bindCameraUboForProgram(GLuint shaderProgramId);
+
+    std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
+
+    void handleTexturePreDestruction(Texture* target);
 
   public:
     RenderingService(NovelRunner* const runner);

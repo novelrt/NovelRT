@@ -3,7 +3,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  Texture::Texture() :
+  Texture::Texture(NovelRunner* runner, Atom id) :
+    _id(id),
+    _runner(runner),
     _textureId(Utilities::Lazy<GLuint>([] {
     GLuint tempTexture;
     glGenTextures(1, &tempTexture);
@@ -13,7 +15,7 @@ namespace NovelRT::Graphics {
 
   void Texture::loadPngAsTexture(const std::string& file) {
     if (_textureId.isCreated()) throw std::runtime_error("This texture has already been initialised with data. Please make a new texture!");
-
+    _textureFile = file;
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
     auto cFile = fopen(file.c_str(), "rb");
@@ -114,6 +116,8 @@ namespace NovelRT::Graphics {
   }
 
   Texture::~Texture() {
+    _runner->getRenderer()->handleTexturePreDestruction(this);
+
     if (!_textureId.isCreated()) return;
 
     auto textureId = _textureId.getActual();

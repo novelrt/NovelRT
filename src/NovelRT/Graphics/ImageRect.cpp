@@ -7,13 +7,13 @@ namespace NovelRT::Graphics {
     int layer,
     ShaderProgram shaderProgram,
     Camera* camera,
-    const std::string& imageDir,
+    std::shared_ptr<Texture> texture,
     const RGBAConfig& colourTint) :
     RenderObject(transform,
       layer,
       shaderProgram,
       camera),
-    _imageDir(imageDir),
+    _texture(texture),
     _uvBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
     _colourTintBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
     _colourTint(colourTint),
@@ -23,12 +23,11 @@ namespace NovelRT::Graphics {
      int layer,
      ShaderProgram shaderProgram,
      Camera* camera,
-     const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, "", colourTint) {
+     const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
    }
 
    void ImageRect::drawObject() {
-     if (!getActive())
-       return;
+     if (!getActive() || _texture == nullptr) return;
 
      glUseProgram(_shaderProgram.shaderProgramId);
      glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
@@ -109,18 +108,9 @@ namespace NovelRT::Graphics {
 
      glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
      glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
-
-     if (_imageDir.empty() || _imageDir == _previousImageDir) return;
-
-     _previousImageDir = _imageDir;
-
-     _texture = std::make_shared<Texture>(Texture());
-     _texture->loadPngAsTexture(_imageDir);
-
    }
 
-   void ImageRect::setTextureInternal(std::shared_ptr<Texture> texture) {
-     _imageDir = "";
+   void ImageRect::setTexture(std::shared_ptr<Texture> texture) {
      _texture = texture;
    }
    const RGBAConfig& ImageRect::getColourTintConfig() const {
