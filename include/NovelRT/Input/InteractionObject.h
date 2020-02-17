@@ -11,14 +11,15 @@ namespace NovelRT::Input {
   class InteractionObject : public WorldObject {
     friend class InteractionService;
 
+  public:
+    Utilities::Event<> Interacted;
+
   private:
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
     std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
 
   public:
     InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
-
-    Utilities::Event<> Interacted;
 
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
