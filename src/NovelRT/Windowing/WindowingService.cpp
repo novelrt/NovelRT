@@ -6,7 +6,10 @@ namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner), _isTornDown(false) {}
+    _runner(runner), _isTornDown(false),
+    WindowResized(Utilities::Event<Maths::GeoVector<float>>()),
+    WindowTornDown(Utilities::Event<>()) {
+  }
 
   void WindowingService::errorCallback(int, const char* error) {
     _logger.logError("Could not initialize GLFW: ", error);
