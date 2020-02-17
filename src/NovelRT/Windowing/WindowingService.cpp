@@ -6,7 +6,10 @@ namespace NovelRT::Windowing {
   WindowingService::WindowingService(NovelRunner* const runner) :
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner), _isTornDown(false) {}
+    _runner(runner), _isTornDown(false),
+    WindowResized(Utilities::Event<Maths::GeoVector<float>>()),
+    WindowTornDown(Utilities::Event<>()) {
+  }
 
   void WindowingService::errorCallback(int, const char* error) {
     _logger.logError("Could not initialize GLFW: ", error);
@@ -53,7 +56,7 @@ namespace NovelRT::Windowing {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 
@@ -82,7 +85,7 @@ namespace NovelRT::Windowing {
       if (thisPtr == nullptr) throw std::runtime_error("Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->tearDown();
-      thisPtr->raiseWindowTornDown();
+      thisPtr->WindowTornDown();
       });
 
     glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
@@ -91,7 +94,7 @@ namespace NovelRT::Windowing {
 
       thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
-      thisPtr->raiseWindowResized(thisPtr->_windowSize); });
+      thisPtr->WindowResized(thisPtr->_windowSize); });
     _windowSize = Maths::GeoVector<float>(wData, hData);
 
     glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {

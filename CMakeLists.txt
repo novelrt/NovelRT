@@ -13,6 +13,10 @@ if (NOT NOVELRT_SKIP_SAMPLES)
   add_subdirectory(samples)
 endif()
 
-if (NOT NOVELRT_SKIP_DOCUMENTATIONS)
+if (NOT NOVELRT_SKIP_DOCUMENTATION)
   add_subdirectory(doxygen)
+endif()
+
+if (NOT NOVELRT_SKIP_TESTS)
+  add_subdirectory(tests)
 endif()

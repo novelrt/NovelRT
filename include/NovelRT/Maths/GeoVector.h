@@ -12,6 +12,7 @@ namespace NovelRT::Maths {
   class GeoVector {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
+    friend class GeoBounds;
     template<typename U>
     friend class GeoMatrix4;
 
@@ -56,6 +57,14 @@ namespace NovelRT::Maths {
 
     void setY(T value) {
       _value.y = value;
+    }
+
+    inline bool operator==(const GeoVector<T>& other) const {
+      return getVec2Value() == other.getVec2Value();
+    }
+
+    inline bool operator!=(const GeoVector<T>& other) const {
+      return getVec2Value() != other.getVec2Value();
     }
 
     inline GeoVector<T> operator+(const GeoVector<T>& other) const {
