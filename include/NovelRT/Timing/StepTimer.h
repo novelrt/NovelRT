@@ -91,7 +91,7 @@ namespace NovelRT::Timing {
     }
 
     void resetElapsedTime();
-    void tick(const std::vector<std::function<void(double)>>& update);
+    void tick(const Utilities::Event<double>& update);
   };
 }
 

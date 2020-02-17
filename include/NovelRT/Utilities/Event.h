@@ -12,14 +12,17 @@ namespace NovelRT::Utilities {
   class EventHandler {
   private:
     static std::atomic_uintptr_t _nextId;
-    std::function<void(TArgs...)> _function;
+
     uintptr_t _id;
+    std::function<void(TArgs...)> _function;
 
   public:
-    EventHandler(const std::function<void(TArgs...)>& function)
-      : _function(function)
-    {
-      _id = _nextId++;
+    EventHandler() : EventHandler(nullptr) {
+    }
+
+    EventHandler(const std::function<void(TArgs...)>& function) :
+      _id((function != nullptr) ? _nextId++ : 0),
+      _function(function) {
     }
 
     void operator()(TArgs... args) const {
@@ -56,7 +59,7 @@ namespace NovelRT::Utilities {
 
     void operator+=(const EventHandler<TArgs...>& handler) {
       if (handler.getId() != 0) {
-        _handlers.push_back(handler);
+        _handlers.emplace_back(handler);
       }
     }
 
@@ -65,11 +68,11 @@ namespace NovelRT::Utilities {
       *this += handler;
     }
 
-    void operator-=(const EventHandler<TArgs...>& targetHandler) {
-      if (targetHandler.getId() == 0)
+    void operator-=(const EventHandler<TArgs...>& handler) {
+      if (handler.getId() == 0)
         return;
 
-      auto match = std::find(_handlers.cbegin(), _handlers.cend(), targetHandler);
+      auto match = std::find(_handlers.cbegin(), _handlers.cend(), handler);
 
       if (match != _handlers.cend())
         _handlers.erase(match);
