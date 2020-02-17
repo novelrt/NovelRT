@@ -23,6 +23,7 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
+#include <queue>
 
 //Freetype
 #include <ft2build.h>
@@ -59,6 +60,7 @@
 #include "png.h"
 
 namespace NovelRT {
+  typedef uintptr_t Atom;
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;

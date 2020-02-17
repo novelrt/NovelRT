@@ -4,6 +4,27 @@
 #define GL_GLEXT_PROTOTYPES
 
 namespace NovelRT::Graphics {
+
+  RenderingService::RenderingService(NovelRunner* const runner) :
+    _textureCounter(0),
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
+    _runner(runner),
+    _cameraObjectRenderUbo(std::function<GLuint()>([] {
+    GLuint tempHandle;
+    glGenBuffers(1, &tempHandle);
+    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
+    return tempHandle;
+      })),
+    _camera(nullptr) {
+    auto ptr = _runner->getWindowingService();
+    ptr->subscribeToWindowResized([this](auto input) {
+      initialiseRenderPipeline(false, &input);
+      });
+  }
+
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
 
     auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
@@ -188,36 +209,45 @@ namespace NovelRT::Graphics {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
   }
 
-  RenderingService::RenderingService(NovelRunner* const runner) :
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-    _runner(runner),
-    _cameraObjectRenderUbo(std::function<GLuint()>([] {
-    GLuint tempHandle;
-    glGenBuffers(1, &tempHandle);
-    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
-    return tempHandle;
-      })),
-    _camera(nullptr) {
-    auto ptr = _runner->getWindowingService();
-    ptr->subscribeToWindowResized([this](auto input) {
-      initialiseRenderPipeline(false, &input);
-      });
+
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+    return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
+  Camera* RenderingService::getCamera() const {
+    return _camera.get();
+  }
 
-      std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
-        return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
+  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+    GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+    glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+  }
+
+  void RenderingService::handleTexturePreDestruction(Texture* target) {
+    _textureCache.erase(target->getId());
+  }
+
+  std::shared_ptr<Texture> RenderingService::getTexture(const std::string& fileTarget) {
+    if (!fileTarget.empty()) {
+      for(auto& pair : _textureCache) {
+        auto result = pair.second.lock();
+        if (result->getTextureFile() != fileTarget) continue;
+
+        return result;
       }
 
-      Camera* RenderingService::getCamera() const {
-        return _camera.get();
-      }
+      auto returnValue = std::make_shared<Texture>(Texture(_runner, _nextId++));
+      std::weak_ptr<Texture> valueForMap = returnValue;
+      _textureCache.emplace(returnValue->getId(), valueForMap);
+      returnValue->loadPngAsTexture(fileTarget);
+      return returnValue; 
+    }
 
-      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
-      }
+    //DRY, I know, but Im really not fussed rn
+    auto returnValue = std::make_shared<Texture>(Texture(_runner, _nextId++));
+    std::weak_ptr<Texture> valueForMap = returnValue;
+    _textureCache.emplace(returnValue->getId(), valueForMap);
+
+    return returnValue;
+  }
 }
