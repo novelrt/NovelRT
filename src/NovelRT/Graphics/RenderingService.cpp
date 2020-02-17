@@ -6,7 +6,6 @@
 namespace NovelRT::Graphics {
 
   RenderingService::RenderingService(NovelRunner* const runner) :
-    _textureCounter(0),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
     _runner(runner),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
@@ -198,7 +197,7 @@ namespace NovelRT::Graphics {
     int layer,
     const std::string& filePath,
     const RGBAConfig& colourTint) {
-    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
   std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
@@ -206,7 +205,7 @@ namespace NovelRT::Graphics {
     const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
-    return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
 
@@ -225,6 +224,10 @@ namespace NovelRT::Graphics {
 
   void RenderingService::handleTexturePreDestruction(Texture* target) {
     _textureCache.erase(target->getId());
+  }
+
+  void RenderingService::handleFontSetPreDestruction(FontSet* target) {
+    _fontCache.erase(target->getId());
   }
 
   std::shared_ptr<Texture> RenderingService::getTexture(const std::string& fileTarget) {
@@ -246,6 +249,30 @@ namespace NovelRT::Graphics {
     //DRY, I know, but Im really not fussed rn
     auto returnValue = std::make_shared<Texture>(Texture(_runner, _nextId++));
     std::weak_ptr<Texture> valueForMap = returnValue;
+    _textureCache.emplace(returnValue->getId(), valueForMap);
+
+    return returnValue;
+  }
+
+  std::shared_ptr<FontSet> RenderingService::getFontSet(const std::string& fileTarget, float fontSize) {
+    if (!fileTarget.empty()) {
+      for (auto& pair : _fontCache) {
+        auto result = pair.second.lock();
+        if (result->getFontFile() != fileTarget || result->getFontSize() != fontSize) continue;
+
+        return result;
+      }
+
+      auto returnValue = std::make_shared<FontSet>(FontSet(_runner, _nextId++));
+      std::weak_ptr<FontSet> valueForMap = returnValue;
+      _fontCache.emplace(returnValue->getId(), valueForMap);
+      returnValue->loadFontAsTexture(fileTarget, fontSize);
+      return returnValue;
+    }
+
+    //DRY, I know, but Im really not fussed rn
+    auto returnValue = std::make_shared<FontSet>(Texture(_runner, _nextId++));
+    std::weak_ptr<FontSet> valueForMap = returnValue;
     _textureCache.emplace(returnValue->getId(), valueForMap);
 
     return returnValue;

@@ -14,7 +14,10 @@ namespace NovelRT::Graphics {
     _logger(Utilities::Misc::CONSOLE_LOG_GFX){}
 
   void Texture::loadPngAsTexture(const std::string& file) {
-    if (_textureId.isCreated()) throw std::runtime_error("This texture has already been initialised with data. Please make a new texture!");
+    if (_textureId.isCreated()) {
+      _logger.logErrorLine("This texture has already been initialised with data. Please make a new texture!");
+      throw std::runtime_error("Unable to continue! Cannot overwrite Texture!");
+    }
     _textureFile = file;
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 

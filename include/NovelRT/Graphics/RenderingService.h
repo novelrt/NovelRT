@@ -12,6 +12,7 @@ namespace NovelRT::Graphics {
     friend class ImageRect;
     friend class TextRect;
     friend class Texture;
+    friend class FontSet;
   private:
     static std::atomic_uintptr_t _nextId;
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
@@ -27,13 +28,16 @@ namespace NovelRT::Graphics {
     std::unique_ptr<Camera> _camera;
 
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
+    std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
     std::queue<std::string> _keysForRemoval;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
     std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
+    std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
 
     void handleTexturePreDestruction(Texture* target);
+    void handleFontSetPreDestruction(FontSet* target);
 
   public:
     RenderingService(NovelRunner* const runner);

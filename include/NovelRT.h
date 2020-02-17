@@ -136,6 +136,7 @@ namespace NovelRT::Windowing {
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/Texture.h"
+#include "NovelRT/Graphics/FontSet.h"
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"

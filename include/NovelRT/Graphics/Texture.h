@@ -10,6 +10,7 @@ namespace NovelRT::Graphics {
     friend class ImageRect;
     friend class TextRect;
     friend class RenderingService;
+    friend class FontSet;
   private:
     Atom _id;
     NovelRunner* _runner;
