@@ -39,7 +39,7 @@ namespace NovelRT::Utilities {
     }
   };
 
-  template <typename... TArgs> std::atomic_uintptr_t EventHandler<TArgs...>::_nextId(0);
+  template <typename... TArgs> std::atomic_uintptr_t EventHandler<TArgs...>::_nextId(1);
 
   template<typename... TArgs>
   class Event {
@@ -47,6 +47,9 @@ namespace NovelRT::Utilities {
     std::vector<EventHandler<TArgs...>> _handlers;
 
   public:
+    Event() : _handlers(std::vector<EventHandler<TArgs...>>()) {
+    }
+
     size_t getHandlerCount() const {
       return _handlers.size();
     }
@@ -58,9 +61,8 @@ namespace NovelRT::Utilities {
     }
 
     void operator+=(const std::function<void(TArgs...)>& function) {
-      if (function != nullptr) {
-        _handlers.push_back(function);
-      }
+      EventHandler<TArgs...> handler = function;
+      *this += handler;
     }
 
     void operator-=(const EventHandler<TArgs...>& targetHandler) {

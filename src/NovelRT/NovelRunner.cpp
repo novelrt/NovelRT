@@ -11,7 +11,8 @@ namespace NovelRT {
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)),
+  SceneConstructionRequested(Utilities::Event<>()){
     if (!glfwInit()) {
       const char* err = "";
       glfwGetError(&err);
