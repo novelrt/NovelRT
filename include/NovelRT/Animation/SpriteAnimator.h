@@ -11,11 +11,15 @@ namespace NovelRT::Animation {
 
   class SpriteAnimator {
   private:
+    float _accumulatedDelta;
     NovelRunner* _runner; //I'm a bit worried about this, but whatever, just want it working for now
     Graphics::ImageRect* _rect;
     AnimatorPlayState _animatorState;
     std::function<void(double)> _animationUpdateHandle;
     std::vector<std::shared_ptr<SpriteAnimatorState>> _states;
+    std::shared_ptr<SpriteAnimatorState> _currentState;
+    int32_t _currentFrameIndex;
+    std::vector<SpriteAnimatorFrame> _stateFrames;
 
 
     void constructAnimation(double delta);

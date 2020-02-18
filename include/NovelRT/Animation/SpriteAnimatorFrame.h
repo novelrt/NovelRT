@@ -13,6 +13,7 @@ namespace NovelRT::Animation {
     std::shared_ptr<Graphics::Texture> _texture;
     std::function<void()> _onFrameEnter;
     std::function<void()> _onFrameExit;
+    float _duration;
 
   public:
     inline std::shared_ptr<Graphics::Texture> getTexture() const noexcept {
@@ -37,6 +38,14 @@ namespace NovelRT::Animation {
 
     inline void setOnFrameExitDelegate(const std::function<void()>& value) noexcept {
       _onFrameExit = value;
+    }
+
+    inline float getDuration() const noexcept {
+      return _duration;
+    }
+
+    inline void setDuration(float value) noexcept {
+      _duration = value;
     }
   };
 }
