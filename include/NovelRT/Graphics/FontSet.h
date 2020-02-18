@@ -13,7 +13,7 @@ namespace NovelRT::Graphics {
   private:
     Atom _id;
     float _fontSize;
-    NovelRunner* _runner;
+    std::weak_ptr<RenderingService> _renderer;
     std::vector<GraphicsCharacterRenderData> _characters;
     LoggingService _logger; //not proud of this
     std::string _fontFile;
@@ -43,7 +43,7 @@ namespace NovelRT::Graphics {
     }
 
   public:
-    FontSet(NovelRunner* runner, Atom id) noexcept;
+    FontSet(std::weak_ptr<RenderingService> renderer, Atom id) noexcept;
 
     void loadFontAsTextureSet(const std::string& file, float fontSize);
 
