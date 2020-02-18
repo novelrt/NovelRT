@@ -63,9 +63,8 @@ namespace NovelRT::Graphics {
 
     int i = 0;
     for (const char& c : getText()) {
-      GraphicsCharacterRenderData ch;
 
-      auto match = _fontSet->getCharacterBasedonGLchar(c);
+      auto ch = _fontSet->getCharacterBasedonGLchar(c);
 
       auto currentWorldPosition = Maths::GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
         (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
