@@ -4,6 +4,8 @@
 
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
+    SceneConstructionRequested(Utilities::Event<>()),
+    Update(Utilities::Event<double>()),
     _exitCode(1),
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
     _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
@@ -11,8 +13,7 @@ namespace NovelRT {
     _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
     _novelAudioService(std::make_unique<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)),
-  SceneConstructionRequested(Utilities::Event<>()){
+    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
     if (!glfwInit()) {
       const char* err = "";
       glfwGetError(&err);
@@ -29,7 +30,7 @@ namespace NovelRT {
     uint32_t lastFramesPerSecond = 0;
 
     while (_exitCode) {
-      _stepTimer.getActual()->tick(_updateSubscribers);
+      _stepTimer.getActual()->tick(Update);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
       SceneConstructionRequested();
@@ -45,27 +46,6 @@ namespace NovelRT {
 
   Graphics::RenderingService* NovelRunner::getRenderer() const {
     return _novelRenderer.get();
-  }
-
-  void NovelRunner::runOnUpdate(NovelUpdateSubscriber subscriber) {
-    _updateSubscribers.push_back(subscriber);
-  }
-
-  void NovelRunner::stopRunningOnUpdate(NovelUpdateSubscriber subscriber) {
-    if (std::find(
-      _updateSubscribers.begin(),
-      _updateSubscribers.end(),
-      subscriber) != _updateSubscribers.end()) {
-      _updateSubscribers.erase(std::remove_if(
-        _updateSubscribers.begin(),
-        _updateSubscribers.end(),
-        [subscriber](NovelUpdateSubscriber existingSubscriber) {
-          return subscriber == existingSubscriber;
-        }));
-    }
-    else {
-      return;
-    }
   }
 
   Input::InteractionService* NovelRunner::getInteractionService() const {

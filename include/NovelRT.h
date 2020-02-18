@@ -59,7 +59,6 @@
 #include "png.h"
 
 namespace NovelRT {
-  typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
