@@ -20,14 +20,14 @@ namespace NovelRT::Graphics {
       })),
     _camera(nullptr) {
     auto ptr = _runner->getWindowingService();
-    ptr->WindowResized += ([this](auto input) {
+    if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
       initialiseRenderPipeline(false, &input);
       });
   }
 
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
 
-    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
+    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService().lock()->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
     infoScreenSize.append("x");
@@ -36,7 +36,7 @@ namespace NovelRT::Graphics {
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
-      glfwMakeContextCurrent(_runner->getWindowingService()->getWindow());
+      glfwMakeContextCurrent(_runner->getWindowingService().lock()->getWindow()); //lmao
 
       if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
@@ -198,7 +198,7 @@ namespace NovelRT::Graphics {
   }
 
   void RenderingService::endFrame() const {
-    glfwSwapBuffers(_runner->getWindowingService()->getWindow());
+    glfwSwapBuffers(_runner->getWindowingService().lock()->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
@@ -246,7 +246,7 @@ namespace NovelRT::Graphics {
         return result;
       }
 
-      auto returnValue = std::make_shared<Texture>(_runner, _nextId++);
+      auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), _nextId++);
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
@@ -254,7 +254,7 @@ namespace NovelRT::Graphics {
     }
 
     //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<Texture>(_runner, _nextId++);
+    auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), _nextId++);
     std::weak_ptr<Texture> valueForMap = returnValue;
     _textureCache.emplace(returnValue->getId(), valueForMap);
 
@@ -271,7 +271,7 @@ namespace NovelRT::Graphics {
       }
     }
 
-    auto returnValue = std::make_shared<FontSet>(_runner, _nextId++);
+    auto returnValue = std::make_shared<FontSet>(_runner->getRenderer(), _nextId++);
     _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
     returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;

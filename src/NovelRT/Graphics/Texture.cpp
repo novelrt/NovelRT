@@ -3,9 +3,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  Texture::Texture(NovelRunner* runner, Atom id) :
+  Texture::Texture(std::weak_ptr<RenderingService> renderer, Atom id) :
     _id(id),
-    _runner(runner),
+    _renderer(renderer),
     _textureId(Utilities::Lazy<GLuint>([] {
     GLuint tempTexture;
     glGenTextures(1, &tempTexture);
@@ -119,7 +119,8 @@ namespace NovelRT::Graphics {
   }
 
   Texture::~Texture() {
-    _runner->getRenderer()->handleTexturePreDestruction(this);
+    if(!_renderer.expired()) _renderer.lock()->handleTexturePreDestruction(this);
+
 
     if (!_textureId.isCreated()) return;
 

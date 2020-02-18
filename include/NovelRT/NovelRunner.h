@@ -21,12 +21,12 @@ namespace NovelRT {
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
 
-    std::unique_ptr<DebugService> _novelDebugService;
-    std::unique_ptr<Input::InteractionService> _novelInteractionService;
-    std::unique_ptr<Audio::AudioService> _novelAudioService;
-    std::unique_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
-    std::unique_ptr<Windowing::WindowingService> _novelWindowingService;
-    std::unique_ptr<Graphics::RenderingService> _novelRenderer;
+    std::shared_ptr<DebugService> _novelDebugService;
+    std::shared_ptr<Input::InteractionService> _novelInteractionService;
+    std::shared_ptr<Audio::AudioService> _novelAudioService;
+    std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
+    std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
+    std::shared_ptr<Graphics::RenderingService> _novelRenderer;
     LoggingService _loggingService;
 
 
@@ -46,14 +46,14 @@ namespace NovelRT {
 
     int runNovel();
     /// The Rendering Service associated with this Runner.
-    Graphics::RenderingService* getRenderer() const;
+    std::weak_ptr<Graphics::RenderingService> getRenderer() const;
     /// The Interaction Service associated with this Runner
-    Input::InteractionService* getInteractionService() const;
+    std::weak_ptr<Input::InteractionService> getInteractionService() const;
     /// The Debug Service associated with this Runner.
-    DebugService* getDebugService() const;
-    Audio::AudioService* getAudioService() const;
-    DotNet::RuntimeService* getDotNetRuntimeService() const;
-    Windowing::WindowingService* getWindowingService() const;
+    std::weak_ptr<DebugService> getDebugService() const;
+    std::weak_ptr<Audio::AudioService> getAudioService() const;
+    std::weak_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+    std::weak_ptr<Windowing::WindowingService> getWindowingService() const;
 
     ~NovelRunner();
   };
