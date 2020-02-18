@@ -37,7 +37,7 @@ namespace NovelRT::Graphics {
           continue;
         }
         // Generate texture
-        GLuint textureId;
+        GLuint textureId = 0;
         glGenTextures(1, &textureId);
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexImage2D(
