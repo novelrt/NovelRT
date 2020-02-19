@@ -20,15 +20,13 @@ namespace NovelRT {
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
-
     std::shared_ptr<DebugService> _novelDebugService;
+    std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Input::InteractionService> _novelInteractionService;
     std::shared_ptr<Audio::AudioService> _novelAudioService;
     std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
-    std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Graphics::RenderingService> _novelRenderer;
     LoggingService _loggingService;
-
 
   public:
     /**
