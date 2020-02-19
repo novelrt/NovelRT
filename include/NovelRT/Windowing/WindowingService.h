@@ -10,10 +10,11 @@
 namespace NovelRT::Windowing {
   class WindowingService {
 
-  NOVELRT_EVENT(WindowResized, Maths::GeoVector<float>)
-  NOVELRT_PARAMETERLESS_EVENT(WindowTornDown)
+  public:
+    Utilities::Event<Maths::GeoVector<float>> WindowResized;
+    Utilities::Event<> WindowTornDown;
 
-  private:
+  private:   
     Maths::GeoVector<float> _windowSize;
     std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
@@ -25,6 +26,7 @@ namespace NovelRT::Windowing {
 
   public:
     explicit WindowingService(NovelRunner* const runner);
+
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
     void tearDown();
 
@@ -44,7 +46,7 @@ namespace NovelRT::Windowing {
     inline void setWindowSize(const Maths::GeoVector<float>& value) {
       _windowSize = value;
       glfwSetWindowSize(getWindow(), value.getX(), value.getY());
-      raiseWindowResized(_windowSize);
+      WindowResized(_windowSize);
     }
 
     inline Maths::GeoVector<float> getWindowSize() const {

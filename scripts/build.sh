@@ -14,6 +14,7 @@ configuration='Debug'
 generate=false
 help=false
 install=false
+test=false
 remaining=''
 
 while [[ $# -gt 0 ]]; do
@@ -43,6 +44,10 @@ while [[ $# -gt 0 ]]; do
       install=true
       shift 1
       ;;
+    --test)
+      test=true
+      shift 1
+      ;;
     *)
       if [ -z "$remaining" ]; then
         remaining="$1"
@@ -56,9 +61,9 @@ done
 
 function Build {
   if [ -z "$remaining" ]; then
-    cmake --build "$BuildDir"
+    cmake --build "$BuildDir" --config "$configuration"
   else
-    cmake --build "$BuildDir" "${remaining[@]}"
+    cmake --build "$BuildDir" --config "$configuration" "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?
@@ -79,16 +84,16 @@ function Generate {
   if [ -z "$remaining" ]; then
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
     else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
     fi
   else
     if $ci; then
       VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
     else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
     fi
   fi
 
@@ -109,6 +114,7 @@ function Help {
   echo "  --build                   Build repository"
   echo "  --generate                Generate CMake cache"
   echo "  --install                 Install repository"
+  echo "  --test                    Test repository"
   echo ""
   echo "Advanced settings:"
   echo "  --ci                      Set when running on CI server"
@@ -118,15 +124,33 @@ function Help {
 
 function Install {
   if [ -z "$remaining" ]; then
-    cmake --install "$BuildDir"
+    cmake --install "$BuildDir" --config "$configuration"
   else
-    cmake --install "$BuildDir" "${remaining[@]}"
+    cmake --install "$BuildDir" --config "$configuration" "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
     echo "'Install' failed"
+    return "$LASTEXITCODE"
+  fi
+}
+
+function Test {
+  pushd "$TestDir"
+
+  if [ -z "$remaining" ]; then
+    ctest --build-config "$configuration" --output-on-failure
+  else
+    ctest --build-config "$configuration" --output-on-failure "${remaining[@]}"
+  fi
+
+  LASTEXITCODE=$?
+  popd
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    echo "'Test' failed"
     return "$LASTEXITCODE"
   fi
 }
@@ -140,6 +164,7 @@ if $ci; then
   build=true
   generate=true
   install=true
+  test=true
 fi
 
 RepoRoot="$ScriptRoot/.."
@@ -153,11 +178,14 @@ CreateDirectory "$BuildDir"
 InstallDir="$ArtifactsDir/install/$configuration"
 CreateDirectory "$InstallDir"
 
+TestDir="$BuildDir/tests"
+CreateDirectory "$TestDir"
+
 if $ci; then
   VcpkgInstallDir="$ArtifactsDir/vcpkg"
 
   if [ ! -d "$VcpkgInstallDir" ]; then
-     git clone https://github.com/microsoft/vcpkg "$VcpkgInstallDir"
+     git clone https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
   fi
 
   VcpkgExe="$VcpkgInstallDir/vcpkg"
@@ -172,7 +200,7 @@ if $ci; then
     fi
   fi
 
-  "$VcpkgExe" install freetype glad glfw3 glm libsndfile lua nethost openal-soft spdlog
+  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
@@ -206,6 +234,14 @@ fi
 
 if $build; then
   Build
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    return "$LASTEXITCODE"
+  fi
+fi
+
+if $test; then
+  Test
 
   if [ "$LASTEXITCODE" != 0 ]; then
     return "$LASTEXITCODE"
