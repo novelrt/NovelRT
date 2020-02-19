@@ -39,10 +39,14 @@ std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoog
 std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
+
+#ifdef TEST_ANIM
 std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
 std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
 
 bool shouldBeInIdle = true;
+
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -67,6 +71,8 @@ int main(int argc, char* argv[])
   audio.lock()->initializeAudio();
   //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
   //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
+
+#ifdef TEST_ANIM
   auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
   auto idleState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
   idleState->setShouldLoop(true);
@@ -108,6 +114,8 @@ int main(int argc, char* argv[])
   animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
   testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
   testAnim->insertNewState(idleState);
+
+#endif
 
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
@@ -173,6 +181,8 @@ int main(int argc, char* argv[])
   interactionRect->Interacted += [&loggingLevel, &console, &audio] {
     console.log("Test button!", loggingLevel);
     //audio->playSound(jojo, 0);
+
+#ifdef TEST_ANIM
     switch (testAnim->getCurrentPlayState()) {
     case NovelRT::Animation::AnimatorPlayState::Playing:
       testAnim->stop();
@@ -181,6 +191,7 @@ int main(int argc, char* argv[])
       testAnim->play();
       break;
     }
+#endif
   };
 
   runner.SceneConstructionRequested += [] {
@@ -199,7 +210,10 @@ int main(int argc, char* argv[])
     interactionRect->executeObjectBehaviour();
 
     novelChanRect->executeObjectBehaviour();
+
+#ifdef TEST_ANIM
     animRect->executeObjectBehaviour();
+#endif
 
     textRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
