@@ -24,6 +24,22 @@ namespace NovelRT::Windowing {
     float wData = displayData->width * 0.7f;
     float hData = displayData->height * 0.7f;
 
+#if defined (_WIN64)
+    auto optimus = LoadLibrary("nvapi64.dll");
+    if (optimus != nullptr) {
+      _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
+    } else {
+      _logger.logWarningLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+    }
+#elif defined (_WIN32)
+    auto optimus = LoadLibrary("nvapi.dll");
+    if (optimus != nullptr) {
+      _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
+    } else {
+      _logger.logWarningLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+    }
+#endif
+
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
