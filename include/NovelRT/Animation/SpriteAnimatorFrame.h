@@ -9,35 +9,22 @@
 
 namespace NovelRT::Animation {
   class SpriteAnimatorFrame {
+  public:
+    Utilities::Event<> FrameEnter;
+    Utilities::Event<> FrameExit;
+
   private:
     std::shared_ptr<Graphics::Texture> _texture;
-    std::function<void()> _onFrameEnter;
-    std::function<void()> _onFrameExit;
     float _duration;
 
   public:
+
     inline std::shared_ptr<Graphics::Texture> getTexture() const noexcept {
       return _texture;
     }
 
     inline void setTexture(std::shared_ptr<Graphics::Texture> value) noexcept {
       _texture = value;
-    }
-
-    inline std::function<void()> getOnFrameEnterDelegate() const noexcept {
-      return _onFrameEnter;
-    }
-
-    inline void setOnFrameEnterDelegate(const std::function<void()>& value) {
-      _onFrameEnter = value;
-    }
-
-    inline std::function<void()> getOnFrameExitDelegate() const noexcept {
-      return _onFrameExit;
-    }
-
-    inline void setOnFrameExitDelegate(const std::function<void()>& value) noexcept {
-      _onFrameExit = value;
     }
 
     inline float getDuration() const noexcept {

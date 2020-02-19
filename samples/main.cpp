@@ -12,7 +12,7 @@ extern "C"
 
 lua_State* L;
 
-static int average(lua_State *luaState) {
+static int average(lua_State* luaState) {
   int n = lua_gettop(luaState);
   double sum = 0;
   for (int i = 1; i <= n; i++)
@@ -39,8 +39,10 @@ std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoog
 std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
+std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
+std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
   std::filesystem::path resourcesDirPath = executableDirPath / "Resources";
@@ -63,6 +65,24 @@ int main(int argc, char *argv[])
   audio.lock()->initializeAudio();
   //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
   //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
+
+  auto idleState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
+  idleState->setShouldLoop(true);
+  auto frames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
+
+  for (int32_t i = 0; i < 10; i++) {
+    auto frame = NovelRT::Animation::SpriteAnimatorFrame();
+    frame.setDuration(0.1f);
+    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / ("0-" + std::to_string(i) + ".png")).string()));
+    frames.push_back(frame);
+  }
+
+  idleState->setFrames(frames);
+
+  auto animTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1500, 900), 2, NovelRT::Maths::GeoVector<float>(95 * 2, 98 * 2));
+  animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
+  testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
+  testAnim->insertNewState(idleState);
 
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
@@ -91,7 +111,7 @@ int main(int argc, char *argv[])
   auto whatever = playButtonTransform.getPosition();
   whatever.setX(whatever.getX() + 50);
   theRealMvpTransform.setPosition(whatever);
-  
+
   memeInteractionRect = runner.getInteractionService().lock()->createBasicInteractionRect(theRealMvpTransform, -1);
 
   playAudioButtonTwoElectricBoogaloo = runner.getRenderer().lock()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
@@ -128,6 +148,14 @@ int main(int argc, char *argv[])
   interactionRect->Interacted += [&loggingLevel, &console, &audio] {
     console.log("Test button!", loggingLevel);
     //audio->playSound(jojo, 0);
+    switch (testAnim->getCurrentPlayState()) {
+    case NovelRT::Animation::AnimatorPlayState::Playing:
+      testAnim->stop();
+      break;
+    case NovelRT::Animation::AnimatorPlayState::Stopped:
+      testAnim->play();
+      break;
+    }
   };
 
   runner.SceneConstructionRequested += [] {
@@ -146,6 +174,8 @@ int main(int argc, char *argv[])
     interactionRect->executeObjectBehaviour();
 
     novelChanRect->executeObjectBehaviour();
+    animRect->executeObjectBehaviour();
+
     textRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
   };

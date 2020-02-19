@@ -12,16 +12,16 @@ namespace NovelRT::Animation {
   private:
     std::vector<SpriteAnimatorFrame> _frames;
     bool _shouldLoop;
+    std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>> _transitions;
 
   public:
-    std::map<std::string, std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>> transitions; //fuck I give up for now
 
-    inline void insertNewState(const std::string& transitionName, std::shared_ptr<SpriteAnimatorState> stateTarget, std::vector<std::function<bool()>> transitionConditions) {
-      transitions.try_emplace(transitionName, make_tuple(stateTarget, transitionConditions));
+    inline void insertNewState(std::shared_ptr<SpriteAnimatorState> stateTarget, std::vector<std::function<bool()>> transitionConditions) {
+      _transitions.emplace_back(make_tuple(stateTarget, transitionConditions));
     }
 
-    inline void removeState(const std::string& name) { //not sure if we can make this noexcept somehow but whatever
-      transitions.erase(name);
+    inline void removeStateAtIndex(int32_t index) { //not sure if we can make this noexcept somehow but whatever
+      _transitions.erase(_transitions.begin() + index);
     }
 
     inline bool getShouldLoop() const noexcept {
@@ -40,8 +40,31 @@ namespace NovelRT::Animation {
       _frames = value;
     }
 
-    inline void setTransitions(const std::map<std::string, std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>>& value) noexcept {
-      transitions = value;
+    inline void setTransitions(const std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>>& value) noexcept {
+      _transitions = value;
+    }
+
+    inline std::shared_ptr<SpriteAnimatorState> tryFindValidTransition() {
+      for (auto transitionTuple : _transitions) {
+        auto conditions = std::get<std::vector<std::function<bool()>>>(transitionTuple);
+        bool shouldTransitionToThisState = true;
+
+        for (auto condition : conditions) {
+          if (condition()) continue;
+
+          shouldTransitionToThisState = false;
+          break;
+        }
+
+        if (!shouldTransitionToThisState) continue;
+
+        auto returnValue = std::get<std::shared_ptr<SpriteAnimatorState>>(transitionTuple);
+
+        break;
+
+      }
+
+      return nullptr;
     }
   };
 }
