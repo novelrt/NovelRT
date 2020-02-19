@@ -61,7 +61,7 @@
 #include "png.h"
 
 namespace NovelRT {
-  typedef uintptr_t Atom;
+  typedef class Atom Atom;
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
@@ -111,6 +111,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/CameraFrameState.h"
 
 //value types
+#include "NovelRT/Atom.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
