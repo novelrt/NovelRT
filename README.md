@@ -29,10 +29,11 @@ For information on Ink, check it out from [here](https://github.com/inkle/ink).
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything. If you wish to attempt to build a basic visual novel with the existing C++ API, you must first `git clone` this repository and set up vcpkg, which you can find out more about [here](https://github.com/microsoft/vcpkg).
 
 ### Our dependency list currently includes:
+- Freetype
 - GLAD
 - GLFW
 - glm
-- Freetype
+- gtest
 - Libsndfile
 - libpng
 - Lua 5.3
