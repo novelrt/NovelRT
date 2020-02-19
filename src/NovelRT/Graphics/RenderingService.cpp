@@ -4,8 +4,6 @@
 #define GL_GLEXT_PROTOTYPES
 
 namespace NovelRT::Graphics {
-  std::atomic_uintptr_t RenderingService::_nextId(0);
-
   RenderingService::RenderingService(NovelRunner* const runner) :
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
     _runner(runner),
@@ -246,7 +244,7 @@ namespace NovelRT::Graphics {
         return result;
       }
 
-      auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), _nextId++);
+      auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
@@ -254,7 +252,7 @@ namespace NovelRT::Graphics {
     }
 
     //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), _nextId++);
+    auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
     std::weak_ptr<Texture> valueForMap = returnValue;
     _textureCache.emplace(returnValue->getId(), valueForMap);
 
@@ -271,7 +269,7 @@ namespace NovelRT::Graphics {
       }
     }
 
-    auto returnValue = std::make_shared<FontSet>(_runner->getRenderer(), _nextId++);
+    auto returnValue = std::make_shared<FontSet>(_runner->getRenderer(), Atom::getNextFontSetId());
     _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
     returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;
