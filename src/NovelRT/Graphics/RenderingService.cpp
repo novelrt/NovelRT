@@ -206,6 +206,12 @@ namespace NovelRT::Graphics {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
+    int layer,
+    const RGBAConfig& colourTint) {
+    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
+  }
+
   std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
     int layer,
     const RGBAConfig& colourConfig,
