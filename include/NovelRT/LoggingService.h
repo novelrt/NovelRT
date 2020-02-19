@@ -34,6 +34,7 @@ namespace NovelRT {
     void logDebugLine(const std::string& message);
     void logInternal(const std::string& message, LogLevel level);
     void setLogLevel(LogLevel level);
+    void throwIfNullPtr(const void* const object, const std::string& exceptionMessage);
 
     template <typename I, typename ... IRest>
     void logInfo(I current, IRest ... next) {
