@@ -8,18 +8,18 @@ namespace NovelRT::Graphics {
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
     _runner(runner),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
-    GLuint tempHandle;
-    glGenBuffers(1, &tempHandle);
-    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
-    return tempHandle;
-      })),
+      GLuint tempHandle;
+      glGenBuffers(1, &tempHandle);
+      glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
+      glBindBuffer(GL_UNIFORM_BUFFER, 0);
+      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
+      return tempHandle;
+    })),
     _camera(nullptr) {
-    auto ptr = _runner->getWindowingService();
-    if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
-      initialiseRenderPipeline(false, &input);
+      auto ptr = _runner->getWindowingService();
+      if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
+        initialiseRenderPipeline(false, &input);
       });
   }
 
