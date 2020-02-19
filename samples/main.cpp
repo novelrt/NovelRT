@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
 
   auto animTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1500, 900), 2, NovelRT::Maths::GeoVector<float>(95 * 2, 98 * 2));
-  animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
+  animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
   testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
   testAnim->insertNewState(idleState);
 
