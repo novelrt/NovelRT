@@ -5,11 +5,17 @@
 
 namespace NovelRT {
 
+#ifndef NDEBUG
+  typedef spdlog::synchronous_factory spdlog_factory;
+#else
+  typedef spdlog::async_factory spdlog_factory;
+#endif
+
   LoggingService::LoggingService() {
     try {
       _logger = spdlog::get(Utilities::Misc::CONSOLE_LOG_GENERIC);
       if (_logger == nullptr) {
-          _logger = spdlog::stdout_color_mt<spdlog::async_factory>(Utilities::Misc::CONSOLE_LOG_GENERIC);
+          _logger = spdlog::stdout_color_mt<spdlog_factory>(Utilities::Misc::CONSOLE_LOG_GENERIC);
       }
 
       #ifndef NDEBUG
@@ -31,7 +37,7 @@ namespace NovelRT {
     try {
       _logger = spdlog::get(core);
       if (_logger == nullptr) {
-        _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
+        _logger = spdlog::stdout_color_mt<spdlog_factory>(core);
       }
 
     #ifndef NDEBUG
@@ -54,7 +60,7 @@ namespace NovelRT {
     try {
       _logger = spdlog::get(core);
       if (_logger == nullptr) {
-        _logger = spdlog::stdout_color_mt<spdlog::async_factory>(core);
+        _logger = spdlog::stdout_color_mt<spdlog_factory>(core);
       }
 
       setLogLevel(level);

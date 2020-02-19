@@ -9,6 +9,7 @@
 
 //stdlib
 #include <algorithm>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -58,7 +59,6 @@
 #include "png.h"
 
 namespace NovelRT {
-  typedef void (*NovelUpdateSubscriber)(double deltaSeconds);
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
@@ -106,11 +106,14 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
+#include "NovelRT/Maths/QuadTreePoint.h"
+#include "NovelRT/Maths/QuadTree.h"
 #include "NovelRT/Transform.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
 #include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
+#include "NovelRT/Utilities/Event.h"
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
 
