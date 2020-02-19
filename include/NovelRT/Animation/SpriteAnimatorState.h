@@ -58,9 +58,7 @@ namespace NovelRT::Animation {
 
         if (!shouldTransitionToThisState) continue;
 
-        auto returnValue = std::get<std::shared_ptr<SpriteAnimatorState>>(transitionTuple);
-
-        break;
+        return std::get<std::shared_ptr<SpriteAnimatorState>>(transitionTuple);
 
       }
 

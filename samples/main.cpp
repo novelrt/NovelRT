@@ -42,6 +42,8 @@ std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
 std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
 
+bool shouldBeInIdle = true;
+
 int main(int argc, char* argv[])
 {
   std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
@@ -65,19 +67,42 @@ int main(int argc, char* argv[])
   audio.lock()->initializeAudio();
   //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
   //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
-
+  auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
   auto idleState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
   idleState->setShouldLoop(true);
-  auto frames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
+  auto idleFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
 
   for (int32_t i = 0; i < 10; i++) {
     auto frame = NovelRT::Animation::SpriteAnimatorFrame();
     frame.setDuration(0.1f);
-    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / ("0-" + std::to_string(i) + ".png")).string()));
-    frames.push_back(frame);
+    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "idle" / ("0-" + std::to_string(i) + ".png")).string()));
+    idleFrames.push_back(frame);
   }
 
-  idleState->setFrames(frames);
+  idleFrames.back().FrameExit += [] { shouldBeInIdle = false; };
+
+  idleState->insertNewState(movingState, std::vector<std::function<bool()>> {[] { return !shouldBeInIdle;  }});
+
+  idleState->setFrames(idleFrames);
+
+
+  movingState->setShouldLoop(true);
+  movingState->insertNewState(idleState, std::vector<std::function<bool()>> {[] {return shouldBeInIdle;  }});
+
+  auto movingFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
+
+  for (int32_t i = 0; i < 5; i++) {
+    auto frame = NovelRT::Animation::SpriteAnimatorFrame();
+    frame.setDuration(0.1f);
+    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "right" / ("100-" + std::to_string(i) + ".png")).string()));
+    movingFrames.push_back(frame);
+  }
+
+  movingFrames.back().FrameExit += [] { shouldBeInIdle = true; };
+
+  movingState->setFrames(movingFrames);
+
+
 
   auto animTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1500, 900), 2, NovelRT::Maths::GeoVector<float>(95 * 2, 98 * 2));
   animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));

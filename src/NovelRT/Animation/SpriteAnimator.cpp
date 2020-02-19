@@ -21,29 +21,29 @@ namespace NovelRT::Animation {
         _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
       }
 
+      auto transitionPtr = _currentState->tryFindValidTransition();
+
+      if (transitionPtr != nullptr) {
+        _logger.logDebug("Switching transition!");
+        _currentState = transitionPtr;
+        _accumulatedDelta = 0.0f;
+        _currentFrameIndex = 0;
+        _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
+      }
+
       if (_currentState->getFrames()->size() > _currentFrameIndex && _currentState->getFrames()->at(_currentFrameIndex).getDuration() <= _accumulatedDelta) {
         _accumulatedDelta = 0;
         _currentState->getFrames()->at(_currentFrameIndex++).FrameExit();
 
         if (_currentState->getShouldLoop() && _currentFrameIndex >= _currentState->getFrames()->size()) {
           _currentFrameIndex = 0;
-        }
-        else if (_currentFrameIndex >= _currentState->getFrames()->size()) {
-          _currentFrameIndex--; //temp fix
+        } else if (_currentFrameIndex >= _currentState->getFrames()->size()) {
+          return;
         }
 
         auto newFrame = _currentState->getFrames()->at(_currentFrameIndex);
         newFrame.FrameEnter();
         _rect->setTexture(newFrame.getTexture());
-      }
-
-      auto transitionPtr = _currentState->tryFindValidTransition();
-
-      if (transitionPtr != nullptr) {
-        _currentState = transitionPtr;
-        _accumulatedDelta = 0.0f;
-        _currentFrameIndex = 0;
-        _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
       }
 
 
