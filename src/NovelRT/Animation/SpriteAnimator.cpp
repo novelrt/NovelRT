@@ -5,53 +5,51 @@
 namespace NovelRT::Animation {
   SpriteAnimator::SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept :
     _accumulatedDelta(0.0f),
+    _currentFrameIndex(0),
     _runner(runner),
     _rect(rect),
     _animatorState(AnimatorPlayState::Stopped),
-    _animationUpdateHandle([=](double delta) { constructAnimation(delta); }),
-    _currentState(nullptr) {}
+    _animationUpdateHandle(Utilities::EventHandler<double>([=](double delta) { constructAnimation(delta); })),
+    _currentState(nullptr),
+    _logger(Utilities::Misc::CONSOLE_LOG_GENERIC) {}
 
   void SpriteAnimator::constructAnimation(double delta) {
     switch (_animatorState) {
-    case AnimatorPlayState::Playing:
+    case AnimatorPlayState::Playing: {
       if (_currentState == nullptr) {
         _currentState = _states.at(0);
-        _currentState->getFrames()->at(_currentFrameIndex).getOnFrameEnterDelegate()();
+        _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
       }
 
-      if (_currentState->getShouldLoop() && _currentFrameIndex >= _currentState->getFrames()->size()) _currentFrameIndex = 0;
+      if (_currentState->getFrames()->size() > _currentFrameIndex && _currentState->getFrames()->at(_currentFrameIndex).getDuration() <= _accumulatedDelta) {
+        _accumulatedDelta = 0;
+        _currentState->getFrames()->at(_currentFrameIndex++).FrameExit();
 
-      if (_currentState->getFrames()->size() < _currentFrameIndex && _currentState->getFrames()->at(_currentFrameIndex).getDuration() <= _accumulatedDelta) {
-        _currentState->getFrames()->at(_currentFrameIndex++).getOnFrameExitDelegate()();
+        if (_currentState->getShouldLoop() && _currentFrameIndex >= _currentState->getFrames()->size()) {
+          _currentFrameIndex = 0;
+        }
+        else if (_currentFrameIndex >= _currentState->getFrames()->size()) {
+          _currentFrameIndex--; //temp fix
+        }
+
         auto newFrame = _currentState->getFrames()->at(_currentFrameIndex);
-        newFrame.getOnFrameEnterDelegate()();
+        newFrame.FrameEnter();
         _rect->setTexture(newFrame.getTexture());
       }
 
-      for (auto pair : _currentState->transitions) {
-        auto conditions = std::get<std::vector<std::function<bool()>>>(pair.second);
-        bool shouldTransitionToThisState = true;
+      auto transitionPtr = _currentState->tryFindValidTransition();
 
-        for (auto condition : conditions) {
-          if (condition()) continue;
-
-          shouldTransitionToThisState = false;
-          break;
-        }
-
-        if (!shouldTransitionToThisState) continue;
-
-        _currentState = std::get<std::shared_ptr<SpriteAnimatorState>>(pair.second);
+      if (transitionPtr != nullptr) {
+        _currentState = transitionPtr;
         _accumulatedDelta = 0.0f;
         _currentFrameIndex = 0;
-        _currentState->getFrames()->at(_currentFrameIndex).getOnFrameEnterDelegate()();
-
-        break;
-
+        _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
       }
+
 
       _accumulatedDelta += delta;
       break;
+    }
     case AnimatorPlayState::Paused:
       break;
     }
@@ -69,5 +67,7 @@ namespace NovelRT::Animation {
   void SpriteAnimator::stop() {
     _runner->Update -= _animationUpdateHandle;
     _animatorState = AnimatorPlayState::Stopped;
+    _accumulatedDelta = 0;
+    _currentFrameIndex = 0;
   }
 }

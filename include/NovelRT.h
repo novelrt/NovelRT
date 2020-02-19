@@ -111,6 +111,10 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/CameraFrameState.h"
 
 //value types
+#include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
+#include "NovelRT/Utilities/Lazy.h"
+#include "NovelRT/Utilities/Misc.h"
+
 #include "NovelRT/Animation/AnimatorPlayState.h"
 #include "NovelRT/Animation/SpriteAnimatorFrame.h"
 #include "NovelRT/Maths/GeoVector.h"
@@ -123,9 +127,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
-#include "NovelRT/Utilities/Event.h"
-#include "NovelRT/Utilities/Lazy.h"
-#include "NovelRT/Utilities/Misc.h"
 
 //base types
 #include "NovelRT/LoggingService.h" //this isn't in the services section due to include order/dependencies.
