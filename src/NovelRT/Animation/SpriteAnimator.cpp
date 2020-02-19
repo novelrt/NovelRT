@@ -24,7 +24,6 @@ namespace NovelRT::Animation {
         auto transitionPtr = _currentState->tryFindValidTransition();
 
         if (transitionPtr != nullptr) {
-          _logger.logDebug("Switching transition!");
           _currentState = transitionPtr;
           _accumulatedDelta = 0.0f;
           _currentFrameIndex = 0;
