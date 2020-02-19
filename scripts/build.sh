@@ -83,15 +83,13 @@ function CreateDirectory {
 function Generate {
   if [ -z "$remaining" ]; then
     if $ci; then
-      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
     else
       cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
     fi
   else
     if $ci; then
-      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
+      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
     else
       cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
     fi
@@ -182,32 +180,6 @@ TestDir="$BuildDir/tests"
 CreateDirectory "$TestDir"
 
 if $ci; then
-  VcpkgInstallDir="$ArtifactsDir/vcpkg"
-
-  if [ ! -d "$VcpkgInstallDir" ]; then
-     git clone https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
-  fi
-
-  VcpkgExe="$VcpkgInstallDir/vcpkg"
-
-  if [ ! -f "$VcpkgExe" ]; then
-    "$VcpkgInstallDir/bootstrap-vcpkg.sh"
-    LASTEXITCODE=$?
-
-    if [ "$LASTEXITCODE" != 0 ]; then
-      echo "'bootstrap-vcpkg' failed"
-      return "$LASTEXITCODE"
-    fi
-  fi
-
-  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog
-  LASTEXITCODE=$?
-
-  if [ "$LASTEXITCODE" != 0 ]; then
-    echo "'vcpkg install' failed"
-    return "$LASTEXITCODE"
-  fi
-
   export DOTNET_CLI_TELEMETRY_OPTOUT=1
   export DOTNET_MULTILEVEL_LOOKUP=0
   export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1

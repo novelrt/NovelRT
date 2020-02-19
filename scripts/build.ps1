@@ -29,11 +29,6 @@ function Create-Directory([string[]] $Path) {
 }
 
 function Generate() {
-  if ($ci) {
-    $VcpkgToolchainFile = Join-Path -Path $VcpkgInstallDir -ChildPath "scripts/buildsystems/vcpkg.cmake"
-    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile" + $remaining
-  }
-
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
 
   if ($LastExitCode -ne 0) {
@@ -105,28 +100,6 @@ try {
   Create-Directory -Path $TestDir
 
   if ($ci) {
-    $VcpkgInstallDir = Join-Path -Path $ArtifactsDir -ChildPath "vcpkg"
-
-    if (!(Test-Path -Path $VcpkgInstallDir)) {
-      & git clone https://github.com/microsoft/vcpkg $VcpkgInstallDir
-    }
-
-    $VcpkgExe = Join-Path -Path $VcpkgInstallDir -ChildPath "vcpkg.exe"
-
-    if (!(Test-Path -Path $VcpkgExe)) {
-      & $VcpkgInstallDir/bootstrap-vcpkg.bat
-
-      if ($LastExitCode -ne 0) {
-        throw "'bootstrap-vcpkg' failed"
-      }
-    }
-
-    & $VcpkgExe install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog --triplet x64-windows
-
-    if ($LastExitCode -ne 0) {
-        throw "'vcpkg install' failed"
-    }
-
     $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
     $env:DOTNET_MULTILEVEL_LOOKUP = 0
     $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
