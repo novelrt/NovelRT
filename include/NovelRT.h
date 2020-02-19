@@ -24,7 +24,6 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
-#include <queue>
 
 //Freetype
 #include <ft2build.h>
