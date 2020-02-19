@@ -123,17 +123,11 @@ namespace NovelRT::Graphics {
         auto cFile = fopen(_imageDir.c_str(), "rb");
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr); //TODO: Figure out how the error function ptr works
 
-        if (png == nullptr) {
-          _logger.logErrorLine("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-          throw std::runtime_error("Unable to continue! File failed to load for texture.");
-        }
+        _logger.throwIfNullPtr(png, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 
         auto info = png_create_info_struct(png);
 
-        if (info == nullptr) {
-          _logger.logError("Image at path " + _imageDir + " failed to provide an info struct! Aborting...");
-          throw std::runtime_error("Unable to continue! File failed to load for texture.");
-        }
+        _logger.throwIfNullPtr(info, "Image at path " + _imageDir + " failed to provide an info struct! Aborting...");
 
         if (setjmp(png_jmpbuf(png))) { //This is how libpng does error handling.
           _logger.logError("Image at path " + _imageDir + " appears to be corrupted! Aborting...");
@@ -187,10 +181,7 @@ namespace NovelRT::Graphics {
         unsigned char* p = rawImage;
 
         //TODO: Proper error check on data.rowPointers
-        if (data.rowPointers == nullptr) {
-          _logger.logErrorLine("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-          throw std::runtime_error("Unable to continue! File failed to load for texture.");
-        }
+        _logger.throwIfNullPtr(data.rowPointers, "Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
 
         for (int i = 0; i < data.height; i++) {
           data.rowPointers[i] = p;
