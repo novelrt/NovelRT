@@ -11,12 +11,22 @@ namespace NovelRT::Animation {
   class SpriteAnimatorState {
   private:
     std::vector<SpriteAnimatorFrame> _frames;
-    bool _shouldLoop;
+    bool _shouldLoop = false; //this is to shut the warning up since we have no ctor
     std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>> _transitions;
 
   public:
-
     inline void insertNewState(std::shared_ptr<SpriteAnimatorState> stateTarget, std::vector<std::function<bool()>> transitionConditions) {
+
+      if (stateTarget == nullptr) {
+        return;
+      }
+
+      for (size_t i = 0; i < transitionConditions.size(); i++) {
+        if (transitionConditions.at(i) == nullptr) {
+          transitionConditions.erase(transitionConditions.begin() + i);
+        }
+      }
+
       _transitions.emplace_back(make_tuple(stateTarget, transitionConditions));
     }
 
@@ -38,10 +48,6 @@ namespace NovelRT::Animation {
 
     inline void setFrames(const std::vector<SpriteAnimatorFrame>& value) noexcept {
       _frames = value;
-    }
-
-    inline void setTransitions(const std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>>& value) noexcept {
-      _transitions = value;
     }
 
     inline std::shared_ptr<SpriteAnimatorState> tryFindValidTransition() {
