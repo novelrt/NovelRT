@@ -12,7 +12,9 @@ namespace NovelRT {
     _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
     _novelInteractionService(std::make_shared<Input::InteractionService>(this)),
     _novelAudioService(std::make_shared<Audio::AudioService>()),
+#ifdef NOVELRT_SUPPORT_DOTNET
     _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
+#endif
     _novelRenderer(std::make_shared<Graphics::RenderingService>(this)) {
     if (!glfwInit()) {
       const char* err = "";
@@ -58,9 +60,11 @@ namespace NovelRT {
     return std::weak_ptr<Audio::AudioService>(_novelAudioService);
   }
 
+#ifdef NOVELRT_SUPPORT_DOTNET
   std::weak_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const {
     return std::weak_ptr<DotNet::RuntimeService>(_novelDotNetRuntimeService);
   }
+#endif
 
   std::weak_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const {
     return std::weak_ptr<Windowing::WindowingService>(_novelWindowingService);

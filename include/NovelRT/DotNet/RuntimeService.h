@@ -7,6 +7,10 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
+#ifndef NOVELRT_SUPPORT_DOTNET
+#error .NET Runtime service included without .NET support enabled
+#endif
+
 namespace NovelRT::DotNet {
   class RuntimeService {
   private:

@@ -24,7 +24,9 @@ namespace NovelRT {
     std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Input::InteractionService> _novelInteractionService;
     std::shared_ptr<Audio::AudioService> _novelAudioService;
+#ifdef NOVELRT_SUPPORT_DOTNET
     std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
+#endif
     std::shared_ptr<Graphics::RenderingService> _novelRenderer;
     LoggingService _loggingService;
 
@@ -50,7 +52,9 @@ namespace NovelRT {
     /// The Debug Service associated with this Runner.
     std::weak_ptr<DebugService> getDebugService() const;
     std::weak_ptr<Audio::AudioService> getAudioService() const;
+#ifdef NOVELRT_SUPPORT_DOTNET
     std::weak_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+#endif
     std::weak_ptr<Windowing::WindowingService> getWindowingService() const;
 
     ~NovelRunner();

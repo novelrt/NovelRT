@@ -61,8 +61,10 @@
 #include <sndfile.h>
 
 //nethost
+#ifdef NOVELRT_SUPPORT_DOTNET
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
+#endif
 
 //spdlog
 #if defined(_MSC_VER)
@@ -185,10 +187,14 @@ namespace NovelRT::Windowing {
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
-#include "NovelRT/DotNet/RuntimeService.h"
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
+
+//Engine language support services
+#ifdef NOVELRT_SUPPORT_DOTNET
+#include "NovelRT/DotNet/RuntimeService.h"
+#endif
 
 // Scene Graph types
 #include "NovelRT/SceneGraph/SceneNode.h"
