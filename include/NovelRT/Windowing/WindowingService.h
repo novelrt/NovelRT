@@ -22,9 +22,9 @@ namespace NovelRT::Windowing {
     std::string _windowTitle;
     bool _isTornDown;
 
-    #if defined(_WIN64) || defined(_WIN32)
+#if defined(_WIN64) || defined(_WIN32)
     HMODULE optimus;
-    #endif
+#endif
 
     void errorCallback(int, const char* error);
     void checkForOptimus(const char* library);

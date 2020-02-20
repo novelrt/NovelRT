@@ -124,12 +124,16 @@ namespace NovelRT::Windowing {
   }
 
   void WindowingService::checkForOptimus(const char* library) {
+#if defined(_WIN64) || defined(_WIN32)
     optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
     } else {
       _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
     }
+#else
+    return;
+#endif
   }
 
   void WindowingService::tearDown() {
