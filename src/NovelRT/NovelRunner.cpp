@@ -8,12 +8,12 @@ namespace NovelRT {
     Update(Utilities::Event<double>()),
     _exitCode(1),
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
-    _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
-    _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<Input::InteractionService>(this)),
-    _novelAudioService(std::make_unique<Audio::AudioService>()),
-    _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
+    _novelDebugService(std::make_shared<DebugService>(this)),
+    _novelInteractionService(std::make_shared<Input::InteractionService>(this)),
+    _novelAudioService(std::make_shared<Audio::AudioService>()),
+    _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
+    _novelRenderer(std::make_shared<Graphics::RenderingService>(this)) {
     if (!glfwInit()) {
       const char* err = "";
       glfwGetError(&err);
@@ -44,28 +44,28 @@ namespace NovelRT {
     return _exitCode;
   }
 
-  Graphics::RenderingService* NovelRunner::getRenderer() const {
-    return _novelRenderer.get();
+  std::weak_ptr<Graphics::RenderingService> NovelRunner::getRenderer() const {
+    return std::weak_ptr<Graphics::RenderingService>(_novelRenderer);
   }
 
-  Input::InteractionService* NovelRunner::getInteractionService() const {
-    return _novelInteractionService.get();
+  std::weak_ptr<Input::InteractionService> NovelRunner::getInteractionService() const {
+    return std::weak_ptr<Input::InteractionService>(_novelInteractionService);
   }
 
-  DebugService* NovelRunner::getDebugService() const {
-    return _novelDebugService.get();
+  std::weak_ptr<DebugService> NovelRunner::getDebugService() const {
+    return std::weak_ptr<DebugService>(_novelDebugService);
   }
 
-  Audio::AudioService* NovelRunner::getAudioService() const {
-    return _novelAudioService.get();
+  std::weak_ptr<Audio::AudioService> NovelRunner::getAudioService() const {
+    return std::weak_ptr<Audio::AudioService>(_novelAudioService);
   }
 
-  DotNet::RuntimeService* NovelRunner::getDotNetRuntimeService() const {
-    return _novelDotNetRuntimeService.get();
+  std::weak_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const {
+    return std::weak_ptr<DotNet::RuntimeService>(_novelDotNetRuntimeService);
   }
 
-  Windowing::WindowingService* NovelRunner::getWindowingService() const {
-	  return _novelWindowingService.get();
+  std::weak_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const {
+    return std::weak_ptr<Windowing::WindowingService>(_novelWindowingService);
   }
 
   NovelRunner::~NovelRunner() {

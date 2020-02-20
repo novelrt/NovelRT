@@ -4,9 +4,28 @@
 #define GL_GLEXT_PROTOTYPES
 
 namespace NovelRT::Graphics {
+  RenderingService::RenderingService(NovelRunner* const runner) :
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
+    _runner(runner),
+    _cameraObjectRenderUbo(std::function<GLuint()>([] {
+      GLuint tempHandle;
+      glGenBuffers(1, &tempHandle);
+      glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
+      glBindBuffer(GL_UNIFORM_BUFFER, 0);
+      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
+      return tempHandle;
+    })),
+    _camera(nullptr) {
+      auto ptr = _runner->getWindowingService();
+      if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
+        initialiseRenderPipeline(false, &input);
+      });
+  }
+
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
 
-    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize;
+    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService().lock()->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
     infoScreenSize.append("x");
@@ -15,7 +34,7 @@ namespace NovelRT::Graphics {
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
-      glfwMakeContextCurrent(_runner->getWindowingService()->getWindow());
+      glfwMakeContextCurrent(_runner->getWindowingService().lock()->getWindow()); //lmao
 
       if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
@@ -177,14 +196,20 @@ namespace NovelRT::Graphics {
   }
 
   void RenderingService::endFrame() const {
-    glfwSwapBuffers(_runner->getWindowingService()->getWindow());
+    glfwSwapBuffers(_runner->getWindowingService().lock()->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
     int layer,
     const std::string& filePath,
     const RGBAConfig& colourTint) {
-    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), filePath, colourTint);
+    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
+  }
+
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
+    int layer,
+    const RGBAConfig& colourTint) {
+    return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
   std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
@@ -192,39 +217,67 @@ namespace NovelRT::Graphics {
     const RGBAConfig& colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
-    return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), fontSize, fontFilePath, colourConfig);
+    return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  RenderingService::RenderingService(NovelRunner* const runner) :
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-    _runner(runner),
-    _cameraObjectRenderUbo(std::function<GLuint()>([] {
-    GLuint tempHandle;
-    glGenBuffers(1, &tempHandle);
-    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4<float>));
-    return tempHandle;
-      })),
-    _camera(nullptr) {
-    auto ptr = _runner->getWindowingService();
-    ptr->WindowResized += [this](auto input) {
-      initialiseRenderPipeline(false, &input);
-    };
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+    return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
+  Camera* RenderingService::getCamera() const {
+    return _camera.get();
+  }
 
-      std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
-        return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
+  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+    GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
+    glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+  }
+
+  void RenderingService::handleTexturePreDestruction(Texture* target) {
+    _textureCache.erase(target->getId());
+  }
+
+  void RenderingService::handleFontSetPreDestruction(FontSet* target) {
+    _fontCache.erase(target->getId());
+  }
+
+  std::shared_ptr<Texture> RenderingService::getTexture(const std::string& fileTarget) {
+    if (!fileTarget.empty()) {
+      for(auto& pair : _textureCache) {
+        auto result = pair.second.lock();
+        if (result->getTextureFile() != fileTarget) continue;
+
+        return result;
       }
 
-      Camera* RenderingService::getCamera() const {
-        return _camera.get();
-      }
+      auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
+      std::weak_ptr<Texture> valueForMap = returnValue;
+      _textureCache.emplace(returnValue->getId(), valueForMap);
+      returnValue->loadPngAsTexture(fileTarget);
+      return returnValue; 
+    }
 
-      void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
-        GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
-        glUniformBlockBinding(shaderProgramId, uboIndex, 0);
+    //DRY, I know, but Im really not fussed rn
+    auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
+    std::weak_ptr<Texture> valueForMap = returnValue;
+    _textureCache.emplace(returnValue->getId(), valueForMap);
+
+    return returnValue;
+  }
+
+  std::shared_ptr<FontSet> RenderingService::getFontSet(const std::string& fileTarget, float fontSize) {
+    if (!fileTarget.empty()) {
+      for (auto& pair : _fontCache) {
+        auto result = pair.second.lock();
+        if (result->getFontFile() != fileTarget || result->getFontSize() != fontSize) continue;
+
+        return result;
       }
+    }
+
+    auto returnValue = std::make_shared<FontSet>(_runner->getRenderer(), Atom::getNextFontSetId());
+    _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
+    returnValue->loadFontAsTextureSet(fileTarget, fontSize);
+    return returnValue;
+  }
 }
