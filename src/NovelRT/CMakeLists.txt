@@ -28,9 +28,9 @@ Audio/AudioService.cpp
 
 $<$<BOOL:${NOVELRT_SUPPORT_DOTNET}>:DotNet/RuntimeService.cpp>
 
-Graphics/BasicFillRect.cpp Graphics/Camera.cpp Graphics/ImageRect.cpp
-Graphics/RenderingService.cpp Graphics/RenderObject.cpp Graphics/RGBAConfig.cpp
-Graphics/TextRect.cpp
+Graphics/BasicFillRect.cpp Graphics/Camera.cpp Graphics/FontSet.cpp
+Graphics/ImageRect.cpp Graphics/RenderingService.cpp Graphics/RenderObject.cpp
+Graphics/RGBAConfig.cpp Graphics/TextRect.cpp Graphics/Texture.cpp
 
 Input/BasicInteractionRect.cpp Input/InteractionObject.cpp
 Input/InteractionService.cpp
