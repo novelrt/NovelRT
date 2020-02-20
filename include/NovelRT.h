@@ -20,6 +20,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
@@ -59,9 +60,14 @@
 #include "png.h"
 
 namespace NovelRT {
+  typedef class Atom Atom;
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
+}
+
+namespace NovelRT::Animation {
+  typedef class SpriteAnimator SpriteAnimator;
 }
 
 namespace NovelRT::Audio {
@@ -75,6 +81,7 @@ namespace NovelRT::DotNet {
 }
 
 namespace NovelRT::Graphics {
+  typedef class Texture Texture;
   typedef class BasicFillRect BasicFillRect;
   typedef class Camera Camera;
   typedef class ImageRect ImageRect;
@@ -103,6 +110,13 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/CameraFrameState.h"
 
 //value types
+#include "NovelRT/Atom.h"
+#include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
+#include "NovelRT/Utilities/Lazy.h"
+#include "NovelRT/Utilities/Misc.h"
+
+#include "NovelRT/Animation/AnimatorPlayState.h"
+#include "NovelRT/Animation/SpriteAnimatorFrame.h"
 #include "NovelRT/Maths/GeoVector.h"
 #include "NovelRT/Maths/GeoMatrix4.h"
 #include "NovelRT/Maths/GeoBounds.h"
@@ -113,9 +127,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/ImageData.h"
 #include "NovelRT/Graphics/ShaderProgram.h"
 #include "NovelRT/Graphics/RGBAConfig.h"
-#include "NovelRT/Utilities/Event.h"
-#include "NovelRT/Utilities/Lazy.h"
-#include "NovelRT/Utilities/Misc.h"
 
 //base types
 #include "NovelRT/LoggingService.h" //this isn't in the services section due to include order/dependencies.
@@ -123,8 +134,14 @@ namespace NovelRT::Windowing {
 #include "NovelRT/NovelRunner.h"
 #include "NovelRT/WorldObject.h"
 
+//Animation types
+#include "NovelRT/Animation/SpriteAnimatorState.h"
+#include "NovelRT/Animation/SpriteAnimator.h"
+
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
+#include "NovelRT/Graphics/Texture.h"
+#include "NovelRT/Graphics/FontSet.h"
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"

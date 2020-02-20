@@ -47,7 +47,7 @@ namespace NovelRT {
         std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
         std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
 
-        _fpsCounter = _runner->getRenderer()->createTextRect(transform, 0, yellow, 16, (fontsDirPath / "Gayathri-Regular.ttf").string());
+        _fpsCounter = _runner->getRenderer().lock()->createTextRect(transform, 0, yellow, 16, (fontsDirPath / "Gayathri-Regular.ttf").string());
         updateFpsCounter();
       }
     }

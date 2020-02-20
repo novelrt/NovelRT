@@ -9,20 +9,15 @@
 
 namespace NovelRT::Graphics {
   class ImageRect : public RenderObject {
-    friend class TextRect;
 
   private:
-    std::string _imageDir;
-    std::string _previousImageDir;
-    Utilities::Lazy<GLuint> _textureId;
     std::vector<GLfloat> _uvCoordinates;
+    std::shared_ptr<Texture> _texture;
     Utilities::Lazy<GLuint> _uvBuffer;
     Utilities::Lazy<GLuint> _colourTintBuffer;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
     LoggingService _logger;
-
-    void setTextureInternal(GLuint textureId);
 
   protected:
     void configureObjectBuffers() final;
@@ -32,7 +27,7 @@ namespace NovelRT::Graphics {
       int layer,
       ShaderProgram shaderProgram,
       Camera* camera,
-      const std::string& imageDir,
+      std::shared_ptr<Texture> texture,
       const RGBAConfig& colourTint);
 
     ImageRect(const Transform& transform,
@@ -41,12 +36,13 @@ namespace NovelRT::Graphics {
       Camera* camera,
       const RGBAConfig& colourTint);
 
+    void setTexture(std::shared_ptr<Texture> texture);
+
     void drawObject() final;
 
     const RGBAConfig& getColourTintConfig() const;
     RGBAConfig& getColourTintConfig();
     void setColourTintConfig(const RGBAConfig& value);
-    ~ImageRect() override;
   };
 }
 
