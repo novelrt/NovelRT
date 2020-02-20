@@ -42,7 +42,7 @@ add_custom_command(
 
 
 add_custom_target(NovelRT_DotNet ALL
-  DEPENDS ${_NovelRT_DotNet_OutputFiles}
-  SOURCES ${_NovelRT_DotNet_InputFiles})
+  DEPENDS "${_NovelRT_DotNet_OutputFiles}"
+  SOURCES "${_NovelRT_DotNet_InputFiles}")
 
 add_dependency_outputs(NovelRT_DotNet ${_NovelRT_DotNet_OutputFiles})
