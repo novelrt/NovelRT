@@ -119,21 +119,15 @@ namespace NovelRT::Windowing {
   void WindowingService::checkForOptimus() {
   #if defined (_WIN64)
     auto optimus = LoadLibrary("nvapi64.dll");
-    if (optimus != nullptr) {
-      _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
-    }
-    else {
-      _logger.logWarningLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
-    }
   #elif defined (_WIN32)
     auto optimus = LoadLibrary("nvapi.dll");
+  #endif
     if (optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
     }
     else {
       _logger.logWarningLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
     }
-  #endif
   }
 
   void WindowingService::tearDown() {
