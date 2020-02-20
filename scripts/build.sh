@@ -194,6 +194,8 @@ if $ci; then
   . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
 
   PATH="$DotNetInstallDirectory:$PATH:"
+
+  dotnet help > /dev/null
 fi
 
 if $generate; then

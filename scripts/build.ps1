@@ -114,6 +114,8 @@ try {
     & $DotNetInstallScript -Channel 2.1 -Version latest -InstallDir $DotNetInstallDirectory -Runtime dotnet
 
     $env:PATH="$DotNetInstallDirectory;$env:PATH"
+
+    & dotnet | Out-Null
   }
 
   if ($generate) {
