@@ -41,8 +41,6 @@ std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
-#define TEST_ANIM
-
 #ifdef TEST_ANIM
 std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
 std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
