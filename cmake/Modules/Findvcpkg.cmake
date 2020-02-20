@@ -10,8 +10,7 @@ else()
   set(_vcpkg_install_command "${CMAKE_BINARY_DIR}/vcpkg/src/vcpkg/vcpkg")
 endif()
 
-mark_as_advanced(_vcpkg_install_command)
-mark_as_advanced(_vcpkg_toolchain)
+mark_as_advanced(_vcpkg_install_command _vcpkg_toolchain)
 
 if(NOT EXISTS ${_vcpkg_install_command})
   make_directory(${CMAKE_BINARY_DIR}/vcpkg)
@@ -26,7 +25,8 @@ if(NOT EXISTS ${_vcpkg_install_command})
 endif()
 
 execute_process(
-  COMMAND ${_vcpkg_install_command} install ${vcpkg_FIND_COMPONENTS})
+  COMMAND ${_vcpkg_install_command} install ${vcpkg_FIND_COMPONENTS}
+  OUTPUT_QUIET)
 
 include(${_vcpkg_toolchain})
 

@@ -1,45 +1,17 @@
-set(NOVELRT_SAMPLES_HEADERS)
-source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_SAMPLES_HEADERS})
+include(CopyDependencyOutputs)
 
-file(GLOB_RECURSE NOVELRT_SAMPLES_SOURCES CONFIGURE_DEPENDS *.cpp)
-source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_SAMPLES_SOURCES})
-
-set(NOVELRT_SAMPLES_LINK_LIBRARIES
-  NovelRT
+set(NovelRT_Samples_SRCS
+main.cpp
 )
 
-add_executable(NovelRTSamples ${NOVELRT_SAMPLES_HEADERS} ${NOVELRT_SAMPLES_SOURCES})
-add_dependencies(NovelRTSamples NovelRTSamplesDependencies)
+add_executable(NovelRT_Samples ${NovelRT_Samples_SRCS})
+add_dependencies(NovelRT_Samples NovelRT)
 
-target_link_libraries(NovelRTSamples ${NOVELRT_SAMPLES_LINK_LIBRARIES})
+target_link_libraries(NovelRT_Samples NovelRT)
+copy_dependency_outputs(NovelRT_Samples NovelRT _output_files_list)
+add_dependency_outputs(NovelRT_Samples ${_output_files_list})
 
-add_custom_command(TARGET NovelRTSamples POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/NovelRTSamples.txt
-)
+mark_as_advanced(_output_files_list)
 
-set_property(TARGET NovelRTSamples PROPERTY
-  BINARY_OUTDIR $<TARGET_FILE_DIR:NovelRTSamples>
-)
-
-# NovelRTSamples.Dependencies
-
-set(NOVELRT_SAMPLES_DEPENDENCIES_INPUTS
-  $<TARGET_FILE:NovelRT>
-  ${CMAKE_BINARY_DIR}/src/NovelRTDotNet.txt
-  ${CMAKE_BINARY_DIR}/src/NovelRTResources.txt
-)
-
-set(NOVELRT_SAMPLES_DEPENDENCIES_OUTPUTS
-  ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.txt
-  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTDotNet.txt
-  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTResources.txt
-  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTSamplesDependencies.txt
-)
-
-add_custom_command(OUTPUT ${NOVELRT_SAMPLES_DEPENDENCIES_OUTPUTS}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory $<TARGET_FILE_DIR:NovelRT> $<TARGET_GENEX_EVAL:NovelRTSamples,$<TARGET_PROPERTY:NovelRTSamples,BINARY_OUTDIR>>
-  COMMAND ${CMAKE_COMMAND} -E touch ${NOVELRT_SAMPLES_DEPENDENCIES_OUTPUTS}
-  DEPENDS ${NOVELRT_SAMPLES_DEPENDENCIES_INPUTS}
-)
-
-add_custom_target(NovelRTSamplesDependencies ALL DEPENDS ${NOVELRT_SAMPLES_DEPENDENCIES_OUTPUTS})
+install(FILES ${_output_files_list}
+  DESTINATION bin)
