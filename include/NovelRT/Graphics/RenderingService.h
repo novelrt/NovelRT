@@ -9,6 +9,10 @@
 
 namespace NovelRT::Graphics {
   class RenderingService {
+    friend class ImageRect;
+    friend class TextRect;
+    friend class Texture;
+    friend class FontSet;
   private:
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
@@ -22,7 +26,13 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::unique_ptr<Camera> _camera;
 
+    std::map<Atom, std::weak_ptr<Texture>> _textureCache;
+    std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
+
     void bindCameraUboForProgram(GLuint shaderProgramId);
+
+    void handleTexturePreDestruction(Texture* target);
+    void handleFontSetPreDestruction(FontSet* target);
 
   public:
     RenderingService(NovelRunner* const runner);
@@ -32,6 +42,8 @@ namespace NovelRT::Graphics {
 
     std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 
+    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+
     std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig);
 
     std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
@@ -40,6 +52,9 @@ namespace NovelRT::Graphics {
 
     void beginFrame() const;
     void endFrame() const;
+
+    std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
+    std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
   };
 }
 

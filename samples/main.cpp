@@ -12,7 +12,7 @@ extern "C"
 
 lua_State* L;
 
-static int average(lua_State *luaState) {
+static int average(lua_State* luaState) {
   int n = lua_gettop(luaState);
   double sum = 0;
   for (int i = 1; i <= n; i++)
@@ -41,7 +41,15 @@ std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
 std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
-int main(int argc, char *argv[])
+#ifdef TEST_ANIM
+std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
+std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
+
+bool shouldBeInIdle = true;
+
+#endif
+
+int main(int argc, char* argv[])
 {
   std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
   std::filesystem::path resourcesDirPath = executableDirPath / "Resources";
@@ -61,48 +69,93 @@ int main(int argc, char *argv[])
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
   auto audio = runner.getAudioService();
-  audio->initializeAudio();
+  audio.lock()->initializeAudio();
   //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
   //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
 
+#ifdef TEST_ANIM
+  auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
+  auto idleState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
+  idleState->setShouldLoop(true);
+  auto idleFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
+
+  for (int32_t i = 0; i < 10; i++) {
+    auto frame = NovelRT::Animation::SpriteAnimatorFrame();
+    frame.setDuration(0.1f);
+    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "idle" / ("0-" + std::to_string(i) + ".png")).string()));
+    idleFrames.push_back(frame);
+  }
+
+  idleFrames.back().FrameExit += [] { shouldBeInIdle = false; };
+
+  idleState->insertNewState(movingState, std::vector<std::function<bool()>> {[] { return !shouldBeInIdle;  }});
+
+  idleState->setFrames(idleFrames);
+
+
+  movingState->setShouldLoop(true);
+  movingState->insertNewState(idleState, std::vector<std::function<bool()>> {[] {return shouldBeInIdle;  }});
+
+  auto movingFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
+
+  for (int32_t i = 0; i < 5; i++) {
+    auto frame = NovelRT::Animation::SpriteAnimatorFrame();
+    frame.setDuration(0.1f);
+    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "right" / ("100-" + std::to_string(i) + ".png")).string()));
+    movingFrames.push_back(frame);
+  }
+
+  movingFrames.back().FrameExit += [] { shouldBeInIdle = true; };
+
+  movingState->setFrames(movingFrames);
+
+
+
+  auto animTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1500, 900), 2, NovelRT::Maths::GeoVector<float>(95 * 2, 98 * 2));
+  animRect = runner.getRenderer().lock()->createImageRect(animTransform, 3, NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
+  testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
+  testAnim->insertNewState(idleState);
+
+#endif
+
   auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector<float>(456, 618));
 
-  novelChanRect = runner.getRenderer()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+  novelChanRect = runner.getRenderer().lock()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
   auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
 
-  textRect = runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, (fontsDirPath / "Gayathri-Regular.ttf").string());
+  textRect = runner.getRenderer().lock()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, (fontsDirPath / "Gayathri-Regular.ttf").string());
   textRect->setText("RubyGnomer");
 
   auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
-  lineRect = runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+  lineRect = runner.getRenderer().lock()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
 
   auto myTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1, 1), 0.0f, NovelRT::Maths::GeoVector<float>(200, 300));
-  myBasicFillRect = runner.getRenderer()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+  myBasicFillRect = runner.getRenderer().lock()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
-  playAudioButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+  playAudioButton = runner.getRenderer().lock()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
   playAudioTextTransform.setScale(NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
   auto vec = playButtonTransform.getPosition();
   vec.setX(playButtonTransform.getPosition().getX() - 75);
   playAudioTextTransform.setPosition(vec);
-  playAudioText = runner.getRenderer()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, (fontsDirPath / "Gayathri-Regular.ttf").string());
+  playAudioText = runner.getRenderer().lock()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, (fontsDirPath / "Gayathri-Regular.ttf").string());
   playAudioText->setText("Play Audio");
 
   auto theRealMvpTransform = playButtonTransform;
   auto whatever = playButtonTransform.getPosition();
   whatever.setX(whatever.getX() + 50);
   theRealMvpTransform.setPosition(whatever);
-  
-  memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
 
-  playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
+  memeInteractionRect = runner.getInteractionService().lock()->createBasicInteractionRect(theRealMvpTransform, -1);
+
+  playAudioButtonTwoElectricBoogaloo = runner.getRenderer().lock()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
 
-  runner.getDebugService()->setIsFpsCounterVisible(true);
+  runner.getDebugService().lock()->setIsFpsCounterVisible(true);
 
   runner.Update += [](double delta) {
     const float rotationAmount = 45.0f;
@@ -119,7 +172,7 @@ int main(int argc, char *argv[])
     novelChanRect->getTransform().setRotation(rotation);
   };
 
-  interactionRect = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
+  interactionRect = runner.getInteractionService().lock()->createBasicInteractionRect(playButtonTransform, 2);
   memeInteractionRect->setSubscribedKey(NovelRT::Input::KeyCode::LeftMouseButton);
   interactionRect->setSubscribedKey(NovelRT::Input::KeyCode::RightMouseButton);
 
@@ -133,6 +186,17 @@ int main(int argc, char *argv[])
   interactionRect->Interacted += [&loggingLevel, &console, &audio] {
     console.log("Test button!", loggingLevel);
     //audio->playSound(jojo, 0);
+
+#ifdef TEST_ANIM
+    switch (testAnim->getCurrentPlayState()) {
+    case NovelRT::Animation::AnimatorPlayState::Playing:
+      testAnim->stop();
+      break;
+    case NovelRT::Animation::AnimatorPlayState::Stopped:
+      testAnim->play();
+      break;
+    }
+#endif
   };
 
   runner.SceneConstructionRequested += [] {
@@ -151,12 +215,17 @@ int main(int argc, char *argv[])
     interactionRect->executeObjectBehaviour();
 
     novelChanRect->executeObjectBehaviour();
+
+#ifdef TEST_ANIM
+    animRect->executeObjectBehaviour();
+#endif
+
     textRect->executeObjectBehaviour();
     myBasicFillRect->executeObjectBehaviour();
     lineRect->executeObjectBehaviour();
   };
 
-  runner.getDotNetRuntimeService()->initialize();
+  runner.getDotNetRuntimeService().lock()->initialize();
   //audio->playMusic(bgm, -1);
 
   runner.runNovel();

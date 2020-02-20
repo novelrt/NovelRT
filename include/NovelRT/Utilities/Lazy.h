@@ -33,6 +33,11 @@ namespace NovelRT::Utilities {
       _isCreated = false;
     }
 
+    void reset(T newExplicitValue) {
+      _isCreated = true;
+      _actual = newExplicitValue;
+    }
+
     bool isCreated() const {
       return _isCreated;
     }
@@ -60,6 +65,10 @@ namespace NovelRT::Utilities {
       _actual = nullptr;
     }
 
+    void reset(T* newExplicitValue) {
+      _actual.reset(newExplicitValue);
+    }
+
     bool isCreated() const {
       return _actual != nullptr;
     }
@@ -85,6 +94,10 @@ namespace NovelRT::Utilities {
 
     void reset() {
       _actual = nullptr;
+    }
+
+    void reset(T* newExplicitValue) {
+      _actual.reset(newExplicitValue);
     }
 
     bool isCreated() const {
