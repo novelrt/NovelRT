@@ -13,5 +13,6 @@ add_dependency_outputs(NovelRT_Samples ${_output_files_list})
 
 mark_as_advanced(_output_files_list)
 
-install(FILES ${_output_files_list}
-  DESTINATION bin)
+install(
+  TARGETS NovelRT_Samples
+  RUNTIME DESTINATION bin)

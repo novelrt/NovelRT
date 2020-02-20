@@ -94,7 +94,7 @@ if(NOVELRT_SUPPORT_DOTNET)
 
   install(
     FILES ${_dotnet_output_files_list}
-    DESTINATION lib)
+    DESTINATION bin)
 endif()
 
 install(

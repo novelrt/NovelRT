@@ -25,8 +25,7 @@ if(NOT EXISTS ${_vcpkg_install_command})
 endif()
 
 execute_process(
-  COMMAND ${_vcpkg_install_command} install ${vcpkg_FIND_COMPONENTS}
-  OUTPUT_QUIET)
+  COMMAND ${_vcpkg_install_command} install ${vcpkg_FIND_COMPONENTS})
 
 include(${_vcpkg_toolchain})
 
