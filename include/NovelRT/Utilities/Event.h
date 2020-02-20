@@ -11,17 +11,15 @@ namespace NovelRT::Utilities {
   template<typename... TArgs>
   class EventHandler {
   private:
-    static std::atomic_uintptr_t _nextId;
-
-    uintptr_t _id;
+    Atom _id;
     std::function<void(TArgs...)> _function;
 
   public:
     EventHandler() : EventHandler(nullptr) {
     }
 
-    EventHandler(const std::function<void(TArgs...)>& function) :
-      _id((function != nullptr) ? _nextId++ : 0),
+    explicit EventHandler(const std::function<void(TArgs...)>& function) :
+      _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
       _function(function) {
     }
 
@@ -29,7 +27,7 @@ namespace NovelRT::Utilities {
       _function(std::forward<TArgs>(args)...);
     }
 
-    uintptr_t getId() const {
+    Atom getId() const {
       return _id;
     }
 
@@ -41,8 +39,6 @@ namespace NovelRT::Utilities {
       return _id != other._id;
     }
   };
-
-  template <typename... TArgs> std::atomic_uintptr_t EventHandler<TArgs...>::_nextId(1);
 
   template<typename... TArgs>
   class Event {
@@ -58,18 +54,18 @@ namespace NovelRT::Utilities {
     }
 
     void operator+=(const EventHandler<TArgs...>& handler) {
-      if (handler.getId() != 0) {
+      if (handler.getId() != Atom()) {
         _handlers.emplace_back(handler);
       }
     }
 
     void operator+=(const std::function<void(TArgs...)>& function) {
-      EventHandler<TArgs...> handler = function;
+      auto handler = EventHandler<TArgs...>(function);
       *this += handler;
     }
 
     void operator-=(const EventHandler<TArgs...>& handler) {
-      if (handler.getId() == 0)
+      if (handler.getId() == Atom())
         return;
 
       auto match = std::find(_handlers.cbegin(), _handlers.cend(), handler);
