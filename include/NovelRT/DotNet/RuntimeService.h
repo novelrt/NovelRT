@@ -27,11 +27,7 @@ namespace NovelRT::DotNet {
       std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
       std::filesystem::path assemblyPath = executableDirPath / assemblyName;
 
-#if defined(WIN32)
       const char_t* assembly_path = assemblyPath .c_str();
-#else
-      const char_t* assembly_path = assemblyPath.string().c_str();
-#endif
 
       void* delegate;
       int result = _load_assembly_and_get_function_pointer.getActual()(assembly_path, typeName, methodName, delegateTypeName, nullptr, &delegate);

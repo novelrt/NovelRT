@@ -66,11 +66,7 @@ namespace NovelRT::DotNet {
       std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
       std::filesystem::path runtimeConfigJsonPath = executableDirPath / "NovelRT.DotNet.runtimeconfig.json";
 
-#if defined(WIN32)
       const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
-#else
-      const char_t* runtime_config_path = runtimeConfigJsonPath.string().c_str();
-#endif
 
       _logger.logInfo("Initializing the runtime using: " + runtimeConfigJsonPath.string());
 
