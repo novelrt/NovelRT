@@ -19,7 +19,8 @@ execute_process(
   OUTPUT_VARIABLE _NovelRT_DotNet_InputFiles)
 string(STRIP "${_NovelRT_DotNet_InputFiles}" _NovelRT_DotNet_InputFiles)
 
-list(TRANSFORM _NovelRT_DotNet_OutputFiles PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
+list(TRANSFORM _NovelRT_DotNet_InputFiles PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
+list(TRANSFORM _NovelRT_DotNet_InputFiles REPLACE "[\\]" "/")
 
 execute_process(
   COMMAND dotnet msbuild ${NOVELRT_DOTNET_CSPROJ} /noLogo /target:CMakeGetOutputFiles /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}
@@ -28,6 +29,7 @@ string(STRIP "${_NovelRT_DotNet_OutputFiles}" _NovelRT_DotNet_OutputFiles)
 
 list(APPEND _NovelRT_DotNet_OutputFiles NovelRT.DotNet.runtimeconfig.json)
 list(TRANSFORM _NovelRT_DotNet_OutputFiles PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+list(TRANSFORM _NovelRT_DotNet_OutputFiles REPLACE "[\\]" "/")
 
 mark_as_advanced(_NovelRT_DotNet_InputFiles _NovelRT_DotNet_OutputFiles)
 
