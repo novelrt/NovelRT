@@ -23,6 +23,7 @@ namespace NovelRT::Windowing {
     bool _isTornDown;
 
     void errorCallback(int, const char* error);
+    void checkForOptimus();
 
   public:
     explicit WindowingService(NovelRunner* const runner);
