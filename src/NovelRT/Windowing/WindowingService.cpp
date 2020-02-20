@@ -24,7 +24,14 @@ namespace NovelRT::Windowing {
     float wData = displayData->width * 0.7f;
     float hData = displayData->height * 0.7f;
 
-    checkForOptimus();
+    //Check is only for Windows - stays inside definition checks
+#if defined(_WIN64)
+      static const char* OptimusLibraryName = "nvapi64.dll";
+      checkForOptimus(OptimusLibraryName);
+#elif defined(_WIN32)
+      static const char* OptimusLibraryName = "nvapi.dll";
+      checkForOptimus(OptimusLibraryName);
+#endif
 
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
 
@@ -116,24 +123,25 @@ namespace NovelRT::Windowing {
 
   }
 
-  void WindowingService::checkForOptimus() {
-  #if defined (_WIN64)
-    auto optimus = LoadLibrary("nvapi64.dll");
-  #elif defined (_WIN32)
-    auto optimus = LoadLibrary("nvapi.dll");
-  #endif
+  void WindowingService::checkForOptimus(const char* library) {
+    optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
     } else {
-      _logger.logWarningLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+      _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
     }
   }
 
   void WindowingService::tearDown() {
     if (_isTornDown) return;
+#if defined(_WIN64) || defined(_WIN32)
+    if (optimus != nullptr) {
+      FreeLibrary(optimus);
+    }
+#endif
 
     _isTornDown = true;
-
+    
     glfwDestroyWindow(getWindow());
   }
 }
