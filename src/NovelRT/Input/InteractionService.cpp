@@ -6,8 +6,12 @@ namespace NovelRT::Input {
   InteractionService::InteractionService(NovelRunner* const runner) :
     _runner(runner),
     _clickTarget(nullptr),
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT))
-  {}
+    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
+    auto ptr = _runner->getWindowingService();
+    if(!ptr.expired()) ptr.lock()->WindowResized += [this](auto value) {
+      setScreenSize(value);
+    };
+  }
 
   void InteractionService::validateIfKeyCached(KeyCode code) {
     auto result = _keyStates.find(code);
@@ -44,7 +48,7 @@ namespace NovelRT::Input {
 
       if (result == _keyStates.end()) continue;
       processKeyState(result->first, result->second);
-    }   
+    }
   }
 
   void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
