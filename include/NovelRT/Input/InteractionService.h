@@ -40,7 +40,7 @@ namespace NovelRT::Input {
       _screenSize = value;
     }
 
-    inline KeyState getKeyState(KeyCode value) noexcept {
+    inline KeyState getKeyState(KeyCode value) const noexcept {
       auto it = _keyStates.find(value);
       if (it != _keyStates.end()) {
         return it->second;
