@@ -115,7 +115,7 @@ try {
 
     $env:PATH="$DotNetInstallDirectory;$env:PATH"
 
-    & dotnet | Out-Null
+    & dotnet help | Out-Null
   }
 
   if ($generate) {
