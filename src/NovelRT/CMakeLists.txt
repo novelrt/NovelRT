@@ -83,18 +83,20 @@ endif()
 
 copy_dependency_outputs(NovelRT NovelRT_Resources _resource_output_files_list)
 add_dependency_outputs(NovelRT ${_resource_output_files_list})
+install_dependency_outputs(
+  FILES ${_resource_output_files_list}
+  DESTINATION bin)
 
 mark_as_advanced(_resource_output_files_list)
 
 if(NOVELRT_SUPPORT_DOTNET)
   copy_dependency_outputs(NovelRT NovelRT_DotNet _dotnet_output_files_list)
   add_dependency_outputs(NovelRT ${_dotnet_output_files_list})
-
-  mark_as_advanced(_resource_output_files_list)
-
-  install(
+  install_dependency_outputs(
     FILES ${_dotnet_output_files_list}
     DESTINATION bin)
+
+  mark_as_advanced(_resource_output_files_list)
 endif()
 
 if(NOVELRT_GENERATOR_IS_MULTI_CONFIG)
@@ -102,10 +104,6 @@ if(NOVELRT_GENERATOR_IS_MULTI_CONFIG)
 else()
   add_dependency_outputs(NovelRT "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}NovelRT${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
-
-install(
-  DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Resources"
-  DESTINATION bin)
 
 install(
   TARGETS NovelRT
