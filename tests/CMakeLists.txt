@@ -7,6 +7,8 @@ endif()
 
 set(NovelRT_Tests_SRCS
 
+Animation/SpriteAnimatorStateTest.cpp
+
 Maths/QuadTreeTest.cpp
 
 Utilities/EventTest.cpp

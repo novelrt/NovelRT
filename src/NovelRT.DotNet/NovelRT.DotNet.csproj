@@ -8,8 +8,7 @@
     <None Update="NovelRT.DotNet.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!-- Make sure our compile itemgroup doesn't include any assembly info stuff -->
-  <Target Name="CMakeGetInputFiles" BeforeTargets="GenerateAssemblyInfo">
+  <Target Name="CMakeGetInputFiles">
     <Message Text="@(Compile)" Importance="high" />
   </Target>
 

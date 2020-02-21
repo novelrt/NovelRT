@@ -12,6 +12,9 @@ option(NOVELRT_SUPPORT_LUA "Build Lua support" ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 17)
 
+get_property(NOVELRT_GENERATOR_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+mark_as_advanced(NOVELRT_GENERATOR_IS_MULTI_CONFIG)
+
 find_package(vcpkg REQUIRED
   COMPONENTS freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft
   spdlog gtest)

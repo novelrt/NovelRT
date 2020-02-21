@@ -1,22 +1,34 @@
 function(copy_dependency_outputs target dependency)
-  get_target_property(output_files_list ${dependency} COPY_FILES)
-  get_target_property(output_binary_dir ${dependency} BINARY_DIR)
+  get_target_property(dependency_files_list ${dependency} COPY_FILES)
+  get_target_property(dependency_binary_dir ${dependency} BINARY_DIR)
 
   string(REPLACE "${CMAKE_BINARY_DIR}/" "" local_path "${CMAKE_CURRENT_BINARY_DIR}")
 
-  foreach(input ${output_files_list})
-    string(REPLACE "${output_binary_dir}" "" output ${input})
+  foreach(input ${dependency_files_list})
+    if(NOVELRT_GENERATOR_IS_MULTI_CONFIG)
+      string(REPLACE "${dependency_binary_dir}/" "" output "${input}")
+      string(REPLACE "${CMAKE_CFG_INTDIR}/" "" output "${output}")
 
-    list(APPEND outputs ${CMAKE_CURRENT_BINARY_DIR}${output})
+      list(APPEND outputs "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${output}")
 
-    add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}${output}
-      COMMAND ${CMAKE_COMMAND} -E copy ${input} ${CMAKE_CURRENT_BINARY_DIR}${output}
-      COMMENT "Generating ${local_path}${output}")
+      add_custom_command(
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${output}"
+        COMMAND ${CMAKE_COMMAND} -E copy "${input}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${output}"
+        COMMENT "Generating ${local_path}/${CMAKE_CFG_INTDIR}/${output}")
+    else()
+      string(REPLACE "${dependency_binary_dir}/" "" output "${input}")
+
+      list(APPEND outputs "${CMAKE_CURRENT_BINARY_DIR}/${output}")
+
+      add_custom_command(
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${output}"
+        COMMAND ${CMAKE_COMMAND} -E copy "${input}" "${CMAKE_CURRENT_BINARY_DIR}/${output}"
+        COMMENT "Generating ${local_path}/${output}")
+    endif()
   endforeach()
 
   add_custom_target("${target}_copy_outputs_from_${dependency}"
-    DEPENDS ${outputs})
+    DEPENDS "${outputs}")
 
   add_dependencies("${target}_copy_outputs_from_${dependency}" ${dependency})
   add_dependencies(${target} "${target}_copy_outputs_from_${dependency}")
