@@ -17,7 +17,10 @@
 #include <limits>
 #include <map>
 #include <memory>
+#include <queue>
+#include <set>
 #include <sstream>
+#include <stack>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -96,6 +99,11 @@ namespace NovelRT::Input {
   typedef class InteractionService InteractionService;
 }
 
+namespace NovelRT::SceneGraph {
+  typedef class Scene Scene;
+  typedef class SceneNode SceneNode;
+}
+
 namespace NovelRT::Timing {
   typedef class StepTimer StepTimer;
 }
@@ -159,5 +167,9 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
+
+// Scene Graph types
+#include "NovelRT/SceneGraph/SceneNode.h"
+#include "NovelRT/SceneGraph/Scene.h"
 
 #endif //!NOVELRT_H
