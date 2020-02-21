@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
 
   runner.getDebugService().lock()->setIsFpsCounterVisible(true);
 
-  runner.Update += [](double delta) {
+  runner.Update += [&runner, &console](double delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
@@ -170,6 +170,10 @@ int main(int argc, char* argv[])
     }
 
     novelChanRect->getTransform().setRotation(rotation);
+
+    if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) != NovelRT::Input::KeyState::Idle) {
+      console.logInfoLine("W is not idle!");
+    }
   };
 
   interactionRect = runner.getInteractionService().lock()->createBasicInteractionRect(playButtonTransform, 2);
