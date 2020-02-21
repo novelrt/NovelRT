@@ -39,6 +39,15 @@ namespace NovelRT::Input {
     inline void setScreenSize(const Maths::GeoVector<float>& value) {
       _screenSize = value;
     }
+
+    inline KeyState getKeyState(KeyCode value) noexcept {
+      auto it = _keyStates.find(value);
+      if (it != _keyStates.end()) {
+        return it->second;
+      }
+
+      return KeyState::Idle;
+    }
   };
 }
 
