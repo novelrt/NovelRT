@@ -82,7 +82,7 @@ namespace NovelRT::SceneGraph {
     std::stack<std::shared_ptr<SceneNode>> _pendingNodes;
     std::set<std::shared_ptr<SceneNode>> _visitedNodes;
 
-    T _currentResult;
+    T _value;
 
   public:
     using iterator_category = std::output_iterator_tag;
@@ -100,7 +100,7 @@ namespace NovelRT::SceneGraph {
     }
 
     const_reference operator*() const {
-      return _currentResult;
+      return _value;
     }
 
     const_pointer operator->() const {
@@ -109,7 +109,7 @@ namespace NovelRT::SceneGraph {
 
     depth_first_traversal_result_iterator& operator++() {
       auto node = _pendingNodes.top();
-      _currentResult = _function(node);
+      _value = _function(node);
       _pendingNodes.pop();
 
       for (auto child : node->getChildren()) {
