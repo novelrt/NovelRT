@@ -111,9 +111,11 @@ namespace NovelRT {
   }
 
   void LoggingService::logInternal(const std::string& message, LogLevel level) {
-  #ifndef NDEBUG
+#ifndef NDEBUG
     log(message, level);
-  #endif
+#else
+    unused(message); unused(level);
+#endif
   }
 
   void LoggingService::setLogLevel(LogLevel level) {

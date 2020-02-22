@@ -49,10 +49,10 @@ static void closeNativeLibrary(void* nativeLibrary)
 {
 #if defined(_WIN32)
   BOOL result = FreeLibrary(static_cast<HMODULE>(nativeLibrary));
-  assert(result != FALSE);
+  assert(result != FALSE); unused(result);
 #else
   int result = dlclose(nativeLibrary);
-  assert(result == 0);
+  assert(result == 0); unused(result);
 #endif
 }
 
@@ -127,7 +127,7 @@ namespace NovelRT::DotNet {
     if (_hostContextHandle.isCreated())
     {
       int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
-      assert(result == 0);
+      assert(result == 0); unused(result);
     }
 
     if (_hostfxr.isCreated())
