@@ -49,6 +49,10 @@ namespace NovelRT::Animation {
         _accumulatedDelta += static_cast<float>(delta);
         break;
       }
+
+      default:
+        assert((_animatorState == AnimatorPlayState::Stopped) || (_animatorState == AnimatorPlayState::Paused));
+        break;
     }
   }
 
