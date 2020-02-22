@@ -3,7 +3,8 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Audio {
-AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
+AudioService::AudioService() :
+  _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
       _logger.logError("OpenAL device creation failed!", getALError());
@@ -21,8 +22,15 @@ AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice
   }), [](auto x) {
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(x);
-  })), isInitialised(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
-    _musicSource(), _musicSourceState(0), _soundSource(), _soundSourceState(0) {
+  })),
+  isInitialised(false),
+  _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+  _musicSource(),
+  _musicSourceState(0),
+  _soundSource(),
+  _soundSourceState(0),
+  _soundLoopAmount(0),
+  _musicLoopAmount(0) {
 }
 
 bool AudioService::initializeAudio() {
@@ -59,7 +67,7 @@ ALuint AudioService::readFile(std::string input) {
 
   ALuint buffer;
   alGenBuffers(1, &buffer);
-  alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(), data.size() * sizeof(uint16_t), info.samplerate);
+  alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(), static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
   sf_close(file);
   return buffer;
 }
@@ -319,7 +327,7 @@ std::string AudioService::getALError() {
       return std::string("The requested operation resulted in OpenAL running out of memory.");
     }
     default: {
-      return nullptr;
+      return std::string("");
     }
   }
 }

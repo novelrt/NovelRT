@@ -6,7 +6,8 @@ namespace NovelRT::Graphics {
   FontSet::FontSet(std::weak_ptr<RenderingService> renderer, Atom id) noexcept :
     _renderer(renderer),
     _id(id),
-    _fontFile("") {
+    _fontFile(""),
+    _fontSize(0) {
 
   }
 
@@ -31,7 +32,7 @@ namespace NovelRT::Graphics {
       _logger.logError("FREETYPE - Failed to load font: ", file);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, fontSize);
+    FT_Set_Pixel_Sizes(face, 0, static_cast<FT_UInt>(fontSize));
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 

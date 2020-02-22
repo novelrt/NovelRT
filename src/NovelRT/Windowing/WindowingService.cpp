@@ -9,7 +9,8 @@ namespace NovelRT::Windowing {
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
     _runner(runner),
-    _isTornDown(false) {
+    _isTornDown(false),
+    _optimus() {
   }
 
   void WindowingService::errorCallback(int, const char* error) {
@@ -21,8 +22,8 @@ namespace NovelRT::Windowing {
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
     // create window
-    float wData = displayData->width * 0.7f;
-    float hData = displayData->height * 0.7f;
+    auto wData = static_cast<int32_t>(displayData->width * 0.7f);
+    auto hData = static_cast<int32_t>(displayData->height * 0.7f);
 
     //Check is only for Windows - stays inside definition checks
 #if defined(_WIN64)
@@ -97,10 +98,10 @@ namespace NovelRT::Windowing {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
-      thisPtr->_windowSize = Maths::GeoVector<float>(w, h);
+      thisPtr->_windowSize = Maths::GeoVector<float>(static_cast<float>(w), static_cast<float>(h));
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
       thisPtr->WindowResized(thisPtr->_windowSize); });
-    _windowSize = Maths::GeoVector<float>(wData, hData);
+    _windowSize = Maths::GeoVector<float>(static_cast<float>(wData), static_cast<float>(hData));
 
     glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
@@ -125,8 +126,8 @@ namespace NovelRT::Windowing {
 
   void WindowingService::checkForOptimus(const char* library) {
 #if defined(_WIN64) || defined(_WIN32)
-    optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
-    if (optimus != nullptr) {
+    _optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
+    if (_optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
     } else {
       _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
@@ -139,8 +140,8 @@ namespace NovelRT::Windowing {
   void WindowingService::tearDown() {
     if (_isTornDown) return;
 #if defined(_WIN64) || defined(_WIN32)
-    if (optimus != nullptr) {
-      FreeLibrary(optimus);
+    if (_optimus != nullptr) {
+      FreeLibrary(_optimus);
     }
 #endif
 

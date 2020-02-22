@@ -65,7 +65,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _camera->forceResize(windowSize);
-      glViewport(0, 0, windowSize.getX(), windowSize.getY());
+      glViewport(0, 0, static_cast<GLsizei>(windowSize.getX()), static_cast<GLsizei>(windowSize.getY()));
     }
 
     return true;
@@ -122,7 +122,7 @@ namespace NovelRT::Graphics {
     glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
     if (infoLogLength > 0) {
-      std::vector<char> vertexShaderErrorMessage(infoLogLength + 1);
+      std::vector<char> vertexShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&vertexShaderErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
@@ -138,7 +138,7 @@ namespace NovelRT::Graphics {
     glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &Result);
     if (Result != GL_TRUE) {
       glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
-      std::vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
+      std::vector<char> fragmentShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
       _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
@@ -155,7 +155,7 @@ namespace NovelRT::Graphics {
     glGetProgramiv(programId, GL_LINK_STATUS, &Result);
     if (Result != GL_TRUE) {
       glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
-      std::vector<char> ProgramErrorMessage(infoLogLength + 1);
+      std::vector<char> ProgramErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the specified error in the shader program.");
