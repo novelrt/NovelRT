@@ -147,7 +147,7 @@ namespace NovelRT {
     throw std::runtime_error(exceptionMessage);
   }
 
-  void LoggingService::throwIfNotZero(errno_t error, const std::string& exceptionMessage)
+  void LoggingService::throwIfNotZero(int32_t error, const std::string& exceptionMessage)
   {
     if (error == 0) return;
     logError(exceptionMessage);
