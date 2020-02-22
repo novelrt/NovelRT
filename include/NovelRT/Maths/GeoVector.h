@@ -59,6 +59,18 @@ namespace NovelRT::Maths {
       _value.y = value;
     }
 
+    inline GeoVector<T> getNormalised() const noexcept {
+      return GeoVector<T>(glm::normalize(getVec2Value()));
+    }
+
+    inline float getMagnitude() const noexcept {
+      return glm::length(getVec2Value());
+    }
+
+    inline float getLength() const noexcept {
+      return getMagnitude();
+    }
+
     inline bool operator==(const GeoVector<T>& other) const {
       return getVec2Value() == other.getVec2Value();
     }
@@ -99,8 +111,20 @@ namespace NovelRT::Maths {
       return GeoVector<T>(getVec2Value() / other);
     }
 
-    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) {
+    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) noexcept {
       setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
+    }
+
+    bool epsilonEquals(const GeoVector<T>& other, const GeoVector<T>& epsilonValue) const noexcept {
+      return glm::all(glm::equal(getVec2Value(), other.getVec2Value(), epsilonValue.getVec2Value()));
+    }
+
+    static const GeoVector<T> zero() {
+      return GeoVector<T>(0, 0);
+    }
+
+    static GeoVector<T> one() {
+      return GeoVector<T>(1, 1);
     }
   };
 }
