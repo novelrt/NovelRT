@@ -228,7 +228,7 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
     alSourceStop(_musicSource);
     alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
   }
-  alSourcei(_musicSource, AL_BUFFER, *handle);
+  alSourcei(_musicSource, AL_BUFFER, static_cast<ALint>(*handle));
   if (loops == -1 || loops > 0)
   {
     _musicLoopAmount = loops;
