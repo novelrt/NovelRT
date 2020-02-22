@@ -14,7 +14,7 @@ namespace NovelRT::Graphics {
     GLuint finalViewMatrixBufferUboId = 0;
     std::vector<GLuint> uboIds;
 
-    ShaderProgram() {};
+    ShaderProgram() {}
   };
 }
 

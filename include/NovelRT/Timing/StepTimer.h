@@ -83,11 +83,11 @@ namespace NovelRT::Timing {
     }
 
     static double TicksToSeconds(uint64_t ticks) {
-      return (double)ticks / TicksPerSecond;
+      return static_cast<double>(ticks) / TicksPerSecond;
     }
 
     static uint64_t SecondsToTicks(double seconds) {
-      return (uint64_t)(seconds * TicksPerSecond);
+      return static_cast<uint64_t>(seconds * TicksPerSecond);
     }
 
     void resetElapsedTime();

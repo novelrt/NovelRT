@@ -19,7 +19,7 @@ namespace NovelRT::Windowing {
     _logger.logError("Could not initialize GLFW: ", error);
   }
 
-  void WindowingService::initialiseWindow(int displayNumber, const std::string& windowTitle) {
+  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -43,7 +43,7 @@ namespace NovelRT::Windowing {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
 
-    auto window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
+    auto window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
 
     if (window == nullptr)
     {
@@ -55,7 +55,7 @@ namespace NovelRT::Windowing {
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
       glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
 
-      window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
+      window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
 
       if (window == nullptr)
       {
@@ -73,11 +73,12 @@ namespace NovelRT::Windowing {
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 
-        window = glfwCreateWindow(wData, hData, _windowTitle.c_str(), nullptr, nullptr);
+        window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
         _logger.throwIfNullPtr(window, "Failed to create OpenGL v4.3 context using native API");
       }
     }
 
+    _windowTitle = windowTitle;
     _logger.logInfo("Window succesfully created.");
 
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
@@ -88,16 +89,16 @@ namespace NovelRT::Windowing {
     glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
 
 
-    glfwSetWindowCloseCallback(_window.get(), [](auto window) {
-      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+    glfwSetWindowCloseCallback(_window.get(), [](auto targetWindow) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->tearDown();
       thisPtr->WindowTornDown();
       });
 
-    glfwSetWindowSizeCallback(_window.get(), [](auto window, auto w, auto h) {
-      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+    glfwSetWindowSizeCallback(_window.get(), [](auto targetWindow, auto w, auto h) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->_windowSize = Maths::GeoVector<float>(static_cast<float>(w), static_cast<float>(h));
@@ -105,19 +106,19 @@ namespace NovelRT::Windowing {
       thisPtr->WindowResized(thisPtr->_windowSize); });
     _windowSize = Maths::GeoVector<float>(static_cast<float>(wData), static_cast<float>(hData));
 
-    glfwSetMouseButtonCallback(_window.get(), [](auto window, auto mouseButton, auto action, auto mods) {
-      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+    glfwSetMouseButtonCallback(_window.get(), [](auto targetWindow, auto mouseButton, auto action, auto /*mods*/) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       double x = 0, y = 0;
-      glfwGetCursorPos(window, &x, &y);
+      glfwGetCursorPos(targetWindow, &x, &y);
       thisPtr->_runner->getInteractionService().lock()->acceptMouseButtonClickPush(mouseButton, action, Maths::GeoVector<float>(static_cast<float>(x), static_cast<float>(y)));
       });
 
 
 
-    glfwSetKeyCallback(_window.get(), [](auto window, auto key, auto scancode, auto action, auto mods) {
-      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(window));
+    glfwSetKeyCallback(_window.get(), [](auto targetWindow, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
+      auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
       thisPtr->_runner->getInteractionService().lock()->acceptKeyboardInputBindingPush(key, action);
@@ -126,18 +127,16 @@ namespace NovelRT::Windowing {
 
   }
 
-  void WindowingService::checkForOptimus(const char* library) {
 #if defined(_WIN64) || defined(_WIN32)
+  void WindowingService::checkForOptimus(const char* library) {
     _optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (_optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
     } else {
       _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
     }
-#else
-    return;
-#endif
   }
+#endif
 
   void WindowingService::tearDown() {
     if (_isTornDown) return;

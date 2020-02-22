@@ -23,14 +23,14 @@ AudioService::AudioService() :
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(x);
   })),
-  isInitialised(false),
   _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
   _musicSource(),
   _musicSourceState(0),
+  _musicLoopAmount(0),
   _soundSource(),
   _soundSourceState(0),
   _soundLoopAmount(0),
-  _musicLoopAmount(0) {
+  isInitialised(false) {
 }
 
 bool AudioService::initializeAudio() {
@@ -59,9 +59,9 @@ ALuint AudioService::readFile(std::string input) {
   std::vector<short> readBuffer;
   readBuffer.resize(_bufferSize);
 
-  size_t readSize = 0;
+  sf_count_t readSize = 0;
 
-  while ((readSize = sf_read_short(file, readBuffer.data(), readBuffer.size())) != 0) {
+  while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0) {
     data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
   }
 
@@ -157,7 +157,7 @@ void AudioService::playSound(std::vector<ALuint>::iterator handle, int loops) {
     alSourceStop(_soundSource);
     alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
   }
-  alSourcei(_soundSource, AL_BUFFER, *handle);
+  alSourcei(_soundSource, AL_BUFFER, static_cast<ALint>(*handle));
   if (loops == -1 || loops > 0) {
     _soundLoopAmount = loops;
     alSourcei(_soundSource, AL_LOOPING, AL_TRUE);

@@ -89,7 +89,7 @@ namespace NovelRT {
       case LogLevel::Err:
         _logger->error(message);
         break;
-      default:
+      case LogLevel::Off:
         break;
     }
   }
@@ -132,10 +132,6 @@ namespace NovelRT {
         break;
       case LogLevel::Off:
         _logger->set_level(spdlog::level::level_enum::off);
-        break;
-      default:
-        _logger->set_level(spdlog::level::level_enum::info);
-        _logger->info("Logging level invalid! Defaulting to INFO.");
         break;
     }
   }

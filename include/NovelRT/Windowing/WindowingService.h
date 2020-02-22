@@ -24,10 +24,10 @@ namespace NovelRT::Windowing {
 
 #if defined(_WIN32) || defined(_WIN64)
     HMODULE _optimus;
+    void checkForOptimus(const char* library);
 #endif
 
     void errorCallback(int, const char* error);
-    void checkForOptimus(const char* library);
 
   public:
     explicit WindowingService(NovelRunner* const runner);

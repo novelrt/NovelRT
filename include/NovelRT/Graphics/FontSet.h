@@ -11,9 +11,9 @@ namespace NovelRT::Graphics {
     friend class TextRect;
     friend class RenderingService;
   private:
+    std::weak_ptr<RenderingService> _renderer;
     Atom _id;
     float _fontSize;
-    std::weak_ptr<RenderingService> _renderer;
     std::vector<GraphicsCharacterRenderData> _characters;
     LoggingService _logger; //not proud of this
     std::string _fontFile;

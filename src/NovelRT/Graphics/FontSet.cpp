@@ -6,8 +6,8 @@ namespace NovelRT::Graphics {
   FontSet::FontSet(std::weak_ptr<RenderingService> renderer, Atom id) noexcept :
     _renderer(renderer),
     _id(id),
-    _fontFile(""),
-    _fontSize(0) {
+    _fontSize(0),
+    _fontFile("") {
 
   }
 
@@ -67,8 +67,8 @@ namespace NovelRT::Graphics {
       // Now store character for later use
       GraphicsCharacterRenderData character = {
           _renderer.lock()->getTexture(),
-          Maths::GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          Maths::GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+          Maths::GeoVector<uint32_t>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+          Maths::GeoVector<int32_t>(face->glyph->bitmap_left, face->glyph->bitmap_top),
           GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
       };
       character.texture->setTextureIdInternal(textureId);
