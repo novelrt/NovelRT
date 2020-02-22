@@ -39,10 +39,10 @@ namespace NovelRT::Graphics {
   }
   void TextRect::setText(const std::string& value) {
     _text = value;
-    int difference = _text.length() - _letterRects.size();
+    auto difference = _text.length() - _letterRects.size();
     auto modifiedTransform = getTransform();
     modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
-    for (int i = 0; i < difference; i++) {
+    for (size_t i = 0; i < difference; i++) {
       auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
           getLayer(),
@@ -73,12 +73,12 @@ namespace NovelRT::Graphics {
       auto& target = _letterRects.at(i++);
       target->setTexture(ch.texture);
       target->getTransform().setPosition(currentWorldPosition);
-      target->getTransform().setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
+      target->getTransform().setScale(Maths::GeoVector<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY())));
       target->setActive(true);
       ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
     }
 
-    if (_letterRects.size() == static_cast<uint32_t>(i) + 1)
+    if (_letterRects.size() == static_cast<size_t>(i) + 1)
       return;
 
     auto beginIt = _letterRects.begin() + i;

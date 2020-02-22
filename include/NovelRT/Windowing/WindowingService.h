@@ -23,7 +23,7 @@ namespace NovelRT::Windowing {
     bool _isTornDown;
 
 #if defined(_WIN64) || defined(_WIN32)
-    HMODULE optimus;
+    HMODULE _optimus;
 #endif
 
     void errorCallback(int, const char* error);
@@ -50,7 +50,7 @@ namespace NovelRT::Windowing {
 
     inline void setWindowSize(const Maths::GeoVector<float>& value) {
       _windowSize = value;
-      glfwSetWindowSize(getWindow(), value.getX(), value.getY());
+      glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.getX()), static_cast<int32_t>(value.getY()));
       WindowResized(_windowSize);
     }
 

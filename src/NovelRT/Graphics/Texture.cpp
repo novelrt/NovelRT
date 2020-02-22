@@ -21,7 +21,8 @@ namespace NovelRT::Graphics {
     _textureFile = file;
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
-    auto cFile = fopen(file.c_str(), "rb");
+    FILE* cFile;
+    _logger.throwIfNotZero(fopen_s(&cFile, file.c_str(), "rb"), "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
     auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr); //TODO: Figure out how the error function ptr works
 
     if (png == nullptr) {
@@ -93,7 +94,7 @@ namespace NovelRT::Graphics {
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
-    for (int i = 0; i < data.height; i++) {
+    for (uint32_t i = 0; i < data.height; i++) {
       data.rowPointers[i] = p;
       p += data.width * bpp;
     }

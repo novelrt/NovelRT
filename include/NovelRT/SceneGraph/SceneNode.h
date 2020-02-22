@@ -244,7 +244,7 @@ namespace NovelRT::SceneGraph {
       });
 
       while ((*result != true) && !result.isEnd()) {
-        result++;
+        ++result;
       }
 
       return *result;

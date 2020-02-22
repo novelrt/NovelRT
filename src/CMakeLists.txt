@@ -20,7 +20,7 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   glm
   OpenAL::OpenAL
   png
-  spdlog::spdlog
+  spdlog::spdlog_header_only
 )
 
 if (WIN32)

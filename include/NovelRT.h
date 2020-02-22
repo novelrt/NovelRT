@@ -3,13 +3,12 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
-//cstdlib
-#include <cmath>
-#include <cstdint>
-
 //stdlib
+#define __STDC_WANT_LIB_EXT1__
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -27,6 +26,11 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
+
+#if defined(_WIN32) || defined(_WIN64)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 
 //Freetype
 #include <ft2build.h>
@@ -55,12 +59,21 @@
 #include <hostfxr.h>
 
 //spdlog
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/async.h"
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  #pragma warning(disable:4275)
+#endif
+
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/async.h>
+
+#if defined(_MSC_VER)
+  #pragma warning(pop)
+#endif
 
 //libpng
-#include "png.h"
+#include <png.h>
 
 namespace NovelRT {
   typedef class Atom Atom;
