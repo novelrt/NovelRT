@@ -98,7 +98,7 @@ namespace NovelRT::Maths {
       for (uint32_t index = 0; index < getPointCount(); index++) {
         auto point = getPoint(index);
         auto result = tryInsert(point);
-        assert(result);
+        assert(result); unused(result);
       }
 
       _pointCount = 0;

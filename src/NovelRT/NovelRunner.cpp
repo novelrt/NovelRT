@@ -8,8 +8,8 @@ namespace NovelRT {
     Update(Utilities::Event<double>()),
     _exitCode(1),
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
-    _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
     _novelDebugService(std::make_shared<DebugService>(this)),
+    _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
     _novelInteractionService(std::make_shared<Input::InteractionService>(this)),
     _novelAudioService(std::make_shared<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
@@ -27,8 +27,6 @@ namespace NovelRT {
   }
 
   int NovelRunner::runNovel() {
-    uint32_t lastFramesPerSecond = 0;
-
     while (_exitCode) {
       _stepTimer.getActual()->tick(Update);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());

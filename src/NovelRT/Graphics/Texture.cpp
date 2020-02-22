@@ -21,7 +21,12 @@ namespace NovelRT::Graphics {
     _textureFile = file;
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
-    auto cFile = fopen(file.c_str(), "rb");
+    FILE* cFile;
+#if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
+    _logger.throwIfNotZero(fopen_s(&cFile, file.c_str(), "rb"), "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+#else
+    cFile = fopen(file.c_str(), "rb");
+#endif
     auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr); //TODO: Figure out how the error function ptr works
 
     if (png == nullptr) {
@@ -70,7 +75,7 @@ namespace NovelRT::Graphics {
 
 
     auto rowBytes = png_get_rowbytes(png, info);
-    auto bpp = (unsigned int)(rowBytes) / data.width;
+    auto bpp = static_cast<uint32_t>(rowBytes) / data.width;
 
     //Allows us to get the final image data, not interlaced.
     png_set_interlace_handling(png);
@@ -79,7 +84,7 @@ namespace NovelRT::Graphics {
     auto pixelBufferAmount = (data.width * data.height * bpp);
     auto rawImage = new unsigned char[pixelBufferAmount]; //We allocate the pixel buffer here.
     if (rawImage == nullptr) {
-      png_destroy_read_struct(&png, &info, (png_infopp)nullptr);
+      png_destroy_read_struct(&png, &info, nullptr);
       fclose(cFile);
       throw std::runtime_error("Couldn't allocate space for PNG!");
     }
@@ -93,7 +98,7 @@ namespace NovelRT::Graphics {
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
-    for (int i = 0; i < data.height; i++) {
+    for (uint32_t i = 0; i < data.height; i++) {
       data.rowPointers[i] = p;
       p += data.width * bpp;
     }

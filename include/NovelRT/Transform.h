@@ -13,9 +13,9 @@ namespace NovelRT {
     Maths::GeoVector<float> _position;
     Maths::GeoVector<float> _scale;
     float _rotation;
-    bool _active;
     int _orderInLayer;
     int _layer;
+    bool _active;
 
   public:
     Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale);

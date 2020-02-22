@@ -42,7 +42,7 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::processMouseStates() {
-    for (int i = (int)KeyCode::FirstMouseButton; i < (int)KeyCode::LastMouseButton; i++) {
+    for (int32_t i = static_cast<int32_t>(KeyCode::FirstMouseButton); i < static_cast<int32_t>(KeyCode::LastMouseButton); i++) {
       auto keyCode = static_cast<KeyCode>(i);
       auto result = _keyStates.find(keyCode);
 

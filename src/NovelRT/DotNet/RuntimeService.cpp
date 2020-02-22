@@ -14,10 +14,8 @@ using namespace NovelRT::Utilities;
 
 #if defined(WIN32)
   #define STR(s) L ## s
-  #define CH(c) L ## c
 #else
   #define STR(s) s
-  #define CH(c) c
 #endif
 
 const auto HostApiBufferTooSmall = 0x80008098;
@@ -51,10 +49,10 @@ static void closeNativeLibrary(void* nativeLibrary)
 {
 #if defined(_WIN32)
   BOOL result = FreeLibrary(static_cast<HMODULE>(nativeLibrary));
-  assert(result != FALSE);
+  assert(result != FALSE); unused(result);
 #else
   int result = dlclose(nativeLibrary);
-  assert(result == 0);
+  assert(result == 0); unused(result);
 #endif
 }
 
@@ -84,7 +82,7 @@ namespace NovelRT::DotNet {
       size_t buffer_size;
       int result = get_hostfxr_path(nullptr, &buffer_size, nullptr);
 
-      if (result != HostApiBufferTooSmall)
+      if (result != static_cast<int>(HostApiBufferTooSmall))
       {
         _logger.logError("Failed to locate hostfxr: ", result);
         throw std::runtime_error("Failed to locate hostfxr");
@@ -129,7 +127,7 @@ namespace NovelRT::DotNet {
     if (_hostContextHandle.isCreated())
     {
       int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
-      assert(result == 0);
+      assert(result == 0); unused(result);
     }
 
     if (_hostfxr.isCreated())

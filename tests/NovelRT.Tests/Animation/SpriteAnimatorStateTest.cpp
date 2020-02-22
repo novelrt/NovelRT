@@ -24,7 +24,7 @@ protected:
 
 void setUpRelationships(std::vector<std::shared_ptr<SpriteAnimatorState>> targets, std::vector<std::function<bool()>> conditions = std::vector<std::function<bool()>>()) {
   for (size_t i = 0; i < targets.size(); i++) {
-    int nextTarget = (i + 1 >= targets.size()) ? 0 : i + 1;
+    auto nextTarget = (i + 1 >= targets.size()) ? 0 : i + 1;
     targets.at(i)->insertNewState(targets.at(nextTarget), conditions);
   }
 }

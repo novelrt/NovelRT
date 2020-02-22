@@ -3,7 +3,8 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Audio {
-AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
+AudioService::AudioService() :
+  _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
       _logger.logError("OpenAL device creation failed!", getALError());
@@ -21,8 +22,15 @@ AudioService::AudioService() : _device(Utilities::Lazy<std::unique_ptr<ALCdevice
   }), [](auto x) {
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(x);
-  })), isInitialised(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
-    _musicSource(), _musicSourceState(0), _soundSource(), _soundSourceState(0) {
+  })),
+  _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+  _musicSource(),
+  _musicSourceState(0),
+  _musicLoopAmount(0),
+  _soundSource(),
+  _soundSourceState(0),
+  _soundLoopAmount(0),
+  isInitialised(false) {
 }
 
 bool AudioService::initializeAudio() {
@@ -51,15 +59,15 @@ ALuint AudioService::readFile(std::string input) {
   std::vector<short> readBuffer;
   readBuffer.resize(_bufferSize);
 
-  size_t readSize = 0;
+  sf_count_t readSize = 0;
 
-  while ((readSize = sf_read_short(file, readBuffer.data(), readBuffer.size())) != 0) {
+  while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0) {
     data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
   }
 
   ALuint buffer;
   alGenBuffers(1, &buffer);
-  alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(), data.size() * sizeof(uint16_t), info.samplerate);
+  alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(), static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
   sf_close(file);
   return buffer;
 }
@@ -149,7 +157,7 @@ void AudioService::playSound(std::vector<ALuint>::iterator handle, int loops) {
     alSourceStop(_soundSource);
     alGetSourcei(_soundSource, AL_SOURCE_STATE, &_soundSourceState);
   }
-  alSourcei(_soundSource, AL_BUFFER, *handle);
+  alSourcei(_soundSource, AL_BUFFER, static_cast<ALint>(*handle));
   if (loops == -1 || loops > 0) {
     _soundLoopAmount = loops;
     alSourcei(_soundSource, AL_LOOPING, AL_TRUE);
@@ -220,7 +228,7 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
     alSourceStop(_musicSource);
     alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
   }
-  alSourcei(_musicSource, AL_BUFFER, *handle);
+  alSourcei(_musicSource, AL_BUFFER, static_cast<ALint>(*handle));
   if (loops == -1 || loops > 0)
   {
     _musicLoopAmount = loops;
@@ -319,7 +327,7 @@ std::string AudioService::getALError() {
       return std::string("The requested operation resulted in OpenAL running out of memory.");
     }
     default: {
-      return nullptr;
+      return std::string("");
     }
   }
 }
