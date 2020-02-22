@@ -6,6 +6,16 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
+
+//class GeoVectorTest : public testing::Test {
+//protected:
+//  GeoVector<float> _testVector;
+//
+//  void SetUp() override {
+//    _testVector = GeoVector<float>::zero();
+//  }
+//};
+
 TEST(GeoVectorTest, staticZeroCallReturnsGeoVectorZero) {
   EXPECT_EQ(GeoVector<float>::zero(), GeoVector<float>(0.0f, 0.0f));
 }
@@ -23,6 +33,11 @@ TEST(GeoVectorTest, geoVectorGetNormalisedReturnsNormalisedGeoVector) {
 TEST(GeoVectorTest, geoVectorGetMagnitudeReturnsCorrectLength) {
   auto vec = GeoVector<float>::one().getNormalised();
   EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2)));
+}
+
+TEST(GeoVectorTest, geoVectorGetLengthReturnsCorrectLength) {
+  auto vec = GeoVector<float>::one().getNormalised();
+  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2)));
 }
 
 TEST(GeoVectorTest, geoVectorRotateToAngleAroundPointRotatesCorrectAmount) {
