@@ -61,14 +61,14 @@ namespace NovelRT::Graphics {
 
     auto ttfOrigin = getTransform().getPosition();
 
-    int i = 0;
+    size_t i = 0;
     for (const char& c : getText()) {
 
       auto ch = _fontSet->getCharacterBasedonGLchar(c);
 
       auto currentWorldPosition = Maths::GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
         (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
-        + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
+        + ((static_cast<float>(ch.size.getY()) - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
       target->setTexture(ch.texture);
@@ -81,7 +81,7 @@ namespace NovelRT::Graphics {
     if (_letterRects.size() == static_cast<size_t>(i) + 1)
       return;
 
-    auto beginIt = _letterRects.begin() + i;
+    auto beginIt = _letterRects.begin() + static_cast<std::vector<std::unique_ptr<ImageRect>>::iterator::difference_type>(i);
     auto endIt = _letterRects.end();
 
     std::for_each(beginIt, endIt, [](const std::unique_ptr<ImageRect>& ptr) {

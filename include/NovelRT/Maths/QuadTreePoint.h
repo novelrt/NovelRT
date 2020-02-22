@@ -8,6 +8,7 @@
 namespace NovelRT::Maths {
   class QuadTreePoint {
   public:
+    virtual ~QuadTreePoint();
     virtual const GeoVector<float>& getPosition() const noexcept = 0;
   };
 }

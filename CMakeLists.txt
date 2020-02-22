@@ -6,9 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
-    add_compile_options(/Wall /WX)
+  add_compile_options(/W4 /WX /wd4611)
 else()
-    add_compile_options(-pedantic -pedantic-error -Wall -Wextra -Weverything -Werror)
+  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Weverything -Werror -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-float-equal -Wno-padded -Wno-reserved-id-macro)
 endif()
 
 include_directories(include)

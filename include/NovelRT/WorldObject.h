@@ -11,14 +11,15 @@ namespace NovelRT {
   class WorldObject {
   private:
     Transform _transform;
-    bool _active;
     int _layer;
+    bool _active;
 
   protected:
     bool _isDirty;
 
   public:
     WorldObject(const Transform& transform, int layer);
+    virtual ~WorldObject() { }
 
     inline Transform& getTransform() {
       _isDirty = true;

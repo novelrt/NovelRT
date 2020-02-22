@@ -47,7 +47,7 @@ TEST_F(QuadTreeTest, createCorrectlySetsBounds)
 
 TEST_F(QuadTreeTest, createHasNoPoints)
 {
-  EXPECT_EQ(_quadTree->getPointCount(), 0);
+  EXPECT_EQ(_quadTree->getPointCount(), 0u);
 }
 
 TEST_F(QuadTreeTest, createHasNoChildren)
@@ -79,7 +79,7 @@ TEST_F(QuadTreeTest, insertFourDoesNotSubdivide) {
   auto point3 = std::make_shared<SimpleQuadTreePoint>(1.0f, -1.0f);
   _quadTree->tryInsert(point3);
 
-  EXPECT_EQ(_quadTree->getPointCount(), 4);
+  EXPECT_EQ(_quadTree->getPointCount(), 4u);
 
   EXPECT_EQ(_quadTree->getPoint(0), point0);
   EXPECT_EQ(_quadTree->getPoint(1), point1);
@@ -108,12 +108,12 @@ TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
   auto point4 = std::make_shared<SimpleQuadTreePoint>(0.0f, 0.0f);
   _quadTree->tryInsert(point4);
 
-  EXPECT_EQ(_quadTree->getPointCount(), 0);
+  EXPECT_EQ(_quadTree->getPointCount(), 0u);
 
-  EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2);
-  EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1);
-  EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1);
-  EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1);
+  EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2u);
+  EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1u);
+  EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1u);
+  EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1u);
 
   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(0), point0);
   EXPECT_EQ(_quadTree->getTopRight()->getPoint(0), point1);
@@ -138,12 +138,12 @@ TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
   auto point4 = std::make_shared<SimpleQuadTreePoint>(0.0f, 0.0f);
   _quadTree->tryInsert(point4);
 
-  EXPECT_EQ(_quadTree->getPointCount(), 0);
+  EXPECT_EQ(_quadTree->getPointCount(), 0u);
 
-  EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2);
-  EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1);
-  EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1);
-  EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1);
+  EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2u);
+  EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1u);
+  EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1u);
+  EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1u);
 
   auto expectedSize = GeoVector(TEST_WIDTH / 2, TEST_HEIGHT / 2);
 
@@ -171,7 +171,7 @@ TEST_F(QuadTreeTest, getIntersectingPointsReturnsAllPoints) {
 
   auto intersectingPoints = _quadTree->getIntersectingPoints(_quadTree->getBounds());
 
-  EXPECT_EQ(intersectingPoints.size(), 5);
+  EXPECT_EQ(intersectingPoints.size(), 5u);
 
   EXPECT_EQ(intersectingPoints[0], point0);
   EXPECT_EQ(intersectingPoints[1], point4);

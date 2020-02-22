@@ -8,7 +8,7 @@
 namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
     _frequency(glfwGetTimerFrequency()),
-    _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),
+    _maxCounterDelta(static_cast<uint64_t>(_frequency * maxSecondDelta)),
     _lastCounter(glfwGetTimerValue()),
     _secondCounter(0),
     _remainingTicks(0),
@@ -39,7 +39,7 @@ namespace NovelRT::Timing {
 
     // Convert to the "canonicalized" tick format of TicksPerSecond
     // This will never overflow due to the clamping we did above
-    auto ticksDelta = (counterDelta * TicksPerSecond) / _frequency;
+    auto ticksDelta = (clampedCounterDelta * TicksPerSecond) / _frequency;
 
     if (ticksDelta == 0)
       return;
@@ -59,7 +59,7 @@ namespace NovelRT::Timing {
 
       auto targetElapsedTicks = _targetElapsedTicks;
 
-      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (int64_t)(TicksPerSecond / 4000)) {
+      if (abs(static_cast<int64_t>(ticksDelta - targetElapsedTicks)) < static_cast<int64_t>(TicksPerSecond / 4000)) {
         ticksDelta = targetElapsedTicks;
       }
 

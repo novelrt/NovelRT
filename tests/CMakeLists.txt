@@ -1,5 +1,9 @@
 find_package(GTest CONFIG REQUIRED)
 
+if (NOT MSVC)
+  add_compile_options(-Wno-global-constructors -Wno-missing-prototypes -Wno-weak-vtables)
+endif()
+
 set(NOVELRT_TESTS_HEADERS)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_TESTS_HEADERS})
 

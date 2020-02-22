@@ -3,8 +3,10 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  Camera::Camera() : _cameraFrameState(CameraFrameState::ModifiedInCurrent), _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&Camera::generateUboMatrix,
-    this)))) {}
+  Camera::Camera() :
+    _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&Camera::generateUboMatrix, this)))),
+    _cameraFrameState(CameraFrameState::ModifiedInCurrent) {
+  }
 
   std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize) {
     auto returnVal = std::make_unique<Camera>();
@@ -24,8 +26,8 @@ namespace NovelRT::Graphics {
         break;
       case CameraFrameState::ModifiedInLast:
         _cameraFrameState = CameraFrameState::Unmodified;
-      default:
-        assert(_cameraFrameState == CameraFrameState::Unmodified);
+        break;
+      case CameraFrameState::Unmodified:
         break;
     }
   }

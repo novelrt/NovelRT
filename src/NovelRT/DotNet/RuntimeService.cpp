@@ -14,10 +14,8 @@ using namespace NovelRT::Utilities;
 
 #if defined(WIN32)
   #define STR(s) L ## s
-  #define CH(c) L ## c
 #else
   #define STR(s) s
-  #define CH(c) c
 #endif
 
 const auto HostApiBufferTooSmall = 0x80008098;
@@ -84,7 +82,7 @@ namespace NovelRT::DotNet {
       size_t buffer_size;
       int result = get_hostfxr_path(nullptr, &buffer_size, nullptr);
 
-      if (result != HostApiBufferTooSmall)
+      if (result != static_cast<int>(HostApiBufferTooSmall))
       {
         _logger.logError("Failed to locate hostfxr: ", result);
         throw std::runtime_error("Failed to locate hostfxr");

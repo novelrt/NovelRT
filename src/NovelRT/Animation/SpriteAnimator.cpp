@@ -50,8 +50,8 @@ namespace NovelRT::Animation {
         break;
       }
 
-      default:
-        assert((_animatorState == AnimatorPlayState::Stopped) || (_animatorState == AnimatorPlayState::Paused));
+      case AnimatorPlayState::Stopped:
+      case AnimatorPlayState::Paused:
         break;
     }
   }
