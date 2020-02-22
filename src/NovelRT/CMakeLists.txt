@@ -111,3 +111,37 @@ install(
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin)
+
+# TODO: figure out if this is required on other platforms...
+
+if(WIN32)
+  function(generate_library_install_snippet)
+    foreach(install_libraries_config "${CMAKE_CONFIGURATION_TYPES}")
+      string(REGEX MATCHALL "." config_characters "${install_libraries_config}")
+
+      set(configuration_regex "^(")
+      foreach(character IN LISTS config_characters)
+        string(TOUPPER "${character}" character_uppercase)
+        string(TOLOWER "${character}" character_lowercase)
+        set(configuration_regex "${configuration_regex}[${character_uppercase}${character_lowercase}]")
+      endforeach()
+      set(configuration_regex "${configuration_regex})$")
+
+      string(CONFIGURE
+[[file(GET_RUNTIME_DEPENDENCIES
+       RESOLVED_DEPENDENCIES_VAR novelrt_resolved_dependencies
+       LIBRARIES "@CMAKE_CURRENT_BINARY_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@NovelRT@CMAKE_SHARED_LIBRARY_SUFFIX@")
+  foreach(dependency IN LISTS novelrt_resolved_dependencies)
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/@install_libraries_configuration@/bin" FILES "${dependency}")
+  endforeach()]]
+        snippet @ONLY)
+
+      list(APPEND install_deps_snippet "${snippet}")
+    endforeach()
+
+    list(JOIN install_deps_snippet "\r\n  " install_deps_snippet)
+    install(CODE "${install_deps_snippet}")
+  endfunction()
+
+  generate_library_install_snippet()
+endif()
