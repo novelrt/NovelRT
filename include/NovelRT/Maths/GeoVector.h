@@ -67,6 +67,10 @@ namespace NovelRT::Maths {
       return glm::length(getVec2Value());
     }
 
+    inline float getLength() const noexcept {
+      return getMagnitude();
+    }
+
     inline bool operator==(const GeoVector<T>& other) const {
       return getVec2Value() == other.getVec2Value();
     }
@@ -115,7 +119,7 @@ namespace NovelRT::Maths {
       return glm::all(glm::equal(getVec2Value(), other.getVec2Value(), epsilonValue.getVec2Value()));
     }
 
-    static GeoVector<T> zero() {
+    static const GeoVector<T> zero() {
       return GeoVector<T>(0, 0);
     }
 
