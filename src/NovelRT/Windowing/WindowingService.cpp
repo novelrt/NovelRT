@@ -9,8 +9,10 @@ namespace NovelRT::Windowing {
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
     _runner(runner),
-    _isTornDown(false),
-    _optimus() {
+#if defined(_WIN32) || defined(_WIN64)
+    _optimus(),
+#endif
+    _isTornDown(false) {
   }
 
   void WindowingService::errorCallback(int, const char* error) {

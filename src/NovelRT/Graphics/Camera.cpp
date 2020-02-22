@@ -24,6 +24,9 @@ namespace NovelRT::Graphics {
         break;
       case CameraFrameState::ModifiedInLast:
         _cameraFrameState = CameraFrameState::Unmodified;
+      default:
+        assert(_cameraFrameState == CameraFrameState::Unmodified);
+        break;
     }
   }
 
