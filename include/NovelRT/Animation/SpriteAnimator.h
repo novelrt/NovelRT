@@ -12,7 +12,7 @@ namespace NovelRT::Animation {
   class SpriteAnimator {
   private:
     float _accumulatedDelta;
-    int32_t _currentFrameIndex;
+    uint32_t _currentFrameIndex;
     NovelRunner* _runner; //I'm a bit worried about this, but whatever, just want it working for now
     Graphics::ImageRect* _rect;
     AnimatorPlayState _animatorState;

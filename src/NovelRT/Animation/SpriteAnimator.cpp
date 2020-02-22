@@ -46,9 +46,13 @@ namespace NovelRT::Animation {
         }
 
 
-        _accumulatedDelta += delta;
+        _accumulatedDelta += static_cast<float>(delta);
         break;
       }
+
+      case AnimatorPlayState::Stopped:
+      case AnimatorPlayState::Paused:
+        break;
     }
   }
 

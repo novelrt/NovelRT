@@ -22,12 +22,12 @@ namespace NovelRT::Windowing {
     std::string _windowTitle;
     bool _isTornDown;
 
-#if defined(_WIN64) || defined(_WIN32)
-    HMODULE optimus;
+#if defined(_WIN32) || defined(_WIN64)
+    HMODULE _optimus;
+    void checkForOptimus(const char* library);
 #endif
 
     void errorCallback(int, const char* error);
-    void checkForOptimus(const char* library);
 
   public:
     explicit WindowingService(NovelRunner* const runner);
@@ -50,7 +50,7 @@ namespace NovelRT::Windowing {
 
     inline void setWindowSize(const Maths::GeoVector<float>& value) {
       _windowSize = value;
-      glfwSetWindowSize(getWindow(), value.getX(), value.getY());
+      glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.getX()), static_cast<int32_t>(value.getY()));
       WindowResized(_windowSize);
     }
 

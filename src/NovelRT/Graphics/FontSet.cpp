@@ -6,6 +6,7 @@ namespace NovelRT::Graphics {
   FontSet::FontSet(std::weak_ptr<RenderingService> renderer, Atom id) noexcept :
     _renderer(renderer),
     _id(id),
+    _fontSize(0),
     _fontFile("") {
 
   }
@@ -31,7 +32,7 @@ namespace NovelRT::Graphics {
       _logger.logError("FREETYPE - Failed to load font: ", file);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, fontSize);
+    FT_Set_Pixel_Sizes(face, 0, static_cast<FT_UInt>(fontSize));
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
@@ -66,8 +67,8 @@ namespace NovelRT::Graphics {
       // Now store character for later use
       GraphicsCharacterRenderData character = {
           _renderer.lock()->getTexture(),
-          Maths::GeoVector<int>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          Maths::GeoVector<int>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+          Maths::GeoVector<uint32_t>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+          Maths::GeoVector<int32_t>(face->glyph->bitmap_left, face->glyph->bitmap_top),
           GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
       };
       character.texture->setTextureIdInternal(textureId);

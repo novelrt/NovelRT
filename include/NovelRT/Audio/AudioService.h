@@ -11,22 +11,22 @@
 namespace NovelRT::Audio {
   class AudioService {
   private:
-    const int _bufferSize = 2048;
-    const int _noBuffer = 0;
+    const size_t _bufferSize = 2048;
+    const ALuint _noBuffer = 0;
     const ALfloat _pitch = 1.0f;
-    
+
+    Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> _device;
+    Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>> _context;
     LoggingService _logger;
-    ALint _musicLoopAmount;
     ALuint _musicSource;
     ALint _musicSourceState;
-    ALint _soundLoopAmount;
+    ALint _musicLoopAmount;
     ALuint _soundSource;
     ALint _soundSourceState;
+    ALint _soundLoopAmount;
     SoundBank _sounds;
     MusicBank _music;
     std::string _deviceName;
-    Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> _device;
-    Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>> _context;
 
     ALuint readFile(std::string input);
     std::string getALError();

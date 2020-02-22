@@ -39,10 +39,10 @@ namespace NovelRT::Graphics {
   }
   void TextRect::setText(const std::string& value) {
     _text = value;
-    int difference = _text.length() - _letterRects.size();
+    auto difference = _text.length() - _letterRects.size();
     auto modifiedTransform = getTransform();
     modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
-    for (int i = 0; i < difference; i++) {
+    for (size_t i = 0; i < difference; i++) {
       auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
           getLayer(),
@@ -61,27 +61,27 @@ namespace NovelRT::Graphics {
 
     auto ttfOrigin = getTransform().getPosition();
 
-    int i = 0;
+    size_t i = 0;
     for (const char& c : getText()) {
 
       auto ch = _fontSet->getCharacterBasedonGLchar(c);
 
       auto currentWorldPosition = Maths::GeoVector<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
         (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
-        + ((ch.size.getY() - ch.bearing.getY()) / 2.0f));
+        + ((static_cast<float>(ch.size.getY()) - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
       target->setTexture(ch.texture);
       target->getTransform().setPosition(currentWorldPosition);
-      target->getTransform().setScale(Maths::GeoVector<float>(ch.size.getX(), ch.size.getY()));
+      target->getTransform().setScale(Maths::GeoVector<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY())));
       target->setActive(true);
       ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
     }
 
-    if (_letterRects.size() == static_cast<uint32_t>(i) + 1)
+    if (_letterRects.size() == static_cast<size_t>(i) + 1)
       return;
 
-    auto beginIt = _letterRects.begin() + i;
+    auto beginIt = _letterRects.begin() + static_cast<std::vector<std::unique_ptr<ImageRect>>::iterator::difference_type>(i);
     auto endIt = _letterRects.end();
 
     std::for_each(beginIt, endIt, [](const std::unique_ptr<ImageRect>& ptr) {

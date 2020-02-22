@@ -8,8 +8,8 @@
 
 namespace NovelRT::Graphics {
   struct ImageData {
-    int32_t width;
-    int32_t height;
+    uint32_t width;
+    uint32_t height;
     png_byte colourType;
     png_byte bitDepth;
     png_bytep* rowPointers = nullptr; //just following the example here

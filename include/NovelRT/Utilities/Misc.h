@@ -11,13 +11,13 @@ namespace NovelRT::Utilities {
   class Misc {
   public:
     static const int SDL_SUCCESS = 0;
-    static inline const std::string CONSOLE_LOG_GENERIC = "NovelRT";
-    static inline const std::string CONSOLE_LOG_APP = "Application";
-    static inline const std::string CONSOLE_LOG_DOTNET = ".NET";
-    static inline const std::string CONSOLE_LOG_GFX = "GFX";
-    static inline const std::string CONSOLE_LOG_AUDIO = "Audio";
-    static inline const std::string CONSOLE_LOG_INPUT = "Input";
-    static inline const std::string CONSOLE_LOG_WINDOWING = "WindowManager";
+    static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
+    static inline const char* CONSOLE_LOG_APP = "Application";
+    static inline const char* CONSOLE_LOG_DOTNET = ".NET";
+    static inline const char* CONSOLE_LOG_GFX = "GFX";
+    static inline const char* CONSOLE_LOG_AUDIO = "Audio";
+    static inline const char* CONSOLE_LOG_INPUT = "Input";
+    static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
     static std::filesystem::path getExecutablePath();
 

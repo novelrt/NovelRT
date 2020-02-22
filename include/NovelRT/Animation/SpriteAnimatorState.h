@@ -23,7 +23,7 @@ namespace NovelRT::Animation {
 
       for (size_t i = 0; i < transitionConditions.size(); i++) {
         if (transitionConditions.at(i) == nullptr) {
-          transitionConditions.erase(transitionConditions.begin() + i);
+          transitionConditions.erase(transitionConditions.begin() + static_cast<std::vector<SpriteAnimatorFrame>::iterator::difference_type>(i));
         }
       }
 

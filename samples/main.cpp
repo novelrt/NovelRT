@@ -10,8 +10,6 @@ extern "C"
 #include <lauxlib.h>
 }
 
-lua_State* L;
-
 static int average(lua_State* luaState) {
   int n = lua_gettop(luaState);
   double sum = 0;
@@ -31,26 +29,27 @@ static int average(lua_State* luaState) {
   _putenv_s(name, value)
 #endif
 
-std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
-std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
-std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
-std::unique_ptr<NovelRT::Graphics::BasicFillRect> myBasicFillRect;
-std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButton;
-std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoogaloo;
-std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
-std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
-std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
+int main(int /*argc*/, char* /*argv*/[])
+{
+  lua_State* L;
+
+  std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
+  std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
+  std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
+  std::unique_ptr<NovelRT::Graphics::BasicFillRect> myBasicFillRect;
+  std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButton;
+  std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoogaloo;
+  std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
+  std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
+  std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
 #ifdef TEST_ANIM
-std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
-std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
+  std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
+  std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
 
-bool shouldBeInIdle = true;
-
+  bool shouldBeInIdle = true;
 #endif
 
-int main(int argc, char* argv[])
-{
   std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
   std::filesystem::path resourcesDirPath = executableDirPath / "Resources";
 
@@ -157,11 +156,11 @@ int main(int argc, char* argv[])
 
   runner.getDebugService().lock()->setIsFpsCounterVisible(true);
 
-  runner.Update += [&runner, &console](double delta) {
+  runner.Update += [&](double delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
-    rotation += rotationAmount * (float)delta;
+    rotation += rotationAmount * static_cast<float>(delta);
     novelChanRect->getTransform().setRotation(rotation);
 
     if (rotation > 360.0f)
@@ -187,7 +186,7 @@ int main(int argc, char* argv[])
   };
 
   //If uncommenting the call, pass &jojo to the subscription next to &audio.
-  interactionRect->Interacted += [&loggingLevel, &console, &audio] {
+  interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
     //audio->playSound(jojo, 0);
 
@@ -203,7 +202,7 @@ int main(int argc, char* argv[])
 #endif
   };
 
-  runner.SceneConstructionRequested += [] {
+  runner.SceneConstructionRequested += [&] {
 
 
     playAudioButton->executeObjectBehaviour();
