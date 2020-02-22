@@ -22,7 +22,11 @@ namespace NovelRT::Graphics {
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
     FILE* cFile;
+#if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
     _logger.throwIfNotZero(fopen_s(&cFile, file.c_str(), "rb"), "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+#else
+    cFile = fopen(file.c_str(), "rb");
+#endif
     auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr); //TODO: Figure out how the error function ptr works
 
     if (png == nullptr) {
