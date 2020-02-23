@@ -25,6 +25,41 @@ namespace NovelRT::Utilities {
       return getExecutablePath().parent_path();
     }
   };
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T operator~ (T a) {
+    return static_cast<T>(~static_cast<U>(a));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T operator| (T a, T b) {
+    return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T operator& (T a, T b) {
+    return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T operator^ (T a, T b) {
+    return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T& operator|= (T& a, T b) {
+    return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T& operator&= (T& a, T b) {
+    return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+  }
+
+  template<class T, class U = std::underlying_type_t<T>>
+  constexpr T& operator^= (T& a, T b) {
+    return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+  }
 }
 
-#endif //NOVELRT_UTILITIES_MISC_H
+#endif //!NOVELRT_UTILITIES_MISC_H
