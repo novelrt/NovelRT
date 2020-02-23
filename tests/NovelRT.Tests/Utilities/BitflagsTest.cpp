@@ -19,3 +19,52 @@ TEST(BitflagsTest, bitwiseOr) {
   EXPECT_TRUE((flags & TestEnum::c) == TestEnum::c);
   EXPECT_TRUE((flags & TestEnum::d) == TestEnum::d);
 }
+
+TEST(BitflagsTest, bitwiseAnd) {
+  auto flags = (TestEnum::b | TestEnum::c) & (TestEnum::c | TestEnum::d);
+  EXPECT_EQ(flags, TestEnum::c);
+  EXPECT_NE(flags, TestEnum::b);
+}
+
+TEST(BitflagsTest, bitwiseComplement) {
+  auto flags = ~TestEnum::a;
+  EXPECT_TRUE((flags & TestEnum::b) == TestEnum::b);
+  EXPECT_TRUE((flags & TestEnum::c) == TestEnum::c);
+  EXPECT_TRUE((flags & TestEnum::d) == TestEnum::d);
+}
+
+TEST(BitflagsTest, bitwiseXor) {
+  auto allFlags = ~TestEnum::a;
+  auto flags = TestEnum::b ^ allFlags;
+
+  EXPECT_FALSE((flags & TestEnum::b) == TestEnum::b);
+  EXPECT_TRUE((flags & TestEnum::c) == TestEnum::c);
+  EXPECT_TRUE((flags & TestEnum::d) == TestEnum::d);
+}
+
+TEST(BitflagsTest, bitwiseOrEquals) {
+  auto flags = TestEnum::b;
+  flags |= TestEnum::c;
+  flags |= TestEnum::d;
+
+  EXPECT_TRUE((flags & TestEnum::b) == TestEnum::b);
+  EXPECT_TRUE((flags & TestEnum::c) == TestEnum::c);
+  EXPECT_TRUE((flags & TestEnum::d) == TestEnum::d);
+}
+
+TEST(BitflagsTest, bitwiseAndEquals) {
+  auto flags = (TestEnum::b | TestEnum::c);
+  flags &= (TestEnum::c | TestEnum::d);
+
+  EXPECT_EQ(flags, TestEnum::c);
+  EXPECT_NE(flags, TestEnum::b);
+}
+
+TEST(BitflagsTest, bitwiseXorEquals) {
+  auto flags = ~TestEnum::a;
+  flags ^= TestEnum::b;
+
+  EXPECT_FALSE((flags & TestEnum::b) == TestEnum::b);
+  EXPECT_TRUE((flags & TestEnum::c) == TestEnum::c);
+  EXPECT_TRUE((flags & TestEnum::d) == TestEnum::d);
+}
