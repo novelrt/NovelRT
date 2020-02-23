@@ -21,12 +21,12 @@ namespace NovelRT {
     Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) noexcept;
     Transform() noexcept;
 
-    inline const Maths::GeoBounds& getAABB() const {
+    inline Maths::GeoBounds getAABB() const {
       auto scale = fmaxf(_scale.getX(), _scale.getY());
       return Maths::GeoBounds(_position, Maths::GeoVector(scale, scale), 0);
     }
 
-    inline const Maths::GeoBounds& getBounds() const {
+    inline Maths::GeoBounds getBounds() const {
       return Maths::GeoBounds(_position, _scale, _rotation);
     }
 
