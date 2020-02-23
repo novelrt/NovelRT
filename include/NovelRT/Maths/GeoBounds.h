@@ -13,7 +13,6 @@ namespace NovelRT::Maths {
     GeoVector<float> _position;
     float _rotation;
     GeoVector<float> _size;
-    GeoVector<float> _extents;
 
   public:
     GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation);
