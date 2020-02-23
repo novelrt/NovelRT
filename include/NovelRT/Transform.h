@@ -18,7 +18,8 @@ namespace NovelRT {
     bool _active;
 
   public:
-    Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale);
+    Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) noexcept;
+    Transform() noexcept;
 
     inline const Maths::GeoBounds& getAABB() const {
       auto scale = fmaxf(_scale.getX(), _scale.getY());
