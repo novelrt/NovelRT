@@ -119,6 +119,9 @@ namespace NovelRT::Input {
 }
 
 namespace NovelRT::SceneGraph {
+  typedef class QuadTreeNode QuadTreeNode;
+  typedef class QuadTreeScenePoint QuadTreeScenePoint;
+  typedef class RenderObjectNode RenderObjectNode;
   typedef class Scene Scene;
   typedef class SceneNode SceneNode;
 }
@@ -189,6 +192,9 @@ namespace NovelRT::Windowing {
 
 // Scene Graph types
 #include "NovelRT/SceneGraph/SceneNode.h"
+#include "NovelRT/SceneGraph/RenderObjectNode.h"
+#include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
+#include "NovelRT/SceneGraph/QuadTreeNode.h"
 #include "NovelRT/SceneGraph/Scene.h"
 
 #endif //!NOVELRT_H
