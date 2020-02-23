@@ -7,9 +7,20 @@
 
 namespace NovelRT::Maths {
   class QuadTreePoint {
+  private:
+    GeoVector<float> _position;
+
   public:
-    virtual ~QuadTreePoint();
-    virtual const GeoVector<float>& getPosition() const noexcept = 0;
+    QuadTreePoint(GeoVector<float> position) :
+      _position(position) {
+    }
+
+    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector<float>(x, y)) {
+    }
+
+    const GeoVector<float>& getPosition() const noexcept {
+      return _position;
+    }
   };
 }
 
