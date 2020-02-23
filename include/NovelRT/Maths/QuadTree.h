@@ -6,8 +6,7 @@
 #endif
 
 namespace NovelRT::Maths {
-  template <typename TQuadTreePoint>
-  class QuadTree {
+  class QuadTree : public std::enable_shared_from_this<QuadTree> {
   private:
     static const int32_t POINT_CAPACITY = 4;
 
@@ -16,116 +15,129 @@ namespace NovelRT::Maths {
     static const int32_t BOTTOM_LEFT = 2;
     static const int32_t BOTTOM_RIGHT = 3;
 
-    typedef std::array<std::shared_ptr<TQuadTreePoint>, POINT_CAPACITY> TPoints;
-    typedef std::array<std::unique_ptr<QuadTree>, 4> TChildren;
-
+    std::weak_ptr<QuadTree> _parent;
     GeoBounds _bounds;
-    TPoints _points;
-    TChildren _children;
-    uint32_t _pointCount;
+    std::array<std::shared_ptr<QuadTreePoint>, POINT_CAPACITY> _points;
+    std::array<std::shared_ptr<QuadTree>, 4> _children;
+    size_t _pointCount;
+
+    void subdivideTree() noexcept;
+    void tryMergeTree() noexcept;
 
   public:
-    explicit QuadTree(const GeoBounds& bounds) noexcept :
+    explicit QuadTree(const GeoBounds& bounds, std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept :
+      _parent(parent),
       _bounds(bounds),
-      _points({}),
-      _children({}),
+      _points(),
+      _children(),
       _pointCount(0) {
-      static_assert(std::is_base_of<QuadTreePoint, TQuadTreePoint>::value, "Type argument for TQuadTreePoint must inherit NovelRT::Maths::QuadTreePoint!");
+    }
+
+    const std::weak_ptr<QuadTree>& getParent() const noexcept {
+      return _parent;
     }
 
     const GeoBounds& getBounds() const noexcept {
       return _bounds;
     }
 
-    std::shared_ptr<TQuadTreePoint> getPoint(uint32_t index) const noexcept {
-      return (index < _pointCount) ? _points[index] : nullptr;
+    const std::shared_ptr<QuadTreePoint>& getPoint(size_t index) const noexcept {
+      return _points[index];
     }
 
-    uint32_t getPointCount() const noexcept {
+    template <typename TQuadTreePoint>
+    const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const {
+      return static_cast<std::shared_ptr<TQuadTreePoint>>(getPoint(index));
+    }
+
+    size_t getPointCount() const noexcept {
       return _pointCount;
     }
 
-    QuadTree* getTopLeft() const noexcept {
-      return _children[TOP_LEFT].get();
+    const std::shared_ptr<QuadTree>& getTopLeft() const noexcept {
+      return _children[TOP_LEFT];
     }
 
-    QuadTree* getTopRight() const noexcept {
-      return _children[TOP_RIGHT].get();
+    const std::shared_ptr<QuadTree>& getTopRight() const noexcept {
+      return _children[TOP_RIGHT];
     }
 
-    QuadTree* getBottomLeft() const noexcept {
-      return _children[BOTTOM_LEFT].get();
+    const std::shared_ptr<QuadTree>& getBottomLeft() const noexcept {
+      return _children[BOTTOM_LEFT];
     }
 
-    QuadTree* getBottomRight() const noexcept {
-      return _children[BOTTOM_RIGHT].get();
+    const std::shared_ptr<QuadTree>& getBottomRight() const noexcept {
+      return _children[BOTTOM_RIGHT];
     }
 
-    bool tryInsert(std::shared_ptr<TQuadTreePoint> point) noexcept {
-      if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition())) return false;
+    bool tryInsert(std::shared_ptr<QuadTreePoint> point) noexcept {
+      if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition())) {
+        return false;
+      }
 
-      if (_children[TOP_LEFT] == nullptr) {
-        if (_pointCount < POINT_CAPACITY) {
+      if (getTopLeft() == nullptr) {
+        if (getPointCount() < POINT_CAPACITY) {
           _points[_pointCount++] = point;
           return true;
         }
         subdivideTree();
       }
 
-      auto result = _children[TOP_LEFT]->tryInsert(point) ||
-                    _children[TOP_RIGHT]->tryInsert(point) ||
-                    _children[BOTTOM_LEFT]->tryInsert(point) ||
-                    _children[BOTTOM_RIGHT]->tryInsert(point);
+      auto result = getTopLeft()->tryInsert(point) ||
+                    getTopRight()->tryInsert(point) ||
+                    getBottomLeft()->tryInsert(point) ||
+                    getBottomRight()->tryInsert(point);
 
       assert(result);
       return result;
     }
 
-    void subdivideTree() noexcept {
-      const GeoVector<float> TOP_LEFT_SCALE = GeoVector<float>(-0.5, +0.5);
-      const GeoVector<float> TOP_RIGHT_SCALE = GeoVector<float>(+0.5, +0.5);
-      const GeoVector<float> BOTTOM_LEFT_SCALE = GeoVector<float>(-0.5, -0.5);
-      const GeoVector<float> BOTTOM_RIGHT_SCALE = GeoVector<float>(+0.5, -0.5);
-
-      GeoVector size = getBounds().getSize() / 2;
-      GeoVector position = getBounds().getPosition();
-
-      _children[TOP_LEFT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0));
-      _children[TOP_RIGHT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0));
-      _children[BOTTOM_LEFT] = std::make_unique<QuadTree>(GeoBounds(position + (size * BOTTOM_LEFT_SCALE), size, 0));
-      _children[BOTTOM_RIGHT] = std::make_unique<QuadTree>(GeoBounds(position + (size * BOTTOM_RIGHT_SCALE), size, 0));
-
-      for (uint32_t index = 0; index < getPointCount(); index++) {
-        auto point = getPoint(index);
-        auto result = tryInsert(point);
-        assert(result); unused(result);
+    bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept {
+      if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition())) {
+        return false;
       }
 
-      _pointCount = 0;
+      if (getTopLeft() == nullptr) {
+        for (size_t i = 0; i < getPointCount(); i++) {
+          if (getPoint(i) == point) {
+            auto lastPoint = --_pointCount;
+            _points[i] = getPoint(lastPoint);
+            _points[lastPoint] = nullptr;
+            tryMergeTree();
+            return true;
+          }
+        }
+        return false;
+      }
+
+      return getTopLeft()->tryRemove(point) ||
+             getTopRight()->tryRemove(point) ||
+             getBottomLeft()->tryRemove(point) ||
+             getBottomRight()->tryRemove(point);
     }
 
-    void getIntersectingPoints(const GeoBounds& bounds, std::vector<std::shared_ptr<TQuadTreePoint>>& intersectingPoints) {
+    void getIntersectingPoints(const GeoBounds& bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints) {
       if (getBounds().intersectsWith(bounds)) {
         return;
       }
 
-      if (_children[TOP_LEFT] == nullptr) {
-        for (uint32_t index = 0; index < getPointCount(); index++) {
+      if (getTopLeft() == nullptr) {
+        for (size_t index = 0; index < getPointCount(); index++) {
           auto point = getPoint(index);
           if (bounds.pointIsWithinBounds(point->getPosition())) {
             intersectingPoints.emplace_back(point);
           }
         }
       } else {
-        _children[TOP_LEFT]->getIntersectingPoints(bounds, intersectingPoints);
-        _children[TOP_RIGHT]->getIntersectingPoints(bounds, intersectingPoints);
-        _children[BOTTOM_LEFT]->getIntersectingPoints(bounds, intersectingPoints);
-        _children[BOTTOM_RIGHT]->getIntersectingPoints(bounds, intersectingPoints);
+        getTopLeft()->getIntersectingPoints(bounds, intersectingPoints);
+        getTopRight()->getIntersectingPoints(bounds, intersectingPoints);
+        getBottomLeft()->getIntersectingPoints(bounds, intersectingPoints);
+        getBottomRight()->getIntersectingPoints(bounds, intersectingPoints);
       }
     }
 
-    std::vector<std::shared_ptr<TQuadTreePoint>> getIntersectingPoints(const GeoBounds& bounds) {
-      auto intersectingPoints = std::vector<std::shared_ptr<TQuadTreePoint>>();
+    std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(const GeoBounds& bounds) {
+      auto intersectingPoints = std::vector<std::shared_ptr<QuadTreePoint>>();
       getIntersectingPoints(bounds, intersectingPoints);
       return intersectingPoints;
     }
