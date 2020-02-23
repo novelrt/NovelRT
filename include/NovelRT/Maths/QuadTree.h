@@ -92,6 +92,14 @@ namespace NovelRT::Maths {
       return result;
     }
 
+    template <typename TQuadTreePoint, typename... TArgs>
+    bool tryInsert(const GeoBounds& bounds, TArgs... args) {
+      return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0), std::forward<TArgs>(args)...) ||
+             tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(1), std::forward<TArgs>(args)...) ||
+             tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(3), std::forward<TArgs>(args)...) ||
+             tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(2), std::forward<TArgs>(args)...);
+    }
+
     bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept {
       if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition())) {
         return false;

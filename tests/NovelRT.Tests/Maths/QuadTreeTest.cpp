@@ -259,3 +259,29 @@ TEST_F(QuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4) 
   EXPECT_EQ(_quadTree->getBottomRight()->getPoint(0), point3);
   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(1), point4);
 }
+
+TEST_F(QuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll) {
+  auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
+  _quadTree->tryInsert(point0);
+
+  auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
+  _quadTree->tryInsert(point1);
+
+  auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
+  _quadTree->tryInsert(point2);
+
+  auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
+  _quadTree->tryInsert(point3);
+
+  auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
+  _quadTree->tryInsert(point4);
+
+  auto intersectingPoints = _quadTree->getIntersectingPoints(_quadTree->getBounds());
+  EXPECT_EQ(intersectingPoints.size(), 5u);
+
+  EXPECT_EQ(intersectingPoints[0], point0);
+  EXPECT_EQ(intersectingPoints[1], point4);
+  EXPECT_EQ(intersectingPoints[2], point1);
+  EXPECT_EQ(intersectingPoints[3], point2);
+  EXPECT_EQ(intersectingPoints[4], point3);
+}
