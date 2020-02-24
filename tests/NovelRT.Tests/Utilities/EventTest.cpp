@@ -90,14 +90,24 @@ TEST(EventTest, unsubscribeRemovesMatchingVersion2)
 }
 
 TEST(EventTest, subscribeWithinSubscribeDoesNotCauseHardCrash) {
-  auto logger = NovelRT::LoggingService();
   auto event = Event<>();
-  event += [&] {event += [&] { event += [&] { logger.logInfo("Hello! this is a test"); }; }; };
+  int32_t counter = 0;
+
+  auto OnEvent1 = [&]() { counter++; };
+  auto OnEvent2 = [&]() { counter++; event += OnEvent1; };
+
+  event += OnEvent2;
+
   event();
+  EXPECT_EQ(1, counter);
+
   event();
+  EXPECT_EQ(3, counter);
+
   event();
+  EXPECT_EQ(6, counter);
+
   event();
-  event();
-  event();
+  EXPECT_EQ(10, counter);
 }
 
