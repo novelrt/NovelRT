@@ -6,16 +6,6 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-
-//class GeoVectorTest : public testing::Test {
-//protected:
-//  GeoVector<float> _testVector;
-//
-//  void SetUp() override {
-//    _testVector = GeoVector<float>::zero();
-//  }
-//};
-
 TEST(GeoVectorTest, staticZeroCallReturnsGeoVectorZero) {
   EXPECT_EQ(GeoVector<float>::zero(), GeoVector<float>(0.0f, 0.0f));
 }
