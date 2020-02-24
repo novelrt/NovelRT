@@ -75,8 +75,8 @@ namespace NovelRT::Utilities {
     }
 
     void operator()(TArgs... args) const {
-      for (auto& handler : _handlers) {
-        handler(args...);
+      for (size_t i = 0; i < _handlers.size(); i++) {
+        _handlers.at(i)(args...);
       }
     }
   };
