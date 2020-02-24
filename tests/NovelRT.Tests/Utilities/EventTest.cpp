@@ -15,16 +15,16 @@ TEST(EventTest, createHasZeroSize)
 TEST(EventTest, subscribeAddsOne)
 {
   auto event = Event<>();
-  event += [](){};
+  event += []() {};
   EXPECT_EQ(1, event.getHandlerCount());
 }
 
 TEST(EventTest, unsubscribeNonexistingRemovesZero)
 {
   auto event = Event<>();
-  event += [](){};
+  event += []() {};
 
-  auto OnEvent = EventHandler<>([](){});
+  auto OnEvent = EventHandler<>([]() {});
   event -= OnEvent;
 
   EXPECT_EQ(1, event.getHandlerCount());
@@ -34,7 +34,7 @@ TEST(EventTest, subscribeTwiceAddsTwo)
 {
   auto event = Event<>();
 
-  auto OnEvent = EventHandler<>([](){});
+  auto OnEvent = EventHandler<>([]() {});
   event += OnEvent;
   event += OnEvent;
 
@@ -45,7 +45,7 @@ TEST(EventTest, unsubscribeExistingRemovesOne)
 {
   auto event = Event<>();
 
-  auto OnEvent = EventHandler<>([](){});
+  auto OnEvent = EventHandler<>([]() {});
   event += OnEvent;
   event += OnEvent;
 
@@ -87,5 +87,17 @@ TEST(EventTest, unsubscribeRemovesMatchingVersion2)
   event();
 
   EXPECT_EQ(2, counter);
+}
+
+TEST(EventTest, subscribeWithinSubscribeDoesNotCauseHardCrash) {
+  auto logger = NovelRT::LoggingService();
+  auto event = Event<>();
+  event += [&] {event += [&] { event += [&] { logger.logInfo("Hello! this is a test"); }; }; };
+  event();
+  event();
+  event();
+  event();
+  event();
+  event();
 }
 
