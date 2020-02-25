@@ -29,9 +29,9 @@ AudioService::AudioService() :
   _musicLoopAmount(0),
   _soundSourceState(0),
   _soundLoopAmount(0),
-  isInitialised(false),
+  _soundStorage(),
   _manualLoad(false),
-  _soundStorage() {
+  isInitialised(false) {
   }
 
 bool AudioService::initializeAudio() {
