@@ -286,7 +286,7 @@ ALuint AudioService::loadSound(std::string input) {
 }
 
 void AudioService::unload(ALuint source) {
-  alSourcei(source, AL_BUFFER, _noBuffer);
+  alSourcei(source, AL_BUFFER, 0);
 }
 
 void AudioService::playSound(ALuint handle, int loops) {
