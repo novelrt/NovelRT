@@ -36,6 +36,10 @@ namespace NovelRT::Graphics {
       Camera* camera,
       const RGBAConfig& colourTint);
 
+    const std::shared_ptr<Texture>& getTexture() const noexcept {
+      return _texture;
+    }
+
     void setTexture(std::shared_ptr<Texture> texture);
 
     void drawObject() final;
