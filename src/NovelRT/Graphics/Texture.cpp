@@ -117,6 +117,8 @@ namespace NovelRT::Graphics {
     glTexImage2D(GL_TEXTURE_2D, 0, mode, data.width, data.height, 0, mode, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(rawImage));
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    _size = Maths::GeoVector<float>(static_cast<float>(data.width), static_cast<float>(data.height));
+
     fclose(cFile);
     delete[] rawImage;
     delete[] data.rowPointers;
