@@ -15,19 +15,23 @@ namespace NovelRT::Audio {
     const ALuint _noBuffer = 0;
     const ALfloat _pitch = 1.0f;
 
-    std::vector<ALuint> _soundStorage;
     Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> _device;
     Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>> _context;
+    std::string _deviceName;
     LoggingService _logger;
+    bool _manualLoad;
+    MusicBank _music;
     ALuint _musicSource;
     ALint _musicSourceState;
     ALint _musicLoopAmount;
-    ALint _soundSourceState;
     ALint _soundLoopAmount;
-    SoundBank _sounds;
-    MusicBank _music;
-    std::string _deviceName;
-    bool _manualLoad;
+    ALint _soundSourceState;
+    SoundBank _soundStorage;
+    SoundBank _bufferStorage;
+    
+
+
+
 
     ALuint readFile(std::string input);
     std::string getALError();
@@ -41,7 +45,6 @@ namespace NovelRT::Audio {
     bool initializeAudio();
     std::vector<ALuint>::iterator loadMusic(std::string input);
     
-    void unloadMusic(ALuint handle);
     void setSoundVolume(ALuint source, float val);
     void setSoundPosition(ALuint source, float posX, float posY);
     void resumeMusic();
@@ -54,7 +57,7 @@ namespace NovelRT::Audio {
     //For touhou sample
     //Returns source
     ALuint loadSound(std::string input);
-    void unloadSound(ALuint handle);
+    void unload(ALuint handle);
     void playSound(ALuint handle, int loops);
     void stopSound(ALuint handle);
 

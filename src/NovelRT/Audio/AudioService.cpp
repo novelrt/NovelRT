@@ -24,13 +24,14 @@ AudioService::AudioService() :
     alcDestroyContext(x);
   })),
   _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+  _manualLoad(false),
   _musicSource(),
   _musicSourceState(0),
   _musicLoopAmount(0),
-  _soundSourceState(0),
   _soundLoopAmount(0),
+  _soundSourceState(0),
   _soundStorage(),
-  _manualLoad(false),
+  _bufferStorage(),
   isInitialised(false) {
   }
 
@@ -94,25 +95,10 @@ std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
   }
   else {
     _music.push_back(newBuffer);
+    _bufferStorage.push_back(newBuffer);
     it = std::find(_music.begin(), _music.end(), newBuffer);
     return it;
   }
-}
-
-void AudioService::unloadMusic(ALuint handle) {
-  if (!isInitialised) {
-    _logger.logError("Cannot unload audio from memory while the service is uninitialised! Aborting...");
-    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::unload. You cannot unload audio when the service is not initialised.");
-  }
-
-  alDeleteBuffers(1, &handle);
-  if (alGetError() != AL_NO_ERROR) {
-    alSourcei(handle, AL_BUFFER, 0);
-    alDeleteBuffers(1, &handle);
-  }
-  auto buffer = std::find(_music.begin(), _music.end(), handle);
-  _music.erase(buffer);
-  _logger.logDebugLine("Deleted requested music buffer.");
 }
 
 void AudioService::setSoundVolume(ALuint source, float value) {
@@ -274,7 +260,6 @@ std::string AudioService::getALError() {
   }
 }
 
-
 //for touhou project
 ALuint AudioService::loadSound(std::string input) {
   if (!isInitialised) {
@@ -295,13 +280,13 @@ ALuint AudioService::loadSound(std::string input) {
   alSourcei(newSource, AL_BUFFER, static_cast<ALint>(newBuffer));
 
   _soundStorage.push_back(newSource);
+  _bufferStorage.push_back(newBuffer);
 
   return newSource;
 }
 
-void AudioService::unloadSound(ALuint handle) {
-  alSourcei(handle, AL_BUFFER, 0);
-  alDeleteBuffers(1, &handle);
+void AudioService::unload(ALuint source) {
+  alSourcei(source, AL_BUFFER, _noBuffer);
 }
 
 void AudioService::playSound(ALuint handle, int loops) {
@@ -333,12 +318,6 @@ void AudioService::stopSound(ALuint handle) {
 AudioService::~AudioService() {
   if (!_context.isCreated()) return;
 
-  if (!_music.empty()) {
-    _music.clear();
-  }
-  if (!_sounds.empty()) {
-    _sounds.clear();
-  }
 
   if (_manualLoad) {
     for (auto source : _soundStorage) {
@@ -348,9 +327,12 @@ AudioService::~AudioService() {
   }
 
   alDeleteSources(1, &_musicSource);
+  if (!_music.empty()) {
+    _music.clear();
+  }
 
-  for (auto musicObject : _music) {
-    unloadMusic(musicObject);
+  for (auto buffer : _bufferStorage) {
+    alDeleteBuffers(1, &buffer);
   }
 
   //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
