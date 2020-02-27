@@ -18,7 +18,10 @@ namespace NovelRT::Animation {
       case AnimatorPlayState::Playing: {
         if (_currentState == nullptr) {
           _currentState = _states.at(0);
-          _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
+
+          auto frame = _currentState->getFrames()->at(_currentFrameIndex);
+          _rect->setTexture(frame.getTexture());
+          frame.FrameEnter();
         }
 
         auto transitionPtr = _currentState->tryFindValidTransition();
@@ -41,8 +44,8 @@ namespace NovelRT::Animation {
           }
 
           auto newFrame = _currentState->getFrames()->at(_currentFrameIndex);
-          newFrame.FrameEnter();
           _rect->setTexture(newFrame.getTexture());
+          newFrame.FrameEnter();
         }
 
 
