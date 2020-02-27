@@ -8,3 +8,13 @@ jobs:
     inputs:
       filename: scripts/cibuild.cmd
       arguments: '-configuration ${{parameters.configuration}}'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: '${{parameters.name}}'
+      buildConfiguration: ${{parameters.configuration}}
+      buildPlatform: ${{parameters.architecture}}
