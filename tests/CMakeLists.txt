@@ -24,7 +24,7 @@ add_dependencies(NovelRTTests NovelRTTestsDependencies)
 target_link_libraries(NovelRTTests ${NOVELRT_TESTS_LINK_LIBRARIES})
 
 enable_testing()
-add_test(NAME NovelRTTests COMMAND NovelRTTests)
+add_test(NAME NovelRTTests COMMAND NovelRTTests --gtest_output=xml)
 
 add_custom_command(TARGET NovelRTTests POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/NovelRTTests.txt
