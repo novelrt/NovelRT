@@ -11,7 +11,7 @@ jobs:
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
-      testResultsFormat: xUnit
+      testResultsFormat: JUnit
       testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
       mergeTestResults: true
       failTaskOnFailedTests: true
