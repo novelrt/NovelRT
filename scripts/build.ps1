@@ -15,7 +15,9 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function Build() {
+  $ErrorActionPreference = "Continue"
   & cmake --build $BuildDir --config $configuration
+  $ErrorActionPreference = "Stop"
 
   if ($LastExitCode -ne 0) {
     throw "'Build' failed"
@@ -29,7 +31,9 @@ function Create-Directory([string[]] $Path) {
 }
 
 function Generate() {
+  $ErrorActionPreference = "Continue"
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
+  $ErrorActionPreference = "Stop"
 
   if ($LastExitCode -ne 0) {
     throw "'Generate' failed"
@@ -55,7 +59,9 @@ function Help() {
 }
 
 function Install() {
+  $ErrorActionPreference = "Continue"
   & cmake --install $BuildDir --config $configuration
+  $ErrorActionPreference = "Stop"
 
   if ($LastExitCode -ne 0) {
     throw "'Install' failed"
@@ -63,9 +69,11 @@ function Install() {
 }
 
 function Test() {
+  $ErrorActionPreference = "Continue"
   Push-Location -Path $TestDir
   & ctest --build-config $configuration --output-on-failure
   Pop-Location
+  $ErrorActionPreference = "Stop"
 
   if ($LastExitCode -ne 0) {
     throw "'Test' failed"
