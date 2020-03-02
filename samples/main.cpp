@@ -69,8 +69,8 @@ int main(int /*argc*/, char* /*argv*/[])
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
   auto audio = runner.getAudioService();
   audio.lock()->initializeAudio();
-  //auto bgm = audio->load((soundsDirPath / "running.ogg").string(), true);
-  //auto jojo = audio->load((soundsDirPath / "jojo.ogg").string(), false);
+  auto bgm = audio.lock()->loadMusic((soundsDirPath / "marisa.ogg").string());
+  auto jojo = audio.lock()->loadSound((soundsDirPath / "caution.wav").string());
 
 #ifdef TEST_ANIM
   auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
@@ -181,14 +181,14 @@ int main(int /*argc*/, char* /*argv*/[])
 
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
-  memeInteractionRect->Interacted += [&console] {
+  memeInteractionRect->Interacted += [&] {
     console.logDebug("WAHEYYY");
+    audio.lock()->playSound(jojo, 0);
   };
 
-  //If uncommenting the call, pass &jojo to the subscription next to &audio.
   interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
-    //audio->playSound(jojo, 0);
+    
 
 #ifdef TEST_ANIM
     switch (testAnim->getCurrentPlayState()) {
@@ -229,7 +229,7 @@ int main(int /*argc*/, char* /*argv*/[])
   };
 
   runner.getDotNetRuntimeService().lock()->initialize();
-  //audio->playMusic(bgm, -1);
+  audio.lock()->playMusic(bgm, -1);
 
   runner.runNovel();
 
