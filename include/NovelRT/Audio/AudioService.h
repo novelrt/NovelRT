@@ -17,16 +17,17 @@ namespace NovelRT::Audio {
 
     Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> _device;
     Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>> _context;
+    std::string _deviceName;
     LoggingService _logger;
+    bool _manualLoad;
+    MusicBank _music;
     ALuint _musicSource;
     ALint _musicSourceState;
     ALint _musicLoopAmount;
-    ALuint _soundSource;
-    ALint _soundSourceState;
     ALint _soundLoopAmount;
-    SoundBank _sounds;
-    MusicBank _music;
-    std::string _deviceName;
+    ALint _soundSourceState;
+    SoundBank _soundStorage;
+    SoundBank _bufferStorage;
 
     ALuint readFile(std::string input);
     std::string getALError();
@@ -38,18 +39,21 @@ namespace NovelRT::Audio {
     ~AudioService();
 
     bool initializeAudio();
-    std::vector<ALuint>::iterator load(std::string input, bool isMusic);
-    void unload(ALuint handle, bool isMusic);
-    void playSound(std::vector<ALuint>::iterator handle, int loops);
-    void stopSound();
-    void setSoundVolume(float val);
-    void setSoundPosition(float posX, float posY);
+    std::vector<ALuint>::iterator loadMusic(std::string input);
+    
+    void setSoundVolume(ALuint source, float val);
+    void setSoundPosition(ALuint source, float posX, float posY);
     void resumeMusic();
     void playMusic(std::vector<ALuint>::iterator handle, int loops);
     void pauseMusic();
     void stopMusic();
     void setMusicVolume(float value);
     void checkSources();
+    ALuint loadSound(std::string input);
+    void unload(ALuint handle);
+    void playSound(ALuint handle, int loops);
+    void stopSound(ALuint handle);
+
   };
 }
 
