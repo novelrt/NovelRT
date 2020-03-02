@@ -51,7 +51,8 @@ ALuint AudioService::readFile(std::string input) {
   SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
   if (file == nullptr) {
-    _logger.logErrorLine(std::string(sf_strerror(nullptr)));
+    _logger.logWarningLine(std::string(sf_strerror(nullptr)));
+    return _noBuffer;
   }
 
   std::vector<uint16_t> data;
@@ -84,7 +85,7 @@ std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
 
   //Sorry Matt, nullptr types are incompatible to ALuint according to VS.
   if (newBuffer == _noBuffer) {
-    _logger.logError("Could not load audio file: ", getALError());
+    _logger.logWarning("Could not load audio file: " + input);
     return _music.end();
   }
 
@@ -143,8 +144,8 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
   }
 
-  if (*handle == _noBuffer) {
-    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+  if (handle == _music.end()) {
+    _logger.logWarningLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
     return;
   }
 
@@ -260,7 +261,6 @@ std::string AudioService::getALError() {
   }
 }
 
-//for touhou project
 ALuint AudioService::loadSound(std::string input) {
   if (!isInitialised) {
     _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
@@ -269,7 +269,8 @@ ALuint AudioService::loadSound(std::string input) {
   auto newBuffer = readFile(input);
 
   if (newBuffer == _noBuffer) {
-    _logger.logError("Could not load audio file: ", getALError());
+    _logger.logWarning("Could not load audio file: " + input);
+    return _noBuffer;
   }
 
   _manualLoad = true;
