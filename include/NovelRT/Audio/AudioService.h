@@ -28,10 +28,6 @@ namespace NovelRT::Audio {
     ALint _soundSourceState;
     SoundBank _soundStorage;
     SoundBank _bufferStorage;
-    
-
-
-
 
     ALuint readFile(std::string input);
     std::string getALError();
@@ -53,14 +49,10 @@ namespace NovelRT::Audio {
     void stopMusic();
     void setMusicVolume(float value);
     void checkSources();
-
-    //For touhou sample
-    //Returns source
     ALuint loadSound(std::string input);
     void unload(ALuint handle);
     void playSound(ALuint handle, int loops);
     void stopSound(ALuint handle);
-
 
   };
 }
