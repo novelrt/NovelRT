@@ -71,9 +71,6 @@ int main(int /*argc*/, char* /*argv*/[])
   audio.lock()->initializeAudio();
   auto bgm = audio.lock()->loadMusic((soundsDirPath / "marisa.ogg").string());
   auto jojo = audio.lock()->loadSound((soundsDirPath / "caution.wav").string());
-  auto jojo2 = audio.lock()->loadSound((soundsDirPath / "master_spark.wav").string());
-  auto jojo3 = audio.lock()->loadSound((soundsDirPath / "ATTACK3.wav").string());
-  auto jojo4 = audio.lock()->loadSound((soundsDirPath / "SPELLCARD.wav").string());
 
 #ifdef TEST_ANIM
   auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
@@ -187,12 +184,8 @@ int main(int /*argc*/, char* /*argv*/[])
   memeInteractionRect->Interacted += [&] {
     console.logDebug("WAHEYYY");
     audio.lock()->playSound(jojo, 0);
-    audio.lock()->playSound(jojo2, 0);
-    audio.lock()->playSound(jojo3, 0);
-    audio.lock()->playSound(jojo4, 0);
   };
 
-  //If uncommenting the call, pass &jojo to the subscription next to &audio.
   interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
     
