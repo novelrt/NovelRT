@@ -4,6 +4,6 @@
 
 namespace NovelRT::Timing {
 
-  Timestamp::Timestamp(uint64_t ticks) : _tickDelta(ticks) {}
+  Timestamp::Timestamp(uint64_t ticks) : _ticks(ticks) {}
 
 }

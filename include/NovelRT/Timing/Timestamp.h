@@ -10,21 +10,21 @@
 namespace NovelRT::Timing {
   class Timestamp {
   private:
-    const uint64_t _tickDelta;
+    const uint64_t _ticks;
 
   public:
     Timestamp(uint64_t ticks);
 
     inline uint64_t getTickDelta() const {
-      return _tickDelta;
+      return _ticks;
     }
 
     inline double getDoubleDelta() const {
-      return static_cast<double>(_tickDelta) / TicksPerSecond;
+      return static_cast<double>(_ticks) / TicksPerSecond;
     }
 
     inline float getFloatDelta() const {
-      return static_cast<float>(_tickDelta) / TicksPerSecond;
+      return static_cast<float>(_ticks) / TicksPerSecond;
     }
 
   };
