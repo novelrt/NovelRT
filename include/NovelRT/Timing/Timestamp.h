@@ -10,7 +10,7 @@
 namespace NovelRT::Timing {
   class Timestamp {
   private:
-    const uint64_t _ticks;
+    uint64_t _ticks;
 
   public:
     Timestamp::Timestamp(uint64_t ticks) : _ticks(ticks) {}
