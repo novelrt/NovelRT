@@ -49,7 +49,7 @@ namespace NovelRT::Animation {
         }
 
 
-        _accumulatedDelta += delta.getFloatDelta();
+        _accumulatedDelta += delta.getSecondsFloat();
         break;
       }
 
