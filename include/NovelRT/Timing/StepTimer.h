@@ -91,7 +91,7 @@ namespace NovelRT::Timing {
     }
 
     void resetElapsedTime();
-    void tick(const Utilities::Event<double>& update);
+    void tick(const Utilities::Event<DeltaTimestamp>& update);
   };
 }
 

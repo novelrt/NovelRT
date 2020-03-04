@@ -141,6 +141,7 @@ namespace NovelRT::Windowing {
 
 //value types
 #include "NovelRT/Atom.h"
+#include "NovelRT/Timing/DeltaTimestamp.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
