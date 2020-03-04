@@ -160,7 +160,7 @@ int main(int /*argc*/, char* /*argv*/[])
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
-    rotation += rotationAmount * delta.getFloatDelta();
+    rotation += rotationAmount * delta.getSecondsFloat();
     novelChanRect->getTransform().setRotation(rotation);
 
     if (rotation > 360.0f)

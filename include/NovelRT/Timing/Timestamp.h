@@ -15,15 +15,15 @@ namespace NovelRT::Timing {
   public:
     Timestamp(uint64_t ticks);
 
-    inline uint64_t getTickDelta() const {
+    inline uint64_t getTicks() const {
       return _ticks;
     }
 
-    inline double getDoubleDelta() const {
+    inline double getSecondsDouble() const {
       return static_cast<double>(_ticks) / TicksPerSecond;
     }
 
-    inline float getFloatDelta() const {
+    inline float getSecondsFloat() const {
       return static_cast<float>(_ticks) / TicksPerSecond;
     }
 
