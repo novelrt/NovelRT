@@ -13,7 +13,7 @@ namespace NovelRT::Timing {
     const uint64_t _ticks;
 
   public:
-    Timestamp(uint64_t ticks);
+    Timestamp::Timestamp(uint64_t ticks) : _ticks(ticks) {}
 
     inline uint64_t getTicks() const {
       return _ticks;
