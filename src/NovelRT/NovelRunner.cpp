@@ -5,7 +5,7 @@
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
     SceneConstructionRequested(Utilities::Event<>()),
-    Update(Utilities::Event<double>()),
+    Update(Utilities::Event<Timing::DeltaTimestamp>()),
     _exitCode(1),
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
     _novelDebugService(std::make_shared<DebugService>(this)),
