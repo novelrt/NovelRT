@@ -127,6 +127,8 @@ namespace NovelRT::SceneGraph {
 }
 
 namespace NovelRT::Timing {
+  // Windows and some other platforms use 100ns ticks
+  static const uint64_t TicksPerSecond = 10'000'000;
   typedef class StepTimer StepTimer;
 }
 

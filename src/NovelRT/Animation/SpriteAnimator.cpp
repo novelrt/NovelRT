@@ -9,11 +9,11 @@ namespace NovelRT::Animation {
     _runner(runner),
     _rect(rect),
     _animatorState(AnimatorPlayState::Stopped),
-    _animationUpdateHandle(Utilities::EventHandler<Timing::DeltaTimestamp>([=](Timing::DeltaTimestamp delta) { constructAnimation(delta); })),
+    _animationUpdateHandle(Utilities::EventHandler<Timing::Timestamp>([=](Timing::Timestamp delta) { constructAnimation(delta); })),
     _currentState(nullptr),
     _logger(Utilities::Misc::CONSOLE_LOG_GENERIC) {}
 
-  void SpriteAnimator::constructAnimation(Timing::DeltaTimestamp delta) {
+  void SpriteAnimator::constructAnimation(Timing::Timestamp delta) {
     switch (_animatorState) {
       case AnimatorPlayState::Playing: {
         if (_currentState == nullptr) {
