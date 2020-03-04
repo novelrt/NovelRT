@@ -31,8 +31,6 @@ namespace NovelRT::Timing {
     bool _isFixedTimeStep;
 
   public:
-    // Windows and some other platforms use 100ns ticks
-    static const uint64_t TicksPerSecond = 10'000'000;
 
     StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1);
 
@@ -43,13 +41,13 @@ namespace NovelRT::Timing {
       return _totalTicks;
     }
 
-    inline double getElapsedSeconds() const {
+    inline Timestamp getElapsedSeconds() const {
       auto elapsedTicks = getElapsedTicks();
-      return TicksToSeconds(elapsedTicks);
+      return Timestamp(elapsedTicks);
     }
-    inline double getTotalSeconds() const {
+    inline Timestamp getTotalSeconds() const {
       auto totalTicks = getTotalTicks();
-      return TicksToSeconds(totalTicks);
+      return Timestamp(totalTicks);
     }
 
     inline uint64_t getTargetElapsedTicks() const {
@@ -59,9 +57,9 @@ namespace NovelRT::Timing {
       _targetElapsedTicks = value;
     }
 
-    inline double getTargetElapsedSeconds() const {
+    inline Timestamp getTargetElapsedSeconds() const {
       auto targetElapsedTicks = getTargetElapsedTicks();
-      return TicksToSeconds(targetElapsedTicks);
+      return Timestamp(targetElapsedTicks);
     }
     inline void setTargetElapsedSeconds(double value) {
       auto targetElapsedTicks = SecondsToTicks(value);
@@ -91,7 +89,7 @@ namespace NovelRT::Timing {
     }
 
     void resetElapsedTime();
-    void tick(const Utilities::Event<DeltaTimestamp>& update);
+    void tick(const Utilities::Event<Timestamp>& update);
   };
 }
 

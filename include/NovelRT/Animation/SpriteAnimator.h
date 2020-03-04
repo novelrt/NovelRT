@@ -16,14 +16,14 @@ namespace NovelRT::Animation {
     NovelRunner* _runner; //I'm a bit worried about this, but whatever, just want it working for now
     Graphics::ImageRect* _rect;
     AnimatorPlayState _animatorState;
-    Utilities::EventHandler<Timing::DeltaTimestamp> _animationUpdateHandle;
+    Utilities::EventHandler<Timing::Timestamp> _animationUpdateHandle;
     std::vector<std::shared_ptr<SpriteAnimatorState>> _states;
     std::shared_ptr<SpriteAnimatorState> _currentState;
     std::vector<SpriteAnimatorFrame> _stateFrames;
     LoggingService _logger;
 
 
-    void constructAnimation(Timing::DeltaTimestamp delta);
+    void constructAnimation(Timing::Timestamp delta);
 
   public:
     explicit SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept;

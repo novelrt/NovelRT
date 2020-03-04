@@ -8,24 +8,23 @@
 #endif
 
 namespace NovelRT::Timing {
-  class DeltaTimestamp {
+  class Timestamp {
   private:
     const uint64_t _tickDelta;
-    const double _doubleDelta;
-    const float _floatDelta;
-  public:
-    DeltaTimestamp(uint64_t tickDelta, double doubleDelta, float floatDelta);
 
-    inline uint64_t getTickDelta() {
+  public:
+    Timestamp(uint64_t ticks);
+
+    inline uint64_t getTickDelta() const {
       return _tickDelta;
     }
 
-    inline double getDoubleDelta() {
-      return _doubleDelta;
+    inline double getDoubleDelta() const {
+      return static_cast<double>(_tickDelta) / TicksPerSecond;
     }
 
-    inline float getFloatDelta() {
-      return _floatDelta;
+    inline float getFloatDelta() const {
+      return static_cast<float>(_tickDelta) / TicksPerSecond;
     }
 
   };
