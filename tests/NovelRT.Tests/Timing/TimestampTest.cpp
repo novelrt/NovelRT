@@ -14,7 +14,7 @@ protected:
     _timeStamp = Timestamp(TicksPerSecond);
   }
 public:
-  TimestampTest() : _timeStamp(Timestamp(0)) {}
+  TimestampTest() : _timeStamp(Timestamp(uint64_t(0))) {}
 };
 
 TEST_F(TimestampTest, GetTicksShouldReturnCorrectValue) {
