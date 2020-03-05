@@ -41,11 +41,11 @@ namespace NovelRT::Timing {
       return _totalTicks;
     }
 
-    inline Timestamp getElapsedSeconds() const {
+    inline Timestamp getElapsedTime() const {
       auto elapsedTicks = getElapsedTicks();
       return Timestamp(elapsedTicks);
     }
-    inline Timestamp getTotalSeconds() const {
+    inline Timestamp getTotalTime() const {
       auto totalTicks = getTotalTicks();
       return Timestamp(totalTicks);
     }
