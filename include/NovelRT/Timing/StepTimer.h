@@ -57,11 +57,11 @@ namespace NovelRT::Timing {
       _targetElapsedTicks = value;
     }
 
-    inline Timestamp getTargetElapsedSeconds() const {
+    inline Timestamp getTargetElapsedTime() const {
       auto targetElapsedTicks = getTargetElapsedTicks();
       return Timestamp(targetElapsedTicks);
     }
-    inline void setTargetElapsedSeconds(double value) {
+    inline void setTargetElapsedTime(double value) {
       auto targetElapsedTicks = SecondsToTicks(value);
       setTargetElapsedTicks(targetElapsedTicks);
     }
