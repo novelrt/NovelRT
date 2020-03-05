@@ -15,7 +15,7 @@ namespace NovelRT {
 
   public:
     Utilities::Event<> SceneConstructionRequested;
-    Utilities::Event<double> Update;
+    Utilities::Event<Timing::Timestamp> Update;
 
   private:
     int _exitCode;

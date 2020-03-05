@@ -127,6 +127,8 @@ namespace NovelRT::SceneGraph {
 }
 
 namespace NovelRT::Timing {
+  // Windows and some other platforms use 100ns ticks
+  static const uint64_t TicksPerSecond = 10'000'000;
   typedef class StepTimer StepTimer;
 }
 
@@ -141,6 +143,7 @@ namespace NovelRT::Windowing {
 
 //value types
 #include "NovelRT/Atom.h"
+#include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"

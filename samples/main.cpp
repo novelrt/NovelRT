@@ -156,11 +156,11 @@ int main(int /*argc*/, char* /*argv*/[])
 
   runner.getDebugService().lock()->setIsFpsCounterVisible(true);
 
-  runner.Update += [&](double delta) {
+  runner.Update += [&](NovelRT::Timing::Timestamp delta) {
     const float rotationAmount = 45.0f;
 
     auto rotation = novelChanRect->getTransform().getRotation();
-    rotation += rotationAmount * static_cast<float>(delta);
+    rotation += rotationAmount * delta.getSecondsFloat();
     novelChanRect->getTransform().setRotation(rotation);
 
     if (rotation > 360.0f)

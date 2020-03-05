@@ -31,8 +31,6 @@ namespace NovelRT::Timing {
     bool _isFixedTimeStep;
 
   public:
-    // Windows and some other platforms use 100ns ticks
-    static const uint64_t TicksPerSecond = 10'000'000;
 
     StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1);
 
@@ -43,29 +41,29 @@ namespace NovelRT::Timing {
       return _totalTicks;
     }
 
-    inline double getElapsedSeconds() const {
+    inline Timestamp getElapsedTime() const {
       auto elapsedTicks = getElapsedTicks();
-      return TicksToSeconds(elapsedTicks);
+      return Timestamp(elapsedTicks);
     }
-    inline double getTotalSeconds() const {
+    inline Timestamp getTotalTime() const {
       auto totalTicks = getTotalTicks();
-      return TicksToSeconds(totalTicks);
+      return Timestamp(totalTicks);
     }
 
     inline uint64_t getTargetElapsedTicks() const {
       return _targetElapsedTicks;
     }
+
     inline void setTargetElapsedTicks(uint64_t value) {
       _targetElapsedTicks = value;
     }
 
-    inline double getTargetElapsedSeconds() const {
+    inline Timestamp getTargetElapsedTime() const {
       auto targetElapsedTicks = getTargetElapsedTicks();
-      return TicksToSeconds(targetElapsedTicks);
+      return Timestamp(targetElapsedTicks);
     }
-    inline void setTargetElapsedSeconds(double value) {
-      auto targetElapsedTicks = SecondsToTicks(value);
-      setTargetElapsedTicks(targetElapsedTicks);
+    inline void setTargetElapsedTime(Timestamp value) {
+      setTargetElapsedTicks(value.getTicks());
     }
 
     inline uint32_t getFrameCount() const {
@@ -78,20 +76,13 @@ namespace NovelRT::Timing {
     inline bool getIsFixedTimeStep() const {
       return _isFixedTimeStep;
     }
+
     inline void setIsFixedTimeStep(bool value) {
       _isFixedTimeStep = value;
     }
 
-    static double TicksToSeconds(uint64_t ticks) {
-      return static_cast<double>(ticks) / TicksPerSecond;
-    }
-
-    static uint64_t SecondsToTicks(double seconds) {
-      return static_cast<uint64_t>(seconds * TicksPerSecond);
-    }
-
     void resetElapsedTime();
-    void tick(const Utilities::Event<double>& update);
+    void tick(const Utilities::Event<Timestamp>& update);
   };
 }
 
