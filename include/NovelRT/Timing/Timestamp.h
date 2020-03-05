@@ -21,13 +21,13 @@ namespace NovelRT::Timing {
 
     inline double getSecondsDouble() const {
       auto returnVal = static_cast<double>(_ticks) / TicksPerSecond;
-      assert((returnVal != 0.0 || _ticks == 0) && "Unable to represent Timestamp as a double! Ticks is either zero or near zero.");
+      assert((returnVal != 0.0 || _ticks == 0) && "Timestamp can't be represented in seconds as a double, tick value is too small!");
       return returnVal;
     }
 
     inline float getSecondsFloat() const {
       auto returnVal = static_cast<float>(getSecondsDouble());
-      assert((returnVal != 0.0f || _ticks == 0) && "Unable to represent Timestamp as a float! Ticks is either zero or near zero.");
+      assert((returnVal != 0.0f || _ticks == 0) && "Timestamp can't be represented in seconds as a float, tick value is too small!");
       return returnVal;
     }
 
