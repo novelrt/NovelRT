@@ -29,7 +29,7 @@ namespace NovelRT::Timing {
     _framesThisSecond = 0;
   }
 
-  void StepTimer::tick(const Utilities::Event<double>& update) {
+  void StepTimer::tick(const Utilities::Event<Timestamp>& update) {
     auto currentCounter = glfwGetTimerValue();
     auto counterDelta = currentCounter - _lastCounter;
 
@@ -65,15 +65,13 @@ namespace NovelRT::Timing {
 
       _remainingTicks += ticksDelta;
 
-      auto secondsDelta = TicksToSeconds(targetElapsedTicks);
-
       while (_remainingTicks >= targetElapsedTicks) {
         _elapsedTicks = targetElapsedTicks;
         _totalTicks += targetElapsedTicks;
         _remainingTicks -= targetElapsedTicks;
         _frameCount++;
 
-        update(secondsDelta);
+        update(Timestamp(ticksDelta));
       }
     } else {
       // variable timestep update logic
@@ -83,8 +81,7 @@ namespace NovelRT::Timing {
       _remainingTicks = 0;
       _frameCount++;
 
-      auto secondsDelta = TicksToSeconds(ticksDelta);
-      update(secondsDelta);
+      update(Timestamp(ticksDelta));
     }
 
     // Track the current framerate
