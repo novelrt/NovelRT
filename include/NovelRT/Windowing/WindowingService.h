@@ -3,10 +3,6 @@
 #ifndef NOVELRT_NOVELWINDOWINGSERVICE_H
 #define NOVELRT_NOVELWINDOWINGSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::Windowing {
   /**
    * Manages the game window and window events such as resizing.
@@ -17,7 +13,7 @@ namespace NovelRT::Windowing {
     Utilities::Event<Maths::GeoVector2<float>> WindowResized;
     Utilities::Event<> WindowTornDown;
 
-  private:   
+  private:
     Maths::GeoVector2<float> _windowSize;
     std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;

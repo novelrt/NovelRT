@@ -3,10 +3,6 @@
 #ifndef NOVELRT_LOGGINGSERVICE_H
 #define NOVELRT_LOGGINGSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT {
   enum class LogLevel {
     Debug = SPDLOG_LEVEL_DEBUG,

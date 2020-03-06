@@ -1,10 +1,6 @@
 #ifndef NOVELRT_MATHS_QUADTREE_H
 #define NOVELRT_MATHS_QUADTREE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::Maths {
   class QuadTree : public std::enable_shared_from_this<QuadTree> {
   private:

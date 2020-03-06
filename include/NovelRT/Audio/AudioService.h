@@ -3,10 +3,6 @@
 #ifndef NOVELRT_AUDIOSERVICE_H
 #define NOVELRT_AUDIOSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::Audio {
   // TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
   class AudioService {
@@ -40,7 +36,7 @@ namespace NovelRT::Audio {
 
     bool initializeAudio();
     std::vector<ALuint>::iterator loadMusic(std::string input);
-    
+
     void setSoundVolume(ALuint source, float val);
     void setSoundPosition(ALuint source, float posX, float posY);
     void resumeMusic();

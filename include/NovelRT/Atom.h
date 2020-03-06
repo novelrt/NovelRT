@@ -3,10 +3,6 @@
 #ifndef NOVELRT_ATOM_H
 #define NOVELRT_ATOM_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT {
   class Atom {
   private:

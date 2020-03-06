@@ -3,10 +3,6 @@
 #ifndef NOVELRT_GRAPHICS_SHADERPROGRAM_H
 #define NOVELRT_GRAPHICS_SHADERPROGRAM_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::Graphics {
   struct ShaderProgram {
   public:

@@ -3,10 +3,6 @@
 #ifndef NOVELRT_WORLDOBJECT_H
 #define NOVELRT_WORLDOBJECT_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT {
   /**
    * Represents an object in the game world.

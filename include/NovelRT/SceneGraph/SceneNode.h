@@ -3,10 +3,6 @@
 #ifndef NOVELRT_SCENENODE_H
 #define NOVELRT_SCENENODE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::SceneGraph {
   class SceneNode : public std::enable_shared_from_this<SceneNode> {
   public:

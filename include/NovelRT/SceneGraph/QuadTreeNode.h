@@ -3,10 +3,6 @@
 #ifndef NOVELRT_QUADTREENODE_H
 #define NOVELRT_QUADTREENODE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
-
 namespace NovelRT::SceneGraph {
   class QuadTreeNode : public SceneNode {
   private:
