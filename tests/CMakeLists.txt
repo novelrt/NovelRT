@@ -1,7 +1,7 @@
 find_package(GTest CONFIG REQUIRED)
 
-if (NOT MSVC)
-  add_compile_options(-Wno-global-constructors -Wno-missing-prototypes -Wno-weak-vtables)
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wno-global-constructors -Wno-weak-vtables)
 endif()
 
 set(NOVELRT_TESTS_HEADERS)
