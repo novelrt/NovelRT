@@ -8,141 +8,13 @@
 #endif
 
 namespace NovelRT::SceneGraph {
-  template <typename T>
-  class breadth_first_traversal_result_iterator {
-  private:
-    std::function<T(const std::shared_ptr<SceneNode>&)> _function;
-    std::queue<std::shared_ptr<SceneNode>> _pendingNodes;
-    std::set<std::shared_ptr<SceneNode>> _visitedNodes;
-
-    T _value;
-
-  public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = T;
-    using pointer = value_type*;
-    using const_pointer = const value_type*;
-    using reference = value_type&;
-    using const_reference = const value_type&;
-
-    breadth_first_traversal_result_iterator(const std::shared_ptr<SceneNode>& node, std::function<T(const std::shared_ptr<SceneNode>&)> function) :
-      _function(function) {
-      _pendingNodes.push(node);
-      _visitedNodes.insert(node);
-      ++*this;
-    }
-
-    const_reference operator*() const {
-      return _value;
-    }
-
-    const_pointer operator->() const {
-      return std::pointer_traits<pointer>::pointer_to(**this);
-    }
-
-    breadth_first_traversal_result_iterator& operator++() {
-      auto node = _pendingNodes.front();
-      _value = _function(node);
-      _pendingNodes.pop();
-
-      for (auto child : node->getChildren()) {
-        if (_visitedNodes.find(child) == _visitedNodes.cend()) {
-          _visitedNodes.insert(child);
-          _pendingNodes.push(child);
-        }
-      }
-
-      return *this;
-    }
-
-    breadth_first_traversal_result_iterator operator++(int) {
-      auto tmp = *this;
-      ++*this;
-      return tmp;
-    }
-
-    bool operator==(const breadth_first_traversal_result_iterator& other) const {
-      return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty()
-        || _pendingNodes.front() == other._pendingNodes.front());
-    }
-
-    bool operator!=(const breadth_first_traversal_result_iterator& other) const {
-      return !(*this == other);
-    }
-
-    bool isEnd() const {
-      return _pendingNodes.empty();
-    }
-  };
-
-  template <typename T>
-  class depth_first_traversal_result_iterator {
-  private:
-    std::function<T(const std::shared_ptr<SceneNode>&)> _function;
-    std::stack<std::shared_ptr<SceneNode>> _pendingNodes;
-    std::set<std::shared_ptr<SceneNode>> _visitedNodes;
-
-    T _value;
-
-  public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = T;
-    using pointer = value_type*;
-    using const_pointer = const value_type*;
-    using reference = value_type&;
-    using const_reference = const value_type&;
-
-    depth_first_traversal_result_iterator(const std::shared_ptr<SceneNode>& node, std::function<T(const std::shared_ptr<SceneNode>&)> function) :
-      _function(function) {
-      _pendingNodes.push(node);
-      _visitedNodes.insert(node);
-      ++*this;
-    }
-
-    const_reference operator*() const {
-      return _value;
-    }
-
-    const_pointer operator->() const {
-      return std::pointer_traits<pointer>::pointer_to(**this);
-    }
-
-    depth_first_traversal_result_iterator& operator++() {
-      auto node = _pendingNodes.top();
-      _value = _function(node);
-      _pendingNodes.pop();
-
-      for (auto child : node->getChildren()) {
-        if (_visitedNodes.find(child) == _visitedNodes.cend()) {
-          _visitedNodes.insert(child);
-          _pendingNodes.push(child);
-        }
-      }
-
-      return *this;
-    }
-
-    depth_first_traversal_result_iterator operator++(int) {
-      auto tmp = *this;
-      ++*this;
-      return tmp;
-    }
-
-    bool operator==(const depth_first_traversal_result_iterator& other) const {
-      return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty()
-        || _pendingNodes.top() == other._pendingNodes.top());
-    }
-
-    bool operator!=(const depth_first_traversal_result_iterator& other) const {
-      return !(*this == other);
-    }
-
-    bool isEnd() const {
-      return _pendingNodes.empty();
-    }
-  };
-
   class SceneNode : public std::enable_shared_from_this<SceneNode> {
+  public:
+    template <typename T>
+    class breadth_first_traversal_result_iterator;
+    template <typename T>
+    class depth_first_traversal_result_iterator;
+
   private:
     std::set<std::shared_ptr<SceneNode>> _parents;
     std::set<std::shared_ptr<SceneNode>> _children;
@@ -249,6 +121,140 @@ namespace NovelRT::SceneGraph {
 
       return *result;
     }
+
+    template <typename T>
+    class breadth_first_traversal_result_iterator {
+    private:
+      std::function<T(const std::shared_ptr<SceneNode>&)> _function;
+      std::queue<std::shared_ptr<SceneNode>> _pendingNodes;
+      std::set<std::shared_ptr<SceneNode>> _visitedNodes;
+
+      T _value;
+
+    public:
+      using iterator_category = std::output_iterator_tag;
+      using value_type = T;
+      using pointer = value_type*;
+      using const_pointer = const value_type*;
+      using reference = value_type&;
+      using const_reference = const value_type&;
+
+      breadth_first_traversal_result_iterator(const std::shared_ptr<SceneNode>& node, std::function<T(const std::shared_ptr<SceneNode>&)> function) :
+        _function(function) {
+        _pendingNodes.push(node);
+        _visitedNodes.insert(node);
+        ++*this;
+      }
+
+      const_reference operator*() const {
+        return _value;
+      }
+
+      const_pointer operator->() const {
+        return std::pointer_traits<pointer>::pointer_to(**this);
+      }
+
+      breadth_first_traversal_result_iterator& operator++() {
+        auto node = _pendingNodes.front();
+        _value = _function(node);
+        _pendingNodes.pop();
+
+        for (auto child : node->getChildren()) {
+          if (_visitedNodes.find(child) == _visitedNodes.cend()) {
+            _visitedNodes.insert(child);
+            _pendingNodes.push(child);
+          }
+        }
+
+        return *this;
+      }
+
+      breadth_first_traversal_result_iterator operator++(int) {
+        auto tmp = *this;
+        ++*this;
+        return tmp;
+      }
+
+      bool operator==(const breadth_first_traversal_result_iterator& other) const {
+        return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty()
+          || _pendingNodes.front() == other._pendingNodes.front());
+      }
+
+      bool operator!=(const breadth_first_traversal_result_iterator& other) const {
+        return !(*this == other);
+      }
+
+      bool isEnd() const {
+        return _pendingNodes.empty();
+      }
+    };
+
+    template <typename T>
+    class depth_first_traversal_result_iterator {
+    private:
+      std::function<T(const std::shared_ptr<SceneNode>&)> _function;
+      std::stack<std::shared_ptr<SceneNode>> _pendingNodes;
+      std::set<std::shared_ptr<SceneNode>> _visitedNodes;
+
+      T _value;
+
+    public:
+      using iterator_category = std::output_iterator_tag;
+      using value_type = T;
+      using pointer = value_type*;
+      using const_pointer = const value_type*;
+      using reference = value_type&;
+      using const_reference = const value_type&;
+
+      depth_first_traversal_result_iterator(const std::shared_ptr<SceneNode>& node, std::function<T(const std::shared_ptr<SceneNode>&)> function) :
+        _function(function) {
+        _pendingNodes.push(node);
+        _visitedNodes.insert(node);
+        ++*this;
+      }
+
+      const_reference operator*() const {
+        return _value;
+      }
+
+      const_pointer operator->() const {
+        return std::pointer_traits<pointer>::pointer_to(**this);
+      }
+
+      depth_first_traversal_result_iterator& operator++() {
+        auto node = _pendingNodes.top();
+        _value = _function(node);
+        _pendingNodes.pop();
+
+        for (auto child : node->getChildren()) {
+          if (_visitedNodes.find(child) == _visitedNodes.cend()) {
+            _visitedNodes.insert(child);
+            _pendingNodes.push(child);
+          }
+        }
+
+        return *this;
+      }
+
+      depth_first_traversal_result_iterator operator++(int) {
+        auto tmp = *this;
+        ++*this;
+        return tmp;
+      }
+
+      bool operator==(const depth_first_traversal_result_iterator& other) const {
+        return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty()
+          || _pendingNodes.top() == other._pendingNodes.top());
+      }
+
+      bool operator!=(const depth_first_traversal_result_iterator& other) const {
+        return !(*this == other);
+      }
+
+      bool isEnd() const {
+        return _pendingNodes.empty();
+      }
+    };
   };
 }
 
