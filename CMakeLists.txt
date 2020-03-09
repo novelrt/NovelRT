@@ -7,8 +7,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
   add_compile_options(/W4 /WX /wd4611)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-float-equal -Wno-padded)
 else()
-  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Weverything -Werror -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-float-equal -Wno-padded -Wno-reserved-id-macro)
+  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-float-equal -Wno-padded -Wno-reserved-id-macro)
 endif()
 
 include_directories(include)
