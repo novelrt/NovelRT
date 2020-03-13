@@ -20,12 +20,12 @@ namespace NovelRT::Maths {
     bool intersectsWith(const GeoBounds& otherBounds) const;
     GeoVector<float> getCornerInLocalSpace(int index) const;
     GeoVector<float> getCornerInWorldSpace(int index) const;
-    GeoVector<float> getPosition() const;
-    void setPosition(const GeoVector<float>& value);
-    GeoVector<float> getSize() const;
-    void setSize(const GeoVector<float>& value);
-    float getRotation() const;
-    void setRotation(float value);
+    const GeoVector<float>& position() const;
+    GeoVector<float>& position();
+    const GeoVector<float>& size() const;
+    GeoVector<float>& size();
+    const float& rotation() const;
+    float& rotation();
     GeoVector<float> getExtents() const;
 
     inline bool operator==(const GeoBounds& other) const {
