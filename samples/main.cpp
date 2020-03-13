@@ -170,14 +170,14 @@ int main(int /*argc*/, char* /*argv*/[])
 
     novelChanRect->getTransform().setRotation(rotation);
 
-    if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) != NovelRT::Input::KeyState::Idle) {
+    if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");
     }
   };
 
   interactionRect = runner.getInteractionService().lock()->createBasicInteractionRect(playButtonTransform, 2);
-  memeInteractionRect->setSubscribedKey(NovelRT::Input::KeyCode::LeftMouseButton);
-  interactionRect->setSubscribedKey(NovelRT::Input::KeyCode::RightMouseButton);
+  memeInteractionRect->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+  interactionRect->subscribedKey() = NovelRT::Input::KeyCode::RightMouseButton;
 
   auto loggingLevel = NovelRT::LogLevel::Debug;
 
