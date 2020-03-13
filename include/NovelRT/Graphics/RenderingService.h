@@ -24,7 +24,7 @@ namespace NovelRT::Graphics {
     ShaderProgram _fontProgram;
 
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
-    std::unique_ptr<Camera> _camera;
+    std::shared_ptr<Camera> _camera;
 
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
     std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
@@ -48,7 +48,7 @@ namespace NovelRT::Graphics {
 
     std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
 
-    Camera* getCamera() const;
+    std::weak_ptr<Camera> getCamera() const;
 
     void beginFrame() const;
     void endFrame() const;

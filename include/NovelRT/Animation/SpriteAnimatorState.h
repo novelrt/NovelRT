@@ -30,24 +30,24 @@ namespace NovelRT::Animation {
       _transitions.emplace_back(make_tuple(stateTarget, transitionConditions));
     }
 
-    inline void removeStateAtIndex(int32_t index) { //not sure if we can make this noexcept somehow but whatever
+    inline void removeStateAtIndex(size_t index) { //not sure if we can make this noexcept somehow but whatever
       _transitions.erase(_transitions.begin() + index);
     }
 
-    inline bool getShouldLoop() const noexcept {
+    inline const bool& shouldLoop() const noexcept {
       return _shouldLoop;
     }
 
-    inline void setShouldLoop(bool value) noexcept {
-      _shouldLoop = value;
+    inline bool& shouldLoop() noexcept {
+      return _shouldLoop;
     }
 
-    inline const std::vector<SpriteAnimatorFrame>* getFrames() const noexcept {
-      return &_frames;
+    inline const std::vector<SpriteAnimatorFrame>& frames() const noexcept {
+      return _frames;
     }
 
-    inline void setFrames(const std::vector<SpriteAnimatorFrame>& value) noexcept {
-      _frames = value;
+    inline std::vector<SpriteAnimatorFrame>& frames() noexcept {
+      return _frames;
     }
 
     inline std::shared_ptr<SpriteAnimatorState> tryFindValidTransition() {

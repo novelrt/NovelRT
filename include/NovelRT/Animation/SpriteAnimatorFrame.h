@@ -27,12 +27,12 @@ namespace NovelRT::Animation {
       _texture = value;
     }
 
-    inline float getDuration() const noexcept {
+    inline const float& duration() const noexcept {
       return _duration;
     }
 
-    inline void setDuration(float value) noexcept {
-      _duration = value;
+    inline float& duration() noexcept {
+      return _duration;
     }
   };
 }

@@ -21,13 +21,12 @@ namespace NovelRT::Graphics {
   public:
     BasicFillRect(const Transform& transform,
       int layer,
-      Camera* camera,
+      std::weak_ptr<Camera> camera,
       ShaderProgram shaderProgram,
       const RGBAConfig& fillColour);
 
     void drawObject() final;
-    const RGBAConfig& getColourConfig() const;
-    RGBAConfig& getColourConfig();
+    const RGBAConfig getColourConfig() const;
     void setColourConfig(const RGBAConfig& value);
   };
 }
