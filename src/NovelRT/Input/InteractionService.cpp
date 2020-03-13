@@ -86,8 +86,8 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[target->getSubscribedKey()] == KeyState::KeyDown
-      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[target->getSubscribedKey()])
+    if (_keyStates[target->subscribedKey()] == KeyState::KeyDown
+      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[target->subscribedKey()])
       && (_clickTarget == nullptr || (_clickTarget->getLayer() > target->getLayer()))) {
       _logger.logDebug("Valid click target detected! Executing...");
       _clickTarget = target;

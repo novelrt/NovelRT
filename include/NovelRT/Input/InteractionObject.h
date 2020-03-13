@@ -23,9 +23,15 @@ namespace NovelRT::Input {
 
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
-    KeyCode getSubscribedKey() const;
-    void setSubscribedKey(KeyCode key);
+
+    inline KeyCode& subscribedKey() noexcept {
+      return _subscribedKey;
+    }
+
+    inline const KeyCode& subscribedKey() const noexcept {
+      return _subscribedKey;
+    }
   };
 }
 
-#endif //NOVELRT_INPUT_INTERACTIONOBJECT_H
+#endif //!NOVELRT_INPUT_INTERACTIONOBJECT_H
