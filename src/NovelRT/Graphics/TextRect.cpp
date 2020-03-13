@@ -21,7 +21,7 @@ namespace NovelRT::Graphics {
   TextRect::TextRect(const Transform& transform,
     int layer,
     ShaderProgram shaderProgram,
-    Camera* camera,
+    std::weak_ptr<Camera> camera,
     std::shared_ptr<FontSet> fontSet,
     const RGBAConfig& colourConfig) :
     RenderObject(

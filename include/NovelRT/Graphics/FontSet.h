@@ -21,7 +21,7 @@ namespace NovelRT::Graphics {
 
 
 
-    inline const std::vector<GraphicsCharacterRenderData>& getTextureIdInternal() const noexcept {
+    inline const std::vector<GraphicsCharacterRenderData>& getCharacterRenderDataInternal() const noexcept {
       return _characters;
     }
 
