@@ -121,12 +121,12 @@ int main(int /*argc*/, char* /*argv*/[])
 
   novelChanRect = runner.getRenderer().lock()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
-  auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() + 400, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
+  auto rubyGnomerTextTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.position().getX() + 400, novelChanTransform.position().getY()), 0, NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
 
   textRect = runner.getRenderer().lock()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255), 70, (fontsDirPath / "Gayathri-Regular.ttf").string());
   textRect->setText("RubyGnomer");
 
-  auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.getPosition(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
+  auto lineTransform = NovelRT::Transform(rubyGnomerTextTransform.position(), 0, NovelRT::Maths::GeoVector<float>(1000.0f, 2.0f));
 
   lineRect = runner.getRenderer().lock()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
@@ -134,20 +134,20 @@ int main(int /*argc*/, char* /*argv*/[])
   auto myTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(1, 1), 0.0f, NovelRT::Maths::GeoVector<float>(200, 300));
   myBasicFillRect = runner.getRenderer().lock()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
 
-  auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.getPosition().getX() - 500, novelChanTransform.getPosition().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
+  auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector<float>(novelChanTransform.position().getX() - 500, novelChanTransform.position().getY()), 0, NovelRT::Maths::GeoVector<float>(200, 200));
   playAudioButton = runner.getRenderer().lock()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
   playAudioTextTransform.setScale(NovelRT::Maths::GeoVector<float>(1.0f, 1.0f));
-  auto vec = playButtonTransform.getPosition();
-  vec.setX(playButtonTransform.getPosition().getX() - 75);
-  playAudioTextTransform.setPosition(vec);
+  auto vec = playButtonTransform.position();
+  vec.setX(playButtonTransform.position().getX() - 75);
+  playAudioTextTransform.position() = vec;
   playAudioText = runner.getRenderer().lock()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, (fontsDirPath / "Gayathri-Regular.ttf").string());
   playAudioText->setText("Play Audio");
 
   auto theRealMvpTransform = playButtonTransform;
-  auto whatever = playButtonTransform.getPosition();
+  auto whatever = playButtonTransform.position();
   whatever.setX(whatever.getX() + 50);
-  theRealMvpTransform.setPosition(whatever);
+  theRealMvpTransform.position() = whatever;
 
   memeInteractionRect = runner.getInteractionService().lock()->createBasicInteractionRect(theRealMvpTransform, -1);
 
@@ -159,16 +159,16 @@ int main(int /*argc*/, char* /*argv*/[])
   runner.Update += [&](NovelRT::Timing::Timestamp delta) {
     const float rotationAmount = 45.0f;
 
-    auto rotation = novelChanRect->getTransform().getRotation();
+    auto rotation = novelChanRect->transform().getRotation();
     rotation += rotationAmount * delta.getSecondsFloat();
-    novelChanRect->getTransform().setRotation(rotation);
+    novelChanRect->transform().setRotation(rotation);
 
     if (rotation > 360.0f)
     {
       rotation -= 360.0f;
     }
 
-    novelChanRect->getTransform().setRotation(rotation);
+    novelChanRect->transform().setRotation(rotation);
 
     if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");

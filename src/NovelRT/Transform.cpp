@@ -4,16 +4,14 @@
 
 namespace NovelRT {
   Transform::Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) noexcept :
-    _active(true) {
-    setPosition(position);
-    setRotation(rotation);
-    setScale(scale);
-  }
+    _position(position),
+    _scale(scale),
+    _rotation(rotation),
+    _active(true) {}
 
   Transform::Transform() noexcept :
-    _active(true) {
-    setPosition(Maths::GeoVector<float>::zero());
-    setRotation(0.0f);
-    setScale(Maths::GeoVector<float>::zero());
-  }
+    _position(Maths::GeoVector<float>::zero()),
+    _scale(Maths::GeoVector<float>::zero()),
+    _rotation(0.0f),
+    _active(true) {}
 }

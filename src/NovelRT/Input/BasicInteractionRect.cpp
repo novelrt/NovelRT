@@ -7,8 +7,8 @@ namespace NovelRT::Input {
     : InteractionObject(transform, layer, notifyHasBeenDrawnObject) {}
 
   bool BasicInteractionRect::validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const {
-    auto position = getTransform().getPosition();
-    auto size = getTransform().getScale();
-    return Maths::GeoBounds(position, size, getTransform().getRotation()).pointIsWithinBounds(mousePosition);
+    auto position = transform().position();
+    auto size = transform().getScale();
+    return Maths::GeoBounds(position, size, transform().getRotation()).pointIsWithinBounds(mousePosition);
   }
 }
