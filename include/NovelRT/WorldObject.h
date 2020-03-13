@@ -21,21 +21,21 @@ namespace NovelRT {
     WorldObject(const Transform& transform, int layer);
     virtual ~WorldObject() { }
 
-    inline Transform& getTransform() {
+    inline Transform& transform() {
       _isDirty = true;
       return _transform;
     }
 
-    inline const Transform& getTransform() const {
+    inline const Transform& transform() const {
       return _transform;
     }
 
-    inline int getLayer() const {
+    inline const int& layer() const {
       return _layer;
     }
 
-    inline void setLayer(int value) {
-      _layer = value;
+    inline int& layer() {
+      return _layer;
     }
 
     virtual bool getActive() const;
