@@ -13,8 +13,6 @@ namespace NovelRT {
     Maths::GeoVector<float> _position;
     Maths::GeoVector<float> _scale;
     float _rotation;
-    int _orderInLayer;
-    int _layer;
     bool _active;
 
   public:
@@ -30,16 +28,12 @@ namespace NovelRT {
       return Maths::GeoBounds(_position, _scale, _rotation);
     }
 
-    inline const Maths::GeoVector<float>& getPosition() const {
+    inline const Maths::GeoVector<float>& position() const {
       return _position;
     }
 
-    inline Maths::GeoVector<float>& getPosition() {
+    inline Maths::GeoVector<float>& position() {
       return _position;
-    }
-
-    inline void setPosition(const Maths::GeoVector<float>& value) {
-      _position = value;
     }
 
     inline float getRotation() const {

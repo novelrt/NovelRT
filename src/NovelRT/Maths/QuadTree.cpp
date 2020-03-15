@@ -11,8 +11,8 @@ namespace NovelRT::Maths {
     const GeoVector<float> BOTTOM_LEFT_SCALE = GeoVector<float>(-0.5, -0.5);
     const GeoVector<float> BOTTOM_RIGHT_SCALE = GeoVector<float>(+0.5, -0.5);
 
-    GeoVector size = getBounds().getSize() / 2;
-    GeoVector position = getBounds().getPosition();
+    GeoVector size = getBounds().size() / 2;
+    GeoVector position = getBounds().position();
 
     _children[TOP_LEFT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0), weak_from_this());
     _children[TOP_RIGHT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0), weak_from_this());

@@ -50,20 +50,20 @@ namespace NovelRT::Timing {
       return Timestamp(totalTicks);
     }
 
-    inline uint64_t getTargetElapsedTicks() const {
+    inline const uint64_t& targetElapsedTicks() const {
       return _targetElapsedTicks;
     }
 
-    inline void setTargetElapsedTicks(uint64_t value) {
-      _targetElapsedTicks = value;
+    inline uint64_t& targetElapsedTicks() {
+      return _targetElapsedTicks;
     }
 
     inline Timestamp getTargetElapsedTime() const {
-      auto targetElapsedTicks = getTargetElapsedTicks();
-      return Timestamp(targetElapsedTicks);
+      auto ticks = targetElapsedTicks();
+      return Timestamp(ticks);
     }
     inline void setTargetElapsedTime(Timestamp value) {
-      setTargetElapsedTicks(value.getTicks());
+      targetElapsedTicks() = value.getTicks();
     }
 
     inline uint32_t getFrameCount() const {
@@ -73,12 +73,12 @@ namespace NovelRT::Timing {
       return _framesPerSecond;
     }
 
-    inline bool getIsFixedTimeStep() const {
+    inline const bool& isFixedTimeStep() const {
       return _isFixedTimeStep;
     }
 
-    inline void setIsFixedTimeStep(bool value) {
-      _isFixedTimeStep = value;
+    inline bool& isFixedTimeStep() {
+      return _isFixedTimeStep;
     }
 
     void resetElapsedTime();

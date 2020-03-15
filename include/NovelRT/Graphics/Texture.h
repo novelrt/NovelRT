@@ -35,7 +35,7 @@ namespace NovelRT::Graphics {
     Texture(std::weak_ptr<RenderingService> renderer, Atom id);
     void loadPngAsTexture(const std::string& file);
 
-    inline std::string getTextureFile() const noexcept {
+    inline const std::string& getTextureFile() const noexcept {
       return _textureFile;
     }
 
