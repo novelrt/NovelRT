@@ -71,7 +71,7 @@ namespace NovelRT::Graphics {
         + ((static_cast<float>(ch.size.getY()) - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
-      target->setTexture(ch.texture);
+      target->texture() = ch.texture;
       target->transform().position() = currentWorldPosition;
       target->transform().setScale(Maths::GeoVector<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY())));
       target->setActive(true);

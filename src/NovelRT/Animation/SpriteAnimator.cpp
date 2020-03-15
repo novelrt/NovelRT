@@ -20,7 +20,7 @@ namespace NovelRT::Animation {
           _currentState = _states.at(0);
 
           auto frame = _currentState->frames().at(_currentFrameIndex);
-          _rect->setTexture(frame.getTexture());
+          _rect->texture() = frame.texture();
           frame.FrameEnter();
         }
 
@@ -44,7 +44,7 @@ namespace NovelRT::Animation {
           }
 
           auto newFrame = _currentState->frames().at(_currentFrameIndex);
-          _rect->setTexture(newFrame.getTexture());
+          _rect->texture() = newFrame.texture();
           newFrame.FrameEnter();
         }
 
