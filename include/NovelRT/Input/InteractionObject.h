@@ -24,11 +24,11 @@ namespace NovelRT::Input {
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
 
-    inline KeyCode& subscribedKey() noexcept {
+    inline const KeyCode& subscribedKey() const noexcept {
       return _subscribedKey;
     }
 
-    inline const KeyCode& subscribedKey() const noexcept {
+    inline KeyCode& subscribedKey() noexcept {
       return _subscribedKey;
     }
   };
