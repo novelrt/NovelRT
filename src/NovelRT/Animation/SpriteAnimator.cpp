@@ -19,8 +19,8 @@ namespace NovelRT::Animation {
         if (_currentState == nullptr) {
           _currentState = _states.at(0);
 
-          auto frame = _currentState->getFrames()->at(_currentFrameIndex);
-          _rect->setTexture(frame.getTexture());
+          auto frame = _currentState->frames().at(_currentFrameIndex);
+          _rect->texture() = frame.texture();
           frame.FrameEnter();
         }
 
@@ -30,21 +30,21 @@ namespace NovelRT::Animation {
           _currentState = transitionPtr;
           _accumulatedDelta = 0.0f;
           _currentFrameIndex = 0;
-          _currentState->getFrames()->at(_currentFrameIndex).FrameEnter();
+          _currentState->frames().at(_currentFrameIndex).FrameEnter();
         }
 
-        if (_currentState->getFrames()->size() > _currentFrameIndex && _currentState->getFrames()->at(_currentFrameIndex).getDuration() <= _accumulatedDelta) {
+        if (_currentState->frames().size() > _currentFrameIndex && _currentState->frames().at(_currentFrameIndex).duration() <= _accumulatedDelta) {
           _accumulatedDelta = 0;
-          _currentState->getFrames()->at(_currentFrameIndex++).FrameExit();
+          _currentState->frames().at(_currentFrameIndex++).FrameExit();
 
-          if (_currentState->getShouldLoop() && _currentFrameIndex >= _currentState->getFrames()->size()) {
+          if (_currentState->shouldLoop() && _currentFrameIndex >= _currentState->frames().size()) {
             _currentFrameIndex = 0;
-          } else if (_currentFrameIndex >= _currentState->getFrames()->size()) {
+          } else if (_currentFrameIndex >= _currentState->frames().size()) {
             return;
           }
 
-          auto newFrame = _currentState->getFrames()->at(_currentFrameIndex);
-          _rect->setTexture(newFrame.getTexture());
+          auto newFrame = _currentState->frames().at(_currentFrameIndex);
+          _rect->texture() = newFrame.texture();
           newFrame.FrameEnter();
         }
 

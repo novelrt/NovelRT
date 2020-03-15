@@ -29,12 +29,12 @@ namespace NovelRT::Maths {
       _value.y = value.y;
     }
 
-    glm::vec<4, T> getVec4Value() const {
+    const glm::vec<4, T>& vec4Value() const {
       return _value;
     }
 
-    void setVec4Value(glm::vec<4, T> value) {
-      _value = value;
+    glm::vec<4, T>& vec4Value() {
+      return _value;
     }
 
     glm::vec<4, T> _value;
@@ -123,10 +123,10 @@ namespace NovelRT::Maths {
       return GeoVector<T>(0, 0);
     }
 
-    static GeoVector<T> one() {
+    static const GeoVector<T> one() {
       return GeoVector<T>(1, 1);
     }
   };
 }
 
-#endif //NOVELRT_MATHS_GEOVECTOR_H
+#endif //!NOVELRT_MATHS_GEOVECTOR_H

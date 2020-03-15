@@ -223,8 +223,8 @@ namespace NovelRT::Graphics {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
-  Camera* RenderingService::getCamera() const {
-    return _camera.get();
+  std::weak_ptr<Camera> RenderingService::getCamera() const {
+    return _camera;
   }
 
   void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {

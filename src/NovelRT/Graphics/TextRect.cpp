@@ -21,7 +21,7 @@ namespace NovelRT::Graphics {
   TextRect::TextRect(const Transform& transform,
     int layer,
     ShaderProgram shaderProgram,
-    Camera* camera,
+    std::weak_ptr<Camera> camera,
     std::shared_ptr<FontSet> fontSet,
     const RGBAConfig& colourConfig) :
     RenderObject(
@@ -40,12 +40,12 @@ namespace NovelRT::Graphics {
   void TextRect::setText(const std::string& value) {
     _text = value;
     auto difference = _text.length() - _letterRects.size();
-    auto modifiedTransform = getTransform();
+    auto modifiedTransform = transform();
     modifiedTransform.setScale(Maths::GeoVector<float>(50, 50));
     for (size_t i = 0; i < difference; i++) {
       auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
-          getLayer(),
+          layer(),
           _shaderProgram,
           _camera,
           _colourConfig);
@@ -59,7 +59,7 @@ namespace NovelRT::Graphics {
   }
   void TextRect::reloadText() {
 
-    auto ttfOrigin = getTransform().getPosition();
+    auto ttfOrigin = transform().position();
 
     size_t i = 0;
     for (const char& c : getText()) {
@@ -71,9 +71,9 @@ namespace NovelRT::Graphics {
         + ((static_cast<float>(ch.size.getY()) - ch.bearing.getY()) / 2.0f));
 
       auto& target = _letterRects.at(i++);
-      target->setTexture(ch.texture);
-      target->getTransform().setPosition(currentWorldPosition);
-      target->getTransform().setScale(Maths::GeoVector<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY())));
+      target->texture() = ch.texture;
+      target->transform().position() = currentWorldPosition;
+      target->transform().setScale(Maths::GeoVector<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY())));
       target->setActive(true);
       ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
     }

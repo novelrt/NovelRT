@@ -46,7 +46,7 @@ namespace NovelRT::Maths {
     }
 
     inline void setX(const GeoVector<T>& value) {
-      _value[0] = value.getVec4Value();
+      _value[0] = value.vec4Value();
     }
 
     inline GeoVector<T> getY() const {
@@ -54,7 +54,7 @@ namespace NovelRT::Maths {
     }
 
     inline void setY(const GeoVector<T>& value) {
-      _value[1] = value.getVec4Value();
+      _value[1] = value.vec4Value();
     }
 
     inline GeoVector<T> getZ() const {
@@ -62,7 +62,7 @@ namespace NovelRT::Maths {
     }
 
     inline void setZ(const GeoVector<T>& value) {
-      _value[2] = value.getVec4Value();
+      _value[2] = value.vec4Value();
     }
 
     inline GeoVector<T> getW() const {
@@ -70,7 +70,7 @@ namespace NovelRT::Maths {
     }
 
     inline void setW(const GeoVector<T>& value) {
-      _value[3] = value.getVec4Value();
+      _value[3] = value.vec4Value();
     }
 
     inline GeoMatrix4<T> operator+(const GeoMatrix4<T>& other) const {

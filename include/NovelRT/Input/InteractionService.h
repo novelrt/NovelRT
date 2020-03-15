@@ -28,7 +28,7 @@ namespace NovelRT::Input {
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
-    InteractionService(NovelRunner* const runner);
+    InteractionService(NovelRunner* const runner) noexcept;
 
     void consumePlayerInput();
 
@@ -36,7 +36,7 @@ namespace NovelRT::Input {
 
     void executeClickedInteractable();
 
-    inline void setScreenSize(const Maths::GeoVector<float>& value) {
+    inline void setScreenSize(const Maths::GeoVector<float>& value) noexcept {
       _screenSize = value;
     }
 

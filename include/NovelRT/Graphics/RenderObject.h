@@ -21,11 +21,11 @@ namespace NovelRT::Graphics {
     ShaderProgram _shaderProgram;
     std::vector<GLfloat> _vertexBufferData;
     bool _bufferInitialised;
-    Camera* _camera;
+    std::weak_ptr<Camera> _camera;
     Utilities::Lazy<Maths::GeoMatrix4<float>> _finalViewMatrixData;
 
   public:
-    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera);
+    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera);
 
     void executeObjectBehaviour() final;
     virtual ~RenderObject();

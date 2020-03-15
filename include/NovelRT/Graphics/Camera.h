@@ -52,7 +52,7 @@ namespace NovelRT::Graphics {
       _projectionMatrix = value;
     }
 
-    inline Maths::GeoMatrix4<float>& getCameraUboMatrix() {
+    inline Maths::GeoMatrix4<float> getCameraUboMatrix() {
       return _cameraUboMatrix.getActual();
     }
 

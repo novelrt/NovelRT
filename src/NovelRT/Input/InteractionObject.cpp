@@ -12,12 +12,4 @@ namespace NovelRT::Input {
   void InteractionObject::executeObjectBehaviour() {
     _notifyHasBeenDrawnObject(this);
   }
-
-  KeyCode InteractionObject::getSubscribedKey() const {
-    return _subscribedKey;
-  }
-
-  void InteractionObject::setSubscribedKey(KeyCode key) {
-    _subscribedKey = key;
-  }
 }
