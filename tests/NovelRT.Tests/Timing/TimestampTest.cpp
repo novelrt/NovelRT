@@ -14,7 +14,7 @@ protected:
     _timeStamp = Timestamp(TicksPerSecond);
   }
 public:
-  TimestampTest() : _timeStamp(Timestamp(uint64_t(0))) {}
+  TimestampTest() : _timeStamp(Timestamp(0ULL)) {}
 };
 
 TEST_F(TimestampTest, GetTicksShouldReturnCorrectValue) {
@@ -27,4 +27,48 @@ TEST_F(TimestampTest, GetSecondsDoubleShouldReturnCorrectValue) {
 
 TEST_F(TimestampTest, GetSecondsFloatShouldReturnCorrectValue) {
   ASSERT_FLOAT_EQ(_timeStamp.getSecondsFloat(), 1.0f);
+}
+
+TEST_F(TimestampTest, AddOperatorAddsCorrectly) {
+  auto result = Timestamp(0ULL) + Timestamp(1ULL);
+  ASSERT_EQ(result.getTicks(), 1ULL);
+}
+
+TEST_F(TimestampTest, SubtractOperatorSubtractsCorrectly) {
+  auto result = Timestamp(1ULL) - Timestamp(1ULL);
+  ASSERT_EQ(result.getTicks(), 0ULL);
+}
+
+TEST_F(TimestampTest, MultiplyOperatorMultipliesCorrectly) {
+  auto result = Timestamp(2ULL) * Timestamp(2ULL);
+  ASSERT_EQ(result.getTicks(), 4ULL);
+}
+
+TEST_F(TimestampTest, DivideOperatorDividesCorrectly) {
+  auto result = Timestamp(2ULL) / Timestamp(2ULL);
+  ASSERT_EQ(result.getTicks(), 1ULL);
+}
+
+TEST_F(TimestampTest, AddAssignOperatorAddsAndAssignsCorrectly) {
+  auto result = Timestamp(0ULL);
+  result += Timestamp(1ULL);
+  ASSERT_EQ(result.getTicks(), 1ULL);
+}
+
+TEST_F(TimestampTest, SubtractAssignOperatorSubtractsAndAssignsCorrectly) {
+  auto result = Timestamp(1ULL);
+  result -= Timestamp(1ULL);
+  ASSERT_EQ(result.getTicks(), 0ULL);
+}
+
+TEST_F(TimestampTest, MultiplyAssignOperatorMultipliesAndAssignsCorrectly) {
+  auto result = Timestamp(2ULL);
+  result *= Timestamp(2ULL);
+  ASSERT_EQ(result.getTicks(), 4ULL);
+}
+
+TEST_F(TimestampTest, DivideAssignOperatorDividesAndAssignsCorrectly) {
+  auto result = Timestamp(2ULL);
+  result /= Timestamp(2ULL);
+  ASSERT_EQ(result.getTicks(), 1ULL);
 }

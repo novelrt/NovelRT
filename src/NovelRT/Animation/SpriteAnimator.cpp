@@ -28,7 +28,7 @@ namespace NovelRT::Animation {
 
         if (transitionPtr != nullptr) {
           _currentState = transitionPtr;
-          _accumulatedDelta = 0.0f;
+          _accumulatedDelta = Timing::Timestamp::zero();
           _currentFrameIndex = 0;
           _currentState->frames().at(_currentFrameIndex).FrameEnter();
         }
@@ -48,8 +48,7 @@ namespace NovelRT::Animation {
           newFrame.FrameEnter();
         }
 
-
-        _accumulatedDelta += delta.getSecondsFloat();
+        _accumulatedDelta += delta;
         break;
       }
 
