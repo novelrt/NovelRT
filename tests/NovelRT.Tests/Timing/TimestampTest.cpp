@@ -8,25 +8,25 @@ using namespace NovelRT::Timing;
 
 class TimestampTest : public testing::Test {
 protected:
-  Timestamp _timeStamp;
+  Timestamp _timestamp;
 
   void SetUp() override {
-    _timeStamp = Timestamp(TicksPerSecond);
+    _timestamp = Timestamp(TicksPerSecond);
   }
 public:
-  TimestampTest() : _timeStamp(Timestamp(0ULL)) {}
+  TimestampTest() : _timestamp(Timestamp(0ULL)) {}
 };
 
 TEST_F(TimestampTest, GetTicksShouldReturnCorrectValue) {
-  ASSERT_EQ(_timeStamp.getTicks(), TicksPerSecond);
+  ASSERT_EQ(_timestamp.getTicks(), TicksPerSecond);
 }
 
 TEST_F(TimestampTest, GetSecondsDoubleShouldReturnCorrectValue) {
-  ASSERT_DOUBLE_EQ(_timeStamp.getSecondsDouble(), 1.0);
+  ASSERT_DOUBLE_EQ(_timestamp.getSecondsDouble(), 1.0);
 }
 
 TEST_F(TimestampTest, GetSecondsFloatShouldReturnCorrectValue) {
-  ASSERT_FLOAT_EQ(_timeStamp.getSecondsFloat(), 1.0f);
+  ASSERT_FLOAT_EQ(_timestamp.getSecondsFloat(), 1.0f);
 }
 
 TEST_F(TimestampTest, AddOperatorAddsCorrectly) {
@@ -71,4 +71,12 @@ TEST_F(TimestampTest, DivideAssignOperatorDividesAndAssignsCorrectly) {
   auto result = Timestamp(2ULL);
   result /= Timestamp(2ULL);
   ASSERT_EQ(result.getTicks(), 1ULL);
+}
+
+TEST_F(TimestampTest, EqualityOperatorEvaluatesCorrectly) {
+  ASSERT_EQ(_timestamp, Timestamp(TicksPerSecond));
+}
+
+TEST_F(TimestampTest, InequalityOperatorEvaluatesCorrectly) {
+  ASSERT_NE(_timestamp, Timestamp(0ULL));
 }
