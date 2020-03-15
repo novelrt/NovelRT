@@ -19,12 +19,12 @@ namespace NovelRT::Animation {
 
   public:
 
-    inline std::shared_ptr<Graphics::Texture> getTexture() const noexcept {
+    inline const std::shared_ptr<Graphics::Texture>& texture() const noexcept {
       return _texture;
     }
 
-    inline void setTexture(std::shared_ptr<Graphics::Texture> value) noexcept {
-      _texture = value;
+    inline std::shared_ptr<Graphics::Texture>& texture() noexcept {
+      return _texture;
     }
 
     inline const float& duration() const noexcept {

@@ -91,7 +91,7 @@ namespace NovelRT::Graphics {
 
      glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
 
-     auto config = getColourTintConfig();
+     auto config = colourTint();
      auto rScalar = config.getRScalar();
      auto gScalar = config.getGScalar();
      auto bScalar = config.getBScalar();
@@ -108,18 +108,5 @@ namespace NovelRT::Graphics {
 
      glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
      glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
-   }
-
-   void ImageRect::setTexture(std::shared_ptr<Texture> texture) {
-     _texture = texture;
-   }
-   const RGBAConfig& ImageRect::getColourTintConfig() const {
-     return _colourTint;
-   }
-   RGBAConfig& ImageRect::getColourTintConfig() {
-     return _colourTint;
-   }
-   void ImageRect::setColourTintConfig(const RGBAConfig& value) {
-     _colourTint = value;
    }
 }

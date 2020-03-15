@@ -36,17 +36,24 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Camera> camera,
       const RGBAConfig& colourTint);
 
-    const std::shared_ptr<Texture>& getTexture() const noexcept {
+    const std::shared_ptr<Texture>& texture() const noexcept {
       return _texture;
     }
 
-    void setTexture(std::shared_ptr<Texture> texture);
+    std::shared_ptr<Texture>& texture() noexcept {
+      return _texture;
+    }
 
     void drawObject() final;
 
-    const RGBAConfig& getColourTintConfig() const;
-    RGBAConfig& getColourTintConfig();
-    void setColourTintConfig(const RGBAConfig& value);
+    inline const RGBAConfig& colourTint() const {
+      return _colourTint;
+    }
+
+    inline RGBAConfig& colourTint() {
+      _isDirty = true;
+      return _colourTint;
+    }
   };
 }
 
