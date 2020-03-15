@@ -80,7 +80,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   for (int32_t i = 0; i < 10; i++) {
     auto frame = NovelRT::Animation::SpriteAnimatorFrame();
-    frame.duration() = NovelRT::Timing::Timestamp(0.1f);
+    frame.duration() = NovelRT::Timing::Timestamp::fromSeconds(0.1f);
     frame.texture() = runner.getRenderer().lock()->getTexture((imagesDirPath / "idle" / ("0-" + std::to_string(i) + ".png")).string());
     idleFrames.push_back(frame);
   }
@@ -99,7 +99,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   for (int32_t i = 0; i < 5; i++) {
     auto frame = NovelRT::Animation::SpriteAnimatorFrame();
-    frame.duration() = NovelRT::Timing::Timestamp(0.1f);
+    frame.duration() = NovelRT::Timing::Timestamp::fromSeconds(0.1f);
     frame.texture() = runner.getRenderer().lock()->getTexture((imagesDirPath / "right" / ("100-" + std::to_string(i) + ".png")).string());
     movingFrames.push_back(frame);
   }
