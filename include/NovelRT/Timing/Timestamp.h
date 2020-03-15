@@ -13,8 +13,7 @@ namespace NovelRT::Timing {
     uint64_t _ticks;
 
   public:
-    Timestamp(uint64_t ticks) : _ticks(ticks) {}
-    explicit Timestamp(double seconds) : _ticks(static_cast<uint64_t>(seconds * TicksPerSecond)) {}
+    explicit Timestamp(uint64_t ticks) noexcept : _ticks(ticks) {}
 
     inline uint64_t getTicks() const {
       return _ticks;
@@ -34,6 +33,10 @@ namespace NovelRT::Timing {
 
     inline static const Timestamp zero() {
       return Timestamp(0ULL);
+    }
+
+    inline static const Timestamp fromSeconds(double seconds) {
+      return Timestamp(static_cast<uint64_t>(seconds * TicksPerSecond));
     }
 
     inline Timestamp operator+(const Timestamp& other) const {
