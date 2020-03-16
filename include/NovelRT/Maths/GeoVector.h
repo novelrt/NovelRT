@@ -79,6 +79,22 @@ namespace NovelRT::Maths {
       return getVec2Value() != other.getVec2Value();
     }
 
+    inline bool operator<(const GeoVector<T>& other) const {
+      return glm::any(glm::lessThan(getVec2Value(), other.getVec2Value()));
+    }
+
+    inline bool operator<=(const GeoVector<T>& other) const {
+      return glm::any(glm::lessThanEqual(getVec2Value(), other.getVec2Value()));
+    }
+
+    inline bool operator>(const GeoVector<T>& other) const {
+      return glm::any(glm::greaterThan(getVec2Value(), other.getVec2Value()));
+    }
+
+    inline bool operator>=(const GeoVector<T>& other) const {
+      return glm::any(glm::greaterThanEqual(getVec2Value(), other.getVec2Value()));
+    }
+
     inline GeoVector<T> operator+(const GeoVector<T>& other) const {
       return GeoVector<T>(getVec2Value() + other.getVec2Value());
     }
