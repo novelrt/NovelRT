@@ -14,6 +14,24 @@ TEST(GeoVectorTest, geoVectorInequalityOperatorEvaluatesCorrectly) {
   EXPECT_NE(GeoVector<float>(0.0f, 0.0f), GeoVector<float>(1.0f, 0.0f));
 }
 
+TEST(GeoVectorTest, geoVectorLessThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(GeoVector<float>::zero() < GeoVector<float>::one());
+}
+
+TEST(GeoVectorTest, geoVectorLessOrEqualToThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(GeoVector<float>::zero() <= GeoVector<float>::one());
+  EXPECT_TRUE(GeoVector<float>::one() <= GeoVector<float>::one());
+}
+
+TEST(GeoVectorTest, geoVectorGreaterThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(GeoVector<float>::one() > GeoVector<float>::zero());
+}
+
+TEST(GeoVectorTest, geoVectorGreaterThanOrEqualToOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(GeoVector<float>::one() >= GeoVector<float>::zero());
+  EXPECT_TRUE(GeoVector<float>::one() >= GeoVector<float>::one());
+}
+
 TEST(GeoVectorTest, staticZeroCallReturnsGeoVectorZero) {
   EXPECT_EQ(GeoVector<float>::zero(), GeoVector<float>(0.0f, 0.0f));
 }
