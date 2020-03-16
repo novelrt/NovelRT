@@ -15,9 +15,10 @@ namespace NovelRT::Animation {
 
   private:
     std::shared_ptr<Graphics::Texture> _texture;
-    float _duration;
+    Timing::Timestamp _duration;
 
   public:
+    SpriteAnimatorFrame() : _duration(Timing::Timestamp::zero()) {}
 
     inline const std::shared_ptr<Graphics::Texture>& texture() const noexcept {
       return _texture;
@@ -27,11 +28,11 @@ namespace NovelRT::Animation {
       return _texture;
     }
 
-    inline const float& duration() const noexcept {
+    inline const Timing::Timestamp& duration() const noexcept {
       return _duration;
     }
 
-    inline float& duration() noexcept {
+    inline Timing::Timestamp& duration() noexcept {
       return _duration;
     }
   };
