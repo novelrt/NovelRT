@@ -34,10 +34,10 @@ namespace NovelRT::Graphics {
   }
 
   void RenderObject::configureObjectBuffers() {
-    auto topLeft = Maths::GeoVector<GLfloat>(-0.5f, 0.5f);
-    auto bottomRight = Maths::GeoVector<GLfloat>(0.5f, -0.5f);
-    auto topRight = Maths::GeoVector<GLfloat>(0.5f, 0.5f);
-    auto bottomLeft = Maths::GeoVector<GLfloat>(-0.5f, -0.5f);
+    auto topLeft = Maths::GeoVector2<GLfloat>(-0.5f, 0.5f);
+    auto bottomRight = Maths::GeoVector2<GLfloat>(0.5f, -0.5f);
+    auto topRight = Maths::GeoVector2<GLfloat>(0.5f, 0.5f);
+    auto bottomLeft = Maths::GeoVector2<GLfloat>(-0.5f, -0.5f);
     _vertexBufferData = {
         topLeft.getX(), topLeft.getY(), 0.0f,
         bottomRight.getX(), bottomRight.getY(), 0.0f,

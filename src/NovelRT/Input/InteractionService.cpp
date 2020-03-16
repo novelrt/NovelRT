@@ -67,7 +67,7 @@ namespace NovelRT::Input {
     processKeyState(keyCode, keyState);
   }
 
-  void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector<float>& mousePosition) {
+  void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
     auto value = mousePosition.vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));

@@ -8,17 +8,17 @@
 namespace NovelRT::Maths {
   class QuadTreePoint {
   private:
-    GeoVector<float> _position;
+    GeoVector2<float> _position;
 
   public:
-    QuadTreePoint(GeoVector<float> position) :
+    QuadTreePoint(GeoVector2<float> position) :
       _position(position) {
     }
 
-    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector<float>(x, y)) {
+    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2<float>(x, y)) {
     }
 
-    const GeoVector<float>& getPosition() const noexcept {
+    const GeoVector2<float>& getPosition() const noexcept {
       return _position;
     }
   };

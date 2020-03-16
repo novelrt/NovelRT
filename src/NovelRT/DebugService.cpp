@@ -42,7 +42,7 @@ namespace NovelRT {
       if (value) {
         auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-        auto transform = Transform(Maths::GeoVector<float>(0, 1080 - 16), 0, Maths::GeoVector<float>(1.0f, 1.0f));
+        auto transform = Transform(Maths::GeoVector2<float>(0, 1080 - 16), 0, Maths::GeoVector2<float>(1.0f, 1.0f));
 
         std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
         std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";

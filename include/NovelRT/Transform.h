@@ -10,29 +10,29 @@
 namespace NovelRT {
   class Transform {
   protected:
-    Maths::GeoVector<float> _position;
-    Maths::GeoVector<float> _scale;
+    Maths::GeoVector2<float> _position;
+    Maths::GeoVector2<float> _scale;
     float _rotation;
     bool _active;
 
   public:
-    Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) noexcept;
+    Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
     Transform() noexcept;
 
     inline Maths::GeoBounds getAABB() const {
       auto scale = fmaxf(_scale.getX(), _scale.getY());
-      return Maths::GeoBounds(_position, Maths::GeoVector(scale, scale), 0);
+      return Maths::GeoBounds(_position, Maths::GeoVector2(scale, scale), 0);
     }
 
     inline Maths::GeoBounds getBounds() const {
       return Maths::GeoBounds(_position, _scale, _rotation);
     }
 
-    inline const Maths::GeoVector<float>& position() const {
+    inline const Maths::GeoVector2<float>& position() const {
       return _position;
     }
 
-    inline Maths::GeoVector<float>& position() {
+    inline Maths::GeoVector2<float>& position() {
       return _position;
     }
 
@@ -44,15 +44,15 @@ namespace NovelRT {
       _rotation = value;
     }
 
-    inline const Maths::GeoVector<float>& getScale() const {
+    inline const Maths::GeoVector2<float>& getScale() const {
       return _scale;
     }
 
-    inline Maths::GeoVector<float>& getScale() {
+    inline Maths::GeoVector2<float>& getScale() {
       return _scale;
     }
 
-    inline void setScale(const Maths::GeoVector<float>& value) {
+    inline void setScale(const Maths::GeoVector2<float>& value) {
       _scale = value;
     }
   };
