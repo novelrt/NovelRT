@@ -111,6 +111,46 @@ namespace NovelRT::Maths {
       return GeoVector<T>(getVec2Value() / other);
     }
 
+    inline GeoVector<T>& operator+=(const GeoVector<T>& other) {
+      vec4Value() += other.vec4Value();
+      return *this;
+    }
+
+    inline GeoVector<T>& operator-=(const GeoVector<T>& other) {
+      vec4Value() -= other.vec4Value();
+      return *this;
+    }
+
+    inline GeoVector<T> operator*=(const GeoVector<T>& other) {
+      vec4Value() *= other.vec4Value();
+      return *this;
+    }
+
+    GeoVector<T> operator/=(const GeoVector<T>& other) {
+      vec4Value() /= other.vec4Value();
+      return *this;
+    }
+
+    inline GeoVector<T> operator+=(T other) {
+      vec4Value() += other;
+      return *this;
+    }
+
+    inline GeoVector<T> operator-=(T other) {
+      vec4Value() -= other;
+      return *this;
+    }
+
+    inline GeoVector<T> operator*=(T other) {
+      vec4Value() *= other;
+      return *this;
+    }
+
+    GeoVector<T> operator/=(T other) {
+      vec4Value() /= other;
+      return *this;
+    }
+
     void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) noexcept {
       setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
     }
