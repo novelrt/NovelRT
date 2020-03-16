@@ -3,15 +3,15 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  Transform::Transform(const Maths::GeoVector<float>& position, float rotation, const Maths::GeoVector<float>& scale) noexcept :
+  Transform::Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept :
     _position(position),
     _scale(scale),
     _rotation(rotation),
     _active(true) {}
 
   Transform::Transform() noexcept :
-    _position(Maths::GeoVector<float>::zero()),
-    _scale(Maths::GeoVector<float>::zero()),
+    _position(Maths::GeoVector2<float>::zero()),
+    _scale(Maths::GeoVector2<float>::zero()),
     _rotation(0.0f),
     _active(true) {}
 }

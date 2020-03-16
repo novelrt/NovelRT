@@ -22,7 +22,7 @@ namespace NovelRT::Graphics {
       });
   }
 
-  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector<float>* const optionalWindowSize) {
+  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
 
     auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService().lock()->getWindowSize() : *optionalWindowSize; //lol this is not safe
 

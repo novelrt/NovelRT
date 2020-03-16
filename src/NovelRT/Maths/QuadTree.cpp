@@ -6,13 +6,13 @@ namespace NovelRT::Maths {
   void QuadTree::subdivideTree() noexcept {
     assert(getPointCount() == POINT_CAPACITY);
 
-    const GeoVector<float> TOP_LEFT_SCALE = GeoVector<float>(-0.5, +0.5);
-    const GeoVector<float> TOP_RIGHT_SCALE = GeoVector<float>(+0.5, +0.5);
-    const GeoVector<float> BOTTOM_LEFT_SCALE = GeoVector<float>(-0.5, -0.5);
-    const GeoVector<float> BOTTOM_RIGHT_SCALE = GeoVector<float>(+0.5, -0.5);
+    const GeoVector2<float> TOP_LEFT_SCALE = GeoVector2<float>(-0.5, +0.5);
+    const GeoVector2<float> TOP_RIGHT_SCALE = GeoVector2<float>(+0.5, +0.5);
+    const GeoVector2<float> BOTTOM_LEFT_SCALE = GeoVector2<float>(-0.5, -0.5);
+    const GeoVector2<float> BOTTOM_RIGHT_SCALE = GeoVector2<float>(+0.5, -0.5);
 
-    GeoVector size = getBounds().size() / 2;
-    GeoVector position = getBounds().position();
+    GeoVector2 size = getBounds().size() / 2;
+    GeoVector2 position = getBounds().position();
 
     _children[TOP_LEFT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0), weak_from_this());
     _children[TOP_RIGHT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0), weak_from_this());

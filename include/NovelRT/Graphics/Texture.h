@@ -17,7 +17,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<GLuint> _textureId;
     LoggingService _logger; //not proud of this
     std::string _textureFile;
-    Maths::GeoVector<float> _size;
+    Maths::GeoVector2<float> _size;
 
     inline GLuint getTextureIdInternal() noexcept {
       return _textureId.getActual();
@@ -39,7 +39,7 @@ namespace NovelRT::Graphics {
       return _textureFile;
     }
 
-    inline const Maths::GeoVector<float>& getSize() const noexcept {
+    inline const Maths::GeoVector2<float>& getSize() const noexcept {
       return _size;
     }
 

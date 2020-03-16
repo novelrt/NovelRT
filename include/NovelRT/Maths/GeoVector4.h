@@ -9,7 +9,7 @@
 
 namespace NovelRT::Maths {
   template<typename T>
-  class GeoVector {
+  class GeoVector4 {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
     friend class GeoBounds;
@@ -17,8 +17,7 @@ namespace NovelRT::Maths {
     friend class GeoMatrix4;
 
   private:
-    GeoVector(glm::vec<2, T> value) : _value(glm::vec<4, T>(value, 0, 0)) {}
-    GeoVector(glm::vec<4, T> value) : _value(value) {}
+    GeoVector4(glm::vec<4, T> value) : _value(value) {}
 
     inline glm::vec<2, T> getVec2Value() const {
       return glm::vec<2, T>(_value.x, _value.y);
@@ -40,8 +39,8 @@ namespace NovelRT::Maths {
     glm::vec<4, T> _value;
 
   public:
-    GeoVector() {}
-    GeoVector(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {}
+    GeoVector4() {}
+    GeoVector4(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {}
 
     T getX() const {
       return getVec2Value().x;
@@ -59,8 +58,8 @@ namespace NovelRT::Maths {
       _value.y = value;
     }
 
-    inline GeoVector<T> getNormalised() const noexcept {
-      return GeoVector<T>(glm::normalize(getVec2Value()));
+    inline GeoVector4<T> getNormalised() const noexcept {
+      return GeoVector4<T>(glm::normalize(getVec2Value()));
     }
 
     inline float getMagnitude() const noexcept {
@@ -71,116 +70,116 @@ namespace NovelRT::Maths {
       return getMagnitude();
     }
 
-    inline bool operator==(const GeoVector<T>& other) const {
+    inline bool operator==(const GeoVector4<T>& other) const {
       return getVec2Value() == other.getVec2Value();
     }
 
-    inline bool operator!=(const GeoVector<T>& other) const {
+    inline bool operator!=(const GeoVector4<T>& other) const {
       return getVec2Value() != other.getVec2Value();
     }
 
-    inline bool operator<(const GeoVector<T>& other) const {
+    inline bool operator<(const GeoVector4<T>& other) const {
       return glm::any(glm::lessThan(getVec2Value(), other.getVec2Value()));
     }
 
-    inline bool operator<=(const GeoVector<T>& other) const {
+    inline bool operator<=(const GeoVector4<T>& other) const {
       return glm::any(glm::lessThanEqual(getVec2Value(), other.getVec2Value()));
     }
 
-    inline bool operator>(const GeoVector<T>& other) const {
+    inline bool operator>(const GeoVector4<T>& other) const {
       return glm::any(glm::greaterThan(getVec2Value(), other.getVec2Value()));
     }
 
-    inline bool operator>=(const GeoVector<T>& other) const {
+    inline bool operator>=(const GeoVector4<T>& other) const {
       return glm::any(glm::greaterThanEqual(getVec2Value(), other.getVec2Value()));
     }
 
-    inline GeoVector<T> operator+(const GeoVector<T>& other) const {
-      return GeoVector<T>(getVec2Value() + other.getVec2Value());
+    inline GeoVector4<T> operator+(const GeoVector4<T>& other) const {
+      return GeoVector4<T>(getVec2Value() + other.getVec2Value());
     }
 
-    inline GeoVector<T> operator-(const GeoVector<T>& other) const {
-      return GeoVector<T>(getVec2Value() - other.getVec2Value());
+    inline GeoVector4<T> operator-(const GeoVector4<T>& other) const {
+      return GeoVector4<T>(getVec2Value() - other.getVec2Value());
     }
 
-    inline GeoVector<T> operator*(const GeoVector<T>& other) const {
-      return GeoVector<T>(getVec2Value() * other.getVec2Value());
+    inline GeoVector4<T> operator*(const GeoVector4<T>& other) const {
+      return GeoVector4<T>(getVec2Value() * other.getVec2Value());
     }
 
-    GeoVector<T> operator/(const GeoVector<T>& other) const {
-      return GeoVector<T>(getVec2Value() / other.getVec2Value());
+    GeoVector4<T> operator/(const GeoVector4<T>& other) const {
+      return GeoVector4<T>(getVec2Value() / other.getVec2Value());
     }
 
-    inline GeoVector<T> operator+(T other) const {
-      return GeoVector<T>(getVec2Value() + other);
+    inline GeoVector4<T> operator+(T other) const {
+      return GeoVector4<T>(getVec2Value() + other);
     }
 
-    inline GeoVector<T> operator-(T other) const {
-      return GeoVector<T>(getVec2Value() - other);
+    inline GeoVector4<T> operator-(T other) const {
+      return GeoVector4<T>(getVec2Value() - other);
     }
 
-    inline GeoVector<T> operator*(T other) const {
-      return GeoVector<T>(getVec2Value() * other);
+    inline GeoVector4<T> operator*(T other) const {
+      return GeoVector4<T>(getVec2Value() * other);
     }
 
-    GeoVector<T> operator/(T other) const {
-      return GeoVector<T>(getVec2Value() / other);
+    GeoVector4<T> operator/(T other) const {
+      return GeoVector4<T>(getVec2Value() / other);
     }
 
-    inline GeoVector<T>& operator+=(const GeoVector<T>& other) {
+    inline GeoVector4<T>& operator+=(const GeoVector4<T>& other) {
       vec4Value() += other.vec4Value();
       return *this;
     }
 
-    inline GeoVector<T>& operator-=(const GeoVector<T>& other) {
+    inline GeoVector4<T>& operator-=(const GeoVector4<T>& other) {
       vec4Value() -= other.vec4Value();
       return *this;
     }
 
-    inline GeoVector<T> operator*=(const GeoVector<T>& other) {
+    inline GeoVector4<T> operator*=(const GeoVector4<T>& other) {
       vec4Value() *= other.vec4Value();
       return *this;
     }
 
-    GeoVector<T> operator/=(const GeoVector<T>& other) {
+    GeoVector4<T> operator/=(const GeoVector4<T>& other) {
       vec4Value() /= other.vec4Value();
       return *this;
     }
 
-    inline GeoVector<T> operator+=(T other) {
+    inline GeoVector4<T> operator+=(T other) {
       vec4Value() += other;
       return *this;
     }
 
-    inline GeoVector<T> operator-=(T other) {
+    inline GeoVector4<T> operator-=(T other) {
       vec4Value() -= other;
       return *this;
     }
 
-    inline GeoVector<T> operator*=(T other) {
+    inline GeoVector4<T> operator*=(T other) {
       vec4Value() *= other;
       return *this;
     }
 
-    GeoVector<T> operator/=(T other) {
+    GeoVector4<T> operator/=(T other) {
       vec4Value() /= other;
       return *this;
     }
 
-    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector<T>& point) noexcept {
+    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector4<T>& point) noexcept {
       setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
     }
 
-    bool epsilonEquals(const GeoVector<T>& other, const GeoVector<T>& epsilonValue) const noexcept {
+    bool epsilonEquals(const GeoVector4<T>& other, const GeoVector4<T>& epsilonValue) const noexcept {
       return glm::all(glm::equal(getVec2Value(), other.getVec2Value(), epsilonValue.getVec2Value()));
     }
 
-    static const GeoVector<T> zero() {
-      return GeoVector<T>(0, 0);
+    static const GeoVector4<T> zero() {
+      return GeoVector4<T>(0, 0);
     }
 
-    static const GeoVector<T> one() {
-      return GeoVector<T>(1, 1);
+    static const GeoVector4<T> one() {
+      return GeoVector4<T>(1, 1);
     }
   };
 }

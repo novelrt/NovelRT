@@ -31,45 +31,45 @@ namespace NovelRT::Maths {
   public:
     GeoMatrix4() {}
 
-    GeoMatrix4(GeoVector<T> x,
-      GeoVector<T> y,
-      GeoVector<T> z,
-      GeoVector<T> w) {
+    GeoMatrix4(GeoVector2<T> x,
+      GeoVector2<T> y,
+      GeoVector2<T> z,
+      GeoVector2<T> w) {
       setX(x);
       setY(y);
       setZ(z);
       setW(w);
     }
 
-    inline GeoVector<T> getX() const {
-      return GeoVector<T>(_value[0]);
+    inline GeoVector2<T> getX() const {
+      return GeoVector2<T>(_value[0]);
     }
 
-    inline void setX(const GeoVector<T>& value) {
+    inline void setX(const GeoVector2<T>& value) {
       _value[0] = value.vec4Value();
     }
 
-    inline GeoVector<T> getY() const {
-      return GeoVector<T>(_value[1]);
+    inline GeoVector2<T> getY() const {
+      return GeoVector2<T>(_value[1]);
     }
 
-    inline void setY(const GeoVector<T>& value) {
+    inline void setY(const GeoVector2<T>& value) {
       _value[1] = value.vec4Value();
     }
 
-    inline GeoVector<T> getZ() const {
-      return GeoVector<T>(_value[2]);
+    inline GeoVector2<T> getZ() const {
+      return GeoVector2<T>(_value[2]);
     }
 
-    inline void setZ(const GeoVector<T>& value) {
+    inline void setZ(const GeoVector2<T>& value) {
       _value[2] = value.vec4Value();
     }
 
-    inline GeoVector<T> getW() const {
-      return GeoVector<T>(_value[3]);
+    inline GeoVector2<T> getW() const {
+      return GeoVector2<T>(_value[3]);
     }
 
-    inline void setW(const GeoVector<T>& value) {
+    inline void setW(const GeoVector2<T>& value) {
       _value[3] = value.vec4Value();
     }
 
