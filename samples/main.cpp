@@ -75,38 +75,38 @@ int main(int /*argc*/, char* /*argv*/[])
 #ifdef TEST_ANIM
   auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
   auto idleState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
-  idleState->setShouldLoop(true);
+  idleState->shouldLoop() = true;
   auto idleFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
 
   for (int32_t i = 0; i < 10; i++) {
     auto frame = NovelRT::Animation::SpriteAnimatorFrame();
-    frame.setDuration(0.1f);
-    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "idle" / ("0-" + std::to_string(i) + ".png")).string()));
+    frame.duration() = NovelRT::Timing::Timestamp::fromSeconds(0.1f);
+    frame.texture() = runner.getRenderer().lock()->getTexture((imagesDirPath / "idle" / ("0-" + std::to_string(i) + ".png")).string());
     idleFrames.push_back(frame);
   }
 
-  idleFrames.back().FrameExit += [] { shouldBeInIdle = false; };
+  idleFrames.back().FrameExit += [&shouldBeInIdle] { shouldBeInIdle = false; };
 
-  idleState->insertNewState(movingState, std::vector<std::function<bool()>> {[] { return !shouldBeInIdle;  }});
+  idleState->insertNewState(movingState, std::vector<std::function<bool()>> {[&shouldBeInIdle] { return !shouldBeInIdle;  }});
 
-  idleState->setFrames(idleFrames);
+  idleState->frames() = idleFrames;
 
 
-  movingState->setShouldLoop(true);
-  movingState->insertNewState(idleState, std::vector<std::function<bool()>> {[] {return shouldBeInIdle;  }});
+  movingState->shouldLoop() = true;
+  movingState->insertNewState(idleState, std::vector<std::function<bool()>> {[&shouldBeInIdle] {return shouldBeInIdle;  }});
 
   auto movingFrames = std::vector<NovelRT::Animation::SpriteAnimatorFrame>();
 
   for (int32_t i = 0; i < 5; i++) {
     auto frame = NovelRT::Animation::SpriteAnimatorFrame();
-    frame.setDuration(0.1f);
-    frame.setTexture(runner.getRenderer().lock()->getTexture((imagesDirPath / "right" / ("100-" + std::to_string(i) + ".png")).string()));
+    frame.duration() = NovelRT::Timing::Timestamp::fromSeconds(0.1f);
+    frame.texture() = runner.getRenderer().lock()->getTexture((imagesDirPath / "right" / ("100-" + std::to_string(i) + ".png")).string());
     movingFrames.push_back(frame);
   }
 
-  movingFrames.back().FrameExit += [] { shouldBeInIdle = true; };
+  movingFrames.back().FrameExit += [&shouldBeInIdle] { shouldBeInIdle = true; };
 
-  movingState->setFrames(movingFrames);
+  movingState->frames() = movingFrames;
 
 
 
