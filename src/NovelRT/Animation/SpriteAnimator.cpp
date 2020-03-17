@@ -4,7 +4,7 @@
 
 namespace NovelRT::Animation {
   SpriteAnimator::SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept :
-    _accumulatedDelta(0.0f),
+    _accumulatedDelta(0),
     _currentFrameIndex(0),
     _runner(runner),
     _rect(rect),
@@ -28,13 +28,13 @@ namespace NovelRT::Animation {
 
         if (transitionPtr != nullptr) {
           _currentState = transitionPtr;
-          _accumulatedDelta = 0.0f;
+          _accumulatedDelta = Timing::Timestamp::zero();
           _currentFrameIndex = 0;
           _currentState->frames().at(_currentFrameIndex).FrameEnter();
         }
 
         if (_currentState->frames().size() > _currentFrameIndex && _currentState->frames().at(_currentFrameIndex).duration() <= _accumulatedDelta) {
-          _accumulatedDelta = 0;
+          _accumulatedDelta = Timing::Timestamp(0);
           _currentState->frames().at(_currentFrameIndex++).FrameExit();
 
           if (_currentState->shouldLoop() && _currentFrameIndex >= _currentState->frames().size()) {
@@ -48,8 +48,7 @@ namespace NovelRT::Animation {
           newFrame.FrameEnter();
         }
 
-
-        _accumulatedDelta += delta.getSecondsFloat();
+        _accumulatedDelta += delta;
         break;
       }
 
@@ -71,7 +70,7 @@ namespace NovelRT::Animation {
   void SpriteAnimator::stop() {
     _runner->Update -= _animationUpdateHandle;
     _animatorState = AnimatorPlayState::Stopped;
-    _accumulatedDelta = 0;
+    _accumulatedDelta = Timing::Timestamp(0);
     _currentFrameIndex = 0;
   }
 }
