@@ -20,7 +20,11 @@ namespace NovelRT::Maths {
   private:
     glm::mat<4, 4, T> _value;
 
-    inline glm::mat4 getUnderlyingMatrix() const {
+    inline const glm::mat4& underlyingMatrix() const {
+      return _value;
+    }
+
+    inline glm::mat4& underlyingMatrix() {
       return _value;
     }
 
@@ -31,62 +35,90 @@ namespace NovelRT::Maths {
   public:
     GeoMatrix4() {}
 
-    GeoMatrix4(GeoVector2<T> x,
-      GeoVector2<T> y,
-      GeoVector2<T> z,
-      GeoVector2<T> w) {
+    GeoMatrix4(GeoVector4<T> x,
+      GeoVector4<T> y,
+      GeoVector4<T> z,
+      GeoVector4<T> w) {
       setX(x);
       setY(y);
       setZ(z);
       setW(w);
     }
 
-    inline GeoVector2<T> getX() const {
-      return GeoVector2<T>(_value[0]);
+    inline GeoVector4<T> getX() const {
+      return GeoVector4<T>(_value[0]);
     }
 
-    inline void setX(const GeoVector2<T>& value) {
+    inline void setX(const GeoVector4<T>& value) {
       _value[0] = value.vec4Value();
     }
 
-    inline GeoVector2<T> getY() const {
-      return GeoVector2<T>(_value[1]);
+    inline GeoVector4<T> getY() const {
+      return GeoVector4<T>(_value[1]);
     }
 
-    inline void setY(const GeoVector2<T>& value) {
+    inline void setY(const GeoVector4<T>& value) {
       _value[1] = value.vec4Value();
     }
 
-    inline GeoVector2<T> getZ() const {
-      return GeoVector2<T>(_value[2]);
+    inline GeoVector4<T> getZ() const {
+      return GeoVector4<T>(_value[2]);
     }
 
-    inline void setZ(const GeoVector2<T>& value) {
+    inline void setZ(const GeoVector4<T>& value) {
       _value[2] = value.vec4Value();
     }
 
-    inline GeoVector2<T> getW() const {
-      return GeoVector2<T>(_value[3]);
+    inline GeoVector4<T> getW() const {
+      return GeoVector4<T>(_value[3]);
     }
 
-    inline void setW(const GeoVector2<T>& value) {
+    inline void setW(const GeoVector4<T>& value) {
       _value[3] = value.vec4Value();
     }
 
+    inline bool operator==(const GeoMatrix4<T>& other) const {
+      return underlyingMatrix() == other.underlyingMatrix();
+    }
+
+    inline bool operator!=(const GeoMatrix4<T>& other) const {
+      return underlyingMatrix() != other.underlyingMatrix();
+    }
+
     inline GeoMatrix4<T> operator+(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(getUnderlyingMatrix() + other.getUnderlyingMatrix());
+      return GeoMatrix4<T>(underlyingMatrix() + other.underlyingMatrix());
     }
 
     inline GeoMatrix4<T> operator-(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(getUnderlyingMatrix() - other.getUnderlyingMatrix());
+      return GeoMatrix4<T>(underlyingMatrix() - other.underlyingMatrix());
     }
 
     inline GeoMatrix4<T> operator*(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(getUnderlyingMatrix() * other.getUnderlyingMatrix());
+      return GeoMatrix4<T>(underlyingMatrix() * other.underlyingMatrix());
     }
 
     inline GeoMatrix4<T> operator/(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(getUnderlyingMatrix() / other.getUnderlyingMatrix());
+      return GeoMatrix4<T>(underlyingMatrix() / other.underlyingMatrix());
+    }
+
+    inline GeoMatrix4<T>& operator+=(const GeoMatrix4<T>& other) {
+      underlyingMatrix() += other.underlyingMatrix();
+      return *this;
+    }
+
+    inline GeoMatrix4<T>& operator-=(const GeoMatrix4<T>& other) {
+      underlyingMatrix() -= other.underlyingMatrix();
+      return *this;
+    }
+
+    inline GeoMatrix4<T>& operator*=(const GeoMatrix4<T>& other) {
+      underlyingMatrix() *= other.underlyingMatrix();
+      return *this;
+    }
+
+    inline GeoMatrix4<T>& operator/=(const GeoMatrix4<T>& other) {
+      underlyingMatrix() /= other.underlyingMatrix();
+      return *this;
     }
 
     static GeoMatrix4<T> getDefaultIdentity() {

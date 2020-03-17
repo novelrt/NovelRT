@@ -173,8 +173,8 @@ namespace NovelRT::Maths {
       return *this;
     }
 
-    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector4<T>& point) noexcept {
-      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), glm::vec<3, T>(0, 0, 1)) + point.vec4Value();
+    void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector4<T>& point, const GeoVector3<T>& axis = GeoVector3<T>(0, 0, 1)) noexcept {
+      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), axis.getVec3Value()) + point.vec4Value();
     }
 
     bool epsilonEquals(const GeoVector4<T>& other, const GeoVector4<T>& epsilonValue) const noexcept {
