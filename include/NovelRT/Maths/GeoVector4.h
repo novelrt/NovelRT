@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_MATHS_GEOVECTOR_H
-#define NOVELRT_MATHS_GEOVECTOR_H
+#ifndef NOVELRT_MATHS_GEOVECTOR4_H
+#define NOVELRT_MATHS_GEOVECTOR4_H
 
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
@@ -19,15 +19,6 @@ namespace NovelRT::Maths {
   private:
     GeoVector4(glm::vec<4, T> value) : _value(value) {}
 
-    inline glm::vec<2, T> getVec2Value() const {
-      return glm::vec<2, T>(_value.x, _value.y);
-    }
-
-    inline void setVec2Value(glm::vec<2, T> value) {
-      _value.x = value.x;
-      _value.y = value.y;
-    }
-
     const glm::vec<4, T>& vec4Value() const {
       return _value;
     }
@@ -40,10 +31,10 @@ namespace NovelRT::Maths {
 
   public:
     GeoVector4() {}
-    GeoVector4(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {}
+    GeoVector4(T x, T y, T z, T w) : _value(glm::vec<4, T>(x, y, z, w)) {}
 
     T getX() const {
-      return getVec2Value().x;
+      return _value.x;
     }
 
     void setX(T value) {
@@ -51,19 +42,35 @@ namespace NovelRT::Maths {
     }
 
     T getY() const {
-      return getVec2Value().y;
+      return _value.y;
     }
 
     void setY(T value) {
       _value.y = value;
     }
 
+    T getZ() const {
+      return _value.z;
+    }
+
+    void setZ(T value) {
+      _value.z = value;
+    }
+
+    T getW() const {
+      return _value.w;
+    }
+
+    void setW(T value) {
+      _value.w = value;
+    }
+
     inline GeoVector4<T> getNormalised() const noexcept {
-      return GeoVector4<T>(glm::normalize(getVec2Value()));
+      return GeoVector4<T>(glm::normalize(vec4Value()));
     }
 
     inline float getMagnitude() const noexcept {
-      return glm::length(getVec2Value());
+      return glm::length(vec4Value());
     }
 
     inline float getLength() const noexcept {
@@ -71,59 +78,59 @@ namespace NovelRT::Maths {
     }
 
     inline bool operator==(const GeoVector4<T>& other) const {
-      return getVec2Value() == other.getVec2Value();
+      return vec4Value() == other.vec4Value();
     }
 
     inline bool operator!=(const GeoVector4<T>& other) const {
-      return getVec2Value() != other.getVec2Value();
+      return vec4Value() != other.vec4Value();
     }
 
     inline bool operator<(const GeoVector4<T>& other) const {
-      return glm::any(glm::lessThan(getVec2Value(), other.getVec2Value()));
+      return glm::any(glm::lessThan(vec4Value(), other.vec4Value()));
     }
 
     inline bool operator<=(const GeoVector4<T>& other) const {
-      return glm::any(glm::lessThanEqual(getVec2Value(), other.getVec2Value()));
+      return glm::any(glm::lessThanEqual(vec4Value(), other.vec4Value()));
     }
 
     inline bool operator>(const GeoVector4<T>& other) const {
-      return glm::any(glm::greaterThan(getVec2Value(), other.getVec2Value()));
+      return glm::any(glm::greaterThan(vec4Value(), other.vec4Value()));
     }
 
     inline bool operator>=(const GeoVector4<T>& other) const {
-      return glm::any(glm::greaterThanEqual(getVec2Value(), other.getVec2Value()));
+      return glm::any(glm::greaterThanEqual(vec4Value(), other.vec4Value()));
     }
 
     inline GeoVector4<T> operator+(const GeoVector4<T>& other) const {
-      return GeoVector4<T>(getVec2Value() + other.getVec2Value());
+      return GeoVector4<T>(vec4Value() + other.vec4Value());
     }
 
     inline GeoVector4<T> operator-(const GeoVector4<T>& other) const {
-      return GeoVector4<T>(getVec2Value() - other.getVec2Value());
+      return GeoVector4<T>(vec4Value() - other.vec4Value());
     }
 
     inline GeoVector4<T> operator*(const GeoVector4<T>& other) const {
-      return GeoVector4<T>(getVec2Value() * other.getVec2Value());
+      return GeoVector4<T>(vec4Value() * other.vec4Value());
     }
 
     GeoVector4<T> operator/(const GeoVector4<T>& other) const {
-      return GeoVector4<T>(getVec2Value() / other.getVec2Value());
+      return GeoVector4<T>(vec4Value() / other.vec4Value());
     }
 
     inline GeoVector4<T> operator+(T other) const {
-      return GeoVector4<T>(getVec2Value() + other);
+      return GeoVector4<T>(vec4Value() + other);
     }
 
     inline GeoVector4<T> operator-(T other) const {
-      return GeoVector4<T>(getVec2Value() - other);
+      return GeoVector4<T>(vec4Value() - other);
     }
 
     inline GeoVector4<T> operator*(T other) const {
-      return GeoVector4<T>(getVec2Value() * other);
+      return GeoVector4<T>(vec4Value() * other);
     }
 
     GeoVector4<T> operator/(T other) const {
-      return GeoVector4<T>(getVec2Value() / other);
+      return GeoVector4<T>(vec4Value() / other);
     }
 
     inline GeoVector4<T>& operator+=(const GeoVector4<T>& other) {
@@ -167,21 +174,21 @@ namespace NovelRT::Maths {
     }
 
     void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector4<T>& point) noexcept {
-      setVec2Value(glm::rotate((getVec2Value() - point.getVec2Value()), glm::radians(angleRotationValue)) + point.getVec2Value());
+      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), glm::vec<3, T>(0, 0, 1)) + point.vec4Value();
     }
 
     bool epsilonEquals(const GeoVector4<T>& other, const GeoVector4<T>& epsilonValue) const noexcept {
-      return glm::all(glm::equal(getVec2Value(), other.getVec2Value(), epsilonValue.getVec2Value()));
+      return glm::all(glm::equal(vec4Value(), other.vec4Value(), epsilonValue.vec4Value()));
     }
 
     static const GeoVector4<T> zero() {
-      return GeoVector4<T>(0, 0);
+      return GeoVector4<T>(0, 0, 0, 0);
     }
 
     static const GeoVector4<T> one() {
-      return GeoVector4<T>(1, 1);
+      return GeoVector4<T>(1, 1, 1, 1);
     }
   };
 }
 
-#endif //!NOVELRT_MATHS_GEOVECTOR_H
+#endif //!NOVELRT_MATHS_GEOVECTOR4_H
