@@ -6,39 +6,98 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-TEST(GeoMatrix4Test, equalityOperatorEvaluatesCorrectly) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+class GeoMatrix4Test : public testing::Test {
+protected:
+  GeoMatrix4<float> _dummyMatrix;
 
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+  void SetUp() override {
+    _dummyMatrix = GeoMatrix4<float>(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f),
+      GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
+      GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
+      GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+  }
+};
+
+TEST_F(GeoMatrix4Test, equalityOperatorEvaluatesCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
+
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
 
   ASSERT_EQ(testMatOne, testMatTwo);
 }
 
-TEST(GeoMatrix4Test, inequalityOperatorEvaluatesCorrectly) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(1.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+TEST_F(GeoMatrix4Test, inequalityOperatorEvaluatesCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
 
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::zero(), GeoVector4<float>::zero(), GeoVector4<float>::zero(), GeoVector4<float>::zero());
 
   ASSERT_NE(testMatOne, testMatTwo);
 }
 
-TEST(GeoMatrix4Test, getDefaultIdentityReturnsIdentityMatrix) {
-  auto testMat = GeoMatrix4<float>(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f),
-    GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f));
+TEST_F(GeoMatrix4Test, getDefaultIdentityReturnsIdentityMatrix) {
+  ASSERT_EQ(GeoMatrix4<float>::getDefaultIdentity(), _dummyMatrix);
+}
 
-  ASSERT_EQ(GeoMatrix4<float>::getDefaultIdentity(), testMat);
+TEST_F(GeoMatrix4Test, getXReturnsExpectedGeoVector4) {
+  ASSERT_EQ(GeoVector4<float>(1.0f, 0.0f, 0.0f, 0.0f), _dummyMatrix.getX());
+}
+
+TEST_F(GeoMatrix4Test, setXSetsExpectedGeoVector4) {
+  _dummyMatrix.setX(GeoVector4<float>::one());
+  ASSERT_EQ(GeoVector4<float>::one(), _dummyMatrix.getX());
+}
+
+TEST_F(GeoMatrix4Test, getYReturnsExpectedGeoVector4) {
+  ASSERT_EQ(GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f), _dummyMatrix.getY());
+}
+
+TEST_F(GeoMatrix4Test, setYSetsExpectedGeoVector4) {
+  _dummyMatrix.setY(GeoVector4<float>::one());
+  ASSERT_EQ(GeoVector4<float>::one(), _dummyMatrix.getY());
+}
+
+TEST_F(GeoMatrix4Test, getZReturnsExpectedGeoVector4) {
+  ASSERT_EQ(GeoVector4<float>(0.0f, 0.0f, 1.0f, 0.0f), _dummyMatrix.getZ());
+}
+
+TEST_F(GeoMatrix4Test, setZSetsExpectedGeoVector4) {
+  _dummyMatrix.setZ(GeoVector4<float>::one());
+  ASSERT_EQ(GeoVector4<float>::one(), _dummyMatrix.getZ());
+}
+
+TEST_F(GeoMatrix4Test, getWReturnsExpectedGeoVector4) {
+  ASSERT_EQ(GeoVector4<float>(0.0f, 0.0f, 0.0f, 1.0f), _dummyMatrix.getW());
+}
+
+TEST_F(GeoMatrix4Test, setWSetsExpectedGeoVector4) {
+  _dummyMatrix.setW(GeoVector4<float>::one());
+  ASSERT_EQ(GeoVector4<float>::one(), _dummyMatrix.getW());
+}
+
+TEST_F(GeoMatrix4Test, addOperatorAddsCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto result = testMatOne + testMatOne;
+  EXPECT_EQ(result, testMatTwo);
+}
+
+TEST_F(GeoMatrix4Test, subtractOperatorSubtractsCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f));
+  auto result = testMatOne - testMatOne;
+  EXPECT_EQ(result, testMatTwo);
+}
+
+TEST_F(GeoMatrix4Test, multiplyOperatorMultipliesCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f));
+  auto result = testMatOne * testMatOne;
+  EXPECT_EQ(result, testMatTwo);
+}
+
+TEST_F(GeoMatrix4Test, divideOperatorDividesCorrectly) {
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
+  auto result = testMatOne / testMatTwo;
+  EXPECT_EQ(result, testMatTwo);
 }
