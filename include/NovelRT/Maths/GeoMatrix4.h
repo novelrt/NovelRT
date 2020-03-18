@@ -97,10 +97,6 @@ namespace NovelRT::Maths {
       return GeoMatrix4<T>(underlyingMatrix() * other.underlyingMatrix());
     }
 
-    inline GeoMatrix4<T> operator/(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(underlyingMatrix() / other.underlyingMatrix());
-    }
-
     inline GeoMatrix4<T>& operator+=(const GeoMatrix4<T>& other) {
       underlyingMatrix() += other.underlyingMatrix();
       return *this;
@@ -116,8 +112,30 @@ namespace NovelRT::Maths {
       return *this;
     }
 
-    inline GeoMatrix4<T>& operator/=(const GeoMatrix4<T>& other) {
-      underlyingMatrix() /= other.underlyingMatrix();
+    inline GeoMatrix4<T> operator+(T other) const {
+      return GeoMatrix4<T>(underlyingMatrix() + other);
+    }
+
+    inline GeoMatrix4<T> operator-(T other) const {
+      return GeoMatrix4<T>(underlyingMatrix() - other);
+    }
+
+    inline GeoMatrix4<T> operator*(T other) const {
+      return GeoMatrix4<T>(underlyingMatrix() * other);
+    }
+
+    inline GeoMatrix4<T>& operator+=(T other) {
+      underlyingMatrix() += other;
+      return *this;
+    }
+
+    inline GeoMatrix4<T>& operator-=(T other) {
+      underlyingMatrix() -= other;
+      return *this;
+    }
+
+    inline GeoMatrix4<T>& operator*=(T other) {
+      underlyingMatrix() *= other;
       return *this;
     }
 
