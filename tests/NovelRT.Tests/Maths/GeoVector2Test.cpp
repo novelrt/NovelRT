@@ -75,6 +75,11 @@ TEST(GeoVector2Test, multiplyOperatorMultipliesCorrectlyForTemplateType) {
   EXPECT_EQ(result, GeoVector2<float>(4.0f, 4.0f));
 }
 
+TEST(GeoVector2Test, multiplyOperatorMultipliesCorrectlyForTemplateTypeInverse) {
+  auto result = 2.0f * GeoVector2<float>(2.0f, 2.0f);
+  EXPECT_EQ(result, GeoVector2<float>(4.0f, 4.0f));
+}
+
 TEST(GeoVector2Test, divideOperatorDividesCorrectlyForTemplateType) {
   auto result = GeoVector2<float>(2.0f, 2.0f) / 2.0f;
   EXPECT_EQ(result, GeoVector2<float>::one());

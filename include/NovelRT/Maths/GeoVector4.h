@@ -189,6 +189,11 @@ namespace NovelRT::Maths {
       return GeoVector4<T>(1, 1, 1, 1);
     }
   };
+
+  template<typename T>
+  inline GeoVector4<T> operator*(T lhs, const GeoVector4<T>& rhs) {
+    return rhs * lhs;
+  }
 }
 
 #endif //!NOVELRT_MATHS_GEOVECTOR4_H
