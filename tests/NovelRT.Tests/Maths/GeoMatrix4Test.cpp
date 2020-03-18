@@ -76,7 +76,7 @@ TEST_F(GeoMatrix4Test, setWSetsExpectedGeoVector4) {
 
 TEST_F(GeoMatrix4Test, addOperatorAddsCorrectlyForGeoMatrix4) {
   auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
   auto result = testMatOne + testMatOne;
   EXPECT_EQ(result, testMatTwo);
 }
@@ -89,15 +89,15 @@ TEST_F(GeoMatrix4Test, subtractOperatorSubtractsCorrectlyForGeoMatrix4) {
 }
 
 TEST_F(GeoMatrix4Test, multiplyOperatorMultipliesCorrectlyForGeoMatrix4) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f));
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f));
   auto result = testMatOne * testMatOne;
   EXPECT_EQ(result, testMatTwo);
 }
 
 TEST_F(GeoMatrix4Test, addAssignOperatorAddsCorrectlyForGeoMatrix4) {
   auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
   testMatOne += testMatOne;
   EXPECT_EQ(testMatOne, testMatTwo);
 }
@@ -110,15 +110,17 @@ TEST_F(GeoMatrix4Test, subtractAssignOperatorSubtractsCorrectlyForGeoMatrix4) {
 }
 
 TEST_F(GeoMatrix4Test, multiplyAssignOperatorMultipliesCorrectlyForGeoMatrix4) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f), GeoVector4<float>(16.0f, 16.0f, 16.0f, 16.0f));
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f), GeoVector4<float>::uniform(16.0f));
   testMatOne *= testMatOne;
   EXPECT_EQ(testMatOne, testMatTwo);
 }
 
+
+
 TEST_F(GeoMatrix4Test, addOperatorAddsCorrectlyForTemplateType) {
   auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
   auto result = testMatOne + 1.0f;
   EXPECT_EQ(result, testMatTwo);
 }
@@ -131,15 +133,15 @@ TEST_F(GeoMatrix4Test, subtractOperatorSubtractsCorrectlyForTemplateType) {
 }
 
 TEST_F(GeoMatrix4Test, multiplyOperatorMultipliesCorrectlyForTemplateType) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f));
   auto result = testMatOne * 2.0f;
   EXPECT_EQ(result, testMatTwo);
 }
 
 TEST_F(GeoMatrix4Test, addAssignOperatorAddsCorrectlyForTemplateType) {
   auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one(), GeoVector4<float>::one());
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
   testMatOne += 1.0f;
   EXPECT_EQ(testMatOne, testMatTwo);
 }
@@ -152,8 +154,8 @@ TEST_F(GeoMatrix4Test, subtractAssignOperatorSubtractsCorrectlyForTemplateType) 
 }
 
 TEST_F(GeoMatrix4Test, multiplyAssignOperatorMultipliesCorrectlyForTemplateType) {
-  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f), GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
-  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f), GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto testMatOne = GeoMatrix4<float>(GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f), GeoVector4<float>::uniform(2.0f));
+  auto testMatTwo = GeoMatrix4<float>(GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f), GeoVector4<float>::uniform(4.0f));
   testMatOne *= 2.0f;
   EXPECT_EQ(testMatOne, testMatTwo);
 }
