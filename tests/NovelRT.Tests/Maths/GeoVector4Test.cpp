@@ -15,21 +15,21 @@ TEST(GeoVector4Test, inequalityOperatorEvaluatesCorrectly) {
 }
 
 TEST(GeoVector4Test, lessThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector4<float>::zero() < GeoVector4<float>::one());
+  EXPECT_TRUE(GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f) < GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 TEST(GeoVector4Test, lessThanOrEqualToThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector4<float>::zero() <= GeoVector4<float>::one());
-  EXPECT_TRUE(GeoVector4<float>::one() <= GeoVector4<float>::one());
+  EXPECT_TRUE(GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f) <= GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f));
+  EXPECT_TRUE(GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f) <= GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 TEST(GeoVector4Test, greaterThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector4<float>::one() > GeoVector4<float>::zero());
+  EXPECT_TRUE(GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f) > GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
 TEST(GeoVector4Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector4<float>::one() >= GeoVector4<float>::zero());
-  EXPECT_TRUE(GeoVector4<float>::one() >= GeoVector4<float>::one());
+  EXPECT_TRUE(GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f) >= GeoVector4<float>(0.0f, 0.0f, 0.0f, 0.0f));
+  EXPECT_TRUE(GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f) >= GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 TEST(GeoVector4Test, staticUniformCallReturnsGeoVector4WithUniformValues) {
@@ -46,7 +46,7 @@ TEST(GeoVector4Test, staticOneCallReturnsGeoVector4One) {
 
 TEST(GeoVector4Test, addOperatorAddsCorrectlyForGeoVector4) {
   auto result = GeoVector4<float>::one() + GeoVector4<float>::one();
-  EXPECT_EQ(result, GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  EXPECT_EQ(result, GeoVector4<float>::uniform(2.0f));
 }
 
 TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForGeoVector4) {
@@ -55,23 +55,23 @@ TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForGeoVector4) {
 }
 
 TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForGeoVector4) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f) * GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
-  EXPECT_EQ(result, GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto result = GeoVector4<float>::uniform(2.0f) * GeoVector4<float>::uniform(2.0f);
+  EXPECT_EQ(result, GeoVector4<float>::uniform(4.0f));
 }
 
 TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForTemplateTypeInverse) {
-  auto result = 2.0f * GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
-  EXPECT_EQ(result, GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto result = 2.0f * GeoVector4<float>::uniform(2.0f);
+  EXPECT_EQ(result, GeoVector4<float>::uniform(4.0f));
 }
 
 TEST(GeoVector4Test, divideOperatorDividesCorrectlyForGeoVector4) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f) / GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
+  auto result = GeoVector4<float>::uniform(2.0f) / GeoVector4<float>::uniform(2.0f);
   EXPECT_EQ(result, GeoVector4<float>::one());
 }
 
 TEST(GeoVector4Test, addOperatorAddsCorrectlyForTemplateType) {
   auto result = GeoVector4<float>::one() + 1.0f;
-  EXPECT_EQ(result, GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  EXPECT_EQ(result, GeoVector4<float>::uniform(2.0f));
 }
 
 TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForTemplateType) {
@@ -80,19 +80,19 @@ TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForTemplateType) {
 }
 
 TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForTemplateType) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f) * 2.0f;
-  EXPECT_EQ(result, GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto result = GeoVector4<float>::uniform(2.0f) * 2.0f;
+  EXPECT_EQ(result, GeoVector4<float>::uniform(4.0f));
 }
 
 TEST(GeoVector4Test, divideOperatorDividesCorrectlyForTemplateType) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f) / 2.0f;
+  auto result = GeoVector4<float>::uniform(2.0f) / 2.0f;
   EXPECT_EQ(result, GeoVector4<float>::one());
 }
 
 TEST(GeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector4) {
   auto result = GeoVector4<float>::one();
   result += GeoVector4<float>::one();
-  EXPECT_EQ(result, GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  EXPECT_EQ(result, GeoVector4<float>::uniform(2.0f));
 }
 
 TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector4) {
@@ -102,21 +102,21 @@ TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVec
 }
 
 TEST(GeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector4) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
-  result *= GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
-  EXPECT_EQ(result, GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  auto result = GeoVector4<float>::uniform(2.0f);
+  result *= GeoVector4<float>::uniform(2.0f);
+  EXPECT_EQ(result, GeoVector4<float>::uniform(4.0f));
 }
 
 TEST(GeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector4) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
-  result /= GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
+  auto result = GeoVector4<float>::uniform(2.0f);
+  result /= GeoVector4<float>::uniform(2.0f);
   EXPECT_EQ(result, GeoVector4<float>::one());
 }
 
 TEST(GeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForTemplateType) {
   auto result = GeoVector4<float>::one();
   result += 1.0f;
-  EXPECT_EQ(result, GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f));
+  EXPECT_EQ(result, GeoVector4<float>::uniform(2.0f));
 }
 
 TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForTemplateType) {
@@ -126,13 +126,13 @@ TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForTempla
 }
 
 TEST(GeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForTemplateType) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
+  auto result = GeoVector4<float>::uniform(2.0f);
   result *= 2.0f;
-  EXPECT_EQ(result, GeoVector4<float>(4.0f, 4.0f, 4.0f, 4.0f));
+  EXPECT_EQ(result, GeoVector4<float>::uniform(4.0f));
 }
 
 TEST(GeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateType) {
-  auto result = GeoVector4<float>(2.0f, 2.0f, 2.0f, 2.0f);
+  auto result = GeoVector4<float>::uniform(2.0f);
   result /= 2.0f;
   EXPECT_EQ(result, GeoVector4<float>::one());
 }
@@ -156,5 +156,5 @@ TEST(GeoVector4Test, getLengthReturnsCorrectLength) {
 TEST(GeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   auto vec = GeoVector4<float>(0.0f, 1.0f, 0.0f, 0.0f);
   vec.rotateToAngleAroundPoint(90.0f, GeoVector4<float>::zero());
-  EXPECT_TRUE(vec.epsilonEquals(GeoVector4<float>(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>(1e-7f, 1e-7f, 1e-7f, 1e-7f)));
+  EXPECT_TRUE(vec.epsilonEquals(GeoVector4<float>(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>::uniform(1e-7f)));
 }
