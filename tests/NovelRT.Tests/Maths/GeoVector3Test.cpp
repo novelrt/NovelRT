@@ -15,25 +15,25 @@ TEST(GeoVector3Test, inequalityOperatorEvaluatesCorrectly) {
 }
 
 TEST(GeoVector3Test, lessThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector3<float>::zero() < GeoVector3<float>::one());
+  EXPECT_TRUE(GeoVector3<float>(0.0f, 0.0f, 0.0f) < GeoVector3<float>::one());
 }
 
 TEST(GeoVector3Test, lessOrEqualToThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector3<float>::zero() <= GeoVector3<float>::one());
+  EXPECT_TRUE(GeoVector3<float>(0.0f, 0.0f, 0.0f) <= GeoVector3<float>::one());
   EXPECT_TRUE(GeoVector3<float>::one() <= GeoVector3<float>::one());
 }
 
 TEST(GeoVector3Test, greaterThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector3<float>::one() > GeoVector3<float>::zero());
+  EXPECT_TRUE(GeoVector3<float>::one() > GeoVector3<float>(0.0f, 0.0f, 0.0f));
 }
 
 TEST(GeoVector3Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector3<float>::one() >= GeoVector3<float>::zero());
+  EXPECT_TRUE(GeoVector3<float>::one() >= GeoVector3<float>(0.0f, 0.0f, 0.0f));
   EXPECT_TRUE(GeoVector3<float>::one() >= GeoVector3<float>::one());
 }
 
 TEST(GeoVector3Test, staticUniformCallReturnsGeoVector3WithUniformValues) {
-  EXPECT_EQ(GeoVector3<float>(1.0f, 1.0f, 1.0f), GeoVector3<float>::uniform(1.0f));
+  EXPECT_EQ(GeoVector3<float>::uniform(1.0f), GeoVector3<float>(1.0f, 1.0f, 1.0f));
 }
 
 TEST(GeoVector3Test, staticZeroCallReturnsGeoVector3Zero) {
