@@ -33,7 +33,7 @@ TEST(GeoVector4Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
 }
 
 TEST(GeoVector4Test, staticUniformCallReturnsGeoVector4WithUniformValues) {
-  EXPECT_EQ(GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f), GeoVector4<float>::uniform(1.0f));
+  EXPECT_EQ(GeoVector4<float>::uniform(1.0f), GeoVector4<float>(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 TEST(GeoVector4Test, staticZeroCallReturnsGeoVector4Zero) {
