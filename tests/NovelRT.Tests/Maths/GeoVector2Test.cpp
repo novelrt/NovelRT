@@ -32,6 +32,10 @@ TEST(GeoVector2Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector2<float>::one() >= GeoVector2<float>::one());
 }
 
+TEST(GeoVector2Test, staticUniformCallReturnsGeoVector2WithUniformValues) {
+  EXPECT_EQ(GeoVector2<float>(1.0f, 1.0f), GeoVector2<float>::uniform(1.0f));
+}
+
 TEST(GeoVector2Test, staticZeroCallReturnsGeoVector2Zero) {
   EXPECT_EQ(GeoVector2<float>::zero(), GeoVector2<float>(0.0f, 0.0f));
 }

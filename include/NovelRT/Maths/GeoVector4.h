@@ -182,11 +182,15 @@ namespace NovelRT::Maths {
     }
 
     static const GeoVector4<T> zero() {
-      return GeoVector4<T>(0, 0, 0, 0);
+      return GeoVector4<T>::uniform(0);
     }
 
     static const GeoVector4<T> one() {
-      return GeoVector4<T>(1, 1, 1, 1);
+      return GeoVector4<T>::uniform(1);
+    }
+
+    static const GeoVector4<T> uniform(T value) {
+      return GeoVector4<T>(value, value, value, value);
     }
   };
 
