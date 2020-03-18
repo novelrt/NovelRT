@@ -182,6 +182,10 @@ namespace NovelRT::Maths {
     static const GeoVector2<T> one() {
       return GeoVector2<T>(1, 1);
     }
+
+    static const GeoVector2<T> uniform(T value) {
+      return GeoVector2<T>(value, value);
+    }
   };
 
   template<typename T>
