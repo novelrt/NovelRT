@@ -10,14 +10,18 @@
 namespace NovelRT::Maths {
   template<typename T>
   class GeoVector4 {
-    friend class Graphics::RenderObject;
     friend class Input::InteractionService;
-    friend class GeoBounds;
     template<typename U>
     friend class GeoMatrix4x4;
+    template<typename V>
+    friend class GeoVector3;
+    template<typename W>
+    friend class GeoVector2;
 
   private:
     GeoVector4(glm::vec<4, T> value) : _value(value) {}
+    GeoVector4(glm::vec<3, T> value) : _value(glm::vec<4, T>(value, 0)) {}
+    GeoVector4(glm::vec<2, T> value) : _value(glm::vec<4, T>(value, 0, 0)) {}
 
     const glm::vec<4, T>& vec4Value() const {
       return _value;
@@ -34,35 +38,35 @@ namespace NovelRT::Maths {
     GeoVector4(T x, T y, T z, T w) : _value(glm::vec<4, T>(x, y, z, w)) {}
 
     T getX() const {
-      return _value.x;
+      return vec4Value().x;
     }
 
     void setX(T value) {
-      _value.x = value;
+      vec4Value().x = value;
     }
 
     T getY() const {
-      return _value.y;
+      return vec4Value().y;
     }
 
     void setY(T value) {
-      _value.y = value;
+      vec4Value().y = value;
     }
 
     T getZ() const {
-      return _value.z;
+      return vec4Value().z;
     }
 
     void setZ(T value) {
-      _value.z = value;
+      vec4Value().z = value;
     }
 
     T getW() const {
-      return _value.w;
+      return vec4Value().w;
     }
 
     void setW(T value) {
-      _value.w = value;
+      vec4Value().w = value;
     }
 
     inline GeoVector4<T> getNormalised() const noexcept {
@@ -174,7 +178,7 @@ namespace NovelRT::Maths {
     }
 
     void rotateToAngleAroundPoint(T angleRotationValue, const GeoVector4<T>& point, const GeoVector3<T>& axis = GeoVector3<T>(0, 0, 1)) noexcept {
-      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), axis.getVec3Value()) + point.vec4Value();
+      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), axis.vec3Value()) + point.vec4Value();
     }
 
     bool epsilonEquals(const GeoVector4<T>& other, const GeoVector4<T>& epsilonValue) const noexcept {

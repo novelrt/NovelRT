@@ -70,15 +70,15 @@ namespace NovelRT::Input {
   void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
-    auto value = mousePosition.vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
+    auto value = mousePosition.asGeoVector4().vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
     auto result = _mousePositionsOnScreenPerButton.find(keyCode);
 
     if (result == _mousePositionsOnScreenPerButton.end()) {
-      _mousePositionsOnScreenPerButton.insert({ keyCode, value });
+      _mousePositionsOnScreenPerButton.insert({ keyCode, Maths::GeoVector2<float>(value.x, value.y) });
     }
     else {
-      result->second = value;
+      result->second = Maths::GeoVector2<float>(value.x, value.y);
     }
 
     validateIfKeyCached(keyCode);
