@@ -28,8 +28,8 @@ namespace NovelRT::Maths {
     auto minB = otherBounds.position() - otherBounds.getExtents();
     auto maxB = otherBounds.position() + otherBounds.getExtents();
 
-    auto result = glm::greaterThan(minA.getVec2Value(), maxB.getVec2Value()) | glm::greaterThan(minB.getVec2Value(), maxA.getVec2Value());
-    return glm::any(result);
+    auto result = minA > maxB | minB > maxA;
+    return result;
   }
 
   GeoVector2<float> GeoBounds::getCornerInLocalSpace(int index) const {
