@@ -10,7 +10,7 @@
 namespace NovelRT::Maths {
 
   template<typename T>
-  class GeoMatrix4 {
+  class GeoMatrix4x4 {
     friend class Graphics::RenderObject;
     friend class Graphics::ImageRect;
     friend class Graphics::BasicFillRect;
@@ -28,14 +28,14 @@ namespace NovelRT::Maths {
       return _value;
     }
 
-    explicit GeoMatrix4(glm::mat4 matrix) {
+    explicit GeoMatrix4x4(glm::mat4 matrix) {
       _value = matrix;
     }
 
   public:
-    GeoMatrix4() {}
+    GeoMatrix4x4() {}
 
-    GeoMatrix4(GeoVector4<T> x,
+    GeoMatrix4x4(GeoVector4<T> x,
       GeoVector4<T> y,
       GeoVector4<T> z,
       GeoVector4<T> w) {
@@ -77,70 +77,70 @@ namespace NovelRT::Maths {
       _value[3] = value.vec4Value();
     }
 
-    inline bool operator==(const GeoMatrix4<T>& other) const {
+    inline bool operator==(const GeoMatrix4x4<T>& other) const {
       return underlyingMatrix() == other.underlyingMatrix();
     }
 
-    inline bool operator!=(const GeoMatrix4<T>& other) const {
+    inline bool operator!=(const GeoMatrix4x4<T>& other) const {
       return underlyingMatrix() != other.underlyingMatrix();
     }
 
-    inline GeoMatrix4<T> operator+(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(underlyingMatrix() + other.underlyingMatrix());
+    inline GeoMatrix4x4<T> operator+(const GeoMatrix4x4<T>& other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() + other.underlyingMatrix());
     }
 
-    inline GeoMatrix4<T> operator-(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(underlyingMatrix() - other.underlyingMatrix());
+    inline GeoMatrix4x4<T> operator-(const GeoMatrix4x4<T>& other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() - other.underlyingMatrix());
     }
 
-    inline GeoMatrix4<T> operator*(const GeoMatrix4<T>& other) const {
-      return GeoMatrix4<T>(underlyingMatrix() * other.underlyingMatrix());
+    inline GeoMatrix4x4<T> operator*(const GeoMatrix4x4<T>& other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() * other.underlyingMatrix());
     }
 
-    inline GeoMatrix4<T>& operator+=(const GeoMatrix4<T>& other) {
+    inline GeoMatrix4x4<T>& operator+=(const GeoMatrix4x4<T>& other) {
       underlyingMatrix() += other.underlyingMatrix();
       return *this;
     }
 
-    inline GeoMatrix4<T>& operator-=(const GeoMatrix4<T>& other) {
+    inline GeoMatrix4x4<T>& operator-=(const GeoMatrix4x4<T>& other) {
       underlyingMatrix() -= other.underlyingMatrix();
       return *this;
     }
 
-    inline GeoMatrix4<T>& operator*=(const GeoMatrix4<T>& other) {
+    inline GeoMatrix4x4<T>& operator*=(const GeoMatrix4x4<T>& other) {
       underlyingMatrix() *= other.underlyingMatrix();
       return *this;
     }
 
-    inline GeoMatrix4<T> operator+(T other) const {
-      return GeoMatrix4<T>(underlyingMatrix() + other);
+    inline GeoMatrix4x4<T> operator+(T other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() + other);
     }
 
-    inline GeoMatrix4<T> operator-(T other) const {
-      return GeoMatrix4<T>(underlyingMatrix() - other);
+    inline GeoMatrix4x4<T> operator-(T other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() - other);
     }
 
-    inline GeoMatrix4<T> operator*(T other) const {
-      return GeoMatrix4<T>(underlyingMatrix() * other);
+    inline GeoMatrix4x4<T> operator*(T other) const {
+      return GeoMatrix4x4<T>(underlyingMatrix() * other);
     }
 
-    inline GeoMatrix4<T>& operator+=(T other) {
+    inline GeoMatrix4x4<T>& operator+=(T other) {
       underlyingMatrix() += other;
       return *this;
     }
 
-    inline GeoMatrix4<T>& operator-=(T other) {
+    inline GeoMatrix4x4<T>& operator-=(T other) {
       underlyingMatrix() -= other;
       return *this;
     }
 
-    inline GeoMatrix4<T>& operator*=(T other) {
+    inline GeoMatrix4x4<T>& operator*=(T other) {
       underlyingMatrix() *= other;
       return *this;
     }
 
-    static GeoMatrix4<T> getDefaultIdentity() {
-      return GeoMatrix4<T>(glm::identity<glm::mat4>());
+    static GeoMatrix4x4<T> getDefaultIdentity() {
+      return GeoMatrix4x4<T>(glm::identity<glm::mat4>());
     }
   };
 }

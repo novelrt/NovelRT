@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
     glUseProgram(_shaderProgram.shaderProgramId);
 
     glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
 
 
     glBindVertexArray(_vertexArrayObject.getActual());
