@@ -13,14 +13,11 @@ namespace NovelRT::Maths {
     friend class Input::InteractionService;
     template<typename U>
     friend class GeoVector4;
-    template<typename V>
-    friend class GeoVector2;
 
   private:
     glm::vec<3, T> _value;
 
     GeoVector3(glm::vec<3, T> value) : _value(value) {}
-    GeoVector3(glm::vec<2, T> value) : _value(glm::vec<3, T>(value, 0)) {}
 
     const glm::vec<3, T>& vec3Value() const {
       return _value;
@@ -33,6 +30,7 @@ namespace NovelRT::Maths {
   public:
     GeoVector3() {}
     GeoVector3(T x, T y, T z) : _value(glm::vec<4, T>(x, y, z, 0)) {}
+    GeoVector3(const GeoVector2<T>& vec2Value) : _value(vec2Value.vec2Value(), 0) {}
 
     T getX() const {
       return vec3Value().x;
@@ -68,10 +66,6 @@ namespace NovelRT::Maths {
 
     inline float getLength() const noexcept {
       return getMagnitude();
-    }
-
-    inline GeoVector4<T> asGeoVector4() const noexcept {
-      return GeoVector4<T>(vec3Value());
     }
 
     inline bool operator==(const GeoVector3<T>& other) const {
