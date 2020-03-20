@@ -28,7 +28,7 @@ namespace NovelRT::Maths {
 
   public:
     GeoVector2() {}
-    GeoVector2(T x, T y) : _value(glm::vec<4, T>(x, y, 0, 0)) {}
+    GeoVector2(T x, T y) : _value(glm::vec<2, T>(x, y)) {}
 
     T getX() const {
       return vec2Value().x;
