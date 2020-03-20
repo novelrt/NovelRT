@@ -158,3 +158,11 @@ TEST(GeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   vec.rotateToAngleAroundPoint(90.0f, GeoVector4<float>::zero());
   EXPECT_TRUE(vec.epsilonEquals(GeoVector4<float>(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4<float>::uniform(1e-7f)));
 }
+
+TEST(GeoVector4Test, geoVector2ConstructorReturnsCorrectGeoVector4) {
+  EXPECT_EQ(GeoVector4<float>(GeoVector2<float>::one()), GeoVector4<float>(1.0f, 1.0f, 0.0f, 0.0f));
+}
+
+TEST(GeoVector4Test, geoVector3ConstructorReturnsCorrectGeoVector4) {
+  EXPECT_EQ(GeoVector4<float>(GeoVector3<float>::one()), GeoVector4<float>(1.0f, 1.0f, 1.0f, 0.0f));
+}

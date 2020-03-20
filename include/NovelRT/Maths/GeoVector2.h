@@ -12,6 +12,10 @@ namespace NovelRT::Maths {
   class GeoVector2 {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
+    template<typename U>
+    friend class GeoVector3;
+    template<typename V>
+    friend class GeoVector4;
 
   private:
     glm::vec<2, T> _value;
@@ -56,14 +60,6 @@ namespace NovelRT::Maths {
 
     inline float getLength() const noexcept {
       return getMagnitude();
-    }
-
-    inline GeoVector3<T> asGeoVector3() const noexcept {
-      return GeoVector3<T>(vec2Value());
-    }
-
-    inline GeoVector4<T> asGeoVector4() const noexcept {
-      return GeoVector4<T>(vec2Value());
     }
 
     inline bool operator==(const GeoVector2<T>& other) const {

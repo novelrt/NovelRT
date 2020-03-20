@@ -13,15 +13,9 @@ namespace NovelRT::Maths {
     friend class Input::InteractionService;
     template<typename U>
     friend class GeoMatrix4x4;
-    template<typename V>
-    friend class GeoVector3;
-    template<typename W>
-    friend class GeoVector2;
 
   private:
     GeoVector4(glm::vec<4, T> value) : _value(value) {}
-    GeoVector4(glm::vec<3, T> value) : _value(glm::vec<4, T>(value, 0)) {}
-    GeoVector4(glm::vec<2, T> value) : _value(glm::vec<4, T>(value, 0, 0)) {}
 
     const glm::vec<4, T>& vec4Value() const {
       return _value;
@@ -36,6 +30,8 @@ namespace NovelRT::Maths {
   public:
     GeoVector4() {}
     GeoVector4(T x, T y, T z, T w) : _value(glm::vec<4, T>(x, y, z, w)) {}
+    GeoVector4(const GeoVector2<T>& vec2Value) : _value(vec2Value.vec2Value(), 0, 0) {}
+    GeoVector4(const GeoVector3<T>& vec3Value) : _value(vec3Value.vec3Value(), 0) {}
 
     T getX() const {
       return vec4Value().x;
