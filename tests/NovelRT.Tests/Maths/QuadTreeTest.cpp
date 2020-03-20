@@ -10,8 +10,8 @@ static const float TEST_WIDTH = 1920.0f;
 static const float TEST_HEIGHT = 1080.0f;
 
 GeoBounds getCenteredBounds(float width, float height) {
-  auto size = GeoVector<float>(width, height);
-  auto position = GeoVector<float>(0, 0);
+  auto size = GeoVector2<float>(width, height);
+  auto position = GeoVector2<float>(0, 0);
   return GeoBounds(position, size, 0);
 }
 
@@ -136,12 +136,12 @@ TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
   EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1u);
   EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1u);
 
-  auto expectedSize = GeoVector(TEST_WIDTH / 2, TEST_HEIGHT / 2);
+  auto expectedSize = GeoVector2(TEST_WIDTH / 2, TEST_HEIGHT / 2);
 
-  EXPECT_EQ(_quadTree->getTopLeft()->getBounds(), GeoBounds(GeoVector<float>(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getTopRight()->getBounds(), GeoBounds(GeoVector<float>(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getBottomLeft()->getBounds(), GeoBounds(GeoVector<float>(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getBottomRight()->getBounds(), GeoBounds(GeoVector<float>(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
+  EXPECT_EQ(_quadTree->getTopLeft()->getBounds(), GeoBounds(GeoVector2<float>(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
+  EXPECT_EQ(_quadTree->getTopRight()->getBounds(), GeoBounds(GeoVector2<float>(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
+  EXPECT_EQ(_quadTree->getBottomLeft()->getBounds(), GeoBounds(GeoVector2<float>(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
+  EXPECT_EQ(_quadTree->getBottomRight()->getBounds(), GeoBounds(GeoVector2<float>(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
 }
 
 TEST_F(QuadTreeTest, insertOutOfBoundsReturnsFalse) {

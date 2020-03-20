@@ -117,7 +117,7 @@ void AudioService::setSoundVolume(ALuint source, float value) {
   }
 }
 
-//Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector<float> here...
+//Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector2<float> here...
 //This also has no effect if the buffer is more than one channel (not Mono)
 void AudioService::setSoundPosition(ALuint source, float posX, float posY)
 {

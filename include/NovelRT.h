@@ -150,8 +150,10 @@ namespace NovelRT::Windowing {
 
 #include "NovelRT/Animation/AnimatorPlayState.h"
 #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-#include "NovelRT/Maths/GeoVector.h"
-#include "NovelRT/Maths/GeoMatrix4.h"
+#include "NovelRT/Maths/GeoVector2.h"
+#include "NovelRT/Maths/GeoVector3.h"
+#include "NovelRT/Maths/GeoVector4.h"
+#include "NovelRT/Maths/GeoMatrix4x4.h"
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Maths/QuadTreePoint.h"
 #include "NovelRT/Maths/QuadTree.h"
