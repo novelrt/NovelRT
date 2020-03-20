@@ -14,7 +14,7 @@ namespace NovelRT::Graphics {
     friend class Texture;
     friend class FontSet;
   private:
-    bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector<float>* const optionalWindowSize = nullptr);
+    bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector2<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
     NovelRunner* const _runner;
 
