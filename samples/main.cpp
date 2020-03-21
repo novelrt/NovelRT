@@ -159,16 +159,16 @@ int main(int /*argc*/, char* /*argv*/[])
   runner.Update += [&](NovelRT::Timing::Timestamp delta) {
     const float rotationAmount = 45.0f;
 
-    auto rotation = novelChanRect->transform().getRotation();
+    auto rotation = novelChanRect->transform().rotation();
     rotation += rotationAmount * delta.getSecondsFloat();
-    novelChanRect->transform().setRotation(rotation);
+    novelChanRect->transform().rotation() = rotation;
 
     if (rotation > 360.0f)
     {
       rotation -= 360.0f;
     }
 
-    novelChanRect->transform().setRotation(rotation);
+    novelChanRect->transform().rotation() = rotation;
 
     if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");

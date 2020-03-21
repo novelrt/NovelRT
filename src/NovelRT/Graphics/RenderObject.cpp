@@ -73,7 +73,7 @@ namespace NovelRT::Graphics {
     auto position = transform().position().vec2Value();
     auto resultMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity().underlyingMatrix();
     resultMatrix = glm::translate(resultMatrix, glm::vec3(position, layer()));
-    resultMatrix = glm::rotate(resultMatrix, glm::radians(transform().getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+    resultMatrix = glm::rotate(resultMatrix, glm::radians(transform().rotation()), glm::vec3(0.0f, 0.0f, 1.0f));
     resultMatrix = glm::scale(resultMatrix, glm::vec3(transform().getScale().vec2Value(), 1.0f));
 
     return Maths::GeoMatrix4x4<float>(glm::transpose(_camera.lock()->getCameraUboMatrix().underlyingMatrix() * resultMatrix));
