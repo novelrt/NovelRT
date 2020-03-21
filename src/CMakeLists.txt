@@ -76,7 +76,7 @@ target_link_libraries(NovelC ${NOVELRT_LIB_LINK_LIBRARIES})
 file(GLOB_RECURSE NOVELRTC_TEST_SOURCES CONFIGURE_DEPENDS NovelRT.C/*.c)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRTC_TEST_SOURCES})
 
-add_executable(NovelCTest ${NOVELRTC_LIB_HEADERS} ${NOVELRTC_TEST_SOURCES})
+add_executable(NovelCTest ${NOVELRTC_TEST_SOURCES})
 target_link_libraries(NovelCTest NovelC)
 
 # NovelRT.Resources
