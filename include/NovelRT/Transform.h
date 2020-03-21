@@ -36,12 +36,12 @@ namespace NovelRT {
       return _position;
     }
 
-    inline float getRotation() const {
+    inline const float& rotation() const {
       return _rotation;
     }
 
-    inline void setRotation(const float value) {
-      _rotation = value;
+    inline float& rotation() {
+      return _rotation;
     }
 
     inline const Maths::GeoVector2<float>& getScale() const {
