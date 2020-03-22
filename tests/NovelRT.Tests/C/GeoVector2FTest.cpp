@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "../../../src/NovelRT.C/GeoVector2F.h"
+#include "NovelC/GeoVector2F.h"
 
 using namespace NovelRT;
 using namespace NovelRT::Maths;
@@ -36,19 +36,21 @@ TEST(GeoVector2_C_Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(three, one));
   EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(three, three));
 }
-/*
+
 TEST(GeoVector2_C_Test, staticUniformCallReturnsGeoVector2WithUniformValues) {
-  EXPECT_EQ(GeoVector2<float>::uniform(1.0f), GeoVector2<float>(1.0f, 1.0f));
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), three));
 }
 
 TEST(GeoVector2_C_Test, staticZeroCallReturnsGeoVector2Zero) {
-  EXPECT_EQ(GeoVector2<float>::zero(), GeoVector2<float>::uniform(0.0f));
+  GeoVector2_t test = GeoVector2F_create(0.0f, 0.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_zero(), test));
 }
 
 TEST(GeoVector2_C_Test, staticOneCallReturnsGeoVector2One) {
-  EXPECT_EQ(GeoVector2<float>::one(), GeoVector2<float>::uniform(1.0f));
+  GeoVector2_t test = GeoVector2F_create(1.0f, 1.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_one(), test));
 }
-
+/*
 TEST(GeoVector2_C_Test, addOperatorAddsCorrectlyForGeoVector2) {
   auto result = GeoVector2<float>::one() + GeoVector2<float>::one();
   EXPECT_EQ(result, GeoVector2<float>::uniform(2.0f));
@@ -144,26 +146,27 @@ TEST(GeoVector2_C_Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplat
 
 TEST(GeoVector2_C_Test, getNormalisedReturnsNormalisedGeoVector) {
   //replace with GeoVector2F::one().getNormalised or what the proper API is once completed.
-  GeoVector2_t vec = GeoVector2F_getNormalised(three);
+  GeoVector2_t vec = GeoVector2F_one();
+  vec = GeoVector2F_getNormalised(vec);
   float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
 TEST(GeoVector2_C_Test, getMagnitudeReturnsCorrectLength) {
-  //replace with GeoVector2F::one().getNormalised or what the proper API is once completed.
-  GeoVector2_t vec = GeoVector2F_getNormalised(three);
+  GeoVector2_t vec = GeoVector2F_one();
+  vec = GeoVector2F_getNormalised(vec);
   EXPECT_FLOAT_EQ(GeoVector2F_getMagnitude(vec), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
 
 TEST(GeoVector2_C_Test, getLengthReturnsCorrectLength) {
-  //replace with GeoVector2F::one().getNormalised or what the proper API is once completed.
-  GeoVector2_t vec = GeoVector2F_getNormalised(three);
+  GeoVector2_t vec = GeoVector2F_one();
+  vec = GeoVector2F_getNormalised(vec);
   EXPECT_FLOAT_EQ(GeoVector2F_getLength(vec), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
-/*
+
 TEST(GeoVector2_C_Test, rotateToAngleAroundPointRotatesCorrectAmount) {
-  auto vec = GeoVector2<float>(0.0f, 1.0f);
-  vec.rotateToAngleAroundPoint(90.0f, GeoVector2<float>::zero());
-  EXPECT_TRUE(vec.epsilonEquals(GeoVector2<float>(-1.0f, 0.0f), GeoVector2<float>::uniform(1e-7f)));
+  GeoVector2_t vec = GeoVector2F_create(0.0f, 1.0f);
+  GeoVector2F_rotateToAngleAroundPoint(vec, 90.0f, GeoVector2F_zero());
+  EXPECT_TRUE(GeoVector2F_epsilonEquals(vec, GeoVector2F_create(-1.0f, 0.0f), GeoVector2F_uniform(1e-7f)));
 }
-*/
+

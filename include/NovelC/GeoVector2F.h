@@ -14,16 +14,56 @@ extern "C" {
    float y;
  };
 
-#ifdef WIN32
-#define typeof _declspec()
-#endif
+typedef struct GeoVector2F GeoVector2_t;
 
- typedef struct GeoVector2F GeoVector2_t;
+GeoVector2_t GeoVector2F_create(float x, float y) {
+  GeoVector2_t gv = { x, y };
+  return gv;
+}
 
-float GeoVector2F_getX(GeoVector2_t* gv);
-void GeoVector2F_setX(GeoVector2_t* gv, float value);
-float GeoVector2F_getY(GeoVector2_t* gv);
-void GeoVector2F_setY(GeoVector2_t* gv, float value);
+inline const GeoVector2_t GeoVector2F_uniform(float value) {
+  return GeoVector2F_create(value, value);
+}
+
+inline const GeoVector2_t GeoVector2F_zero() {
+  return GeoVector2F_uniform(0.0f);
+}
+
+inline const GeoVector2_t GeoVector2F_one() {
+  return GeoVector2F_uniform(1.0f);
+}
+
+float GeoVector2F_getX(GeoVector2_t& gv) {
+  return gv.x;
+}
+
+void GeoVector2F_setX(GeoVector2_t& gv, float value) {
+  gv.x = value;
+}
+
+float GeoVector2F_getY(GeoVector2_t& gv) {
+  return gv.y;
+}
+
+void GeoVector2F_setY(GeoVector2_t& gv, float value) {
+  gv.y = value;
+}
+
+void GeoVector2F_rotateToAngleAroundPoint(GeoVector2F& vector, float angleRotationValue, const GeoVector2F& point) noexcept {
+  NovelRT::Maths::GeoVector2<float> geo = NovelRT::Maths::GeoVector2<float>(vector.x, vector.y);
+  geo.rotateToAngleAroundPoint(angleRotationValue, NovelRT::Maths::GeoVector2<float>(point.x, point.y));
+  vector.x = geo.getX();
+  vector.y = geo.getY();
+  //vec2Value() = glm::rotate((vec2Value() - point.vec2Value()), glm::radians(angleRotationValue)) + point.vec2Value();
+}
+
+bool GeoVector2F_epsilonEquals(GeoVector2F& vector, const GeoVector2F& other, const GeoVector2F& epsilonValue) noexcept {
+  NovelRT::Maths::GeoVector2<float>v1 = NovelRT::Maths::GeoVector2<float>(vector.x, vector.y);
+  NovelRT::Maths::GeoVector2<float>v2 = NovelRT::Maths::GeoVector2<float>(other.x, other.y);
+  NovelRT::Maths::GeoVector2<float>v3 = NovelRT::Maths::GeoVector2<float>(epsilonValue.x, epsilonValue.y);
+  return v1.epsilonEquals(v2, v3);
+  //return glm::all(glm::equal(vec2Value(), other.vec2Value(), epsilonValue.vec2Value()));
+}
 
 inline GeoVector2_t GeoVector2F_getNormalised(GeoVector2_t& gv) {
   NovelRT::Maths::GeoVector2<float> geo = NovelRT::Maths::GeoVector2<float>(gv.x, gv.y).getNormalised();
@@ -40,27 +80,27 @@ inline float GeoVector2F_getMagnitude(GeoVector2_t& gv) {
   return GeoVector2F_getLength(gv);
 }
 
-inline bool GeoVector2F_equal(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_equal(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) == NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
-inline bool GeoVector2F_notEqual(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_notEqual(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) != NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
-inline bool GeoVector2F_lessThan(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_lessThan(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) < NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
-inline bool GeoVector2F_lessThanOrEqualTo(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_lessThanOrEqualTo(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) <= NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
-inline bool GeoVector2F_greaterThan(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_greaterThan(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) > NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
-inline bool GeoVector2F_greaterThanOrEqualTo(GeoVector2_t& first, const GeoVector2_t& other) {
+inline bool GeoVector2F_greaterThanOrEqualTo(const GeoVector2_t& first, const GeoVector2_t& other) {
   return NovelRT::Maths::GeoVector2<float>(first.x, first.y) >= NovelRT::Maths::GeoVector2<float>(other.x, other.y);
 }
 
@@ -182,6 +222,10 @@ inline GeoVector2_t GeoVector2F_divideFloatIntoVector(GeoVector2_t& vector, floa
   vector.x = geo.getX();
   vector.y = geo.getY();
   return vector;
+}
+
+inline GeoVector2_t GeoVector2F_multiplyFlip(float lhs, GeoVector2F& rhs) {
+  return GeoVector2F_multiplyFloat(rhs, lhs);
 }
 
 #ifdef __cplusplus
