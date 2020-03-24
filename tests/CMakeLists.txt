@@ -16,6 +16,7 @@ set(NOVELRT_TESTS_LINK_LIBRARIES
   GTest::gmock
   GTest::gmock_main
   NovelRT
+  NovelRTInterop
 )
 
 add_executable(NovelRTTests ${NOVELRT_TESTS_HEADERS} ${NOVELRT_TESTS_SOURCES})

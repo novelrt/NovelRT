@@ -16,7 +16,7 @@ extern "C" {
 
 typedef struct GeoVector2F GeoVector2F_t;
 
-GeoVector2F_t GeoVector2F_create(float x, float y) {
+inline GeoVector2F_t GeoVector2F_create(float x, float y) {
   GeoVector2F_t gv = { x, y };
   return gv;
 }
@@ -33,23 +33,23 @@ inline const GeoVector2F_t GeoVector2F_one() {
   return GeoVector2F_uniform(1.0f);
 }
 
-float GeoVector2F_getX(GeoVector2F_t& gv) {
+inline float GeoVector2F_getX(GeoVector2F_t& gv) {
   return gv.x;
 }
 
-void GeoVector2F_setX(GeoVector2F_t& gv, float value) {
+inline void GeoVector2F_setX(GeoVector2F_t& gv, float value) {
   gv.x = value;
 }
 
-float GeoVector2F_getY(GeoVector2F_t& gv) {
+inline float GeoVector2F_getY(GeoVector2F_t& gv) {
   return gv.y;
 }
 
-void GeoVector2F_setY(GeoVector2F_t& gv, float value) {
+inline void GeoVector2F_setY(GeoVector2F_t& gv, float value) {
   gv.y = value;
 }
 
-void GeoVector2F_rotateToAngleAroundPoint(GeoVector2F& vector, float angleRotationValue, const GeoVector2F& point) noexcept {
+inline void GeoVector2F_rotateToAngleAroundPoint(GeoVector2F& vector, float angleRotationValue, const GeoVector2F& point) noexcept {
   NovelRT::Maths::GeoVector2<float> geo = NovelRT::Maths::GeoVector2<float>(vector.x, vector.y);
   geo.rotateToAngleAroundPoint(angleRotationValue, NovelRT::Maths::GeoVector2<float>(point.x, point.y));
   vector.x = geo.getX();
@@ -57,7 +57,7 @@ void GeoVector2F_rotateToAngleAroundPoint(GeoVector2F& vector, float angleRotati
   //vec2Value() = glm::rotate((vec2Value() - point.vec2Value()), glm::radians(angleRotationValue)) + point.vec2Value();
 }
 
-bool GeoVector2F_epsilonEquals(GeoVector2F& vector, const GeoVector2F& other, const GeoVector2F& epsilonValue) noexcept {
+inline bool GeoVector2F_epsilonEquals(GeoVector2F& vector, const GeoVector2F& other, const GeoVector2F& epsilonValue) noexcept {
   NovelRT::Maths::GeoVector2<float>v1 = NovelRT::Maths::GeoVector2<float>(vector.x, vector.y);
   NovelRT::Maths::GeoVector2<float>v2 = NovelRT::Maths::GeoVector2<float>(other.x, other.y);
   NovelRT::Maths::GeoVector2<float>v3 = NovelRT::Maths::GeoVector2<float>(epsilonValue.x, epsilonValue.y);
@@ -153,7 +153,7 @@ inline GeoVector2F_t GeoVector2F_multiplyFloat(GeoVector2F_t& vector, float valu
   return vector;
 }
 
-GeoVector2F_t GeoVector2F_divideFloat(GeoVector2F_t& vector, float value) {
+inline GeoVector2F_t GeoVector2F_divideFloat(GeoVector2F_t& vector, float value) {
   NovelRT::Maths::GeoVector2 geo = NovelRT::Maths::GeoVector2<float>(vector.x, vector.y) / value;
   vector.x = geo.getX();
   vector.y = geo.getY();
@@ -184,7 +184,7 @@ inline GeoVector2F_t GeoVector2F_multiplyIntoVector(GeoVector2F_t& first, const 
   return first;
 }
 
-GeoVector2F_t GeoVector2F_divideIntoVector(GeoVector2F_t& first, const GeoVector2F_t& other) {
+inline GeoVector2F_t GeoVector2F_divideIntoVector(GeoVector2F_t& first, const GeoVector2F_t& other) {
   NovelRT::Maths::GeoVector2 geo = NovelRT::Maths::GeoVector2<float>(first.x, first.y);
   geo /= NovelRT::Maths::GeoVector2<float>(other.x, other.y);
   first.x = geo.getX();

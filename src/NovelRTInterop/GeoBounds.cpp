@@ -1,5 +1,5 @@
-#include "NovelC/GeoVector2F.h"
-#include "NovelC/GeoBounds.h"
+#include "NovelRTInterop/GeoVector2F.h"
+#include "NovelRTInterop/GeoBounds.h"
 #include "NovelRT.h"
 
 
