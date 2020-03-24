@@ -68,7 +68,7 @@ file(GLOB_RECURSE NOVELC_LIB_SOURCES CONFIGURE_DEPENDS NovelC/*.cpp)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELC_LIB_SOURCES})
 
 add_library(NovelC SHARED ${NOVELC_LIB_HEADERS} ${NOVELC_LIB_SOURCES})
-target_link_libraries(NovelC ${NOVELRT_LIB_LINK_LIBRARIES})
+target_link_libraries(NovelC NovelRT)
 
 # NovelRT.Resources
 
