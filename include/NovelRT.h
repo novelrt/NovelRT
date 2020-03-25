@@ -32,6 +32,7 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
+#include <any>
 
 #if defined(_WIN32) || defined(_WIN64)
 #define WIN32_LEAN_AND_MEAN
@@ -143,6 +144,7 @@ namespace NovelRT::Windowing {
 
 //value types
 #include "NovelRT/Atom.h"
+#include "NovelRT/Plugins/PluginKind.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
 #include "NovelRT/Utilities/Lazy.h"
@@ -187,6 +189,9 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
 
+//Plugins types
+#include "NovelRT/Plugins/PluginInfo.h"
+
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
@@ -194,6 +199,8 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
+#include "NovelRT/Plugins/PluginService.h"
+
 
 // Scene Graph types
 #include "NovelRT/SceneGraph/SceneNode.h"

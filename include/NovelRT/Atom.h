@@ -63,6 +63,12 @@ namespace NovelRT {
       auto value = ++_nextTextureId;
       return Atom(value);
     }
+
+    static Atom getNextPluginId() {
+      static std::atomic_uintptr_t _nextPluginId(0);
+      auto value = ++_nextPluginId;
+      return Atom(value);
+    }
   };
 }
 
