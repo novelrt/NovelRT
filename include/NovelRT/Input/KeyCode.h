@@ -8,6 +8,9 @@
 #endif
 
 namespace NovelRT::Input {
+  /**
+   * A set of key codes, with their OpenGL values.
+   */
   enum class KeyCode : int32_t {
     Nothing = GLFW_KEY_UNKNOWN,
     Enter = GLFW_KEY_ENTER,
