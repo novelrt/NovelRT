@@ -38,6 +38,7 @@ namespace NovelRT {
       auto scale = fmaxf(_scale.getX(), _scale.getY());
       return Maths::GeoBounds(_position, Maths::GeoVector2(scale, scale), 0);
     }
+
     /**
      * Gets the bounds of this transform.
      */
@@ -51,6 +52,7 @@ namespace NovelRT {
     inline const Maths::GeoVector2<float>& position() const {
       return _position;
     }
+
     /**
      * Gets the position of this transform.
      */
