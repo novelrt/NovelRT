@@ -81,27 +81,39 @@
 //libpng
 #include <png.h>
 
+/**
+ * NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
+ * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
+ */
 namespace NovelRT {
   typedef class Atom Atom;
   typedef class DebugService DebugService;
   typedef class LoggingService LoggingService;
   typedef class NovelRunner NovelRunner;
 }
-
+/**
+ * Contains animation features.
+ */
 namespace NovelRT::Animation {
   typedef class SpriteAnimator SpriteAnimator;
 }
-
+/***
+ * Contains audio features, such as playing audio, and managing audio resources.
+ */
 namespace NovelRT::Audio {
   typedef std::vector<ALuint> SoundBank;
   typedef std::vector<ALuint> MusicBank;
   typedef class AudioService AudioService;
 }
-
+/**
+ * Contains features to interop with the .NET Core runtime.
+ */
 namespace NovelRT::DotNet {
   typedef class RuntimeService RuntimeService;
 }
-
+/**
+ * Contains graphics features, such as rendering, textures, cameras, etc...
+ */
 namespace NovelRT::Graphics {
   typedef class Texture Texture;
   typedef class BasicFillRect BasicFillRect;
@@ -111,13 +123,17 @@ namespace NovelRT::Graphics {
   typedef class RenderObject RenderObject;
   typedef class TextRect TextRect;
 }
-
+/**
+ * Contains input features, such as keyboard and mouse interactivity.
+ */
 namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
 }
-
+/**
+ * Contains scene graph features.
+ */
 namespace NovelRT::SceneGraph {
   typedef class QuadTreeNode QuadTreeNode;
   typedef class QuadTreeScenePoint QuadTreeScenePoint;
@@ -125,13 +141,17 @@ namespace NovelRT::SceneGraph {
   typedef class Scene Scene;
   typedef class SceneNode SceneNode;
 }
-
+/**
+ * Contains timing features, such as timers.
+ */
 namespace NovelRT::Timing {
   // Windows and some other platforms use 100ns ticks
   static const uint64_t TicksPerSecond = 10'000'000;
   typedef class StepTimer StepTimer;
 }
-
+/**
+ * Contains windowing features.
+ */
 namespace NovelRT::Windowing {
   typedef class WindowingService WindowingService;
 }
@@ -144,7 +164,7 @@ namespace NovelRT::Windowing {
 //value types
 #include "NovelRT/Atom.h"
 #include "NovelRT/Timing/Timestamp.h"
-#include "NovelRT/Utilities/Event.h" //these have to exist up here due to inclue order issues
+#include "NovelRT/Utilities/Event.h" //these have to exist up here due to include order issues
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
 
