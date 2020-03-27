@@ -9,7 +9,7 @@
 
 namespace NovelRT::Input {
   /**
-   * A set of key codes, with their OpenGL values.
+   * A set of key codes.
    */
   enum class KeyCode : int32_t {
     Nothing = GLFW_KEY_UNKNOWN,

@@ -21,9 +21,9 @@ namespace NovelRT {
   public:
     /**
      * Creates a new Transform, with the specified position, rotation and scale.
-     * @param position The position.
-     * @param rotation The rotation.
-     * @param scale The scale.
+     * @param position The position, which represents the position where the object will be rendered.
+     * @param rotation The rotation, which represents the rotation of the object.
+     * @param scale The scale, which represents the size of the object.
      */
     Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
     /**
@@ -40,14 +40,14 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the bounds of this transform.
+     * Gets the bounds, based on the position, scale and rotation of this transform.
      */
     inline Maths::GeoBounds getBounds() const {
       return Maths::GeoBounds(_position, _scale, _rotation);
     }
 
     /**
-     * Gets the constant position of this transform.
+     * Gets the position of this transform.
      */
     inline const Maths::GeoVector2<float>& position() const {
       return _position;
@@ -61,7 +61,7 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the constant rotation of this transform.
+     * Gets the rotation of this transform.
      */
     inline const float& rotation() const {
       return _rotation;
@@ -75,7 +75,7 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the constant scale of this transform.
+     * Gets the scale of this transform.
      */
     inline const Maths::GeoVector2<float>& getScale() const {
       return _scale;
@@ -88,10 +88,6 @@ namespace NovelRT {
       return _scale;
     }
 
-    /**
-     * Sets the scale of this transform to the specified value.
-     * @param value The new scale.
-     */
     inline void setScale(const Maths::GeoVector2<float>& value) {
       _scale = value;
     }
