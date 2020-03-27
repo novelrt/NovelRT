@@ -16,13 +16,12 @@ namespace NovelRT {
     Maths::GeoVector2<float> _position;
     Maths::GeoVector2<float> _scale;
     float _rotation;
-
   public:
     /**
-     * Creates a new Transform, with the specified position, rotation and scale.
-     * @param position The position, which represents the position of the transform in a given space such as screen or world space.
+     * Creates a new Transform with the specified position, rotation and scale.
+     * @param position The position which represents the position of the transform in a given space such as screen or world space.
      * @param rotation The rotation, in degrees, which represents the rotation of the transform.
-     * @param scale The scale, which represents the size of the transform.
+     * @param scale The scale which represents the size of the transform.
      */
     Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
     /**
@@ -39,14 +38,14 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the bounds, based on the position, scale and rotation of this transform.
+     * Gets the bounds based on the position, scale and rotation of this transform.
      */
     inline Maths::GeoBounds getBounds() const {
       return Maths::GeoBounds(_position, _scale, _rotation);
     }
 
     /**
-     * Gets the position of this transform.
+     * Gets the position of this transform. This is the read-only version.
      */
     inline const Maths::GeoVector2<float>& position() const {
       return _position;
@@ -60,7 +59,7 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the rotation, in degrees, of this transform.
+     * Gets the rotation, in degrees, of this transform. This is the read-only version.
      */
     inline const float& rotation() const {
       return _rotation;
@@ -74,12 +73,15 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the scale of this transform.
+     * Gets the scale of this transform. This is the read-only version.
      */
     inline const Maths::GeoVector2<float>& scale() const {
       return _scale;
     }
 
+    /**
+     * Gets the scale of this transform.
+     */
     inline Maths::GeoVector2<float>& scale() {
       return _scale;
     }

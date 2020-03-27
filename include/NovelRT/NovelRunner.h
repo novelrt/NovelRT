@@ -15,11 +15,12 @@ namespace NovelRT {
 
   public:
     /**
-     * An event that occurs when the scene has to be (re)constructed.
+     * This event is used for constructing the rendered scene. This is called once per frame update.
      */
     Utilities::Event<> SceneConstructionRequested;
     /**
-     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one.
+     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one. <br/>
+     * Use this to define game behaviour that is required to be done per-frame.
      */
     Utilities::Event<Timing::Timestamp> Update;
 
@@ -44,7 +45,7 @@ namespace NovelRT {
      */
     explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0);
     /**
-     * Starts the visual novel.
+     * Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
      */
     int runNovel();

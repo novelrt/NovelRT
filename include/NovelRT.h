@@ -112,7 +112,7 @@ namespace NovelRT::DotNet {
   typedef class RuntimeService RuntimeService;
 }
 /**
- * Contains graphics features, such as rendering, textures, cameras, etc...
+ * Contains graphics features, such as rendering, textures, cameras, etc.
  */
 namespace NovelRT::Graphics {
   typedef class Texture Texture;
