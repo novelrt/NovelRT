@@ -188,7 +188,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
-    
+
 
 #ifdef TEST_ANIM
     switch (testAnim->getCurrentPlayState()) {
@@ -198,9 +198,9 @@ int main(int /*argc*/, char* /*argv*/[])
     case NovelRT::Animation::AnimatorPlayState::Stopped:
       testAnim->play();
       break;
-    }
+  }
 #endif
-  };
+};
 
   runner.SceneConstructionRequested += [&] {
 
