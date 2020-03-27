@@ -14,7 +14,14 @@ namespace NovelRT {
   class NovelRunner {
 
   public:
+    /**
+     * This event is used for constructing the rendered scene. This is called once per frame update.
+     */
     Utilities::Event<> SceneConstructionRequested;
+    /**
+     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one. <br/>
+     * Use this to define game behaviour that is required to be done per-frame.
+     */
     Utilities::Event<Timing::Timestamp> Update;
 
   private:
@@ -38,21 +45,27 @@ namespace NovelRT {
      */
     explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0);
     /**
-     * Starts the visual novel.
+     * Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
      */
-
     int runNovel();
-    /// The Rendering Service associated with this Runner.
+
+    /// Gets the Rendering Service associated with this Runner.
     std::weak_ptr<Graphics::RenderingService> getRenderer() const;
-    /// The Interaction Service associated with this Runner
+    /// Gets the Interaction Service associated with this Runner
     std::weak_ptr<Input::InteractionService> getInteractionService() const;
-    /// The Debug Service associated with this Runner.
+    /// Gets the Debug Service associated with this Runner.
     std::weak_ptr<DebugService> getDebugService() const;
+    /// Gets the Audio Service associated with this Runner.
     std::weak_ptr<Audio::AudioService> getAudioService() const;
+    /// Gets the .NET Runtime Service associated with this Runner.
     std::weak_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+    /// Gets the Windowing Service associated with this Runner.
     std::weak_ptr<Windowing::WindowingService> getWindowingService() const;
 
+    /**
+     * Terminates the game.
+     */
     ~NovelRunner();
   };
 }

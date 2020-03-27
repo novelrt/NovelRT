@@ -8,6 +8,9 @@
 #endif
 
 namespace NovelRT::Windowing {
+  /**
+   * Manages the game window and window events such as resizing.
+   */
   class WindowingService {
 
   public:
