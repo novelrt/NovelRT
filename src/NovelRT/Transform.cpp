@@ -6,12 +6,10 @@ namespace NovelRT {
   Transform::Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept :
     _position(position),
     _scale(scale),
-    _rotation(rotation),
-    _active(true) {}
+    _rotation(rotation){}
 
   Transform::Transform() noexcept :
     _position(Maths::GeoVector2<float>::zero()),
     _scale(Maths::GeoVector2<float>::zero()),
-    _rotation(0.0f),
-    _active(true) {}
+    _rotation(0.0f){}
 }

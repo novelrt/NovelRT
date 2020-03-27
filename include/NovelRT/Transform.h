@@ -13,7 +13,6 @@ namespace NovelRT {
     Maths::GeoVector2<float> _position;
     Maths::GeoVector2<float> _scale;
     float _rotation;
-    bool _active;
 
   public:
     Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
@@ -44,16 +43,12 @@ namespace NovelRT {
       return _rotation;
     }
 
-    inline const Maths::GeoVector2<float>& getScale() const {
+    inline const Maths::GeoVector2<float>& scale() const {
       return _scale;
     }
 
-    inline Maths::GeoVector2<float>& getScale() {
+    inline Maths::GeoVector2<float>& scale() {
       return _scale;
-    }
-
-    inline void setScale(const Maths::GeoVector2<float>& value) {
-      _scale = value;
     }
   };
 }
