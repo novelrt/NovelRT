@@ -193,6 +193,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Plugins/PluginInfo.h"
 
 //Engine service types
+#include "NovelRT/Graphics/IRenderingService.h"
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
 #include "NovelRT/DotNet/RuntimeService.h"

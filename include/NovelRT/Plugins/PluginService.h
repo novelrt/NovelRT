@@ -24,10 +24,7 @@ namespace NovelRT::Plugins {
     bool tryGetPluginInfo(const std::filesystem::path& path, PluginInfo& info, bool isRelative = true) const noexcept;
     std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) noexcept;
 
-    template<typename TPluginInterface>
-    std::shared_ptr<TPluginInterface> getPlugin(const PluginInfo& info) const noexcept {
-      
-    }
+    std::shared_ptr<Graphics::IRenderingService> createRenderingService(const PluginInfo& info, other args here) const noexcept;
   };
 }
 
