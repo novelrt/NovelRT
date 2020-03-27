@@ -16,14 +16,13 @@ namespace NovelRT {
     Maths::GeoVector2<float> _position;
     Maths::GeoVector2<float> _scale;
     float _rotation;
-    bool _active;
 
   public:
     /**
      * Creates a new Transform, with the specified position, rotation and scale.
-     * @param position The position, which represents the position where the object will be rendered.
-     * @param rotation The rotation, which represents the rotation of the object.
-     * @param scale The scale, which represents the size of the object.
+     * @param position The position, which represents the position where the transform will be rendered.
+     * @param rotation The rotation, in degrees, which represents the rotation of the transform.
+     * @param scale The scale, which represents the size of the transform.
      */
     Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
     /**
@@ -61,14 +60,14 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the rotation of this transform.
+     * Gets the rotation, in degrees, of this transform.
      */
     inline const float& rotation() const {
       return _rotation;
     }
 
     /**
-     * Gets the rotation of this transform.
+     * Gets the rotation, in degrees, of this transform.
      */
     inline float& rotation() {
       return _rotation;
