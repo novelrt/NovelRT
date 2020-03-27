@@ -76,19 +76,12 @@ namespace NovelRT {
     /**
      * Gets the scale of this transform.
      */
-    inline const Maths::GeoVector2<float>& getScale() const {
+    inline const Maths::GeoVector2<float>& scale() const {
       return _scale;
     }
 
-    /**
-     * Gets the scale of this transform.
-     */
-    inline Maths::GeoVector2<float>& getScale() {
+    inline Maths::GeoVector2<float>& scale() {
       return _scale;
-    }
-
-    inline void setScale(const Maths::GeoVector2<float>& value) {
-      _scale = value;
     }
   };
 }
