@@ -57,10 +57,15 @@ namespace NovelRT::Graphics {
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+#if defined(__APPLE__)
+        _basicFillRectProgram = loadShaders("BasicVertexShader_Apple.glsl", "BasicFragmentShader_Apple.glsl");
+        _texturedRectProgram = loadShaders("TexturedVertexShader_Apple.glsl", "TexturedFragmentShader_Apple.glsl");
+        _fontProgram = loadShaders("FontVertexShader_Apple.glsl", "FontFragmentShader_Apple.glsl");
+#else
       _basicFillRectProgram = loadShaders("BasicVertexShader.glsl", "BasicFragmentShader.glsl");
       _texturedRectProgram = loadShaders("TexturedVertexShader.glsl", "TexturedFragmentShader.glsl");
       _fontProgram = loadShaders("FontVertexShader.glsl", "FontFragmentShader.glsl");
+#endif
     }
     else {
       _camera->forceResize(windowSize);
