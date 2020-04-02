@@ -26,6 +26,25 @@ namespace NovelRT::Utilities {
 
       path[pathLength] = L'\0';
       return path;
+#elif defined(__APPLE__)
+      char *path;
+      uint32_t pathLength = 0;
+      _NSGetExecutablePath(nullptr, &pathLength);
+      path = new char[pathLength];
+      if ((pathLength <= 0) || (pathLength >= PATH_MAX))
+      {
+          return std::filesystem::current_path();
+      }
+      
+      if (_NSGetExecutablePath(path, &pathLength) < 0)
+      {
+          return std::filesystem::current_path();
+      }
+      
+      char *actualPath = realpath(path, nullptr);
+      free(path);
+      
+      return std::string(actualPath).c_str();
 #else
       char path[PATH_MAX + 1];
       auto pathLength = readlink("/proc/self/exe", path, PATH_MAX);

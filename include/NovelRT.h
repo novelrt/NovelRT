@@ -38,6 +38,10 @@
 #include <Windows.h>
 #endif
 
+#if defined(__APPLE__)
+#include <mach-o/dyld.h>
+#endif
+
 //Freetype
 #include <ft2build.h>
 #include FT_FREETYPE_H
