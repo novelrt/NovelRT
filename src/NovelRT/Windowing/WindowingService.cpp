@@ -36,12 +36,27 @@ namespace NovelRT::Windowing {
       checkForOptimus(OptimusLibraryName);
 #endif
 
+      
+#if defined(__APPLE__)
+      _logger.logInfoLine("Attempting to create OpenGL 4.1 context");
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+      
+      auto window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
+      if (window == nullptr)
+      {
+          _logger.throwIfNullPtr(window, "Failed to create OpenGL v4.1 context");
+      }
+#else
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+
 
     auto window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
 
@@ -66,9 +81,7 @@ namespace NovelRT::Windowing {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
-
+        
 #ifndef NDEBUG
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
@@ -77,7 +90,7 @@ namespace NovelRT::Windowing {
         _logger.throwIfNullPtr(window, "Failed to create OpenGL v4.3 context using native API");
       }
     }
-
+#endif
     _windowTitle = windowTitle;
     _logger.logInfo("Window succesfully created.");
 

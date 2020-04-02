@@ -19,9 +19,14 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   glfw
   glm
   OpenAL::OpenAL
-  png
   spdlog::spdlog_header_only
 )
+
+if (APPLE)
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} png_static)
+else()
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} png)
+endif()
 
 if (WIN32)
   set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-shared)
@@ -47,9 +52,11 @@ link_libraries(${NETHOST_LIBRARY})
 
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-else()
+elseif(UNIX AND NOT APPLE)
   link_libraries(m)
   link_libraries(stdc++fs)
+else()
+  link_libraries(m)
 endif()
 
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
