@@ -8,6 +8,9 @@
 #endif
 
 namespace NovelRT::Input {
+  /**
+   * A set of key states.
+   */
   enum class KeyState : int32_t {
     Idle = 0,
     KeyDown = GLFW_PRESS,

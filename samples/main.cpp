@@ -137,7 +137,7 @@ int main(int /*argc*/, char* /*argv*/[])
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(novelChanTransform.position().getX() - 500, novelChanTransform.position().getY()), 0, NovelRT::Maths::GeoVector2<float>(200, 200));
   playAudioButton = runner.getRenderer().lock()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
-  playAudioTextTransform.setScale(NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f));
+  playAudioTextTransform.scale() = NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f);
   auto vec = playButtonTransform.position();
   vec.setX(playButtonTransform.position().getX() - 75);
   playAudioTextTransform.position() = vec;
@@ -159,16 +159,16 @@ int main(int /*argc*/, char* /*argv*/[])
   runner.Update += [&](NovelRT::Timing::Timestamp delta) {
     const float rotationAmount = 45.0f;
 
-    auto rotation = novelChanRect->transform().getRotation();
+    auto rotation = novelChanRect->transform().rotation();
     rotation += rotationAmount * delta.getSecondsFloat();
-    novelChanRect->transform().setRotation(rotation);
+    novelChanRect->transform().rotation() = rotation;
 
     if (rotation > 360.0f)
     {
       rotation -= 360.0f;
     }
 
-    novelChanRect->transform().setRotation(rotation);
+    novelChanRect->transform().rotation() = rotation;
 
     if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");
@@ -188,7 +188,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
-    
+
 
 #ifdef TEST_ANIM
     switch (testAnim->getCurrentPlayState()) {
@@ -198,9 +198,9 @@ int main(int /*argc*/, char* /*argv*/[])
     case NovelRT::Animation::AnimatorPlayState::Stopped:
       testAnim->play();
       break;
-    }
+  }
 #endif
-  };
+};
 
   runner.SceneConstructionRequested += [&] {
 
