@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "GeoVector2F.h"
+#include "GeoVector2F_t.h"
 #include "NovelRT.h"
 
 
-#ifndef NOVELRT_MATHS_GEOBOUNDS_C_H
-#define NOVELRT_MATHS_GEOBOUNDS_C_H
+#ifndef NOVELRT_MATHS_GEOBOUNDS_T_H
+#define NOVELRT_MATHS_GEOBOUNDS_T_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ inline bool GeoBounds_notEqual(const GeoBounds_t& first, const GeoBounds_t& othe
 }
 #endif
 
-#endif //NOVELRT_MATHS_GEOBOUNDS_C_H
+#endif //NOVELRT_MATHS_GEOBOUNDS_T_H
