@@ -18,13 +18,13 @@ extern "C" {
   };
 
   typedef struct GeoVector4F GeoVector4F_t;
-
+  
   inline GeoVector4F_t GeoVector4F_create(float x, float y, float z, float w) {
     return { x, y, z, w };
   }
 
   inline GeoVector4F_t GeoVector4F_createFromGeoVector2F(const GeoVector2F_t& vector) {
-    return { vector.x, vector.y, 0.0f, 0.0f };
+    return { vector.getX(), vector.getY(), 0.0f, 0.0f };
   }
 
   inline GeoVector4F_t GeoVector4F_createFromGeoVector3F(const GeoVector3F_t& vector) {
@@ -288,7 +288,7 @@ extern "C" {
   inline GeoVector4F_t GeoVector4F_multiplyFloatIntoVectorInverse(float lhs, GeoVector4F& rhs) {
     return GeoVector4F_multiplyFloat(rhs, lhs);
   }
-
+  
 #ifdef __cplusplus
 }
 #endif

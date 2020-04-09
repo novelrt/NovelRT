@@ -173,5 +173,5 @@ TEST(C_GeoVector3F_Test, rotateToAngleAroundPointRotatesCorrectAmount) {
 }
 
 TEST(C_GeoVector3F_Test, geoVector2ConstructorReturnsCorrectGeoVector3) {
-  EXPECT_TRUE(GeoVector3F_equal(GeoVector3F_createFromGeoVector2F({ 1.0f, 1.0f }), { 1.0f, 1.0f, 0.0f }));
+  EXPECT_TRUE(GeoVector3F_equal(GeoVector3F_createFromGeoVector2F(GeoVector2<float>::uniform(1.0f)), { 1.0f, 1.0f, 0.0f }));
 }

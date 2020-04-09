@@ -174,7 +174,7 @@ TEST(InteropGeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
 }
 
 TEST(InteropGeoVector4Test, geoVector2ConstructorReturnsCorrectGeoVector4) {
-  EXPECT_TRUE(GeoVector4F_equal(GeoVector4F_createFromGeoVector2F({ 1.0f, 1.0f }), { 1.0f, 1.0f, 0.0f, 0.0f }));
+  EXPECT_TRUE(GeoVector4F_equal(GeoVector4F_createFromGeoVector2F(GeoVector2F_uniform(1.0f)), { 1.0f, 1.0f, 0.0f, 0.0f }));
 }
 
 TEST(InteropGeoVector4Test, geoVector3ConstructorReturnsCorrectGeoVector4) {

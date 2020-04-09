@@ -22,7 +22,7 @@ inline GeoVector3F_t GeoVector3F_create(float x, float y, float z) {
 }
 
 inline GeoVector3F_t GeoVector3F_createFromGeoVector2F(const GeoVector2F_t& vector) {
-  return { vector.x, vector.y, 0.0f };
+  return { vector.getX(), vector.getY(), 0.0f };
 }
 
 inline const GeoVector3F_t GeoVector3F_uniform(float value) {
