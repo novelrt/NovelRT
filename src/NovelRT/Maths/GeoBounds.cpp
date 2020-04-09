@@ -12,11 +12,9 @@ namespace NovelRT::Maths {
     auto corner0 = getCornerInWorldSpace(0);
     auto corner2 = getCornerInWorldSpace(2);
 
-    if (point.getX() >= corner0.getX() && point.getX() <= corner2.getX() && point.getY() <= corner2.getY()
-      && point.getY() >= corner0.getY())
-      return true;
+      return point.getX() >= corner0.getX() && point.getX() <= corner2.getX() && point.getY() <= corner2.getY()
+             && point.getY() >= corner0.getY();
 
-    return false;
   }
 
   bool GeoBounds::intersectsWith(const GeoBounds& otherBounds) const {

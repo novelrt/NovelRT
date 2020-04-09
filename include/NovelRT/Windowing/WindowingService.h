@@ -27,7 +27,7 @@ namespace NovelRT::Windowing {
 
 #if defined(_WIN32) || defined(_WIN64)
     HMODULE _optimus;
-    void checkForOptimus(const char* library);
+    void checkForOptimus(const char* library) noexcept;
 #endif
 
     void errorCallback(int, const char* error);
