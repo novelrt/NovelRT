@@ -11,10 +11,10 @@ namespace NovelRT::Graphics {
   class RenderObject : public WorldObject {
   protected:
     virtual void drawObject() = 0;
-    virtual void configureObjectBuffers()  ;
-    static GLuint generateStandardBuffer() noexcept ;
-    Maths::GeoMatrix4x4<float> generateViewData() noexcept ;
-    Maths::GeoMatrix4x4<float> generateCameraBlock() noexcept ;
+    virtual void configureObjectBuffers() ;
+    static GLuint generateStandardBuffer() noexcept;
+    Maths::GeoMatrix4x4<float> generateViewData() noexcept;
+    Maths::GeoMatrix4x4<float> generateCameraBlock() noexcept;
 
     Utilities::Lazy<GLuint> _vertexBuffer;
     Utilities::Lazy<GLuint> _vertexArrayObject;
@@ -25,10 +25,10 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<Maths::GeoMatrix4x4<float>> _finalViewMatrixData;
 
   public:
-    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera) ;
+    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera);
 
     void executeObjectBehaviour() final;
-    virtual ~RenderObject() noexcept ;
+    virtual ~RenderObject() noexcept;
   };
 }
 

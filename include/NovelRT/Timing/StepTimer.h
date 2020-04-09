@@ -81,8 +81,8 @@ namespace NovelRT::Timing {
       return _isFixedTimeStep;
     }
 
-    void resetElapsedTime() noexcept ;
-    void tick(const Utilities::Event<Timestamp>& update) noexcept ;
+    void resetElapsedTime() noexcept;
+    void tick(const Utilities::Event<Timestamp>& update) noexcept;
   };
 }
 

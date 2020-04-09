@@ -11,7 +11,7 @@ namespace NovelRT::Graphics {
   class TextRect : public RenderObject {
 
   private:
-    void reloadText() noexcept ;
+    void reloadText() noexcept;
 
     std::string _fontFileDir;
     std::string _previousFontFileDir;
@@ -42,10 +42,10 @@ namespace NovelRT::Graphics {
       return _colourConfig;
     }
 
-    void setColourConfig(const RGBAConfig& value) noexcept ;
+    void setColourConfig(const RGBAConfig& value) noexcept;
 
     std::string getText() const;
-    void setText(const std::string& value) noexcept ;
+    void setText(const std::string& value) noexcept;
 
     void setActive(bool value) override;
 

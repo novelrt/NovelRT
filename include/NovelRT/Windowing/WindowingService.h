@@ -36,7 +36,7 @@ namespace NovelRT::Windowing {
     explicit WindowingService(NovelRunner* const runner);
 
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
-    void tearDown() noexcept ;
+    void tearDown() noexcept;
 
     inline GLFWwindow* getWindow() const {
       return _window.get();

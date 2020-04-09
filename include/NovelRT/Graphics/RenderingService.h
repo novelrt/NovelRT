@@ -29,10 +29,10 @@ namespace NovelRT::Graphics {
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
     std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
 
-    void bindCameraUboForProgram(GLuint shaderProgramId) noexcept ;
+    void bindCameraUboForProgram(GLuint shaderProgramId) noexcept;
 
-    void handleTexturePreDestruction(Texture* target) noexcept ;
-    void handleFontSetPreDestruction(FontSet* target) noexcept ;
+    void handleTexturePreDestruction(Texture* target) noexcept;
+    void handleFontSetPreDestruction(FontSet* target) noexcept;
 
   public:
     RenderingService(NovelRunner* const runner);
@@ -44,7 +44,7 @@ namespace NovelRT::Graphics {
 
     std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) noexcept ;
+    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) noexcept;
 
     std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
 

@@ -24,19 +24,19 @@ namespace NovelRT::Graphics {
 
     int getR() const;
     float getRScalar() const;
-    void setR(int value) noexcept ;
+    void setR(int value) noexcept;
 
     int getG() const;
     float getGScalar() const;
-    void setG(int value) noexcept ;
+    void setG(int value) noexcept;
 
     int getB() const;
     float getBScalar() const;
-    void setB(int value) noexcept ;
+    void setB(int value) noexcept;
 
     int getA() const;
     float getAScalar() const;
-    void setA(int value) noexcept ;
+    void setA(int value) noexcept;
   };
 }
 
