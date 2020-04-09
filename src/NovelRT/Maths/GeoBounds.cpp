@@ -62,7 +62,7 @@ namespace NovelRT::Maths {
     return _position;
   }
 
-  GeoVector2<float>& GeoBounds::position() {
+  GeoVector2<float>& GeoBounds::position() noexcept {
     return _position;
   }
 
@@ -70,7 +70,7 @@ namespace NovelRT::Maths {
     return _size;
   }
 
-  GeoVector2<float>& GeoBounds::size() {
+  GeoVector2<float>& GeoBounds::size() noexcept {
     return _size;
   }
 
@@ -78,7 +78,7 @@ namespace NovelRT::Maths {
     return _rotation;
   }
 
-  float& GeoBounds::rotation() {
+  float& GeoBounds::rotation() noexcept {
     return _rotation;
   }
 

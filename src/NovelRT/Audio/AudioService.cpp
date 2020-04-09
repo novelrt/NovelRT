@@ -35,7 +35,7 @@ AudioService::AudioService() :
   isInitialised(false) {
   }
 
-bool AudioService::initializeAudio() {
+bool AudioService::initializeAudio() noexcept {
   _device.getActual();
   _context.getActual();
   alGenSources(1, &_musicSource);

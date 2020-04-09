@@ -37,7 +37,7 @@ namespace NovelRT {
     return (_fpsCounter != nullptr) && _fpsCounter->getActive();
   }
 
-  void DebugService::setIsFpsCounterVisible(bool value) {
+  void DebugService::setIsFpsCounterVisible(bool value) noexcept {
     if (_fpsCounter == nullptr) {
       if (value) {
         auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
@@ -58,14 +58,14 @@ namespace NovelRT {
     }
   }
 
-  void DebugService::setFramesPerSecond(uint32_t value) {
+  void DebugService::setFramesPerSecond(uint32_t value) noexcept {
     if (_framesPerSecond != value) {
       _framesPerSecond = value;
       updateFpsCounter();
     }
   }
 
-  void DebugService::updateFpsCounter() {
+  void DebugService::updateFpsCounter() noexcept {
     if (_fpsCounter != nullptr) {
       char fpsText[16];
       snprintf(fpsText, 16, "%u fps", _framesPerSecond);

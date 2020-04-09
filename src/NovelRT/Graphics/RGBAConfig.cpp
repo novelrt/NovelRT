@@ -14,7 +14,7 @@ namespace NovelRT::Graphics {
     return _r;
   }
 
-  void RGBAConfig::setR(int value) {
+  void RGBAConfig::setR(int value) noexcept {
     if (value < 0) {
       _r = 0;
     }
@@ -30,7 +30,7 @@ namespace NovelRT::Graphics {
     return _g;
   }
 
-  void RGBAConfig::setG(int value) {
+  void RGBAConfig::setG(int value) noexcept {
     if (value < 0) {
       _g = 0;
     }
@@ -46,7 +46,7 @@ namespace NovelRT::Graphics {
     return _b;
   }
 
-  void RGBAConfig::setB(int value) {
+  void RGBAConfig::setB(int value) noexcept {
     if (value < 0) {
       _b = 0;
     }
@@ -62,7 +62,7 @@ namespace NovelRT::Graphics {
     return _a;
   }
 
-  void RGBAConfig::setA(int value) {
+  void RGBAConfig::setA(int value) noexcept {
     if (value < 0) {
       _a = 0;
     }

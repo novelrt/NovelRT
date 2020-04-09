@@ -33,7 +33,7 @@ namespace NovelRT::Graphics {
     drawObject();
   }
 
-  void RenderObject::configureObjectBuffers() {
+  void RenderObject::configureObjectBuffers() noexcept {
     auto topLeft = Maths::GeoVector2<GLfloat>(-0.5f, 0.5f);
     auto bottomRight = Maths::GeoVector2<GLfloat>(0.5f, -0.5f);
     auto topRight = Maths::GeoVector2<GLfloat>(0.5f, 0.5f);
@@ -56,20 +56,20 @@ namespace NovelRT::Graphics {
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _vertexBufferData.size(), _vertexBufferData.data(), GL_STATIC_DRAW);
   }
 
-  RenderObject::~RenderObject() {
+  RenderObject::~RenderObject() noexcept {
     if (!_vertexArrayObject.isCreated()) return;
 
     auto vao = _vertexArrayObject.getActual();
     glDeleteVertexArrays(1, &vao);
   }
 
-  GLuint RenderObject::generateStandardBuffer() {
+  GLuint RenderObject::generateStandardBuffer() noexcept {
     GLuint tempBuffer;
     glGenBuffers(1, &tempBuffer);
     return tempBuffer;
   }
 
-  Maths::GeoMatrix4x4<float> RenderObject::generateViewData() {
+  Maths::GeoMatrix4x4<float> RenderObject::generateViewData() noexcept {
     auto position = transform().position().vec2Value();
     auto resultMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity().underlyingMatrix();
     resultMatrix = glm::translate(resultMatrix, glm::vec3(position, layer()));
@@ -79,7 +79,7 @@ namespace NovelRT::Graphics {
     return Maths::GeoMatrix4x4<float>(glm::transpose(_camera.lock()->getCameraUboMatrix().underlyingMatrix() * resultMatrix));
   }
 
-  Maths::GeoMatrix4x4<float> RenderObject::generateCameraBlock() {
+  Maths::GeoMatrix4x4<float> RenderObject::generateCameraBlock() noexcept {
     return _camera.lock()->getCameraUboMatrix();
   }
 }

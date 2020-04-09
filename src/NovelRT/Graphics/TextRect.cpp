@@ -9,7 +9,7 @@ namespace NovelRT::Graphics {
     }
   }
 
-  void TextRect::setColourConfig(const RGBAConfig& value) {
+  void TextRect::setColourConfig(const RGBAConfig& value) noexcept {
     _colourConfig = value;
     configureObjectBuffers();
   }
@@ -37,7 +37,7 @@ namespace NovelRT::Graphics {
   std::string TextRect::getText() const {
     return _text;
   }
-  void TextRect::setText(const std::string& value) {
+  void TextRect::setText(const std::string& value) noexcept {
     _text = value;
     auto difference = _text.length() - _letterRects.size();
     auto modifiedTransform = transform();
@@ -57,7 +57,7 @@ namespace NovelRT::Graphics {
       reloadText();
     }
   }
-  void TextRect::reloadText() {
+  void TextRect::reloadText() noexcept {
 
     auto ttfOrigin = transform().position();
 

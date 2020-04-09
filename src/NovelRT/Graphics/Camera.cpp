@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
     return getProjectionMatrix() * getViewMatrix();
   }
 
-  void Camera::initialiseCameraForFrame() {
+  void Camera::initialiseCameraForFrame() noexcept {
     switch (_cameraFrameState) {
       case CameraFrameState::ModifiedInCurrent:
         _cameraFrameState = CameraFrameState::ModifiedInLast;

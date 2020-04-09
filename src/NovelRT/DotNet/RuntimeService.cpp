@@ -20,7 +20,7 @@ using namespace NovelRT::Utilities;
 
 const auto HostApiBufferTooSmall = 0x80008098;
 
-static void* getNativeExport(void* nativeLibrary, const char* exportName) {
+static void* getNativeExport(void* nativeLibrary, const char* exportName) noexcept {
 #if defined(_WIN32)
   void* nativeExport = GetProcAddress(static_cast<HMODULE>(nativeLibrary), exportName);
   assert(nativeExport != nullptr);
@@ -45,7 +45,7 @@ static void* loadNativeLibrary(const char_t* path)
 #endif
 }
 
-static void closeNativeLibrary(void* nativeLibrary)
+static void closeNativeLibrary(void* nativeLibrary) noexcept
 {
 #if defined(_WIN32)
   BOOL result = FreeLibrary(static_cast<HMODULE>(nativeLibrary));

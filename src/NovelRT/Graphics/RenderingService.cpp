@@ -219,7 +219,7 @@ namespace NovelRT::Graphics {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) noexcept {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
@@ -227,16 +227,16 @@ namespace NovelRT::Graphics {
     return _camera;
   }
 
-  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) {
+  void RenderingService::bindCameraUboForProgram(GLuint shaderProgramId) noexcept {
     GLuint uboIndex = glGetUniformBlockIndex(shaderProgramId, "finalViewMatrixBuffer");
     glUniformBlockBinding(shaderProgramId, uboIndex, 0);
   }
 
-  void RenderingService::handleTexturePreDestruction(Texture* target) {
+  void RenderingService::handleTexturePreDestruction(Texture* target) noexcept {
     _textureCache.erase(target->getId());
   }
 
-  void RenderingService::handleFontSetPreDestruction(FontSet* target) {
+  void RenderingService::handleFontSetPreDestruction(FontSet* target) noexcept {
     _fontCache.erase(target->getId());
   }
 

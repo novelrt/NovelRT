@@ -21,7 +21,7 @@ namespace NovelRT::Timing {
     _isFixedTimeStep(targetFrameRate != 0) {
   }
 
-  void StepTimer::resetElapsedTime() {
+  void StepTimer::resetElapsedTime() noexcept {
     _lastCounter = glfwGetTimerValue();
     _secondCounter = 0;
     _remainingTicks = 0;
@@ -29,7 +29,7 @@ namespace NovelRT::Timing {
     _framesThisSecond = 0;
   }
 
-  void StepTimer::tick(const Utilities::Event<Timestamp>& update) {
+  void StepTimer::tick(const Utilities::Event<Timestamp>& update) noexcept {
     auto currentCounter = glfwGetTimerValue();
     auto counterDelta = currentCounter - _lastCounter;
 

@@ -128,7 +128,7 @@ namespace NovelRT::Windowing {
   }
 
 #if defined(_WIN64) || defined(_WIN32)
-  void WindowingService::checkForOptimus(const char* library) {
+  void WindowingService::checkForOptimus(const char* library) noexcept {
     _optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (_optimus != nullptr) {
       _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
@@ -138,7 +138,7 @@ namespace NovelRT::Windowing {
   }
 #endif
 
-  void WindowingService::tearDown() {
+  void WindowingService::tearDown() noexcept {
     if (_isTornDown) return;
 #if defined(_WIN64) || defined(_WIN32)
     if (_optimus != nullptr) {
