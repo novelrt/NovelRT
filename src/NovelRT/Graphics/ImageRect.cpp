@@ -26,7 +26,7 @@ namespace NovelRT::Graphics {
      const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
    }
 
-   void ImageRect::drawObject() noexcept {
+   void ImageRect::drawObject() {
      if (!getActive() || _texture == nullptr) return;
 
      glUseProgram(_shaderProgram.shaderProgramId);
@@ -75,7 +75,7 @@ namespace NovelRT::Graphics {
      glBindVertexArray(0);
    }
 
-   void ImageRect::configureObjectBuffers() noexcept {
+   void ImageRect::configureObjectBuffers() {
      RenderObject::configureObjectBuffers();
 
      _uvCoordinates = {

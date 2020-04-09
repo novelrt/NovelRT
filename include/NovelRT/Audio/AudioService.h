@@ -38,7 +38,7 @@ namespace NovelRT::Audio {
     AudioService();
     ~AudioService();
 
-    bool initializeAudio();
+    bool initializeAudio() noexcept;
     std::vector<ALuint>::iterator loadMusic(std::string input);
     
     void setSoundVolume(ALuint source, float val);

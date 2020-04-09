@@ -21,11 +21,11 @@ namespace NovelRT::Maths {
     GeoVector2<float> getCornerInLocalSpace(int index) const;
     GeoVector2<float> getCornerInWorldSpace(int index) const;
     const GeoVector2<float>& position() const;
-    GeoVector2<float>& position();
+    GeoVector2<float>& position() noexcept ;
     const GeoVector2<float>& size() const;
-    GeoVector2<float>& size();
+    GeoVector2<float>& size() noexcept ;
     const float& rotation() const;
-    float& rotation();
+    float& rotation() noexcept ;
     GeoVector2<float> getExtents() const;
 
     inline bool operator==(const GeoBounds& other) const {

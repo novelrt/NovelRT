@@ -28,7 +28,7 @@ namespace NovelRT::Animation {
   public:
     explicit SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept;
     void play();
-    void pause();
+    void pause() noexcept ;
     void stop();
 
     inline AnimatorPlayState getCurrentPlayState() const noexcept {

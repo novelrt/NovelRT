@@ -18,7 +18,7 @@ namespace NovelRT::Graphics {
     Maths::GeoMatrix4x4<float> generateUboMatrix();
     CameraFrameState _cameraFrameState;
 
-    void initialiseCameraForFrame();
+    void initialiseCameraForFrame() noexcept ;
     void forceResize(const Maths::GeoVector2<float>& windowSize);
 
   public:

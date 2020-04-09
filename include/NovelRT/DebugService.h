@@ -16,7 +16,7 @@ namespace NovelRT {
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
     uint32_t _framesPerSecond;
 
-    void updateFpsCounter();
+    void updateFpsCounter() noexcept ;
 
     void onSceneConstruction();
 
@@ -24,12 +24,12 @@ namespace NovelRT {
     DebugService(NovelRunner* const runner);
 
     bool getIsFpsCounterVisible() const;
-    void setIsFpsCounterVisible(bool value);
+    void setIsFpsCounterVisible(bool value) noexcept ;
 
     inline uint32_t getFramesPerSecond() const {
       return _framesPerSecond;
     }
-    void setFramesPerSecond(uint32_t value);
+    void setFramesPerSecond(uint32_t value) noexcept ;
   };
 }
 

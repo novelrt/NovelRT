@@ -21,7 +21,7 @@ namespace NovelRT::Input {
   public:
     InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
 
-    void executeObjectBehaviour() final;
+    void executeObjectBehaviour() final ;
     virtual bool validateInteractionPerimeter(const Maths::GeoVector2<float>& mousePosition) const = 0;
 
     inline const KeyCode& subscribedKey() const noexcept {

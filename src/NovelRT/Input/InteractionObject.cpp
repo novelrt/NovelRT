@@ -9,7 +9,7 @@ namespace NovelRT::Input {
     _notifyHasBeenDrawnObject(notifyHasBeenDrawnObject) {
   }
 
-  void InteractionObject::executeObjectBehaviour() noexcept {
+  void InteractionObject::executeObjectBehaviour() {
     _notifyHasBeenDrawnObject(this);
   }
 }

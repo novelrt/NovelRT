@@ -33,7 +33,7 @@ namespace NovelRT::Graphics {
     drawObject();
   }
 
-  void RenderObject::configureObjectBuffers() noexcept {
+  void RenderObject::configureObjectBuffers() {
     auto topLeft = Maths::GeoVector2<GLfloat>(-0.5f, 0.5f);
     auto bottomRight = Maths::GeoVector2<GLfloat>(0.5f, -0.5f);
     auto topRight = Maths::GeoVector2<GLfloat>(0.5f, 0.5f);

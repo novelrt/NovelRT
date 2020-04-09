@@ -20,7 +20,7 @@ namespace NovelRT::Graphics {
     LoggingService _logger;
 
   protected:
-    void configureObjectBuffers() final;
+    void configureObjectBuffers() final ;
 
   public:
     ImageRect(const Transform& transform,
@@ -44,7 +44,7 @@ namespace NovelRT::Graphics {
       return _texture;
     }
 
-    void drawObject() final;
+    void drawObject() final ;
 
     inline const RGBAConfig& colourTint() const {
       return _colourTint;

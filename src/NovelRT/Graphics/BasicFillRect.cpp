@@ -12,7 +12,7 @@ namespace NovelRT::Graphics {
     RenderObject(transform, layer, shaderProgram, camera), _colourConfig(fillColour),
     _colourBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)) {}
 
-  void BasicFillRect::drawObject() noexcept {
+  void BasicFillRect::drawObject() {
     if (!getActive())
       return;
 

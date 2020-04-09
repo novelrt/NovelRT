@@ -8,7 +8,7 @@
 #include <unistd.h>
 #endif
 
-namespace NovelRT::Utilities noexcept {
+namespace NovelRT::Utilities {
   std::filesystem::path Misc::getExecutablePath() {
 #if defined(WIN32)
       wchar_t path[MAX_PATH + 1];
