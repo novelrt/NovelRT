@@ -22,17 +22,17 @@ extern "C" {
   GeoVector2F_t GeoBounds_getExtents(GeoBounds_t& bounds);
   bool GeoBounds_intersectsWith(const GeoBounds_t& firstBounds, const GeoBounds_t& otherBounds);
 
-  inline GeoVector2F_t& GeoBounds_getPosition(const GeoBounds_t& bounds) {
+  inline GeoVector2F_t GeoBounds_getPosition(const GeoBounds_t& bounds) {
     GeoVector2F_t result = bounds.position();
     return result;
   }
 
-  inline GeoVector2F_t& GeoBounds_getSize(const GeoBounds_t& bounds) {
+  inline GeoVector2F_t GeoBounds_getSize(const GeoBounds_t& bounds) {
     GeoVector2F_t result = bounds.size();
     return result;
   }
 
-  inline float& GeoBounds_getRotation(const GeoBounds_t& bounds) {
+  inline float GeoBounds_getRotation(const GeoBounds_t& bounds) {
     float result = bounds.rotation();
     return result;
   }
@@ -44,37 +44,6 @@ extern "C" {
   inline bool GeoBounds_notEqual(const GeoBounds_t& first, const GeoBounds_t& other) {
     return (first.position() != other.position()) || (first.size() != other.size()) || (first.rotation() != other.rotation());
   }
-
-  /*
- struct GeoBounds {
-   GeoVector2F_t _position;
-   float _rotation;
-   GeoVector2F_t _size;
- };
-
-typedef struct GeoBounds GeoBounds_t;
-
-GeoBounds_t GeoBounds_create(const GeoVector2F_t& position, const GeoVector2F_t& size, float rotation);
-GeoVector2F_t GeoBounds_getCornerInLocalSpace(const GeoBounds_t& bounds, int index);
-GeoVector2F_t GeoBounds_getCornerInWorldSpace(GeoBounds_t& bounds, int index);
-bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const GeoVector2F_t& point);
-const GeoVector2F_t& GeoBounds_position(const GeoBounds_t& bounds);
-const GeoVector2F_t& GeoBounds_size(const GeoBounds_t& bounds);
-const float& GeoBounds_rotation(const GeoBounds_t& bounds);
-GeoVector2F_t GeoBounds_getExtents(GeoBounds_t& bounds);
-bool GeoBounds_intersectsWith(const GeoBounds_t& firstBounds, const GeoBounds_t& otherBounds);
-
-inline bool GeoBounds_equal(const GeoBounds_t& first, const GeoBounds_t& other) {
-  return GeoVector2F_equal(first._position, other._position)
-    && GeoVector2F_equal(first._size, other._size)
-    && first._rotation == other._rotation;
-}
-
-inline bool GeoBounds_notEqual(const GeoBounds_t& first, const GeoBounds_t& other) {
-  return GeoVector2F_notEqual(first._position, other._position)
-    || GeoVector2F_notEqual(first._size, other._size)
-    || first._rotation != other._rotation;
-}*/
 
 #ifdef __cplusplus
 }
