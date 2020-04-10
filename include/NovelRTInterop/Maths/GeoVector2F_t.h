@@ -1,10 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelRT.h"
 
-#ifdef _WIN32
 #pragma warning( disable: 4099 )
 #pragma warning( disable: 4190 )
-#endif
 
 #ifndef NOVELRT_MATHS_GEOVECTOR2F_H
 #define NOVELRT_MATHS_GEOVECTOR2F_H
