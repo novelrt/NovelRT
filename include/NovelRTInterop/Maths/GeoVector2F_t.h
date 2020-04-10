@@ -1,8 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelRT.h"
 
+#ifdef _WIN32
 #pragma warning( disable: 4099 )
 #pragma warning( disable: 4190 )
+#elif __linux__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmismatched-tags"
+#pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
 
 #ifndef NOVELRT_MATHS_GEOVECTOR2F_H
 #define NOVELRT_MATHS_GEOVECTOR2F_H
