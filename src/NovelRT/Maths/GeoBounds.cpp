@@ -28,7 +28,7 @@ namespace NovelRT::Maths {
     auto minB = otherBounds.position() - otherBounds.getExtents();
     auto maxB = otherBounds.position() + otherBounds.getExtents();
 
-    auto result = (minA > maxB) | (minB > maxA);
+    auto result = (minA > maxB) || (minB > maxA);
     return result;
   }
 
