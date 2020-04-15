@@ -21,6 +21,10 @@ if (NOT NOVELRT_SKIP_SAMPLES)
   add_subdirectory(samples)
 endif()
 
+if (NOT NOVELRT_SKIP_LUA_SAMPLES)
+  add_subdirectory(lua-samples)
+endif()
+
 if (NOT NOVELRT_SKIP_DOCUMENTATION)
   add_subdirectory(doxygen)
 endif()
