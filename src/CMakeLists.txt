@@ -22,6 +22,7 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   OpenAL::OpenAL
   png
   spdlog::spdlog_header_only
+  sol2::sol2
 )
 
 if (WIN32)
@@ -37,7 +38,6 @@ include_directories(${LUA_INCLUDE_DIRS})
 
 find_library(LUA_LIBRARY NAMES liblua lua)
 link_libraries(${LUA_LIBRARY})
-target_link_libraries(NovelRT sol2::sol2)
 
 # nethost doesn't provide native cmake support
 
