@@ -6,6 +6,7 @@ find_package(libpng CONFIG REQUIRED)
 find_package(LibSndFile CONFIG REQUIRED)
 find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(sol2 CONFIG REQUIRED)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_HEADERS})
@@ -36,6 +37,7 @@ include_directories(${LUA_INCLUDE_DIRS})
 
 find_library(LUA_LIBRARY NAMES liblua lua)
 link_libraries(${LUA_LIBRARY})
+target_link_libraries(NovelRT sol2::sol2)
 
 # nethost doesn't provide native cmake support
 
