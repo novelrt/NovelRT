@@ -1,0 +1,26 @@
+jobs:
+- job: ${{parameters.name}}
+  pool:
+    vmimage: ${{parameters.pool}}
+  steps:
+  - task: Bash@3
+    displayName: 'Run scripts/machine-setup.sh'
+    inputs:
+      targetType: filePath
+      filePath: ./scripts/machine-setup.sh
+  - task: Bash@3
+    displayName: 'Run scripts/cibuild.sh'
+    inputs:
+      targetType: filePath
+      filePath: ./scripts/cibuild.sh
+      arguments: '--configuration ${{parameters.configuration}}'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: '${{parameters.name}}'
+      buildConfiguration: ${{parameters.configuration}}
+      buildPlatform: ${{parameters.architecture}}
