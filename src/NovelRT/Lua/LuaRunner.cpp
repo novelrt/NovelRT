@@ -13,9 +13,9 @@ namespace NovelRT::Lua {
       lib::debug, lib::io, lib::math, lib::os,
       lib::package, lib::string, lib::table, lib::utf8);
 
-    auto a = _state.new_usertype<NovelRT::NovelRunner>("novel_runner", sol::constructors<NovelRT::NovelRunner(int, std::string)>());
-    auto b = _state.new_usertype<NovelRT::Transform>("transform", sol::constructors<NovelRT::Transform(NovelRT::Maths::GeoVector2<float>, int, NovelRT::Maths::GeoVector2<float>)>());
-    auto c = _state.new_usertype<NovelRT::Maths::GeoVector2<float>>("geo_vector", sol::constructors<NovelRT::Maths::GeoVector2<float>(int, int)>());
+    _state.new_usertype<NovelRT::NovelRunner>("novel_runner"); //, sol::constructors<NovelRT::NovelRunner(int, std::string)>()
+    _state.new_usertype<NovelRT::Transform>("transform"); //, sol::constructors<NovelRT::Transform(NovelRT::Maths::GeoVector2<float>, int, NovelRT::Maths::GeoVector2<float>)>()
+    _state.new_usertype<NovelRT::Maths::GeoVector2<float>>("geo_vector"); //, sol::constructors<NovelRT::Maths::GeoVector2<float>(int, int)>()
   }
 
   void LuaRunner::run() {
