@@ -33,8 +33,8 @@ namespace NovelRT::Lua {
         float rotation, const Maths::GeoVector2<float> & scale)>()
       );
 
-    transformType["getAABB"] = sol::property(&Transform::getAABB);
-    transformType["getBounds"] = sol::property(&Transform::getBounds);
+    transformType["AABB"] = sol::property(&Transform::getAABB);
+    transformType["bounds"] = sol::property(&Transform::getBounds);
     transformType["position"] = sol::property(
       static_cast<const Maths::GeoVector2<float> & (Transform::*)() const>(&Transform::position),
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::position)
