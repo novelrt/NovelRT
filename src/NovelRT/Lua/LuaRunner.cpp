@@ -15,6 +15,13 @@ namespace NovelRT::Lua {
 
     auto globalTable = _state.create_table("novelrt");
 
+    // Atom
+    auto atomType = globalTable.new_usertype<Atom>("Atom", sol::constructors<Atom(), Atom(uintptr_t)>());
+
+    atomType["getNextEventHandlerId"] = &Atom::getNextEventHandlerId;
+    atomType["getNextFontSetId"] = &Atom::getNextFontSetId;
+    atomType["getNextTextureId"] = &Atom::getNextTextureId;
+
     // NovelRunner
     auto novelRunnerType = globalTable.new_usertype<NovelRunner>("NovelRunner",
       sol::constructors<NovelRunner(int), NovelRunner(int, const std::string&), NovelRunner(int, const std::string&, uint32_t)>()
