@@ -13,8 +13,10 @@ namespace NovelRT::Lua {
       lib::debug, lib::io, lib::math, lib::os,
       lib::package, lib::string, lib::table, lib::utf8);
 
+    auto globalTable = _state.create_table("novelrt");
+
     // NovelRunner
-    auto novelRunnerType = _state.new_usertype<NovelRunner>("NovelRunner",
+    auto novelRunnerType = globalTable.new_usertype<NovelRunner>("NovelRunner",
       sol::constructors<NovelRunner(int), NovelRunner(int, const std::string&), NovelRunner(int, const std::string&, uint32_t)>()
       );
 
@@ -27,7 +29,7 @@ namespace NovelRT::Lua {
     novelRunnerType["getWindowingService"] = sol::property(&NovelRunner::getWindowingService);
 
     // Transform
-    auto transformType = _state.new_usertype<Transform>("Transform",
+    auto transformType = globalTable.new_usertype<Transform>("Transform",
       sol::constructors<Transform(),
       Transform(const Maths::GeoVector2<float> & position,
         float rotation, const Maths::GeoVector2<float> & scale)>()
@@ -49,6 +51,8 @@ namespace NovelRT::Lua {
       static_cast<const Maths::GeoVector2<float> & (Transform::*)() const>(&Transform::scale),
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::scale)
       );
+
+    _state["novelrt"] = globalTable;
   }
 
   void LuaRunner::run() {
