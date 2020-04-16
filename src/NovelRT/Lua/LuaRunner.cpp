@@ -22,6 +22,18 @@ namespace NovelRT::Lua {
     atomType["getNextFontSetId"] = &Atom::getNextFontSetId;
     atomType["getNextTextureId"] = &Atom::getNextTextureId;
 
+    // DebugService
+    auto debugServiceType = globalTable.new_usertype<DebugService>(sol::constructors<DebugService(NovelRunner* const)>());
+    debugServiceType["fpsCounterVisible"] = sol::property(
+      static_cast<bool (DebugService::*)() const>(&DebugService::getIsFpsCounterVisible),
+      static_cast<void (DebugService::*)(bool)>(&DebugService::setIsFpsCounterVisible)
+      );
+
+    debugServiceType["framesPerSecond"] = sol::property(
+      static_cast<uint32_t(DebugService::*)() const>(&DebugService::getFramesPerSecond),
+      static_cast<void (DebugService::*)(uint32_t)>(&DebugService::setFramesPerSecond)
+      );
+
     // NovelRunner
     auto novelRunnerType = globalTable.new_usertype<NovelRunner>("NovelRunner",
       sol::constructors<NovelRunner(int), NovelRunner(int, const std::string&), NovelRunner(int, const std::string&, uint32_t)>()
