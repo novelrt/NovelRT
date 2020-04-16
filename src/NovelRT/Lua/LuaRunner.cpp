@@ -23,7 +23,7 @@ namespace NovelRT::Lua {
     atomType["getNextTextureId"] = &Atom::getNextTextureId;
 
     // DebugService
-    auto debugServiceType = globalTable.new_usertype<DebugService>(sol::constructors<DebugService(NovelRunner* const)>());
+    auto debugServiceType = globalTable.new_usertype<DebugService>("DebugService", sol::constructors<DebugService(NovelRunner* const)>());
     debugServiceType["fpsCounterVisible"] = sol::property(
       static_cast<bool (DebugService::*)() const>(&DebugService::getIsFpsCounterVisible),
       static_cast<void (DebugService::*)(bool)>(&DebugService::setIsFpsCounterVisible)
