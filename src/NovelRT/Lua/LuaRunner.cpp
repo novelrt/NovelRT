@@ -38,7 +38,7 @@ namespace NovelRT::Lua {
 
     // LoggingService
     auto loggingServiceType = globalTable.new_usertype<LoggingService>("LoggingService",
-      sol::constructors<LoggingService(), LoggingService(const std::string & core), LoggingService(const std::string * core, LogLevel)>());
+      sol::constructors<LoggingService(), LoggingService(const std::string&), LoggingService(const std::string&, LogLevel)>());
 
     loggingServiceType["log"] = &LoggingService::log;
     loggingServiceType["logInfoLine"] = &LoggingService::logInfoLine;
