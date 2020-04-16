@@ -34,6 +34,33 @@ namespace NovelRT::Lua {
       static_cast<void (DebugService::*)(uint32_t)>(&DebugService::setFramesPerSecond)
       );
 
+
+    // LoggingService
+    auto loggingServiceType = globalTable.new_usertype<LoggingService>("LoggingService",
+      sol::constructors<LoggingService(), LoggingService(const std::string & core), LoggingService(const std::string * core, LogLevel)>());
+
+    loggingServiceType["log"] = &LoggingService::log;
+    loggingServiceType["logInfoLine"] = &LoggingService::logInfoLine;
+    loggingServiceType["logErrorLine"] = &LoggingService::logErrorLine;
+    loggingServiceType["logWarningLine"] = &LoggingService::logWarningLine;
+    loggingServiceType["logDebugLine"] = &LoggingService::logDebugLine;
+    loggingServiceType["logInternal"] = &LoggingService::logInternal;
+    loggingServiceType["setLogLevel"] = &LoggingService::setLogLevel;
+
+    // TODO: should I include throwIfNullPtr/NotZero?
+    // TODO: figure out how to specify template types for logInfo/Error/Warning/Debug
+
+    // LogLevel
+
+    globalTable.new_enum<LogLevel>("LogLevel", {
+      { "Debug", LogLevel::Debug },
+      { "Info", LogLevel::Info },
+      { "Warn", LogLevel::Warn },
+      { "Error", LogLevel::Err },
+      { "Off", LogLevel::Off }
+    });
+
+
     // NovelRunner
     auto novelRunnerType = globalTable.new_usertype<NovelRunner>("NovelRunner",
       sol::constructors<NovelRunner(int), NovelRunner(int, const std::string&), NovelRunner(int, const std::string&, uint32_t)>()
