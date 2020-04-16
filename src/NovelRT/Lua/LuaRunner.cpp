@@ -17,13 +17,13 @@ namespace NovelRT::Lua {
     auto novelRunnerType = _state.new_usertype<NovelRunner>("NovelRunner",
       sol::constructors<NovelRunner(int), NovelRunner(int, std::string), NovelRunner(int, int, std::string)>());
 
-    novelRunnerType["run_novel"] = &NovelRunner::runNovel;
-    novelRunnerType["get_renderer"] = &NovelRunner::getRenderer;
-    novelRunnerType["get_interaction_service"] = &NovelRunner::getInteractionService;
-    novelRunnerType["get_audio_service"] = &NovelRunner::getAudioService;
-    novelRunnerType["get_debug_service"] = &NovelRunner::getDebugService;
-    novelRunnerType["get_dot_net_runtime_service"] = &NovelRunner::getDotNetRuntimeService;
-    novelRunnerType["get_windowing_service"] = &NovelRunner::getWindowingService;
+    novelRunnerType["runNovel"] = &NovelRunner::runNovel;
+    novelRunnerType["getRenderer"] = &NovelRunner::getRenderer;
+    novelRunnerType["getInteractionService"] = &NovelRunner::getInteractionService;
+    novelRunnerType["getAudioService"] = &NovelRunner::getAudioService;
+    novelRunnerType["getDebugService"] = &NovelRunner::getDebugService;
+    novelRunnerType["getDotNetRuntimeService"] = &NovelRunner::getDotNetRuntimeService;
+    novelRunnerType["getWindowingService"] = &NovelRunner::getWindowingService;
 
   }
 
