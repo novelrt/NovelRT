@@ -15,16 +15,15 @@ namespace NovelRT::Lua {
 
     // NovelRunner
     auto novelRunnerType = _state.new_usertype<NovelRunner>("NovelRunner",
-      sol::constructors<NovelRunner(int), NovelRunner(int, std::string), NovelRunner(int, int, std::string)>());
+      sol::constructors<NovelRunner(int), NovelRunner(int, const std::string&), NovelRunner(int, const std::string&, uint32_t)>());
 
     novelRunnerType["runNovel"] = &NovelRunner::runNovel;
-    novelRunnerType["getRenderer"] = &NovelRunner::getRenderer;
-    novelRunnerType["getInteractionService"] = &NovelRunner::getInteractionService;
-    novelRunnerType["getAudioService"] = &NovelRunner::getAudioService;
-    novelRunnerType["getDebugService"] = &NovelRunner::getDebugService;
-    novelRunnerType["getDotNetRuntimeService"] = &NovelRunner::getDotNetRuntimeService;
-    novelRunnerType["getWindowingService"] = &NovelRunner::getWindowingService;
-
+    novelRunnerType["getRenderer"] = sol::property(&NovelRunner::getRenderer);
+    novelRunnerType["getInteractionService"] = sol::property(&NovelRunner::getInteractionService);
+    novelRunnerType["getAudioService"] = sol::property(&NovelRunner::getAudioService);
+    novelRunnerType["getDebugService"] = sol::property(&NovelRunner::getDebugService);
+    novelRunnerType["getDotNetRuntimeService"] = sol::property(&NovelRunner::getDotNetRuntimeService);
+    novelRunnerType["getWindowingService"] = sol::property(&NovelRunner::getWindowingService);
   }
 
   void LuaRunner::run() {
