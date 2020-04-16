@@ -15,6 +15,7 @@ namespace NovelRT::Lua {
 
     auto globalTable = _state.create_table("novelrt");
 
+#pragma region NovelRT::
     // Atom
     auto atomType = globalTable.new_usertype<Atom>("Atom", sol::constructors<Atom(), Atom(uintptr_t)>());
 
@@ -58,7 +59,7 @@ namespace NovelRT::Lua {
       { "Warn", LogLevel::Warn },
       { "Error", LogLevel::Err },
       { "Off", LogLevel::Off }
-    });
+      });
 
 
     // NovelRunner
@@ -97,6 +98,10 @@ namespace NovelRT::Lua {
       static_cast<const Maths::GeoVector2<float> & (Transform::*)() const>(&Transform::scale),
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::scale)
       );
+
+    // WorldObject is left out, because it is an abstract class and isn't consumed or returned in any parts of the api.
+
+#pragma endregion
 
     _state["novelrt"] = globalTable;
   }
