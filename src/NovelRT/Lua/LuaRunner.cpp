@@ -14,8 +14,8 @@ namespace NovelRT::Lua {
       lib::package, lib::string, lib::table, lib::utf8);
 
     // NovelRunner
-    auto novelRunnerType = _state.new_usertype<NovelRT::NovelRunner>("NovelRunner",
-      sol::constructors<NovelRT::NovelRunner(int), NovelRT::NovelRunner(int, std::string), NovelRT::NovelRunner(int, int, std::string)>());
+    auto novelRunnerType = _state.new_usertype<NovelRunner>("NovelRunner",
+      sol::constructors<NovelRunner(int), NovelRunner(int, std::string), NovelRunner(int, int, std::string)>());
 
     novelRunnerType["run_novel"] = &NovelRunner::runNovel;
     novelRunnerType["get_renderer"] = &NovelRunner::getRenderer;
@@ -24,13 +24,6 @@ namespace NovelRT::Lua {
     novelRunnerType["get_debug_service"] = &NovelRunner::getDebugService;
     novelRunnerType["get_dot_net_runtime_service"] = &NovelRunner::getDotNetRuntimeService;
     novelRunnerType["get_windowing_service"] = &NovelRunner::getWindowingService;
-
-    // Transform
-    auto transformType = _state.new_usertype<NovelRT::Transform>("Transform",
-      sol::constructors<NovelRT::Transform(),
-        NovelRT::Transform(const Maths::GeoVector2<float> & position,
-          float rotation, const Maths::GeoVector2<float> & scale)>());
-
 
   }
 
