@@ -4,7 +4,7 @@
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-  auto luaRunner = NovelRT::Lua::LuaRunner("main.lua");
+  auto luaRunner = NovelRT::Lua::LuaRunner("./main.lua");
   luaRunner.init();
   luaRunner.run();
   return 0;
