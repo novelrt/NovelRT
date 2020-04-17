@@ -17,37 +17,41 @@ namespace NovelRT::Input {
     auto result = _keyStates.find(code);
 
     if (result == _keyStates.end()) {
-      _keyStates.insert({ code, KeyState::Idle });
+      _keyStates.insert({ code, KeyStateFrameUpdatePair{ KeyState::Idle, false } });
     }
   }
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
     validateIfKeyCached(code);
-
     auto result = _keyStates.find(code);
+    auto previousState = result->second.currentState;
+
+    if (result->second.wasUpdatedThisFrame) {
+      return;
+    }
 
     switch (state) {
     case KeyState::KeyDown:
-      if (result->second == KeyState::KeyDown) {
-        result->second = KeyState::KeyDownHeld;
+      if (result->second.currentState == KeyState::KeyDown) {
+        result->second.currentState = KeyState::KeyDownHeld;
       }
-      else if (result->second != KeyState::KeyDownHeld) {
-        result->second = KeyState::KeyDown;
+      else if (result->second.currentState != KeyState::KeyDownHeld) {
+        result->second.currentState = KeyState::KeyDown;
       }
       break;
     case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      result->second = (result->second == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
+      result->second.currentState = (result->second.currentState == KeyState::KeyUp) ? KeyState::Idle : state; //lmao
       break;
+    }
+
+    if(previousState != result->second.currentState) {
+      result->second.wasUpdatedThisFrame = true;
     }
   }
 
-  void InteractionService::processMouseStates() {
-    for (int32_t i = static_cast<int32_t>(KeyCode::FirstMouseButton); i < static_cast<int32_t>(KeyCode::LastMouseButton); i++) {
-      auto keyCode = static_cast<KeyCode>(i);
-      auto result = _keyStates.find(keyCode);
-
-      if (result == _keyStates.end()) continue;
-      processKeyState(result->first, result->second);
+  void InteractionService::processKeyStates() {
+    for (auto& pair : _keyStates) {
+      processKeyState(pair.first, pair.second.currentState);
     }
   }
 
@@ -59,7 +63,7 @@ namespace NovelRT::Input {
     auto result = _keyStates.find(keyCode);
 
     if (result == _keyStates.end()) {
-      _keyStates.insert({ keyCode, keyState });
+      _keyStates.insert({ keyCode, KeyStateFrameUpdatePair{ keyState, true } });
       return;
     }
 
@@ -86,7 +90,7 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[target->subscribedKey()] == KeyState::KeyDown
+    if (_keyStates[target->subscribedKey()].currentState == KeyState::KeyDown
       && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[target->subscribedKey()])
       && (_clickTarget == nullptr || (_clickTarget->layer() > target->layer()))) {
       _logger.logDebug("Valid click target detected! Executing...");
@@ -95,7 +99,11 @@ namespace NovelRT::Input {
   }
 
 void InteractionService::consumePlayerInput() {
-  processMouseStates();
+  for (auto& pair : _keyStates) {
+    pair.second.wasUpdatedThisFrame = false;
+  }
+
+  processKeyStates();
   glfwPollEvents();
 }
 

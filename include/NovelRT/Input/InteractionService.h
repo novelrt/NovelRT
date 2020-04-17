@@ -17,13 +17,13 @@ namespace NovelRT::Input {
 
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
-    std::map<KeyCode, KeyState> _keyStates;
+    std::map<KeyCode, KeyStateFrameUpdatePair> _keyStates;
     std::map<KeyCode, Maths::GeoVector2<float>> _mousePositionsOnScreenPerButton;
     Maths::GeoVector2<float> _screenSize;
     LoggingService _logger;
     void validateIfKeyCached(KeyCode code);
     void processKeyState(KeyCode code, KeyState state);
-    void processMouseStates();
+    void processKeyStates();
     void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 
@@ -43,7 +43,7 @@ namespace NovelRT::Input {
     inline KeyState getKeyState(KeyCode value) const noexcept {
       auto it = _keyStates.find(value);
       if (it != _keyStates.end()) {
-        return it->second;
+        return it->second.currentState;
       }
 
       return KeyState::Idle;
