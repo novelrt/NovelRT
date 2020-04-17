@@ -1,5 +1,5 @@
 #include <string>
-#include <sol\sol.hpp>
+#include <novelrt.h>
 namespace NovelRT::Lua {
   class LuaRunner {
   public:
