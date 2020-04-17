@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
-  add_compile_options(/W4 /WX /wd4611)
+  add_compile_options(/W4 /WX /wd4611 /D _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-float-equal -Wno-padded)
 else()
