@@ -103,6 +103,14 @@ namespace NovelRT::Lua {
 
 #pragma endregion
 
+#pragma region NovelRT::Animation
+    globalTable.new_enum<Animation::AnimatorPlayState>("AnimatorPlayState", {
+      { "Paused", Animation::AnimatorPlayState::Paused },
+      { "Playing", Animation::AnimatorPlayState::Playing },
+      { "Stopped", Animation::AnimatorPlayState::Stopped }
+      });
+#pragma endregion
+
     _state["novelrt"] = globalTable;
   }
 
