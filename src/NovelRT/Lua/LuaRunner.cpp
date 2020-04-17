@@ -130,6 +130,12 @@ namespace NovelRT::Lua {
   }
 
   void LuaRunner::run() {
-    auto result = _state.script_file(_fileName);
+    try {
+      auto result = _state.safe_script_file(_fileName);
+    }
+    catch (const sol::error& err) {
+      std::cout << "An error occurred from within sol: " << err.what() << std::endl;
+    }
+    
   }
 }
