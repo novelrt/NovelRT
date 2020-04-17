@@ -104,11 +104,26 @@ namespace NovelRT::Lua {
 #pragma endregion
 
 #pragma region NovelRT::Animation
+
+    //AnimatorPlayState
+
     globalTable.new_enum<Animation::AnimatorPlayState>("AnimatorPlayState", {
       { "Paused", Animation::AnimatorPlayState::Paused },
       { "Playing", Animation::AnimatorPlayState::Playing },
       { "Stopped", Animation::AnimatorPlayState::Stopped }
       });
+
+    //SpriteAnimator
+
+    auto spriteAnimatorType = globalTable.new_usertype<Animation::SpriteAnimator>("SpriteAnimator",
+      sol::constructors<Animation::SpriteAnimator(NovelRunner*, Graphics::ImageRect*)>());
+
+    spriteAnimatorType["play"] = &Animation::SpriteAnimator::play;
+    spriteAnimatorType["pause"] = &Animation::SpriteAnimator::pause;
+    spriteAnimatorType["stop"] = &Animation::SpriteAnimator::stop;
+    spriteAnimatorType["currentPlayState"] = sol::property(&Animation::SpriteAnimator::getCurrentPlayState);
+    spriteAnimatorType["insertNewState"] = &Animation::SpriteAnimator::insertNewState;
+
 #pragma endregion
 
     _state["novelrt"] = globalTable;
