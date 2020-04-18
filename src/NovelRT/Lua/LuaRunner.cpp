@@ -126,8 +126,6 @@ namespace NovelRT::Lua {
     spriteAnimatorType["currentPlayState"] = sol::property(&Animation::SpriteAnimator::getCurrentPlayState);
     spriteAnimatorType["insertNewState"] = &Animation::SpriteAnimator::insertNewState;
 
-    //test
-
 #pragma endregion
 
 #pragma region NovelRT::Audio
