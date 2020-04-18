@@ -127,6 +127,31 @@ namespace NovelRT::Lua {
 #pragma endregion
 
     _state["novelrt"] = globalTable;
+
+#pragma region NovelRT::Audio
+#pragma endregion
+
+#pragma region NovelRT::DotNet
+#pragma endregion
+
+#pragma region NovelRT::Graphics
+#pragma endregion
+
+#pragma region NovelRT::Input
+#pragma endregion
+
+#pragma region NovelRT::Maths
+#pragma endregion
+
+#pragma region NovelRT::Timing
+#pragma endregion
+
+#pragma region NovelRT::Utilities
+#pragma endregion
+
+#pragma region NovelRT::Windowing
+#pragma endregion
+
   }
 
   void LuaRunner::run() {
