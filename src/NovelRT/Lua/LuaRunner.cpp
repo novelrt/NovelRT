@@ -15,6 +15,8 @@ namespace NovelRT::Lua {
 
     auto globalTable = _state.create_table("novelrt");
 
+    _state["novelrt"] = globalTable;
+
 #pragma region NovelRT::
     // Atom
     auto atomType = globalTable.new_usertype<Atom>("Atom", sol::constructors<Atom(), Atom(uintptr_t)>());
@@ -126,8 +128,6 @@ namespace NovelRT::Lua {
 
 #pragma endregion
 
-    _state["novelrt"] = globalTable;
-
 #pragma region NovelRT::Audio
 #pragma endregion
 
@@ -135,6 +135,17 @@ namespace NovelRT::Lua {
 #pragma endregion
 
 #pragma region NovelRT::Graphics
+    //ImageRect
+    auto imageRectType = globalTable.new_usertype<Graphics::ImageRect>("ImageRect",
+      sol::constructors<Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, const Graphics::RGBAConfig&),
+      Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, std::shared_ptr<Graphics::Texture>, const Graphics::RGBAConfig&)>()
+      );
+
+    imageRectType["texture"] = sol::property(static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture));
+    imageRectType["colourTint"] = sol::property(static_cast<const Graphics::RGBAConfig& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint));
+
+
+
 #pragma endregion
 
 #pragma region NovelRT::Input
