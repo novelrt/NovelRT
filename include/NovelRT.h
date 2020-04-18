@@ -81,6 +81,9 @@
 //libpng
 #include <png.h>
 
+/sol
+#include <sol/sol.hpp>
+
 /**
  * NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
  * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
@@ -130,6 +133,12 @@ namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
+}
+/**
+ * Contains lua features.
+ */
+namespace NovelRT::Lua {
+  typedef class LuaRunner LuaRunner;
 }
 /**
  * Contains scene graph features.
@@ -206,6 +215,9 @@ namespace NovelRT::Windowing {
 //Input types
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
+
+//Lua types
+#include "NovelRT/Lua/LuaRunner.h"
 
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"
