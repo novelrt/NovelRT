@@ -1,7 +1,7 @@
-find_package(Freetype 2.10 REQUIRED)
+find_package(Freetype 2.8 REQUIRED)
 find_package(glad 0.1.33 REQUIRED)
-find_package(glm 0.9.9 REQUIRED)
-find_package(sndfile 1.0.28 REQUIRED)
+find_package(glm 0.9.7 REQUIRED)
+find_package(sndfile 1.0.25 REQUIRED)
 
 set(SOURCES
 
