@@ -77,6 +77,7 @@ namespace NovelRT::Graphics {
     FT_Done_Face(face);
     FT_Done_FreeType(freeTypeLoader);
     _fontFile = file;
+    _fontSize = fontSize;
 
   }
 
