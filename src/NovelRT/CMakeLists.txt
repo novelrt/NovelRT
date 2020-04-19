@@ -1,3 +1,8 @@
+find_package(Freetype 2.10 REQUIRED)
+find_package(glad 0.1.33 REQUIRED)
+find_package(glm 0.9.9 REQUIRED)
+find_package(sndfile 1.0.28 REQUIRED)
+
 set(SOURCES
 
 Animation/SpriteAnimator.cpp
@@ -36,6 +41,9 @@ target_include_directories(NovelRT
 )
 target_link_libraries(NovelRT
   PUBLIC
+    Freetype::Freetype
+    glad::glad
+    glm::glm
 )
 
 install(
@@ -43,6 +51,15 @@ install(
   EXPORT NovelRT
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+)
+
+install(
+  DIRECTORY
+    "${CMAKE_SOURCE_DIR}/include"
+  TYPE INCLUDE
+  FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
 )
 
 install(
