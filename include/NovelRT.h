@@ -43,7 +43,7 @@
 #include FT_FREETYPE_H
 
 //glad
-#include <glad.h>
+#include <glad/glad.h>
 
 //GLFW3
 #define GLFW_INCLUDE_NONE

@@ -22,7 +22,7 @@ else()
   find_package(sndfile ${sndfile_FIND_VERSION} CONFIG QUIET)
 endif()
 
-if(NOT DEFINED sndfile_FOUND OR NOT TARGET sndfile-static)
+if(NOT sndfile_FOUND OR NOT TARGET sndfile-static)
   find_package(PkgConfig)
   pkg_check_modules(PC_SNDFILE QUIET sndfile)
 

@@ -7,6 +7,8 @@ sudo apt-add-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8
 sudo apt-get update
 sudo apt-get install clang-8 cmake g++-8 libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm -y
 
+sudo apt install libsndfile1-dev libfreetype-dev libglm1-dev
+
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 255
 sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 255
 

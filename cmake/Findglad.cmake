@@ -22,7 +22,7 @@ else()
   find_package(glad ${glad_FIND_VERSION} CONFIG QUIET)
 endif()
 
-if(NOT DEFINED glad_FOUND)
+if(NOT glad_FOUND)
   find_package(PkgConfig)
   pkg_check_modules(PC_GLAD QUIET glad)
 
