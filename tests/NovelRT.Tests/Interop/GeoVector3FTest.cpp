@@ -48,13 +48,13 @@ TEST(C_GeoVector3F_Test, staticOneCallReturnsGeoVector3One) {
 TEST(C_GeoVector3F_Test, addOperatorAddsCorrectlyForGeoVector3) {
   GeoVector3F_t geo = GeoVector3F_one();
   GeoVector3F_t result = GeoVector3F_addVector(geo, geo);
-  EXPECT_TRUE(GeoVector3F_equal(geo, GeoVector3F_uniform(2.0f)));
+  EXPECT_TRUE(GeoVector3F_equal(result, GeoVector3F_uniform(2.0f)));
 }
 
 TEST(C_GeoVector3F_Test, subtractOperatorSubtractsCorrectlyForGeoVector3) {
   GeoVector3F_t geo = GeoVector3F_one();
   GeoVector3F_t result = GeoVector3F_subtractVector(geo, geo);
-  EXPECT_TRUE(GeoVector3F_equal(geo, GeoVector3F_uniform(0.0f)));
+  EXPECT_TRUE(GeoVector3F_equal(result, GeoVector3F_uniform(0.0f)));
 }
 
 TEST(C_GeoVector3F_Test, multiplyOperatorMultipliesCorrectlyForGeoVector3) {

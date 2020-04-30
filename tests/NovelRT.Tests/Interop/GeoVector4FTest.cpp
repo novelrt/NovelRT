@@ -49,13 +49,13 @@ TEST(InteropGeoVector4Test, staticOneCallReturnsGeoVector3One) {
 TEST(InteropGeoVector4Test, addOperatorAddsCorrectlyForGeoVector3) {
   GeoVector4F_t geo = GeoVector4F_one();
   GeoVector4F_t result = GeoVector4F_addVector(geo, geo);
-  EXPECT_TRUE(GeoVector4F_equal(geo, GeoVector4F_uniform(2.0f)));
+  EXPECT_TRUE(GeoVector4F_equal(result, GeoVector4F_uniform(2.0f)));
 }
 
 TEST(InteropGeoVector4Test, subtractOperatorSubtractsCorrectlyForGeoVector3) {
   GeoVector4F_t geo = GeoVector4F_one();
   GeoVector4F_t result = GeoVector4F_subtractVector(geo, geo);
-  EXPECT_TRUE(GeoVector4F_equal(geo, GeoVector4F_uniform(0.0f)));
+  EXPECT_TRUE(GeoVector4F_equal(result, GeoVector4F_uniform(0.0f)));
 }
 
 TEST(InteropGeoVector4Test, multiplyOperatorMultipliesCorrectlyForGeoVector3) {
