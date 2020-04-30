@@ -9,25 +9,18 @@
 extern "C" {
 #endif
 
-  struct QuadTreePoint {
-    GeoVector2F_t _position;
-  };
-
-  typedef struct QuadTreePoint QuadTreePoint_t;
+  typedef struct NovelRT::Maths::QuadTreePoint QuadTreePoint_t;
 
   inline QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t position) {
-    QuadTreePoint result = { position };
-    return result;
+    return NovelRT::Maths::QuadTreePoint(position);
   }
 
   inline QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y) {
-    GeoVector2F position = { x, y };
-    QuadTreePoint result = { position };
-    return result;
+    return NovelRT::Maths::QuadTreePoint(NovelRT::Maths::GeoVector2<float>(x,y));
   }
 
   inline const GeoVector2F_t& QuadTreePoint_getPosition(QuadTreePoint_t point) {
-    return point._position;
+    return point.getPosition();
   }
 
 #ifdef __cplusplus
