@@ -1,8 +1,8 @@
 #include "NovelRTInterop/Maths/GeoVector2F_t.h"
-#include "NovelRTInterop/Maths/GeoBounds_t.h"
+//#include "NovelRTInterop/Maths/GeoBounds_t.h"
 #include "NovelRT.h"
 
-
+/*
 extern "C" {
   GeoBounds_t GeoBounds_create(const GeoVector2F_t& position, const GeoVector2F_t& size, float rotation) {
     return NovelRT::Maths::GeoBounds(position, size, rotation);
@@ -28,3 +28,4 @@ extern "C" {
     return first.intersectsWith(other);
   }
 }
+*/
