@@ -9,9 +9,9 @@ extern "C" {
   typedef void GeoVector2F_t;
 
   GeoVector2F_t* GeoVector2F_create(float x, float y);
-  const GeoVector2F_t* GeoVector2F_uniform(float value);
-  const GeoVector2F_t* GeoVector2F_zero();
-  const GeoVector2F_t* GeoVector2F_one();
+  GeoVector2F_t* GeoVector2F_uniform(float value);
+  GeoVector2F_t* GeoVector2F_zero();
+  GeoVector2F_t* GeoVector2F_one();
   float GeoVector2F_getX(GeoVector2F_t* gv);
   void GeoVector2F_setX(GeoVector2F_t* gv, float value);
   float GeoVector2F_getY(GeoVector2F_t* gv);

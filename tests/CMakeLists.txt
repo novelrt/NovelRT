@@ -41,12 +41,14 @@ set(NOVELRT_TESTS_DEPENDENCIES_INPUTS
   $<TARGET_FILE:NovelRT>
   ${CMAKE_BINARY_DIR}/src/NovelRTDotNet.txt
   ${CMAKE_BINARY_DIR}/src/NovelRTResources.txt
+  ${CMAKE_BINARY_DIR}/src/NovelRTInteropResources.txt
 )
 
 set(NOVELRT_TESTS_DEPENDENCIES_OUTPUTS
   ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.txt
   ${CMAKE_CURRENT_BINARY_DIR}/NovelRTDotNet.txt
   ${CMAKE_CURRENT_BINARY_DIR}/NovelRTResources.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTInteropResources.txt
   ${CMAKE_CURRENT_BINARY_DIR}/NovelRTTestsDependencies.txt
 )
 
