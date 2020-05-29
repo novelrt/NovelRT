@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_MATHS_GEOVECTOR2F_H
-#define NOVELRT_MATHS_GEOVECTOR2F_H
+#ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
+#define NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,4 +49,4 @@ extern "C" {
 }
 #endif
 
-#endif //NOVELRT_MATHS_GEOVECTOR2F_H
+#endif //NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
