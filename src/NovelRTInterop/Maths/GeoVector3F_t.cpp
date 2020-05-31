@@ -2,9 +2,6 @@
 #include <NovelRT.h>
 #include "NovelRTInterop/Maths/GeoVector3F_t.h"
 
-#ifndef NOVELRT_MATHS_GEOVECTOR3F_H
-#define NOVELRT_MATHS_GEOVECTOR3F_H
-
 #ifdef __cplusplus
 using namespace NovelRT;
 extern "C" {
@@ -39,7 +36,7 @@ float GeoVector3F_getX(GeoVector3F_t* gv) {
 
 void GeoVector3F_setX(GeoVector3F_t* gv, float value) {
 	static Maths::GeoVector3<float> vec = *(reinterpret_cast<Maths::GeoVector3<float>*>(&gv));
-	vec.setX(value);
+  vec.setX(value);
 	gv = reinterpret_cast<GeoVector3F_t*>(&vec);
 }
 
@@ -220,4 +217,3 @@ GeoVector3F_t* GeoVector3F_multiplyFloatIntoVectorInverse(float lhs, GeoVector3F
 }
 #endif
 
-#endif //NOVELRT_MATHS_GEOVECTOR3F_H
