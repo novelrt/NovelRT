@@ -19,6 +19,7 @@ add_subdirectory(src)
 
 if (NOT NOVELRT_SKIP_SAMPLES)
   add_subdirectory(samples)
+  add_subdirectory(lua-samples)
 endif()
 
 if (NOT NOVELRT_SKIP_DOCUMENTATION)

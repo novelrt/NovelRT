@@ -81,7 +81,7 @@
 //libpng
 #include <png.h>
 
-/sol
+//sol
 #include <sol/sol.hpp>
 
 /**
