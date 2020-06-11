@@ -13,22 +13,23 @@ namespace NovelRT::Input {
     friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
   private:
-    NovelRunner* const _runner;
+    static inline const uint32_t INPUT_BUFFER_COUNT = 2;
 
+    uint32_t _currentBufferIndex;
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
-    std::map<KeyCode, KeyStateFrameUpdatePair> _keyStates;
-    std::map<KeyCode, Maths::GeoVector2<float>> _mousePositionsOnScreenPerButton;
+    std::array<std::map<KeyCode, KeyStateFrameUpdatePair>, INPUT_BUFFER_COUNT> _keyStates;
     Maths::GeoVector2<float> _screenSize;
+    Maths::GeoVector2<float> _cursorPosition;
     LoggingService _logger;
-    void validateIfKeyCached(KeyCode code);
     void processKeyState(KeyCode code, KeyState state);
     void processKeyStates();
-    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
+    void acceptCursorPositionChangePush(Maths::GeoVector2<float> newCursorPosition);
+    void acceptMouseButtonClickPush(int button, int action);
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
-    InteractionService(NovelRunner* const runner) noexcept;
+    InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept;
 
     void consumePlayerInput();
 

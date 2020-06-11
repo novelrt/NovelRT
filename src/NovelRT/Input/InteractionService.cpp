@@ -3,23 +3,14 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  InteractionService::InteractionService(NovelRunner* const runner) noexcept :
-    _runner(runner),
+  InteractionService::InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept :
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
-    auto ptr = _runner->getWindowingService();
-    if(!ptr.expired()) ptr.lock()->WindowResized += [this](auto value) {
+    if(!windowingService.expired()) windowingService.lock()->WindowResized += [this](auto value) {
       setScreenSize(value);
     };
   }
 
-  void InteractionService::validateIfKeyCached(KeyCode code) {
-    auto result = _keyStates.find(code);
-
-    if (result == _keyStates.end()) {
-      _keyStates.insert({ code, KeyStateFrameUpdatePair{ KeyState::Idle, false } });
-    }
-  }
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
     validateIfKeyCached(code);
     auto result = _keyStates.find(code);
