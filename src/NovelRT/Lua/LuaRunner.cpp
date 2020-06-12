@@ -128,6 +128,40 @@ namespace NovelRT::Lua {
     spriteAnimatorType["currentPlayState"] = sol::property(&Animation::SpriteAnimator::getCurrentPlayState);
     spriteAnimatorType["insertNewState"] = &Animation::SpriteAnimator::insertNewState;
 
+    //SpriteAnimatorFrame
+
+    auto spriteAnimatorFrameType = globalTable.new_usertype<Animation::SpriteAnimatorFrame>("SpriteAnimatorFrame",
+      sol::constructors<Animation::SpriteAnimatorFrame()>());
+
+    spriteAnimatorFrameType["frameEnter"] = &Animation::SpriteAnimatorFrame::FrameEnter;
+    spriteAnimatorFrameType["frameExit"] = &Animation::SpriteAnimatorFrame::FrameExit;
+
+    spriteAnimatorFrameType["texture"] = sol::property(
+      static_cast<const std::shared_ptr<Graphics::Texture> & (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::texture),
+      static_cast<std::shared_ptr<Graphics::Texture> & (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::texture)
+      );
+
+    spriteAnimatorFrameType["duration"] = sol::property(
+      static_cast<const Timing::Timestamp & (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::duration),
+      static_cast<Timing::Timestamp & (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::duration)
+      );
+
+    //SpriteAnimatorState
+
+    auto spriteAnimatorStateType = globalTable.new_usertype<Animation::SpriteAnimatorState>("SpriteAnimatorState");
+
+    spriteAnimatorStateType["insertNewState"] = &Animation::SpriteAnimatorState::insertNewState;
+    spriteAnimatorStateType["removeStateAtIndex"] = &Animation::SpriteAnimatorState::removeStateAtIndex;
+    spriteAnimatorStateType["shouldLoop"] = sol::property(
+      static_cast<const bool& (Animation::SpriteAnimatorState::*)() const>(&Animation::SpriteAnimatorState::shouldLoop),
+      static_cast<bool& (Animation::SpriteAnimatorState::*)()>(&Animation::SpriteAnimatorState::shouldLoop)
+      );
+    spriteAnimatorStateType["frames"] = sol::property(
+      static_cast<const std::vector<Animation::SpriteAnimatorFrame> & (Animation::SpriteAnimatorState::*)() const>(&Animation::SpriteAnimatorState::frames),
+      static_cast<std::vector<Animation::SpriteAnimatorFrame> & (Animation::SpriteAnimatorState::*)()>(&Animation::SpriteAnimatorState::frames)
+      );
+    spriteAnimatorStateType["tryFindValidTransition"] = &Animation::SpriteAnimatorState::tryFindValidTransition;
+
 #pragma endregion
 
 #pragma region NovelRT::Audio
