@@ -14,7 +14,7 @@ namespace NovelRT::Lua {
     sol::state _state;
 
   public:
-    LuaRunner::LuaRunner(const std::string& fileName) noexcept;
+    LuaRunner(const std::string& fileName) noexcept;
     void init();
     void run();
   };
