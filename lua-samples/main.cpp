@@ -1,6 +1,14 @@
-#include <iostream>
+#include <novelrt.h>
+
+using namespace NovelRT::Utilities;
+using namespace NovelRT::Lua;
 
 int main() {
-    std::cout << "Hello World!";
-    return 0;
+  auto executablePath = Misc::getExecutableDirPath();
+  auto luaMainPath = (executablePath / "Resources/Scripts/main.lua").string();
+
+  auto runner = LuaRunner(luaMainPath);
+
+  runner.init();
+  runner.run();
 }
