@@ -6,8 +6,15 @@ set(DOCS_IMAGES
   novel-chan_doxy.png
 )
 
+set(DOCS_MAINPAGE
+  ${CMAKE_SOURCE_DIR}/README.md
+  ${CMAKE_SOURCE_DIR}/LICENCE.md
+  ${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md
+)
+
 set(DOCS_RESOURCES
   ${DOCS_IMAGES}
+  ${DOCS_MAINPAGE}
 )
 
 if (DOXYGEN_FOUND)
@@ -19,6 +26,7 @@ if (DOXYGEN_FOUND)
   set(DOXYFILE_OUT ${DOXYGEN_OUTPUT_DIR}/Doxyfile)
 
   set(DOXYGEN_PROJECT_LOGO ${DOXYGEN_OUTPUT_DIR}/novel-chan_doxy.png)
+  set(DOXYGEN_MAINPAGE_MD ${DOXYGEN_OUTPUT_DIR}/README.md)
 
   #Replace variables inside @@ with the current values
   configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
