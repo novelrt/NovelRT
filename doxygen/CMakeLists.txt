@@ -1,3 +1,5 @@
+# More information on how this was made can be found at https://quantumlytangled.com/generating-doxygen-documentation-for-cpp-using-cmake/
+
 find_package(Doxygen QUIET)
 
 set(DOCS_IMAGES
@@ -23,7 +25,8 @@ if (DOXYGEN_FOUND)
   file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
   file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
 
-  add_custom_command(OUTPUT
+  add_custom_command(
+                     OUTPUT
                        ${DOXYGEN_INDEX_FILE}
                        ${DOXYGEN_FAKE_INDEX_FILE}
                      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
@@ -31,4 +34,6 @@ if (DOXYGEN_FOUND)
                      COMMENT "Generating docs")
 
   add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+else ()
+	message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
