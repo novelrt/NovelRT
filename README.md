@@ -6,7 +6,7 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 | Windows x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
 | Ubuntu x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
 
-[![Discord](https://img.shields.io/discord/543898968380145675?logo=discord&style=plastic)](https://discord.novelrt.dev/)
+[![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
 ## Current Features
 
@@ -29,14 +29,18 @@ For information on Ink, check it out from [here](https://github.com/inkle/ink).
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything. If you wish to attempt to build a basic visual novel with the existing C++ API, you must first `git clone` this repository and set up vcpkg, which you can find out more about [here](https://github.com/microsoft/vcpkg).
 
 ### Our dependency list currently includes:
-- sdl2
-- sdl2-mixer
-- sdl2-image
-- Lua 5.3
-- glad
+- Freetype
+- GLAD
+- GLFW
 - glm
-- freetype
+- gtest
+- Libsndfile
+- libpng
+- Lua 5.3
+- nethost
+- OpenAL-Soft
 - spdlog
+(and their respective dependencies)
 
 *The minimum CMake version required for this project is 3.13.*
 

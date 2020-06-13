@@ -11,18 +11,27 @@ namespace NovelRT::Input {
   class InteractionObject : public WorldObject {
     friend class InteractionService;
 
-    NOVELRT_PARAMETERLESS_EVENT(Interacted)
+  public:
+    Utilities::Event<> Interacted;
+
   private:
     KeyCode _subscribedKey = KeyCode::LeftMouseButton;
     std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
 
   public:
     InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+
     void executeObjectBehaviour() final;
-    virtual bool validateInteractionPerimeter(const Maths::GeoVector<float>& mousePosition) const = 0;
-    KeyCode getSubscribedKey() const;
-    void setSubscribedKey(KeyCode key);
+    virtual bool validateInteractionPerimeter(const Maths::GeoVector2<float>& mousePosition) const = 0;
+
+    inline const KeyCode& subscribedKey() const noexcept {
+      return _subscribedKey;
+    }
+
+    inline KeyCode& subscribedKey() noexcept {
+      return _subscribedKey;
+    }
   };
 }
 
-#endif //NOVELRT_INPUT_INTERACTIONOBJECT_H
+#endif //!NOVELRT_INPUT_INTERACTIONOBJECT_H

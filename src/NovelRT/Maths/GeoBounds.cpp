@@ -3,13 +3,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Maths {
-  GeoBounds::GeoBounds(const GeoVector<float>& position, const GeoVector<float>& size, float rotation) :
+  GeoBounds::GeoBounds(const GeoVector2<float>& position, const GeoVector2<float>& size, float rotation) :
     _position(position),
     _rotation(rotation),
-    _size(size) {
-  }
+    _size(size) { }
 
-  bool GeoBounds::pointIsWithinBounds(const GeoVector<float>& point) const {
+  bool GeoBounds::pointIsWithinBounds(const GeoVector2<float>& point) const {
     auto corner0 = getCornerInWorldSpace(0);
     auto corner2 = getCornerInWorldSpace(2);
 
@@ -20,50 +19,70 @@ namespace NovelRT::Maths {
     return false;
   }
 
-  GeoVector<float> GeoBounds::getCornerInLocalSpace(int index) const {
-    GeoVector<float> returnValue;
-    auto size = getSize();
+  bool GeoBounds::intersectsWith(const GeoBounds& otherBounds) const {
+    if (rotation() != 0.0f) throw std::runtime_error("Box intersection does not currently support rotated bounds. AABB support only.");
+
+    auto minA = position() - getExtents();
+    auto maxA = position() + getExtents();
+
+    auto minB = otherBounds.position() - otherBounds.getExtents();
+    auto maxB = otherBounds.position() + otherBounds.getExtents();
+
+    auto result = (minA > maxB) || (minB > maxA);
+    return result;
+  }
+
+  GeoVector2<float> GeoBounds::getCornerInLocalSpace(int index) const {
+    GeoVector2<float> returnValue;
+    auto boundsSize = size();
     switch (index) {
     case 0:
-      returnValue = GeoVector<float>(-(size.getX() / 2), -(size.getY() / 2));
+      returnValue = GeoVector2<float>(-(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
       break;
     case 1:
-      returnValue = GeoVector<float>(+(size.getX() / 2), -(size.getY() / 2));
+      returnValue = GeoVector2<float>(+(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
       break;
     case 2:
-      returnValue = GeoVector<float>(+(size.getX() / 2), +(size.getY() / 2));
+      returnValue = GeoVector2<float>(+(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
       break;
     case 3:
-      returnValue = GeoVector<float>(-(size.getX() / 2), +(size.getY() / 2));
+      returnValue = GeoVector2<float>(-(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
       break;
     }
 
-    returnValue.rotateToAngleAroundPoint(getRotation(), getPosition());
+    returnValue.rotateToAngleAroundPoint(rotation(), position());
     return returnValue;
   }
 
-  GeoVector<float> GeoBounds::getCornerInWorldSpace(int index) const {
+  GeoVector2<float> GeoBounds::getCornerInWorldSpace(int index) const {
     return _position + getCornerInLocalSpace(index);
   }
 
-  GeoVector<float> GeoBounds::getPosition() const {
+  const GeoVector2<float>& GeoBounds::position() const {
     return _position;
   }
 
-  void GeoBounds::setPosition(const GeoVector<float>& value) {
-    _position = value;
+  GeoVector2<float>& GeoBounds::position() {
+    return _position;
   }
 
-  GeoVector<float> GeoBounds::getSize() const {
+  const GeoVector2<float>& GeoBounds::size() const {
     return _size;
   }
-  void GeoBounds::setSize(const GeoVector<float>& value) {
-    _size = value;
+
+  GeoVector2<float>& GeoBounds::size() {
+    return _size;
   }
-  float GeoBounds::getRotation() const {
+
+  const float& GeoBounds::rotation() const {
     return _rotation;
   }
-  void GeoBounds::setRotation(float value) {
-    _rotation = value;
+
+  float& GeoBounds::rotation() {
+    return _rotation;
+  }
+
+  GeoVector2<float> GeoBounds::getExtents() const {
+    return _size / 2.0f;
   }
 }

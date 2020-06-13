@@ -10,20 +10,25 @@
 namespace NovelRT::Input {
   class InteractionService {
     friend class InteractionObject;
-
-    NOVELRT_PARAMETERLESS_EVENT(Quit)
-    NOVELRT_EVENT(ResizeInputDetected, Maths::GeoVector<float>)
+    friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
   private:
+    NovelRunner* const _runner;
+
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
-    std::map<KeyCode, Maths::GeoVector<float>> _mousePositionsOnScreenPerButton;
-    Maths::GeoVector<float> _screenSize;
+    std::map<KeyCode, Maths::GeoVector2<float>> _mousePositionsOnScreenPerButton;
+    Maths::GeoVector2<float> _screenSize;
     LoggingService _logger;
+    void validateIfKeyCached(KeyCode code);
+    void processKeyState(KeyCode code, KeyState state);
+    void processMouseStates();
+    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
+    void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
-    InteractionService();
+    InteractionService(NovelRunner* const runner) noexcept;
 
     void consumePlayerInput();
 
@@ -31,8 +36,17 @@ namespace NovelRT::Input {
 
     void executeClickedInteractable();
 
-    inline void setScreenSize(const Maths::GeoVector<float>& value) {
+    inline void setScreenSize(const Maths::GeoVector2<float>& value) noexcept {
       _screenSize = value;
+    }
+
+    inline KeyState getKeyState(KeyCode value) const noexcept {
+      auto it = _keyStates.find(value);
+      if (it != _keyStates.end()) {
+        return it->second;
+      }
+
+      return KeyState::Idle;
     }
   };
 }

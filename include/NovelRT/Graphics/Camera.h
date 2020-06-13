@@ -12,47 +12,47 @@ namespace NovelRT::Graphics {
     friend class RenderingService;
 
   private:
-    Maths::GeoMatrix4<float> _viewMatrix;
-    Maths::GeoMatrix4<float> _projectionMatrix;
-    Utilities::Lazy<Maths::GeoMatrix4<float>> _cameraUboMatrix;
-    Maths::GeoMatrix4<float> generateUboMatrix();
+    Maths::GeoMatrix4x4<float> _viewMatrix;
+    Maths::GeoMatrix4x4<float> _projectionMatrix;
+    Utilities::Lazy<Maths::GeoMatrix4x4<float>> _cameraUboMatrix;
+    Maths::GeoMatrix4x4<float> generateUboMatrix();
     CameraFrameState _cameraFrameState;
 
     void initialiseCameraForFrame();
-    void forceResize(const Maths::GeoVector<float>& windowSize);
+    void forceResize(const Maths::GeoVector2<float>& windowSize);
 
   public:
     Camera();
 
-    inline Maths::GeoMatrix4<float>& getViewMatrix() {
+    inline Maths::GeoMatrix4x4<float>& getViewMatrix() {
       return _viewMatrix;
     }
 
-    inline const Maths::GeoMatrix4<float>& getViewMatrix() const {
+    inline const Maths::GeoMatrix4x4<float>& getViewMatrix() const {
       return _viewMatrix;
     }
 
-    inline void setViewMatrix(const Maths::GeoMatrix4<float>& value) {
+    inline void setViewMatrix(const Maths::GeoMatrix4x4<float>& value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _viewMatrix = value;
     }
 
-    inline Maths::GeoMatrix4<float>& getProjectionMatrix() {
+    inline Maths::GeoMatrix4x4<float>& getProjectionMatrix() {
       return _projectionMatrix;
     }
 
-    inline const Maths::GeoMatrix4<float>& getProjectionMatrix() const {
+    inline const Maths::GeoMatrix4x4<float>& getProjectionMatrix() const {
       return _projectionMatrix;
     }
 
-    inline void setProjectionMatrix(const Maths::GeoMatrix4<float>& value) {
+    inline void setProjectionMatrix(const Maths::GeoMatrix4x4<float>& value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _projectionMatrix = value;
     }
 
-    inline Maths::GeoMatrix4<float>& getCameraUboMatrix() {
+    inline Maths::GeoMatrix4x4<float> getCameraUboMatrix() {
       return _cameraUboMatrix.getActual();
     }
 
@@ -60,7 +60,7 @@ namespace NovelRT::Graphics {
       return _cameraFrameState;
     }
 
-    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize);
+    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize);
   };
 }
 

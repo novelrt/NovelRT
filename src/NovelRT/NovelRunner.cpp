@@ -4,78 +4,69 @@
 
 namespace NovelRT {
   NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
+    SceneConstructionRequested(Utilities::Event<>()),
+    Update(Utilities::Event<Timing::Timestamp>()),
     _exitCode(1),
-    _stepTimer(Timing::StepTimer(targetFrameRate)),
-    _novelDebugService(std::make_unique<DebugService>(this)),
-    _novelInteractionService(std::make_unique<Input::InteractionService>()),
-    _novelAudioService(std::make_unique<Audio::AudioService>()),
-    _novelDotNetRuntimeService(std::make_unique<DotNet::RuntimeService>()),
-    _novelWindowingService(std::make_unique<Windowing::WindowingService>(this)),
-    _novelRenderer(std::make_unique<Graphics::RenderingService>(this)) {
+    _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
+    _novelDebugService(std::make_shared<DebugService>(this)),
+    _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
+    _novelInteractionService(std::make_shared<Input::InteractionService>(this)),
+    _novelAudioService(std::make_shared<Audio::AudioService>()),
+    _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
+    _novelRenderer(std::make_shared<Graphics::RenderingService>(this)) {
+    if (!glfwInit()) {
+      const char* err = "";
+      glfwGetError(&err);
+       _loggingService.logError("GLFW ERROR: ", err);
+      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
+    }
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
-    _novelInteractionService->subscribeToQuit([this] { _exitCode = 0; });
+    _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
   }
 
   int NovelRunner::runNovel() {
-    uint32_t lastFramesPerSecond = 0;
-
     while (_exitCode) {
-      _stepTimer.tick(_updateSubscribers);
-      _novelDebugService->setFramesPerSecond(_stepTimer.getFramesPerSecond());
-      _novelInteractionService->consumePlayerInput();
+      _stepTimer.getActual()->tick(Update);
+      _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
       _novelRenderer->beginFrame();
-      raiseSceneConstructionRequested();
+      SceneConstructionRequested();
       _novelRenderer->endFrame();
+      _novelInteractionService->consumePlayerInput();
       _novelInteractionService->executeClickedInteractable();
+      _novelAudioService->checkSources();
     }
 
     _novelWindowingService->tearDown();
-    _novelAudioService->~AudioService();
     return _exitCode;
   }
 
-  Graphics::RenderingService* NovelRunner::getRenderer() const {
-    return _novelRenderer.get();
+  std::weak_ptr<Graphics::RenderingService> NovelRunner::getRenderer() const {
+    return std::weak_ptr<Graphics::RenderingService>(_novelRenderer);
   }
 
-  void NovelRunner::runOnUpdate(NovelUpdateSubscriber subscriber) {
-    _updateSubscribers.push_back(subscriber);
+  std::weak_ptr<Input::InteractionService> NovelRunner::getInteractionService() const {
+    return std::weak_ptr<Input::InteractionService>(_novelInteractionService);
   }
 
-  void NovelRunner::stopRunningOnUpdate(NovelUpdateSubscriber subscriber) {
-    if (std::find(
-      _updateSubscribers.begin(),
-      _updateSubscribers.end(),
-      subscriber) != _updateSubscribers.end()) {
-      _updateSubscribers.erase(std::remove_if(
-        _updateSubscribers.begin(),
-        _updateSubscribers.end(),
-        [subscriber](NovelUpdateSubscriber existingSubscriber) {
-          return subscriber == existingSubscriber;
-        }));
-    }
-    else {
-      return;
-    }
+  std::weak_ptr<DebugService> NovelRunner::getDebugService() const {
+    return std::weak_ptr<DebugService>(_novelDebugService);
   }
 
-  Input::InteractionService* NovelRunner::getInteractionService() const {
-    return _novelInteractionService.get();
+  std::weak_ptr<Audio::AudioService> NovelRunner::getAudioService() const {
+    return std::weak_ptr<Audio::AudioService>(_novelAudioService);
   }
 
-  DebugService* NovelRunner::getDebugService() const {
-    return _novelDebugService.get();
+  std::weak_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const {
+    return std::weak_ptr<DotNet::RuntimeService>(_novelDotNetRuntimeService);
   }
 
-  Audio::AudioService* NovelRunner::getAudioService() const {
-    return _novelAudioService.get();
+  std::weak_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const {
+    return std::weak_ptr<Windowing::WindowingService>(_novelWindowingService);
   }
-  DotNet::RuntimeService* NovelRunner::getDotNetRuntimeService() const {
-    return _novelDotNetRuntimeService.get();
-  }
-  Windowing::WindowingService* NovelRunner::getWindowingService() const {
-	  return _novelWindowingService.get();
+
+  NovelRunner::~NovelRunner() {
+    glfwTerminate();
   }
 }

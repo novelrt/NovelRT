@@ -1,12 +1,11 @@
 find_package(Freetype REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(sdl2-image CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
+find_package(libpng CONFIG REQUIRED)
+find_package(LibSndFile CONFIG REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-
-find_package(Doxygen QUIET)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_HEADERS})
@@ -17,13 +16,18 @@ source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_SOURCES})
 set(NOVELRT_LIB_LINK_LIBRARIES
   Freetype::Freetype
   glad::glad
+  glfw
   glm
-  SDL2::SDL2-static
-  SDL2::SDL2_image
-  SDL2::SDL2_mixer
-  SDL2::SDL2main
-  spdlog::spdlog
+  OpenAL::OpenAL
+  png
+  spdlog::spdlog_header_only
 )
+
+if (WIN32)
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-shared)
+else()
+  set(NOVELRT_LIB_LINK_LIBRARIES ${NOVELRT_LIB_LINK_LIBRARIES} sndfile-static)
+endif()
 
 # lua doesn't provide native cmake support
 
@@ -79,62 +83,72 @@ add_custom_target(NovelRTResources ALL DEPENDS ${NOVELRT_RESOURCE_OUTPUTS} SOURC
 
 # NovelRT.DotNet
 
-set(NOVELRT_DOTNET_CSPROJ ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet/NovelRT.DotNet.csproj)
+if (NOT NOVELRT_SKIP_DOTNET)
+  set(NOVELRT_DOTNET_CSPROJ ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet/NovelRT.DotNet.csproj)
 
-if("${CMAKE_BUILD_TYPE}" AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  set(NOVELRT_DOTNET_CONFIGURATION Release)
-else()
-  set(NOVELRT_DOTNET_CONFIGURATION Debug)
+  if("${CMAKE_BUILD_TYPE}" AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    set(NOVELRT_DOTNET_CONFIGURATION Release)
+  else()
+    set(NOVELRT_DOTNET_CONFIGURATION Debug)
+  endif()
+
+  file(GLOB_RECURSE NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS
+    NovelRT.DotNet/*.cs
+    NovelRT.DotNet/NovelRT.DotNet.runtimeconfig.json
+  )
+  list(FILTER NOVELRT_DOTNET_INPUTS EXCLUDE REGEX NovelRT\.DotNet/obj/.*)
+  source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_DOTNET_INPUTS})
+
+  set(NOVELRT_DOTNET_OUTPUTS
+    ${CMAKE_CURRENT_BINARY_DIR}/NovelRTDotNet.txt
+  )
+
+  add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
+    COMMAND dotnet build ${NOVELRT_DOTNET_CSPROJ} /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=$<TARGET_FILE_DIR:NovelRT>
+    COMMAND ${CMAKE_COMMAND} -E touch ${NOVELRT_DOTNET_OUTPUTS}
+    MAIN_DEPENDENCY ${NOVELRT_DOTNET_CSPROJ}
+    DEPENDS ${NOVELRT_DOTNET_INPUTS}
+  )
+
+  add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS} SOURCES ${NOVELRT_DOTNET_INPUTS})
 endif()
 
-file(GLOB_RECURSE NOVELRT_DOTNET_INPUTS CONFIGURE_DEPENDS
-  NovelRT.DotNet/*.cs
-  NovelRT.DotNet/NovelRT.DotNet.runtimeconfig.json
+# NovelRT Package
+
+include(CMakePackageConfigHelpers)
+
+set(NOVELRT_CONFIG_DIR "lib/cmake")
+
+set(NOVELRT_VERSION_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/NovelRTConfigVersion.cmake")
+write_basic_package_version_file("${NOVELRT_VERSION_CONFIG}" COMPATIBILITY SameMajorVersion)
+
+set(NOVELRT_PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/NovelRTConfig.cmake")
+configure_package_config_file("Config.cmake.in" "${NOVELRT_PROJECT_CONFIG}" INSTALL_DESTINATION "${NOVELRT_CONFIG_DIR}")
+
+# NovelRT Installation
+
+install(TARGETS NovelRT
+        EXPORT NovelRTTargets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
 )
-list(FILTER NOVELRT_DOTNET_INPUTS EXCLUDE REGEX NovelRT\.DotNet/obj/.*)
-source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_DOTNET_INPUTS})
 
-set(NOVELRT_DOTNET_OUTPUTS
-  ${CMAKE_CURRENT_BINARY_DIR}/NovelRTDotNet.txt
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../include/"
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.h"
 )
 
-add_custom_command(OUTPUT ${NOVELRT_DOTNET_OUTPUTS}
-  COMMAND dotnet build ${NOVELRT_DOTNET_CSPROJ} /p:Configuration=${NOVELRT_DOTNET_CONFIGURATION} /p:OutDir=$<TARGET_FILE_DIR:NovelRT>
-  COMMAND ${CMAKE_COMMAND} -E touch ${NOVELRT_DOTNET_OUTPUTS}
-  MAIN_DEPENDENCY ${NOVELRT_DOTNET_CSPROJ}
-  DEPENDS ${NOVELRT_DOTNET_INPUTS}
+install(FILES "${NOVELRT_VERSION_CONFIG}" "${NOVELRT_PROJECT_CONFIG}"
+        DESTINATION "${NOVELRT_CONFIG_DIR}"
 )
 
-add_custom_target(NovelRTDotNet ALL DEPENDS ${NOVELRT_DOTNET_OUTPUTS} SOURCES ${NOVELRT_DOTNET_INPUTS})
+install(EXPORT NovelRTTargets
+        DESTINATION "${NOVELRT_CONFIG_DIR}"
+        NAMESPACE "NovelRT::"
+)
 
-# Docs
-
-if (DOXYGEN_FOUND)
-  set(DOXYGEN_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-  set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/docs)
-  set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
-  set(DOXYGEN_FAKE_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/__index.html)
-  set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
-  set(DOXYFILE_OUT ${DOXYGEN_OUTPUT_DIR}/Doxyfile)
-
-  set(DOCS_IMAGES
-    novel-chan_doxy.png
-  )
-  set(DOCS_RESOURCES
-    ${DOCS_IMAGES}
-  )
-
-  #Replace variables inside @@ with the current values
-  configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
-  file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
-  file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
-
-  add_custom_command(OUTPUT
-                       ${DOXYGEN_INDEX_FILE}
-                       ${DOXYGEN_FAKE_INDEX_FILE}
-                     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
-                     MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
-                     COMMENT "Generating docs")
-
-  add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
-endif (DOXYGEN_FOUND)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
+        DESTINATION Resources
+)

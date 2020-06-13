@@ -26,11 +26,11 @@ messageCallback(GLenum source,
 #include <NovelRT.h>
 
 namespace NovelRT {
-  DebugService::DebugService(NovelRunner* runner) :
+  DebugService::DebugService(NovelRunner* const runner) :
     _runner(runner),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {
-    runner->subscribeToSceneConstructionRequested(std::bind(&DebugService::onSceneConstruction, this));
+    runner->SceneConstructionRequested += std::bind(&DebugService::onSceneConstruction, this);
   }
 
   bool DebugService::getIsFpsCounterVisible() const {
@@ -42,12 +42,14 @@ namespace NovelRT {
       if (value) {
         auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-        auto transform = Transform(Maths::GeoVector<float>(0, 1080 - 16), 0, Maths::GeoVector<float>(1.0f, 1.0f));
+        auto transform = Transform(Maths::GeoVector2<float>(0, 1080 - 16), 0, Maths::GeoVector2<float>(1.0f, 1.0f));
 
         std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
         std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
 
-        _fpsCounter = _runner->getRenderer()->createTextRect(transform, 0, yellow, 16, (fontsDirPath / "Gayathri-Regular.ttf").string());
+        std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
+
+        _fpsCounter = _runner->getRenderer().lock()->createTextRect(transform, 0, yellow, 16, fontPath);
         updateFpsCounter();
       }
     }

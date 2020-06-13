@@ -3,363 +3,342 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Audio {
-
-AudioService::AudioService() : _nextChannel(1), _musicTime(0), _musicPausedTime(0), isInitialized(false), _logger(Utilities::Misc::CONSOLE_LOG_AUDIO) {
-  initializeAudio();
-}
+AudioService::AudioService() :
+  _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
+    auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
+    if (!device) {
+      _logger.logError("OpenAL device creation failed!", getALError());
+      throw std::runtime_error("OpenAL failed to create an audio device! Aborting...");
+    }
+    return device;
+  }), [](auto x) { alcCloseDevice(x); })),
+  _context(Utilities::Lazy<std::unique_ptr<ALCcontext, void(*)(ALCcontext*)>>(std::function<ALCcontext*()>([this] {
+    auto context = alcCreateContext(_device.getActual(), nullptr);
+    alcMakeContextCurrent(context);
+    isInitialised = true;
+    _deviceName = alcGetString(_device.getActual(), ALC_DEVICE_SPECIFIER);
+    _logger.logInfo("OpenAL Initialized on device: ", _deviceName);
+    return context;
+  }), [](auto x) {
+    alcMakeContextCurrent(nullptr);
+    alcDestroyContext(x);
+  })),
+  _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+  _manualLoad(false),
+  _musicSource(),
+  _musicSourceState(0),
+  _musicLoopAmount(0),
+  _soundLoopAmount(0),
+  _soundSourceState(0),
+  _soundStorage(),
+  _bufferStorage(),
+  isInitialised(false) {
+  }
 
 bool AudioService::initializeAudio() {
-  logIfSDLFailure(SDL_InitSubSystem, SDL_INIT_AUDIO);
-  logIfMixerFailure(Mix_OpenAudio, 44100, MIX_DEFAULT_FORMAT, 2, 2048);
-  logIfMixerFailure(Mix_AllocateChannels, (Uint32)NOVEL_MIXER_CHANNELS);
-  _logger.logInfoLine("SDL2_Mixer Initialized.");
-  isInitialized = true;
-  return isInitialized;
+  _device.getActual();
+  _context.getActual();
+  alGenSources(1, &_musicSource);
+  alSourcef(_musicSource, AL_GAIN, 0.75f);
+  alSourcef(_musicSource, AL_PITCH, _pitch);
+
+  return isInitialised;
 }
 
-void AudioService::load(std::string input, bool isMusic) {
-  if (!isMusic)
-  {
-    auto exists = _sounds.find(input);
-    if (exists != _sounds.end()) return;
+ALuint AudioService::readFile(std::string input) {
+  SF_INFO info;
+  info.format = 0;
+  SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
-    Mix_Chunk* newSound = Mix_LoadWAV(input.c_str());
-    if (newSound != nullptr)
-    {
-      _sounds[input] = newSound;
-    }
-    else
-    {
-      _logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
-    }
+  if (file == nullptr) {
+    _logger.logWarningLine(std::string(sf_strerror(nullptr)));
+    return _noBuffer;
   }
-  else
-  {
-    auto exists = _music.find(input);
-    if (exists != _music.end()) return;
 
-    Mix_Music* newMusic = Mix_LoadMUS(input.c_str());
-    if (newMusic != nullptr)
-    {
-      _music[input] = newMusic;
-    }
-    else
-    {
-      _logger.logError("SDL_Mixer error occurred during load. Error: ", getSDLError());
-    }
+  std::vector<uint16_t> data;
+  std::vector<short> readBuffer;
+  readBuffer.resize(_bufferSize);
+
+  sf_count_t readSize = 0;
+
+  while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0) {
+    data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
   }
+
+  ALuint buffer;
+  alGenBuffers(1, &buffer);
+  alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(), static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
+  sf_close(file);
+  return buffer;
 }
 
-void AudioService::unload(std::string input, bool isMusic) {
-  if (!isMusic)
-  {
-    auto existingSound = _sounds.find(input);
-    if (existingSound == _sounds.end()) return;
-
-    Mix_FreeChunk(_sounds[input]);
-    _sounds.erase(existingSound);
+/*Note: Due to the current design, this will currently block the thread it is being called on.
+  If it is called on the main thread, please do all loading of audio files at the start of
+  the engine (after NovelRunner has been created).
+*/
+std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
+  if (!isInitialised) {
+    _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::load. You cannot load new audio when the service is not initialised.");
   }
-  else
-  {
-    auto existingMusic = _music.find(input);
-    if (existingMusic == _music.end()) return;
+  auto newBuffer = readFile(input);
 
-    Mix_FreeMusic(_music[input]);
-    _music.erase(existingMusic);
-  }
-}
-
-void AudioService::playSound(std::string soundName, int loops) {
-  auto existingSound = _sounds.find(soundName);
-  if (existingSound == _sounds.end())
-  {
-    load(soundName, false);
-    existingSound = _sounds.find(soundName);
-    if (existingSound == _sounds.end())
-    {
-      return;
-    }
+  //Sorry Matt, nullptr types are incompatible to ALuint according to VS.
+  if (newBuffer == _noBuffer) {
+    _logger.logWarning("Could not load audio file: " + input);
+    return _music.end();
   }
 
-  auto onChannel = _channelMap.find(soundName);
-  if (onChannel != _channelMap.end())
-  {
-    if (Mix_Playing(_channelMap[soundName]) == MIXER_TRUE)
-    {
-      _logger.logWarningLine("Already playing on desired channel!");
-      return;
-    }
-
-    if (loops == MIXER_INFINITE_LOOP)
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_INFINITE_LOOP);
-    }
-    else if (loops == MIXER_NO_LOOP)
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_NO_LOOP);
-    }
-    else
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], loops-1);
-    }
+  auto it = std::find(_music.begin(), _music.end(), newBuffer);
+  if (it != _music.end()) {
+    alDeleteBuffers(1, &newBuffer);
+    return it;
   }
-  else
-  {
-    _channelMap[soundName] = _nextChannel;
-    incrementNextChannel();
-
-    if (loops == MIXER_INFINITE_LOOP)
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_INFINITE_LOOP);
-    }
-    else if (loops == MIXER_NO_LOOP)
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], MIXER_NO_LOOP);
-    }
-    else
-    {
-      Mix_PlayChannel(_channelMap[soundName], _sounds[soundName], loops-1);
-    }
+  else {
+    _music.push_back(newBuffer);
+    _bufferStorage.push_back(newBuffer);
+    it = std::find(_music.begin(), _music.end(), newBuffer);
+    return it;
   }
 }
 
-void AudioService::stopSound(std::string soundName) {
-  Mix_HaltChannel(_channelMap[soundName]);
-}
-
-void AudioService::setSoundVolume(std::string soundName, float value) {
-  Mix_VolumeChunk(_sounds[soundName], convertToMixVolume(value));
-}
-
-void AudioService::setSoundPosition(std::string soundName, int angle, int distance) {
-  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
-  {
-    Mix_SetPosition(_channelMap[soundName], angle, distance);
+void AudioService::setSoundVolume(ALuint source, float value) {
+  if (!isInitialised) {
+    _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
   }
-  else
-  {
-    _logger.logError("Sound is not allocated to a channel already: ", soundName);
+
+  if (value > 1.0f) {
+    alSourcef(source, AL_GAIN, 1.0f);
+  } else if (value <= 0.0f) {
+    alSourcef(source, AL_GAIN, 0.0f);
+  } else {
+    alSourcef(source, AL_GAIN, value);
   }
 }
 
-void AudioService::setSoundDistance(std::string soundName, int distance) {
-  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
-  {
-    Mix_SetDistance(_channelMap[soundName], distance);
+//Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector2<float> here...
+//This also has no effect if the buffer is more than one channel (not Mono)
+void AudioService::setSoundPosition(ALuint source, float posX, float posY)
+{
+  if (!isInitialised) {
+    _logger.logError("Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopSound. You cannot stop a sound when the AudioService is not initialised.");
   }
-  else
-  {
-    _logger.logError("Sound is not allocated to a channel already: ", soundName);
-  }
-}
 
-void AudioService::setSoundPanning(std::string soundName, int leftChannelVolume, int rightChannelVolume) {
-  if (_channelMap.find(soundName) != _channelMap.end() && _channelMap[soundName] != MIXER_NO_EXPLICIT_CHANNEL)
-  {
-    Mix_SetPanning(_channelMap[soundName], leftChannelVolume, rightChannelVolume);
-  }
-  else
-  {
-    _logger.logError("Sound is not allocated to a channel already: ", soundName);
-  }
+  alSource3f(source, AL_POSITION, posX, posY, 0.0f);
 }
 
 void AudioService::resumeMusic() {
-  if (Mix_PausedMusic()) Mix_ResumeMusic();
+  if (!isInitialised) {
+    _logger.logError("Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setSoundVolume. You cannot modify a sound source when the AudioService is not initialised.");
+  }
+
+  alSourcePlay(_musicSource);
 }
 
-void AudioService::playMusic(std::string musicName, int loops) {
-  auto existingMusic = _music.find(musicName);
-  if (existingMusic == _music.end())
-  {
-    load(musicName, true);
-    existingMusic = _music.find(musicName);
-    if (existingMusic == _music.end()) return;
-  }
-  _channelMap[musicName] = NOVEL_MUSIC_CHANNEL;
-
-  if (loops == 0)
-  {
-    Mix_PlayMusic(_music[musicName], MIXER_NO_LOOP);
-  }
-  else if (loops == MIXER_INFINITE_LOOP)
-  {
-    Mix_PlayMusic(_music[musicName], MIXER_INFINITE_LOOP);
-  }
-  else
-  {
-    Mix_PlayMusic(_music[musicName], loops-1);
+void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
+  if (!isInitialised) {
+    _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
   }
 
+  if (handle == _music.end()) {
+    _logger.logWarningLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    return;
+  }
 
+  alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+  if (_soundSourceState == AL_PLAYING) {
+    alSourceStop(_musicSource);
+    alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+  }
+  alSourcei(_musicSource, AL_BUFFER, static_cast<ALint>(*handle));
+  if (loops == -1 || loops > 0)
+  {
+    _musicLoopAmount = loops;
+    alSourcei(_musicSource, AL_LOOPING, AL_TRUE);
+  } else {
+    alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
+  }
+  alSourcePlay(_musicSource);
 }
 
 void AudioService::pauseMusic() {
-  if (!Mix_PausedMusic())
-  {
-    Mix_PauseMusic();
-    _musicPausedTime = SDL_GetPerformanceCounter();
+  if (!isInitialised) {
+    _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::pauseMusic. You cannot pause a sound when the AudioService is not initialised.");
   }
+
+  alSourcePause(_musicSource);
 }
 
 void AudioService::stopMusic() {
-  Mix_HaltMusic();
+  if (!isInitialised) {
+    _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::stopMusic. You cannot stop a sound when the AudioService is not initialised.");
+  }
+
+  alSourceStop(_musicSource);
 }
 
 void AudioService::setMusicVolume(float value) {
-  Mix_VolumeMusic(convertToMixVolume(value));
+  if (!isInitialised) {
+    _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::setMusicVolume. You cannot modify a sound when the AudioService is not initialised.");
+  }
+
+  if (value > 1.0f) {
+    alSourcef(_musicSource, AL_GAIN, 1.0f);
+  }
+  else if (value <= 0.0f) {
+    alSourcef(_musicSource, AL_GAIN, 0.0f);
+  }
+  else {
+    alSourcef(_musicSource, AL_GAIN, value);
+  }
 }
 
-void AudioService::fadeMusicInOnce(std::string musicName, int ms) {
-  if (!Mix_PlayingMusic())
-  {
-    Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
+void AudioService::checkSources() {
+  //Changing the init check as I don't want this to kill the Runner.
+  if (isInitialised) {
+
+    int musicLoop = 0;
+    int soundLoop = 0;
+    for (auto sound : _soundStorage) {
+      alGetSourcei(sound, AL_LOOPING, &soundLoop);
+      if (soundLoop == AL_TRUE) {
+        alGetSourcei(sound, AL_SOURCE_STATE, &_soundSourceState);
+        //Pretty sure there's a better way to check this...
+        if (_soundSourceState == AL_STOPPED && (_soundLoopAmount > 0 || _soundLoopAmount == -1)) {
+          if (_soundLoopAmount > 0) {
+            _soundLoopAmount--;
+          }
+          alSourceRewind(sound);
+          alSourcePlay(sound);
+        }
+      }
+    }
+
+    alGetSourcei(_musicSource, AL_LOOPING, &musicLoop);
+
+    if (musicLoop == AL_TRUE) {
+      alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+      if (_musicSourceState == AL_STOPPED && (_musicLoopAmount > 0 || _musicLoopAmount == -1)) {
+        if (_musicLoopAmount > 0) {
+          _musicLoopAmount--;
+        }
+        alSourceRewind(_musicSource);
+        alSourcePlay(_musicSource);
+      }
+    }
+
   }
-  else
-  {
-    Mix_FadeOutMusic(1000);
-    switch(Mix_GetMusicType(_music[musicName]))
-    {
-      case MUS_OGG:
-      {
-        double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
-        Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
-        break;
-      }
-      case MUS_MP3:
-      {
-        Mix_RewindMusic();
-        double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
-        Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
-        break;
-      }
-      default:
-      {
-        Mix_FadeInMusic(_music[musicName], MIXER_NO_LOOP, ms);
-        break;
-      }
+}
+
+std::string AudioService::getALError() {
+  auto err = alGetError();
+  switch (err) {
+    case AL_INVALID_NAME: {
+      return std::string("A bad ID or name was passed to the OpenAL function.");
+    }
+    case AL_INVALID_ENUM: {
+      return std::string("An invalid enum was passed to an OpenAL function.");
+    }
+    case AL_INVALID_VALUE: {
+      return std::string("An invalid value was passed to an OpenAL function.");
+    }
+    case AL_INVALID_OPERATION: {
+      return std::string("The requested operation is not valid.");
+    }
+    case AL_OUT_OF_MEMORY: {
+      return std::string("The requested operation resulted in OpenAL running out of memory.");
+    }
+    default: {
+      return std::string("");
     }
   }
 }
 
-void AudioService::fadeMusicIn(std::string musicName, int loops, int ms) {
-  if (!Mix_PlayingMusic())
-  {
-    Mix_FadeInMusic(_music[musicName], loops-1, ms);
+ALuint AudioService::loadSound(std::string input) {
+  if (!isInitialised) {
+    _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::load. You cannot load new audio when the service is not initialised.");
   }
-  else
-  {
-    Mix_FadeOutMusic(1000);
-    switch(Mix_GetMusicType(_music[musicName]))
-    {
-      case MUS_OGG:
-      {
-        double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
-        Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], loops-1, ms);
-        break;
-      }
-      case MUS_MP3:
-      {
-        Mix_RewindMusic();
-        double pos = (double)((_musicPausedTime - _musicTime)*1000) / (double)SDL_GetPerformanceFrequency();
-        Mix_SetMusicPosition(pos);
-        Mix_FadeInMusic(_music[musicName], loops-1, ms);
-        break;
-      }
-      default:
-      {
-        Mix_FadeInMusic(_music[musicName], loops-1, ms);
-        break;
-      }
-    }
-  }
-}
+  auto newBuffer = readFile(input);
 
-void AudioService::fadeMusicOut(int ms) {
-  Mix_FadeOutMusic(ms);
-  _musicPausedTime = SDL_GetPerformanceCounter();
-}
-
-void AudioService::setGlobalVolume(float value) {
-  Mix_Volume(MIXER_NO_EXPLICIT_CHANNEL, convertToMixVolume(value));
-  Mix_VolumeMusic(convertToMixVolume(value));
-}
-
-int AudioService::convertToMixVolume(float value) {
-  int converted = (value > 1.0f || value < 0.0f) ? 1.0f : (int)(SDL_MIX_MAXVOLUME * value);
-  return converted;
-}
-
-void AudioService::incrementNextChannel() {
-  int nextChannelTest = _nextChannel + 1;
-  _nextChannel = (nextChannelTest >= NOVEL_MIXER_CHANNELS || nextChannelTest < 0) ? 0 : nextChannelTest;
-}
-
-std::string AudioService::findByChannelMap(int channel) {
-  auto it = _channelMap.begin();
-  while (it != _channelMap.end())
-  {
-    if (it->second == channel)
-    {
-      return it->first;
-    }
-    it++;
+  if (newBuffer == _noBuffer) {
+    _logger.logWarning("Could not load audio file: " + input);
+    return _noBuffer;
   }
 
-  return nullptr;
+  _manualLoad = true;
+  ALuint newSource = _noBuffer;
+  alGenSources(1, &newSource);
+  alSourcef(newSource, AL_GAIN, 0.75f);
+  alSourcef(newSource, AL_PITCH, _pitch);
+  alSourcei(newSource, AL_BUFFER, static_cast<ALint>(newBuffer));
+
+  _soundStorage.push_back(newSource);
+  _bufferStorage.push_back(newBuffer);
+
+  return newSource;
 }
 
-void AudioService::logIfSDLFailure(std::function<int(Uint32)> sdlFunction, Uint32 sdl_flag) {
-  if (sdlFunction(sdl_flag) < Utilities::Misc::SDL_SUCCESS)
-  {
-    _logger.logError("SDL Error: ", getSDLError());
-    throw std::runtime_error("Audio error occurred! Unable to continue.");
+void AudioService::unload(ALuint source) {
+  alSourcei(source, AL_BUFFER, 0);
+}
+
+void AudioService::playSound(ALuint handle, int loops) {
+  if (!isInitialised) {
+    _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
+    throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
   }
-}
 
-void AudioService::logIfMixerFailure(std::function<int(int)> mixerFunction, int mixerFlag) {
-  if (mixerFunction(mixerFlag) < Utilities::Misc::SDL_SUCCESS)
-  {
-    _logger.logError("Mixer Error: ", getSDLError());
-    throw std::runtime_error("Audio error occurred! Unable to continue.");
+  if (handle == _noBuffer) {
+    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    return;
   }
-}
 
-void AudioService::logIfMixerFailure(std::function<int(int, Uint16, int, int)> mixerFunction, int freq, Uint16 mixerFormat, int channels, int sampleSize) {
-  if (mixerFunction(freq, mixerFormat, channels, sampleSize) < Utilities::Misc::SDL_SUCCESS)
+  if (loops == -1 || loops > 0)
   {
-    _logger.logError("Mixer Error: ", getSDLError());
-    throw std::runtime_error("Audio error occurred! Unable to continue.");
+    _soundLoopAmount = loops;
+    alSourcei(handle, AL_LOOPING, AL_TRUE);
   }
+  else {
+    alSourcei(handle, AL_LOOPING, AL_FALSE);
+  }
+  alSourcePlay(handle);
 }
 
-std::string AudioService::getSDLError() {
-  return std::string(SDL_GetError());
+void AudioService::stopSound(ALuint handle) {
+  alSourceStop(handle);
 }
 
 AudioService::~AudioService() {
-  Mix_HaltMusic();
-  Mix_HaltChannel(MIXER_NO_EXPLICIT_CHANNEL);
+  if (!_context.isCreated()) return;
 
-  std::map<std::string, Mix_Music*>::iterator musicIterator;
-  for (musicIterator = _music.begin(); musicIterator != _music.end(); musicIterator++)
-  {
-    Mix_FreeMusic(musicIterator->second);
+
+  if (_manualLoad) {
+    for (auto source : _soundStorage) {
+      alDeleteSources(1, &source);
+    }
+    _soundStorage.clear();
   }
 
-  std::map<std::string, Mix_Chunk*>::iterator soundIterator;
-  for (soundIterator = _sounds.begin(); soundIterator != _sounds.end(); soundIterator++)
-  {
-    Mix_FreeChunk(soundIterator->second);
+  alDeleteSources(1, &_musicSource);
+  if (!_music.empty()) {
+    _music.clear();
   }
-  _channelMap.clear();
-  _music.clear();
-  _sounds.clear();
 
-  Mix_Quit();
+  for (auto buffer : _bufferStorage) {
+    alDeleteBuffers(1, &buffer);
+  }
+
+  //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
+  _context.reset();
+  _device.reset();
 }
 
 }

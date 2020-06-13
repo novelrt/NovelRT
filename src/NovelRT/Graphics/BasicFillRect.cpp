@@ -6,7 +6,7 @@ namespace NovelRT::Graphics {
 
   BasicFillRect::BasicFillRect(const Transform& transform,
     int layer,
-    Camera* camera,
+    std::weak_ptr<Camera> camera,
     ShaderProgram shaderProgram,
     const RGBAConfig& fillColour) :
     RenderObject(transform, layer, shaderProgram, camera), _colourConfig(fillColour),
@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
     glUseProgram(_shaderProgram.shaderProgramId);
 
     glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
 
 
     glBindVertexArray(_vertexArrayObject.getActual());
@@ -51,16 +51,15 @@ namespace NovelRT::Graphics {
 
   }
 
-  const RGBAConfig& BasicFillRect::getColourConfig() const {
+  const RGBAConfig BasicFillRect::getColourConfig() const {
     return _colourConfig;
   }
-  RGBAConfig& BasicFillRect::getColourConfig() {
-    return _colourConfig;
-  }
+
   void BasicFillRect::setColourConfig(const RGBAConfig& value) {
     _colourConfig = value;
     configureObjectBuffers();
   }
+
   void BasicFillRect::configureObjectBuffers() {
     RenderObject::configureObjectBuffers();
 

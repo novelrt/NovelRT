@@ -1,5 +1,5 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#version 330 core
+#version 300 es
 
 layout (location = 0) in vec3 vertexPosition;
 layout (location = 1) in vec2 aTexCoord;

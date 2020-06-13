@@ -3,17 +3,19 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  Camera::Camera() : _cameraFrameState(CameraFrameState::ModifiedInCurrent), _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&Camera::generateUboMatrix,
-    this)))) {}
+  Camera::Camera() :
+    _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4x4<float>>(std::function<Maths::GeoMatrix4x4<float>()>(std::bind(&Camera::generateUboMatrix, this)))),
+    _cameraFrameState(CameraFrameState::ModifiedInCurrent) {
+  }
 
-  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector<float>& windowSize) {
+  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize) {
     auto returnVal = std::make_unique<Camera>();
-    returnVal->setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
-    returnVal->setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+    returnVal->setProjectionMatrix(Maths::GeoMatrix4x4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
+    returnVal->setViewMatrix(Maths::GeoMatrix4x4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
     return returnVal;
   }
 
-  Maths::GeoMatrix4<float> Camera::generateUboMatrix() {
+  Maths::GeoMatrix4x4<float> Camera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
   }
 
@@ -24,11 +26,14 @@ namespace NovelRT::Graphics {
         break;
       case CameraFrameState::ModifiedInLast:
         _cameraFrameState = CameraFrameState::Unmodified;
+        break;
+      case CameraFrameState::Unmodified:
+        break;
     }
   }
 
-  void Camera::forceResize(const Maths::GeoVector<float>& windowSize) {
-    setProjectionMatrix(Maths::GeoMatrix4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
-    setViewMatrix(Maths::GeoMatrix4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+  void Camera::forceResize(const Maths::GeoVector2<float>& windowSize) {
+    setProjectionMatrix(Maths::GeoMatrix4x4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
+    setViewMatrix(Maths::GeoMatrix4x4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
   }
 }

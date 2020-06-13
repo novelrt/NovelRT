@@ -7,9 +7,9 @@
 
 namespace NovelRT::Timing {
   StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) :
-    _frequency(SDL_GetPerformanceFrequency()),
-    _maxCounterDelta((uint64_t)(_frequency * maxSecondDelta)),
-    _lastCounter(SDL_GetPerformanceCounter()),
+    _frequency(glfwGetTimerFrequency()),
+    _maxCounterDelta(static_cast<uint64_t>(_frequency * maxSecondDelta)),
+    _lastCounter(glfwGetTimerValue()),
     _secondCounter(0),
     _remainingTicks(0),
     _elapsedTicks(0),
@@ -22,31 +22,30 @@ namespace NovelRT::Timing {
   }
 
   void StepTimer::resetElapsedTime() {
-    _lastCounter = SDL_GetPerformanceCounter();
+    _lastCounter = glfwGetTimerValue();
     _secondCounter = 0;
     _remainingTicks = 0;
     _framesPerSecond = 0;
     _framesThisSecond = 0;
   }
 
-  void StepTimer::tick(const std::vector<NovelUpdateSubscriber>& update) {
-
-    auto currentCounter = SDL_GetPerformanceCounter();
+  void StepTimer::tick(const Utilities::Event<Timestamp>& update) {
+    auto currentCounter = glfwGetTimerValue();
     auto counterDelta = currentCounter - _lastCounter;
 
-    _lastCounter = currentCounter;
-    _secondCounter += counterDelta;
-
-    if (counterDelta > _maxCounterDelta)
-    {
-      // This handles excessibly large deltas to avoid overcompting.
-      // It is particularly beneficial to do this when debugging, for example
-      counterDelta = _maxCounterDelta;
-    }
+    // This handles excessibly large deltas to avoid overcompting.
+    // It is particularly beneficial to do this when debugging, for example
+    auto clampedCounterDelta = std::min(counterDelta, _maxCounterDelta);
 
     // Convert to the "canonicalized" tick format of TicksPerSecond
     // This will never overflow due to the clamping we did above
-    auto ticksDelta = (counterDelta * TicksPerSecond) / _frequency;
+    auto ticksDelta = (clampedCounterDelta * TicksPerSecond) / _frequency;
+
+    if (ticksDelta == 0)
+      return;
+
+    _lastCounter = currentCounter;
+    _secondCounter += counterDelta;
 
     auto lastFrameCount = _frameCount;
 
@@ -60,13 +59,11 @@ namespace NovelRT::Timing {
 
       auto targetElapsedTicks = _targetElapsedTicks;
 
-      if (abs((int64_t)(ticksDelta - targetElapsedTicks)) < (int64_t)(TicksPerSecond / 4000)) {
+      if (abs(static_cast<int64_t>(ticksDelta - targetElapsedTicks)) < static_cast<int64_t>(TicksPerSecond / 4000)) {
         ticksDelta = targetElapsedTicks;
       }
 
       _remainingTicks += ticksDelta;
-
-      auto secondsDelta = TicksToSeconds(targetElapsedTicks);
 
       while (_remainingTicks >= targetElapsedTicks) {
         _elapsedTicks = targetElapsedTicks;
@@ -74,9 +71,7 @@ namespace NovelRT::Timing {
         _remainingTicks -= targetElapsedTicks;
         _frameCount++;
 
-        for (auto subscriber : update) {
-          subscriber(secondsDelta);
-        }
+        update(Timestamp(ticksDelta));
       }
     } else {
       // variable timestep update logic
@@ -86,11 +81,7 @@ namespace NovelRT::Timing {
       _remainingTicks = 0;
       _frameCount++;
 
-      auto secondsDelta = TicksToSeconds(ticksDelta);
-
-      for (auto subscriber : update) {
-        subscriber(secondsDelta);
-      }
+      update(Timestamp(ticksDelta));
     }
 
     // Track the current framerate

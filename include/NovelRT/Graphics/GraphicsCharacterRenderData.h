@@ -10,9 +10,9 @@
 namespace NovelRT::Graphics {
   struct GraphicsCharacterRenderData {
   public:
-    GLuint textureId;  // ID handle of the glyph texture
-    Maths::GeoVector<int32_t> size;       // Size of glyph
-    Maths::GeoVector<int32_t> bearing;    // Offset from baseline to left/top of glyph
+    std::shared_ptr<Texture> texture;  // ID handle of the glyph texture
+    Maths::GeoVector2<uint32_t> size;       // Size of glyph
+    Maths::GeoVector2<int32_t> bearing;    // Offset from baseline to left/top of glyph
     int32_t advance;    // Offset to advance to next glyph
   };
 }

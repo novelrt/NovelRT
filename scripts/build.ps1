@@ -6,6 +6,7 @@ Param(
   [switch] $generate,
   [switch] $help,
   [switch] $install,
+  [switch] $test,
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$remaining
 )
 
@@ -14,7 +15,7 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function Build() {
-  & cmake --build $BuildDir
+  & cmake --build $BuildDir --config $configuration
 
   if ($LastExitCode -ne 0) {
     throw "'Build' failed"
@@ -33,7 +34,7 @@ function Generate() {
     $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile" + $remaining
   }
 
-  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_INSTALL_PREFIX=$InstallDir $remaining
+  & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
 
   if ($LastExitCode -ne 0) {
     throw "'Generate' failed"
@@ -49,6 +50,7 @@ function Help() {
     Write-Host -Object "  -build                  Build repository"
     Write-Host -Object "  -generate               Generate CMake cache"
     Write-Host -Object "  -install                Install repository"
+    Write-Host -Object "  -test                   Test repository"
     Write-Host -Object ""
     Write-Host -Object "Advanced settings:"
     Write-Host -Object "  -ci                     Set when running on CI server"
@@ -58,10 +60,20 @@ function Help() {
 }
 
 function Install() {
-  & cmake --install $BuildDir
+  & cmake --install $BuildDir --config $configuration
 
   if ($LastExitCode -ne 0) {
     throw "'Install' failed"
+  }
+}
+
+function Test() {
+  Push-Location -Path $TestDir
+  & ctest --build-config $configuration --output-on-failure
+  Pop-Location
+
+  if ($LastExitCode -ne 0) {
+    throw "'Test' failed"
   }
 }
 
@@ -75,6 +87,7 @@ try {
     $build = $true
     $generate = $true
     $install = $true
+    $test = $true
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
@@ -87,6 +100,9 @@ try {
 
   $InstallDir = Join-Path -Path $ArtifactsDir -ChildPath "install/$configuration"
   Create-Directory -Path $InstallDir
+
+  $TestDir = Join-Path -Path $BuildDir -ChildPath "tests"
+  Create-Directory -Path $TestDir
 
   if ($ci) {
     $VcpkgInstallDir = Join-Path -Path $ArtifactsDir -ChildPath "vcpkg"
@@ -105,7 +121,7 @@ try {
       }
     }
 
-    & $VcpkgExe install freetype glad glm lua nethost sdl2 sdl2-image sdl2-mixer[core,mpg123,libvorbis] spdlog --triplet x64-windows
+    & $VcpkgExe install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog --triplet x64-windows
 
     if ($LastExitCode -ne 0) {
         throw "'vcpkg install' failed"
@@ -133,6 +149,10 @@ try {
 
   if ($build) {
     Build
+  }
+
+  if ($test) {
+    Test
   }
 
   if ($install) {

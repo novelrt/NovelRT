@@ -8,41 +8,56 @@
 #endif
 
 namespace NovelRT::Windowing {
+  /**
+   * Manages the game window and window events such as resizing.
+   */
   class WindowingService {
 
-  NOVELRT_EVENT(WindowResized, Maths::GeoVector<float>)
-  NOVELRT_PARAMETERLESS_EVENT(WindowClosed)
+  public:
+    Utilities::Event<Maths::GeoVector2<float>> WindowResized;
+    Utilities::Event<> WindowTornDown;
 
-  private:
-    Maths::GeoVector<float> _windowSize;
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
+  private:   
+    Maths::GeoVector2<float> _windowSize;
+    std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
-    NovelRunner* _runner;
+    NovelRunner* const _runner;
+    std::string _windowTitle;
+    bool _isTornDown;
+
+#if defined(_WIN32) || defined(_WIN64)
+    HMODULE _optimus;
+    void checkForOptimus(const char* library);
+#endif
+
+    void errorCallback(int, const char* error);
 
   public:
     explicit WindowingService(NovelRunner* const runner);
+
     void initialiseWindow(int displayNumber, const std::string& windowTitle);
     void tearDown();
 
-    inline SDL_Window* getWindow() const {
+    inline GLFWwindow* getWindow() const {
       return _window.get();
     }
 
     inline std::string getWindowTitle() const {
-      return SDL_GetWindowTitle(getWindow());
+      return _windowTitle;
     }
 
     inline void setWindowTitle(const std::string& value) {
-      return SDL_SetWindowTitle(getWindow(), value.c_str());
+      _windowTitle = value;
+      return glfwSetWindowTitle(getWindow(), _windowTitle.c_str());
     }
 
-    inline void setWindowSize(const Maths::GeoVector<float>& value) {
+    inline void setWindowSize(const Maths::GeoVector2<float>& value) {
       _windowSize = value;
-      SDL_SetWindowSize(getWindow(), value.getX(), value.getY());
-      raiseWindowResized(_windowSize);
+      glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.getX()), static_cast<int32_t>(value.getY()));
+      WindowResized(_windowSize);
     }
 
-    inline Maths::GeoVector<float> getWindowSize() const {
+    inline Maths::GeoVector2<float> getWindowSize() const {
       return _windowSize;
     }
   };

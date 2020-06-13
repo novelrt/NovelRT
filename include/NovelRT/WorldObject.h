@@ -8,33 +8,40 @@
 #endif
 
 namespace NovelRT {
+  /**
+   * Represents an object in the game world.
+   *
+   * WorldObjects have a transform, and can be active or not.
+   * They are also rendered in the world in order of their layer.
+   */
   class WorldObject {
   private:
     Transform _transform;
-    bool _active;
     int _layer;
+    bool _active;
 
   protected:
     bool _isDirty;
 
   public:
     WorldObject(const Transform& transform, int layer);
+    virtual ~WorldObject() { }
 
-    inline Transform& getTransform() {
+    inline Transform& transform() {
       _isDirty = true;
       return _transform;
     }
 
-    inline const Transform& getTransform() const {
+    inline const Transform& transform() const {
       return _transform;
     }
 
-    inline int getLayer() const {
+    inline const int& layer() const {
       return _layer;
     }
 
-    inline void setLayer(int value) {
-      _layer = value;
+    inline int& layer() {
+      return _layer;
     }
 
     virtual bool getActive() const;

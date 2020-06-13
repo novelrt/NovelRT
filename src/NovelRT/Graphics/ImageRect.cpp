@@ -6,165 +6,107 @@ namespace NovelRT::Graphics {
   ImageRect::ImageRect(const Transform& transform,
     int layer,
     ShaderProgram shaderProgram,
-    Camera* camera,
-    const std::string& imageDir,
+    std::weak_ptr<Camera> camera,
+    std::shared_ptr<Texture> texture,
     const RGBAConfig& colourTint) :
     RenderObject(transform,
       layer,
       shaderProgram,
       camera),
-    _imageDir(imageDir),
-    _textureId(Utilities::Lazy<GLuint>([] {
-    GLuint tempTexture;
-    glGenTextures(1, &tempTexture);
-    return tempTexture;
-      })),
+    _texture(texture),
     _uvBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
-        _colourTintBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
-        _colourTint(colourTint),
-        _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
+    _colourTintBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
+    _colourTint(colourTint),
+    _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
-      ImageRect::ImageRect(const Transform& transform,
-        int layer,
-        ShaderProgram shaderProgram,
-        Camera* camera,
-        const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, "", colourTint) {
-      }
+   ImageRect::ImageRect(const Transform& transform,
+     int layer,
+     ShaderProgram shaderProgram,
+     std::weak_ptr<Camera> camera,
+     const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
+   }
 
-      void ImageRect::drawObject() {
-        if (!getActive())
-          return;
+   void ImageRect::drawObject() {
+     if (!getActive() || _texture == nullptr) return;
 
-        glUseProgram(_shaderProgram.shaderProgramId);
-        glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+     glUseProgram(_shaderProgram.shaderProgramId);
+     glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
+     glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
 
-        glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
-        glBindVertexArray(_vertexArrayObject.getActual());
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
-        glVertexAttribPointer(
-          0,
-          3,
-          GL_FLOAT,
-          GL_FALSE,
-          0,
-          nullptr
-        );
+     glBindTexture(GL_TEXTURE_2D, _texture->getTextureIdInternal());
+     glBindVertexArray(_vertexArrayObject.getActual());
+     glEnableVertexAttribArray(0);
+     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer.getActual());
+     glVertexAttribPointer(
+       0,
+       3,
+       GL_FLOAT,
+       GL_FALSE,
+       0,
+       nullptr
+     );
 
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
-        glVertexAttribPointer(
-          1,
-          2,
-          GL_FLOAT,
-          GL_FALSE,
-          0,
-          nullptr
-        );
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
-        glVertexAttribPointer(
-          2,
-          4,
-          GL_FLOAT,
-          GL_FALSE,
-          0,
-          nullptr
-        );
+     glEnableVertexAttribArray(1);
+     glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
+     glVertexAttribPointer(
+       1,
+       2,
+       GL_FLOAT,
+       GL_FALSE,
+       0,
+       nullptr
+     );
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
-      }
+     glEnableVertexAttribArray(2);
+     glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
+     glVertexAttribPointer(
+       2,
+       4,
+       GL_FLOAT,
+       GL_FALSE,
+       0,
+       nullptr
+     );
 
-      void ImageRect::configureObjectBuffers() {
-        RenderObject::configureObjectBuffers();
+     glDrawArrays(GL_TRIANGLES, 0, 6);
+     glDisableVertexAttribArray(2);
+     glDisableVertexAttribArray(1);
+     glDisableVertexAttribArray(0);
+     glBindVertexArray(0);
+   }
 
-        _uvCoordinates = {
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f
-        };
+   void ImageRect::configureObjectBuffers() {
+     RenderObject::configureObjectBuffers();
 
-        glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
+     _uvCoordinates = {
+         0.0f, 1.0f,
+         1.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f,
+         0.0f, 0.0f,
+         1.0f, 0.0f
+     };
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
+     glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer.getActual());
 
-        auto config = getColourTintConfig();
-        auto rScalar = config.getRScalar();
-        auto gScalar = config.getGScalar();
-        auto bScalar = config.getBScalar();
-        auto aScalar = config.getAScalar();
+     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _uvCoordinates.size(), _uvCoordinates.data(), GL_STATIC_DRAW);
 
-        _colourTintData = {
-            rScalar, gScalar, bScalar, aScalar,
-            rScalar, gScalar, bScalar, aScalar,
-            rScalar, gScalar, bScalar, aScalar,
-            rScalar, gScalar, bScalar, aScalar,
-            rScalar, gScalar, bScalar, aScalar,
-            rScalar, gScalar, bScalar, aScalar,
-        };
+     auto config = colourTint();
+     auto rScalar = config.getRScalar();
+     auto gScalar = config.getGScalar();
+     auto bScalar = config.getBScalar();
+     auto aScalar = config.getAScalar();
 
-        glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
+     _colourTintData = {
+         rScalar, gScalar, bScalar, aScalar,
+         rScalar, gScalar, bScalar, aScalar,
+         rScalar, gScalar, bScalar, aScalar,
+         rScalar, gScalar, bScalar, aScalar,
+         rScalar, gScalar, bScalar, aScalar,
+         rScalar, gScalar, bScalar, aScalar,
+     };
 
-        if (_imageDir.empty() || _imageDir == _previousImageDir) return;
-
-        _previousImageDir = _imageDir;
-
-        SDL_Surface* surface = IMG_Load(_imageDir.c_str());
-
-        if (surface == nullptr) {
-          _logger.logErrorLine("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-          throw - 1;
-        }
-        glBindTexture(GL_TEXTURE_2D, _textureId.getActual());
-
-        int mode = GL_RGB;
-
-        if (surface->format->BytesPerPixel == 4) {
-          mode = GL_RGBA;
-        }
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, mode, surface->w, surface->h, 0, mode, GL_UNSIGNED_BYTE, surface->pixels);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        SDL_FreeSurface(surface);
-      }
-
-      void ImageRect::setTextureInternal(GLuint textureId) {
-        _imageDir = "";
-        _textureId = Utilities::Lazy<GLuint>(textureId, [] {
-          GLuint tempBuffer;
-          glGenBuffers(1, &tempBuffer);
-          return tempBuffer;
-          });
-      }
-      const RGBAConfig& ImageRect::getColourTintConfig() const {
-        return _colourTint;
-      }
-      RGBAConfig& ImageRect::getColourTintConfig() {
-        return _colourTint;
-      }
-      void ImageRect::setColourTintConfig(const RGBAConfig& value) {
-        _colourTint = value;
-      }
-
-      ImageRect::~ImageRect() {
-        if (_imageDir.empty() && !_textureId.isCreated()) return;
-
-        auto textureId = _textureId.getActual();
-        glDeleteTextures(1, &textureId);
-      }
-
+     glBindBuffer(GL_ARRAY_BUFFER, _colourTintBuffer.getActual());
+     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _colourTintData.size(), _colourTintData.data(), GL_STATIC_DRAW);
+   }
 }

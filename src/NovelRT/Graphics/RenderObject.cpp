@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
 
-  RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, Camera* camera) :
+  RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera) :
     WorldObject(transform, layer),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
@@ -15,10 +15,10 @@ namespace NovelRT::Graphics {
     _shaderProgram(shaderProgram),
     _bufferInitialised(false),
     _camera(camera),
-    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4<float>>(std::function<Maths::GeoMatrix4<float>()>(std::bind(&RenderObject::generateViewData, this)))){}
+    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4x4<float>>(std::function<Maths::GeoMatrix4x4<float>()>(std::bind(&RenderObject::generateViewData, this)))){}
 
   void RenderObject::executeObjectBehaviour() {
-    if (_camera->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
+    if (_camera.lock()->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
     
     if (_isDirty) {
       _finalViewMatrixData.reset();
@@ -34,10 +34,10 @@ namespace NovelRT::Graphics {
   }
 
   void RenderObject::configureObjectBuffers() {
-    auto topLeft = Maths::GeoVector<GLfloat>(-0.5f, 0.5f);
-    auto bottomRight = Maths::GeoVector<GLfloat>(0.5f, -0.5f);
-    auto topRight = Maths::GeoVector<GLfloat>(0.5f, 0.5f);
-    auto bottomLeft = Maths::GeoVector<GLfloat>(-0.5f, -0.5f);
+    auto topLeft = Maths::GeoVector2<GLfloat>(-0.5f, 0.5f);
+    auto bottomRight = Maths::GeoVector2<GLfloat>(0.5f, -0.5f);
+    auto topRight = Maths::GeoVector2<GLfloat>(0.5f, 0.5f);
+    auto bottomLeft = Maths::GeoVector2<GLfloat>(-0.5f, -0.5f);
     _vertexBufferData = {
         topLeft.getX(), topLeft.getY(), 0.0f,
         bottomRight.getX(), bottomRight.getY(), 0.0f,
@@ -69,17 +69,17 @@ namespace NovelRT::Graphics {
     return tempBuffer;
   }
 
-  Maths::GeoMatrix4<float> RenderObject::generateViewData() {
-    auto position = getTransform().getPosition().getVec2Value();
-    auto resultMatrix = Maths::GeoMatrix4<float>::getDefaultIdentity().getUnderlyingMatrix();
-    resultMatrix = glm::translate(resultMatrix, glm::vec3(position, getLayer()));
-    resultMatrix = glm::rotate(resultMatrix, glm::radians(getTransform().getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-    resultMatrix = glm::scale(resultMatrix, glm::vec3(getTransform().getScale().getVec2Value(), 1.0f));
+  Maths::GeoMatrix4x4<float> RenderObject::generateViewData() {
+    auto position = transform().position().vec2Value();
+    auto resultMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity().underlyingMatrix();
+    resultMatrix = glm::translate(resultMatrix, glm::vec3(position, layer()));
+    resultMatrix = glm::rotate(resultMatrix, glm::radians(transform().rotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+    resultMatrix = glm::scale(resultMatrix, glm::vec3(transform().scale().vec2Value(), 1.0f));
 
-    return Maths::GeoMatrix4<float>(glm::transpose(_camera->getCameraUboMatrix().getUnderlyingMatrix() * resultMatrix));
+    return Maths::GeoMatrix4x4<float>(glm::transpose(_camera.lock()->getCameraUboMatrix().underlyingMatrix() * resultMatrix));
   }
 
-  Maths::GeoMatrix4<float> RenderObject::generateCameraBlock() {
-    return _camera->getCameraUboMatrix();
+  Maths::GeoMatrix4x4<float> RenderObject::generateCameraBlock() {
+    return _camera.lock()->getCameraUboMatrix();
   }
 }

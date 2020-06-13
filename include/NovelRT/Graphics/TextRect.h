@@ -17,10 +17,9 @@ namespace NovelRT::Graphics {
     std::string _previousFontFileDir;
     std::string _text;
     std::vector<std::unique_ptr<ImageRect>> _letterRects;
-    std::map<GLchar, GraphicsCharacterRenderData> _fontCharacters;
     LoggingService _logger;
     RGBAConfig _colourConfig;
-    float _fontSize;
+    std::shared_ptr<FontSet> _fontSet;
 
   protected:
     void configureObjectBuffers() final;
@@ -29,18 +28,17 @@ namespace NovelRT::Graphics {
     TextRect(const Transform& transform,
       int layer,
       ShaderProgram programId,
-      Camera* camera,
-      float fontSize,
-      const std::string& fontFileDir,
+      std::weak_ptr<Camera> camera,
+      std::shared_ptr<FontSet> fontSet,
       const RGBAConfig& colourConfig);
 
     void drawObject() final;
 
-    inline const RGBAConfig& getColourConfig() const {
+    inline const RGBAConfig& getColourConfig() const noexcept {
       return _colourConfig;
     }
 
-    inline RGBAConfig& getColourConfig() {
+    inline RGBAConfig& getColourConfig() noexcept {
       return _colourConfig;
     }
 
@@ -50,6 +48,14 @@ namespace NovelRT::Graphics {
     void setText(const std::string& value);
 
     void setActive(bool value) override;
+
+    inline std::shared_ptr<FontSet> getFontSet() const noexcept {
+      return _fontSet;
+    }
+
+    inline void setFontSet(std::shared_ptr<FontSet> value) noexcept {
+      _fontSet = value;
+    }
 
   };
 }

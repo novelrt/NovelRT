@@ -9,20 +9,15 @@
 
 namespace NovelRT::Graphics {
   class ImageRect : public RenderObject {
-    friend class TextRect;
 
   private:
-    std::string _imageDir;
-    std::string _previousImageDir;
-    Utilities::Lazy<GLuint> _textureId;
     std::vector<GLfloat> _uvCoordinates;
+    std::shared_ptr<Texture> _texture;
     Utilities::Lazy<GLuint> _uvBuffer;
     Utilities::Lazy<GLuint> _colourTintBuffer;
     RGBAConfig _colourTint;
     std::vector<GLfloat> _colourTintData;
     LoggingService _logger;
-
-    void setTextureInternal(GLuint textureId);
 
   protected:
     void configureObjectBuffers() final;
@@ -31,22 +26,34 @@ namespace NovelRT::Graphics {
     ImageRect(const Transform& transform,
       int layer,
       ShaderProgram shaderProgram,
-      Camera* camera,
-      const std::string& imageDir,
+      std::weak_ptr<Camera> camera,
+      std::shared_ptr<Texture> texture,
       const RGBAConfig& colourTint);
 
     ImageRect(const Transform& transform,
       int layer,
       ShaderProgram shaderProgram,
-      Camera* camera,
+      std::weak_ptr<Camera> camera,
       const RGBAConfig& colourTint);
+
+    const std::shared_ptr<Texture>& texture() const noexcept {
+      return _texture;
+    }
+
+    std::shared_ptr<Texture>& texture() noexcept {
+      return _texture;
+    }
 
     void drawObject() final;
 
-    const RGBAConfig& getColourTintConfig() const;
-    RGBAConfig& getColourTintConfig();
-    void setColourTintConfig(const RGBAConfig& value);
-    ~ImageRect() override;
+    inline const RGBAConfig& colourTint() const {
+      return _colourTint;
+    }
+
+    inline RGBAConfig& colourTint() {
+      _isDirty = true;
+      return _colourTint;
+    }
   };
 }
 
