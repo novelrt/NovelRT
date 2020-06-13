@@ -1,4 +1,5 @@
 MIT Licence
+=======================
 
 Copyright (c) 2020 Matt Jones and Contributors
 

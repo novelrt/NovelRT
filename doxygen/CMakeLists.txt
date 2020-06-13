@@ -14,7 +14,6 @@ set(DOCS_MAINPAGE
 
 set(DOCS_RESOURCES
   ${DOCS_IMAGES}
-  ${DOCS_MAINPAGE}
 )
 
 if (DOXYGEN_FOUND)
@@ -35,6 +34,14 @@ if (DOXYGEN_FOUND)
   configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
   file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
   file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
+
+  foreach(docFile ${DOCS_MAINPAGE})
+    file(READ ${docFile} TEMP_DOC_FILE_CONTENTS)
+    get_filename_component(TEMP_DOC_FILE_NAME ${docFile} NAME)
+    message(${TEMP_DOC_FILE_NAME})
+    string(REGEX REPLACE "/NovelRT/m" "NovelRT {#mainpage}" TEMP_DOC_FILE_CONTENTS "${TEMP_DOC_FILE_CONTENTS}" )
+    file(WRITE ${DOXYGEN_OUTPUT_DIR}/${TEMP_DOC_FILE_NAME} "${TEMP_DOC_FILE_CONTENTS}")
+  endforeach()
 
   add_custom_command(
                      OUTPUT
