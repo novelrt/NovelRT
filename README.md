@@ -1,4 +1,5 @@
-# NovelRT
+NovelRT <span style="display: hidden"> {#mainpage} </span>
+=======================
 NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
 
 | Job | Debug Status | Release Status |
