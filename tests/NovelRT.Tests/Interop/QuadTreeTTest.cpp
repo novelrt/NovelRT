@@ -65,18 +65,18 @@ TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
 }
 
 TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
-  QuadTree_tryInsert(_quadTree, _point0);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, _point0));
 
   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  QuadTree_tryInsert(_quadTree, point1);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  QuadTree_tryInsert(_quadTree, point2);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  QuadTree_tryInsert(_quadTree, point3);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 4u);
+  ASSERT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
   EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), _point0);
   EXPECT_EQ(QuadTree_getPoint(_quadTree, 1), point1);

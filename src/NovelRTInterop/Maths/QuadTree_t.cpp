@@ -9,100 +9,98 @@ extern "C" {
 
   QuadTree_t* QuadTree_create(GeoBounds_t* bounds) {
     Maths::GeoBounds cBounds = *reinterpret_cast<Maths::GeoBounds*>(bounds);
-    static Maths::QuadTree tree = Maths::QuadTree(cBounds);
-    static auto treePtr = std::make_shared<Maths::QuadTree>(tree);
-    return reinterpret_cast<QuadTree_t*>(&treePtr);
+    Maths::QuadTree* tree = new Maths::QuadTree(cBounds);
+    return reinterpret_cast<QuadTree_t*>(tree);
   }
 
   const QuadTree_t* QuadTree_getParent(QuadTree_t* tree) {
-    static const std::weak_ptr<Maths::QuadTree> parent = reinterpret_cast<Maths::QuadTree*>(tree)->getParent();
-    return reinterpret_cast<const QuadTree_t*>(&parent);
+    const std::weak_ptr<Maths::QuadTree> parent = reinterpret_cast<Maths::QuadTree*>(tree)->getParent();
+    return reinterpret_cast<const QuadTree_t*>(parent.lock().get());
   }
 
   const GeoBounds_t* QuadTree_getBounds(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> cTree = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    static const Maths::GeoBounds bounds = cTree->getBounds();
-    return reinterpret_cast<const GeoBounds_t*>(&bounds);
+    Maths::QuadTree* cTree = reinterpret_cast<Maths::QuadTree*>(tree);
+    const Maths::GeoBounds* bounds = new Maths::GeoBounds(cTree->getBounds());
+    return reinterpret_cast<const GeoBounds_t*>(bounds);
   }
 
   const QuadTreePoint_t* QuadTree_getPoint(QuadTree_t* tree, size_t index) {
-    std::shared_ptr<Maths::QuadTree> parent = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    std::shared_ptr<Maths::QuadTreePoint> point = parent->getPoint(index);
+    Maths::QuadTree* parent = reinterpret_cast<Maths::QuadTree*>(tree);
+    auto point = parent->getPoint(index);
     if (point == nullptr)
     {
       return nullptr;
     }
     else
     {
-      return reinterpret_cast<const QuadTreePoint_t*>(&(parent->getPoint(index)));
+      return reinterpret_cast<const QuadTreePoint_t*>(point.get());
     }
     
   }
 
   size_t QuadTree_getPointCount(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> cTree = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
+    Maths::QuadTree* cTree = reinterpret_cast<Maths::QuadTree*>(tree);
     return cTree->getPointCount();
   }
 
   const QuadTree_t* QuadTree_getTopLeft(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> parent = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    std::shared_ptr<Maths::QuadTree> topLeft = parent->getTopLeft();
+    Maths::QuadTree* parent = reinterpret_cast<Maths::QuadTree*>(tree);
+    auto topLeft = parent->getTopLeft();
     if (topLeft == nullptr)
     {
       return nullptr;
     }
     else
     {
-    static const QuadTree_t* cQuadTree = reinterpret_cast<const QuadTree_t*>(&topLeft);
-    return cQuadTree;
+      const QuadTree_t* cQuadTree = reinterpret_cast<const QuadTree_t*>(topLeft.get());
+      return cQuadTree;
     }
   }
 
   const QuadTree_t* QuadTree_getTopRight(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> parent = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    static std::shared_ptr<Maths::QuadTree> topRight = parent->getTopRight();
+    Maths::QuadTree* parent = reinterpret_cast<Maths::QuadTree*>(tree);
+    auto topRight = parent->getTopRight();
     if (topRight == nullptr)
     {
       return nullptr;
     }
     else
     {
-      return reinterpret_cast<const QuadTree_t*>(&topRight);
+      return reinterpret_cast<const QuadTree_t*>(topRight.get());
     }
   }
 
   const QuadTree_t* QuadTree_getBottomLeft(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> parent = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    static std::shared_ptr<Maths::QuadTree> bottomLeft = parent->getBottomLeft();
+    Maths::QuadTree* parent = reinterpret_cast<Maths::QuadTree*>(tree);
+    auto bottomLeft = parent->getBottomLeft();
     if (bottomLeft == nullptr)
     {
       return nullptr;
     }
     else
     {
-      return reinterpret_cast<const QuadTree_t*>(&bottomLeft);
+      return reinterpret_cast<const QuadTree_t*>(bottomLeft.get());
     }
   }
 
   const QuadTree_t* QuadTree_getBottomRight(QuadTree_t* tree) {
-    std::shared_ptr<Maths::QuadTree> parent = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    static std::shared_ptr<Maths::QuadTree> bottomRight = parent->getBottomRight();
+    Maths::QuadTree* parent = reinterpret_cast<Maths::QuadTree*>(tree);
+    auto bottomRight = parent->getBottomRight();
     if (bottomRight == nullptr)
     {
       return nullptr;
     }
     else
     {
-      return reinterpret_cast<const QuadTree_t*>(&bottomRight);
+      return reinterpret_cast<const QuadTree_t*>(bottomRight.get());
     }
   }
 
   bool QuadTree_tryInsert(QuadTree_t* tree, QuadTreePoint_t* point) {
-    static std::shared_ptr<Maths::QuadTree> cTree = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
-    static std::shared_ptr<Maths::QuadTreePoint> cPoint = std::shared_ptr<Maths::QuadTreePoint>(reinterpret_cast<Maths::QuadTreePoint*>(point));
+    Maths::QuadTree* cTree = reinterpret_cast<Maths::QuadTree*>(tree);
+    std::shared_ptr<Maths::QuadTreePoint> cPoint = std::shared_ptr<Maths::QuadTreePoint>(reinterpret_cast<Maths::QuadTreePoint*>(point));
     
     auto result = cTree->tryInsert(cPoint);
-    tree = reinterpret_cast<QuadTree_t*>(&cTree);
     return result;
   }
 
