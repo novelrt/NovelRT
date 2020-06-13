@@ -31,6 +31,7 @@ namespace NovelRT::Maths {
     _pointCount = 0;
   }
 
+  //TODO: Why is this not returning a bool as a try method?
   void QuadTree::tryMergeTree() noexcept {
     auto parent = getParent().lock();
 

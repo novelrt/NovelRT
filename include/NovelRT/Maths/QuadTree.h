@@ -45,6 +45,7 @@ namespace NovelRT::Maths {
       return _points[index];
     }
 
+    //TODO: Im fairly certain this can't exist in the C API? Figure this out
     template <typename TQuadTreePoint>
     const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const {
       return static_cast<std::shared_ptr<TQuadTreePoint>>(getPoint(index));
@@ -92,6 +93,7 @@ namespace NovelRT::Maths {
       return result;
     }
 
+    //TODO: This doesn't seem right at all lol
     template <typename TQuadTreePoint, typename... TArgs>
     bool tryInsert(const GeoBounds& bounds, TArgs... args) {
       return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0), std::forward<TArgs>(args)...)) ||
@@ -124,6 +126,7 @@ namespace NovelRT::Maths {
              getBottomRight()->tryRemove(point);
     }
 
+    //TODO: Why are we returning via a parameter and not the signature's return type?
     void getIntersectingPoints(const GeoBounds& bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints) {
       if (getBounds().intersectsWith(bounds)) {
         return;
