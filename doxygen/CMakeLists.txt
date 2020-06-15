@@ -1,6 +1,6 @@
 # More information on how this was made can be found at https://quantumlytangled.com/generating-doxygen-documentation-for-cpp-using-cmake/
 
-find_package(Doxygen QUIET)
+find_package(Doxygen)
 
 set(DOCS_IMAGES
   novel-chan_doxy.png
@@ -67,6 +67,4 @@ if (DOXYGEN_FOUND)
                      COMMENT "Generating docs")
 
   add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
-else ()
-	message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
