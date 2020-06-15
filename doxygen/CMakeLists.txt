@@ -67,4 +67,6 @@ if (DOXYGEN_FOUND)
                      COMMENT "Generating docs")
 
   add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+else ()
+  message(FATAL_ERROR "Doxygen needs to be installed to generate the documentation!")
 endif (DOXYGEN_FOUND)
