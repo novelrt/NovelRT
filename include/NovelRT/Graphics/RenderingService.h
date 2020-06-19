@@ -8,7 +8,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class RenderingService {
+  class RenderingService : IRenderingService {
     friend class ImageRect;
     friend class TextRect;
     friend class Texture;
@@ -55,6 +55,7 @@ namespace NovelRT::Graphics {
 
     std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
     std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
+    void doTest() override;
   };
 }
 

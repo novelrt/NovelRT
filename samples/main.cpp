@@ -31,6 +31,19 @@ static int average(lua_State* luaState) {
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+  NovelRT::Plugins::PluginService service;
+
+  NovelRT::Plugins::PluginInfo info;
+
+  if (service.tryGetPluginInfo("teehee.json", info)) {
+    std::cout << info.Name() << std::endl;
+    std::cout << static_cast<uint32_t>(info.Kind()) << std::endl;
+    std::cout << info.location().string() << std::endl;
+    std::cout << info.engineVersion() << std::endl;
+    std::cout << info.pluginInfoVersion() << std::endl;
+  }
+
+
   lua_State* L;
 
   std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;

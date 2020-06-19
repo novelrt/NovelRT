@@ -6,6 +6,7 @@ find_package(libpng CONFIG REQUIRED)
 find_package(LibSndFile CONFIG REQUIRED)
 find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(jsoncpp CONFIG REQUIRED)
 
 file(GLOB_RECURSE NOVELRT_LIB_HEADERS CONFIGURE_DEPENDS ../include/*.h)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_LIB_HEADERS})
@@ -21,6 +22,7 @@ set(NOVELRT_LIB_LINK_LIBRARIES
   OpenAL::OpenAL
   png
   spdlog::spdlog_header_only
+  jsoncpp_lib
 )
 
 if (WIN32)

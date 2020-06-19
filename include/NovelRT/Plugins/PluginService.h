@@ -9,24 +9,23 @@
 
 namespace NovelRT::Plugins {
 #if defined(WIN32) || defined(WIN64)
-  typedef HMODULE NRTPluginPointer;
+  using NRTPluginPointer = HMODULE;
 #else
-  typedef void* NRTPluginPointer;
+  using NRTPluginPointer = void*;
 #endif
 
   class PluginService {
   private:
-    std::map<Atom, std::shared_ptr<NRTPluginPointer>> _loadedPlugins;
-    PluginInfo getPluginInfo(const std::filesystem::path& info) const;
+    std::map<Atom, NRTPluginPointer> _loadedPlugins;
+    PluginInfo getPluginInfo(const std::filesystem::path& path) const;
     NRTPluginPointer loadPlugin(const std::filesystem::path& location);
 
   public:
-    bool tryGetPluginInfo(const std::filesystem::path& path, PluginInfo& info, bool isRelative = true) const noexcept;
-    std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) noexcept;
+    bool tryGetPluginInfo(const std::filesystem::path& path, PluginInfo& info, bool isRelative = true) const;
+    std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) const;
 
-    std::shared_ptr<Graphics::IRenderingService> createRenderingService(const PluginInfo& info, other args here) const noexcept;
+    std::shared_ptr<Graphics::IRenderingService> createRenderingService(const PluginInfo& info) noexcept;
   };
 }
-
 
 #endif

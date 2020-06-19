@@ -279,4 +279,7 @@ namespace NovelRT::Graphics {
     returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;
   }
+  void RenderingService::doTest() {
+    _logger.logDebug("Hello from plugin!");
+  }
 }

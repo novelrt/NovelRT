@@ -82,6 +82,9 @@
 //libpng
 #include <png.h>
 
+//jsoncpp
+#include <json/json.h>
+
 namespace NovelRT {
   typedef class Atom Atom;
   typedef class DebugService DebugService;
