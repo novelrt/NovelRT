@@ -40,7 +40,7 @@ namespace NovelRT::Graphics {
   void TextRect::setText(const std::string& value) {
     _text = value;
 
-    if (_letterRects.size() < _text.size()) {
+    if (_letterRects.size() < _text.length()) {
       size_t difference = _text.length() - _letterRects.size();
       auto modifiedTransform = transform();
       modifiedTransform.scale() = Maths::GeoVector2<float>(50, 50);
