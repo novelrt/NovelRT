@@ -21,7 +21,7 @@ namespace NovelRT::Plugins {
     NRTPluginPointer loadPlugin(const std::filesystem::path& location);
 
   public:
-    bool tryGetPluginInfo(const std::filesystem::path& path, PluginInfo& info, bool isRelative = true) const;
+    bool tryGetPluginInfo(const std::filesystem::path& location, PluginInfo& info, bool isRelative = true) const;
     std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) const;
 
     std::shared_ptr<Graphics::IRenderingService> createRenderingService(const PluginInfo& info) noexcept;

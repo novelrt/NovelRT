@@ -36,8 +36,8 @@ int main(int /*argc*/, char* /*argv*/[])
   NovelRT::Plugins::PluginInfo info;
 
   if (service.tryGetPluginInfo("teehee.json", info)) {
-    std::cout << info.Name() << std::endl;
-    std::cout << static_cast<uint32_t>(info.Kind()) << std::endl;
+    std::cout << info.name() << std::endl;
+    std::cout << static_cast<uint32_t>(info.kind()) << std::endl;
     std::cout << info.location().string() << std::endl;
     std::cout << info.engineVersion() << std::endl;
     std::cout << info.pluginInfoVersion() << std::endl;

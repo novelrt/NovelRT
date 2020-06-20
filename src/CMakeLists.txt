@@ -68,6 +68,7 @@ file(GLOB_RECURSE NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS
   Resources/Images/*.png
   Resources/Scripts/*.lua
   Resources/Shaders/*.glsl
+  Resources/Plugins/*.*
 )
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${NOVELRT_RESOURCE_INPUTS})
 

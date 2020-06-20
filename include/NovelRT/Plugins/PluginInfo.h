@@ -34,15 +34,15 @@ namespace NovelRT::Plugins {
       _engineVersion(""),
       _pluginInfoVersion("") {}
 
-    inline const Atom& PluginId() const noexcept {
+    inline const Atom& pluginId() const noexcept {
       return _pluginId;
     }
 
-    inline const std::string& Name() const noexcept {
+    inline const std::string& name() const noexcept {
       return _name;
     }
 
-    inline const PluginKind& Kind() const noexcept {
+    inline const PluginKind& kind() const noexcept {
       return _kind;
     }
 
