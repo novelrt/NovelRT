@@ -200,7 +200,7 @@ if $ci; then
     fi
   fi
 
-  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog
+  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog jsoncpp
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then

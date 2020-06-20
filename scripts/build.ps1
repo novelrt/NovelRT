@@ -121,7 +121,7 @@ try {
       }
     }
 
-    & $VcpkgExe install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog --triplet x64-windows
+    & $VcpkgExe install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog jsoncpp --triplet x64-windows
 
     if ($LastExitCode -ne 0) {
         throw "'vcpkg install' failed"
