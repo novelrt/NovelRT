@@ -11,6 +11,7 @@ namespace NovelRT::Graphics {
   class IRenderingService {
   public:
     virtual void doTest() = 0;
+    virtual ~IRenderingService() = default;
   };
 }
 
