@@ -7,8 +7,8 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-//TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
 namespace NovelRT::Audio {
+  // TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
   class AudioService {
   private:
     const size_t _bufferSize = 2048;

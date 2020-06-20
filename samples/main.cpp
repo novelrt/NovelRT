@@ -150,7 +150,7 @@ int main(int /*argc*/, char* /*argv*/[])
   auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(novelChanTransform.position().getX() - 500, novelChanTransform.position().getY()), 0, NovelRT::Maths::GeoVector2<float>(200, 200));
   playAudioButton = runner.getRenderer().lock()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
   auto playAudioTextTransform = playButtonTransform;
-  playAudioTextTransform.setScale(NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f));
+  playAudioTextTransform.scale() = NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f);
   auto vec = playButtonTransform.position();
   vec.setX(playButtonTransform.position().getX() - 75);
   playAudioTextTransform.position() = vec;
@@ -201,7 +201,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
   interactionRect->Interacted += [&] {
     console.log("Test button!", loggingLevel);
-    
+
 
 #ifdef TEST_ANIM
     switch (testAnim->getCurrentPlayState()) {
@@ -211,9 +211,9 @@ int main(int /*argc*/, char* /*argv*/[])
     case NovelRT::Animation::AnimatorPlayState::Stopped:
       testAnim->play();
       break;
-    }
+  }
 #endif
-  };
+};
 
   runner.SceneConstructionRequested += [&] {
 
