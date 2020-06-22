@@ -2,9 +2,9 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-//#include "NovelRTInterop/Maths/GeoVector4F_t.h"
-//#include "NovelRTInterop/Maths/GeoVector3F_t.h"
-/*
+#include "NovelRTInterop/Maths/GeoVector4F_t.h"
+#include "NovelRTInterop/Maths/GeoVector3F_t.h"
+
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
@@ -180,4 +180,4 @@ TEST(InteropGeoVector4Test, geoVector2ConstructorReturnsCorrectGeoVector4) {
 TEST(InteropGeoVector4Test, geoVector3ConstructorReturnsCorrectGeoVector4) {
   EXPECT_TRUE(GeoVector4F_equal(GeoVector4F_createFromGeoVector3F({ 1.0f, 1.0f, 1.0f }), { 1.0f, 1.0f, 1.0f, 0.0f }));
 }
-*/
+
