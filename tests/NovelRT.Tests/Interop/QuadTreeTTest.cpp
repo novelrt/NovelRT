@@ -11,31 +11,27 @@ using namespace NovelRT::Maths;
 static const float TEST_WIDTH = 1920.0f;
 static const float TEST_HEIGHT = 1080.0f;
 
-GeoBounds_t* GeoBounds_getCenteredBounds(float width, float height) {
+GeoBounds_t GeoBounds_getCenteredBounds(float width, float height) {
   auto size = GeoVector2<float>(width, height);
   auto position = GeoVector2<float>(0, 0);
-  static GeoBounds centered = GeoBounds(position, size, 0);
-  return reinterpret_cast<GeoBounds_t*>(&centered);
+  GeoBounds* centered = new GeoBounds(position, size, 0);
+  return reinterpret_cast<GeoBounds_t&>(centered);
 }
 
 class InteropQuadTreeTest : public testing::Test {
 protected:
-  QuadTree_t* _quadTree;
-  QuadTreePoint_t* _cPoint0;
-  QuadTreePoint* _point0;
+  QuadTree_t _quadTree;
 
   void SetUp() override {
-    static GeoBounds_t* bounds = GeoBounds_getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-    _quadTree = QuadTree_create(bounds);
-    _cPoint0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    _point0 = reinterpret_cast<QuadTreePoint*>(_cPoint0);
+    GeoBounds_t bounds = GeoBounds_getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
+    _quadTree = QuadTree_create(reinterpret_cast<GeoBounds_t&>(bounds));
   }
 };
 
 TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds)
 {
-  auto expectedBounds = *reinterpret_cast<GeoBounds*>(GeoBounds_getCenteredBounds(TEST_WIDTH, TEST_HEIGHT));
-  auto cBounds = *reinterpret_cast<const GeoBounds*>(QuadTree_getBounds(_quadTree));
+  auto expectedBounds = *reinterpret_cast<GeoBounds*>(&GeoBounds_getCenteredBounds(TEST_WIDTH, TEST_HEIGHT));
+  auto cBounds = *reinterpret_cast<const GeoBounds*>(&QuadTree_getBounds(_quadTree));
   EXPECT_EQ(cBounds, expectedBounds);
 }
 
@@ -61,11 +57,13 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
 }
 
 TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
-  EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, _cPoint0));
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
-  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, _point0));
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
@@ -78,7 +76,7 @@ TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
 
   ASSERT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
-  EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), _point0);
+  EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), point0);
   EXPECT_EQ(QuadTree_getPoint(_quadTree, 1), point1);
   EXPECT_EQ(QuadTree_getPoint(_quadTree, 2), point2);
   EXPECT_EQ(QuadTree_getPoint(_quadTree, 3), point3);
