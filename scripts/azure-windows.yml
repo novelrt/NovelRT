@@ -19,6 +19,6 @@ jobs:
       buildConfiguration: ${{parameters.configuration}}
       buildPlatform: ${{parameters.architecture}}
   - task: PublishPipelineArtifact@3
-        targetPath: artifacts/vcpkg/buildtrees/openal-soft
-        artifactName: openal
-        condition: always()
+      targetPath: artifacts/vcpkg/buildtrees/openal-soft
+      artifactName: openal
+      condition: always()
