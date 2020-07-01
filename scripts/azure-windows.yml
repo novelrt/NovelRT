@@ -3,6 +3,8 @@ jobs:
   pool:
     vmimage: ${{parameters.pool}}
   steps:
+  - publish: artifacts/vcpkg/buildtrees/openal-soft/install-x64-windows-dbg-out.log
+    artifact: openal
   - task: BatchScript@1
     displayName: 'Run scripts/cibuild.cmd'
     inputs:
@@ -18,7 +20,3 @@ jobs:
       testRunTitle: '${{parameters.name}}'
       buildConfiguration: ${{parameters.configuration}}
       buildPlatform: ${{parameters.architecture}}
-  - task: PublishPipelineArtifact@3
-      targetPath: artifacts/vcpkg/buildtrees/openal-soft
-      artifactName: openal
-      condition: always()
