@@ -7,7 +7,7 @@ jobs:
     displayName: 'Run scripts/cibuild.cmd'
     inputs:
       filename: scripts/cibuild.cmd
-      arguments: '-configuration ${{parameters.configuration}}'
+      arguments: '-configuration Release'
   - task: ArchiveFiles@2
     condition: always()
     inputs:
@@ -23,13 +23,13 @@ jobs:
       targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       artifact: 'openal'
       publishLocation: 'pipeline'
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results'
-    inputs:
-      testResultsFormat: JUnit
-      testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
-      mergeTestResults: true
-      failTaskOnFailedTests: true
-      testRunTitle: '${{parameters.name}}'
-      buildConfiguration: ${{parameters.configuration}}
-      buildPlatform: ${{parameters.architecture}}
+  #- task: PublishTestResults@2
+  #  displayName: 'Publish Test Results'
+  #  inputs:
+  #    testResultsFormat: JUnit
+  #    testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
+  #    mergeTestResults: true
+  #    failTaskOnFailedTests: true
+  #    testRunTitle: 'CIFailureTestRun'
+  #    buildConfiguration: Release
+      #buildPlatform: ${{parameters.architecture}}
