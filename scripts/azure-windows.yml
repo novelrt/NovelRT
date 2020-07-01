@@ -12,7 +12,7 @@ jobs:
     inputs:
        pathToPublish: artifacts/vcpkg/buildtrees/openal-soft/install-x64-windows-dbg-out.log
        artifactName: openal
-  - task: PublishTestResults@3
+  - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: JUnit
