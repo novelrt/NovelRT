@@ -1,17 +1,28 @@
 jobs:
-- job: ${{parameters.name}}
+- job: 'openalFailureTest'
   pool:
-    vmimage: ${{parameters.pool}}
+    vmimage: 'windows-latest'
   steps:
   - task: BatchScript@1
     displayName: 'Run scripts/cibuild.cmd'
     inputs:
       filename: scripts/cibuild.cmd
       arguments: '-configuration ${{parameters.configuration}}'
-  - task: PublishBuildArtifacts@1
+  - task: ArchiveFiles@2
+    condition: always()
     inputs:
-       pathToPublish: artifacts/vcpkg/buildtrees/openal-soft/install-x64-windows-dbg-out.log
-       artifactName: openal
+      rootFolderOrFile: 'artifacts/vcpkg/buildtrees/openal-soft'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+      verbose: true
+  - task: PublishPipelineArtifact@1
+    condition: always()
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      artifact: 'openal'
+      publishLocation: 'pipeline'
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
