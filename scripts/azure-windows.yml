@@ -8,9 +8,11 @@ jobs:
     inputs:
       filename: scripts/cibuild.cmd
       arguments: '-configuration ${{parameters.configuration}}'
-  - publish: artifacts/vcpkg/buildtrees/openal-soft/install-x64-windows-dbg-out.log
-    artifact: openal
-  - task: PublishTestResults@2
+  - task: PublishBuildArtifacts@1
+    inputs:
+       pathToPublish: artifacts/vcpkg/buildtrees/openal-soft/install-x64-windows-dbg-out.log
+       artifactName: openal
+  - task: PublishTestResults@3
     displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: JUnit
