@@ -10,21 +10,21 @@
 extern "C" {
 #endif
 
-  typedef struct QuadTree_t* Quadtree;
+  typedef struct Quadtree* QuadTree_t;
   typedef struct StdVector_QuadTreePoint* PointVector;
 
-  Quadtree QuadTree_create(GeoBounds_t& bounds);
-  const Quadtree QuadTree_getParent(Quadtree tree);
-  const GeoBounds_t QuadTree_getBounds(Quadtree tree);
-  const QuadTreePoint_t QuadTree_getPoint(Quadtree tree, size_t index);
-  size_t QuadTree_getPointCount(Quadtree tree);
-  const Quadtree QuadTree_getTopLeft(Quadtree tree);
-  const Quadtree QuadTree_getTopRight(Quadtree tree);
-  const Quadtree QuadTree_getBottomLeft(Quadtree tree);
-  const Quadtree QuadTree_getBottomRight(Quadtree tree);
-  bool QuadTree_tryInsert(Quadtree tree, QuadTreePoint_t& point);
-  bool QuadTree_tryRemove(Quadtree tree, QuadTreePoint_t& point);
-  PointVector QuadTree_getIntersectingPoints(Quadtree tree, const GeoBounds_t& bounds);
+  QuadTree_t QuadTree_create(GeoBounds_t& bounds);
+  const QuadTree_t QuadTree_getParent(QuadTree_t tree);
+  const GeoBounds_t QuadTree_getBounds(QuadTree_t tree);
+  const QuadTreePoint_t QuadTree_getPoint(QuadTree_t tree, size_t index);
+  size_t QuadTree_getPointCount(QuadTree_t tree);
+  const QuadTree_t QuadTree_getTopLeft(QuadTree_t tree);
+  const QuadTree_t QuadTree_getTopRight(QuadTree_t tree);
+  const QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree);
+  const QuadTree_t QuadTree_getBottomRight(QuadTree_t tree);
+  bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point);
+  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point);
+  PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds);
 
 #ifdef __cplusplus
 }
