@@ -53,6 +53,37 @@ set(ENGINE_SOURCES
 add_library(Engine ${ENGINE_SOURCES})
 target_compile_features(Engine PUBLIC cxx_std_17)
 
+if(MSVC)
+  target_compile_options(Engine
+    PRIVATE
+      /W4
+      /WX
+      /wd4611)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(Engine
+    PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-float-equal
+      -Wno-padded)
+else()
+  target_compile_options(Engine
+    PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-c++98-compat
+      -Wno-c++98-compat-pedantic
+      -Wno-float-equal
+      -Wno-padded
+      -Wno-reserved-id-macro)
+endif()
+
 target_link_libraries(Engine
   PUBLIC
     Freetype::Freetype

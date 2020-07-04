@@ -42,11 +42,8 @@ add_custom_command(
 
 set_source_files_properties(${glad_SOURCES} PROPERTIES GENERATED TRUE)
 
-add_library(glad STATIC IMPORTED)
-
-set_target_properties(glad PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${glad_INCLUDE_DIRS}"
-  INTERFACE_SOURCES "${glad_SOURCES}")
+add_library(glad STATIC "${glad_SOURCES}")
+target_include_directories(glad PUBLIC "${glad_INCLUDE_DIRS}")
 
 find_package_handle_standard_args(glad
   REQUIRED_VARS glad_LOCATION
