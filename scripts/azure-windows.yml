@@ -1,7 +1,7 @@
 jobs:
 - job: 'openalFailureTest'
   pool:
-    vmimage: 'vs2017-win2016'
+    vmimage: 'windows-latest'
   steps:
   - task: BatchScript@1
     displayName: 'Run scripts/cibuild.cmd'
