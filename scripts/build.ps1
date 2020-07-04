@@ -108,7 +108,7 @@ try {
     $VcpkgInstallDir = Join-Path -Path $ArtifactsDir -ChildPath "vcpkg"
 
     if (!(Test-Path -Path $VcpkgInstallDir)) {
-      & git clone https://github.com/microsoft/vcpkg $VcpkgInstallDir
+      & git clone https://github.com/capnkenny/vcpkg $VcpkgInstallDir
     }
 
     $VcpkgExe = Join-Path -Path $VcpkgInstallDir -ChildPath "vcpkg.exe"
