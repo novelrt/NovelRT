@@ -7,13 +7,11 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
-
-include_directories(include)
 
 add_subdirectory(src)
 
@@ -26,5 +24,9 @@ if(NOVELRT_BUILD_DOCUMENTATION)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
+  enable_testing()
+
   add_subdirectory(tests)
 endif()
+
+add_subdirectory(resources)

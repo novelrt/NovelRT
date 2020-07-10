@@ -6,8 +6,18 @@ find_package(glad 0.1.30 REQUIRED
     PROFILE core
     API gl=4.0,gles2=3.0
 )
+find_package(GLFW 3.3.2 REQUIRED)
+find_package(OpenAL 1.19.1 REQUIRED)
+find_package(PNG 1.6.37 REQUIRED)
+find_package(Sndfile 1.0.28 REQUIRED)
 find_package(spdlog 1.5.0 REQUIRED)
-find_package(nethost 3.1.202 REQUIRED)
+
+add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
+set_target_properties(OpenAL::OpenAL
+  PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${OPENAL_INCLUDE_DIR}"
+    IMPORTED_LOCATION "${OPENAL_LIBRARY}"
+)
 
 set(ENGINE_SOURCES
   Animation/SpriteAnimator.cpp
@@ -50,8 +60,14 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine ${ENGINE_SOURCES})
+add_library(Engine SHARED ${ENGINE_SOURCES})
+add_dependencies(Engine Dotnet)
 target_compile_features(Engine PUBLIC cxx_std_17)
+target_include_directories(Engine
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 if(MSVC)
   target_compile_options(Engine
@@ -86,7 +102,12 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
+    CoreCLR::nethost
     Freetype::Freetype
-    glad
-    nethost
+    Glad::GLAD
+    GLFW::GLFW3
+    OpenAL::OpenAL
+    PNG::PNG
+    Sndfile::sndfile
+    spdlog::spdlog
 )
