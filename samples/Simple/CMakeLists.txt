@@ -33,8 +33,3 @@ add_custom_command(
     $<TARGET_FILE_DIR:Resources>
     $<TARGET_FILE_DIR:Simple>/Resources
 )
-
-add_custom_command(
-  TARGET Simple POST_BUILD
-  COMMAND Resources
-)
