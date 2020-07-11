@@ -7,18 +7,27 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position) {
-    return QuadTreePoint_t{ position };
+  QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position)
+  {
+    auto pos = reinterpret_cast<Maths::GeoVector2<float>&>(position);
+    auto handle = reinterpret_cast<QuadTreePoint_t>(new Maths::QuadTreePoint(pos));
+    return handle;
   }
 
-  QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y) {
-    return QuadTreePoint_t{ GeoVector2F_create(x, y) };
+  QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y)
+  {
+    auto handle = reinterpret_cast<QuadTreePoint_t>(new Maths::QuadTreePoint(x, y));
+    return handle;
   }
 
-  const GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t& point) {
-    return point._position;
+  const GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t& point)
+  {
+    Maths::GeoVector2<float>* pos = new Maths::GeoVector2<float>();
+    *pos = reinterpret_cast<Maths::QuadTreePoint*>(point)->getPosition();
+    return reinterpret_cast<const GeoVector2F_t&>(*pos);
   }
 
 #ifdef __cplusplus
+
 }
 #endif

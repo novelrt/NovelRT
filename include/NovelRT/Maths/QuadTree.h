@@ -25,6 +25,7 @@ namespace NovelRT::Maths {
     void tryMergeTree() noexcept;
 
   public:
+
     explicit QuadTree(const GeoBounds& bounds, std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept :
       _parent(parent),
       _bounds(bounds),

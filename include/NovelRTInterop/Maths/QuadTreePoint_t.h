@@ -8,10 +8,7 @@
 extern "C" {
 #endif
 
-  struct QuadTreePoint_t
-  {
-    GeoVector2F_t _position;
-  };
+  typedef struct QuadtreePoint* QuadTreePoint_t;
   
   QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position);
   QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y);

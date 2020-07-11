@@ -2,6 +2,8 @@
 #include "NovelRTInterop/Maths/QuadTree_t.h"
 #include "NovelRT.h"
 
+std::unordered_map <QuadTree_t, std::shared_ptr<NovelRT::Maths::QuadTree>> _collection;
+
 #ifdef __cplusplus
 using namespace NovelRT;
 extern "C" {
@@ -10,86 +12,128 @@ extern "C" {
   QuadTree_t QuadTree_create(GeoBounds_t& bounds)
   {
     auto b = reinterpret_cast<Maths::GeoBounds&>(bounds);
-    Maths::QuadTree* tree = new Maths::QuadTree(b);
-    std::shared_ptr<Maths::QuadTree>* quad = new std::shared_ptr<Maths::QuadTree>();
-    *quad = std::make_shared<Maths::QuadTree>(*tree);
-    return reinterpret_cast<QuadTree_t>(tree);
+    QuadTree_t handle{};
+    auto tree = std::make_shared<Maths::QuadTree>(b);
+    handle = reinterpret_cast<QuadTree_t>(&tree);
+    _collection.emplace(handle, tree);
+    return handle;
   }
 
   const QuadTree_t QuadTree_getParent(QuadTree_t tree)
   {
-    std::weak_ptr<Maths::QuadTree>* parent = new std::weak_ptr<Maths::QuadTree>();
-    *parent = reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree)->lock()->getParent();
-    return reinterpret_cast<QuadTree_t>(parent);
+    auto parent = _collection[tree]->getParent();
+
+    for (const auto element : _collection)
+    {
+      if (parent.lock() == element.second)
+      {
+        return element.first;
+      }
+    }
+
+    QuadTree_t parentHandle{};
+    _collection.emplace(parentHandle, parent);
+    return parentHandle;
   }
 
   const GeoBounds_t QuadTree_getBounds(QuadTree_t tree)
   {
-    std::shared_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::shared_ptr<Maths::QuadTree>*>(tree);
     Maths::GeoBounds* bounds = new Maths::GeoBounds({ 0,0 }, {0,0}, 0);
-    *bounds = quadTree->getBounds();
+    *bounds = _collection[tree]->getBounds();
     return reinterpret_cast<const GeoBounds_t&>(*bounds);
   }
 
   const QuadTreePoint_t QuadTree_getPoint(QuadTree_t tree, size_t index)
   {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    auto point = quadTree.lock()->getPoint(index);
-    return reinterpret_cast<QuadTreePoint_t&>(point);
+    auto point = _collection[tree]->getPoint(index);
+    auto pointToReturn = point.get();
+    return reinterpret_cast<QuadTreePoint_t&>(pointToReturn);
   }
 
   size_t QuadTree_getPointCount(QuadTree_t tree) {
-    return reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree)->lock()->getPointCount();
+    return _collection[tree]->getPointCount();
   }
 
   const QuadTree_t QuadTree_getTopLeft(QuadTree_t tree) {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    std::weak_ptr<Maths::QuadTree>* point = new std::weak_ptr<Maths::QuadTree>();
-    *point = quadTree.lock()->getTopLeft();
-    return reinterpret_cast<QuadTree_t>(point);
+    auto newTree = _collection[tree]->getTopLeft();
+
+    for (const auto element : _collection)
+    {
+      if (newTree == element.second)
+      {
+        return element.first;
+      }
+    }
+
+    QuadTree_t treeHandle{};
+    _collection.emplace(treeHandle, newTree);
+    return treeHandle;
   }
 
   const QuadTree_t QuadTree_getTopRight(QuadTree_t tree) {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    std::weak_ptr<Maths::QuadTree>* point = new std::weak_ptr<Maths::QuadTree>();
-    *point = quadTree.lock()->getTopRight();
-    return reinterpret_cast<QuadTree_t>(point);
+    auto newTree = _collection[tree]->getTopRight();
+
+    for (const auto element : _collection)
+    {
+      if (newTree == element.second)
+      {
+        return element.first;
+      }
+    }
+
+    QuadTree_t treeHandle{};
+    _collection.emplace(treeHandle, newTree);
+    return treeHandle;
   }
 
   const QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree) {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    std::weak_ptr<Maths::QuadTree>* point = new std::weak_ptr<Maths::QuadTree>();
-    *point = quadTree.lock()->getBottomLeft();
-    return reinterpret_cast<QuadTree_t>(point);
+    auto newTree = _collection[tree]->getBottomLeft();
+
+    for (const auto element : _collection)
+    {
+      if (newTree == element.second)
+      {
+        return element.first;
+      }
+    }
+
+    QuadTree_t treeHandle{};
+    _collection.emplace(treeHandle, newTree);
+    return treeHandle;
   }
 
   const QuadTree_t QuadTree_getBottomRight(QuadTree_t tree) {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    std::weak_ptr<Maths::QuadTree>* point = new std::weak_ptr<Maths::QuadTree>();
-    *point = quadTree.lock()->getBottomRight();
-    return reinterpret_cast<QuadTree_t>(point);
+    auto newTree = _collection[tree]->getBottomRight();
+
+    for (const auto element : _collection)
+    {
+      if (newTree == element.second)
+      {
+        return element.first;
+      }
+    }
+
+    QuadTree_t treeHandle{};
+    _collection.emplace(treeHandle, newTree);
+    return treeHandle;
   }
 
   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point) {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    auto pointToInsert = reinterpret_cast<Maths::QuadTreePoint&>(point);
-    auto sharedPoint = std::make_shared<Maths::QuadTreePoint>(pointToInsert);
-    return quadTree.lock()->tryInsert(sharedPoint);
+    auto pointToInsert = reinterpret_cast<Maths::QuadTreePoint*>(point);
+    return _collection[tree]->tryInsert(std::make_shared<Maths::QuadTreePoint>(*pointToInsert));
   }
 
   bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point)
   {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
-    auto pointToRemove = reinterpret_cast<Maths::QuadTreePoint&>(point);
-    auto sharedPoint = std::make_shared<Maths::QuadTreePoint>(pointToRemove);
-    return quadTree.lock()->tryRemove(sharedPoint);
+    auto pointToRemove = reinterpret_cast<Maths::QuadTreePoint*>(point);
+    auto sharedPoint = std::make_shared<Maths::QuadTreePoint>(*pointToRemove);
+    return _collection[tree]->tryRemove(sharedPoint);
   }
 
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds)
   {
-    std::weak_ptr<Maths::QuadTree> quadTree = *reinterpret_cast<std::weak_ptr<Maths::QuadTree>*>(tree);
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
-    *points = quadTree.lock()->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
+    *points = _collection[tree]->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
     return reinterpret_cast<PointVector>(points);
   }
   
