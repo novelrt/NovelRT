@@ -22,9 +22,18 @@ find_path(Sndfile_INCLUDE_DIR sndfile.h
   PATH_SUFFIXES include
 )
 
+if(Sndfile_INCLUDE_DIR)
+  file(READ "${Sndfile_INCLUDE_DIR}/sndfile.h" _sndfile_version_file)
+  string(REGEX REPLACE ".*#define.*SNDFILE_([0-9]+).*" "\\1" _sndfile_suffix_version "${_sndfile_version_file}")
+  set(_sndfile_extra_names "sndfile-${_sndfile_suffix_version}" "libsndfile-${_sndfile_suffix_version}")
+endif()
+
 find_library(
-  Sndfile_LIBRARY NAMES sndfile
+  Sndfile_LIBRARY
+  NAMES sndfile libsndfile ${_sndfile_extra_names}
   HINTS ${sndfile_search_dir} ${pc_sndfile_LIBDIR} ${pc_sndfile_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 set(Sndfile_LIBRARIES ${Sndfile_LIBRARY})

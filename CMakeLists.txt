@@ -7,6 +7,12 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
+if(MSVC)
+  # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
+  string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+  string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)

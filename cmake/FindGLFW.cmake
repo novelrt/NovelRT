@@ -17,14 +17,17 @@ pkg_check_modules(pc_glfw QUIET glfw3)
 set(GTest_DEFINITIONS ${pc_glfw_CFLAGS_OTHER})
 set(glfw_search_dir ${glfw_ROOT_DIR} $ENV{glfw_INSTALL_DIR})
 
-find_path(GLFW_INCLUDE_DIR GLFW/glfw3.h
+find_path(GLFW_INCLUDE_DIR
+  GLFW/glfw3.h
   HINTS ${glfw_search_dir} ${pc_glfw_INCLUDEDIR} ${pc_glfw_INCLUDE_DIRS}
   PATH_SUFFIXES include
 )
 
-find_library(
-  GLFW_LIBRARY NAMES glfw
+find_library(GLFW_LIBRARY
+  NAMES glfw glfw3 glfw3dll
   HINTS ${glfw_search_dir} ${pc_glfw_LIBDIR} ${pc_glfw_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 set(GLFW_LIBRARIES ${GLFW_LIBRARY})

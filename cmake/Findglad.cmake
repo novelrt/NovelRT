@@ -6,10 +6,16 @@ execute_process(
   OUTPUT_VARIABLE glad_LOCATION
 )
 
-execute_process(
-  COMMAND ${Python_EXECUTABLE} -c "import glad; print(glad.__version__, end='')"
-  OUTPUT_VARIABLE glad_VERSION
-)
+if(glad_LOCATION STREQUAL "None")
+  unset(glad_LOCATION)
+endif()
+
+if(glad_LOCATION)
+  execute_process(
+    COMMAND ${Python_EXECUTABLE} -c "import glad; print(glad.__version__, end='')"
+    OUTPUT_VARIABLE glad_VERSION
+  )
+endif()
 
 find_package_handle_standard_args(glad
   REQUIRED_VARS glad_LOCATION
@@ -47,9 +53,11 @@ if(glad_FOUND)
     COMMENT "Generating GLAD"
   )
 
-  set_source_files_properties(${glad_SOURCES} PROPERTIES GENERATED TRUE)
-
-  add_library(glad SHARED "${glad_SOURCES}")
+  add_library(glad "${glad_SOURCES}")
   target_include_directories(glad PUBLIC "${glad_OUT_DIR}/include")
+  target_compile_definitions(glad
+    PUBLIC
+      GLAD_GLAPI_EXPORT_BUILD
+  )
   add_library(Glad::GLAD ALIAS glad)
 endif()

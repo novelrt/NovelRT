@@ -60,7 +60,7 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine SHARED ${ENGINE_SOURCES})
+add_library(Engine ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
@@ -74,7 +74,9 @@ if(MSVC)
     PRIVATE
       /W4
       /WX
-      /wd4611)
+      /wd4611
+  )
+  get_target_property(opts Engine COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(Engine
     PRIVATE
@@ -84,7 +86,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       -Wextra
       -Werror
       -Wno-float-equal
-      -Wno-padded)
+      -Wno-padded
+  )
 else()
   target_compile_options(Engine
     PRIVATE
@@ -97,7 +100,8 @@ else()
       -Wno-c++98-compat-pedantic
       -Wno-float-equal
       -Wno-padded
-      -Wno-reserved-id-macro)
+      -Wno-reserved-id-macro
+  )
 endif()
 
 target_link_libraries(Engine

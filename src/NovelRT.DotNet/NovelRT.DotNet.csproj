@@ -20,4 +20,9 @@
     <Message Importance="High" Text="$(TargetFileName)" />
   </Target>
 
+  <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
+  <Target Name="GetCMakeOutputByproducts" DependsOnTargets="ComputeFilesToPublish">
+    <Message Importance="High" Text="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
+  </Target>
+
 </Project>
