@@ -24,6 +24,14 @@ bool checkPointsForEquality(QuadTreePoint_t one, QuadTreePoint_t two) {
   return left->getPosition() == right->getPosition();
 }
 
+bool checkBoundsForEquality(GeoBounds_t one, GeoBounds_t two)
+{
+  auto left = reinterpret_cast<GeoBounds&>(one);
+  auto right = reinterpret_cast<GeoBounds&>(two);
+
+  return left == right;
+}
+
 class InteropQuadTreeTest : public testing::Test {
 protected:
   QuadTree_t* _quadTree;
@@ -133,70 +141,71 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomRight(*_quadTree), 0), point3));
   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(*_quadTree), 1), point4));
 }
-/*
+
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
-  auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-  _quadTree->tryInsert(point0);
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
 
-  auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-  _quadTree->tryInsert(point1);
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
 
-  auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-  _quadTree->tryInsert(point2);
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
 
-  auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-  _quadTree->tryInsert(point3);
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
 
-  auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-  _quadTree->tryInsert(point4);
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
 
-  EXPECT_EQ(_quadTree->getPointCount(), 0u);
+  EXPECT_EQ(QuadTree_getPointCount(*_quadTree), 0u);
 
-  EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2u);
-  EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1u);
-  EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1u);
-  EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(*_quadTree)), 2u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(*_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(*_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(*_quadTree)), 1u);
 
-  auto expectedSize = GeoVector2(TEST_WIDTH / 2, TEST_HEIGHT / 2);
+  auto expectedSize = GeoVector2F_create(TEST_WIDTH / 2, TEST_HEIGHT / 2);
 
-  EXPECT_EQ(_quadTree->getTopLeft()->getBounds(), GeoBounds(GeoVector2<float>(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getTopRight()->getBounds(), GeoBounds(GeoVector2<float>(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getBottomLeft()->getBounds(), GeoBounds(GeoVector2<float>(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
-  EXPECT_EQ(_quadTree->getBottomRight()->getBounds(), GeoBounds(GeoVector2<float>(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopLeft(*_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopRight(*_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomLeft(*_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomRight(*_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
 }
 
 TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {
-  auto point0 = std::make_shared<QuadTreePoint>(3840.0f, 2160.0f);
-  EXPECT_EQ(false, _quadTree->tryInsert(point0));
+  auto point0 = QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
+  EXPECT_EQ(false, QuadTree_tryInsert(*_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
-  auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-  _quadTree->tryInsert(point0);
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
 
-  auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-  _quadTree->tryInsert(point1);
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
 
-  auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-  _quadTree->tryInsert(point2);
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
 
-  auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-  _quadTree->tryInsert(point3);
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
 
-  auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-  _quadTree->tryInsert(point4);
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
 
-  auto intersectingPoints = _quadTree->getIntersectingPoints(_quadTree->getBounds());
+  auto allPoints = QuadTree_getIntersectingPoints(*_quadTree, QuadTree_getBounds(*_quadTree));
+  auto intersectingPoints = reinterpret_cast<std::vector<QuadTreePoint_t>*>(allPoints);
 
-  EXPECT_EQ(intersectingPoints.size(), 5u);
+  EXPECT_EQ(intersectingPoints->size(), 5u);
 
-  EXPECT_EQ(intersectingPoints[0], point0);
-  EXPECT_EQ(intersectingPoints[1], point4);
-  EXPECT_EQ(intersectingPoints[2], point1);
-  EXPECT_EQ(intersectingPoints[3], point2);
-  EXPECT_EQ(intersectingPoints[4], point3);
+  EXPECT_TRUE(checkPointsForEquality(intersectingPoints->at(0), point0));
+  EXPECT_TRUE(checkPointsForEquality(intersectingPoints->at(1), point4));
+  EXPECT_TRUE(checkPointsForEquality(intersectingPoints->at(2), point1));
+  EXPECT_TRUE(checkPointsForEquality(intersectingPoints->at(3), point2));
+  EXPECT_TRUE(checkPointsForEquality(intersectingPoints->at(4), point3));
 }
-
+/*
 TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
   auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
   _quadTree->tryInsert(point0);

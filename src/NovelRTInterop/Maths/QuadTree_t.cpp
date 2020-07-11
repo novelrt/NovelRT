@@ -13,7 +13,7 @@ extern "C" {
   {
     auto b = reinterpret_cast<Maths::GeoBounds&>(bounds);
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t handle = new Quad{ handleId };
+    QuadTree_t handle = new QuadTreeHandle{ handleId };
     auto tree = std::make_shared<Maths::QuadTree>(b);
     handle = reinterpret_cast<QuadTree_t>(&tree);
     _collection.emplace(handle, tree);
@@ -33,7 +33,7 @@ extern "C" {
     }
 
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t parentHandle = new Quad{ handleId };
+    QuadTree_t parentHandle = new QuadTreeHandle{ handleId };
     _collection.emplace(parentHandle, parent);
     return parentHandle;
   }
@@ -72,7 +72,7 @@ extern "C" {
       }
     }
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new Quad{ handleId };
+    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
 
@@ -95,7 +95,7 @@ extern "C" {
     }
 
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new Quad{ handleId };
+    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
@@ -117,7 +117,7 @@ extern "C" {
     }
 
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new Quad{ handleId };
+    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
@@ -139,7 +139,7 @@ extern "C" {
     }
 
     auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new Quad{ handleId };
+    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
@@ -160,7 +160,15 @@ extern "C" {
   {
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
     *points = _collection[tree]->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
-    return reinterpret_cast<PointVector>(points);
+
+    std::vector<QuadTreePoint_t>* converted = new std::vector<QuadTreePoint_t>();
+    for(int i = 0; i < points->size(); i++)
+    {
+      QuadTreePoint_t pointToInsert = reinterpret_cast<QuadTreePoint_t&>(*points->at(i).get());
+      converted->emplace_back(pointToInsert);
+    }
+
+    return reinterpret_cast<PointVector>(converted);
   }
 
   void QuadTree_destroy(QuadTree_t tree)

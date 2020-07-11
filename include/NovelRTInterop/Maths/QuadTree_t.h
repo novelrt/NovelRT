@@ -10,8 +10,9 @@
 extern "C" {
 #endif
 
-  struct Quad{ int id; };
-  typedef struct Quad* QuadTree_t;
+  struct QuadTreeHandle{ int id; };
+  typedef struct QuadTreeHandle* QuadTree_t;
+
   typedef struct StdVector_QuadTreePoint* PointVector;
 
   QuadTree_t QuadTree_create(GeoBounds_t& bounds);
