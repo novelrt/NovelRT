@@ -17,19 +17,23 @@ pkg_check_modules(pc_gtest QUIET gtest)
 set(GTest_DEFINITIONS ${pc_gtest_CFLAGS_OTHER})
 set(gtest_search_dir ${gtest_ROOT_DIR} $ENV{gtest_INSTALL_DIR})
 
-find_path(GTest_INCLUDE_DIR gtest.h
+find_path(GTest_INCLUDE_DIR gtest/gtest.h
   HINTS ${gtest_search_dir} ${pc_gtest_INCLUDEDIR} ${pc_gtest_INCLUDE_DIRS}
-  PATH_SUFFIXES gtest
+  PATH_SUFFIXES incldue
 )
 
 find_library(
   GTest_LIBRARY NAMES gtest
   HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 find_library(
   GTest_Main_LIBRARY NAMES gtest_main
   HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 if(GTest_Main_LIBRARY)

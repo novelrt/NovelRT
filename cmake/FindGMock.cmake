@@ -17,19 +17,23 @@ pkg_check_modules(pc_gmock QUIET gmock)
 set(GMock_DEFINITIONS ${pc_gmock_CFLAGS_OTHER})
 set(gmock_search_dir ${gmock_ROOT_DIR} $ENV{gmock_INSTALL_DIR})
 
-find_path(GMock_INCLUDE_DIR gmock.h
+find_path(GMock_INCLUDE_DIR gmock/gmock.h
   HINTS ${gmock_search_dir} ${pc_gmock_INCLUDEDIR} ${pc_gmock_INCLUDE_DIRS}
-  PATH_SUFFIXES gmock
+  PATH_SUFFIXES include
 )
 
 find_library(
   GMock_LIBRARY NAMES gmock
   HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 find_library(
   GMock_Main_LIBRARY NAMES gmock_main
   HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
 )
 
 if(GMock_Main_LIBRARY)
