@@ -12,7 +12,8 @@ extern "C" {
   QuadTree_t QuadTree_create(GeoBounds_t& bounds)
   {
     auto b = reinterpret_cast<Maths::GeoBounds&>(bounds);
-    QuadTree_t handle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t handle = new Quad{ handleId };
     auto tree = std::make_shared<Maths::QuadTree>(b);
     handle = reinterpret_cast<QuadTree_t>(&tree);
     _collection.emplace(handle, tree);
@@ -31,7 +32,8 @@ extern "C" {
       }
     }
 
-    QuadTree_t parentHandle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t parentHandle = new Quad{ handleId };
     _collection.emplace(parentHandle, parent);
     return parentHandle;
   }
@@ -57,6 +59,11 @@ extern "C" {
   const QuadTree_t QuadTree_getTopLeft(QuadTree_t tree) {
     auto newTree = _collection[tree]->getTopLeft();
 
+    if (newTree == nullptr)
+    {
+      return nullptr;
+    }
+
     for (const auto element : _collection)
     {
       if (newTree == element.second)
@@ -64,15 +71,21 @@ extern "C" {
         return element.first;
       }
     }
-
-    QuadTree_t treeHandle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t treeHandle = new Quad{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
+
   }
 
   const QuadTree_t QuadTree_getTopRight(QuadTree_t tree) {
     auto newTree = _collection[tree]->getTopRight();
 
+    if (newTree == nullptr)
+    {
+      return nullptr;
+    }
+
     for (const auto element : _collection)
     {
       if (newTree == element.second)
@@ -81,7 +94,8 @@ extern "C" {
       }
     }
 
-    QuadTree_t treeHandle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t treeHandle = new Quad{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
@@ -89,6 +103,11 @@ extern "C" {
   const QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree) {
     auto newTree = _collection[tree]->getBottomLeft();
 
+    if (newTree == nullptr)
+    {
+      return nullptr;
+    }
+
     for (const auto element : _collection)
     {
       if (newTree == element.second)
@@ -97,7 +116,8 @@ extern "C" {
       }
     }
 
-    QuadTree_t treeHandle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t treeHandle = new Quad{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
@@ -105,6 +125,11 @@ extern "C" {
   const QuadTree_t QuadTree_getBottomRight(QuadTree_t tree) {
     auto newTree = _collection[tree]->getBottomRight();
 
+    if (newTree == nullptr)
+    {
+      return nullptr;
+    }
+
     for (const auto element : _collection)
     {
       if (newTree == element.second)
@@ -113,7 +138,8 @@ extern "C" {
       }
     }
 
-    QuadTree_t treeHandle{};
+    auto handleId = static_cast<int>(_collection.size());
+    QuadTree_t treeHandle = new Quad{ handleId };
     _collection.emplace(treeHandle, newTree);
     return treeHandle;
   }
