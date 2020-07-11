@@ -34,13 +34,14 @@ protected:
     _quadTree = new QuadTree_t();
     *_quadTree = QuadTree_create(*bounds);
   }
+
+  void TearDown() override {
+    QuadTree_destroy(*_quadTree);
+  }
 };
 
 TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds)
 {
-  auto treeBounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(treeBounds);
-
   Maths::GeoBounds* expectedBounds = new GeoBounds(GeoVector2<float>(), GeoVector2<float>(), 0);
   GeoBounds_t test = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
   *expectedBounds = reinterpret_cast<Maths::GeoBounds&>(test);
@@ -52,17 +53,11 @@ TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds)
 
 TEST_F(InteropQuadTreeTest, createHasNoPoints)
 {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   EXPECT_EQ(QuadTree_getPointCount(*_quadTree), 0u);
 }
 
 TEST_F(InteropQuadTreeTest, createHasNoChildren)
 {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   EXPECT_EQ(QuadTree_getTopLeft(*_quadTree), nullptr);
   EXPECT_EQ(QuadTree_getTopRight(*_quadTree), nullptr);
   EXPECT_EQ(QuadTree_getBottomLeft(*_quadTree), nullptr);
@@ -71,9 +66,6 @@ TEST_F(InteropQuadTreeTest, createHasNoChildren)
 
 TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
 {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   EXPECT_EQ(QuadTree_getPoint(*_quadTree, 0), nullptr);
   EXPECT_EQ(QuadTree_getPoint(*_quadTree, 1), nullptr);
   EXPECT_EQ(QuadTree_getPoint(*_quadTree, 2), nullptr);
@@ -81,17 +73,11 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
 }
 
 TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   EXPECT_EQ(true, QuadTree_tryInsert(*_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
 
@@ -119,9 +105,6 @@ TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
 
 
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
-  auto bounds = getCenteredBounds(TEST_WIDTH, TEST_HEIGHT);
-  *_quadTree = QuadTree_create(bounds);
-
   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
 
@@ -149,7 +132,6 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomLeft(*_quadTree), 0), point2));
   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomRight(*_quadTree), 0), point3));
   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(*_quadTree), 1), point4));
-
 }
 /*
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {

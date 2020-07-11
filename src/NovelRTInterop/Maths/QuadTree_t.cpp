@@ -162,7 +162,14 @@ extern "C" {
     *points = _collection[tree]->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
     return reinterpret_cast<PointVector>(points);
   }
-  
+
+  void QuadTree_destroy(QuadTree_t tree)
+  {
+    auto treeToDestroy = _collection[tree];
+    treeToDestroy.reset();
+    _collection.erase(tree);
+  }
+
 #ifdef __cplusplus
 }
 #endif

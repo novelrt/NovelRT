@@ -26,6 +26,7 @@ extern "C" {
   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point);
   bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point);
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds);
+  void QuadTree_destroy(QuadTree_t tree);
 
 #ifdef __cplusplus
 }
