@@ -19,7 +19,7 @@ namespace NovelRT::Windowing {
     _logger.logError("Could not initialize GLFW: ", error);
   }
 
-  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle) {
+  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -36,6 +36,11 @@ namespace NovelRT::Windowing {
       checkForOptimus(OptimusLibraryName);
 #endif
 
+    //Set Framebuffer Transparency
+   if (transparencyEnabled)
+   {
+     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+   }
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
