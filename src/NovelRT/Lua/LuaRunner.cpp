@@ -331,6 +331,36 @@ namespace NovelRT::Lua {
     shaderProgramType["finalViewMatrixBufferUboId"] = &Graphics::ShaderProgram::finalViewMatrixBufferUboId;
     shaderProgramType["uboIds"] = &Graphics::ShaderProgram::uboIds;
 
+    //TextRect
+
+    auto textRectType = globalTable.new_usertype<Graphics::TextRect>("TextRect",
+      sol::constructors<Graphics::TextRect(const Transform&,
+        int layer,
+        Graphics::ShaderProgram,
+        std::weak_ptr<Graphics::Camera>,
+        std::shared_ptr<Graphics::FontSet>,
+        const Graphics::RGBAConfig&)>()
+      );
+
+    textRectType["colourConfig"] = sol::property(
+      static_cast<const Graphics::RGBAConfig & (Graphics::TextRect::*)() const>(&Graphics::TextRect::getColourConfig),
+      static_cast<Graphics::RGBAConfig & (Graphics::TextRect::*)()>(&Graphics::TextRect::getColourConfig)
+      );
+
+    //TODO: again, seems to have a setter method, but also get/set method properties. Bug Matt about this also.
+
+    textRectType["text"] = sol::property(
+      static_cast<std::string(Graphics::TextRect::*)() const>(&Graphics::TextRect::getText),
+      reinterpret_cast<void (Graphics::TextRect::*)(const std::string&)>(&Graphics::TextRect::getText)
+      );
+
+    textRectType["setActive"] = &Graphics::TextRect::setActive;
+
+    textRectType["fontSet"] = sol::property(
+      static_cast<std::shared_ptr<Graphics::FontSet>(Graphics::TextRect::*)() const>(&Graphics::TextRect::getFontSet),
+      static_cast<void (Graphics::TextRect::*)(std::shared_ptr<Graphics::FontSet>)>(&Graphics::TextRect::setFontSet)
+      );
+
 #pragma endregion
 
 
