@@ -202,6 +202,21 @@ namespace NovelRT::Lua {
       static_cast<void (Graphics::BasicFillRect::*)(const Graphics::RGBAConfig&)>(&Graphics::BasicFillRect::setColourConfig)
       );
 
+    //Camera
+
+    auto cameraType = globalTable.new_usertype<Graphics::Camera>("Camera", sol::constructors<Graphics::Camera()>());
+
+    cameraType["viewMatrix"] = sol::property(
+      static_cast<const Maths::GeoMatrix4x4<float> & (Graphics::Camera::*)() const>(&Graphics::Camera::getViewMatrix),
+      static_cast<Maths::GeoMatrix4x4<float> & (Graphics::Camera::*)()>(&Graphics::Camera::getViewMatrix)
+      );
+
+    //TODO: Graphics::Camera::getViewMatrix/getProjectMatrix appears to have getters/setters, but also set methods. Bug Matt.
+
+    cameraType["getCameraUboMatrix"] = sol::property(static_cast<Maths::GeoMatrix4x4<float>(Graphics::Camera::*)()>(&Graphics::Camera::getCameraUboMatrix));
+    cameraType["getFrameState"] = sol::property(static_cast<Graphics::CameraFrameState(Graphics::Camera::*)() const>(&Graphics::Camera::getFrameState));
+    cameraType["createDefaultOrthographicProjection"] = &Graphics::Camera::createDefaultOrthographicProjection;
+
 
     //ImageRect
     auto imageRectType = globalTable.new_usertype<Graphics::ImageRect>("ImageRect",
