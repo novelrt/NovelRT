@@ -232,6 +232,14 @@ namespace NovelRT::Lua {
     fontSetType["fontFile"] = sol::property(&Graphics::FontSet::getFontFile);
     fontSetType["fontSize"] = sol::property(&Graphics::FontSet::getFontSize);
 
+    // GraphicsCharacterRenderData
+
+    auto graphicsCharacterRenderDataType = globalTable.new_usertype<Graphics::GraphicsCharacterRenderData>("GraphicsCharacterRenderData");
+    graphicsCharacterRenderDataType["texture"] = &Graphics::GraphicsCharacterRenderData::texture;
+    graphicsCharacterRenderDataType["size"] = &Graphics::GraphicsCharacterRenderData::size;
+    graphicsCharacterRenderDataType["bearing"] = &Graphics::GraphicsCharacterRenderData::bearing;
+    graphicsCharacterRenderDataType["advance"] = &Graphics::GraphicsCharacterRenderData::advance;
+
 
 
     //ImageRect
