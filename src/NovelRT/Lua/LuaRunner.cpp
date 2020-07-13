@@ -324,6 +324,12 @@ namespace NovelRT::Lua {
 
     rgbaConfigType["getAScalar"] = &Graphics::RGBAConfig::getAScalar;
 
+    //ShaderProgram
+
+    auto shaderProgramType = globalTable.new_usertype<Graphics::ShaderProgram>(sol::constructors<Graphics::ShaderProgram()>());
+    shaderProgramType["shaderProgramId"] = &Graphics::ShaderProgram::shaderProgramId;
+    shaderProgramType["finalViewMatrixBufferUboId"] = &Graphics::ShaderProgram::finalViewMatrixBufferUboId;
+    shaderProgramType["uboIds"] = &Graphics::ShaderProgram::uboIds;
 
 #pragma endregion
 
