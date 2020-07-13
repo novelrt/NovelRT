@@ -223,7 +223,14 @@ namespace NovelRT::Lua {
       { "Unmodified", Graphics::CameraFrameState::Unmodified },
       { "ModifiedInCurrent", Graphics::CameraFrameState::ModifiedInCurrent },
       { "ModifiedInLast", Graphics::CameraFrameState::ModifiedInLast }
-      });
+    });
+
+    //FontSetType
+
+    auto fontSetType = globalTable.new_usertype<Graphics::FontSet>("FontSet", sol::constructors<Graphics::FontSet(const std::string&, float)>());
+    fontSetType["loadFontAsTextureSet"] = &Graphics::FontSet::loadFontAsTextureSet;
+    fontSetType["fontFile"] = sol::property(&Graphics::FontSet::getFontFile);
+    fontSetType["fontSize"] = sol::property(&Graphics::FontSet::getFontSize);
 
 
 
