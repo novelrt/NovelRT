@@ -35,3 +35,6 @@ fi
 
 . "$DotNetInstallScript" --channel 3.1 --version latest --install-dir "$DotNetInstallDirectory"
 . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
+
+# HACK: CMake finds the wrong python installation and therefore the wrong modules
+sudo rm -rf /home/linuxbrew
