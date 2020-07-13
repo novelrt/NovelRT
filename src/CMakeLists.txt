@@ -57,6 +57,7 @@ endif()
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
+
 add_custom_command(TARGET NovelRT POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.txt
 )

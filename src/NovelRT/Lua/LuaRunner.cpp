@@ -9,6 +9,7 @@ namespace NovelRT::Lua {
     _fileName = fileName;
   }
 
+
   void LuaRunner::init() {
     _state = sol::state();
     _state.open_libraries(lib::base, lib::bit32, lib::coroutine,
@@ -165,6 +166,23 @@ namespace NovelRT::Lua {
 #pragma endregion
 
 #pragma region NovelRT::Audio
+    auto audioServiceType = globalTable.new_usertype<Audio::AudioService>("AudioService", sol::constructors<Audio::AudioService()>());
+    audioServiceType["isInitialized"] = &Audio::AudioService::isInitialised;
+    audioServiceType["initializeAudio"] = &Audio::AudioService::initializeAudio;
+    audioServiceType["loadMusic"] = &Audio::AudioService::loadMusic;
+    audioServiceType["setSoundVolume"] = &Audio::AudioService::setSoundVolume;
+    audioServiceType["setSoundPosition"] = &Audio::AudioService::setSoundPosition;
+    audioServiceType["resumeMusic"] = &Audio::AudioService::resumeMusic;
+    audioServiceType["playMusic"] = &Audio::AudioService::playMusic;
+    audioServiceType["pauseMusic"] = &Audio::AudioService::pauseMusic;
+    audioServiceType["stopMusic"] = &Audio::AudioService::stopMusic;
+    audioServiceType["setMusicVolume"] = &Audio::AudioService::setMusicVolume;
+    audioServiceType["checkSources"] = &Audio::AudioService::checkSources;
+    audioServiceType["loadSound"] = &Audio::AudioService::loadSound;
+    audioServiceType["unload"] = &Audio::AudioService::unload;
+    audioServiceType["playSound"] = &Audio::AudioService::playSound;
+    audioServiceType["stopSound"] = &Audio::AudioService::stopSound;
+       
 #pragma endregion
 
 #pragma region NovelRT::DotNet
@@ -184,22 +202,9 @@ namespace NovelRT::Lua {
 
 #pragma endregion
 
-#pragma region NovelRT::Input
-#pragma endregion
-
-#pragma region NovelRT::Maths
-#pragma endregion
-
-#pragma region NovelRT::Timing
-#pragma endregion
-
-#pragma region NovelRT::Utilities
-#pragma endregion
-
-#pragma region NovelRT::Windowing
-#pragma endregion
 
   }
+
 
   void LuaRunner::run() {
     try {
