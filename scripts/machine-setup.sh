@@ -28,7 +28,9 @@ DotNetInstallScript="$(mktemp dotnet-install_XXXXXX.sh)"
 wget -O "$DotNetInstallScript" "https://dot.net/v1/dotnet-install.sh"
 
 DotNetInstallDirectory="~/dotnet"
-CreateDirectory "$DotNetInstallDirectory"
+if [ ! -d "$DotNetInstallDirectory" ]; then
+  mkdir -p "$DotNetInstallDirectory"
+fi
 
 . "$DotNetInstallScript" --channel 3.1 --version latest --install-dir "$DotNetInstallDirectory"
 . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
