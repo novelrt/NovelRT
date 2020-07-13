@@ -189,6 +189,20 @@ namespace NovelRT::Lua {
 #pragma endregion
 
 #pragma region NovelRT::Graphics
+
+    //BasicFillRect
+
+    auto basicFillRectType = globalTable.new_usertype<Graphics::BasicFillRect>("BasicFillRect",
+      sol::constructors<Graphics::BasicFillRect(const Transform&, int, std::weak_ptr<Graphics::Camera>,
+        Graphics::ShaderProgram, const Graphics::RGBAConfig&)>());
+
+    basicFillRectType["drawObject"] = &Graphics::BasicFillRect::drawObject;
+    basicFillRectType["colourConfig"] = sol::property(
+      static_cast<const Graphics::RGBAConfig (Graphics::BasicFillRect::*)() const>(&Graphics::BasicFillRect::getColourConfig),
+      static_cast<void (Graphics::BasicFillRect::*)(const Graphics::RGBAConfig&)>(&Graphics::BasicFillRect::setColourConfig)
+      );
+
+
     //ImageRect
     auto imageRectType = globalTable.new_usertype<Graphics::ImageRect>("ImageRect",
       sol::constructors<Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, const Graphics::RGBAConfig&),
