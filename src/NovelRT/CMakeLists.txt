@@ -6,7 +6,7 @@ find_package(glad 0.1.30 REQUIRED
     PROFILE core
     API gl=4.0,gles2=3.0
 )
-find_package(GLFW 3.3.2 REQUIRED)
+find_package(GLFW 3.2.1 REQUIRED)
 find_package(OpenAL 1.19.1 REQUIRED)
 find_package(PNG 1.6.37 REQUIRED)
 find_package(Sndfile 1.0.28 REQUIRED)
