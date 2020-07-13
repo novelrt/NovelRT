@@ -56,8 +56,8 @@ endif()
 
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
 
-if("${CMAKE_GENERATOR}" MATCHES "(Win64|Win32)")
-    target_compile_options(NovelRT PRIVATE /bigobj)
+if(MSVC)
+  target_compile_options(NovelRT PRIVATE /bigobj)
 endif()
 
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
