@@ -206,10 +206,7 @@ namespace NovelRT::Lua {
 
     auto cameraType = globalTable.new_usertype<Graphics::Camera>("Camera", sol::constructors<Graphics::Camera()>());
 
-    cameraType["viewMatrix"] = sol::property(
-      static_cast<const Maths::GeoMatrix4x4<float> & (Graphics::Camera::*)() const>(&Graphics::Camera::getViewMatrix),
-      static_cast<Maths::GeoMatrix4x4<float> & (Graphics::Camera::*)()>(&Graphics::Camera::getViewMatrix)
-      );
+    cameraType["viewMatrix"] = sol::property(&Graphics::Camera::getViewMatrix, &Graphics::Camera::setViewMatrix);
 
     //TODO: Graphics::Camera::getViewMatrix/getProjectMatrix appears to have getters/setters, but also set methods. Bug Matt.
 
@@ -344,10 +341,7 @@ namespace NovelRT::Lua {
         const Graphics::RGBAConfig&)>()
       );
 
-    textRectType["colourConfig"] = sol::property(
-      static_cast<const Graphics::RGBAConfig & (Graphics::TextRect::*)() const>(&Graphics::TextRect::getColourConfig),
-      static_cast<Graphics::RGBAConfig & (Graphics::TextRect::*)()>(&Graphics::TextRect::getColourConfig)
-      );
+    textRectType["colourConfig"] = sol::property(&Graphics::TextRect::getColourConfig, &Graphics::TextRect::setColourConfig);
 
     //TODO: again, seems to have a setter method, but also get/set method properties. Bug Matt about this also.
 
