@@ -6,7 +6,7 @@
 # Or, alternatively, the following environment variables:
 # - Dotnet_INSTALL_DIR
 
-include(FindPackageHAndleStandardArgs)
+include(FindPackageHandleStandardArgs)
 
 find_program(
   Dotnet_PROGRAM
