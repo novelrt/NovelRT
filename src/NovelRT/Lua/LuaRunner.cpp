@@ -227,7 +227,7 @@ namespace NovelRT::Lua {
 
     //FontSetType
 
-    auto fontSetType = globalTable.new_usertype<Graphics::FontSet>("FontSet", sol::constructors<Graphics::FontSet(const std::string&, float)>());
+    auto fontSetType = globalTable.new_usertype<Graphics::FontSet>("FontSet", sol::constructors<Graphics::FontSet(std::weak_ptr<Graphics::RenderingService>, Atom)>());
     fontSetType["loadFontAsTextureSet"] = &Graphics::FontSet::loadFontAsTextureSet;
     fontSetType["fontFile"] = sol::property(&Graphics::FontSet::getFontFile);
     fontSetType["fontSize"] = sol::property(&Graphics::FontSet::getFontSize);
@@ -287,10 +287,12 @@ namespace NovelRT::Lua {
 
     //RenderObject
 
-    auto renderObjectType = globalTable.new_usertype<Graphics::RenderObject>("RenderObject",
-      sol::constructors<Graphics::RenderObject(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>)>());
+    //TODO: RenderObject is abstract; how do you represent this in lua?
 
-    renderObjectType["executeObjectBehaviour"] = &Graphics::RenderObject::executeObjectBehaviour;
+    //auto renderObjectType = globalTable.new_usertype<Graphics::RenderObject>("RenderObject",
+    //  sol::constructors<Graphics::RenderObject(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>)>());
+
+    //renderObjectType["executeObjectBehaviour"] = &Graphics::RenderObject::executeObjectBehaviour;
 
     //RGBAConfig
 
@@ -304,8 +306,8 @@ namespace NovelRT::Lua {
     rgbaConfigType["getRScalar"] = &Graphics::RGBAConfig::getRScalar;
 
     rgbaConfigType["g"] = sol::property(
-      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getg),
-      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getg)
+      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getG),
+      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getG)
       );
 
     rgbaConfigType["getGScalar"] = &Graphics::RGBAConfig::getGScalar;
