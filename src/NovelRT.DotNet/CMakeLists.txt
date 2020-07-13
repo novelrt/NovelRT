@@ -1,3 +1,5 @@
+find_package(Dotnet 3.1.100 REQUIRED)
+
 set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
 
 set(OPTIONS
@@ -8,19 +10,19 @@ set(OPTIONS
 )
 
 execute_process(
-  COMMAND dotnet msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
     /t:Restore
 )
 
 execute_process(
-  COMMAND dotnet msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
     /t:GetCMakeOutputAssembly
   OUTPUT_VARIABLE OUTPUT_ASSEMBLY
 )
 string(STRIP "${OUTPUT_ASSEMBLY}" OUTPUT_ASSEMBLY)
 
 execute_process(
-  COMMAND dotnet msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
     /t:GetCMakeOutputByproducts
   OUTPUT_VARIABLE OUTPUT_BYPRODUCTS
 )
@@ -31,7 +33,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/publish)
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
   BYPRODUCTS ${OUTPUT_BYPRODUCTS}
-  COMMAND dotnet msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
     /t:Build,Publish
   COMMENT "Building .NET subproject"
 )
