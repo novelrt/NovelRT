@@ -73,12 +73,12 @@ namespace NovelRT::Lua {
       );
 
     novelRunnerType["runNovel"] = &NovelRunner::runNovel;
-    novelRunnerType["getRenderer"] = sol::property(&NovelRunner::getRenderer);
-    novelRunnerType["getInteractionService"] = sol::property(&NovelRunner::getInteractionService);
-    novelRunnerType["getAudioService"] = sol::property(&NovelRunner::getAudioService);
-    novelRunnerType["getDebugService"] = sol::property(&NovelRunner::getDebugService);
-    novelRunnerType["getDotNetRuntimeService"] = sol::property(&NovelRunner::getDotNetRuntimeService);
-    novelRunnerType["getWindowingService"] = sol::property(&NovelRunner::getWindowingService);
+    novelRunnerType["renderer"] = sol::property(&NovelRunner::getRenderer);
+    novelRunnerType["interactionService"] = sol::property(&NovelRunner::getInteractionService);
+    novelRunnerType["audioService"] = sol::property(&NovelRunner::getAudioService);
+    novelRunnerType["debugService"] = sol::property(&NovelRunner::getDebugService);
+    novelRunnerType["dotNetRuntimeService"] = sol::property(&NovelRunner::getDotNetRuntimeService);
+    novelRunnerType["windowingService"] = sol::property(&NovelRunner::getWindowingService);
 
     // Transform
     auto transformType = globalTable.new_usertype<Transform>("Transform",
