@@ -1,4 +1,4 @@
-#include <novelrt.h>
+#include <NovelRT.h>
 
 using namespace NovelRT::Utilities;
 using namespace NovelRT::Lua;
