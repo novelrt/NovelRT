@@ -197,7 +197,10 @@ namespace NovelRT::Lua {
 
     imageRectType["texture"] = sol::property(static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture));
     imageRectType["colourTint"] = sol::property(static_cast<const Graphics::RGBAConfig& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint));
-
+    imageRectType["drawObject"] = &Graphics::ImageRect::drawObject;
+    imageRectType["colourTint"] = sol::property(
+      static_cast<const Graphics::RGBAConfig & (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
+      static_cast<Graphics::RGBAConfig & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint));
 
 
 #pragma endregion
