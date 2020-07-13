@@ -11,7 +11,8 @@ sudo apt-get update
 sudo apt-get install clang-8 cmake g++-8 libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm python3 -y
 sudo apt-get install libfreetype6-dev libglfw3-dev libglm-dev libgtest-dev liblua5.3-dev libopenal-dev libspdlog-dev -y
 
-python3 -m pip install setuptools
+python3 -m pip --version
+python3 -m pip install setuptools wheel
 python3 -m pip install glad
 
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 255

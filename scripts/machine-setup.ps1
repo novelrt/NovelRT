@@ -16,6 +16,7 @@ if (!(Get-Command python -ErrorAction SilentlyContinue ))
   }
 }
 
+& python -m pip --version
 & python -m pip install setuptools
 & python -m pip install glad
 
