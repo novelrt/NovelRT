@@ -285,6 +285,13 @@ namespace NovelRT::Lua {
     renderingServiceType["getTexture"] = static_cast<std::shared_ptr<Graphics::Texture>(Graphics::RenderingService::*)(const std::string&)>(&Graphics::RenderingService::getTexture);
     renderingServiceType["fontSet"] = sol::property(&Graphics::RenderingService::getFontSet);
 
+    //RenderObject
+
+    auto renderObjectType = globalTable.new_usertype<Graphics::RenderObject>("RenderObject",
+      sol::constructors<Graphics::RenderObject(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>)>());
+
+    renderObjectType["executeObjectBehaviour"] = &Graphics::RenderObject::executeObjectBehaviour;
+
 #pragma endregion
 
 
