@@ -213,9 +213,18 @@ namespace NovelRT::Lua {
 
     //TODO: Graphics::Camera::getViewMatrix/getProjectMatrix appears to have getters/setters, but also set methods. Bug Matt.
 
-    cameraType["getCameraUboMatrix"] = sol::property(static_cast<Maths::GeoMatrix4x4<float>(Graphics::Camera::*)()>(&Graphics::Camera::getCameraUboMatrix));
-    cameraType["getFrameState"] = sol::property(static_cast<Graphics::CameraFrameState(Graphics::Camera::*)() const>(&Graphics::Camera::getFrameState));
+    cameraType["cameraUboMatrix"] = sol::property(static_cast<Maths::GeoMatrix4x4<float>(Graphics::Camera::*)()>(&Graphics::Camera::getCameraUboMatrix));
+    cameraType["frameState"] = sol::property(static_cast<Graphics::CameraFrameState(Graphics::Camera::*)() const>(&Graphics::Camera::getFrameState));
     cameraType["createDefaultOrthographicProjection"] = &Graphics::Camera::createDefaultOrthographicProjection;
+
+    //CameraFrameState
+
+    globalTable.new_enum<Graphics::CameraFrameState>("CameraFrameState", {
+      { "Unmodified", Graphics::CameraFrameState::Unmodified },
+      { "ModifiedInCurrent", Graphics::CameraFrameState::ModifiedInCurrent },
+      { "ModifiedInLast", Graphics::CameraFrameState::ModifiedInLast }
+      });
+
 
 
     //ImageRect
