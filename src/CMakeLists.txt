@@ -55,6 +55,7 @@ else()
 endif()
 
 add_library(NovelRT SHARED ${NOVELRT_LIB_HEADERS} ${NOVELRT_LIB_SOURCES})
+target_compile_options(NovelRT PRIVATE /bigobj)
 target_link_libraries(NovelRT ${NOVELRT_LIB_LINK_LIBRARIES})
 
 
