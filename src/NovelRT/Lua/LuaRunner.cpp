@@ -240,8 +240,6 @@ namespace NovelRT::Lua {
     graphicsCharacterRenderDataType["bearing"] = &Graphics::GraphicsCharacterRenderData::bearing;
     graphicsCharacterRenderDataType["advance"] = &Graphics::GraphicsCharacterRenderData::advance;
 
-
-
     //ImageRect
     auto imageRectType = globalTable.new_usertype<Graphics::ImageRect>("ImageRect",
       sol::constructors<Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, const Graphics::RGBAConfig&),
@@ -264,6 +262,28 @@ namespace NovelRT::Lua {
       static_cast<const Graphics::RGBAConfig & (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
       static_cast<Graphics::RGBAConfig & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint));
 
+
+    //RenderService
+
+    auto renderingServiceType = globalTable.new_usertype<Graphics::RenderingService>("RenderService",
+      sol::constructors<Graphics::RenderingService(NovelRunner* const)>());
+
+    renderingServiceType["createImageRect"] = sol::overload(
+      static_cast<std::unique_ptr<Graphics::ImageRect>(Graphics::RenderingService::*)(const Transform&, int, const std::string&, const Graphics::RGBAConfig&)>(&Graphics::RenderingService::createImageRect),
+      static_cast<std::unique_ptr<Graphics::ImageRect>(Graphics::RenderingService::*)(const Transform&, int, const Graphics::RGBAConfig&)>(&Graphics::RenderingService::createImageRect)
+    );
+
+    renderingServiceType["createBasicFillRect"] = &Graphics::RenderingService::createBasicFillRect;
+    renderingServiceType["createTextRect"] = &Graphics::RenderingService::createTextRect;
+    renderingServiceType["camera"] = sol::property(&Graphics::RenderingService::getCamera);
+    renderingServiceType["beginFrame"] = &Graphics::RenderingService::beginFrame;
+    renderingServiceType["endFrame"] = &Graphics::RenderingService::endFrame;
+    renderingServiceType["texture"] = sol::property(
+      reinterpret_cast<std::shared_ptr<Graphics::Texture> (Graphics::RenderingService::*)(void)>(&Graphics::RenderingService::getTexture)
+      );
+
+    renderingServiceType["getTexture"] = static_cast<std::shared_ptr<Graphics::Texture>(Graphics::RenderingService::*)(const std::string&)>(&Graphics::RenderingService::getTexture);
+    renderingServiceType["fontSet"] = sol::property(&Graphics::RenderingService::getFontSet);
 
 #pragma endregion
 
