@@ -1,4 +1,4 @@
-find_package(Freetype 2.10.1 REQUIRED)
+find_package(Freetype 2.8.1 REQUIRED)
 find_package(glad 0.1.30 REQUIRED
   COMPONENTS
     REPRODUCIBLE

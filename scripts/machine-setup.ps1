@@ -4,6 +4,24 @@
 $VcpkgInstallDirectory = Join-Path -Path $HOME -ChildPath "vcpkg"
 $DotNetInstallDirectory = Join-Path -Path $HOME -ChildPath "dotnet"
 
+if (!(Get-Command python -ErrorAction SilentlyContinue ))
+{
+  $PythonInstaller = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".exe" } - PassThru
+  Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.8.3/python-3.8.3.exe" -OutFile $PythonInstaller
+
+  & $PythonInstaller /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+
+  if ($LastExitCode -ne 0) {
+    throw "'python-3.8.3' failed"
+  }
+}
+
+& python -m pip install glad
+
+if ($LastExitCode -ne 0) {
+  throw "'python -m pip install glad' failed"
+}
+
 if (!(Test-Path -Path $VcpkgInstallDirectory)) {
   & git clone https://github.com/capnkenny/vcpkg $VcpkgInstallDirectory
 }
@@ -34,3 +52,7 @@ New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 
 & $DotNetInstallScript -Channel 3.1 -Version latest -InstallDir $DotNetInstallDirectory
 & $DotNetInstallScript -Channel 2.1 -Version latest -InstallDir $DotNetInstallDirectory -Runtime dotnet
+
+if ($LastExitCode -ne 0) {
+  throw "'dotnet-install' failed"
+}
