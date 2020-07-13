@@ -16,10 +16,11 @@ if (!(Get-Command python -ErrorAction SilentlyContinue ))
   }
 }
 
+& python -m pip install setuptools
 & python -m pip install glad
 
 if ($LastExitCode -ne 0) {
-  throw "'python -m pip install glad' failed"
+  throw "'pip install' failed"
 }
 
 if (!(Test-Path -Path $VcpkgInstallDirectory)) {
