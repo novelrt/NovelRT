@@ -8,7 +8,7 @@ find_package(glad 0.1.30 REQUIRED
 )
 find_package(GLFW 3.2.1 REQUIRED)
 find_package(OpenAL 1.19.1 REQUIRED)
-find_package(PNG 1.6.37 REQUIRED)
+find_package(PNG 1.6.34 REQUIRED)
 find_package(Sndfile 1.0.28 REQUIRED)
 find_package(spdlog 1.5.0 REQUIRED)
 
