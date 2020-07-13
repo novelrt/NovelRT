@@ -213,8 +213,8 @@ namespace NovelRT::Lua {
 
     //TODO: Graphics::Camera::getViewMatrix/getProjectMatrix appears to have getters/setters, but also set methods. Bug Matt.
 
-    cameraType["cameraUboMatrix"] = sol::property(static_cast<Maths::GeoMatrix4x4<float>(Graphics::Camera::*)()>(&Graphics::Camera::getCameraUboMatrix));
-    cameraType["frameState"] = sol::property(static_cast<Graphics::CameraFrameState(Graphics::Camera::*)() const>(&Graphics::Camera::getFrameState));
+    cameraType["cameraUboMatrix"] = sol::property(&Graphics::Camera::getCameraUboMatrix);
+    cameraType["frameState"] = sol::property(&Graphics::Camera::getFrameState);
     cameraType["createDefaultOrthographicProjection"] = &Graphics::Camera::createDefaultOrthographicProjection;
 
     //CameraFrameState
@@ -240,8 +240,17 @@ namespace NovelRT::Lua {
       Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, std::shared_ptr<Graphics::Texture>, const Graphics::RGBAConfig&)>()
       );
 
-    imageRectType["texture"] = sol::property(static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture));
-    imageRectType["colourTint"] = sol::property(static_cast<const Graphics::RGBAConfig& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint));
+    imageRectType["texture"] = sol::property(
+      static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture),
+      static_cast<std::shared_ptr<Graphics::Texture> & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::texture)
+      );
+
+    imageRectType["colourTint"] = sol::property(
+      static_cast<const Graphics::RGBAConfig& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
+      static_cast<Graphics::RGBAConfig & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint)
+      );
+
+
     imageRectType["drawObject"] = &Graphics::ImageRect::drawObject;
     imageRectType["colourTint"] = sol::property(
       static_cast<const Graphics::RGBAConfig & (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
