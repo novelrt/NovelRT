@@ -361,6 +361,13 @@ namespace NovelRT::Lua {
       static_cast<void (Graphics::TextRect::*)(std::shared_ptr<Graphics::FontSet>)>(&Graphics::TextRect::setFontSet)
       );
 
+    auto textureType = globalTable.new_usertype<Graphics::Texture>("Texture",
+      sol::constructors<Graphics::Texture(std::weak_ptr<Graphics::RenderingService>, Atom)>());
+
+    textureType["loadPngAsTexture"] = &Graphics::Texture::loadPngAsTexture;
+    textureType["textureFile"] = sol::property(&Graphics::Texture::getTextureFile);
+    textureType["size"] = sol::property(&Graphics::Texture::getSize);
+
 #pragma endregion
 
 
