@@ -292,6 +292,39 @@ namespace NovelRT::Lua {
 
     renderObjectType["executeObjectBehaviour"] = &Graphics::RenderObject::executeObjectBehaviour;
 
+    //RGBAConfig
+
+    auto rgbaConfigType = globalTable.new_usertype<Graphics::RGBAConfig>("RGBAConfig", sol::constructors<Graphics::RGBAConfig(int, int, int, int)>());
+
+    rgbaConfigType["r"] = sol::property(
+      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getR),
+      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getR)
+      );
+
+    rgbaConfigType["getRScalar"] = &Graphics::RGBAConfig::getRScalar;
+
+    rgbaConfigType["g"] = sol::property(
+      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getg),
+      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getg)
+      );
+
+    rgbaConfigType["getGScalar"] = &Graphics::RGBAConfig::getGScalar;
+
+    rgbaConfigType["b"] = sol::property(
+      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getB),
+      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getB)
+      );
+
+    rgbaConfigType["getBScalar"] = &Graphics::RGBAConfig::getBScalar;
+
+    rgbaConfigType["a"] = sol::property(
+      static_cast<int (Graphics::RGBAConfig::*)() const>(&Graphics::RGBAConfig::getA),
+      reinterpret_cast<void (Graphics::RGBAConfig::*)(int)>(&Graphics::RGBAConfig::getA)
+      );
+
+    rgbaConfigType["getAScalar"] = &Graphics::RGBAConfig::getAScalar;
+
+
 #pragma endregion
 
 
