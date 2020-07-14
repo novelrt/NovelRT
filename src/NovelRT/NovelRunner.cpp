@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate) :
+  NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate, bool transparency) :
     SceneConstructionRequested(Utilities::Event<>()),
     Update(Utilities::Event<Timing::Timestamp>()),
     _exitCode(1),
@@ -20,7 +20,7 @@ namespace NovelRT {
        _loggingService.logError("GLFW ERROR: ", err);
       throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
     }
-    _novelWindowingService->initialiseWindow(displayNumber, windowTitle);
+    _novelWindowingService->initialiseWindow(displayNumber, windowTitle, transparency);
     _novelRenderer->initialiseRendering();
     _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
     _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
