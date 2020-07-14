@@ -23,7 +23,6 @@ namespace NovelRT {
      * Use this to define game behaviour that is required to be done per-frame.
      */
     Utilities::Event<Timing::Timestamp> Update;
-    
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;

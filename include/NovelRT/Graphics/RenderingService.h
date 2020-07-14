@@ -22,14 +22,14 @@ namespace NovelRT::Graphics {
     ShaderProgram _basicFillRectProgram;
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
-
-    RGBAConfig _framebufferColour;
     
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::shared_ptr<Camera> _camera;
 
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
     std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
+
+    RGBAConfig _framebufferColour;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
@@ -39,7 +39,6 @@ namespace NovelRT::Graphics {
   public:
     RenderingService(NovelRunner* const runner);
     int initialiseRendering();
-    
     void tearDown() const;
 
     std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
@@ -55,7 +54,7 @@ namespace NovelRT::Graphics {
     void beginFrame() const;
     void endFrame() const;
 
-    void setBackgroundColour(const RGBAConfig colour);
+    void setBackgroundColour(const RGBAConfig& colour);
 
     std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
     std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);

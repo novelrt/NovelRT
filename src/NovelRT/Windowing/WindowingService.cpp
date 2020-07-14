@@ -37,8 +37,7 @@ namespace NovelRT::Windowing {
 #endif
 
     //Set Framebuffer Transparency
-   if (transparencyEnabled)
-   {
+   if (transparencyEnabled) {
      glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
    }
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");

@@ -16,7 +16,7 @@ namespace NovelRT::Graphics {
       return tempHandle;
     })),
     _camera(nullptr),
-    _framebufferColour(RGBAConfig(0,0,0,0)) {
+    _framebufferColour(RGBAConfig(0,0,102,255)) {
       auto ptr = _runner->getWindowingService();
       if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
         initialiseRenderPipeline(false, &input);
@@ -281,8 +281,7 @@ namespace NovelRT::Graphics {
     return returnValue;
   }
 
-  void RenderingService::setBackgroundColour(const RGBAConfig colour)
-  {
+  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
     _framebufferColour = colour;
   }
 }
