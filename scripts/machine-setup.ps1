@@ -58,3 +58,9 @@ New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 if ($LastExitCode -ne 0) {
   throw "'dotnet-install' failed"
 }
+
+& cmake --version
+
+if ($LastExitCode -ne 0) {
+  throw "'cmake' failed"
+}

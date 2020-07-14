@@ -33,7 +33,7 @@ function Create-Directory([string[]] $Path) {
 function Generate() {
   if ($ci) {
     $VcpkgToolchainFile = Join-Path -Path $vcpkgInstallDirectory -ChildPath "scripts/buildsystems/vcpkg.cmake"
-    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile" + $remaining
+    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile -DPython_FIND_REGISTRY=NEVER -DPython_FIND_STRATEGY=LOCATION " + $remaining
   }
 
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
