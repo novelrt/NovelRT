@@ -49,6 +49,7 @@ $env:DOTNET_MULTILEVEL_LOOKUP = 0
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 
 $DotNetInstallScript = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".ps1" } -PassThru
+$DotNetExe = Join-Path -Path $DotNetInstallDirectory -ChildPath "dotnet.exe"
 Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile $DotNetInstallScript -UseBasicParsing
 New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 
@@ -57,6 +58,12 @@ New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 
 if ($LastExitCode -ne 0) {
   throw "'dotnet-install' failed"
+}
+
+& $DotNetExe --info
+
+if ($LastExitCode -ne 0) {
+  throw "'dotnet' failed"
 }
 
 & cmake --version

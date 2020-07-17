@@ -1,7 +1,8 @@
 jobs:
 - job: ${{parameters.name}}
-  pool:
-    vmimage: ${{parameters.pool}}
+  pool: # Only 16.04 supports running containers. Thanks Microsoft.
+    vmimage: ubuntu-16.04
+  container: ${{parameters.container}}
   steps:
   - task: Bash@3
     displayName: 'Run scripts/machine-setup.sh'

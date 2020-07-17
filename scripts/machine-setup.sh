@@ -1,25 +1,11 @@
 # NOTE: DO NOT RUN THIS ON DEVELOPMENT MACHINES!
 # This is intended for setting up CI machines with the correct dependencies.
 
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
-
-sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
-sudo apt-add-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
-
 sudo apt-get update
-sudo apt-get install clang-8 cmake g++-8 libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm python3 -y
-sudo apt-get install libfreetype6-dev libglfw3-dev libglm-dev libgtest-dev libsndfile1-dev liblua5.3-dev libopenal-dev -y
+sudo apt-get install clang cmake g++ libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm python3 -y
+sudo apt-get install libfreetype-dev libglfw3-dev libglm-dev libgtest-dev libgmock-dev libsndfile1-dev liblua5.3-dev libopenal-dev -y
 
-python3 -m pip --version
-python3 -m pip install setuptools wheel
 python3 -m pip install glad
-
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 255
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 255
-
-sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 255
-sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 255
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_MULTILEVEL_LOOKUP=0
@@ -36,18 +22,6 @@ fi
 . "$DotNetInstallScript" --channel 3.1 --version latest --install-dir "$DotNetInstallDirectory"
 . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
 
+~/dotnet/dotnet --info
+
 cmake --version
-
-# HACK: CMake finds the wrong python installation and therefore the wrong modules
-sudo rm -rf /home/linuxbrew
-
-# N.B.: Ubuntu does't have an updated version of spdlog, so we build our own here
-git clone https://github.com/gabime/spdlog.git
-cd spdlog
-git checkout tags/v1.4.2
-mkdir build
-cd build
-cmake .. -DSPDLOG_BUILD_EXAMPLE=OFF -DSPDLOG_INSTALL=ON
-make -j all
-sudo make -j install
-cd ../..
