@@ -2,7 +2,9 @@ jobs:
 - job: ${{parameters.name}}
   pool: # Only 16.04 supports running containers. Thanks Microsoft.
     vmimage: ubuntu-16.04
-  container: ${{parameters.container}}
+  container:
+    image: ${{parameters.container}}
+    options: --entrypoint "/bin/sh -c 'apt-get install sudo -y'"
   steps:
   - task: Bash@3
     displayName: 'Run scripts/machine-setup.sh'
