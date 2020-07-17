@@ -5,24 +5,25 @@ set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
 set(OPTIONS
   /nologo
   /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
+  /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
   /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}/
   /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/publish/
 )
 
 execute_process(
-  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
     /t:Restore
 )
 
 execute_process(
-  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
     /t:GetCMakeOutputAssembly
   OUTPUT_VARIABLE OUTPUT_ASSEMBLY
 )
 string(STRIP "${OUTPUT_ASSEMBLY}" OUTPUT_ASSEMBLY)
 
 execute_process(
-  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
     /t:GetCMakeOutputByproducts
   OUTPUT_VARIABLE OUTPUT_BYPRODUCTS
 )
@@ -33,7 +34,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/publish)
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
   BYPRODUCTS ${OUTPUT_BYPRODUCTS}
-  COMMAND Dotnet::CLI msbuild ${CSPROJ} ${OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
     /t:Build,Publish
   COMMENT "Building .NET subproject"
 )
