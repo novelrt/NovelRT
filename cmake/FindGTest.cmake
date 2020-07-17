@@ -16,7 +16,7 @@ find_package(PkgConfig)
 pkg_check_modules(pc_gtest QUIET gtest)
 pkg_check_modules(pc_gtest_main QUIET gtest_main)
 
-if(NOT DEFINED gtest_USE_DEBUG_BUILD)
+if(WIN32 AND NOT DEFINED gtest_USE_DEBUG_BUILD)
   if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
     set(GTest_BUILD_TYPE DEBUG)
   else()
@@ -71,8 +71,10 @@ endif()
 
 set(GTest_LIBRARIES_DEBUG ${GTest_LIBRARY_DEBUG})
 set(GTest_Main_LIBRARIES_DEBUG ${GTest_Main_LIBRARY_DEBUG})
+
 set(GTest_LIBRARIES_RELEASE ${GTest_LIBRARY_RELEASE})
 set(GTest_Main_LIBRARIES_RELEASE ${GTest_Main_LIBRARY_RELEASE})
+
 set(GTest_LIBRARIES ${GTest_LIBRARIES_${GTest_BUILD_TYPE}})
 set(GTest_Main_LIBRARIES ${GTest_Main_LIBRARIES_${GTest_BUILD_TYPE}})
 set(GTest_INCLUDE_DIRS ${GTest_INCLUDE_DIR})

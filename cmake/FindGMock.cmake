@@ -16,7 +16,7 @@ find_package(PkgConfig)
 pkg_check_modules(pc_gmock QUIET gmock)
 pkg_check_modules(pc_gmock_main QUIET gmock_main)
 
-if(NOT DEFINED gmock_USE_DEBUG_BUILD)
+if(WIN32 AND NOT DEFINED gmock_USE_DEBUG_BUILD)
   if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
     set(GMock_BUILD_TYPE DEBUG)
   else()
