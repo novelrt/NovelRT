@@ -1,9 +1,9 @@
 # NOTE: DO NOT RUN THIS ON DEVELOPMENT MACHINES!
 # This is intended for setting up CI machines with the correct dependencies.
 
-sudo apt-get update
-sudo apt-get install clang cmake g++ libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm python3 -y
-sudo apt-get install libfreetype-dev libglfw3-dev libglm-dev libgtest-dev libgmock-dev libsndfile1-dev liblua5.3-dev libopenal-dev -y
+apt-get update
+apt-get install clang cmake g++ libglu1-mesa-dev libxcursor-dev libxinerama-dev xorg-dev yasm python3 -y
+apt-get install libfreetype-dev libglfw3-dev libglm-dev libgtest-dev libgmock-dev libsndfile1-dev liblua5.3-dev libopenal-dev -y
 
 python3 -m pip install glad
 
