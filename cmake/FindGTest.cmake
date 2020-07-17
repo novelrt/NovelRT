@@ -14,6 +14,7 @@ include(FindPackageHandleStandardArgs)
 find_package(PkgConfig)
 
 pkg_check_modules(pc_gtest QUIET gtest)
+pkg_check_modules(pc_gtest_main QUIET gtest_main)
 
 if(NOT DEFINED gtest_USE_DEBUG_BUILD)
   if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
@@ -28,6 +29,7 @@ else()
 endif()
 
 set(GTest_DEFINITIONS ${pc_gtest_CFLAGS_OTHER})
+set(GTest_Main_DEFINITIONS ${pc_gtest_main_CFLAGS_OTHER})
 set(gtest_search_dir ${gtest_ROOT_DIR} $ENV{gtest_INSTALL_DIR})
 
 find_path(GTest_INCLUDE_DIR gtest/gtest.h
@@ -44,7 +46,7 @@ find_library(
 
 find_library(
   GTest_Main_LIBRARY_DEBUG NAMES gtest_maind
-  HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
+  HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_main_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
@@ -58,7 +60,7 @@ find_library(
 
 find_library(
   GTest_Main_LIBRARY_RELEASE NAMES gtest_main
-  HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
+  HINTS ${gtest_search_dir} ${pc_gtest_LIBDIR} ${pc_gtest_main_LIBDIR} ${pc_gtest_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
@@ -96,7 +98,7 @@ if(GTest_Main_FOUND)
   set_target_properties(GTest::Main PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${GTest_INCLUDE_DIRS}"
     IMPORTED_LOCATION "${GTest_Main_LIBRARIES}"
-    INTERFACE_COMPILE_OPTIONS "${GTest_DEFINITIONS}"
+    INTERFACE_COMPILE_OPTIONS "${GTest_Main_DEFINITIONS}"
   )
 endif()
 

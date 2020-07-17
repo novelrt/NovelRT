@@ -14,6 +14,7 @@ include(FindPackageHandleStandardArgs)
 find_package(PkgConfig)
 
 pkg_check_modules(pc_gmock QUIET gmock)
+pkg_check_modules(pc_gmock_main QUIET gmock_main)
 
 if(NOT DEFINED gmock_USE_DEBUG_BUILD)
   if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
@@ -28,6 +29,7 @@ else()
 endif()
 
 set(GMock_DEFINITIONS ${pc_gmock_CFLAGS_OTHER})
+set(GMock_Main_DEFINITIONS ${pc_gmock_main_CFLAGS_OTHER})
 set(gmock_search_dir ${gmock_ROOT_DIR} $ENV{gmock_INSTALL_DIR})
 
 find_path(GMock_INCLUDE_DIR gmock/gmock.h
@@ -44,7 +46,7 @@ find_library(
 
 find_library(
   GMock_Main_LIBRARY_DEBUG NAMES gmock_maind
-  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
+  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_main_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
@@ -58,7 +60,7 @@ find_library(
 
 find_library(
   GMock_Main_LIBRARY_RELEASE NAMES gmock_main
-  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
+  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_main_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
@@ -96,7 +98,7 @@ if(GMock_Main_FOUND)
   set_target_properties(GMock::Main PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${GMock_INCLUDE_DIRS}"
     IMPORTED_LOCATION "${GMock_Main_LIBRARIES}"
-    INTERFACE_COMPILE_OPTIONS "${GMock_DEFINITIONS}"
+    INTERFACE_COMPILE_OPTIONS "${GMock_Main_DEFINITIONS}"
   )
 endif()
 
