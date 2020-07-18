@@ -122,7 +122,7 @@ extern "C" {
 
   const QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree) {
     if (tree->children[BOTTOM_LEFT] <= 0) {
-      auto bottomLeft = _collection[tree]->getTopLeft();
+      auto bottomLeft = _collection[tree]->getBottomLeft();
       if (bottomLeft != nullptr)
       {
         for (const auto element : _collection)
@@ -152,7 +152,7 @@ extern "C" {
 
   const QuadTree_t QuadTree_getBottomRight(QuadTree_t tree) {
     if (tree->children[BOTTOM_RIGHT] <= 0) {
-      auto bottomRight = _collection[tree]->getTopLeft();
+      auto bottomRight = _collection[tree]->getBottomRight();
       if (bottomRight != nullptr)
       {
         for (const auto element : _collection)
