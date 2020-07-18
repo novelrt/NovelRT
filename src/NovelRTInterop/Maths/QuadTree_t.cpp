@@ -12,8 +12,8 @@ extern "C" {
   QuadTree_t QuadTree_create(GeoBounds_t& bounds)
   {
     auto b = reinterpret_cast<Maths::GeoBounds&>(bounds);
-    auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t handle = new QuadTreeHandle{ handleId };
+    auto handleId = static_cast<int>(_collection.size()+1);
+    QuadTree_t handle = new QuadTreeHandle{ handleId, {0,0,0,0} };
     auto tree = std::make_shared<Maths::QuadTree>(b);
     handle = reinterpret_cast<QuadTree_t>(&tree);
     _collection.emplace(handle, tree);
@@ -53,107 +53,182 @@ extern "C" {
   }
 
   size_t QuadTree_getPointCount(QuadTree_t tree) {
+    if (_collection.find(tree) == _collection.end())
+    {
+      return static_cast<size_t>(0);
+    }
     return _collection[tree]->getPointCount();
   }
 
   const QuadTree_t QuadTree_getTopLeft(QuadTree_t tree) {
-    auto newTree = _collection[tree]->getTopLeft();
-
-    if (newTree == nullptr)
-    {
+    if (tree->children[TOP_LEFT] <= 0 ) {
+      auto topLeft = _collection[tree]->getTopLeft();
+      if (topLeft != nullptr)
+      {
+        for (const auto element : _collection)
+        {
+          if (topLeft == element.second)
+          {
+            return element.first;
+          }
+        }
+        auto handleId = static_cast<int>(_collection.size()+1);
+        QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
+        _collection.emplace(treeHandle, topLeft);
+        return treeHandle;
+      }
       return nullptr;
     }
 
-    for (const auto element : _collection)
-    {
-      if (newTree == element.second)
-      {
-        return element.first;
+    int childId = tree->children[TOP_LEFT];
+    for (auto test : _collection) {
+      if (test.first->id == childId) {
+        return test.first;
       }
     }
-    auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
-    _collection.emplace(treeHandle, newTree);
-    return treeHandle;
-
+    //If nothing is found, we should assume it doesn't exist
+    return nullptr;
   }
 
   const QuadTree_t QuadTree_getTopRight(QuadTree_t tree) {
-    auto newTree = _collection[tree]->getTopRight();
-
-    if (newTree == nullptr)
-    {
+    if (tree->children[TOP_RIGHT] <= 0) {
+      auto topRight = _collection[tree]->getTopRight();
+      if (topRight != nullptr)
+      {
+        for (const auto element : _collection)
+        {
+          if (topRight == element.second)
+          {
+            return element.first;
+          }
+        }
+        auto handleId = static_cast<int>(_collection.size() + 1);
+        QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
+        _collection.emplace(treeHandle, topRight);
+        return treeHandle;
+      }
       return nullptr;
     }
 
-    for (const auto element : _collection)
-    {
-      if (newTree == element.second)
-      {
-        return element.first;
+    int childId = tree->children[TOP_RIGHT];
+    for (auto test : _collection) {
+      if (test.first->id == childId) {
+        return test.first;
       }
     }
-
-    auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
-    _collection.emplace(treeHandle, newTree);
-    return treeHandle;
+    //If nothing is found, we should assume it doesn't exist
+    return nullptr;
   }
 
   const QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree) {
-    auto newTree = _collection[tree]->getBottomLeft();
-
-    if (newTree == nullptr)
-    {
+    if (tree->children[BOTTOM_LEFT] <= 0) {
+      auto bottomLeft = _collection[tree]->getTopLeft();
+      if (bottomLeft != nullptr)
+      {
+        for (const auto element : _collection)
+        {
+          if (bottomLeft == element.second)
+          {
+            return element.first;
+          }
+        }
+        auto handleId = static_cast<int>(_collection.size() + 1);
+        QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
+        _collection.emplace(treeHandle, bottomLeft);
+        return treeHandle;
+      }
       return nullptr;
     }
 
-    for (const auto element : _collection)
-    {
-      if (newTree == element.second)
-      {
-        return element.first;
+    int childId = tree->children[BOTTOM_LEFT];
+    for (auto test : _collection) {
+      if (test.first->id == childId) {
+        return test.first;
       }
     }
-
-    auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
-    _collection.emplace(treeHandle, newTree);
-    return treeHandle;
+    //If nothing is found, we should assume it doesn't exist
+    return nullptr;
   }
 
   const QuadTree_t QuadTree_getBottomRight(QuadTree_t tree) {
-    auto newTree = _collection[tree]->getBottomRight();
-
-    if (newTree == nullptr)
-    {
+    if (tree->children[BOTTOM_RIGHT] <= 0) {
+      auto bottomRight = _collection[tree]->getTopLeft();
+      if (bottomRight != nullptr)
+      {
+        for (const auto element : _collection)
+        {
+          if (bottomRight == element.second)
+          {
+            return element.first;
+          }
+        }
+        auto handleId = static_cast<int>(_collection.size() + 1);
+        QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
+        _collection.emplace(treeHandle, bottomRight);
+        return treeHandle;
+      }
       return nullptr;
     }
 
-    for (const auto element : _collection)
-    {
-      if (newTree == element.second)
-      {
-        return element.first;
+    int childId = tree->children[BOTTOM_RIGHT];
+    for (auto test : _collection) {
+      if (test.first->id == childId) {
+        return test.first;
       }
     }
-
-    auto handleId = static_cast<int>(_collection.size());
-    QuadTree_t treeHandle = new QuadTreeHandle{ handleId };
-    _collection.emplace(treeHandle, newTree);
-    return treeHandle;
+    //If nothing is found, we should assume it doesn't exist
+    return nullptr;
   }
 
   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point) {
+    auto originalCount = _collection[tree]->getPointCount();
     auto pointToInsert = reinterpret_cast<Maths::QuadTreePoint*>(point);
-    return _collection[tree]->tryInsert(std::make_shared<Maths::QuadTreePoint>(*pointToInsert));
+    bool result = _collection[tree]->tryInsert(std::make_shared<Maths::QuadTreePoint>(*pointToInsert));
+    auto newCount = _collection[tree]->getPointCount();
+    if (newCount < originalCount) {
+      auto topLeft = QuadTree_getTopLeft(tree);
+      auto topRight = QuadTree_getTopRight(tree);
+      auto bottomLeft = QuadTree_getBottomLeft(tree);
+      auto bottomRight = QuadTree_getBottomRight(tree);
+
+      if (topLeft != nullptr) {
+        tree->children[TOP_LEFT] = topLeft->id;
+      }
+      if (topRight != nullptr) {
+        tree->children[TOP_RIGHT] = topRight->id;
+      }
+      if (bottomLeft != nullptr) {
+        tree->children[BOTTOM_LEFT] = bottomLeft->id;
+      }
+      if (bottomRight != nullptr) {
+        tree->children[BOTTOM_RIGHT] = bottomRight->id;
+      }
+    }
+
+    return result;
   }
 
-  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point)
-  {
+  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point) {
+    
+    if (_collection.size() == 0) {
+      return false;
+    }
+
     auto pointToRemove = reinterpret_cast<Maths::QuadTreePoint*>(point);
-    auto sharedPoint = std::make_shared<Maths::QuadTreePoint>(*pointToRemove);
-    return _collection[tree]->tryRemove(sharedPoint);
+    auto pointCount = _collection[tree]->getPointCount();
+    if (pointCount < 1) {
+      return false;
+    }
+
+    for (int i = 0; i < pointCount; i++) {
+      auto originalSharedPtr = _collection[tree]->getPoint(i);
+      auto originalPoint = originalSharedPtr.get();
+      if (originalPoint->getPosition() == pointToRemove->getPosition()) {
+        return _collection[tree]->tryRemove(originalSharedPtr);
+      }
+    }
+
+    return false;
   }
 
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds)
@@ -162,10 +237,10 @@ extern "C" {
     *points = _collection[tree]->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
 
     std::vector<QuadTreePoint_t>* converted = new std::vector<QuadTreePoint_t>();
-    for(int i = 0; i < points->size(); i++)
+    for (std::shared_ptr<Maths::QuadTreePoint> point : *points)
     {
-      QuadTreePoint_t pointToInsert = reinterpret_cast<QuadTreePoint_t&>(*points->at(i).get());
-      converted->emplace_back(pointToInsert);
+      Maths::QuadTreePoint* ptr = point.get();
+      converted->emplace_back(reinterpret_cast<QuadTreePoint_t>(ptr));
     }
 
     return reinterpret_cast<PointVector>(converted);
