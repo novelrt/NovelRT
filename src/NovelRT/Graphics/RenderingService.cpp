@@ -7,18 +7,19 @@ namespace NovelRT::Graphics {
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
     _runner(runner),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
-      GLuint tempHandle;
-      glGenBuffers(1, &tempHandle);
-      glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
-      glBindBuffer(GL_UNIFORM_BUFFER, 0);
-      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
-      return tempHandle;
-    })),
-    _camera(nullptr) {
-      auto ptr = _runner->getWindowingService();
-      if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
-        initialiseRenderPipeline(false, &input);
+    GLuint tempHandle;
+    glGenBuffers(1, &tempHandle);
+    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
+    return tempHandle;
+      })),
+    _camera(nullptr),
+        _framebufferColour(RGBAConfig(0, 0, 102, 255)) {
+    auto ptr = _runner->getWindowingService();
+    if (!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
+      initialiseRenderPipeline(false, &input);
       });
   }
 
@@ -190,7 +191,7 @@ namespace NovelRT::Graphics {
 
   void RenderingService::beginFrame() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(_framebufferColour.getRScalar(), _framebufferColour.getGScalar(), _framebufferColour.getBScalar(), _framebufferColour.getAScalar());
     _camera->initialiseCameraForFrame();
   }
 
@@ -242,7 +243,7 @@ namespace NovelRT::Graphics {
 
   std::shared_ptr<Texture> RenderingService::getTexture(const std::string& fileTarget) {
     if (!fileTarget.empty()) {
-      for(auto& pair : _textureCache) {
+      for (auto& pair : _textureCache) {
         auto result = pair.second.lock();
         if (result->getTextureFile() != fileTarget) continue;
 
@@ -253,7 +254,7 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
-      return returnValue; 
+      return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn
@@ -278,6 +279,10 @@ namespace NovelRT::Graphics {
     _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
     returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;
+  }
+
+  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
+    _framebufferColour = colour;
   }
   void RenderingService::doTest() {
     _logger.logDebug("Hello from plugin!");
