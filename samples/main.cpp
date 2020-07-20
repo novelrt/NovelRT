@@ -130,7 +130,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
 #endif
 
-  auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector2<float>(456, 618));
+  auto novelChanTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector2<float>(762, 881));
 
   novelChanRect = runner.getRenderer().lock()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(), NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
 
