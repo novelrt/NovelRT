@@ -24,11 +24,7 @@ namespace NovelRT::Graphics {
   public:
     Camera();
 
-    inline Maths::GeoMatrix4x4<float>& getViewMatrix() {
-      return _viewMatrix;
-    }
-
-    inline const Maths::GeoMatrix4x4<float>& getViewMatrix() const {
+    inline Maths::GeoMatrix4x4<float> getViewMatrix() const {
       return _viewMatrix;
     }
 
@@ -38,11 +34,7 @@ namespace NovelRT::Graphics {
       _viewMatrix = value;
     }
 
-    inline Maths::GeoMatrix4x4<float>& getProjectionMatrix() {
-      return _projectionMatrix;
-    }
-
-    inline const Maths::GeoMatrix4x4<float>& getProjectionMatrix() const {
+    inline Maths::GeoMatrix4x4<float> getProjectionMatrix() const {
       return _projectionMatrix;
     }
 

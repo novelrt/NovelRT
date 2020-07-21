@@ -39,18 +39,21 @@ namespace NovelRT::Graphics {
   }
   void TextRect::setText(const std::string& value) {
     _text = value;
-    auto difference = _text.length() - _letterRects.size();
-    auto modifiedTransform = transform();
-    modifiedTransform.scale() = Maths::GeoVector2<float>(50, 50);
-    for (size_t i = 0; i < difference; i++) {
-      auto rect = std::make_unique<ImageRect>(
+
+    if (_letterRects.size() < _text.length()) {
+      size_t difference = _text.length() - _letterRects.size();
+      auto modifiedTransform = transform();
+      modifiedTransform.scale() = Maths::GeoVector2<float>(50, 50);
+      for (size_t i = 0; i < difference; i++) {
+        auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
           layer(),
           _shaderProgram,
           _camera,
           _colourConfig);
-      rect->setActive(getActive());
-      _letterRects.push_back(std::move(rect));
+        rect->setActive(getActive());
+        _letterRects.push_back(std::move(rect));
+      }
     }
 
     if (_bufferInitialised) {
@@ -91,6 +94,6 @@ namespace NovelRT::Graphics {
 
   void TextRect::setActive(bool value) {
     WorldObject::setActive(value);
-    std::for_each(_letterRects.begin(), _letterRects.end(), [&value](auto& x){x->setActive(value);});
+    std::for_each(_letterRects.begin(), _letterRects.end(), [&value](auto& x) {x->setActive(value); });
   }
 }
