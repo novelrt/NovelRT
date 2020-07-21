@@ -136,6 +136,18 @@ namespace NovelRT::Input {
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
 }
+
+/**
+ * Contains aliasing for native library plugins
+ */
+namespace NovelRT::Plugins {
+#if defined(WIN32) || defined(WIN64)
+  using NRTPluginPointer = HMODULE;
+#else
+  using NRTPluginPointer = void*;
+#endif
+}
+
 /**
  * Contains scene graph features.
  */

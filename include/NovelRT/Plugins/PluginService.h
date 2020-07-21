@@ -8,12 +8,6 @@
 #endif
 
 namespace NovelRT::Plugins {
-#if defined(WIN32) || defined(WIN64)
-  using NRTPluginPointer = HMODULE;
-#else
-  using NRTPluginPointer = void*;
-#endif
-
   using NRTRenderingServiceCreatorPtr = std::add_pointer<Graphics::IRenderingService*(NovelRunner* const)>::type;
 
   class PluginService {

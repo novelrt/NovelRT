@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
+#include "LoadLibHelper.h"
 
 namespace NovelRT::Plugins {
   PluginInfo PluginService::getPluginInfo(const std::filesystem::path& path) const {
@@ -19,13 +20,9 @@ namespace NovelRT::Plugins {
   }
 
   NRTPluginPointer PluginService::loadPlugin(const std::filesystem::path& location) {
-#if defined(WIN32) || defined(WIN64)
-    std::string variableToAvoidDestruction = (Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / location).string();
-    return LoadLibrary(variableToAvoidDestruction.c_str());
-#else
-    std::string variableToAvoidDestruction = (Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / location).string();
-    return dlopen(variableToAvoidDestruction.c_str());
-#endif
+    std::filesystem::path theRealLocation(location);
+    theRealLocation.replace_extension(getLibraryExtension());
+    return loadPluginLibrary((Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / theRealLocation).string());
   }
 
   PluginService::PluginService() noexcept : _runner(nullptr) {
@@ -85,13 +82,7 @@ namespace NovelRT::Plugins {
   std::shared_ptr<Graphics::IRenderingService> PluginService::createRenderingService(const PluginInfo& info) noexcept {
     NRTPluginPointer lib = loadPlugin(info.location());
     _loadedPlugins.emplace(info.pluginId(), lib);
-#if defined(WIN32) || defined(WIN64)
-    NRTRenderingServiceCreatorPtr creator = reinterpret_cast<NRTRenderingServiceCreatorPtr>(GetProcAddress(lib, "createRenderingService"));
+    auto creator = getSymbolForFunctionPtr<NRTRenderingServiceCreatorPtr>(lib, "createRenderingService");
     return std::shared_ptr<Graphics::IRenderingService>(creator(_runner));
-#else
-    NRTRenderingServiceCreatorPtr creator = reinterpret_cast<NRTRenderingServiceCreatorPtr>(dlsym(lib, "createRenderingService"));
-    return std::shared_ptr<Graphics::IRenderingService>(creator(_runner));
-#endif
-    
   }
 }
