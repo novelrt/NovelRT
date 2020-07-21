@@ -34,7 +34,7 @@ namespace NovelRT::Plugins {
       _engineVersion(""),
       _pluginInfoVersion("") {}
 
-    inline const Atom& pluginId() const noexcept {
+    inline Atom pluginId() const noexcept {
       return _pluginId;
     }
 
@@ -42,7 +42,7 @@ namespace NovelRT::Plugins {
       return _name;
     }
 
-    inline const PluginKind& kind() const noexcept {
+    inline PluginKind kind() const noexcept {
       return _kind;
     }
 

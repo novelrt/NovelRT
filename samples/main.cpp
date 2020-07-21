@@ -31,17 +31,6 @@ static int average(lua_State* luaState) {
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-  NovelRT::Plugins::PluginService service;
-
-  NovelRT::Plugins::PluginInfo info;
-
-  if (service.tryGetPluginInfo("teehee.json", info)) {
-    std::cout << info.name() << std::endl;
-    std::cout << static_cast<uint32_t>(info.kind()) << std::endl;
-    std::cout << info.location().string() << std::endl;
-    std::cout << info.engineVersion() << std::endl;
-    std::cout << info.pluginInfoVersion() << std::endl;
-  }
 
 
   lua_State* L;
@@ -79,7 +68,33 @@ int main(int /*argc*/, char* /*argv*/[])
   lua_close(L);
 
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
+  NovelRT::Plugins::PluginService service(&runner);
+
+  NovelRT::Plugins::PluginInfo info;
+
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
+
+  if (service.tryGetPluginInfo("teehee.json", info)) {
+    console.logDebugLine(info.name());
+    console.logDebugLine(std::to_string(static_cast<uint32_t>(info.kind())));
+    console.logDebugLine(info.location().string());
+    console.logDebugLine(info.engineVersion());
+    console.logDebugLine(info.pluginInfoVersion());
+  }
+
+  if (info.kind() == NovelRT::Plugins::PluginKind::GraphicsPipeline) {
+    console.logDebugLine("Oh hey look at that its a graphics plugin, lemme get a nullptr lmao");
+    auto pluginCollection = service.getAllAvailablePluginInfo();
+
+    auto dummyRenderer = service.createRenderingService(pluginCollection.at(0));
+    if (dummyRenderer == nullptr) {
+      console.logDebugLine("Oh hey look at that it actually returned the nullptr");
+    }
+    else {
+      console.logDebugLine("O NO");
+    }
+  }
+
   auto audio = runner.getAudioService();
   audio.lock()->initializeAudio();
   auto bgm = audio.lock()->loadMusic((soundsDirPath / "marisa.ogg").string());

@@ -18,6 +18,21 @@ namespace NovelRT::Plugins {
     return PluginInfo(Atom::getNextPluginId(), root["name"].asString(), static_cast<PluginKind>(root["kind"].as<uint32_t>()), std::filesystem::path(root["location"].asString()), root["engineVersion"].asString(), root["pluginInfoVersion"].asString());
   }
 
+  NRTPluginPointer PluginService::loadPlugin(const std::filesystem::path& location) {
+#if defined(WIN32) || defined(WIN64)
+    std::string variableToAvoidDestruction = (Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / location).string();
+    return LoadLibrary(variableToAvoidDestruction.c_str());
+#else
+    std::string variableToAvoidDestruction = (Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / location).string();
+    return dlopen(variableToAvoidDestruction.c_str());
+#endif
+  }
+
+  PluginService::PluginService() noexcept : _runner(nullptr) {
+  }
+
+  PluginService::PluginService(NovelRunner* const runner) noexcept : _runner(runner){}
+
   bool PluginService::tryGetPluginInfo(const std::filesystem::path& location, PluginInfo& info, bool isRelative) const {
     std::filesystem::path finalLocation = location;
 
@@ -65,5 +80,18 @@ namespace NovelRT::Plugins {
     }
 
     return plugins;
+  }
+
+  std::shared_ptr<Graphics::IRenderingService> PluginService::createRenderingService(const PluginInfo& info) noexcept {
+    NRTPluginPointer lib = loadPlugin(info.location());
+    _loadedPlugins.emplace(info.pluginId(), lib);
+#if defined(WIN32) || defined(WIN64)
+    NRTRenderingServiceCreatorPtr creator = reinterpret_cast<NRTRenderingServiceCreatorPtr>(GetProcAddress(lib, "createRenderingService"));
+    return std::shared_ptr<Graphics::IRenderingService>(creator(_runner));
+#else
+    NRTRenderingServiceCreatorPtr creator = reinterpret_cast<NRTRenderingServiceCreatorPtr>(dlsym(lib, "createRenderingService"));
+    return std::shared_ptr<Graphics::IRenderingService>(creator(_runner));
+#endif
+    
   }
 }

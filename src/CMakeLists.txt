@@ -61,6 +61,10 @@ add_custom_command(TARGET NovelRT POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.txt
 )
 
+add_library(DoTest SHARED "DoTest/DoTest.cpp")
+target_link_libraries(DoTest NovelRT)
+
+
 # NovelRT.Resources
 
 file(GLOB_RECURSE NOVELRT_RESOURCE_INPUTS CONFIGURE_DEPENDS

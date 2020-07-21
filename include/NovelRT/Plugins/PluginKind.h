@@ -9,11 +9,11 @@
 
 namespace NovelRT::Plugins {
   enum class PluginKind : uint32_t {
-    GraphicsPipeline,
-    AudioPipeline,
-    WindowingSystem,
-    InputSystem,
-    UnknownOrInvalid
+    GraphicsPipeline = 0,
+    AudioPipeline = 1,
+    WindowingSystem = 2,
+    InputSystem = 3,
+    UnknownOrInvalid = 4
   };
 }
 
