@@ -24,8 +24,7 @@ namespace NovelRT::Input {
     LoggingService _logger;
     void processKeyState(KeyCode code, KeyState state);
     void processKeyStates();
-    void acceptCursorPositionChangePush(Maths::GeoVector2<float> newCursorPosition);
-    void acceptMouseButtonClickPush(int button, int action);
+    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
@@ -42,8 +41,8 @@ namespace NovelRT::Input {
     }
 
     inline KeyState getKeyState(KeyCode value) const noexcept {
-      auto it = _keyStates.find(value);
-      if (it != _keyStates.end()) {
+      auto it = _keyStates[_currentBufferIndex].find(value);
+      if (it != _keyStates[_currentBufferIndex].end()) {
         return it->second.currentState;
       }
 

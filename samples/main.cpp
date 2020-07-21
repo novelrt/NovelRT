@@ -173,6 +173,9 @@ int main(int /*argc*/, char* /*argv*/[])
     if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");
     }
+    else if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyUp) {
+      console.logInfoLine("W Key came up!");
+    }
   };
 
   interactionRect = runner.getInteractionService().lock()->createBasicInteractionRect(playButtonTransform, 2);

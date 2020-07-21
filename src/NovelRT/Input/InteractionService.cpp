@@ -4,6 +4,7 @@
 
 namespace NovelRT::Input {
   InteractionService::InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept :
+    _currentBufferIndex(0),
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
     if(!windowingService.expired()) windowingService.lock()->WindowResized += [this](auto value) {
@@ -12,8 +13,7 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
-    validateIfKeyCached(code);
-    auto result = _keyStates.find(code);
+    auto result = _keyStates[_currentBufferIndex].find(code);
     auto previousState = result->second.currentState;
 
     if (result->second.wasUpdatedThisFrame) {
@@ -41,7 +41,7 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::processKeyStates() {
-    for (auto& pair : _keyStates) {
+    for (auto& pair : _keyStates[_currentBufferIndex]) {
       processKeyState(pair.first, pair.second.currentState);
     }
   }
@@ -51,14 +51,12 @@ namespace NovelRT::Input {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(key);
 
-    auto result = _keyStates.find(keyCode);
+    auto result = _keyStates[_currentBufferIndex].find(keyCode);
 
-    if (result == _keyStates.end()) {
-      _keyStates.insert({ keyCode, KeyStateFrameUpdatePair{ keyState, true } });
+    if (result == _keyStates[_currentBufferIndex].end()) {
+      _keyStates[_currentBufferIndex].insert({ keyCode, KeyStateFrameUpdatePair{ keyState, true } });
       return;
     }
-
-    validateIfKeyCached(keyCode);
     processKeyState(keyCode, keyState);
   }
 
@@ -67,22 +65,14 @@ namespace NovelRT::Input {
     auto keyCode = static_cast<KeyCode>(button);
     auto value = Maths::GeoVector4<float>(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
-    auto result = _mousePositionsOnScreenPerButton.find(keyCode);
+    _cursorPosition =  Maths::GeoVector2<float>(value.x, value.y);
 
-    if (result == _mousePositionsOnScreenPerButton.end()) {
-      _mousePositionsOnScreenPerButton.insert({ keyCode, Maths::GeoVector2<float>(value.x, value.y) });
-    }
-    else {
-      result->second = Maths::GeoVector2<float>(value.x, value.y);
-    }
-
-    validateIfKeyCached(keyCode);
     processKeyState(keyCode, keyState);
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[target->subscribedKey()].currentState == KeyState::KeyDown
-      && target->validateInteractionPerimeter(_mousePositionsOnScreenPerButton[target->subscribedKey()])
+    if (_keyStates[_currentBufferIndex][target->subscribedKey()].currentState == KeyState::KeyDown
+      && target->validateInteractionPerimeter(_cursorPosition)
       && (_clickTarget == nullptr || (_clickTarget->layer() > target->layer()))) {
       _logger.logDebug("Valid click target detected! Executing...");
       _clickTarget = target;
@@ -90,7 +80,7 @@ namespace NovelRT::Input {
   }
 
 void InteractionService::consumePlayerInput() {
-  for (auto& pair : _keyStates) {
+  for (auto& pair : _keyStates[_currentBufferIndex]) {
     pair.second.wasUpdatedThisFrame = false;
   }
 

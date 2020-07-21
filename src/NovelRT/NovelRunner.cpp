@@ -10,7 +10,7 @@ namespace NovelRT {
     _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>([targetFrameRate] {return new Timing::StepTimer(targetFrameRate); }))),
     _novelDebugService(std::make_shared<DebugService>(this)),
     _novelWindowingService(std::make_shared<Windowing::WindowingService>(this)),
-    _novelInteractionService(std::make_shared<Input::InteractionService>(this)),
+    _novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
     _novelAudioService(std::make_shared<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
     _novelRenderer(std::make_shared<Graphics::RenderingService>(this)) {
