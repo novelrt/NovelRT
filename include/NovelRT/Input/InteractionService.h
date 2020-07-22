@@ -42,8 +42,9 @@ namespace NovelRT::Input {
     }
 
     inline KeyState getKeyState(KeyCode value) const noexcept {
-      auto it = _keyStates[_currentBufferIndex].find(value);
-      if (it != _keyStates[_currentBufferIndex].end()) {
+      auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+      auto it = currentBuffer.find(value);
+      if (it != currentBuffer.end()) {
         return it->second;
       }
 

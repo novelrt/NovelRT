@@ -11,12 +11,13 @@ namespace NovelRT::Input {
     if(!windowingService.expired()) windowingService.lock()->WindowResized += [this](auto value) {
       setScreenSize(value);
     };
-    _keyStates[0] = std::map<KeyCode, KeyState>();
-    _keyStates[1] = std::map<KeyCode, KeyState>(); //lmao wtf
   }
 
   void InteractionService::processKeyState(KeyCode code, KeyState state) {
-    auto result = _keyStates[_previousBufferIndex].find(code);
+    auto& previousBuffer = _keyStates.at(_previousBufferIndex);
+    auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+
+    auto result = previousBuffer.find(code);
     KeyState stateResult;
 
     if (result == _keyStates[_previousBufferIndex].end()) {
@@ -29,15 +30,15 @@ namespace NovelRT::Input {
     switch (state) {
     case KeyState::KeyDown:
       if (stateResult == KeyState::KeyDown) {
-        _keyStates.at(_currentBufferIndex).insert_or_assign(code, KeyState::KeyDownHeld);
+        currentBuffer.insert_or_assign(code, KeyState::KeyDownHeld);
       }
       else if (stateResult != KeyState::KeyDownHeld) {
-        _keyStates.at(_currentBufferIndex).insert_or_assign(code, KeyState::KeyDown);
+        currentBuffer.insert_or_assign(code, KeyState::KeyDown);
       }
       break;
     case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      _keyStates.at(_currentBufferIndex).insert_or_assign(code, (stateResult == KeyState::KeyUp) ? KeyState::Idle : state); //lmao
+      currentBuffer.insert_or_assign(code, (stateResult == KeyState::KeyUp) ? KeyState::Idle : state);
       break;
     case KeyState::Idle:
     default:
@@ -47,9 +48,11 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::processKeyStates() {
-    for (const auto& pair : _keyStates[_previousBufferIndex]) {
-      auto findResultForCurrent = _keyStates[_currentBufferIndex].find(pair.first);
-      if (findResultForCurrent != _keyStates[_currentBufferIndex].end()) {
+    auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+
+    for (const auto& pair : _keyStates.at(_previousBufferIndex)) {
+      auto findResultForCurrent = currentBuffer.find(pair.first);
+      if (findResultForCurrent != currentBuffer.end()) {
         processKeyState(findResultForCurrent->first, findResultForCurrent->second);
       }
       else {
@@ -74,7 +77,15 @@ namespace NovelRT::Input {
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
-    if (_keyStates[_currentBufferIndex][target->subscribedKey()] == KeyState::KeyDown
+
+    auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+    auto subscribedKeyIterator = currentBuffer.find(target->subscribedKey());
+
+    if (subscribedKeyIterator == currentBuffer.end()) {
+      return;
+    }
+
+    if (subscribedKeyIterator->second == KeyState::KeyDown
       && target->validateInteractionPerimeter(_cursorPosition)
       && (_clickTarget == nullptr || (_clickTarget->layer() > target->layer()))) {
       _logger.logDebug("Valid click target detected! Executing...");
@@ -84,7 +95,7 @@ namespace NovelRT::Input {
 
 void InteractionService::consumePlayerInput() {
   _currentBufferIndex = (_currentBufferIndex + 1) % INPUT_BUFFER_COUNT;
-  _keyStates[_currentBufferIndex].clear();
+  _keyStates.at(_currentBufferIndex).clear();
   glfwPollEvents();
   processKeyStates();
   _previousBufferIndex = _currentBufferIndex;
