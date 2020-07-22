@@ -24,6 +24,7 @@ namespace NovelRT::Input {
     Maths::GeoVector2<float> _cursorPosition;
     LoggingService _logger;
     void processKeyState(KeyCode code, KeyState state);
+    void processKeyStates();
     void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 

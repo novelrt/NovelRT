@@ -4,8 +4,8 @@
 
 namespace NovelRT::Input {
   InteractionService::InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept :
-    _previousBufferIndex(1),
-    _currentBufferIndex(0),
+    _previousBufferIndex(0),
+    _currentBufferIndex(1),
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
     if(!windowingService.expired()) windowingService.lock()->WindowResized += [this](auto value) {
@@ -42,18 +42,22 @@ namespace NovelRT::Input {
     }
   }
 
-  void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
+  void InteractionService::processKeyStates() {
+    for (const auto& pair : _keyStates[_previousBufferIndex]) {
+      auto findResultForCurrent = _keyStates[_currentBufferIndex].find(pair.first);
+      if (findResultForCurrent != _keyStates[_currentBufferIndex].end()) {
+        processKeyState(findResultForCurrent->first, findResultForCurrent->second);
+      }
+      else {
+        processKeyState(pair.first, pair.second);
+      }
+    }
+  }
 
+  void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(key);
-
-    auto result = _keyStates[_currentBufferIndex].find(keyCode);
-
-    if (result == _keyStates[_currentBufferIndex].end()) {
-      _keyStates[_currentBufferIndex].insert({ keyCode, keyState });
-      return;
-    }
-    processKeyState(keyCode, keyState);
+    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, keyState);
   }
 
   void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition) {
@@ -62,8 +66,7 @@ namespace NovelRT::Input {
     auto value = Maths::GeoVector4<float>(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
     _cursorPosition =  Maths::GeoVector2<float>(value.x, value.y);
-
-    processKeyState(keyCode, keyState);
+    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, keyState);
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {
@@ -76,10 +79,12 @@ namespace NovelRT::Input {
   }
 
 void InteractionService::consumePlayerInput() {
+  _currentBufferIndex = (_currentBufferIndex + 1) % INPUT_BUFFER_COUNT;
   _keyStates[_currentBufferIndex].clear();
   glfwPollEvents();
+  processKeyStates();
   _previousBufferIndex = _currentBufferIndex;
-  _currentBufferIndex = (_currentBufferIndex + 1) % INPUT_BUFFER_COUNT;
+
 }
 
   std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
