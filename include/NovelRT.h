@@ -163,7 +163,6 @@ namespace NovelRT::Windowing {
 
 //value types
 #include "NovelRT/Atom.h"
-#include "NovelRT/Input/KeyStateFrameUpdatePair.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to include order issues
 #include "NovelRT/Utilities/Lazy.h"
