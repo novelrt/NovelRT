@@ -163,8 +163,7 @@ int main(int /*argc*/, char* /*argv*/[])
     rotation += rotationAmount * delta.getSecondsFloat();
     novelChanRect->transform().rotation() = rotation;
 
-    if (rotation > 360.0f)
-    {
+    if (rotation > 360.0f) {
       rotation -= 360.0f;
     }
 
