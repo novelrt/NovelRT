@@ -39,6 +39,10 @@ namespace NovelRT::Input {
     case KeyState::KeyUp:
       _keyStates.at(_currentBufferIndex).insert_or_assign(code, (stateResult == KeyState::KeyUp) ? KeyState::Idle : state); //lmao
       break;
+    case KeyState::Idle:
+    default:
+      //do nothing. Seriously. These cases are only here because the Ubuntu build cried at me in CI for not having them suddenly.
+      break;
     }
   }
 
