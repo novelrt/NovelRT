@@ -12,7 +12,7 @@ namespace NovelRT {
     _novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
     _novelAudioService(std::make_shared<Audio::AudioService>()),
     _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
-    _novelRenderer(std::make_shared<Graphics::RenderingService>(this)),
+    _novelRenderer(std::make_shared<Graphics::RenderingService>(getWindowingService())),
     _novelDebugService(std::make_shared<DebugService>(SceneConstructionRequested, getRenderer())) {
     if (!glfwInit()) {
       const char* err = "";
