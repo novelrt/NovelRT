@@ -228,7 +228,7 @@ int main(int /*argc*/, char* /*argv*/[])
     lineRect->executeObjectBehaviour();
   };
 
-  runner.getDotNetRuntimeService()->initialize();
+  runner.getDotNetRuntimeService()->initialise();
   audio->playMusic(bgm, -1);
 
   runner.runNovel();
