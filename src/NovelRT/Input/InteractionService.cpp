@@ -8,7 +8,7 @@ namespace NovelRT::Input {
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
     auto ptr = _runner->getWindowingService();
-    if(!ptr.expired()) ptr.lock()->WindowResized += [this](auto value) {
+    ptr->WindowResized += [this](auto value) {
       setScreenSize(value);
     };
   }

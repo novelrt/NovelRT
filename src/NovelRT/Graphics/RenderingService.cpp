@@ -18,14 +18,14 @@ namespace NovelRT::Graphics {
     _camera(nullptr),
     _framebufferColour(RGBAConfig(0,0,102,255)) {
       auto ptr = _runner->getWindowingService();
-      if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
+      ptr->WindowResized += ([this](auto input) {
         initialiseRenderPipeline(false, &input);
       });
   }
 
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
 
-    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService().lock()->getWindowSize() : *optionalWindowSize; //lol this is not safe
+    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService()->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
     infoScreenSize.append("x");
@@ -34,7 +34,7 @@ namespace NovelRT::Graphics {
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
-      glfwMakeContextCurrent(_runner->getWindowingService().lock()->getWindow()); //lmao
+      glfwMakeContextCurrent(_runner->getWindowingService()->getWindow()); //lmao
 
       if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
@@ -196,7 +196,7 @@ namespace NovelRT::Graphics {
   }
 
   void RenderingService::endFrame() const {
-    glfwSwapBuffers(_runner->getWindowingService().lock()->getWindow());
+    glfwSwapBuffers(_runner->getWindowingService()->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
