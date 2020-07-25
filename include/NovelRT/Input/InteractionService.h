@@ -19,7 +19,7 @@ namespace NovelRT::Input {
     uint32_t _currentBufferIndex;
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
-    std::array<std::map<KeyCode, KeyState>, INPUT_BUFFER_COUNT> _keyStates;
+    std::array<std::map<KeyCode, KeyStateFrameChangeLog>, INPUT_BUFFER_COUNT> _keyStates;
     Maths::GeoVector2<float> _screenSize;
     Maths::GeoVector2<float> _cursorPosition;
     LoggingService _logger;
@@ -41,14 +41,14 @@ namespace NovelRT::Input {
       _screenSize = value;
     }
 
-    inline KeyState getKeyState(KeyCode value) const noexcept {
+    inline KeyStateFrameChangeLog getKeyState(KeyCode value) const noexcept {
       auto& currentBuffer = _keyStates.at(_currentBufferIndex);
       auto it = currentBuffer.find(value);
       if (it != currentBuffer.end()) {
         return it->second;
       }
 
-      return KeyState::Idle;
+      return KeyStateFrameChangeLog{};
     }
   };
 }

@@ -17,34 +17,46 @@ namespace NovelRT::Input {
     auto& previousBuffer = _keyStates.at(_previousBufferIndex);
     auto& currentBuffer = _keyStates.at(_currentBufferIndex);
 
-    auto result = previousBuffer.find(code);
-    KeyState stateResult;
+    auto previousBufferResult = previousBuffer.find(code);
+    KeyState previousStateResult;
 
-    if (result == _keyStates[_previousBufferIndex].end()) {
-      stateResult = KeyState::Idle;
+    if (previousBufferResult == previousBuffer.end()) {
+      previousStateResult = KeyState::Idle;
     }
     else {
-      stateResult = result->second;
+      previousStateResult = previousBufferResult->second.getCurrentState();
+    }
+
+    auto currentBufferResult = currentBuffer.find(code);
+    KeyStateFrameChangeLog changeLogObject{};
+
+    if (currentBufferResult == currentBuffer.end()) {
+      changeLogObject = KeyStateFrameChangeLog();
+    }
+    else {
+      changeLogObject = currentBufferResult->second;
     }
 
     switch (state) {
     case KeyState::KeyDown:
-      if (stateResult == KeyState::KeyDown) {
-        currentBuffer.insert_or_assign(code, KeyState::KeyDownHeld);
+      if (previousStateResult == KeyState::KeyDown) {
+        changeLogObject.pushNewState(KeyState::KeyDownHeld);
       }
-      else if (stateResult != KeyState::KeyDownHeld) {
-        currentBuffer.insert_or_assign(code, KeyState::KeyDown);
+      else if (previousStateResult != KeyState::KeyDownHeld) {
+        changeLogObject.pushNewState(KeyState::KeyDown); //TODO: Is this actually gonna work lol
       }
       break;
     case KeyState::KeyDownHeld:
     case KeyState::KeyUp:
-      currentBuffer.insert_or_assign(code, (stateResult == KeyState::KeyUp) ? KeyState::Idle : state);
+      changeLogObject.pushNewState((previousStateResult == KeyState::KeyUp) ? KeyState::Idle : state);
       break;
     case KeyState::Idle:
     default:
       //do nothing. Seriously. These cases are only here because the Ubuntu build cried at me in CI for not having them suddenly.
       break;
     }
+
+    currentBuffer.insert_or_assign(code, changeLogObject);
   }
 
   void InteractionService::processKeyStates() {
@@ -53,10 +65,10 @@ namespace NovelRT::Input {
     for (const auto& pair : _keyStates.at(_previousBufferIndex)) {
       auto findResultForCurrent = currentBuffer.find(pair.first);
       if (findResultForCurrent != currentBuffer.end()) {
-        processKeyState(findResultForCurrent->first, findResultForCurrent->second);
+        processKeyState(findResultForCurrent->first, findResultForCurrent->second.getCurrentState());
       }
       else {
-        processKeyState(pair.first, pair.second);
+        processKeyState(pair.first, pair.second.getCurrentState());
       }
     }
   }
@@ -64,7 +76,14 @@ namespace NovelRT::Input {
   void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(key);
-    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, keyState);
+    KeyStateFrameChangeLog log{};
+
+    if (_keyStates.at(_currentBufferIndex).find(keyCode) != _keyStates.at(_currentBufferIndex).end()) {
+      log = _keyStates.at(_currentBufferIndex).at(keyCode);
+    }
+
+    log.pushNewState(keyState);
+    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, log);
   }
 
   void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition) {
@@ -73,7 +92,14 @@ namespace NovelRT::Input {
     auto value = Maths::GeoVector4<float>(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
     _cursorPosition =  Maths::GeoVector2<float>(value.x, value.y);
-    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, keyState);
+    KeyStateFrameChangeLog log{};
+
+    if (_keyStates.at(_currentBufferIndex).find(keyCode) != _keyStates.at(_currentBufferIndex).end()) {
+      log = _keyStates.at(_currentBufferIndex).at(keyCode);
+    }
+
+    log.pushNewState(keyState);
+    _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, log);
   }
 
   void InteractionService::HandleInteractionDraw(InteractionObject* target) {

@@ -16,7 +16,6 @@ namespace NovelRT::Input {
     KeyUp = GLFW_RELEASE, //0
     KeyDown = GLFW_PRESS, //1
     KeyDownHeld = GLFW_REPEAT, //2
-
   };
 }
 
