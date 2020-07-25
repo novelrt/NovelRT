@@ -37,12 +37,12 @@ namespace NovelRT::Graphics {
     auto info = png_create_info_struct(png);
 
     if (info == nullptr) {
-      _logger.logError("Image at path " + file + " failed to provide an info struct! Aborting...");
+      _logger.logError("Image at path {} failed to provide an info struct! Aborting...", file);
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
     if (setjmp(png_jmpbuf(png))) { //This is how libpng does error handling.
-      _logger.logError("Image at path " + file + " appears to be corrupted! Aborting...");
+      _logger.logError("Image at path {} appears to be corrupted! Aborting...", file);
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 

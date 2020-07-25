@@ -85,7 +85,7 @@ std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
 
   //Sorry Matt, nullptr types are incompatible to ALuint according to VS.
   if (newBuffer == _noBuffer) {
-    _logger.logWarning("Could not load audio file: " + input);
+    _logger.logWarning("Could not load audio file: {}", input);
     return _music.end();
   }
 
@@ -269,7 +269,7 @@ ALuint AudioService::loadSound(std::string input) {
   auto newBuffer = readFile(input);
 
   if (newBuffer == _noBuffer) {
-    _logger.logWarning("Could not load audio file: " + input);
+    _logger.logWarning("Could not load audio file: {}", input);
     return _noBuffer;
   }
 
