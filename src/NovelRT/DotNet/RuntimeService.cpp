@@ -62,7 +62,7 @@ namespace NovelRT::DotNet {
       hostfxr_handle hostContextHandle = nullptr;
 
       std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
-      std::filesystem::path runtimeConfigJsonPath = executableDirPath / "NovelRT.DotNet.runtimeconfig.json";
+      std::filesystem::path runtimeConfigJsonPath = executableDirPath / "dotnet" / "NovelRT.DotNet.runtimeconfig.json";
 
       const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
 
