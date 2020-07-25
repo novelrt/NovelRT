@@ -26,23 +26,62 @@ For information on Ink, check it out from [here](https://github.com/inkle/ink).
 
 ## Getting Started with NovelRT
 
-Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything. If you wish to attempt to build a basic visual novel with the existing C++ API, you must first `git clone` this repository and set up vcpkg, which you can find out more about [here](https://github.com/microsoft/vcpkg).
+Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything.
 
-### Our dependency list currently includes:
-- Freetype
-- GLAD
-- GLFW
+If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
+
+### Dependencies
+- .NET Core SDK 3.1.100
+- CMake 3.13
+- Doxygen 1.8.8 (if building docs)
+- Freetype 2.8.1
+- GLAD 0.1.30
+- GLFW 3.2.1
 - glm
-- gtest
-- Libsndfile
-- libpng
+- gtest/gmock 1.10.0
+- libpng 1.6.34
+- libsndfile 1.0.28
 - Lua 5.3
-- nethost
-- OpenAL-Soft
-- spdlog
-(and their respective dependencies)
+- OpenAL 1.19.1
+- spdlog 1.4.2
 
-*The minimum CMake version required for this project is 3.13.*
+### Build instructions
+
+We provide build scripts in the root of the repository which may work for you.
+However, you will need to ensure the dependencies are correctly installed.
+
+#### Linux
+First, you must install the dependencies. Using Ubuntu 20.04, this looks something like this:
+```
+sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
+    libglm-dev libgmock-dev libgtest-dev liblua5.3-dev libopenal-dev libsndfile1-dev \
+    libspdlog-dev pyhon3-glad
+```
+Then, clone and build NovelRT:
+```
+git clone https://github.com/NovelRT/NovelRT.git
+mkdir -p NovelRT/build
+cd NovelRT/build
+cmake ..
+make -j
+```
+
+#### Windows
+First, you must [setup vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019#installation) and Python 3 to install the dependencies:
+```
+python -m pip install setuptools
+python -m pip install glad
+vcpkg.exe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
+```
+Then, clone and build NovelRT:
+```
+git clone https://github.com/NovelRT/NovelRT.git
+cd NovelRT
+mkdir build
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=path/to/vcpkg/toolchain.cmake ..
+cmake --build ..
+```
 
 ## Example
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
