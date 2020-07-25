@@ -7,7 +7,7 @@ AudioService::AudioService() :
   _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
-      _logger.logError("OpenAL device creation failed!", getALError());
+      _logger.logError("OpenAL device creation failed! {}", getALError());
       throw std::runtime_error("OpenAL failed to create an audio device! Aborting...");
     }
     return device;
@@ -17,7 +17,7 @@ AudioService::AudioService() :
     alcMakeContextCurrent(context);
     isInitialised = true;
     _deviceName = alcGetString(_device.getActual(), ALC_DEVICE_SPECIFIER);
-    _logger.logInfo("OpenAL Initialized on device: ", _deviceName);
+    _logger.logInfo("OpenAL Initialized on device: {}", _deviceName);
     return context;
   }), [](auto x) {
     alcMakeContextCurrent(nullptr);

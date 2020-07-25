@@ -34,7 +34,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to locate the specified managed function: ", result);
+        _logger.logError("Failed to locate the specified managed function: {}", result);
         throw std::runtime_error("Failed to locate the specified managed function");
       }
 

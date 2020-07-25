@@ -16,7 +16,7 @@ namespace NovelRT::Windowing {
   }
 
   void WindowingService::errorCallback(int, const char* error) {
-    _logger.logError("Could not initialize GLFW: ", error);
+    _logger.logError("Could not initialize GLFW: {}", error);
   }
 
   void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {

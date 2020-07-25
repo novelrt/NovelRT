@@ -29,7 +29,7 @@ namespace NovelRT::Graphics {
     FT_Face face;
 
     if (FT_New_Face(freeTypeLoader, file.c_str(), 0, &face)) {
-      _logger.logError("FREETYPE - Failed to load font: ", file);
+      _logger.logError("FREETYPE - Failed to load font: {}", file);
     }
 
     FT_Set_Pixel_Sizes(face, 0, static_cast<FT_UInt>(fontSize));
