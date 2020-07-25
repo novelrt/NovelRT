@@ -30,7 +30,7 @@ namespace NovelRT::Graphics {
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
     infoScreenSize.append("x");
     infoScreenSize.append(std::to_string(static_cast<int>(windowSize.getY())));
-    _logger.logInfo("Screen size:", infoScreenSize);
+    _logger.logInfo("Screen size: {}", infoScreenSize);
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
