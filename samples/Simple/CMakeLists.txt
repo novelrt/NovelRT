@@ -27,6 +27,16 @@ add_custom_command(
     $<TARGET_FILE_DIR:Simple>/dotnet
 )
 
+#this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
+if(WIN32)
+  add_custom_command(
+    TARGET Simple POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_FILE_DIR:Simple>/dotnet/nethost.dll
+      $<TARGET_FILE_DIR:Simple>
+  )
+endif()
+
 add_custom_command(
   TARGET Simple POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
