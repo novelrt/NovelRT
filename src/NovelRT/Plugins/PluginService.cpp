@@ -2,6 +2,7 @@
 
 #include <NovelRT.h>
 #include "LoadLibHelper.h"
+#include "jsoncpp/json/json.h"
 
 namespace NovelRT::Plugins {
   PluginInfo PluginService::getPluginInfo(const std::filesystem::path& path) const {

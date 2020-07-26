@@ -11,6 +11,7 @@ ScriptRoot="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 build=false
 ci=false
 configuration='Debug'
+dotnetInstallDirectory="$HOME/dotnet"
 generate=false
 help=false
 install=false
@@ -30,6 +31,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --configuration)
       configuration=$2
+      shift 2
+      ;;
+    --dotnetInstallDirectory)
+      dotnetInstallDirectory=$2
       shift 2
       ;;
     --generate)
@@ -82,19 +87,9 @@ function CreateDirectory {
 
 function Generate {
   if [ -z "$remaining" ]; then
-    if $ci; then
-      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile"
-    else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
-    fi
+    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
   else
-    if $ci; then
-      VcpkgToolchainFile="$VcpkgInstallDir/scripts/buildsystems/vcpkg.cmake"
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_TOOLCHAIN_FILE="$VcpkgToolchainFile" "${remaining[@]}"
-    else
-      cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
-    fi
+    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?
@@ -107,17 +102,18 @@ function Generate {
 
 function Help {
   echo "Common settings:"
-  echo "  --configuration <value>   Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
-  echo "  --help                    Print help and exit"
+  echo "  --configuration <value>             Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
+  echo "  --dotnetInstallDirectory <value>   .NET Core install directory"
+  echo "  --help                              Print help and exit"
   echo ""
   echo "Actions:"
-  echo "  --build                   Build repository"
-  echo "  --generate                Generate CMake cache"
-  echo "  --install                 Install repository"
-  echo "  --test                    Test repository"
+  echo "  --build                             Build repository"
+  echo "  --generate                          Generate CMake cache"
+  echo "  --install                           Install repository"
+  echo "  --test                              Test repository"
   echo ""
   echo "Advanced settings:"
-  echo "  --ci                      Set when running on CI server"
+  echo "  --ci                                Set when running on CI server"
   echo ""
   echo "Command line arguments not listed above are passed through to CMake."
 }
@@ -181,48 +177,7 @@ CreateDirectory "$InstallDir"
 TestDir="$BuildDir/tests"
 CreateDirectory "$TestDir"
 
-if $ci; then
-  VcpkgInstallDir="$ArtifactsDir/vcpkg"
-
-  if [ ! -d "$VcpkgInstallDir" ]; then
-     git clone https://github.com/capnkenny/vcpkg "$VcpkgInstallDir"
-  fi
-
-  VcpkgExe="$VcpkgInstallDir/vcpkg"
-
-  if [ ! -f "$VcpkgExe" ]; then
-    "$VcpkgInstallDir/bootstrap-vcpkg.sh"
-    LASTEXITCODE=$?
-
-    if [ "$LASTEXITCODE" != 0 ]; then
-      echo "'bootstrap-vcpkg' failed"
-      return "$LASTEXITCODE"
-    fi
-  fi
-
-  "$VcpkgExe" install freetype glad glfw3 glm gtest libsndfile lua nethost openal-soft spdlog jsoncpp
-  LASTEXITCODE=$?
-
-  if [ "$LASTEXITCODE" != 0 ]; then
-    echo "'vcpkg install' failed"
-    return "$LASTEXITCODE"
-  fi
-
-  export DOTNET_CLI_TELEMETRY_OPTOUT=1
-  export DOTNET_MULTILEVEL_LOOKUP=0
-  export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-
-  DotNetInstallScript="$ArtifactsDir/dotnet-install.sh"
-  wget -O "$DotNetInstallScript" "https://dot.net/v1/dotnet-install.sh"
-
-  DotNetInstallDirectory="$ArtifactsDir/dotnet"
-  CreateDirectory "$DotNetInstallDirectory"
-
-  . "$DotNetInstallScript" --channel 3.1 --version latest --install-dir "$DotNetInstallDirectory"
-  . "$DotNetInstallScript" --channel 2.1 --version latest --install-dir "$DotNetInstallDirectory" --runtime dotnet
-
-  PATH="$DotNetInstallDirectory:$PATH:"
-fi
+export PATH="$dotnetInstallDirectory:$PATH:"
 
 if $generate; then
   Generate
