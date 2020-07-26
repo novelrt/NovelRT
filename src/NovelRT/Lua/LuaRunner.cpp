@@ -83,14 +83,14 @@ namespace NovelRT::Lua {
     // Transform
     auto transformType = globalTable.new_usertype<Transform>("Transform",
       sol::constructors<Transform(),
-      Transform(const Maths::GeoVector2<float> & position,
-        float rotation, const Maths::GeoVector2<float> & scale)>()
+      Transform(const Maths::GeoVector2<float>& position,
+        float rotation, const Maths::GeoVector2<float>& scale)>()
       );
 
     transformType["AABB"] = sol::property(&Transform::getAABB);
     transformType["bounds"] = sol::property(&Transform::getBounds);
     transformType["position"] = sol::property(
-      static_cast<const Maths::GeoVector2<float> & (Transform::*)() const>(&Transform::position),
+      static_cast<const Maths::GeoVector2<float>& (Transform::*)() const>(&Transform::position),
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::position)
       );
 
@@ -100,7 +100,7 @@ namespace NovelRT::Lua {
       );
 
     transformType["scale"] = sol::property(
-      static_cast<const Maths::GeoVector2<float> & (Transform::*)() const>(&Transform::scale),
+      static_cast<const Maths::GeoVector2<float>& (Transform::*)() const>(&Transform::scale),
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::scale)
       );
 
@@ -138,13 +138,13 @@ namespace NovelRT::Lua {
     spriteAnimatorFrameType["frameExit"] = &Animation::SpriteAnimatorFrame::FrameExit;
 
     spriteAnimatorFrameType["texture"] = sol::property(
-      static_cast<const std::shared_ptr<Graphics::Texture> & (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::texture),
-      static_cast<std::shared_ptr<Graphics::Texture> & (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::texture)
+      static_cast<const std::shared_ptr<Graphics::Texture>& (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::texture),
+      static_cast<std::shared_ptr<Graphics::Texture>& (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::texture)
       );
 
     spriteAnimatorFrameType["duration"] = sol::property(
-      static_cast<const Timing::Timestamp & (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::duration),
-      static_cast<Timing::Timestamp & (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::duration)
+      static_cast<const Timing::Timestamp& (Animation::SpriteAnimatorFrame::*)() const>(&Animation::SpriteAnimatorFrame::duration),
+      static_cast<Timing::Timestamp& (Animation::SpriteAnimatorFrame::*)()>(&Animation::SpriteAnimatorFrame::duration)
       );
 
     //SpriteAnimatorState
@@ -158,8 +158,8 @@ namespace NovelRT::Lua {
       static_cast<bool& (Animation::SpriteAnimatorState::*)()>(&Animation::SpriteAnimatorState::shouldLoop)
       );
     spriteAnimatorStateType["frames"] = sol::property(
-      static_cast<const std::vector<Animation::SpriteAnimatorFrame> & (Animation::SpriteAnimatorState::*)() const>(&Animation::SpriteAnimatorState::frames),
-      static_cast<std::vector<Animation::SpriteAnimatorFrame> & (Animation::SpriteAnimatorState::*)()>(&Animation::SpriteAnimatorState::frames)
+      static_cast<const std::vector<Animation::SpriteAnimatorFrame>& (Animation::SpriteAnimatorState::*)() const>(&Animation::SpriteAnimatorState::frames),
+      static_cast<std::vector<Animation::SpriteAnimatorFrame>& (Animation::SpriteAnimatorState::*)()>(&Animation::SpriteAnimatorState::frames)
       );
     spriteAnimatorStateType["tryFindValidTransition"] = &Animation::SpriteAnimatorState::tryFindValidTransition;
 
@@ -245,19 +245,19 @@ namespace NovelRT::Lua {
 
     imageRectType["texture"] = sol::property(
       static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture),
-      static_cast<std::shared_ptr<Graphics::Texture> & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::texture)
+      static_cast<std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)()>(&Graphics::ImageRect::texture)
       );
 
     imageRectType["colourTint"] = sol::property(
       static_cast<const Graphics::RGBAConfig& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
-      static_cast<Graphics::RGBAConfig & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint)
+      static_cast<Graphics::RGBAConfig& (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint)
       );
 
 
     imageRectType["drawObject"] = &Graphics::ImageRect::drawObject;
     imageRectType["colourTint"] = sol::property(
       static_cast<const Graphics::RGBAConfig & (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
-      static_cast<Graphics::RGBAConfig & (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint));
+      static_cast<Graphics::RGBAConfig& (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint));
 
 
     //RenderService
@@ -282,16 +282,6 @@ namespace NovelRT::Lua {
     renderingServiceType["getTexture"] = static_cast<std::shared_ptr<Graphics::Texture>(Graphics::RenderingService::*)(const std::string&)>(&Graphics::RenderingService::getTexture);
     renderingServiceType["fontSet"] = sol::property(&Graphics::RenderingService::getFontSet);
 
-    //RenderObject
-
-    //TODO: RenderObject is abstract; how do you represent this in lua?
-
-    //auto renderObjectType = globalTable.new_usertype<Graphics::RenderObject>("RenderObject",
-    //  sol::constructors<Graphics::RenderObject(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>)>());
-
-    //renderObjectType["executeObjectBehaviour"] = &Graphics::RenderObject::executeObjectBehaviour;
-
-    //RGBAConfig
 
     auto rgbaConfigType = globalTable.new_usertype<Graphics::RGBAConfig>("RGBAConfig", sol::constructors<Graphics::RGBAConfig(int, int, int, int)>());
 
