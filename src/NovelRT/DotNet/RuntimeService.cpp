@@ -123,7 +123,7 @@ namespace NovelRT::DotNet {
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_DOTNET)) {
   }
 
-  RuntimeService::~RuntimeService() {
+  void RuntimeService::tearDown() {
     if (_hostContextHandle.isCreated())
     {
       int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
@@ -132,11 +132,15 @@ namespace NovelRT::DotNet {
 
     if (_hostfxr.isCreated())
     {
-      closeNativeLibrary(_hostfxr.getActual());
+        closeNativeLibrary(_hostfxr.getActual());
     }
   }
 
-  void RuntimeService::initialize() {
+  RuntimeService::~RuntimeService() {
+    tearDown();
+  }
+
+  void RuntimeService::initialise() {
     auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
     initializeFunction();
   }

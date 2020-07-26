@@ -53,6 +53,7 @@ namespace NovelRT::Audio {
     void unload(ALuint handle);
     void playSound(ALuint handle, int loops);
     void stopSound(ALuint handle);
+    void tearDown();
 
   };
 }

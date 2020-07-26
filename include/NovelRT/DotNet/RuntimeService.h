@@ -41,7 +41,8 @@ namespace NovelRT::DotNet {
       return std::function<_Fty>(reinterpret_cast<_Fty*>(delegate));
     }
 
-    void initialize();
+    void initialise();
+    void tearDown();
   };
 }
 

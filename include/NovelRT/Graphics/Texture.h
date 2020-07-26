@@ -13,7 +13,7 @@ namespace NovelRT::Graphics {
     friend class FontSet;
   private:
     Atom _id;
-    std::weak_ptr<RenderingService> _renderer;
+    std::shared_ptr<RenderingService> _renderer;
     Utilities::Lazy<GLuint> _textureId;
     LoggingService _logger; //not proud of this
     std::string _textureFile;
@@ -32,7 +32,7 @@ namespace NovelRT::Graphics {
     }
 
   public:
-    Texture(std::weak_ptr<RenderingService> renderer, Atom id);
+    Texture(std::shared_ptr<RenderingService> renderer, Atom id);
     void loadPngAsTexture(const std::string& file);
 
     inline const std::string& getTextureFile() const noexcept {

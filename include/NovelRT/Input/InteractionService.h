@@ -13,8 +13,6 @@ namespace NovelRT::Input {
     friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
   private:
-    NovelRunner* const _runner;
-
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
     std::map<KeyCode, KeyState> _keyStates;
@@ -28,7 +26,7 @@ namespace NovelRT::Input {
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
-    InteractionService(NovelRunner* const runner) noexcept;
+    InteractionService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
 
     void consumePlayerInput();
 
