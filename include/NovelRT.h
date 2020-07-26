@@ -43,7 +43,7 @@
 #include FT_FREETYPE_H
 
 //glad
-#include <glad.h>
+#include <glad/glad.h>
 
 //GLFW3
 #define GLFW_INCLUDE_NONE
@@ -61,8 +61,8 @@
 #include <sndfile.h>
 
 //nethost
-#include <coreclr_delegates.h>
-#include <hostfxr.h>
+#include "NovelRT/DotNet/coreclr_delegates.h"
+#include "NovelRT/DotNet/hostfxr.h"
 
 //spdlog
 #if defined(_MSC_VER)

@@ -3,9 +3,9 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  RenderingService::RenderingService(NovelRunner* const runner) :
+  RenderingService::RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept :
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-    _runner(runner),
+    _windowingService(windowingService),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
       GLuint tempHandle;
       glGenBuffers(1, &tempHandle);
@@ -15,16 +15,16 @@ namespace NovelRT::Graphics {
       glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
       return tempHandle;
     })),
-    _camera(nullptr) {
-      auto ptr = _runner->getWindowingService();
-      if(!ptr.expired()) ptr.lock()->WindowResized += ([this](auto input) {
+    _camera(nullptr),
+    _framebufferColour(RGBAConfig(0,0,102,255)) {
+    _windowingService->WindowResized += ([this](auto input) {
         initialiseRenderPipeline(false, &input);
       });
   }
 
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
 
-    auto windowSize = (optionalWindowSize == nullptr) ? _runner->getWindowingService().lock()->getWindowSize() : *optionalWindowSize; //lol this is not safe
+    auto windowSize = (optionalWindowSize == nullptr) ? _windowingService->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
     std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
     infoScreenSize.append("x");
@@ -33,7 +33,7 @@ namespace NovelRT::Graphics {
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
-      glfwMakeContextCurrent(_runner->getWindowingService().lock()->getWindow()); //lmao
+      glfwMakeContextCurrent(_windowingService->getWindow()); //lmao
 
       if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logErrorLine("Failed to initialise glad.");
@@ -190,12 +190,12 @@ namespace NovelRT::Graphics {
 
   void RenderingService::beginFrame() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(_framebufferColour.getRScalar(), _framebufferColour.getGScalar(), _framebufferColour.getBScalar(), _framebufferColour.getAScalar());
     _camera->initialiseCameraForFrame();
   }
 
   void RenderingService::endFrame() const {
-    glfwSwapBuffers(_runner->getWindowingService().lock()->getWindow());
+    glfwSwapBuffers(_windowingService->getWindow());
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
@@ -249,7 +249,7 @@ namespace NovelRT::Graphics {
         return result;
       }
 
-      auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
+      auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::getNextTextureId());
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
@@ -257,7 +257,7 @@ namespace NovelRT::Graphics {
     }
 
     //DRY, I know, but Im really not fussed rn
-    auto returnValue = std::make_shared<Texture>(_runner->getRenderer(), Atom::getNextTextureId());
+    auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::getNextTextureId());
     std::weak_ptr<Texture> valueForMap = returnValue;
     _textureCache.emplace(returnValue->getId(), valueForMap);
 
@@ -274,9 +274,13 @@ namespace NovelRT::Graphics {
       }
     }
 
-    auto returnValue = std::make_shared<FontSet>(_runner->getRenderer(), Atom::getNextFontSetId());
+    auto returnValue = std::make_shared<FontSet>(shared_from_this(), Atom::getNextFontSetId());
     _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
     returnValue->loadFontAsTextureSet(fileTarget, fontSize);
     return returnValue;
+  }
+
+  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
+    _framebufferColour = colour;
   }
 }

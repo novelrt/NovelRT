@@ -1,31 +1,39 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
-project(NovelRT VERSION 0.0.1)
+project(NovelRT
+  VERSION 0.1.0
+  DESCRIPTION "NovelRT game engine"
+  HOMEPAGE_URL "https://github.com/novelrt/NovelRT"
+  LANGUAGES C CXX
+)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_CXX_STANDARD 17)
-
-if (MSVC)
-  add_compile_options(/W4 /WX /wd4611)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-float-equal -Wno-padded)
-else()
-  add_compile_options(-pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-float-equal -Wno-padded -Wno-reserved-id-macro)
+if(MSVC)
+  # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
+  string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+  string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
-include_directories(include)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
+option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
+option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 
 add_subdirectory(src)
 
-if (NOT NOVELRT_SKIP_SAMPLES)
+if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
   add_subdirectory(lua-samples)
 endif()
 
-if (NOT NOVELRT_SKIP_DOCUMENTATION)
+if(NOVELRT_BUILD_DOCUMENTATION)
   add_subdirectory(doxygen)
 endif()
 
-if (NOT NOVELRT_SKIP_TESTS)
+if(NOVELRT_BUILD_TESTS)
+  enable_testing()
+
   add_subdirectory(tests)
 endif()
+
+add_subdirectory(resources)

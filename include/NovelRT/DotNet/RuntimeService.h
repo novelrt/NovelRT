@@ -25,7 +25,7 @@ namespace NovelRT::DotNet {
     template <class _Fty>
     std::function<_Fty> getFunction(const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
       std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
-      std::filesystem::path assemblyPath = executableDirPath / assemblyName;
+      std::filesystem::path assemblyPath = executableDirPath / "dotnet" / assemblyName;
 
       const char_t* assembly_path = assemblyPath .c_str();
 
@@ -41,7 +41,8 @@ namespace NovelRT::DotNet {
       return std::function<_Fty>(reinterpret_cast<_Fty*>(delegate));
     }
 
-    void initialize();
+    void initialise();
+    void tearDown();
   };
 }
 

@@ -23,16 +23,15 @@ namespace NovelRT {
      * Use this to define game behaviour that is required to be done per-frame.
      */
     Utilities::Event<Timing::Timestamp> Update;
-
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
-    std::shared_ptr<DebugService> _novelDebugService;
     std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Input::InteractionService> _novelInteractionService;
     std::shared_ptr<Audio::AudioService> _novelAudioService;
     std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
     std::shared_ptr<Graphics::RenderingService> _novelRenderer;
+    std::shared_ptr<DebugService> _novelDebugService;
     LoggingService _loggingService;
 
   public:
@@ -43,7 +42,7 @@ namespace NovelRT {
      * @param windowTitle The title of the window created for NovelRunner.
      * @param targetFrameRate The framerate that should be targeted and capped.
      */
-    explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0);
+    explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0, bool transparency = false);
     /**
      * Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
@@ -51,17 +50,17 @@ namespace NovelRT {
     int runNovel();
 
     /// Gets the Rendering Service associated with this Runner.
-    std::weak_ptr<Graphics::RenderingService> getRenderer() const;
+    std::shared_ptr<Graphics::RenderingService> getRenderer() const;
     /// Gets the Interaction Service associated with this Runner
-    std::weak_ptr<Input::InteractionService> getInteractionService() const;
+    std::shared_ptr<Input::InteractionService> getInteractionService() const;
     /// Gets the Debug Service associated with this Runner.
-    std::weak_ptr<DebugService> getDebugService() const;
+    std::shared_ptr<DebugService> getDebugService() const;
     /// Gets the Audio Service associated with this Runner.
-    std::weak_ptr<Audio::AudioService> getAudioService() const;
+    std::shared_ptr<Audio::AudioService> getAudioService() const;
     /// Gets the .NET Runtime Service associated with this Runner.
-    std::weak_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+    std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
     /// Gets the Windowing Service associated with this Runner.
-    std::weak_ptr<Windowing::WindowingService> getWindowingService() const;
+    std::shared_ptr<Windowing::WindowingService> getWindowingService() const;
 
     /**
      * Terminates the game.
