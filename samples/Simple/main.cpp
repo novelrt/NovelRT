@@ -171,6 +171,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
       console.logInfoLine("W is not idle!");
+      console.logInfoLine(std::to_string(runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W).getChangeCount()) + " key transitions!");
     }
     else if (runner.getInteractionService().lock()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyUp) {
       console.logInfoLine("W Key came up!");
