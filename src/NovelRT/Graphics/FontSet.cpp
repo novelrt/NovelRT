@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  FontSet::FontSet(std::weak_ptr<RenderingService> renderer, Atom id) noexcept :
+  FontSet::FontSet(std::shared_ptr<RenderingService> renderer, Atom id) noexcept :
     _renderer(renderer),
     _id(id),
     _fontSize(0),
@@ -66,7 +66,7 @@ namespace NovelRT::Graphics {
 
       // Now store character for later use
       GraphicsCharacterRenderData character = {
-          _renderer.lock()->getTexture(),
+          _renderer->getTexture(),
           Maths::GeoVector2<uint32_t>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
           Maths::GeoVector2<int32_t>(face->glyph->bitmap_left, face->glyph->bitmap_top),
           GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
@@ -82,8 +82,6 @@ namespace NovelRT::Graphics {
   }
 
   FontSet::~FontSet() {
-    if (!_renderer.expired()) {
-      _renderer.lock()->handleFontSetPreDestruction(this);
-    }
+    _renderer->handleFontSetPreDestruction(this);
   }
 }
