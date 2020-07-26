@@ -14,11 +14,11 @@ jobs:
 - template: azure-unix.yml
   parameters:
     name: ubuntu_debug_x64
-    pool: 'ubuntu-latest'
+    container: 'finitereality/novelrt-build:latest'
     configuration: Debug
 
 - template: azure-unix.yml
   parameters:
     name: ubuntu_release_x64
-    pool: 'ubuntu-latest'
+    container: 'finitereality/novelrt-build:latest'
     configuration: Release
