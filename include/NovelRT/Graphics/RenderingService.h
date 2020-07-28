@@ -8,7 +8,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class RenderingService {
+  class RenderingService : public std::enable_shared_from_this<RenderingService> {
     friend class ImageRect;
     friend class TextRect;
     friend class Texture;
@@ -16,7 +16,7 @@ namespace NovelRT::Graphics {
   private:
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector2<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
-    NovelRunner* const _runner;
+    std::shared_ptr<Windowing::WindowingService> _windowingService;
 
     ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
     ShaderProgram _basicFillRectProgram;
@@ -37,7 +37,7 @@ namespace NovelRT::Graphics {
     void handleFontSetPreDestruction(FontSet* target);
 
   public:
-    RenderingService(NovelRunner* const runner);
+    RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
     int initialiseRendering();
     void tearDown() const;
 

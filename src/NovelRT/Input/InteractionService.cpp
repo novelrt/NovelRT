@@ -3,13 +3,19 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  InteractionService::InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept :
+  InteractionService::InteractionService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept :
     _previousBufferIndex(0),
     _currentBufferIndex(1),
     _clickTarget(nullptr),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_INPUT)) {
-    if(!windowingService.expired()) windowingService.lock()->WindowResized += [this](auto value) {
+    windowingService->WindowResized += [this](auto value) {
       setScreenSize(value);
+    };
+    windowingService->MouseButtonClicked += [this](auto eventArgs) {
+      acceptMouseButtonClickPush(eventArgs.button, eventArgs.action, eventArgs.mousePosition);
+    };
+    windowingService->KeyboardButtonChanged += [this](auto eventArgs) {
+      acceptKeyboardInputBindingPush(eventArgs.key, eventArgs.action);
     };
   }
 

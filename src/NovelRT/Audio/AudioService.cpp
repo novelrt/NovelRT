@@ -316,9 +316,8 @@ void AudioService::stopSound(ALuint handle) {
   alSourceStop(handle);
 }
 
-AudioService::~AudioService() {
+void AudioService::tearDown() {
   if (!_context.isCreated()) return;
-
 
   if (_manualLoad) {
     for (auto source : _soundStorage) {
@@ -339,6 +338,10 @@ AudioService::~AudioService() {
   //were deleting the objects explicitly here to ensure they're always deleted in the right order, lest you summon the kraken. - Ruby
   _context.reset();
   _device.reset();
+}
+
+AudioService::~AudioService() {
+  tearDown();
 }
 
 }

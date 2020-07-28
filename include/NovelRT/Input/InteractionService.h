@@ -29,7 +29,7 @@ namespace NovelRT::Input {
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
-    InteractionService(std::weak_ptr<Windowing::WindowingService> windowingService) noexcept;
+    InteractionService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
 
     void consumePlayerInput();
 

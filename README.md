@@ -80,7 +80,12 @@ cd NovelRT
 mkdir build
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=path/to/vcpkg/toolchain.cmake ..
-cmake --build ..
+cmake --build . -j
+```
+
+Alternatively, you can also specify a single target to build like so:
+```
+cmake --build . -j -t TargetNameGoesHere
 ```
 
 ## Example
