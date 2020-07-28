@@ -43,3 +43,10 @@ add_custom_command(
     $<TARGET_FILE_DIR:Resources>
     $<TARGET_FILE_DIR:Simple>/Resources
 )
+
+add_custom_command(
+  TARGET Simple POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Engine>
+    $<TARGET_FILE_DIR:Simple>
+)
