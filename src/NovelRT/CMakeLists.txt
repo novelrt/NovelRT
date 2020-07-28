@@ -60,7 +60,7 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine SHARED ${ENGINE_SOURCES})
+add_library(Engine ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
@@ -87,7 +87,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       -Werror
       -Wno-float-equal
       -Wno-padded
-      -fPIC
   )
 else()
   target_compile_options(Engine
@@ -102,7 +101,6 @@ else()
       -Wno-float-equal
       -Wno-padded
       -Wno-reserved-id-macro
-      -fPIC
   )
 endif()
 
