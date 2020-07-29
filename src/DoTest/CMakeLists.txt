@@ -4,7 +4,7 @@ set(DOTEST_SOURCES
     DoTest.cpp
 )
 
-add_library(DoTest SHARED ${DOTEST_SOURCES})
+add_library(DoTest MODULE ${DOTEST_SOURCES})
 add_dependencies(DoTest Engine)
 target_compile_features(DoTest PUBLIC cxx_std_17)
 target_include_directories(DoTest
