@@ -38,4 +38,30 @@ target_link_libraries(Engine_Tests
     GMock::Main
 )
 
+add_custom_command(
+  TARGET Engine_Tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Dotnet>
+    $<TARGET_FILE_DIR:Engine_Tests>/dotnet
+)
+
+#this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
+if(WIN32)
+  add_custom_command(
+    TARGET Engine_Tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_FILE_DIR:Engine_Tests>/dotnet/nethost.dll
+      $<TARGET_FILE_DIR:Engine_Tests>
+  )
+endif()
+
+add_custom_command(
+  TARGET Engine_Tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Engine>
+    $<TARGET_FILE_DIR:Engine_Tests>
+)
+
+
+
 gtest_discover_tests(Engine_Tests)
