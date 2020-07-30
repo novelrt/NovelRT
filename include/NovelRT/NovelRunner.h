@@ -26,12 +26,12 @@ namespace NovelRT {
   private:
     int _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
-    std::shared_ptr<DebugService> _novelDebugService;
     std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Input::InteractionService> _novelInteractionService;
     std::shared_ptr<Audio::AudioService> _novelAudioService;
     std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
     std::shared_ptr<Graphics::RenderingService> _novelRenderer;
+    std::shared_ptr<DebugService> _novelDebugService;
     LoggingService _loggingService;
 
   public:
@@ -50,17 +50,17 @@ namespace NovelRT {
     int runNovel();
 
     /// Gets the Rendering Service associated with this Runner.
-    std::weak_ptr<Graphics::RenderingService> getRenderer() const;
+    std::shared_ptr<Graphics::RenderingService> getRenderer() const;
     /// Gets the Interaction Service associated with this Runner
-    std::weak_ptr<Input::InteractionService> getInteractionService() const;
+    std::shared_ptr<Input::InteractionService> getInteractionService() const;
     /// Gets the Debug Service associated with this Runner.
-    std::weak_ptr<DebugService> getDebugService() const;
+    std::shared_ptr<DebugService> getDebugService() const;
     /// Gets the Audio Service associated with this Runner.
-    std::weak_ptr<Audio::AudioService> getAudioService() const;
+    std::shared_ptr<Audio::AudioService> getAudioService() const;
     /// Gets the .NET Runtime Service associated with this Runner.
-    std::weak_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+    std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
     /// Gets the Windowing Service associated with this Runner.
-    std::weak_ptr<Windowing::WindowingService> getWindowingService() const;
+    std::shared_ptr<Windowing::WindowingService> getWindowingService() const;
 
     /**
      * Terminates the game.
