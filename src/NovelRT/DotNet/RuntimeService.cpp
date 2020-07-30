@@ -66,13 +66,13 @@ namespace NovelRT::DotNet {
 
       const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
 
-      _logger.logInfo("Initializing the runtime using: " + runtimeConfigJsonPath.string());
+      _logger.logInfo("Initializing the runtime using: {}" + runtimeConfigJsonPath.string());
 
       int result = _hostfxr_initialize_for_runtime_config.getActual()(runtime_config_path, nullptr, &hostContextHandle);
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 
@@ -84,7 +84,7 @@ namespace NovelRT::DotNet {
 
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -93,7 +93,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -114,7 +114,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 

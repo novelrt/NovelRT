@@ -17,7 +17,7 @@ namespace NovelRT::Windowing {
   }
 
   void WindowingService::errorCallback(int, const char* error) {
-    _logger.logError("Could not initialize GLFW: ", error);
+    _logger.logError("Could not initialize GLFW: {}", error);
   }
 
   void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
@@ -41,7 +41,7 @@ namespace NovelRT::Windowing {
    if (transparencyEnabled) {
      glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
    }
-    _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
+    _logger.logInfo("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -135,9 +135,9 @@ namespace NovelRT::Windowing {
   void WindowingService::checkForOptimus(const char* library) {
     _optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (_optimus != nullptr) {
-      _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
+      _logger.logInfo("NVIDIA GPU detected. Enabling...");
     } else {
-      _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+      _logger.logInfo("NVIDIA GPU not detected. Continuing without Optimus support.");
     }
   }
 #endif

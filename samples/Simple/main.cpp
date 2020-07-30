@@ -171,7 +171,7 @@ int main(int /*argc*/, char* /*argv*/[])
     novelChanRect->transform().rotation() = rotation;
 
     if (runner.getInteractionService()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
-      console.logInfoLine("W is not idle!");
+      console.logInfo("W is not idle!");
     }
   };
 
