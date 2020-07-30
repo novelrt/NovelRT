@@ -26,11 +26,11 @@ messageCallback(GLenum source,
 #include <NovelRT.h>
 
 namespace NovelRT {
-  DebugService::DebugService(NovelRunner* const runner) :
-    _runner(runner),
+  DebugService::DebugService(Utilities::Event<>& sceneConstructionEvent, std::shared_ptr<Graphics::RenderingService> renderingService) noexcept :
+    _renderingService(renderingService),
     _fpsCounter(nullptr),
     _framesPerSecond(0) {
-    runner->SceneConstructionRequested += std::bind(&DebugService::onSceneConstruction, this);
+    sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
   }
 
   bool DebugService::getIsFpsCounterVisible() const {
@@ -49,7 +49,7 @@ namespace NovelRT {
 
         std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
 
-        _fpsCounter = _runner->getRenderer().lock()->createTextRect(transform, 0, yellow, 16, fontPath);
+        _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
         updateFpsCounter();
       }
     }

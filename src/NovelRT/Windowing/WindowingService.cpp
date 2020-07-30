@@ -3,12 +3,13 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Windowing {
-  WindowingService::WindowingService(NovelRunner* const runner) :
+  WindowingService::WindowingService() noexcept :
     WindowResized(Utilities::Event<Maths::GeoVector2<float>>()),
     WindowTornDown(Utilities::Event<>()),
+    MouseButtonClicked(Utilities::Event<MouseClickEventArgs>()),
+    KeyboardButtonChanged(Utilities::Event<KeyboardButtonChangeEventArgs>()),
     _window(std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(nullptr, glfwDestroyWindow)),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_WINDOWING)),
-    _runner(runner),
 #if defined(_WIN32) || defined(_WIN64)
     _optimus(),
 #endif
@@ -19,7 +20,7 @@ namespace NovelRT::Windowing {
     _logger.logError("Could not initialize GLFW: ", error);
   }
 
-  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle) {
+  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -36,6 +37,10 @@ namespace NovelRT::Windowing {
       checkForOptimus(OptimusLibraryName);
 #endif
 
+    //Set Framebuffer Transparency
+   if (transparencyEnabled) {
+     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+   }
     _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
@@ -112,7 +117,7 @@ namespace NovelRT::Windowing {
 
       double x = 0, y = 0;
       glfwGetCursorPos(targetWindow, &x, &y);
-      thisPtr->_runner->getInteractionService().lock()->acceptMouseButtonClickPush(mouseButton, action, Maths::GeoVector2<float>(static_cast<float>(x), static_cast<float>(y)));
+      thisPtr->MouseButtonClicked(MouseClickEventArgs{ mouseButton, action, Maths::GeoVector2<float>((float)x, (float)y) });
       });
 
 
@@ -120,8 +125,7 @@ namespace NovelRT::Windowing {
     glfwSetKeyCallback(_window.get(), [](auto targetWindow, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
-
-      thisPtr->_runner->getInteractionService().lock()->acceptKeyboardInputBindingPush(key, action);
+      thisPtr->KeyboardButtonChanged(KeyboardButtonChangeEventArgs{key, action});
       });
 
 

@@ -4,6 +4,10 @@ jobs:
     vmimage: ${{parameters.pool}}
   steps:
   - task: BatchScript@1
+    displayName: 'Run scripts/machine-setup.cmd'
+    inputs:
+      filename: scripts/machine-setup.cmd
+  - task: BatchScript@1
     displayName: 'Run scripts/cibuild.cmd'
     inputs:
       filename: scripts/cibuild.cmd

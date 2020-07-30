@@ -34,11 +34,7 @@ namespace NovelRT::Graphics {
 
     void drawObject() final;
 
-    inline const RGBAConfig& getColourConfig() const noexcept {
-      return _colourConfig;
-    }
-
-    inline RGBAConfig& getColourConfig() noexcept {
+    inline RGBAConfig getColourConfig() const noexcept {
       return _colourConfig;
     }
 
