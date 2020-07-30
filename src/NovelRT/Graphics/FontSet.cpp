@@ -13,7 +13,7 @@ namespace NovelRT::Graphics {
 
   void FontSet::loadFontAsTextureSet(const std::string& file, float fontSize) {
     if (!_fontFile.empty()) {
-      _logger.logErrorLine("This FontSet has already been initialised with data. Please make a new FontSet!");
+      _logger.logError("This FontSet has already been initialised with data. Please make a new FontSet!");
       throw std::runtime_error("Unable to continue! Cannot overwrite FontSet!");
     }
 
@@ -23,7 +23,7 @@ namespace NovelRT::Graphics {
 
     FT_Library freeTypeLoader;
     if (FT_Init_FreeType(&freeTypeLoader)) {
-      _logger.logErrorLine("Failed to initialise Freetype.");
+      _logger.logError("Failed to initialise Freetype.");
     }
 
     FT_Face face;
@@ -40,7 +40,7 @@ namespace NovelRT::Graphics {
     for (GLubyte c = 0; c < 128; c++) {
       // Load character glyph
       if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-        _logger.logErrorLine("FREETYTPE: Failed to load Glyph");
+        _logger.logError("FREETYTPE: Failed to load Glyph");
         continue;
       }
       // Generate texture

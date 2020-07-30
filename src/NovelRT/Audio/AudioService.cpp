@@ -51,7 +51,7 @@ ALuint AudioService::readFile(std::string input) {
   SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
   if (file == nullptr) {
-    _logger.logWarningLine(std::string(sf_strerror(nullptr)));
+    _logger.logWarning(std::string(sf_strerror(nullptr)));
     return _noBuffer;
   }
 
@@ -145,7 +145,7 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
   }
 
   if (handle == _music.end()) {
-    _logger.logWarningLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    _logger.logWarning("Cannot play the requested sound - it may have been deleted or not loaded properly.");
     return;
   }
 
@@ -297,7 +297,7 @@ void AudioService::playSound(ALuint handle, int loops) {
   }
 
   if (handle == _noBuffer) {
-    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    _logger.logError("Cannot play the requested sound - it may have been deleted or not loaded properly.");
     return;
   }
 
