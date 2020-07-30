@@ -137,7 +137,7 @@ namespace NovelRT::Windowing {
     if (_optimus != nullptr) {
       _logger.logInfo("NVIDIA GPU detected. Enabling...");
     } else {
-      _logger.logInfo("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+      _logger.logInfo("NVIDIA GPU not detected. Continuing without Optimus support.");
     }
   }
 #endif
