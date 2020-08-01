@@ -43,6 +43,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Dotnet>
     $<TARGET_FILE_DIR:Engine_Tests>/dotnet
+  VERBATIM
 )
 
 #this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
@@ -52,6 +53,7 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy
       $<TARGET_FILE_DIR:Engine_Tests>/dotnet/nethost.dll
       $<TARGET_FILE_DIR:Engine_Tests>
+    VERBATIM
   )
 endif()
 
@@ -60,6 +62,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Engine>
     $<TARGET_FILE_DIR:Engine_Tests>
+  VERBATIM
 )
 
 
