@@ -7,7 +7,7 @@ AudioService::AudioService() :
   _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
-      _logger.logError("OpenAL device creation failed!", getALError());
+      _logger.logError("OpenAL device creation failed! {}", getALError());
       throw std::runtime_error("OpenAL failed to create an audio device! Aborting...");
     }
     return device;
@@ -17,7 +17,7 @@ AudioService::AudioService() :
     alcMakeContextCurrent(context);
     isInitialised = true;
     _deviceName = alcGetString(_device.getActual(), ALC_DEVICE_SPECIFIER);
-    _logger.logInfo("OpenAL Initialized on device: ", _deviceName);
+    _logger.logInfo("OpenAL Initialized on device: {}", _deviceName);
     return context;
   }), [](auto x) {
     alcMakeContextCurrent(nullptr);
@@ -51,7 +51,7 @@ ALuint AudioService::readFile(std::string input) {
   SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
   if (file == nullptr) {
-    _logger.logWarningLine(std::string(sf_strerror(nullptr)));
+    _logger.logWarning(std::string(sf_strerror(nullptr)));
     return _noBuffer;
   }
 
@@ -85,7 +85,7 @@ std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
 
   //Sorry Matt, nullptr types are incompatible to ALuint according to VS.
   if (newBuffer == _noBuffer) {
-    _logger.logWarning("Could not load audio file: " + input);
+    _logger.logWarning("Could not load audio file: {}", input);
     return _music.end();
   }
 
@@ -145,7 +145,7 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
   }
 
   if (handle == _music.end()) {
-    _logger.logWarningLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    _logger.logWarning("Cannot play the requested sound - it may have been deleted or not loaded properly.");
     return;
   }
 
@@ -269,7 +269,7 @@ ALuint AudioService::loadSound(std::string input) {
   auto newBuffer = readFile(input);
 
   if (newBuffer == _noBuffer) {
-    _logger.logWarning("Could not load audio file: " + input);
+    _logger.logWarning("Could not load audio file: {}", input);
     return _noBuffer;
   }
 
@@ -297,7 +297,7 @@ void AudioService::playSound(ALuint handle, int loops) {
   }
 
   if (handle == _noBuffer) {
-    _logger.logErrorLine("Cannot play the requested sound - it may have been deleted or not loaded properly.");
+    _logger.logError("Cannot play the requested sound - it may have been deleted or not loaded properly.");
     return;
   }
 

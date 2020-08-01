@@ -60,7 +60,7 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine ${ENGINE_SOURCES})
+add_library(Engine SHARED ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
