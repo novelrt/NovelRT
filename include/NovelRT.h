@@ -206,6 +206,7 @@ namespace NovelRT::Windowing {
 //Input types
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
+#include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
 //Engine service types
 #include "NovelRT/Audio/AudioService.h"

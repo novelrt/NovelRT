@@ -163,15 +163,18 @@ int main(int /*argc*/, char* /*argv*/[])
     rotation += rotationAmount * delta.getSecondsFloat();
     novelChanRect->transform().rotation() = rotation;
 
-    if (rotation > 360.0f)
-    {
+    if (rotation > 360.0f) {
       rotation -= 360.0f;
     }
 
     novelChanRect->transform().rotation() = rotation;
 
     if (runner.getInteractionService()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyDown) {
-      console.logInfo("W is not idle!");
+      console.logInfoLine("W is not idle!");
+      console.logInfoLine(std::to_string(runner.getInteractionService()->getKeyState(NovelRT::Input::KeyCode::W).getChangeCount()) + " key transitions!");
+    }
+    else if (runner.getInteractionService()->getKeyState(NovelRT::Input::KeyCode::W) == NovelRT::Input::KeyState::KeyUp) {
+      console.logInfoLine("W Key came up!");
     }
   };
 
