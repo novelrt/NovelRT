@@ -5,7 +5,7 @@ namespace NovelRT::Plugins {
   std::string getLibraryExtension() noexcept {
 #if defined(WIN32) || defined(WIN64)
     return ".dll";
-#elif defined(__LINUX__)
+#elif defined(__linux__)
     return ".so";
 #elif defined(__APPLE__)
     return ".dylib";
