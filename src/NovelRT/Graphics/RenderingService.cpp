@@ -283,7 +283,4 @@ namespace NovelRT::Graphics {
   void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
     _framebufferColour = colour;
   }
-  void RenderingService::doTest() {
-    _logger.logDebug("Hello from plugin!");
-  }
 }

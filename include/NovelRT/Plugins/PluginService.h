@@ -23,6 +23,7 @@ namespace NovelRT::Plugins {
     std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) const;
 
     std::shared_ptr<Graphics::IRenderingService> createRenderingService(const PluginInfo& info) noexcept;
+    ~PluginService();
   };
 }
 

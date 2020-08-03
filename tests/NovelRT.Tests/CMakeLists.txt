@@ -18,6 +18,8 @@ set(TEST_SOURCES
   Maths/GeoVector4Test.cpp
   Maths/QuadTreeTest.cpp
 
+  Plugins/PluginServiceTest.cpp
+
   SceneGraph/SceneNodeTest.cpp
 
   Timing/TimestampTest.cpp
@@ -61,6 +63,14 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   $<TARGET_FILE_DIR:DoTest>
   $<TARGET_FILE_DIR:Engine_Tests>/Resources/Plugins
+)
+
+#TODO: This is REALLY terrible but whatever, don't do this at home kids
+add_custom_command(
+  TARGET Engine_Tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+  $<TARGET_FILE_DIR:DoTest>/testlibconf.json
+  $<TARGET_FILE_DIR:Engine_Tests>/Resources/Plugins/DummyFolder/testlibconf.json
 )
 
 add_custom_command(

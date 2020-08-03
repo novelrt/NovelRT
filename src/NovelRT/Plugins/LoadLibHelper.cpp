@@ -19,4 +19,12 @@ namespace NovelRT::Plugins {
     return dlopen(target.c_str());
 #endif
   }
+
+  bool freePluginLibrary(NRTPluginPointer target) {
+#if defined(WIN32) || defined(WIN64)
+  return !FreeLibrary(target);
+#else
+  return dlclose(target);
+#endif
+  }
 }

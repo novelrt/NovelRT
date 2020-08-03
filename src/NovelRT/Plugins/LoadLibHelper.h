@@ -8,12 +8,15 @@
 namespace NovelRT::Plugins {
   std::string getLibraryExtension() noexcept;
   NRTPluginPointer loadPluginLibrary(const std::string& target);
+  bool freePluginLibrary(NRTPluginPointer target);
 
   template<typename T>
   T getSymbolForFunctionPtr(NRTPluginPointer lib, const std::string& symbolName) {
 #if defined(WIN32) || defined(WIN64)
-    return reinterpret_cast<T>(GetProcAddress(lib, symbolName.c_str()));
-
+    auto returnObj = reinterpret_cast<T>(GetProcAddress(lib, symbolName.c_str()));
+    auto aaaa = GetLastError();
+    (void)aaaa;
+    return returnObj;
 #else
     return reinterpret_cast<T>(dlsym(lib, symbolName.c_str()));
 #endif

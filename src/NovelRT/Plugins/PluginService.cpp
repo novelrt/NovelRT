@@ -81,7 +81,13 @@ namespace NovelRT::Plugins {
   std::shared_ptr<Graphics::IRenderingService> PluginService::createRenderingService(const PluginInfo& info) noexcept {
     NRTPluginPointer lib = loadPlugin(info.location());
     _loadedPlugins.emplace(info.pluginId(), lib);
-    auto creator = getSymbolForFunctionPtr<NRTRenderingServiceFactoryCreatorPtr>(lib, "createRenderingService");
+    auto creator = getSymbolForFunctionPtr<NRTRenderingServiceFactoryCreatorPtr>(lib, "createRenderingServiceFactory");
     return creator()->create();
+  }
+
+  PluginService::~PluginService() {
+    for(auto& ptr : _loadedPlugins) {
+      freePluginLibrary(ptr.second);
+    }
   }
 }
