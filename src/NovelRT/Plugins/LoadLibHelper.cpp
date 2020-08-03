@@ -16,7 +16,7 @@ namespace NovelRT::Plugins {
 #if defined(WIN32) || defined(WIN64)
     return LoadLibrary(target.c_str());
 #else
-    return dlopen(target.c_str());
+    return dlopen(target.c_str(), RTLD_NOW);
 #endif
   }
 
