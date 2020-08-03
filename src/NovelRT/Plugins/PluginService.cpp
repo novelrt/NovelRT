@@ -22,7 +22,13 @@ namespace NovelRT::Plugins {
 
   NRTPluginPointer PluginService::loadPlugin(const std::filesystem::path& location) {
     std::filesystem::path theRealLocation(location);
+
+    //TODO: This is dumb. Call the ambulance.
+#if defined (__linux__)
+    theRealLocation.replace_filename("lib" + theRealLocation.filename().string());
+#endif
     theRealLocation.replace_extension(getLibraryExtension());
+    
     return loadPluginLibrary((Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / theRealLocation).string());
   }
 
