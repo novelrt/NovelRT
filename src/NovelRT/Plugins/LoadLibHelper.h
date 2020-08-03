@@ -13,10 +13,7 @@ namespace NovelRT::Plugins {
   template<typename T>
   T getSymbolForFunctionPtr(NRTPluginPointer lib, const std::string& symbolName) {
 #if defined(WIN32) || defined(WIN64)
-    auto returnObj = reinterpret_cast<T>(GetProcAddress(lib, symbolName.c_str()));
-    auto aaaa = GetLastError();
-    (void)aaaa;
-    return returnObj;
+    return reinterpret_cast<T>(GetProcAddress(lib, symbolName.c_str()));
 #else
     return reinterpret_cast<T>(dlsym(lib, symbolName.c_str()));
 #endif
