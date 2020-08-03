@@ -223,6 +223,7 @@ namespace NovelRT::Windowing {
 //Input types
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
+#include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
 //Plugins types
 #include "NovelRT/Plugins/PluginInfo.h"

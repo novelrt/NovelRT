@@ -15,7 +15,7 @@ namespace NovelRT::Graphics {
 
   void Texture::loadPngAsTexture(const std::string& file) {
     if (_textureId.isCreated()) {
-      _logger.logErrorLine("This texture has already been initialised with data. Please make a new texture!");
+      _logger.logError("This texture has already been initialised with data. Please make a new texture!");
       throw std::runtime_error("Unable to continue! Cannot overwrite Texture!");
     }
     _textureFile = file;
@@ -30,19 +30,19 @@ namespace NovelRT::Graphics {
     auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr); //TODO: Figure out how the error function ptr works
 
     if (png == nullptr) {
-      _logger.logErrorLine("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+      _logger.logError("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
     auto info = png_create_info_struct(png);
 
     if (info == nullptr) {
-      _logger.logError("Image at path " + file + " failed to provide an info struct! Aborting...");
+      _logger.logError("Image at path {} failed to provide an info struct! Aborting...", file);
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
     if (setjmp(png_jmpbuf(png))) { //This is how libpng does error handling.
-      _logger.logError("Image at path " + file + " appears to be corrupted! Aborting...");
+      _logger.logError("Image at path {} appears to be corrupted! Aborting...", file);
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
@@ -94,7 +94,7 @@ namespace NovelRT::Graphics {
 
     //TODO: Proper error check on data.rowPointers
     if (data.rowPointers == nullptr) {
-      _logger.logErrorLine("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
+      _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
       throw std::runtime_error("Unable to continue! File failed to load for texture.");
     }
 
