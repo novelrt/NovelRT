@@ -8,18 +8,16 @@
 #endif
 
 namespace NovelRT::Plugins {
-  using NRTRenderingServiceCreatorPtr = std::add_pointer<Graphics::IRenderingService*(NovelRunner* const)>::type;
+  using NRTRenderingServiceFactoryCreatorPtr = std::add_pointer<Graphics::IRenderingServiceFactory*()>::type;
 
   class PluginService {
   private:
-    NovelRunner* const _runner;
     std::map<Atom, NRTPluginPointer> _loadedPlugins;
     PluginInfo getPluginInfo(const std::filesystem::path& path) const;
     NRTPluginPointer loadPlugin(const std::filesystem::path& location);
 
   public:
-    PluginService() noexcept; //TODO: gdi Matt clean these constructors up later
-    PluginService(NovelRunner* const runner) noexcept;
+    PluginService() noexcept; 
 
     bool tryGetPluginInfo(const std::filesystem::path& location, PluginInfo& info, bool isRelative = true) const;
     std::vector<PluginInfo> getAllAvailablePluginInfo(const std::filesystem::path& location = "Plugins", bool isRelative = true, bool shouldRecurse = true) const;

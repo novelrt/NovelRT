@@ -213,6 +213,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/Texture.h"
 #include "NovelRT/Graphics/FontSet.h"
+
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
@@ -228,6 +229,7 @@ namespace NovelRT::Windowing {
 
 //Engine service types
 #include "NovelRT/Graphics/IRenderingService.h"
+#include "NovelRT/Graphics/IRenderingServiceFactory.h" //TODO: This stuff is probably an internal implementation detail? Revisit later...
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
 #include "NovelRT/DotNet/RuntimeService.h"

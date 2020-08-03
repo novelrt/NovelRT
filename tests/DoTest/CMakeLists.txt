@@ -1,5 +1,3 @@
-#TODO: this won't be here in final PR, just using it for testing
-
 set(DOTEST_SOURCES
     DoTest.cpp
 )
@@ -7,9 +5,13 @@ set(DOTEST_SOURCES
 add_library(DoTest MODULE ${DOTEST_SOURCES})
 add_dependencies(DoTest Engine)
 target_compile_features(DoTest PUBLIC cxx_std_17)
-target_include_directories(DoTest
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+
+add_custom_command(
+  TARGET DoTest POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/tests/DoTest/testlibconf.json  
+    $<TARGET_FILE_DIR:DoTest>
+    
 )
+
 target_link_libraries(DoTest Engine)

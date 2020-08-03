@@ -157,4 +157,6 @@ TEST_F(PluginServiceTest, getAllAvailablePluginInfoReturnsCollectionOfPluginInfo
   std::filesystem::remove(parent / "DummyFolder");
 }
 
+TEST_F(PluginServiceTest, )
+
 

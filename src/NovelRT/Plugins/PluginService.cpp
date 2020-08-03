@@ -26,10 +26,8 @@ namespace NovelRT::Plugins {
     return loadPluginLibrary((Utilities::Misc::getExecutableDirPath() / "Resources" / "Plugins" / theRealLocation).string());
   }
 
-  PluginService::PluginService() noexcept : _runner(nullptr) {
-  }
+  PluginService::PluginService() noexcept {}
 
-  PluginService::PluginService(NovelRunner* const runner) noexcept : _runner(runner){}
 
   bool PluginService::tryGetPluginInfo(const std::filesystem::path& location, PluginInfo& info, bool isRelative) const {
     std::filesystem::path finalLocation = location;
@@ -83,7 +81,7 @@ namespace NovelRT::Plugins {
   std::shared_ptr<Graphics::IRenderingService> PluginService::createRenderingService(const PluginInfo& info) noexcept {
     NRTPluginPointer lib = loadPlugin(info.location());
     _loadedPlugins.emplace(info.pluginId(), lib);
-    auto creator = getSymbolForFunctionPtr<NRTRenderingServiceCreatorPtr>(lib, "createRenderingService");
-    return std::shared_ptr<Graphics::IRenderingService>(creator(_runner));
+    auto creator = getSymbolForFunctionPtr<NRTRenderingServiceFactoryCreatorPtr>(lib, "createRenderingService");
+    return creator()->create();
   }
 }

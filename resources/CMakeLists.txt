@@ -12,9 +12,7 @@ set(RESOURCES_FILES
   Shaders/FontVertexShader.glsl
   Shaders/TexturedFragmentShader.glsl
   Shaders/TexturedVertexShader.glsl
-
-  Plugins/DoTest.dll #TODO: This isn't permanent. This is just for testing.
-  Plugins/teehee.json
+  
 )
 
 foreach(resource ${RESOURCES_FILES})
