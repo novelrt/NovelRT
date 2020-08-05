@@ -52,8 +52,14 @@ namespace NovelRT::Graphics {
       return _cameraFrameState;
     }
 
+    /**
+     * Creates an orthographic camera using default settings and the given window size.
+     */
     static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize);
 
+    /**
+     * Creates a perspective camera using default settings and the given window size.
+     */
     static std::unique_ptr<Camera> createDefaultPerspectiveProjection(const Maths::GeoVector2<float>& windowSize);
   };
 }
