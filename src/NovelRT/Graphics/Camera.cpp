@@ -15,6 +15,13 @@ namespace NovelRT::Graphics {
     return returnVal;
   }
 
+  std::unique_ptr<Camera> Camera::createPerspectiveProjection(const Maths::GeoVector2<float>& windowSize) {
+    auto returnVal = std::make_unique<Camera>();
+    returnVal->setProjectionMatrix(Maths::GeoMatrix4x4<float>(glm::perspective<float>(glm::radians(90.0f), windowSize.getX() / windowSize.getY(), 0.1f, 100.0f)));
+    returnVal->setViewMatrix(Maths::GeoMatrix4x4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+    return returnVal;
+  }
+
   Maths::GeoMatrix4x4<float> Camera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
   }

@@ -53,6 +53,8 @@ namespace NovelRT::Graphics {
     }
 
     static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize);
+
+    static std::unique_ptr<Camera> createPerspectiveProjection(const Maths::GeoVector2<float>& windowSize);
   };
 }
 
