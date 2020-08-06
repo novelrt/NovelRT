@@ -23,7 +23,6 @@ add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
-  add_subdirectory(lua-samples)
 endif()
 
 if(NOVELRT_BUILD_DOCUMENTATION)

@@ -17,7 +17,6 @@ namespace NovelRT::Lua {
     LuaRunner(const std::string& fileName) noexcept;
     void init();
     void run();
-    LuaRunner bindAtomType();
   };
 }
 

@@ -57,6 +57,8 @@ set(ENGINE_SOURCES
 
   Windowing/WindowingService.cpp
 
+  Lua/LuaRunner.cpp
+
   WorldObject.cpp
 )
 

@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
+#include "../../../include/NovelRT/Lua/Bindings/TransformBindings.h"
 
 using namespace sol;
 
@@ -29,7 +30,7 @@ namespace NovelRT::Lua {
     atomType["getNextTextureId"] = &Atom::getNextTextureId;
 
     // DebugService
-    auto debugServiceType = globalTable.new_usertype<DebugService>("DebugService", sol::constructors<DebugService(NovelRunner* const)>());
+    auto debugServiceType = globalTable.new_usertype<DebugService>("DebugService", sol::constructors<DebugService(Utilities::Event<>&, std::shared_ptr<Graphics::RenderingService>)>());
     debugServiceType["fpsCounterVisible"] = sol::property(
       static_cast<bool (DebugService::*)() const>(&DebugService::getIsFpsCounterVisible),
       static_cast<void (DebugService::*)(bool)>(&DebugService::setIsFpsCounterVisible)
@@ -80,6 +81,15 @@ namespace NovelRT::Lua {
     novelRunnerType["dotNetRuntimeService"] = sol::property(&NovelRunner::getDotNetRuntimeService);
     novelRunnerType["windowingService"] = sol::property(&NovelRunner::getWindowingService);
 
+    novelRunnerType.set_function("sceneConstructionRequested", [](NovelRunner* runner, sol::function cb) {
+        runner->SceneConstructionRequested += cb;
+    });
+
+    novelRunnerType.set_function("update", [](NovelRunner* runner, sol::function cb) {
+        runner->Update += cb;
+
+    });
+
     // Transform
     auto transformType = globalTable.new_usertype<Transform>("Transform",
       sol::constructors<Transform(),
@@ -94,10 +104,7 @@ namespace NovelRT::Lua {
       static_cast<Maths::GeoVector2<float>& (Transform::*)()>(&Transform::position)
       );
 
-    transformType["rotation"] = sol::property(
-      static_cast<const float& (Transform::*)() const>(&Transform::rotation),
-      static_cast<float& (Transform::*)()>(&Transform::rotation)
-      );
+    transformType["rotation"] = sol::property(TransformBindings::getRotation,TransformBindings::setRotation);
 
     transformType["scale"] = sol::property(
       static_cast<const Maths::GeoVector2<float>& (Transform::*)() const>(&Transform::scale),
@@ -166,6 +173,9 @@ namespace NovelRT::Lua {
 #pragma endregion
 
 #pragma region NovelRT::Audio
+
+    //AudioService
+
     auto audioServiceType = globalTable.new_usertype<Audio::AudioService>("AudioService", sol::constructors<Audio::AudioService()>());
     audioServiceType["isInitialized"] = &Audio::AudioService::isInitialised;
     audioServiceType["initializeAudio"] = &Audio::AudioService::initializeAudio;
@@ -185,7 +195,85 @@ namespace NovelRT::Lua {
        
 #pragma endregion
 
-#pragma region NovelRT::DotNet
+#pragma region NovelRT::Maths
+
+    //GeoBounds
+
+    auto geoBoundsType = globalTable.new_usertype<Maths::GeoBounds>("GeoBounds",
+            sol::constructors<Maths::GeoBounds(const Maths::GeoVector2<float>&, const GeoVector2<float>&, float)>();
+
+    geoBoundsType["pointIsWithinBounds"] = &Maths::GeoBounds::pointIsWithinBounds;
+    geoBoundsType["intersectsWith"] = &Maths::GeoBounds::intersectsWith;
+    geoBoundsType["getCornerInLocalSpace"] = &Maths::GeoBounds::getCornerInLocalSpace;
+    geoBoundsType["getCornerInWorldSpace"] = &Maths::GeoBounds::getCornerInWorldSpace;
+    geoBoundsType["position"] =; // leaving blank for later, once I add in property bindings
+    geoBoundsType["size"] =;
+    geoBoundsType["rotation"] =;
+    geoBoundsType["extents"] =;
+
+    //GeoMatrix4x4<float>
+
+    auto geoMatrixFloatType = globalTable.new_usertype<Maths::GeoMatrix4x4<float>>("GeoMatrix4x4f",
+            sol::constructors<Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>, Maths::GeoVector4<float>,
+                    Maths::GeoVector4<float>, Maths::GeoVector4<float>)>());
+
+    geoMatrixFloatType["x"] =;
+    geoMatrixFloatType["y"] =;
+    geoMatrixFloatType["z"] =;
+    geoMatrixFloatType["w"] =;
+
+    //GeoVector2<float>
+    auto geoVector2FloatType = globalTable.new_usertype<Maths::GeoVector2<float>>("GeoVector2f", sol::constructors<Maths::GeoVector2<float>(), Maths::GeoVector2<float>(float, float)>());
+
+    geoVector2FloatType["x"] = sol::property(&Maths::GeoVector2<float>::getX, &Maths::GeoVector2<float>::setX);
+    geoVector2FloatType["y"] = sol::property(&Maths::GeoVector2<float>::getY, &Maths::GeoVector2<float>::setY);
+    geoVector2FloatType["normalized"] = sol::property(&Maths::GeoVector2<float>::getNormalised);
+    geoVector2FloatType["length"] = sol::property(&Maths::GeoVector2<float>::getLength);
+    geoVector2FloatType["rotateToAngleAroundPoint"] = &Maths::GeoVector2<float>::rotateToAngleAroundPoint;
+    geoVector2FloatType["epsilonEquals"] = &Maths::GeoVector2<float>::epsilonEquals;
+    geoVector2FloatType.set("zero", &Maths::GeoVector2<float>::zero);
+    geoVector2FloatType.set("one", &Maths::GeoVector2<float>::one);
+    geoVector2FloatType.set("uniform", &Maths::GeoVector2<float>::uniform);
+
+    //GeoVector3<float>
+
+    auto geoVector3FloatType = globalTable.new_usertype<Maths::GeoVector3<float>>("GeoVector3f",
+            sol::constructors<Maths::GeoVector3<float>(
+                    Maths::GeoVector3(), Maths::GeoVector3(float, float, float), Maths::GeoVector3(const Maths::GeoVector2<float>&))>());
+
+    geoVector3FloatType["x"] =;
+    geoVector3FloatType["y"] =;
+    geoVector3FloatType["z"] =;
+    geoVector3FloatType["normalized"] =;
+    geoVector3FloatType["magnitude"] =;
+    geoVector3FloatType["length"] =;
+
+    //QuadTree
+
+    auto quadTreeType = globalTable.new_usertype<Maths::QuadTree>("QuadTree",
+            sol::constructors<Maths::QuadTree(const Maths::GeoBounds&),
+                Maths::QuadTree(const Maths::GeoBounds&, std::weak_ptr<QuadTree>)>());
+
+    quadTreeType["parent"] =;
+    quadTreeType["bounds"] =;
+    quadTreeType["point"] =;
+    quadTreeType["pointCount"] =;
+    quadTreeType["topLeft"] =;
+    quadTreeType["topRight"] =;
+    quadTreeType["bottomLeft"] =;
+    quadTreeType["bottomRight"] =;
+
+    quadTreeType["tryInsert"] = &Maths::QuadTree::tryInsert;
+    quadTreeType["tryRemove"] = &Maths::QuadTree:tryRemove;
+    quadTreeType["intersectingPoints"] =;
+
+    // QuadTreePoint
+
+    auto quadTreePointType = globalTable.new_usertype<Maths::QuadTreePoint>("QuadTreePoint",
+            sol::constructors<Maths::QuadTreePoint(Maths::GeoVector2<float>), Maths::QuadTreePoint(float, float)>()));
+
+    quadTreePointType["position"] =;
+
 #pragma endregion
 
 #pragma region NovelRT::Graphics
@@ -224,7 +312,7 @@ namespace NovelRT::Lua {
 
     //FontSetType
 
-    auto fontSetType = globalTable.new_usertype<Graphics::FontSet>("FontSet", sol::constructors<Graphics::FontSet(std::weak_ptr<Graphics::RenderingService>, Atom)>());
+    auto fontSetType = globalTable.new_usertype<Graphics::FontSet>("FontSet", sol::constructors<Graphics::FontSet(std::shared_ptr<Graphics::RenderingService>, Atom)>());
     fontSetType["loadFontAsTextureSet"] = &Graphics::FontSet::loadFontAsTextureSet;
     fontSetType["fontFile"] = sol::property(&Graphics::FontSet::getFontFile);
     fontSetType["fontSize"] = sol::property(&Graphics::FontSet::getFontSize);
@@ -243,6 +331,8 @@ namespace NovelRT::Lua {
       Graphics::ImageRect(const Transform&, int, Graphics::ShaderProgram, std::weak_ptr<Graphics::Camera>, std::shared_ptr<Graphics::Texture>, const Graphics::RGBAConfig&)>()
       );
 
+    imageRectType["executeObjectBehaviour"] = &Graphics::ImageRect::executeObjectBehaviour;
+
     imageRectType["texture"] = sol::property(
       static_cast<const std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::texture),
       static_cast<std::shared_ptr<Graphics::Texture>& (Graphics::ImageRect::*)()>(&Graphics::ImageRect::texture)
@@ -259,11 +349,20 @@ namespace NovelRT::Lua {
       static_cast<const Graphics::RGBAConfig & (Graphics::ImageRect::*)() const>(&Graphics::ImageRect::colourTint),
       static_cast<Graphics::RGBAConfig& (Graphics::ImageRect::*)()>(&Graphics::ImageRect::colourTint));
 
+    imageRectType["transform"] = sol::property(
+            [](Graphics::ImageRect* t) -> Transform& {
+                    return t->transform();
+                },
+            [](Graphics::ImageRect* i, Transform t) {
+                i->transform() = t;
+            }
+            );
 
     //RenderService
 
     auto renderingServiceType = globalTable.new_usertype<Graphics::RenderingService>("RenderService",
-      sol::constructors<Graphics::RenderingService(NovelRunner* const)>());
+      sol::constructors<Graphics::RenderingService(std::shared_ptr<Windowing::WindowingService>)>());
+
 
     renderingServiceType["createImageRect"] = sol::overload(
       static_cast<std::unique_ptr<Graphics::ImageRect>(Graphics::RenderingService::*)(const Transform&, int, const std::string&, const Graphics::RGBAConfig&)>(&Graphics::RenderingService::createImageRect),
@@ -279,7 +378,6 @@ namespace NovelRT::Lua {
       reinterpret_cast<std::shared_ptr<Graphics::Texture> (Graphics::RenderingService::*)(void)>(&Graphics::RenderingService::getTexture)
       );
 
-    renderingServiceType["getTexture"] = static_cast<std::shared_ptr<Graphics::Texture>(Graphics::RenderingService::*)(const std::string&)>(&Graphics::RenderingService::getTexture);
     renderingServiceType["fontSet"] = sol::property(&Graphics::RenderingService::getFontSet);
 
 
@@ -348,7 +446,7 @@ namespace NovelRT::Lua {
       );
 
     auto textureType = globalTable.new_usertype<Graphics::Texture>("Texture",
-      sol::constructors<Graphics::Texture(std::weak_ptr<Graphics::RenderingService>, Atom)>());
+      sol::constructors<Graphics::Texture(std::shared_ptr<Graphics::RenderingService>, Atom)>());
 
     textureType["loadPngAsTexture"] = &Graphics::Texture::loadPngAsTexture;
     textureType["textureFile"] = sol::property(&Graphics::Texture::getTextureFile);
@@ -359,7 +457,6 @@ namespace NovelRT::Lua {
 
   }
 
-
   void LuaRunner::run() {
     try {
       auto result = _state.safe_script_file(_fileName);
@@ -367,6 +464,5 @@ namespace NovelRT::Lua {
     catch (const sol::error& err) {
       std::cout << "An error occurred from within sol: " << err.what() << std::endl;
     }
-    
   }
 }
