@@ -17,6 +17,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<Maths::GeoMatrix4x4<float>> _cameraUboMatrix;
     Maths::GeoMatrix4x4<float> generateUboMatrix();
     CameraFrameState _cameraFrameState;
+    std::function<void(Camera*, const Maths::GeoVector2<float>&)> _forceResizeCallback;
 
     void initialiseCameraForFrame();
     void forceResize(const Maths::GeoVector2<float>& windowSize);
@@ -50,6 +51,14 @@ namespace NovelRT::Graphics {
 
     inline CameraFrameState getFrameState() const {
       return _cameraFrameState;
+    }
+
+    inline const std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() const {
+      return _forceResizeCallback;
+    }
+
+    inline std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() {
+      return _forceResizeCallback;
     }
 
     /**
