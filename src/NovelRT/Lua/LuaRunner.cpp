@@ -200,7 +200,7 @@ namespace NovelRT::Lua {
     //GeoBounds
 
     auto geoBoundsType = globalTable.new_usertype<Maths::GeoBounds>("GeoBounds",
-            sol::constructors<Maths::GeoBounds(const Maths::GeoVector2<float>&, const GeoVector2<float>&, float)>();
+            sol::constructors<Maths::GeoBounds(const Maths::GeoVector2<float>&, const GeoVector2<float>&, float)>());
 
     geoBoundsType["pointIsWithinBounds"] = &Maths::GeoBounds::pointIsWithinBounds;
     geoBoundsType["intersectsWith"] = &Maths::GeoBounds::intersectsWith;
@@ -239,7 +239,7 @@ namespace NovelRT::Lua {
 
     auto geoVector3FloatType = globalTable.new_usertype<Maths::GeoVector3<float>>("GeoVector3f",
             sol::constructors<Maths::GeoVector3<float>(
-                    Maths::GeoVector3(), Maths::GeoVector3(float, float, float), Maths::GeoVector3(const Maths::GeoVector2<float>&))>());
+                    Maths::GeoVector3<float>(), Maths::GeoVector3<float>(float, float, float), Maths::GeoVector3(const Maths::GeoVector2<float>&))>());
 
     geoVector3FloatType["x"] =;
     geoVector3FloatType["y"] =;
