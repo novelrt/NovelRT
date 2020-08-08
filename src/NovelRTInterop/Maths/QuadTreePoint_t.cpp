@@ -10,14 +10,14 @@ extern "C" {
   QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position)
   {
     auto pos = reinterpret_cast<Maths::GeoVector2<float>&>(position);
-    auto point = std::shared_ptr<Maths::QuadTreePoint>(new Maths::QuadTreePoint(pos));
+    auto point = new Maths::QuadTreePoint(pos);
     auto handle = reinterpret_cast<QuadTreePoint_t&>(point);
     return handle;
   }
 
   QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y)
   {
-    auto point = std::shared_ptr<Maths::QuadTreePoint>(new Maths::QuadTreePoint(x, y));
+    auto point = new Maths::QuadTreePoint(x, y);
     auto handle = reinterpret_cast<QuadTreePoint_t&>(point);
     return handle;
   }

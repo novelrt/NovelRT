@@ -19,8 +19,8 @@ GeoBounds_t getCenteredBounds(float width, float height) {
 }
 
 bool checkPointsForEquality(QuadTreePoint_t one, QuadTreePoint_t two) {
-  auto left = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(one);
-  auto right = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(two);
+  auto left = reinterpret_cast<Maths::QuadTreePoint*>(one);
+  auto right = reinterpret_cast<Maths::QuadTreePoint*>(two);
   return left->getPosition() == right->getPosition();
 }
 
@@ -61,129 +61,129 @@ TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds) {
     EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
   }
 
-//  TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
-//  {
-//    EXPECT_EQ(QuadTree_getPoint(*_quadTree, 0), nullptr);
-//    EXPECT_EQ(QuadTree_getPoint(*_quadTree, 1), nullptr);
-//    EXPECT_EQ(QuadTree_getPoint(*_quadTree, 2), nullptr);
-//    EXPECT_EQ(QuadTree_getPoint(*_quadTree, 3), nullptr);
-//  }
+ TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
+ {
+   EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), nullptr);
+   EXPECT_EQ(QuadTree_getPoint(_quadTree, 1), nullptr);
+   EXPECT_EQ(QuadTree_getPoint(_quadTree, 2), nullptr);
+   EXPECT_EQ(QuadTree_getPoint(_quadTree, 3), nullptr);
+ }
 
-//  TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
-//    auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//    EXPECT_EQ(true, QuadTree_tryInsert(*_quadTree, point0));
-//  }
+ TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
+   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+   EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
+ }
 
-//  TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
-//    auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//    EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
+ TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
+   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-//    auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-//    EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
+   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-//    auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-//    EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
+   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
-//    auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-//    EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
+   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-//    ASSERT_EQ(QuadTree_getPointCount(*_quadTree), 4u);
+   ASSERT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
-//    EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 0), point0));
-//    EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 1), point1));
-//    EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 2), point2));
-//    EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 3), point3));
+   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 0), point0));
+   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 1), point1));
+   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 2), point2));
+   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 3), point3));
 
-//    EXPECT_EQ(QuadTree_getTopLeft(*_quadTree), nullptr);
-//    EXPECT_EQ(QuadTree_getTopRight(*_quadTree), nullptr);
-//    EXPECT_EQ(QuadTree_getBottomLeft(*_quadTree), nullptr);
-//    EXPECT_EQ(QuadTree_getBottomRight(*_quadTree), nullptr);
-//  }
+   EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
+   EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
+   EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
+   EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
+ }
 
 
 // TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
 //   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
 //   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
 //   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
 //   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-//   EXPECT_EQ(QuadTree_getPointCount(*_quadTree), 0u);
+//   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
 
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(*_quadTree)), 2u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(*_quadTree)), 1u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(*_quadTree)), 1u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(*_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
 
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(*_quadTree), 0), point0));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopRight(*_quadTree), 0), point1));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomLeft(*_quadTree), 0), point2));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomRight(*_quadTree), 0), point3));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(*_quadTree), 1), point4));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 0), point0));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopRight(_quadTree), 0), point1));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomLeft(_quadTree), 0), point2));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getBottomRight(_quadTree), 0), point3));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 1), point4));
 // }
 
 // TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
 //   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
 //   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
 //   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
 //   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-//   EXPECT_EQ(QuadTree_getPointCount(*_quadTree), 0u);
+//   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
 
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(*_quadTree)), 2u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(*_quadTree)), 1u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(*_quadTree)), 1u);
-//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(*_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
+//   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
 
 //   auto expectedSize = GeoVector2F_create(TEST_WIDTH / 2, TEST_HEIGHT / 2);
 
-//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopLeft(*_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
-//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopRight(*_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
-//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomLeft(*_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
-//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomRight(*_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
+//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
+//   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
 // }
 
 // TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {
 //   auto point0 = QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
-//   EXPECT_EQ(false, QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_EQ(false, QuadTree_tryInsert(_quadTree, point0));
 // }
 
 // TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
 //   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
 //   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
 //   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
 //   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-//   auto allPoints = QuadTree_getIntersectingPoints(*_quadTree, QuadTree_getBounds(*_quadTree));
+//   auto allPoints = QuadTree_getIntersectingPoints(_quadTree, QuadTree_getBounds(_quadTree));
 //   auto intersectingPoints = reinterpret_cast<std::vector<QuadTreePoint_t>*>(allPoints);
 
 //   EXPECT_EQ(intersectingPoints->size(), 5u);
@@ -197,45 +197,45 @@ TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds) {
 
 // TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_EQ(true, QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
 
-//   EXPECT_EQ(true, QuadTree_tryRemove(*_quadTree, point0));
+//   EXPECT_EQ(true, QuadTree_tryRemove(_quadTree, point0));
 // }
 
 // TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_EQ(false, QuadTree_tryRemove(*_quadTree, point0));
+//   EXPECT_EQ(false, QuadTree_tryRemove(_quadTree, point0));
 // }
 
 // TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5) {
 //   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point0));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
 //   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point1));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
 //   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point2));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
 //   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point3));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
 //   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-//   EXPECT_TRUE(QuadTree_tryInsert(*_quadTree, point4));
+//   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-//   EXPECT_TRUE(QuadTree_tryRemove(*_quadTree, point4));
+//   EXPECT_TRUE(QuadTree_tryRemove(_quadTree, point4));
 
-//   EXPECT_EQ(QuadTree_getPointCount(*_quadTree), 4u);
+//   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 0), point0));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 1), point1));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 2), point2));
-//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(*_quadTree, 3), point3));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 0), point0));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 1), point1));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 2), point2));
+//   EXPECT_TRUE(checkPointsForEquality(QuadTree_getPoint(_quadTree, 3), point3));
 
-//   EXPECT_EQ(QuadTree_getTopLeft(*_quadTree), nullptr);
-//   EXPECT_EQ(QuadTree_getTopRight(*_quadTree), nullptr);
-//   EXPECT_EQ(QuadTree_getBottomLeft(*_quadTree), nullptr);
-//   EXPECT_EQ(QuadTree_getBottomRight(*_quadTree), nullptr);
+//   EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
+//   EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
+//   EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
+//   EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
 // }
   
 // TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4) {

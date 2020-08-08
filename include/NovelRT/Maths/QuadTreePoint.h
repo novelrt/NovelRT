@@ -6,7 +6,7 @@
 #endif
 
 namespace NovelRT::Maths {
-  class QuadTreePoint {
+  class QuadTreePoint : public std::enable_shared_from_this<QuadTreePoint> {
   private:
     GeoVector2<float> _position;
 
