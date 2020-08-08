@@ -4,10 +4,10 @@
 
 namespace NovelRT::Graphics {
   RenderingService::RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept :
-    _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-    _windowingService(windowingService),
-    _cameraObjectRenderUbo(std::function<GLuint()>([] {
-    GLuint tempHandle;
+  IRenderingService(windowingService),
+  _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
+  _cameraObjectRenderUbo(std::function<GLuint()>([] {
+  GLuint tempHandle;
     glGenBuffers(1, &tempHandle);
     glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
@@ -15,11 +15,11 @@ namespace NovelRT::Graphics {
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
     return tempHandle;
       })),
-    _camera(nullptr),
-    _framebufferColour(RGBAConfig(0,0,102,255)) {
-    _windowingService->WindowResized += ([this](auto input) {
-        initialiseRenderPipeline(false, &input);
-      });
+  _camera(nullptr),
+  _framebufferColour(RGBAConfig(0,0,102,255)) {
+  _windowingService->WindowResized += ([this](auto input) {
+      initialiseRenderPipeline(false, &input);
+    });
   }
 
   bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
@@ -183,7 +183,7 @@ namespace NovelRT::Graphics {
     return 0;
   }
 
-  void RenderingService::tearDown() const {
+  void RenderingService::tearDown() {
     glDeleteProgram(_basicFillRectProgram.shaderProgramId);
     glDeleteProgram(_texturedRectProgram.shaderProgramId);
   }

@@ -71,3 +71,7 @@ TEST_F(PluginServiceTest, createRenderingServiceReturnsPtr) {
   EXPECT_NE(pluginPtr, nullptr);
 }
 
+TEST_F(PluginServiceTest, createRenderingServiceReturnsWorkingPtr) {
+  auto pluginPtr = _pluginService.createRenderingService(_pluginService.getAllAvailablePluginInfo().at(0));
+  EXPECT_EQ(pluginPtr->initialiseRendering(), 0);
+}

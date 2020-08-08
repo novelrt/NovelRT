@@ -16,7 +16,6 @@ namespace NovelRT::Graphics {
   private:
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector2<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
-    std::shared_ptr<Windowing::WindowingService> _windowingService;
 
     ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
     ShaderProgram _basicFillRectProgram;
@@ -39,7 +38,7 @@ namespace NovelRT::Graphics {
   public:
     RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
     int initialiseRendering();
-    void tearDown() const;
+    void tearDown();
 
     std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
 

@@ -1,5 +1,6 @@
 set(DOTEST_SOURCES
     DoTest.cpp
+    DummyRenderingService.cpp
 )
 
 add_library(DoTest SHARED ${DOTEST_SOURCES})
