@@ -33,7 +33,9 @@ namespace NovelRT::Graphics {
     virtual void setBackgroundColour(const RGBAConfig& colour) = 0;
 
     virtual std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "") = 0;
-    virtual std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize) = 0; 
+    virtual std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize) = 0;
+
+    virtual ~IRenderingService() = default; 
   };
 }
 

@@ -112,6 +112,16 @@ license you like.
  */
 
 namespace Json {
+
+//These defines are probably not needed for Windows, but seeing as Clang was unhappy I added them for MSVC too. :) - Ruby
+#ifdef __MSVC_VER
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunneeded-internal-declaration"
+#endif
+
 static inline char getDecimalPoint() {
 #ifdef JSONCPP_NO_LOCALE_SUPPORT
   return '\0';
@@ -120,6 +130,12 @@ static inline char getDecimalPoint() {
   return lc ? *(lc->decimal_point) : '\0';
 #endif
 }
+
+#ifdef __MSVC_VER
+#pragma warning( pop )
+#else
+#pragma GCC diagnostic pop
+#endif
 
 /// Converts a unicode code-point to UTF-8.
 static inline String codePointToUTF8(unsigned int cp) {

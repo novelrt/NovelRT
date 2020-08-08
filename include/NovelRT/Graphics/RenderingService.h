@@ -37,26 +37,26 @@ namespace NovelRT::Graphics {
 
   public:
     RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
-    int initialiseRendering();
-    void tearDown();
+    int initialiseRendering() override;
+    void tearDown() override;
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255)) override;
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255)) override;
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig);
+    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) override;
 
-    std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
+    std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath) override;
 
-    std::weak_ptr<Camera> getCamera() const;
+    std::weak_ptr<Camera> getCamera() const override;
 
-    void beginFrame() const;
-    void endFrame() const;
+    void beginFrame() const override;
+    void endFrame() const override;
 
-    void setBackgroundColour(const RGBAConfig& colour);
+    void setBackgroundColour(const RGBAConfig& colour) override;
 
-    std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
-    std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
+    std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "") override;
+    std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize) override;
   };
 }
 
