@@ -17,6 +17,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<Maths::GeoMatrix4x4<float>> _cameraUboMatrix;
     Maths::GeoMatrix4x4<float> generateUboMatrix();
     CameraFrameState _cameraFrameState;
+    std::function<void(Camera*, const Maths::GeoVector2<float>&)> _forceResizeCallback;
 
     void initialiseCameraForFrame();
     void forceResize(const Maths::GeoVector2<float>& windowSize);
@@ -24,11 +25,7 @@ namespace NovelRT::Graphics {
   public:
     Camera();
 
-    inline Maths::GeoMatrix4x4<float>& getViewMatrix() {
-      return _viewMatrix;
-    }
-
-    inline const Maths::GeoMatrix4x4<float>& getViewMatrix() const {
+    inline Maths::GeoMatrix4x4<float> getViewMatrix() const {
       return _viewMatrix;
     }
 
@@ -38,11 +35,7 @@ namespace NovelRT::Graphics {
       _viewMatrix = value;
     }
 
-    inline Maths::GeoMatrix4x4<float>& getProjectionMatrix() {
-      return _projectionMatrix;
-    }
-
-    inline const Maths::GeoMatrix4x4<float>& getProjectionMatrix() const {
+    inline Maths::GeoMatrix4x4<float> getProjectionMatrix() const {
       return _projectionMatrix;
     }
 
@@ -60,7 +53,23 @@ namespace NovelRT::Graphics {
       return _cameraFrameState;
     }
 
+    inline const std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() const {
+      return _forceResizeCallback;
+    }
+
+    inline std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() {
+      return _forceResizeCallback;
+    }
+
+    /**
+     * Creates an orthographic camera using default settings and the given window size.
+     */
     static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize);
+
+    /**
+     * Creates a perspective camera using default settings and the given window size.
+     */
+    static std::unique_ptr<Camera> createDefaultPerspectiveProjection(const Maths::GeoVector2<float>& windowSize);
   };
 }
 

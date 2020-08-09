@@ -1,34 +1,26 @@
-find_package(Doxygen QUIET)
+find_package(Doxygen 1.8.8 REQUIRED
+  COMPONENTS dot)
 
-set(DOCS_IMAGES
-  novel-chan_doxy.png
+set(DOXYGEN_PROJECT_LOGO novel-chan_doxy.png)
+
+set(DOXYGEN_JAVADOC_AUTOBRIEF YES)
+set(DOXYGEN_JAVADOC_BANNER YES)
+set(DOXYGEN_EXTRACT_PRIV_VIRTUAL YES)
+set(DOXYGEN_EXTRACT_STATIC YES)
+set(DOXYGEN_CASE_SENSE_NAMES NO)
+
+set(DOXYGEN_HTML_COLORSTYLE_HUE 260)
+set(DOXYGEN_HTML_COLORSTYLE_SAT 245)
+set(DOXYGEN_HTML_COLORSTYLE_GAMMA 120)
+
+set(DOXYGEN_CALL_GRAPH YES)
+set(DOXYGEN_CALLER_GRAPH YES)
+set(DOXYGEN_INTERACTIVE_SVG YES)
+
+set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
+
+doxygen_add_docs(Doxygen ALL
+  COMMENT "Generating documentation"
+  ${CMAKE_SOURCE_DIR}/README.md
+  ${CMAKE_SOURCE_DIR}/include
 )
-
-set(DOCS_RESOURCES
-  ${DOCS_IMAGES}
-)
-
-if (DOXYGEN_FOUND)
-  set(DOXYGEN_INPUT_DIR ${CMAKE_SOURCE_DIR}/include/)
-  set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/docs)
-  set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
-  set(DOXYGEN_FAKE_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/__index.html)
-  set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
-  set(DOXYFILE_OUT ${DOXYGEN_OUTPUT_DIR}/Doxyfile)
-
-  set(DOXYGEN_PROJECT_LOGO ${DOXYGEN_OUTPUT_DIR}/novel-chan_doxy.png)
-
-  #Replace variables inside @@ with the current values
-  configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
-  file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) #Doxygen won't create this for us
-  file(COPY ${DOCS_RESOURCES} DESTINATION ${DOXYGEN_OUTPUT_DIR})
-
-  add_custom_command(OUTPUT
-                       ${DOXYGEN_INDEX_FILE}
-                       ${DOXYGEN_FAKE_INDEX_FILE}
-                     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
-                     MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
-                     COMMENT "Generating docs")
-
-  add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
-endif (DOXYGEN_FOUND)

@@ -8,7 +8,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class RenderingService {
+  class RenderingService : public std::enable_shared_from_this<RenderingService> {
     friend class ImageRect;
     friend class TextRect;
     friend class Texture;
@@ -16,18 +16,20 @@ namespace NovelRT::Graphics {
   private:
     bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector2<float>* const optionalWindowSize = nullptr);
     LoggingService _logger;
-    NovelRunner* const _runner;
+    std::shared_ptr<Windowing::WindowingService> _windowingService;
 
     ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
     ShaderProgram _basicFillRectProgram;
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
-
+    
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::shared_ptr<Camera> _camera;
 
     std::map<Atom, std::weak_ptr<Texture>> _textureCache;
     std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
+
+    RGBAConfig _framebufferColour;
 
     void bindCameraUboForProgram(GLuint shaderProgramId);
 
@@ -35,9 +37,8 @@ namespace NovelRT::Graphics {
     void handleFontSetPreDestruction(FontSet* target);
 
   public:
-    RenderingService(NovelRunner* const runner);
+    RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
     int initialiseRendering();
-
     void tearDown() const;
 
     std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
@@ -52,6 +53,8 @@ namespace NovelRT::Graphics {
 
     void beginFrame() const;
     void endFrame() const;
+
+    void setBackgroundColour(const RGBAConfig& colour);
 
     std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
     std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);

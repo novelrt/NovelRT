@@ -62,17 +62,17 @@ namespace NovelRT::DotNet {
       hostfxr_handle hostContextHandle = nullptr;
 
       std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
-      std::filesystem::path runtimeConfigJsonPath = executableDirPath / "NovelRT.DotNet.runtimeconfig.json";
+      std::filesystem::path runtimeConfigJsonPath = executableDirPath / "dotnet" / "NovelRT.DotNet.runtimeconfig.json";
 
       const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
 
-      _logger.logInfo("Initializing the runtime using: " + runtimeConfigJsonPath.string());
+      _logger.logInfo("Initializing the runtime using: {}" + runtimeConfigJsonPath.string());
 
       int result = _hostfxr_initialize_for_runtime_config.getActual()(runtime_config_path, nullptr, &hostContextHandle);
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 
@@ -84,7 +84,7 @@ namespace NovelRT::DotNet {
 
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -93,7 +93,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -114,7 +114,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 
@@ -123,7 +123,7 @@ namespace NovelRT::DotNet {
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_DOTNET)) {
   }
 
-  RuntimeService::~RuntimeService() {
+  void RuntimeService::tearDown() {
     if (_hostContextHandle.isCreated())
     {
       int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
@@ -132,11 +132,15 @@ namespace NovelRT::DotNet {
 
     if (_hostfxr.isCreated())
     {
-      closeNativeLibrary(_hostfxr.getActual());
+        closeNativeLibrary(_hostfxr.getActual());
     }
   }
 
-  void RuntimeService::initialize() {
+  RuntimeService::~RuntimeService() {
+    tearDown();
+  }
+
+  void RuntimeService::initialise() {
     auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
     initializeFunction();
   }
