@@ -75,7 +75,9 @@ extern "C" {
   bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point) {
     auto treePointer = reinterpret_cast<std::shared_ptr<Maths::QuadTree>&>(tree);
     auto cPoint = reinterpret_cast<Maths::QuadTreePoint*>(point);
-    return treePointer->tryRemove(cPoint->shared_from_this());
+    //_collection.remove(cPoint->shared_from_this());
+    auto result = treePointer->tryRemove(cPoint->shared_from_this());
+    return result;
   }
     
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds) {
