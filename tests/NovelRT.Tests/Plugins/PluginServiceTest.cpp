@@ -74,4 +74,13 @@ TEST_F(PluginServiceTest, createRenderingServiceReturnsPtr) {
 TEST_F(PluginServiceTest, createRenderingServiceReturnsWorkingPtr) {
   auto pluginPtr = _pluginService.createRenderingService(_pluginService.getAllAvailablePluginInfo().at(0));
   EXPECT_EQ(pluginPtr->initialiseRendering(), 0);
+  auto fillRectPtr = pluginPtr->createBasicFillRect(NovelRT::Transform(), 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 0));
+  EXPECT_EQ(fillRectPtr, nullptr);
+  auto imageRectPtr = pluginPtr->createImageRect(NovelRT::Transform(), 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 0));
+  EXPECT_EQ(imageRectPtr, nullptr);
+  auto textRectPtr = pluginPtr->createTextRect(NovelRT::Transform(), 0, NovelRT::Graphics::RGBAConfig(0, 0, 0, 0), 0, "");
+  EXPECT_EQ(textRectPtr, nullptr);
+  auto cameraPtr = pluginPtr->getCamera();
+  EXPECT_TRUE(cameraPtr.expired());
+
 }
