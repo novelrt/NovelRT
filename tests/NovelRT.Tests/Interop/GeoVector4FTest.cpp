@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "NovelRTInterop/Maths/GeoVector4F_t.h"
-#include "NovelRTInterop/Maths/GeoVector3F_t.h"
+#include "NovelRT.Interop/Maths/GeoVector4F_t.h"
+#include "NovelRT.Interop/Maths/GeoVector3F_t.h"
 
 using namespace NovelRT;
 using namespace NovelRT::Maths;

@@ -12,16 +12,8 @@
 extern "C" {
 #endif
 
-  struct QuadTreeHandle {
-    int id;
-  };
   typedef struct QuadTreeHandle* QuadTree_t;
   typedef struct StdVector_QuadTreePoint* PointVector;
-
-  static const int32_t TOP_LEFT = 0;
-  static const int32_t TOP_RIGHT = 1;
-  static const int32_t BOTTOM_LEFT = 2;
-  static const int32_t BOTTOM_RIGHT = 3;
 
   QuadTree_t QuadTree_create(GeoBounds_t& bounds);
   QuadTree_t QuadTree_getParent(QuadTree_t tree);

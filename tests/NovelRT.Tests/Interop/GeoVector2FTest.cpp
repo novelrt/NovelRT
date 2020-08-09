@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "NovelRTInterop/Maths/GeoVector2F_t.h"
+#include "NovelRT.Interop/Maths/GeoVector2F_t.h"
 
 using namespace NovelRT;
 using namespace NovelRT::Maths;

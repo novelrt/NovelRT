@@ -37,6 +37,7 @@ add_executable(Engine_Tests ${TEST_SOURCES})
 target_link_libraries(Engine_Tests
   PUBLIC
     Engine
+    Interop
     GTest::GTest
     GTest::Main
     GMock::GMock
