@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#define __STDC_WANT_LIB_EXT1__ 1
-#include <cmath>
-#include <stddef.h>
+
 #include "NovelRT.Interop/Maths/QuadTreePoint_t.h"
 #include "NovelRT.Interop/Maths/GeoBounds_t.h"
+#include <cmath>
+#include <stddef.h>
 
 #ifndef NOVELRT_MATHS_QUADTREE_C_H
 #define NOVELRT_MATHS_QUADTREE_C_H
