@@ -15,29 +15,17 @@ extern "C" {
   }
 
   GeoVector2F_t GeoBounds_getCornerInLocalSpace(const GeoBounds_t& bounds, int index) {
-    Maths::GeoBounds cBounds(Maths::GeoVector2<float>::zero(), Maths::GeoVector2<float>::zero(), 0.0f);
-    std::memcpy(&cBounds, &bounds, sizeof(Maths::GeoBounds));
-    Maths::GeoVector2<float>* returnVal = new Maths::GeoVector2<float>();
-    *returnVal = cBounds.getCornerInLocalSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(returnVal);
-
-    //const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-    //Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
-    //*corner = cBounds.getCornerInLocalSpace(index);
-    //return reinterpret_cast<GeoVector2F_t&>(corner);
+    const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
+    Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
+    *corner = cBounds.getCornerInLocalSpace(index);
+    return reinterpret_cast<GeoVector2F_t&>(corner);
   }
 
   GeoVector2F_t GeoBounds_getCornerInWorldSpace(GeoBounds_t& bounds, int index) {
-    Maths::GeoBounds cBounds(Maths::GeoVector2<float>::zero(), Maths::GeoVector2<float>::zero(), 0.0f);
-    std::memcpy(&cBounds, &bounds, sizeof(Maths::GeoBounds));
-    Maths::GeoVector2<float>* returnVal = new Maths::GeoVector2<float>();
-    *returnVal = cBounds.getCornerInWorldSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(returnVal);
-    
-    //const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-    //Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
-    //*corner = cBounds.getCornerInWorldSpace(index);
-    //return reinterpret_cast<GeoVector2F_t&>(corner);
+    const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
+    Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
+    *corner = cBounds.getCornerInWorldSpace(index);
+    return reinterpret_cast<GeoVector2F_t&>(corner);
   }
 
   bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const GeoVector2F_t& point) {
