@@ -3,8 +3,8 @@
 #include "NovelRT.h"
 #include <list>
 
-std::list<std::shared_ptr<NovelRT::Maths::QuadTreePoint>> _collection; //TODO: Why a list? - Ruby
 //int _collected = 0;
+std::list<std::shared_ptr<NovelRT::Maths::QuadTree>> _treeCollection;
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -13,16 +13,15 @@ extern "C" {
 
    QuadTree_t QuadTree_create(GeoBounds_t& bounds) {
      auto b = reinterpret_cast<Maths::GeoBounds&>(bounds);
-     auto treePointer = new Maths::QuadTree(b);
-     auto tree = reinterpret_cast<QuadTree_t&>(treePointer);
-     return tree;
+     auto treePointer = std::make_shared<Maths::QuadTree>(b);
+     _treeCollection.push_back(treePointer);
+     return reinterpret_cast<QuadTree_t&>(treePointer);
    }
   
    QuadTree_t QuadTree_getParent(QuadTree_t tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
      auto parentTree = treePointer->getParent();
-     auto treeToReturn = reinterpret_cast<QuadTree_t&>(parentTree);
-     return treeToReturn;
+     return reinterpret_cast<QuadTree_t&>(parentTree);
    }
   
    GeoBounds_t QuadTree_getBounds(QuadTree_t tree) {
@@ -65,24 +64,27 @@ extern "C" {
      return reinterpret_cast<QuadTree_t&>(childTree);
    }
   
-   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point) {
+   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t point) {
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-    auto cPoint = reinterpret_cast<Maths::QuadTreePoint*>(point);
-    _collection.emplace_back(std::shared_ptr<Maths::QuadTreePoint>(cPoint));
-    return treePointer->tryInsert(cPoint->shared_from_this());
+    return treePointer->tryInsert(reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point));
    }
   
-  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point) {
+  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t point) {
     auto treePointer = reinterpret_cast<std::shared_ptr<Maths::QuadTree>&>(tree);
-    auto cPoint = reinterpret_cast<Maths::QuadTreePoint*>(point);
-    return treePointer->tryRemove(cPoint->shared_from_this());
+    return treePointer->tryRemove(reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point));
   }
     
+//TODO: Add deleter method for PointVector.
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds) {
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
     *points = treePointer->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
     return reinterpret_cast<PointVector>(points);
+  }
+
+//TODO: We should probably add return codes for stuff like this, because C.
+  void QuadTree_delete(QuadTree_t tree) {
+    _treeCollection.remove(reinterpret_cast<std::shared_ptr<Maths::QuadTree>&>(tree));
   }
 
 #ifdef __cplusplus

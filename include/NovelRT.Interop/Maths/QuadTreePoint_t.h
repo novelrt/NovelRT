@@ -12,7 +12,8 @@ extern "C" {
   
   QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position);
   QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y);
-  const GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t& point);
+  GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t point);
+  void QuadTreePoint_delete(QuadTreePoint_t point);
 
 #ifdef __cplusplus
 }

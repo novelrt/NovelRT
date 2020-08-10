@@ -24,10 +24,10 @@ extern "C" {
   QuadTree_t QuadTree_getTopRight(QuadTree_t tree);
   QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree);
   QuadTree_t QuadTree_getBottomRight(QuadTree_t tree);
-  bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t& point);
-  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t& point);
+  bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t point);
+  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t point);
   PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds);
-  void QuadTree_destroy(QuadTree_t tree);
+  void QuadTree_delete(QuadTree_t tree);
 
 #ifdef __cplusplus
 }
