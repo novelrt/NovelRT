@@ -14,13 +14,13 @@ extern "C" {
     auto pos = reinterpret_cast<Maths::GeoVector2<float>&>(position);
     auto point = std::make_shared<Maths::QuadTreePoint>(pos);
     _pointCollection.push_back(point);
-    return reinterpret_cast<QuadTreePoint_t&>(point);;
+    return reinterpret_cast<QuadTreePoint_t&>(point);
   }
 
   QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y) {
     auto point = std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2<float>(x, y));
     _pointCollection.push_back(point);
-    return reinterpret_cast<QuadTreePoint_t&>(point);;
+    return reinterpret_cast<QuadTreePoint_t&>(_pointCollection.back());
   }
 
   GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t point) {
