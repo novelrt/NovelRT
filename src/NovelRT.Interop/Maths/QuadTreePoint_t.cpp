@@ -11,16 +11,13 @@ extern "C" {
 #endif
 
   QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position) {
-    auto pos = reinterpret_cast<Maths::GeoVector2<float>&>(position);
-    auto point = std::make_shared<Maths::QuadTreePoint>(pos);
-    _pointCollection.push_back(point);
-    return reinterpret_cast<QuadTreePoint_t&>(point);
+    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2<float>&>(position)));
+    return reinterpret_cast<QuadTreePoint_t>(_pointCollection.back().get());
   }
 
   QuadTreePoint_t QuadTreePoint_createFromFloat(float x, float y) {
-    auto point = std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2<float>(x, y));
-    _pointCollection.push_back(point);
-    return reinterpret_cast<QuadTreePoint_t&>(_pointCollection.back());
+    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2<float>(x, y)));
+    return reinterpret_cast<QuadTreePoint_t>(_pointCollection.back().get());
   }
 
   GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t point) {
@@ -30,7 +27,7 @@ extern "C" {
   }
 
   void QuadTreePoint_delete(QuadTreePoint_t point) {
-    _pointCollection.remove(reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point));
+    _pointCollection.remove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());
   }
 
 

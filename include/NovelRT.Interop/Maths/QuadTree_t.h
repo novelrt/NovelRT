@@ -15,7 +15,7 @@ extern "C" {
   typedef struct QuadTreeHandle* QuadTree_t;
   typedef struct StdVector_QuadTreePoint* PointVector;
 
-  QuadTree_t QuadTree_create(GeoBounds_t& bounds);
+  QuadTree_t QuadTree_create(const GeoBounds_t& bounds);
   QuadTree_t QuadTree_getParent(QuadTree_t tree);
   GeoBounds_t QuadTree_getBounds(QuadTree_t tree);
   QuadTreePoint_t QuadTree_getPoint(QuadTree_t tree, size_t index);
