@@ -171,23 +171,23 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
 
  TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
    auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   auto point0Cpp = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point0);
+   auto point0Cpp = reinterpret_cast<Maths::QuadTreePoint*>(point0);
    EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
    auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   auto point1Cpp = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point1);
+   auto point1Cpp = reinterpret_cast<Maths::QuadTreePoint*>(point1);
    EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
    auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   auto point2Cpp = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point2);
+   auto point2Cpp = reinterpret_cast<Maths::QuadTreePoint*>(point2);
    EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
    auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   auto point3Cpp = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point3);
+   auto point3Cpp = reinterpret_cast<Maths::QuadTreePoint*>(point3);
    EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
    auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-   auto point4Cpp = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point4);
+   auto point4Cpp = reinterpret_cast<Maths::QuadTreePoint*>(point4);
    EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
    auto allPoints = QuadTree_getIntersectingPoints(_quadTree, QuadTree_getBounds(_quadTree));
@@ -195,11 +195,11 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
    
    EXPECT_EQ(intersectingPoints->size(), 5u);
 
-   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(0).get(), point0Cpp.get()));
-   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(1).get(), point4Cpp.get()));
-   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(2).get(), point1Cpp.get()));
-   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(3).get(), point2Cpp.get()));
-   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(4).get(), point3Cpp.get()));
+   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(0).get(), point0Cpp));
+   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(1).get(), point4Cpp));
+   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(2).get(), point1Cpp));
+   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(3).get(), point2Cpp));
+   EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPoints->at(4).get(), point3Cpp));
  }
 
  TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
@@ -232,7 +232,6 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
 
    EXPECT_TRUE(QuadTree_tryRemove(_quadTree, point4));
 
-   auto aaaaa = reinterpret_cast<Maths::QuadTree*>(_quadTree);
    EXPECT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
    EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 0), point0));
