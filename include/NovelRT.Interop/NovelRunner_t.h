@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-  typedef void NovelRunner_t;
+  typedef struct NovelRunnerHandle* NovelRunner_t;
 
   NovelRunner_t* NovelRunner_create(int displayNumber);
   NovelRunner_t* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
