@@ -1,4 +1,5 @@
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
+#include "NovelRT.Interop/NovelRTResult.h"
 #include <NovelRT.h>
 #include <stdint.h>
 
@@ -14,9 +15,10 @@ NovelRTWindowingService WindowingService_create() noexcept {
     return reinterpret_cast<NovelRTWindowingService>(_serviceCollection.back().get());
 }
 
-void WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled) {
+NovelRTResult WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     servicePtr->initialiseWindow(displayNumber, windowTitle, transparencyEnabled);
+    return NovelRTResult::NOVELRT_SUCCESS;
 }
 
 void WindowingService_tearDown(NovelRTWindowingService service) {
