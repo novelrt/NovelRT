@@ -58,19 +58,19 @@ namespace NovelRT::Utilities {
       return _handlers.size();
     }
 
-    const EventHandler<TArgs...>& operator+=(const EventHandler<TArgs...>& handler) {
+    Atom operator+=(const EventHandler<TArgs...>& handler) {
       if (handler.getId() != Atom()) {
-        return _handlers.emplace_back(handler);
+        _handlers.emplace_back(handler);
       }
-      return handler;
+      return handler.getId();
     }
 
-    const EventHandler<TArgs...>& operator+=(const std::function<void(TArgs...)>& function) {
+    Atom operator+=(const std::function<void(TArgs...)>& function) {
       auto handler = EventHandler<TArgs...>(function);
       return *this += handler;
     }
 
-    const EventHandler<TArgs...>& operator+=(std::function<void(TArgs...)>&& function) {
+    Atom operator+=(std::function<void(TArgs...)>&& function) {
       auto handler = EventHandler<TArgs...>(function);
       return *this += handler;
     }
