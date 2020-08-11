@@ -15,6 +15,10 @@ TEST(InteropGeoVector2Test, equalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector2F_equal(vec2One, vec2Two));
 }
 
+TEST(InteropGeoVector2Test, createReturnsCorrectGeoVector2) {
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_t{1.0f, 1.0f}, GeoVector2F_create(1.0f, 1.0f)));
+}
+
 TEST(InteropGeoVector2Test, inequalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector2F_notEqual(vec2One, vec2Three));
 }

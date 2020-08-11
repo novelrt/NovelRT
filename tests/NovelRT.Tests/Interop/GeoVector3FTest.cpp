@@ -15,6 +15,14 @@ TEST(InteropGeoVector3Test, equalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector3F_equal(vec3One, vec3Two));
 }
 
+TEST(InteropGeoVector3Test, createReturnsCorrectGeoVector3) {
+  EXPECT_TRUE(GeoVector3F_equal(GeoVector3F_t{1.0f, 1.0f, 1.0f}, GeoVector3F_create(1.0f, 1.0f, 1.0f)));
+}
+
+TEST(InteropGeoVector3Test, createFromGeoVector2ReturnsCorrectGeoVector3) {
+  EXPECT_TRUE(GeoVector3F_equal(GeoVector3F_createFromGeoVector2F(GeoVector2F_create(1.0f, 1.0f)), GeoVector3F_t{1.0f, 1.0f, 0.0f}));
+}
+
 TEST(InteropGeoVector3Test, inequalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(GeoVector3F_notEqual(vec3One, vec3Three));
 }

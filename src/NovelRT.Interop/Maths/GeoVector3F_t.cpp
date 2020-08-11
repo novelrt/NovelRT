@@ -2,6 +2,7 @@
 #include <NovelRT.h>
 #include "NovelRT.Interop/Maths/GeoVector3F_t.h"
 
+
 #ifdef __cplusplus
 using namespace NovelRT;
 extern "C" {
@@ -11,8 +12,8 @@ extern "C" {
     return GeoVector3F_t{ x, y, z };
   }
   
-  GeoVector3F_t GeoVector3F_createFromGeoVector3F(const GeoVector3F_t& vector) {
-  	Maths::GeoVector3<float> cVector2 = *reinterpret_cast<const Maths::GeoVector3<float>*>(&vector);
+  GeoVector3F_t GeoVector3F_createFromGeoVector2F(const GeoVector2F_t& vector) {
+  	Maths::GeoVector2<float> cVector2 = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
   	return GeoVector3F_t{ cVector2.getX(), cVector2.getY(), 0.0f };
   }
   

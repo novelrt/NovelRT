@@ -1,5 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "NovelRT.Interop/Maths/GeoVector2F_t.h"
+
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR3F_H
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR3F_H
 
@@ -15,7 +17,7 @@ extern "C" {
   };
 
   GeoVector3F_t GeoVector3F_create(float x, float y, float z);
-  GeoVector3F_t GeoVector3F_createFromGeoVector3F(const GeoVector3F_t& vector);
+  GeoVector3F_t GeoVector3F_createFromGeoVector2F(const GeoVector2F_t& vector);
   GeoVector3F_t GeoVector3F_uniform(float value);
   GeoVector3F_t GeoVector3F_zero();
   GeoVector3F_t GeoVector3F_one();
