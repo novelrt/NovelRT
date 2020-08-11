@@ -18,14 +18,14 @@ extern "C" {
     const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
     *corner = cBounds.getCornerInLocalSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(corner);
+    return reinterpret_cast<GeoVector2F_t&>(*corner);
   }
 
   GeoVector2F_t GeoBounds_getCornerInWorldSpace(GeoBounds_t& bounds, int index) {
     const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2<float>* corner = new Maths::GeoVector2<float>();
     *corner = cBounds.getCornerInWorldSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(corner);
+    return reinterpret_cast<GeoVector2F_t&>(*corner);
   }
 
   bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const GeoVector2F_t& point) {
