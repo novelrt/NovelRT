@@ -18,9 +18,14 @@ namespace NovelRT::Utilities {
     EventHandler() : EventHandler(nullptr) {
     }
 
+    explicit EventHandler(std::function<void(TArgs...)>&& function) :
+            _id(Atom::getNextEventHandlerId()),
+            _function(std::move(function)) {
+    }
+
     explicit EventHandler(const std::function<void(TArgs...)>& function) :
-      _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
-      _function(function) {
+            _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
+            _function(function) {
     }
 
     void operator()(TArgs... args) const {
@@ -53,25 +58,37 @@ namespace NovelRT::Utilities {
       return _handlers.size();
     }
 
-    void operator+=(const EventHandler<TArgs...>& handler) {
+    const EventHandler<TArgs...>& operator+=(const EventHandler<TArgs...>& handler) {
       if (handler.getId() != Atom()) {
-        _handlers.emplace_back(handler);
+        return _handlers.emplace_back(handler);
       }
+      return handler;
     }
 
-    void operator+=(const std::function<void(TArgs...)>& function) {
+    const EventHandler<TArgs...>& operator+=(const std::function<void(TArgs...)>& function) {
       auto handler = EventHandler<TArgs...>(function);
-      *this += handler;
+      return *this += handler;
+    }
+
+    const EventHandler<TArgs...>& operator+=(std::function<void(TArgs...)>&& function) {
+      auto handler = EventHandler<TArgs...>(function);
+      return *this += handler;
     }
 
     void operator-=(const EventHandler<TArgs...>& handler) {
-      if (handler.getId() == Atom())
+      remove(handler.getId());
+    }
+
+    void remove(Atom eventHandlerId) {
+      if (eventHandlerId == Atom())
         return;
 
-      auto match = std::find(_handlers.cbegin(), _handlers.cend(), handler);
-
-      if (match != _handlers.cend())
-        _handlers.erase(match);
+      for (auto it = _handlers.begin(); it != _handlers.end(); ++it) {
+        if (it->getId() == eventHandlerId) {
+          _handlers.erase(it);
+          return;
+        }
+      }
     }
 
     void operator()(TArgs... args) const {
