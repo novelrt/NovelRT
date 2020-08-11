@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 #include <stdint.h>
 
-std::list<std::shared_ptr<Windowing::WindowingService>> _serviceCollection;
+std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _serviceCollection;
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -15,10 +15,9 @@ NovelRTWindowingService WindowingService_create() noexcept {
     return reinterpret_cast<NovelRTWindowingService>(_serviceCollection.back().get());
 }
 
-NovelRTResult WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled) {
+void WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     servicePtr->initialiseWindow(displayNumber, windowTitle, transparencyEnabled);
-    return NovelRTResult::NOVELRT_SUCCESS;
 }
 
 void WindowingService_tearDown(NovelRTWindowingService service) {
@@ -36,15 +35,14 @@ void WindowingService_setWindowTitle(NovelRTWindowingService service, const char
     servicePtr->setWindowTitle(value);
 }
 
-void WindowingService_setWindowSize(NovelRTWindowingService service, const GeoVector2F_t value) {
+void WindowingService_setWindowSize(NovelRTWindowingService service, const GeoVector2F_t& value) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2<float>*>(&value));
 }
 
 GeoVector2F_t WindowingService_getWindowSize(NovelRTWindowingService service) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-    auto vector = new Maths::GeoVector2<float>();
-    *vector = servicePtr->getWindowSize();
+    auto vector = servicePtr->getWindowSize();
     return reinterpret_cast<GeoVector2F_t&>(vector);
 }
 

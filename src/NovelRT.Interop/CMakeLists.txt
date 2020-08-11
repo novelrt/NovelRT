@@ -8,6 +8,7 @@ set(INTEROP_SOURCES
   Maths/GeoVector4F_t.cpp
   Maths/QuadTree_t.cpp
   Maths/QuadTreePoint_t.cpp
+  Windowing/NovelRTWindowingService.cpp
 )
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
