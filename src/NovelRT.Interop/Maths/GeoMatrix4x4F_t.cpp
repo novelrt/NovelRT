@@ -47,45 +47,41 @@ extern "C" {
     gm.w = value;
   }
 
-  GeoMatrix4x4F_t GeoMatrix4x4F_getDefaultIdentity(GeoMatrix4x4F_t& gm) {
-    Maths::GeoMatrix4x4<float> cMatrix = *reinterpret_cast<Maths::GeoMatrix4x4<float>*>(&gm);
-    Maths::GeoMatrix4x4<float>* identity = new Maths::GeoMatrix4x4<float>();
-    *identity = cMatrix.getDefaultIdentity();
-    return reinterpret_cast<GeoMatrix4x4F_t&>(*identity);
+  GeoMatrix4x4F_t GeoMatrix4x4F_getDefaultIdentity() {
+    auto identity = Maths::GeoMatrix4x4<float>::getDefaultIdentity();
+    return reinterpret_cast<GeoMatrix4x4F_t&>(identity);
   }
 
   bool GeoMatrix4x4F_equal(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&first) == *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);
+    return reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(first) == reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(other);
   }
 
   bool GeoMatrix4x4F_notEqual(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&first) != *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);
+    return reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(first) != reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(other);
   }
 
-  GeoMatrix4x4F_t GeoMatrix4x4F_addMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
-    Maths::GeoMatrix4x4<float> cFirst = *reinterpret_cast<Maths::GeoMatrix4x4<float>*>(&first);
-    Maths::GeoMatrix4x4<float> cOther = *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);
-    Maths::GeoMatrix4x4<float>* result = new Maths::GeoMatrix4x4<float>();
-    *result = cFirst + cOther;
-    return reinterpret_cast<GeoMatrix4x4F_t&>(*result);
+  GeoMatrix4x4F_t GeoMatrix4x4F_addMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
+    const Maths::GeoMatrix4x4<float>& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(first);
+    const Maths::GeoMatrix4x4<float>& cOther = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(other);
+    Maths::GeoMatrix4x4<float> result = cFirst + cOther;
+    return reinterpret_cast<GeoMatrix4x4F_t&>(result);
   }
 
-  GeoMatrix4x4F_t GeoMatrix4x4F_subtractMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
-    Maths::GeoMatrix4x4<float> cFirst = *reinterpret_cast<Maths::GeoMatrix4x4<float>*>(&first);
-    Maths::GeoMatrix4x4<float> cOther = *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);
-    Maths::GeoMatrix4x4<float>* result = new Maths::GeoMatrix4x4<float>();
-    *result = cFirst - cOther;
-    return reinterpret_cast<GeoMatrix4x4F_t&>(*result);
+  GeoMatrix4x4F_t GeoMatrix4x4F_subtractMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
+    const Maths::GeoMatrix4x4<float>& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(first);
+    const Maths::GeoMatrix4x4<float>& cOther = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(other);
+    Maths::GeoMatrix4x4<float> result = cFirst - cOther;
+    return reinterpret_cast<GeoMatrix4x4F_t&>(result);
   }
 
-  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
-    Maths::GeoMatrix4x4<float> cFirst = *reinterpret_cast<Maths::GeoMatrix4x4<float>*>(&first);
-    Maths::GeoMatrix4x4<float> cOther = *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);
-    Maths::GeoMatrix4x4<float>* result = new Maths::GeoMatrix4x4<float>();
-    *result = cFirst * cOther;
-    return reinterpret_cast<GeoMatrix4x4F_t&>(*result);
+  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
+    const Maths::GeoMatrix4x4<float>& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(first);
+    const Maths::GeoMatrix4x4<float>& cOther = reinterpret_cast<const Maths::GeoMatrix4x4<float>&>(other);
+    Maths::GeoMatrix4x4<float> result = cFirst * cOther;
+    return reinterpret_cast<GeoMatrix4x4F_t&>(result);
   }
 
+  //TODO: Redo this
   GeoMatrix4x4F_t GeoMatrix4x4F_addIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other) {
     Maths::GeoMatrix4x4<float> cFirst = *reinterpret_cast<Maths::GeoMatrix4x4<float>*>(&first);
     Maths::GeoMatrix4x4<float> cOther = *reinterpret_cast<const Maths::GeoMatrix4x4<float>*>(&other);

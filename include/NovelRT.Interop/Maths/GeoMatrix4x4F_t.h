@@ -26,12 +26,12 @@ extern "C" {
   void GeoMatrix4x4F_setZ(GeoMatrix4x4F_t& gm, const GeoVector4F_t& value);
   GeoVector4F_t GeoMatrix4x4F_getW(GeoMatrix4x4F_t& gm);
   void GeoMatrix4x4F_setW(GeoMatrix4x4F_t& gm, const GeoVector4F_t& value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_getDefaultIdentity(GeoMatrix4x4F_t& gm);
+  GeoMatrix4x4F_t GeoMatrix4x4F_getDefaultIdentity();
   bool GeoMatrix4x4F_equal(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   bool GeoMatrix4x4F_notEqual(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_addMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_subtractMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  GeoMatrix4x4F_t GeoMatrix4x4F_addMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  GeoMatrix4x4F_t GeoMatrix4x4F_subtractMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   GeoMatrix4x4F_t GeoMatrix4x4F_addIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   GeoMatrix4x4F_t GeoMatrix4x4F_subtractFromMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   GeoMatrix4x4F_t GeoMatrix4x4F_multiplyIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
