@@ -164,7 +164,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForTem
 TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector) {
   GeoVector3F_t cVector = GeoVector3F_one();
   GeoVector3F_t normal = GeoVector3F_getNormalised(cVector);
-  GeoVector3<float> vec = *reinterpret_cast<GeoVector3<float>*>(&normal);
+  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
   float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
@@ -172,14 +172,14 @@ TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector) {
 TEST(InteropGeoVector3Test, getMagnitudeReturnsCorrectLength) {
   GeoVector3F_t cVector = GeoVector3F_one();
   GeoVector3F_t normal = GeoVector3F_getNormalised(cVector);
-  GeoVector3<float> vec = *reinterpret_cast<GeoVector3<float>*>(&normal);
+  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
   EXPECT_FLOAT_EQ(GeoVector3F_getMagnitude(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
 }
 
 TEST(InteropGeoVector3Test, getLengthReturnsCorrectLength) {
   GeoVector3F_t cVector = GeoVector3F_one();
   GeoVector3F_t normal = GeoVector3F_getNormalised(cVector);
-  GeoVector3<float> vec = *reinterpret_cast<GeoVector3<float>*>(&normal);
+  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
   EXPECT_FLOAT_EQ(GeoVector3F_getLength(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
 }
 

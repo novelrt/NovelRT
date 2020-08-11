@@ -63,173 +63,168 @@ extern "C" {
     gv.w = value;
   }
 
-  void GeoVector4F_rotateToAngleAroundPoint(float angleRotationValue, GeoVector4F_t& vector, const GeoVector3F_t& point) noexcept {
-    static Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
-    const Maths::GeoVector3<float> cPoint = *reinterpret_cast<const Maths::GeoVector3<float>*>(&point);
+  void GeoVector4F_rotateToAngleAroundPoint(GeoVector4F_t& vector, float angleRotationValue, const GeoVector3F_t& point) noexcept {
+    Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
+    const Maths::GeoVector3<float>& cPoint = reinterpret_cast<const Maths::GeoVector3<float>&>(point);
     cVector.rotateToAngleAroundPoint(angleRotationValue, cPoint);
-    vector = reinterpret_cast<GeoVector4F_t&>(cVector);
   }
 
-  bool GeoVector4F_epsilonEquals(GeoVector4F_t& vector, const GeoVector4F_t& other, const GeoVector4F_t& epsilonValue) noexcept {
-    Maths::GeoVector4<float>v1 = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
-    Maths::GeoVector4<float>v2 = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
-    Maths::GeoVector4<float>v3 = *reinterpret_cast<const Maths::GeoVector4<float>*>(&epsilonValue);
-    return v1.epsilonEquals(v2, v3);
+  bool GeoVector4F_epsilonEquals(const GeoVector4F_t& vector, const GeoVector4F_t& other, const GeoVector4F_t& epsilonValue) noexcept {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    const Maths::GeoVector4<float>& cEpsilonValue = reinterpret_cast<const Maths::GeoVector4<float>&>(epsilonValue);
+    return cVector.epsilonEquals(cOther, cEpsilonValue);
   }
 
-  GeoVector4F_t GeoVector4F_getNormalised(GeoVector4F_t& gv) {
-    Maths::GeoVector4<float> geo = *reinterpret_cast<Maths::GeoVector4<float>*>(&gv);
-    Maths::GeoVector4<float>* normal = new Maths::GeoVector4<float>();
-    *normal = geo.getNormalised();
-    return reinterpret_cast<GeoVector4F_t&>(*normal);
+  GeoVector4F_t GeoVector4F_getNormalised(const GeoVector4F_t& vector) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
+    Maths::GeoVector4<float> normal = cVector.getNormalised();
+    return reinterpret_cast<GeoVector4F_t&>(normal);
   }
 
-  float GeoVector4F_getLength(GeoVector4F_t& gv) {
-    Maths::GeoVector4<float> geo = *reinterpret_cast<Maths::GeoVector4<float>*>(&gv);
-    return geo.getLength();
+  float GeoVector4F_getLength(const GeoVector4F_t& vector) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
+    return cVector.getLength();
   }
 
-  float GeoVector4F_getMagnitude(GeoVector4F_t& gv) {
-    return GeoVector4F_getLength(gv);
+  float GeoVector4F_getMagnitude(const GeoVector4F_t& vector) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
+    return cVector.getMagnitude();
   }
 
   bool GeoVector4F_equal(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) == *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst == cOther;
   }
 
   bool GeoVector4F_notEqual(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) != *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst != cOther;
   }
 
   bool GeoVector4F_lessThan(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) < *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst < cOther;
   }
 
   bool GeoVector4F_lessThanOrEqualTo(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) <= *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst <= cOther;
   }
 
   bool GeoVector4F_greaterThan(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) > * reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst > cOther;
   }
 
   bool GeoVector4F_greaterThanOrEqualTo(const GeoVector4F_t& first, const GeoVector4F_t& other) {
-    return *reinterpret_cast<const Maths::GeoVector4<float>*>(&first) >= *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
+    return cFirst >= cOther;
   }
 
-  GeoVector4F_t GeoVector4F_addVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  GeoVector4F_t GeoVector4F_addVector(const GeoVector4F_t& first, const GeoVector4F_t& other) {
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     Maths::GeoVector4<float> result = cFirst + cOther;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_subtractVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  GeoVector4F_t GeoVector4F_subtractVector(const GeoVector4F_t& first, const GeoVector4F_t& other) {
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     Maths::GeoVector4<float> result = cFirst - cOther;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_multiplyVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  GeoVector4F_t GeoVector4F_multiplyVector(const GeoVector4F_t& first, const GeoVector4F_t& other) {
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     Maths::GeoVector4<float> result = cFirst * cOther;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_divideVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  GeoVector4F_t GeoVector4F_divideVector(const GeoVector4F_t& first, const GeoVector4F_t& other) {
+    const Maths::GeoVector4<float>& cFirst = reinterpret_cast<const Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     Maths::GeoVector4<float> result = cFirst / cOther;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_addFloat(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  GeoVector4F_t GeoVector4F_addFloat(const GeoVector4F_t& vector, float value) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
     Maths::GeoVector4<float> result = cVector + value;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_subtractFloat(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  GeoVector4F_t GeoVector4F_subtractFloat(const GeoVector4F_t& vector, float value) {
+    const Maths::GeoVector4<float> cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
     Maths::GeoVector4<float> result = cVector - value;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_multiplyFloat(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  GeoVector4F_t GeoVector4F_multiplyFloat(const GeoVector4F_t& vector, float value) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
     Maths::GeoVector4<float> result = cVector * value;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_divideFloat(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  GeoVector4F_t GeoVector4F_divideFloat(const GeoVector4F_t& vector, float value) {
+    const Maths::GeoVector4<float>& cVector = reinterpret_cast<const Maths::GeoVector4<float>&>(vector);
     Maths::GeoVector4<float> result = cVector / value;
     return reinterpret_cast<GeoVector4F_t&>(result);
   }
 
-  GeoVector4F_t GeoVector4F_addIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  void GeoVector4F_addIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
+    Maths::GeoVector4<float>& cFirst = reinterpret_cast<Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     cFirst += cOther;
-    first = reinterpret_cast<GeoVector4F_t&>(cFirst);
-    return first;
   }
 
-  GeoVector4F_t GeoVector4F_subtractFromVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  void GeoVector4F_subtractFromVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
+    Maths::GeoVector4<float>& cFirst = reinterpret_cast<Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     cFirst -= cOther;
-    first = reinterpret_cast<GeoVector4F_t&>(cFirst);
-    return first;
   }
 
-  GeoVector4F_t GeoVector4F_multiplyIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  void GeoVector4F_multiplyIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
+    Maths::GeoVector4<float>& cFirst = reinterpret_cast<Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     cFirst *= cOther;
-    first = reinterpret_cast<GeoVector4F_t&>(cFirst);
-    return first;
   }
 
-  GeoVector4F_t GeoVector4F_divideIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
-    Maths::GeoVector4<float> cFirst = *reinterpret_cast<Maths::GeoVector4<float>*>(&first);
-    Maths::GeoVector4<float> cOther = *reinterpret_cast<const Maths::GeoVector4<float>*>(&other);
+  void GeoVector4F_divideIntoVector(GeoVector4F_t& first, const GeoVector4F_t& other) {
+    Maths::GeoVector4<float>& cFirst = reinterpret_cast<Maths::GeoVector4<float>&>(first);
+    const Maths::GeoVector4<float>& cOther = reinterpret_cast<const Maths::GeoVector4<float>&>(other);
     cFirst /= cOther;
-    first = reinterpret_cast<GeoVector4F_t&>(cFirst);
-    return first;
   }
 
-  GeoVector4F_t GeoVector4F_addFloatIntoVector(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  void GeoVector4F_addFloatIntoVector(GeoVector4F_t& vector, float value) {
+    Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
     cVector += value;
-    vector = reinterpret_cast<GeoVector4F_t&>(cVector);
-    return vector;
   }
 
-  GeoVector4F_t GeoVector4F_subFloatFromVector(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  void GeoVector4F_subFloatFromVector(GeoVector4F_t& vector, float value) {
+    Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
     cVector -= value;
-    vector = reinterpret_cast<GeoVector4F_t&>(cVector);
-    return vector;
   }
 
-  GeoVector4F_t GeoVector4F_multiplyFloatIntoVector(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  void GeoVector4F_multiplyFloatIntoVector(GeoVector4F_t& vector, float value) {
+    Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
     cVector *= value;
-    vector = reinterpret_cast<GeoVector4F_t&>(cVector);
-    return vector;
   }
 
-  GeoVector4F_t GeoVector4F_divideFloatIntoVector(GeoVector4F_t& vector, float value) {
-    Maths::GeoVector4<float> cVector = *reinterpret_cast<Maths::GeoVector4<float>*>(&vector);
+  void GeoVector4F_divideFloatIntoVector(GeoVector4F_t& vector, float value) {
+    Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
     cVector /= value;
-    vector = reinterpret_cast<GeoVector4F_t&>(cVector);
-    return vector;
   }
 
-  GeoVector4F_t GeoVector4F_multiplyFloatIntoVectorInverse(float lhs, GeoVector4F_t& rhs) {
+  GeoVector4F_t GeoVector4F_multiplyFloatInverse(float lhs, const GeoVector4F_t& rhs) {
     return GeoVector4F_multiplyFloat(rhs, lhs);
   }
 
