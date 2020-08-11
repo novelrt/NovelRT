@@ -46,239 +46,265 @@ protected:
 
 };
 
+//TODO: Update all tests with return codes
+TEST_F(InteropQuadTreeTest, QuadTree_createReturnsValidHandle) {
+  EXPECT_NE(reinterpret_cast<Maths::QuadTree*>(QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT))), nullptr);
+}
+
+//TODO: This test really REALLY needs return codes.
+TEST_F(InteropQuadTreeTest, QuadTree_deleteReturnsSuccess) {
+  EXPECT_NO_THROW(QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)));
+}
+
+TEST_F(InteropQuadTreeTest, PointVector_createReturnsValidHandle) {
+  auto points = QuadTree_getIntersectingPoints(_quadTree, getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
+  EXPECT_NO_THROW(PointVector_delete(points));
+}
+
 TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds) {
   auto expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(_quadTree), expectedBounds));
 }
 
- TEST_F(InteropQuadTreeTest, createHasNoPoints)
- {
-   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
- }
+TEST_F(InteropQuadTreeTest, createHasNoPoints) {
+  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
+}
 
-  TEST_F(InteropQuadTreeTest, createHasNoChildren)
-  {
-    EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
-    EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
-    EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
-    EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
-  }
+TEST_F(InteropQuadTreeTest, createHasNoChildren) {
+  EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
+}
 
- TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
- {
-   EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), nullptr);
-   EXPECT_EQ(QuadTree_getPoint(_quadTree, 1), nullptr);
-   EXPECT_EQ(QuadTree_getPoint(_quadTree, 2), nullptr);
-   EXPECT_EQ(QuadTree_getPoint(_quadTree, 3), nullptr);
- }
+TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex) {
+  EXPECT_EQ(QuadTree_getPoint(_quadTree, 0), nullptr);
+  EXPECT_EQ(QuadTree_getPoint(_quadTree, 1), nullptr);
+  EXPECT_EQ(QuadTree_getPoint(_quadTree, 2), nullptr);
+  EXPECT_EQ(QuadTree_getPoint(_quadTree, 3), nullptr);
+}
 
- TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
- }
+TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
+}
 
- TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
+TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
-   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-   ASSERT_EQ(QuadTree_getPointCount(_quadTree), 4u);
+  ASSERT_EQ(QuadTree_getPointCount(_quadTree), 4u);
 
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 0), point0));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 1), point1));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 2), point2));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 3), point3));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 0), point0));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 1), point1));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 2), point2));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 3), point3));
 
-   EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
- }
+  EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
+}
 
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
-   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
+  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
 
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
 
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 0), point0));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopRight(_quadTree), 0), point1));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getBottomLeft(_quadTree), 0), point2));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getBottomRight(_quadTree), 0), point3));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 1), point4));
- }
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 0), point0));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopRight(_quadTree), 0), point1));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getBottomLeft(_quadTree), 0), point2));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getBottomRight(_quadTree), 0), point3));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 1), point4));
+}
 
- TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
+TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
-   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
+  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
 
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
-   EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
 
-   auto expectedSize = GeoVector2F_create(TEST_WIDTH / 2, TEST_HEIGHT / 2);
+  auto expectedSize = GeoVector2F_create(TEST_WIDTH / 2, TEST_HEIGHT / 2);
 
-   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
-   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
-   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
-   EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
- }
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getTopRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomLeft(_quadTree)), GeoBounds_create(GeoVector2F_create(-TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
+  EXPECT_TRUE(checkBoundsForEquality(QuadTree_getBounds(QuadTree_getBottomRight(_quadTree)), GeoBounds_create(GeoVector2F_create(TEST_WIDTH / 4, -TEST_HEIGHT / 4), expectedSize, 0)));
+}
 
- TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {
-   auto point0 = QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
-   EXPECT_EQ(false, QuadTree_tryInsert(_quadTree, point0));
- }
+TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {
+  auto point0 = QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
+  EXPECT_EQ(false, QuadTree_tryInsert(_quadTree, point0));
+}
 
- TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
+TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
-   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-   auto allPoints = QuadTree_getIntersectingPoints(_quadTree, QuadTree_getBounds(_quadTree));
-   
-   EXPECT_EQ(PointVector_getSize(allPoints), 5u);
+  auto allPoints = QuadTree_getIntersectingPoints(_quadTree, QuadTree_getBounds(_quadTree));
 
-   EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 0), point0));
-   EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 1), point4));
-   EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 2), point1));
-   EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 3), point2));
-   EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 4), point3));
- }
+  EXPECT_EQ(PointVector_getSize(allPoints), 5u);
+}
 
- TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
+TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   EXPECT_EQ(true, QuadTree_tryRemove(_quadTree, point0));
- }
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
- TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_EQ(false, QuadTree_tryRemove(_quadTree, point0));
- }
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
 
- TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5) {
-   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
 
-   auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
 
-   auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+  auto allPoints = QuadTree_getIntersectingPoints(_quadTree, QuadTree_getBounds(_quadTree));
 
-   auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+  EXPECT_EQ(PointVector_getSize(allPoints), 5u);
 
-   auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
-   EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+  EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 0), point0));
+  EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 1), point4));
+  EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 2), point1));
+  EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 3), point2));
+  EXPECT_TRUE(checkPointsForEqualityC(PointVector_getPointFromIndex(allPoints, 4), point3));
+}
 
-   EXPECT_TRUE(QuadTree_tryRemove(_quadTree, point4));
+TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_EQ(true, QuadTree_tryInsert(_quadTree, point0));
+  EXPECT_EQ(true, QuadTree_tryRemove(_quadTree, point0));
+}
 
-   EXPECT_EQ(QuadTree_getPointCount(_quadTree), 4u);
+TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_EQ(false, QuadTree_tryRemove(_quadTree, point0));
+}
 
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 0), point0));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 1), point1));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 2), point2));
-   EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 3), point3));
+TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
 
-   EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
-   EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
- }
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
 
-// TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4) {
-//   auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-//   _quadTree->tryInsert(point0);
-//
-//   auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-//   _quadTree->tryInsert(point1);
-//
-//   auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-//   _quadTree->tryInsert(point2);
-//
-//   auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-//   _quadTree->tryInsert(point3);
-//
-//   auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-//   _quadTree->tryInsert(point4);
-//
-//   auto point5 = std::make_shared<QuadTreePoint>(0.5f, 0.5f);
-//   _quadTree->tryInsert(point5);
-//
-//   _quadTree->tryRemove(point5);
-//
-//   EXPECT_EQ(_quadTree->getPointCount(), 0u);
-//
-//   EXPECT_EQ(_quadTree->getTopLeft()->getPointCount(), 2u);
-//   EXPECT_EQ(_quadTree->getTopRight()->getPointCount(), 1u);
-//   EXPECT_EQ(_quadTree->getBottomLeft()->getPointCount(), 1u);
-//   EXPECT_EQ(_quadTree->getBottomRight()->getPointCount(), 1u);
-//
-//   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(0), point0);
-//   EXPECT_EQ(_quadTree->getTopRight()->getPoint(0), point1);
-//   EXPECT_EQ(_quadTree->getBottomLeft()->getPoint(0), point2);
-//   EXPECT_EQ(_quadTree->getBottomRight()->getPoint(0), point3);
-//   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(1), point4);
-//
-//   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(0), point0);
-//   EXPECT_EQ(_quadTree->getTopRight()->getPoint(0), point1);
-//   EXPECT_EQ(_quadTree->getBottomLeft()->getPoint(0), point2);
-//   EXPECT_EQ(_quadTree->getBottomRight()->getPoint(0), point3);
-//   EXPECT_EQ(_quadTree->getTopLeft()->getPoint(1), point4);
-// }
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+
+  EXPECT_TRUE(QuadTree_tryRemove(_quadTree, point4));
+
+  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 4u);
+
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 0), point0));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 1), point1));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 2), point2));
+  EXPECT_TRUE(checkPointsForEqualityC(QuadTree_getPoint(_quadTree, 3), point3));
+
+  EXPECT_EQ(QuadTree_getTopLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getTopRight(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomLeft(_quadTree), nullptr);
+  EXPECT_EQ(QuadTree_getBottomRight(_quadTree), nullptr);
+}
+
+TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4) {
+  auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point0));
+
+  auto point1 = QuadTreePoint_createFromFloat(1.0f, 1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point1));
+
+  auto point2 = QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point2));
+
+  auto point3 = QuadTreePoint_createFromFloat(1.0f, -1.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point3));
+
+  auto point4 = QuadTreePoint_createFromFloat(0.0f, 0.0f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point4));
+
+  auto point5 = QuadTreePoint_createFromFloat(0.5f, 0.5f);
+  EXPECT_TRUE(QuadTree_tryInsert(_quadTree, point5));
+
+  EXPECT_TRUE(QuadTree_tryRemove(_quadTree, point5));
+
+  EXPECT_EQ(QuadTree_getPointCount(_quadTree), 0u);
+
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopLeft(_quadTree)), 2u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getTopRight(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomLeft(_quadTree)), 1u);
+  EXPECT_EQ(QuadTree_getPointCount(QuadTree_getBottomRight(_quadTree)), 1u);
+
+  EXPECT_EQ(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 0), point0);
+  EXPECT_EQ(QuadTree_getPoint(QuadTree_getTopRight(_quadTree), 0), point1);
+  EXPECT_EQ(QuadTree_getPoint(QuadTree_getBottomLeft(_quadTree), 0), point2);
+  EXPECT_EQ(QuadTree_getPoint(QuadTree_getBottomRight(_quadTree), 0), point3);
+  EXPECT_EQ(QuadTree_getPoint(QuadTree_getTopLeft(_quadTree), 1), point4);
+}
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll) {
   auto point0 = QuadTreePoint_createFromFloat(-1.0f, 1.0f);

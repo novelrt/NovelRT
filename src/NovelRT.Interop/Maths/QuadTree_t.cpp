@@ -74,16 +74,16 @@ extern "C" {
     return reinterpret_cast<PointVector>(points);
   }
 
+  void PointVector_delete(PointVector vector) {
+    delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
+  }
+
   size_t PointVector_getSize(PointVector vector) {
     return reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
   }
 
   QuadTreePoint_t PointVector_getPointFromIndex(PointVector vector, size_t index) {
     return reinterpret_cast<QuadTreePoint_t>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
-  }
-
-  void PointVector_delete(PointVector vector) {
-    delete reinterpret_cast<std::vector<PointVector>*>(vector);
   }
 
 //TODO: We should probably add return codes for stuff like this, because C.
