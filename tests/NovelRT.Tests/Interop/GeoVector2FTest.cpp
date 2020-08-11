@@ -107,50 +107,50 @@ TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForFloatType) {
 
 TEST(InteropGeoVector2Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector2F) {
   GeoVector2F_t test = GeoVector2F_one();
-  GeoVector2F_t result = GeoVector2F_addIntoVector(test, test);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(2.0f), result));
+  GeoVector2F_addIntoVector(test, test);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(2.0f), test));
 }
 
 TEST(InteropGeoVector2Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector2F) {
   GeoVector2F_t test = GeoVector2F_one();
-  GeoVector2F_t result = GeoVector2F_subtractFromVector(test, test);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_zero(), result));
+  GeoVector2F_subtractFromVector(test, test);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_zero(), test));
 }
 
 TEST(InteropGeoVector2Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector2F) {
   GeoVector2F_t test = GeoVector2F_uniform(2.0f);
-  GeoVector2F_t result = GeoVector2F_multiplyIntoVector(test, test);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(4.0f), result));
+  GeoVector2F_multiplyIntoVector(test, test);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(4.0f), test));
 }
 
 TEST(InteropGeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector2F) {
   GeoVector2F_t test = GeoVector2F_uniform(2.0f);
-  GeoVector2F_t result = GeoVector2F_divideIntoVector(test, test);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), result));
+  GeoVector2F_divideIntoVector(test, test);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), test));
 }
 
 TEST(InteropGeoVector2Test, addAssignOperatorAddsAndAssignsCorrectlyForTemplateType) {
   GeoVector2F_t test = GeoVector2F_one();
-  GeoVector2F_t result = GeoVector2F_addFloatIntoVector(test, 1.0f);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(2.0f), result));
+  GeoVector2F_addFloatIntoVector(test, 1.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(2.0f), test));
 }
 
 TEST(InteropGeoVector2Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForTemplateType) {
   GeoVector2F_t test = GeoVector2F_one();
-  GeoVector2F_t result = GeoVector2F_subFloatFromVector(test, 1.0f);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(0.0f), result));
+  GeoVector2F_subFloatFromVector(test, 1.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(0.0f), test));
 }
 
 TEST(InteropGeoVector2Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForTemplateType) {
   GeoVector2F_t test = GeoVector2F_uniform(2.0f);
-  GeoVector2F_t result = GeoVector2F_multiplyFloatIntoVector(test, 2.0f);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(4.0f), result));
+  GeoVector2F_multiplyFloatIntoVector(test, 2.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(4.0f), test));
 }
 
 TEST(InteropGeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateType) {
   GeoVector2F_t test = GeoVector2F_uniform(2.0f);
-  GeoVector2F_t result = GeoVector2F_divideFloatIntoVector(test, 2.0f);
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), result));
+  GeoVector2F_divideFloatIntoVector(test, 2.0f);
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), test));
 }
 
 TEST(InteropGeoVector2Test, getNormalisedReturnsNormalisedGeoVector) {

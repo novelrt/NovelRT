@@ -181,22 +181,22 @@ extern "C" {
   }
 
   void GeoVector2F_addFloatIntoVector(GeoVector2F_t& vector, float value) {
-    Maths::GeoVector2<float> cVector = reinterpret_cast<Maths::GeoVector2<float>&>(vector);
+    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(vector);
     cVector += value;
   }
 
   void GeoVector2F_subFloatFromVector(GeoVector2F_t& vector, float value) {
-    Maths::GeoVector2<float> cVector = reinterpret_cast<Maths::GeoVector2<float>&>(vector);
+    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(vector);
     cVector -= value;
   }
 
   void GeoVector2F_multiplyFloatIntoVector(GeoVector2F_t& vector, float value) {
-    Maths::GeoVector2<float> cVector = *reinterpret_cast<Maths::GeoVector2<float>*>(&vector);
+    Maths::GeoVector2<float>& cVector = *reinterpret_cast<Maths::GeoVector2<float>*>(&vector);
     cVector *= value;
   }
 
   void GeoVector2F_divideFloatIntoVector(GeoVector2F_t& vector, float value) {
-    Maths::GeoVector2<float> cVector = *reinterpret_cast<Maths::GeoVector2<float>*>(&vector);
+    Maths::GeoVector2<float>& cVector = *reinterpret_cast<Maths::GeoVector2<float>*>(&vector);
     cVector /= value;
   }
 
