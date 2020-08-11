@@ -16,9 +16,9 @@ extern "C" {
 
   GeoBounds_t GeoBounds_create(const GeoVector2F_t& position, const GeoVector2F_t& size, float rotation);
   GeoVector2F_t GeoBounds_getCornerInLocalSpace(const GeoBounds_t& bounds, int index);
-  GeoVector2F_t GeoBounds_getCornerInWorldSpace(GeoBounds_t& bounds, int index);
+  GeoVector2F_t GeoBounds_getCornerInWorldSpace(const GeoBounds_t& bounds, int index);
   bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const GeoVector2F_t& point);
-  GeoVector2F_t GeoBounds_getExtents(GeoBounds_t& bounds);
+  GeoVector2F_t GeoBounds_getExtents(const GeoBounds_t& bounds);
   bool GeoBounds_intersectsWith(const GeoBounds_t& first, const GeoBounds_t& other);
 
   
