@@ -2,6 +2,7 @@
 #include "NovelRT.Interop/NovelRTResult.h"
 #include <NovelRT.h>
 #include <stdint.h>
+#include <list>
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _serviceCollection;
 
