@@ -32,15 +32,15 @@ extern "C" {
   GeoMatrix4x4F_t GeoMatrix4x4F_addMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   GeoMatrix4x4F_t GeoMatrix4x4F_subtractMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
   GeoMatrix4x4F_t GeoMatrix4x4F_multiplyMatrix(const GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_addIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_subtractFromMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
-  GeoMatrix4x4F_t GeoMatrix4x4F_addFloat(GeoMatrix4x4F_t& matrix, float value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_subtractFloat(GeoMatrix4x4F_t& matrix, float value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyFloat(GeoMatrix4x4F_t& matrix, float value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_addFloatIntoMatrix(GeoMatrix4x4F_t& matrix, float value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_subFloatFromMatrix(GeoMatrix4x4F_t& matrix, float value);
-  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyFloatIntoMatrix(GeoMatrix4x4F_t& matrix, float value);
+  void GeoMatrix4x4F_addIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  void GeoMatrix4x4F_subtractFromMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  void GeoMatrix4x4F_multiplyIntoMatrix(GeoMatrix4x4F_t& first, const GeoMatrix4x4F_t& other);
+  GeoMatrix4x4F_t GeoMatrix4x4F_addFloat(const GeoMatrix4x4F_t& matrix, float value);
+  GeoMatrix4x4F_t GeoMatrix4x4F_subtractFloat(const GeoMatrix4x4F_t& matrix, float value);
+  GeoMatrix4x4F_t GeoMatrix4x4F_multiplyFloat(const GeoMatrix4x4F_t& matrix, float value);
+  void GeoMatrix4x4F_addFloatIntoMatrix(GeoMatrix4x4F_t& matrix, float value);
+  void GeoMatrix4x4F_subFloatFromMatrix(GeoMatrix4x4F_t& matrix, float value);
+  void GeoMatrix4x4F_multiplyFloatIntoMatrix(GeoMatrix4x4F_t& matrix, float value);
 
 #ifdef __cplusplus
 }
