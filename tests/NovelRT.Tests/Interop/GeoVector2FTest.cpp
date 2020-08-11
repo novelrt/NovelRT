@@ -7,38 +7,38 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-GeoVector2F_t one = GeoVector2F_uniform(0.0);
-GeoVector2F_t two = GeoVector2F_uniform(0.0f);
-GeoVector2F_t three = GeoVector2F_uniform(1.0f);
+GeoVector2F_t vec2One = GeoVector2F_uniform(0.0);
+GeoVector2F_t vec2Two = GeoVector2F_uniform(0.0f);
+GeoVector2F_t vec2Three = GeoVector2F_uniform(1.0f);
 
 TEST(InteropGeoVector2Test, equalityOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_equal(one,two));
+  EXPECT_TRUE(GeoVector2F_equal(vec2One, vec2Two));
 }
 
 TEST(InteropGeoVector2Test, inequalityOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_notEqual(one, three));
+  EXPECT_TRUE(GeoVector2F_notEqual(vec2One, vec2Three));
 }
 
 TEST(InteropGeoVector2Test, lessThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_lessThan(one, three));
+  EXPECT_TRUE(GeoVector2F_lessThan(vec2One, vec2Three));
 }
 
 TEST(InteropGeoVector2Test, lessOrEqualToThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_lessThanOrEqualTo(one, three));
-  EXPECT_TRUE(GeoVector2F_lessThanOrEqualTo(three, three));
+  EXPECT_TRUE(GeoVector2F_lessThanOrEqualTo(vec2One, vec2Three));
+  EXPECT_TRUE(GeoVector2F_lessThanOrEqualTo(vec2Three, vec2Three));
 }
 
 TEST(InteropGeoVector2Test, greaterThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_greaterThan(three, one));
+  EXPECT_TRUE(GeoVector2F_greaterThan(vec2Three, vec2One));
 }
 
 TEST(InteropGeoVector2Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(three, one));
-  EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(three, three));
+  EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(vec2Three, vec2One));
+  EXPECT_TRUE(GeoVector2F_greaterThanOrEqualTo(vec2Three, vec2Three));
 }
 
 TEST(InteropGeoVector2Test, staticUniformCallReturnsGeoVector2WithUniformValues) {
-  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), three));
+  EXPECT_TRUE(GeoVector2F_equal(GeoVector2F_uniform(1.0f), vec2Three));
 }
 
 TEST(InteropGeoVector2Test, staticZeroCallReturnsGeoVector2Zero) {
