@@ -19,13 +19,13 @@ namespace NovelRT::Utilities {
     }
 
     explicit EventHandler(std::function<void(TArgs...)>&& function) :
-    _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
-    _function(std::move(function)) {
+      _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
+      _function(std::move(function)) {
     }
 
     explicit EventHandler(const std::function<void(TArgs...)>& function) :
-    _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
-    _function(function) {
+      _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
+      _function(function) {
     }
 
     void operator()(TArgs... args) const {
