@@ -1,5 +1,6 @@
 set(INTEROP_SOURCES
-  NovelRunner_t.cpp
+  NovelRTNovelRunner.cpp
+  NovelRTTransform.cpp
 
   Maths/GeoBounds_t.cpp
   Maths/GeoMatrix4x4F_t.cpp

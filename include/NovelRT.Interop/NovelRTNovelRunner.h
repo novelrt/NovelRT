@@ -8,12 +8,12 @@
 extern "C" {
 #endif
 
-  typedef struct NovelRunnerHandle* NovelRunner_t;
+  typedef struct NovelRunnerHandle* NovelRTNovelRunner;
 
-  NovelRunner_t* NovelRunner_create(int displayNumber);
-  NovelRunner_t* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
-  int NovelRunner_runNovel(NovelRunner_t* runner);
-  void NovelRunner_destroy(NovelRunner_t* runner);
+  NovelRTNovelRunner* NovelRunner_create(int displayNumber);
+  NovelRTNovelRunner* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
+  int NovelRunner_runNovel(NovelRTNovelRunner* runner);
+  void NovelRunner_destroy(NovelRTNovelRunner* runner);
 
 #ifdef __cplusplus
 }

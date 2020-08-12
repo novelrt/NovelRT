@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.Interop/NovelRunner_t.h"
+#include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include <NovelRT.h>
 #include <stdint.h>
 
@@ -9,28 +9,28 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  NovelRunner_t* NovelRunner_create(int displayNumber)
+  NovelRTNovelRunner* NovelRunner_create(int displayNumber)
   {
     NovelRunner* runner = new NovelRunner(displayNumber);
 
-    return reinterpret_cast<NovelRunner_t*>(runner);
+    return reinterpret_cast<NovelRTNovelRunner*>(runner);
   }
 
-  NovelRunner_t* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate)
+  NovelRTNovelRunner* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate)
   {
     NovelRunner* runner = new NovelRunner(displayNumber, windowTitle, targetFrameRate);
 
-    return reinterpret_cast<NovelRunner_t*>(runner);
+    return reinterpret_cast<NovelRTNovelRunner*>(runner);
   }
 
-  int NovelRunner_runNovel(NovelRunner_t* runner)
+  int NovelRunner_runNovel(NovelRTNovelRunner* runner)
   {
     NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
     return cRunner->runNovel();
   }
 
-  void NovelRunner_destroy(NovelRunner_t* runner)
+  void NovelRunner_destroy(NovelRTNovelRunner* runner)
   {
     NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
