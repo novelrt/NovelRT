@@ -19,13 +19,13 @@ namespace NovelRT::Utilities {
     }
 
     explicit EventHandler(std::function<void(TArgs...)>&& function) :
-            _id(Atom::getNextEventHandlerId()),
-            _function(std::move(function)) {
+    _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
+    _function(std::move(function)) {
     }
 
     explicit EventHandler(const std::function<void(TArgs...)>& function) :
-            _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
-            _function(function) {
+    _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()),
+    _function(function) {
     }
 
     void operator()(TArgs... args) const {
@@ -50,6 +50,13 @@ namespace NovelRT::Utilities {
   private:
     std::vector<EventHandler<TArgs...>> _handlers;
 
+    template <typename T>
+    void addHandler(T&& handler) {
+      if (handler.getId() != Atom()) {
+        _handlers.emplace_back(std::forward<T>(handler));
+      }
+    }
+
   public:
     Event() : _handlers(std::vector<EventHandler<TArgs...>>()) {
     }
@@ -58,21 +65,20 @@ namespace NovelRT::Utilities {
       return _handlers.size();
     }
 
-    Atom operator+=(const EventHandler<TArgs...>& handler) {
-      if (handler.getId() != Atom()) {
-        _handlers.emplace_back(handler);
-      }
-      return handler.getId();
+    void operator+=(const EventHandler<TArgs...>& handler) {
+      addHandler(handler);
     }
 
-    Atom operator+=(const std::function<void(TArgs...)>& function) {
-      auto handler = EventHandler<TArgs...>(function);
-      return *this += handler;
+    void operator+=(EventHandler<TArgs...>&& handler) {
+      addHandler(handler);
     }
 
-    Atom operator+=(std::function<void(TArgs...)>&& function) {
-      auto handler = EventHandler<TArgs...>(function);
-      return *this += handler;
+    void operator+=(const std::function<void(TArgs...)>& function) {
+      addHandler(EventHandler<TArgs...>(function));
+    }
+
+    void operator+=(std::function<void(TArgs...)>&& function) {
+      addHandler(EventHandler<TArgs...>(function));
     }
 
     void operator-=(const EventHandler<TArgs...>& handler) {
