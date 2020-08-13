@@ -18,8 +18,6 @@ extern "C" {
     float y;
   } NovelRTGeoVector2F;
 
-  #define NOVELRT_GEOVECTOR2F_NAN NovelRTGeoVector2F{NAN, NAN}
-
   NovelRTBool NovelRT_GeoVector2F_isNaN(NovelRTGeoVector2F vector);
   NovelRTGeoVector2F NovelRT_GeoVector2F_uniform(float value);
   NovelRTGeoVector2F NovelRT_GeoVector2F_zero();

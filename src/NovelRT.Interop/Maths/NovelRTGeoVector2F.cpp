@@ -1,15 +1,19 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelRT.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
-#include <math.h>
+#include <cmath>
 
 #ifdef __cplusplus
 extern "C" {
   using namespace NovelRT;
 #endif
 
-  NovelRTBool GeoVector2F_isNan(NovelRTGeoVector2F vector) {
-    if(isnan(vector.x) || isnan(vector.y)) {
+  NovelRTGeoVector2F NovelRT_GeoVector2F_getNaN() {
+    return NovelRTGeoVector2F{NAN, NAN};
+  }
+
+  NovelRTBool NovelRT_GeoVector2F_isNan(NovelRTGeoVector2F vector) {
+    if(std::isnan(vector.x) || std::isnan(vector.y)) {
       return NOVELRT_TRUE;
     }
 
@@ -45,8 +49,7 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_epsilonEquals(NovelRTGeoVector2F vector, NovelRTGeoVector2F other, NovelRTGeoVector2F epsilonValue) {
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(other);
+    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector); const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(other);
     const Maths::GeoVector2<float>& cEpsilonValue = reinterpret_cast<const Maths::GeoVector2<float>&>(epsilonValue);
     
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
@@ -58,7 +61,7 @@ extern "C" {
 
   NovelRTGeoVector2F NovelRT_GeoVector2F_getNormalised(NovelRTGeoVector2F vector) {
     if(NovelRT_GeoVector2F_isNaN(vector) == NOVELRT_TRUE) {
-      return NOVELRT_GEOVECTOR2F_NAN;
+      return NovelRT_GeoVector2F_getNaN();
     }
     
     const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
@@ -262,7 +265,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -286,7 +289,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -310,7 +313,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -334,7 +337,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -470,7 +473,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -493,7 +496,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -516,7 +519,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -539,7 +542,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
