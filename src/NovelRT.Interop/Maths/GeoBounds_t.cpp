@@ -10,32 +10,32 @@ extern "C" {
   using namespace NovelRT;
 #endif
 
-  GeoBounds_t GeoBounds_create(const GeoVector2F_t& position, const GeoVector2F_t& size, float rotation) {
+  GeoBounds_t GeoBounds_create(const NovelRTGeoVector2F& position, const NovelRTGeoVector2F& size, float rotation) {
     return GeoBounds_t{ position, rotation, size };
   }
 
-  GeoVector2F_t GeoBounds_getCornerInLocalSpace(const GeoBounds_t& bounds, int index) {
+  NovelRTGeoVector2F GeoBounds_getCornerInLocalSpace(const GeoBounds_t& bounds, int index) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
     Maths::GeoVector2<float> corner = cBounds.getCornerInLocalSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(corner);
+    return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  GeoVector2F_t GeoBounds_getCornerInWorldSpace(const GeoBounds_t& bounds, int index) {
+  NovelRTGeoVector2F GeoBounds_getCornerInWorldSpace(const GeoBounds_t& bounds, int index) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
     Maths::GeoVector2<float> corner = cBounds.getCornerInWorldSpace(index);
-    return reinterpret_cast<GeoVector2F_t&>(corner);
+    return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const GeoVector2F_t& point) {
+  bool GeoBounds_pointIsWithinBounds(const GeoBounds_t& bounds, const NovelRTGeoVector2F& point) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
     const Maths::GeoVector2<float>& cPoint = reinterpret_cast<const Maths::GeoVector2<float>&>(point);
     return cBounds.pointIsWithinBounds(cPoint);
   }
 
-  GeoVector2F_t GeoBounds_getExtents(const GeoBounds_t& bounds) {
+  NovelRTGeoVector2F GeoBounds_getExtents(const GeoBounds_t& bounds) {
     const Maths::GeoBounds cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
     Maths::GeoVector2<float> extents = cBounds.getExtents(); 
-    return reinterpret_cast<GeoVector2F_t&>(extents);
+    return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 
   bool GeoBounds_intersectsWith(const GeoBounds_t& first, const GeoBounds_t& other) {

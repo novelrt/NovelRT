@@ -36,15 +36,15 @@ void WindowingService_setWindowTitle(NovelRTWindowingService service, const char
     servicePtr->setWindowTitle(value);
 }
 
-void WindowingService_setWindowSize(NovelRTWindowingService service, const GeoVector2F_t& value) {
+void WindowingService_setWindowSize(NovelRTWindowingService service, const NovelRTGeoVector2F& value) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2<float>*>(&value));
 }
 
-GeoVector2F_t WindowingService_getWindowSize(NovelRTWindowingService service) {
+NovelRTGeoVector2F WindowingService_getWindowSize(NovelRTWindowingService service) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     auto vector = servicePtr->getWindowSize();
-    return reinterpret_cast<GeoVector2F_t&>(vector);
+    return reinterpret_cast<NovelRTGeoVector2F&>(vector);
 }
 
 #ifdef __cplusplus

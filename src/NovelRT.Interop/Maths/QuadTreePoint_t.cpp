@@ -10,7 +10,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  QuadTreePoint_t QuadTreePoint_create(GeoVector2F_t& position) {
+  QuadTreePoint_t QuadTreePoint_create(NovelRTGeoVector2F& position) {
     _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2<float>&>(position)));
     return reinterpret_cast<QuadTreePoint_t>(_pointCollection.back().get());
   }
@@ -20,10 +20,10 @@ extern "C" {
     return reinterpret_cast<QuadTreePoint_t>(_pointCollection.back().get());
   }
 
-  GeoVector2F_t QuadTreePoint_getPosition(QuadTreePoint_t point) {
+  NovelRTGeoVector2F QuadTreePoint_getPosition(QuadTreePoint_t point) {
     Maths::GeoVector2<float>* pos = new Maths::GeoVector2<float>();
     *pos = reinterpret_cast<std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
-    return reinterpret_cast<const GeoVector2F_t&>(*pos);
+    return reinterpret_cast<const NovelRTGeoVector2F&>(*pos);
   }
 
   void QuadTreePoint_delete(QuadTreePoint_t point) {

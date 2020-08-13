@@ -1,5 +1,5 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "NovelRT.Interop/Maths/GeoVector2F_t.h"
+#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
 
 #ifndef NOVELRT_INTEROP_WINDOWING_WINDOWINGSERVICE_H
 #define NOVELRT_INTEROP_WINDOWING_WINDOWINGSERVICE_H
@@ -17,8 +17,8 @@ void WindowingService_initialiseWindow(NovelRTWindowingService service, int disp
 void WindowingService_tearDown(NovelRTWindowingService service);
 const char* WindowingService_getWindowTitle(NovelRTWindowingService service);
 void WindowingService_setWindowTitle(NovelRTWindowingService service, const char* value);
-void WindowingService_setWindowSize(NovelRTWindowingService service, const GeoVector2F_t& value);
-GeoVector2F_t WindowingService_getWindowSize(NovelRTWindowingService service);
+void WindowingService_setWindowSize(NovelRTWindowingService service, const NovelRTGeoVector2F& value);
+NovelRTGeoVector2F WindowingService_getWindowSize(NovelRTWindowingService service);
 
 #ifdef __cplusplus
 }

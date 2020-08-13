@@ -11,7 +11,7 @@ extern "C" {
     return GeoVector4F_t{ x, y, z, w };
   }
 
-  GeoVector4F_t GeoVector4F_createFromGeoVector2F(const GeoVector2F_t& vector) {
+  GeoVector4F_t GeoVector4F_createFromGeoVector2F(const NovelRTGeoVector2F& vector) {
     return GeoVector4F_t{ vector.x, vector.y, 0, 0 };
   }
 

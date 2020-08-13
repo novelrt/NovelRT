@@ -17,7 +17,7 @@ extern "C" {
   };
 
   GeoVector3F_t GeoVector3F_create(float x, float y, float z);
-  GeoVector3F_t GeoVector3F_createFromGeoVector2F(const GeoVector2F_t& vector);
+  GeoVector3F_t GeoVector3F_createFromGeoVector2F(const NovelRTGeoVector2F& vector);
   GeoVector3F_t GeoVector3F_uniform(float value);
   GeoVector3F_t GeoVector3F_zero();
   GeoVector3F_t GeoVector3F_one();
