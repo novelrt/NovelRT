@@ -2,14 +2,18 @@
 #ifndef NOVELRT_INTEROP_NOVELRTRESULT_H
 #define NOVELRT_INTEROP_NOVELRTRESULT_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-enum NovelRTResult {
+typedef enum {
     NOVELRT_SUCCESS = 0,
     NOVELRT_FAILURE = 1
-};
+} NovelRTResult;
+
+typedef uint32_t NovelRTResult;
   
 #ifdef __cplusplus
 }
