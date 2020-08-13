@@ -55,7 +55,7 @@ First, you must install the dependencies. Using Ubuntu 20.04, this looks somethi
 ```
 sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
     libglm-dev libgmock-dev libgtest-dev liblua5.3-dev libopenal-dev libsndfile1-dev \
-    libspdlog-dev pyhon3-glad
+    libspdlog-dev python3-glad
 ```
 Then, clone and build NovelRT:
 ```
