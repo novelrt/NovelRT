@@ -95,7 +95,7 @@ TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForGeoVector2F) {
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_one(), result));
 }
 
-TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForFloatType) {
+TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
   NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
   
@@ -107,7 +107,7 @@ TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForFloatType) {
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector2Test, subtractOperatorSubtractsCorrectlyForFloatType) {
+TEST(InteropGeoVector2Test, subtractOperatorSubtractsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
   NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
   
@@ -119,7 +119,7 @@ TEST(InteropGeoVector2Test, subtractOperatorSubtractsCorrectlyForFloatType) {
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_zero(), result));
 }
 
-TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForFloatType) {
+TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
   NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
   
@@ -131,7 +131,7 @@ TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForFloatType) {
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), result));
 }
 
-TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForFloatType) {
+TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(4.0f);
   NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
   
