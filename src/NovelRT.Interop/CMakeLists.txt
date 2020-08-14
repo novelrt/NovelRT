@@ -1,14 +1,15 @@
 set(INTEROP_SOURCES
   #NovelRunner_t.cpp
+  NovelRTTransform.cpp
   NovelRTInteropUtils.cpp
-  #Maths/GeoBounds_t.cpp
   #Maths/GeoMatrix4x4F_t.cpp
+  Maths/NovelRTGeoBounds.cpp
   Maths/NovelRTGeoVector2F.cpp
   #Maths/GeoVector3F_t.cpp
   #Maths/GeoVector4F_t.cpp
   #Maths/QuadTree_t.cpp
   #Maths/QuadTreePoint_t.cpp
-  #Windowing/NovelRTWindowingService.cpp
+  Windowing/NovelRTWindowingService.cpp
 )
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
