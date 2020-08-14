@@ -18,11 +18,10 @@ typedef uint32_t NovelRTBool;
 #define NOVELRT_TRUE 1u
 #define NOVELRT_FALSE 0u
 
-const char* const cpuLangKey = "cpu";
-
-const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
-const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
-const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
+extern const char* const cpuLangKey; 
+extern const char* const errMsgIsNullptr; 
+extern const char* const errMsgIsNaN;
+extern const char* const errMsgIsDivideByZero;
 
 const char* NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
   

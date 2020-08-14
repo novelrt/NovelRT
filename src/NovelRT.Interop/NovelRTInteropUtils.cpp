@@ -2,7 +2,13 @@
 
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include <unordered_map>
-#include<vector>
+#include <vector>
+
+
+const char* const cpuLangKey = "cpu";
+const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
+const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
+const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
 
 struct ErrorTranslationPair {
   const char* originalText;
@@ -35,7 +41,7 @@ const char* NovelRT_translateErrorCode(const char* const targetLanguage, const c
   auto& vec = translations[thing];
 
   for (const auto& ptrPair : vec) {
-    if(&ptrPair.originalText == &errorPtr) {
+    if(std::addressof(ptrPair.originalText) == std::addressof(errorPtr)) {
       return ptrPair.translatedText;
     }
   }

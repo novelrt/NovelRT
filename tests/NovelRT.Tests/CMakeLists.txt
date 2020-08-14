@@ -12,7 +12,8 @@ include(GoogleTest)
 set(TEST_SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
-  Interop/GeoVector2FTest.cpp
+  Interop/NovelRTInteropUtilsTest.cpp
+  Interop/Maths/GeoVector2FTest.cpp
   #Interop/GeoVector3FTest.cpp  
   #Interop/GeoVector4FTest.cpp
   #Interop/QuadTreePointTTest.cpp
