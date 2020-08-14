@@ -12,7 +12,7 @@ extern "C" {
     return NovelRTGeoVector2F{NAN, NAN};
   }
 
-  NovelRTBool NovelRT_GeoVector2F_isNan(NovelRTGeoVector2F vector) {
+  NovelRTBool NovelRT_GeoVector2F_isNaN(NovelRTGeoVector2F vector) {
     if(std::isnan(vector.x) || std::isnan(vector.y)) {
       return NOVELRT_TRUE;
     }
