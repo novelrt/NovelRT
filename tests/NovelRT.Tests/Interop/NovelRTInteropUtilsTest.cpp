@@ -2,8 +2,9 @@
 
 #include <NovelRT.Interop/NovelRTInteropUtils.h>
 #include <gtest/gtest.h>
+#include <string>
 
 TEST(InteropUtilsTest, translateErrorCodeTranslatesErrorCodeFromDefaultToCpuCode) {
-    const char* ptr = NovelRT_translateErrorCode("cpu", errMsgIsNullptr);
-    EXPECT_EQ("FAILURE_IS_NULLPTR", ptr);
+    const char* ptr = NovelRT_translateErrorCode(NovelRT_getCpuLangKey(), NovelRT_getErrMsgIsNullptr());
+    EXPECT_EQ(std::string("FAILURE_IS_NULLPTR"), std::string(ptr));
 }

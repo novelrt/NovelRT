@@ -20,7 +20,7 @@ NovelRTResult NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService 
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
@@ -32,7 +32,7 @@ NovelRTResult NovelRT_WindowingService_tearDown(NovelRTWindowingService service,
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
@@ -44,7 +44,7 @@ NovelRTResult NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService se
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || windowTitle == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
@@ -57,7 +57,7 @@ NovelRTResult NovelRT_WindowingService_setWindowTitle(NovelRTWindowingService se
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || value == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
@@ -69,7 +69,7 @@ NovelRTResult NovelRT_WindowingService_setWindowSize(NovelRTWindowingService ser
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
@@ -81,7 +81,7 @@ NovelRTResult NovelRT_WindowingService_getWindowSize(NovelRTWindowingService ser
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || output == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
