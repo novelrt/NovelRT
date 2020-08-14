@@ -5,9 +5,6 @@
 
 #include "../NovelRTInteropUtils.h"
 
-#ifndef NAN
-#error "The NovelRT Engine C API requires a definition of NaN. Please configure NaN or use a version of C that has support.
-#endif
 
 #ifdef __cplusplus
 extern "C" {
