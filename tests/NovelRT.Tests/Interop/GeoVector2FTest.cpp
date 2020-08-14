@@ -15,10 +15,6 @@ TEST(InteropGeoVector2Test, equalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(vec2One, vec2Two));
 }
 
-TEST(InteropGeoVector2Test, createReturnsCorrectGeoVector2) {
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRTGeoVector2F{1.0f, 1.0f}, GeoVector2F_create(1.0f, 1.0f)));
-}
-
 TEST(InteropGeoVector2Test, inequalityOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(NovelRT_GeoVector2F_notEqual(vec2One, vec2Three));
 }
@@ -46,114 +42,192 @@ TEST(InteropGeoVector2Test, staticUniformCallReturnsGeoVector2WithUniformValues)
 }
 
 TEST(InteropGeoVector2Test, staticZeroCallReturnsGeoVector2Zero) {
-  NovelRTGeoVector2F test = GeoVector2F_create(0.0f, 0.0f);
+  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(0.0f);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_zero(), test));
 }
 
 TEST(InteropGeoVector2Test, staticOneCallReturnsGeoVector2One) {
-  NovelRTGeoVector2F test = GeoVector2F_create(1.0f, 1.0f);
+  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(1.0f);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_one(), test));
 }
 
 TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_addVector(test, test);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err;
+  NovelRTBool nrtResult = NovelRT_GeoVector2F_addVector(test, test, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);  
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), result));
 }
 
 TEST(InteropGeoVector2Test, subtractOperatorSubtractsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_subtractVector(test, test);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err;
+  NovelRTBool nrtResult = NovelRT_GeoVector2F_subtractVector(test, test, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);  
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_zero(), result));
 }
 
 TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_multiplyVector(test, test);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err;
+  NovelRTBool nrtResult = NovelRT_GeoVector2F_multiplyVector(test, test, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);  
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), result));
 }
 
 TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForGeoVector2F) {
-  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_divideVector(test, test);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(1.0f), result));
+  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(4.0f);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err = nullptr;
+  NovelRTBool nrtResult = NovelRT_GeoVector2F_divideVector(test, test, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);  
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_one(), result));
 }
 
 TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForFloatType) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_addFloat(test, 1.0f);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_addFloat(test, 1.0f, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), result));
 }
 
 TEST(InteropGeoVector2Test, subtractOperatorSubtractsCorrectlyForFloatType) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_subtractFloat(test, 1.0f);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(0.0f), result));
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_subtractFloat(test, 1.0f, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_zero(), result));
 }
 
 TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForFloatType) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_multiplyFloat(test, 2.0f);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), result));
-}
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err = nullptr;
 
-TEST(InteropGeoVector2Test, multiplyOperatorMultipliesCorrectlyForFloatTypeInverse) {
-  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRTGeoVector2F result = GeoVector2F_multiplyFloatInverse(2.0f, test);
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_multiplyFloat(test, 2.0f, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), result));
 }
 
 TEST(InteropGeoVector2Test, divideOperatorDividesCorrectlyForFloatType) {
-  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRTGeoVector2F result = NovelRT_GeoVector2F_divideFloat(test, 2.0f);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(1.0f), result));
+  NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(4.0f);
+  NovelRTGeoVector2F result = NovelRT_GeoVector2F_zero();
+  
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_divideFloat(test, 2.0f, &result, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), result));
 }
 
 TEST(InteropGeoVector2Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRT_GeoVector2F_addIntoVector(test, test);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_addAssignVector(&test, test, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), test));
 }
 
 TEST(InteropGeoVector2Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRT_GeoVector2F_subtractFromVector(test, test);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_subtractAssignVector(&test, test, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_zero(), test));
 }
 
 TEST(InteropGeoVector2Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRT_GeoVector2F_multiplyIntoVector(test, test);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_multiplyAssignVector(&test, test, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), test));
 }
 
 TEST(InteropGeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector2F) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRT_GeoVector2F_divideIntoVector(test, test);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(1.0f), test));
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_divideAssignVector(&test, test, &err);
+
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_one(), test));
 }
 
-TEST(InteropGeoVector2Test, addAssignOperatorAddsAndAssignsCorrectlyForTemplateType) {
+TEST(InteropGeoVector2Test, addAssignOperatorAddsAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  NovelRT_GeoVector2F_addFloatIntoVector(test, 1.0f);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_addAssignFloat(&test, 1.0f, &err);
+  
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector2Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForTemplateType) {
+TEST(InteropGeoVector2Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_one();
-  GeoVector2F_subFloatFromVector(test, 1.0f);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_subtractAssignFloat(&test, 1.0f, &err);
+  
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(0.0f), test));
 }
 
-TEST(InteropGeoVector2Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForTemplateType) {
+TEST(InteropGeoVector2Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRT_GeoVector2F_multiplyFloatIntoVector(test, 2.0f);
-  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(4.0f), test));
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_multiplyAssignFloat(&test, 1.0f, &err);
+  
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateType) {
+TEST(InteropGeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector2F test = NovelRT_GeoVector2F_uniform(2.0f);
-  NovelRT_GeoVector2F_divideFloatIntoVector(test, 2.0f);
+
+  const char* err = nullptr;
+
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_divideAssignFloat(&test, 2.0f, &err);
+  
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(1.0f), test));
 }
 
@@ -180,11 +254,13 @@ TEST(InteropGeoVector2Test, getLengthReturnsCorrectLength) {
 }
 
 TEST(InteropGeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount) {
-  NovelRTGeoVector2F vec = GeoVector2F_create(0.0f, 1.0f);
+  NovelRTGeoVector2F vec{0.0f, 1.0f};
   NovelRTGeoVector2F zero = NovelRT_GeoVector2F_zero();
-  NovelRT_GeoVector2F_rotateToAngleAroundPoint(vec, 90.0f, zero);
-  NovelRTGeoVector2F other = GeoVector2F_create(-1.0f, 0.0f);
+  const char* err = nullptr;
+  NovelRTResult nrtResult = NovelRT_GeoVector2F_rotateToAngleAroundPoint(&vec, 90.0f, zero, &err);
+  NovelRTGeoVector2F other{-1.0f, 0.0f};
   NovelRTGeoVector2F epsilon = NovelRT_GeoVector2F_uniform(1e-7f);
 
+  ASSERT_EQ(nrtResult, NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoVector2F_epsilonEquals(vec, other, epsilon));
 }

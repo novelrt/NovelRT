@@ -15,8 +15,8 @@ typedef enum {
 
 typedef uint32_t NovelRTBool;
 
-#define NOVELRT_TRUE 0u
-#define NOVELRT_FALSE 1u
+#define NOVELRT_TRUE 1u
+#define NOVELRT_FALSE 0u
 
 const char* const cpuLangKey = "cpu";
 
