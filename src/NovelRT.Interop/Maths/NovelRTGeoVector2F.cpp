@@ -65,7 +65,7 @@ extern "C" {
   }
 
   NovelRTGeoVector2F NovelRT_GeoVector2F_getNormalised(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(vector) ) {
       return NovelRT_GeoVector2F_getNaN();
     }
     
@@ -75,7 +75,7 @@ extern "C" {
   }
 
   float NovelRT_GeoVector2F_getLength(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(vector) ) {
       return NAN;
     }
 
@@ -84,7 +84,7 @@ extern "C" {
   }
 
   float NovelRT_GeoVector2F_getMagnitude(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(vector) ) {
       return NAN;
     } 
 
@@ -245,7 +245,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_equal(lhs, NovelRT_GeoVector2F_zero()) == NOVELRT_TRUE || NovelRT_GeoVector2F_equal(rhs, NovelRT_GeoVector2F_zero()) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_equal(lhs, NovelRT_GeoVector2F_zero())  || NovelRT_GeoVector2F_equal(rhs, NovelRT_GeoVector2F_zero()) ) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsDivideByZero;
       }
@@ -270,7 +270,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -294,7 +294,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -318,7 +318,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -342,7 +342,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -374,7 +374,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || NovelRT_GeoVector2F_isNaN(rhs) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -398,7 +398,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || NovelRT_GeoVector2F_isNaN(rhs) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -422,7 +422,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || NovelRT_GeoVector2F_isNaN(rhs) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -446,7 +446,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || NovelRT_GeoVector2F_isNaN(rhs) == NOVELRT_TRUE) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -478,7 +478,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -501,7 +501,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -524,7 +524,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
@@ -547,7 +547,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs) == NOVELRT_TRUE || std::isnan(rhs)) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || std::isnan(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = errMsgIsNaN;
       }
