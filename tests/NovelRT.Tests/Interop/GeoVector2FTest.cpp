@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
+#include <NovelRT.Interop/Maths/NovelRTGeoVector2F.h>
 #include <cmath>
 
 using namespace NovelRT;
@@ -259,7 +259,7 @@ TEST(InteropGeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   NovelRTGeoVector2F zero = NovelRT_GeoVector2F_zero();
 
   const char* err = nullptr;
-  
+
   NovelRTResult nrtResult = NovelRT_GeoVector2F_rotateToAngleAroundPoint(&vec, 90.0f, zero, &err);
   NovelRTGeoVector2F other{-1.0f, 0.0f};
   NovelRTGeoVector2F epsilon = NovelRT_GeoVector2F_uniform(1e-7f);
@@ -272,4 +272,3 @@ TEST(InteropGeoVector2Test, isNaNReturnsTrueNaNVector) {
   NovelRTGeoVector2F nanVec {NAN, NAN};
   EXPECT_TRUE(NovelRT_GeoVector2F_isNaN(nanVec));
 }
-
