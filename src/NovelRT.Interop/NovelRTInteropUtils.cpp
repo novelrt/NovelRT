@@ -38,7 +38,6 @@ std::unordered_map<std::string, std::vector<ErrorTranslationPair>> translations 
   }
 };
 
-
 const char* const NovelRT_getCpuLangKey() {
   return cpuLangKey;
 }

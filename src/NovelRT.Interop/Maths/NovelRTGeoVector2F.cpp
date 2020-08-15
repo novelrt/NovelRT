@@ -46,6 +46,14 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
+    if(NovelRT_GeoVector2F_isNaN(*vector) || NovelRT_GeoVector2F_isNaN(point)) {
+      if(errorMessage != nullptr) {
+      *errorMessage = NovelRT_getErrMsgIsNaN();
+      }
+
+      return NOVELRT_FAILURE;
+    }
+
     Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(*vector);
     const Maths::GeoVector2<float>& cPoint = reinterpret_cast<const Maths::GeoVector2<float>&>(point);
     cVector.rotateToAngleAroundPoint(angleRotationValue, cPoint);
