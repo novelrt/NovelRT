@@ -15,16 +15,14 @@ typedef enum {
 
 typedef uint32_t NovelRTBool;
 
-#define NOVELRT_TRUE 0u
-#define NOVELRT_FALSE 1u
+#define NOVELRT_TRUE 1u
+#define NOVELRT_FALSE 0u
 
-const char* const cpuLangKey = "cpu";
-
-const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
-const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
-const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
-
-const char* NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
+const char* const NovelRT_getCpuLangKey();
+const char* const NovelRT_getErrMsgIsNullptr();
+const char* const NovelRT_getErrMsgIsNaN();
+const char* const NovelRT_getErrMsgIsDivideByZero();
+const char* const NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
   
 #ifdef __cplusplus
 }

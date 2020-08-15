@@ -2,12 +2,20 @@
 
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include <unordered_map>
-#include<vector>
+#include <vector>
+
+
 
 struct ErrorTranslationPair {
   const char* originalText;
   const char* translatedText;
 };
+
+
+const char* const cpuLangKey = "cpu";
+const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
+const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
+const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
 
 std::vector<ErrorTranslationPair> cpuPair {
   ErrorTranslationPair {
@@ -30,12 +38,28 @@ std::unordered_map<std::string, std::vector<ErrorTranslationPair>> translations 
   }
 };
 
-const char* NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {
+const char* const NovelRT_getCpuLangKey() {
+  return cpuLangKey;
+}
+
+const char* const NovelRT_getErrMsgIsNullptr() {
+  return errMsgIsNullptr; 
+}
+
+const char* const NovelRT_getErrMsgIsNaN() {
+  return errMsgIsNaN;
+}
+
+const char* const NovelRT_getErrMsgIsDivideByZero() {
+  return errMsgIsDivideByZero;
+}
+
+const char* const NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {
   std::string thing(targetLanguage);
   auto& vec = translations[thing];
 
   for (const auto& ptrPair : vec) {
-    if(&ptrPair.originalText == &errorPtr) {
+    if(ptrPair.originalText == errorPtr) {
       return ptrPair.translatedText;
     }
   }
