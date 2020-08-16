@@ -190,7 +190,7 @@ TEST(InteropGeoVector4Test, getLengthReturnsCorrectLength) {
 
 TEST(InteropGeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   GeoVector4F_t vec = GeoVector4F_create(0.0f, 1.0f, 0.0f, 0.0f);
-  GeoVector3F_t zero = GeoVector3F_zero();
+  NovelRTGeoVector3F zero = GeoVector3F_zero();
   GeoVector4F_rotateToAngleAroundPoint(vec, 90.0f, zero);
   GeoVector4F_t other = GeoVector4F_create(-1.0f, 0.0f, 0.0f, 0.0f);
   GeoVector4F_t epsilon = GeoVector4F_uniform(1e-7f);
