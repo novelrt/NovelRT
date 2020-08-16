@@ -15,7 +15,7 @@ extern "C" {
     return GeoVector4F_t{ vector.x, vector.y, 0, 0 };
   }
 
-  GeoVector4F_t GeoVector4F_createFromGeoVector3F(const GeoVector3F_t& vector) {
+  GeoVector4F_t GeoVector4F_createFromGeoVector3F(const NovelRTGeoVector3F& vector) {
     return GeoVector4F_t{ vector.x, vector.y, vector.z, 0 };
   }
 
@@ -63,7 +63,7 @@ extern "C" {
     gv.w = value;
   }
 
-  void GeoVector4F_rotateToAngleAroundPoint(GeoVector4F_t& vector, float angleRotationValue, const GeoVector3F_t& point) noexcept {
+  void GeoVector4F_rotateToAngleAroundPoint(GeoVector4F_t& vector, float angleRotationValue, const NovelRTGeoVector3F& point) noexcept {
     Maths::GeoVector4<float>& cVector = reinterpret_cast<Maths::GeoVector4<float>&>(vector);
     const Maths::GeoVector3<float>& cPoint = reinterpret_cast<const Maths::GeoVector3<float>&>(point);
     cVector.rotateToAngleAroundPoint(angleRotationValue, cPoint);
