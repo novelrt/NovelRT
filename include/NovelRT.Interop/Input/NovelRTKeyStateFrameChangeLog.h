@@ -16,8 +16,8 @@ NovelRTResult NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFram
 
 NovelRTResult NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage);
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(const NovelRTKeyStateFrameChangeLog lhs, const NovelRTKeyState rhs);
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(const NovelRTKeyState lhs, const NovelRTKeyStateFrameChangeLog rhs);
+NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs);
+NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs);
 
 #ifdef __cplusplus
 }

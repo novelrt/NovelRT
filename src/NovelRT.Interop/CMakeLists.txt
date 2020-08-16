@@ -4,6 +4,7 @@ set(INTEROP_SOURCES
   NovelRTInteropUtils.cpp
 
   Input/NovelRTKeyStateFrameChangeLog.cpp
+  Input/NovelRTInteractionService.cpp
 
   #Maths/GeoMatrix4x4F_t.cpp
   Maths/NovelRTGeoBounds.cpp
