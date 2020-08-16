@@ -8,40 +8,40 @@ extern "C" {
 #endif
 
 NovelRTResult NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage) {
-    Input::KeyStateFrameChangeLog* log = reinterpret_cast<Input::KeyStateFrameChangeLog*>(changeLog);
-    if (log == nullptr || output == nullptr) {
+    Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
+    if (output == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
-    auto state = log->getCurrentState();
+    auto state = log.getCurrentState();
     *output = reinterpret_cast<NovelRTKeyState&>(state);
     return NOVELRT_SUCCESS;
 }
 
 NovelRTResult NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage) {
-    Input::KeyStateFrameChangeLog* log = reinterpret_cast<Input::KeyStateFrameChangeLog*>(changeLog);
-    if (log == nullptr || output == nullptr) {
+    Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
+    if (output == nullptr) {
         if (errorMessage != nullptr) {
-            *errorMessage = errMsgIsNullptr;
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
-    *output = log->getChangeCount();
+    *output = log.getChangeCount();
     return NOVELRT_SUCCESS;
 }
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(const NovelRTKeyStateFrameChangeLog lhs, const NovelRTKeyState rhs) {
-    Input::KeyStateFrameChangeLog* log = reinterpret_cast<Input::KeyStateFrameChangeLog*>(lhs);
+NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs) {
+    Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(lhs);
     auto keyState = reinterpret_cast<const Input::KeyState&>(rhs);
-    if (*log == keyState) {
+    if (log == keyState) {
         return NOVELRT_TRUE;
     }
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(const NovelRTKeyState lhs, const NovelRTKeyStateFrameChangeLog rhs) {
+NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs) {
     return NovelRT_KeyStateFrameChangeLog_compareChangeLog(rhs, lhs);
 }
 
