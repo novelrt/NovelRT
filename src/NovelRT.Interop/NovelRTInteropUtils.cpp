@@ -38,23 +38,23 @@ std::unordered_map<std::string, std::vector<ErrorTranslationPair>> translations 
   }
 };
 
-const char* const NovelRT_getCpuLangKey() {
+const char* NovelRT_getCpuLangKey() {
   return cpuLangKey;
 }
 
-const char* const NovelRT_getErrMsgIsNullptr() {
+const char* NovelRT_getErrMsgIsNullptr() {
   return errMsgIsNullptr; 
 }
 
-const char* const NovelRT_getErrMsgIsNaN() {
+const char* NovelRT_getErrMsgIsNaN() {
   return errMsgIsNaN;
 }
 
-const char* const NovelRT_getErrMsgIsDivideByZero() {
+const char* NovelRT_getErrMsgIsDivideByZero() {
   return errMsgIsDivideByZero;
 }
 
-const char* const NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {
+const char* NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {
   std::string thing(targetLanguage);
   auto& vec = translations[thing];
 

@@ -18,11 +18,11 @@ typedef uint32_t NovelRTBool;
 #define NOVELRT_TRUE 1u
 #define NOVELRT_FALSE 0u
 
-const char* const NovelRT_getCpuLangKey();
-const char* const NovelRT_getErrMsgIsNullptr();
-const char* const NovelRT_getErrMsgIsNaN();
-const char* const NovelRT_getErrMsgIsDivideByZero();
-const char* const NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
+const char* NovelRT_getCpuLangKey();
+const char* NovelRT_getErrMsgIsNullptr();
+const char* NovelRT_getErrMsgIsNaN();
+const char* NovelRT_getErrMsgIsDivideByZero();
+const char* NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
   
 #ifdef __cplusplus
 }

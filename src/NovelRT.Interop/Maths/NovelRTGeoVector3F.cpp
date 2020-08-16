@@ -17,7 +17,7 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector3F_isNaN(NovelRTGeoVector3F vector) {
-    if(std::isnan(vector.x) || std::isnan(vector.y)) {
+    if(std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z)) {
       return NOVELRT_TRUE;
     }
 
