@@ -43,16 +43,16 @@ TEST(InteropGeoVector3Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
   EXPECT_TRUE(NovelRT_GeoVector3F_greaterThanOrEqualTo(vec3Three, vec3Three));
 }
 
-TEST(InteropGeoVector3Test, staticUniformCallReturnsGeoVector2WithUniformValues) {
+TEST(InteropGeoVector3Test, staticUniformCallReturnsGeoVector3WithUniformValues) {
   EXPECT_TRUE(NovelRT_GeoVector3F_equal(NovelRT_GeoVector3F_uniform(1.0f), vec3Three));
 }
 
-TEST(InteropGeoVector3Test, staticZeroCallReturnsGeoVector2Zero) {
+TEST(InteropGeoVector3Test, staticZeroCallReturnsGeoVector3Zero) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_uniform(0.0f);
   EXPECT_TRUE(NovelRT_GeoVector3F_equal(NovelRT_GeoVector3F_zero(), test));
 }
 
-TEST(InteropGeoVector3Test, staticOneCallReturnsGeoVector2One) {
+TEST(InteropGeoVector3Test, staticOneCallReturnsGeoVector3One) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_uniform(1.0f);
   EXPECT_TRUE(NovelRT_GeoVector3F_equal(NovelRT_GeoVector3F_one(), test));
 }
@@ -317,7 +317,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector2FZeroIsProvidedForGeoVector3F) {
+TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusReturnsGeoVector3FZeroIsProvidedForGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
   NovelRTGeoVector3F result = NovelRT_GeoVector3F_zero();
   
@@ -616,7 +616,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsFailureStatusWhenUnableToOpe
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
 
   const char* err = nullptr;
@@ -681,7 +681,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
 
   const char* err = nullptr;
@@ -746,7 +746,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
 
   const char* err = nullptr;
@@ -811,7 +811,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsFailureStatusWhenUnableTo
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
 
   const char* err = nullptr;
@@ -855,7 +855,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector2FZeroIsProvidedForGeoVector3F) {
+TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusReturnsGeoVector3FZeroIsProvidedForGeoVector3F) {
   NovelRTGeoVector3F test = NovelRT_GeoVector3F_one();
 
   const char* err = nullptr;

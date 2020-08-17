@@ -2,58 +2,62 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "NovelRT.Interop/Maths/NovelRTGeoVector4F.h"
+#include <NovelRT.Interop/Maths/NovelRTGeoVector4F.h>
+#include <cmath>
 
-NovelRTGeoVector4F vec3One = NovelRT_GeoVector4F_uniform(0.0);
-NovelRTGeoVector4F vec3Two = NovelRT_GeoVector4F_uniform(0.0f);
-NovelRTGeoVector4F vec3Three = NovelRT_GeoVector4F_uniform(1.0f);
+using namespace NovelRT;
+using namespace NovelRT::Maths;
 
-TEST(InteropGeoVector3Test, createFromGeoVector2ReturnsGeoVector3WithCorrectAndVerbatimValues) {
+NovelRTGeoVector4F vec4One = NovelRT_GeoVector4F_uniform(0.0);
+NovelRTGeoVector4F vec4Two = NovelRT_GeoVector4F_uniform(0.0f);
+NovelRTGeoVector4F vec4Three = NovelRT_GeoVector4F_uniform(1.0f);
+
+TEST(InteropGeoVector4Test, createFromGeoVector2ReturnsGeoVector4WithCorrectAndVerbatimValues) {
   NovelRTGeoVector4F vec = NovelRT_GeoVector4F_createFromGeoVector2F(NovelRT_GeoVector2F_uniform(1.0f));
-  EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRTGeoVector4F{1.0f, 1.0f, 0.0f}, vec));
+  EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRTGeoVector4F{1.0f, 1.0f, 0.0f, 0.0f}, vec));
 }
 
-TEST(InteropGeoVector3Test, equalityOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_equal(vec3One, vec3Two));
+TEST(InteropGeoVector4Test, equalityOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_equal(vec4One, vec4Two));
 }
 
-TEST(InteropGeoVector3Test, inequalityOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_notEqual(vec3One, vec3Three));
+TEST(InteropGeoVector4Test, inequalityOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_notEqual(vec4One, vec4Three));
 }
 
-TEST(InteropGeoVector3Test, lessThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_lessThan(vec3One, vec3Three));
+TEST(InteropGeoVector4Test, lessThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_lessThan(vec4One, vec4Three));
 }
 
-TEST(InteropGeoVector3Test, lessOrEqualToThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_lessThanOrEqualTo(vec3One, vec3Three));
-  EXPECT_TRUE(NovelRT_GeoVector4F_lessThanOrEqualTo(vec3Three, vec3Three));
+TEST(InteropGeoVector4Test, lessOrEqualToThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_lessThanOrEqualTo(vec4One, vec4Three));
+  EXPECT_TRUE(NovelRT_GeoVector4F_lessThanOrEqualTo(vec4Three, vec4Three));
 }
 
-TEST(InteropGeoVector3Test, greaterThanOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThan(vec3Three, vec3One));
+TEST(InteropGeoVector4Test, greaterThanOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThan(vec4Three, vec4One));
 }
 
-TEST(InteropGeoVector3Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThanOrEqualTo(vec3Three, vec3One));
-  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThanOrEqualTo(vec3Three, vec3Three));
+TEST(InteropGeoVector4Test, greaterThanOrEqualToOperatorEvaluatesCorrectly) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThanOrEqualTo(vec4Three, vec4One));
+  EXPECT_TRUE(NovelRT_GeoVector4F_greaterThanOrEqualTo(vec4Three, vec4Three));
 }
 
-TEST(InteropGeoVector3Test, staticUniformCallReturnsGeoVector2WithUniformValues) {
-  EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(1.0f), vec3Three));
+TEST(InteropGeoVector4Test, staticUniformCallReturnsGeoVector4WithUniformValues) {
+  EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(1.0f), vec4Three));
 }
 
-TEST(InteropGeoVector3Test, staticZeroCallReturnsGeoVector2Zero) {
+TEST(InteropGeoVector4Test, staticZeroCallReturnsGeoVector4Zero) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(0.0f);
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_zero(), test));
 }
 
-TEST(InteropGeoVector3Test, staticOneCallReturnsGeoVector2One) {
+TEST(InteropGeoVector4Test, staticOneCallReturnsGeoVector4One) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(1.0f);
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_one(), test));
 }
 
-TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorAddsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -64,7 +68,7 @@ TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForGeoVector3F) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -74,7 +78,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsFailureStatusWhenUnableToOperateFo
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -85,7 +89,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenR
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -96,7 +100,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -107,7 +111,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -118,7 +122,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorSubtractsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -129,7 +133,7 @@ TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForGeoVector3F) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_zero(), result));
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -139,7 +143,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsFailureStatusWhenUnableToOper
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -150,7 +154,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNullptrMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -161,7 +165,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -172,7 +176,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -183,7 +187,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorMultipliesCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -194,7 +198,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForGeoVector3F) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(4.0f), result));
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -204,7 +208,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsFailureStatusWhenUnableToOper
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -215,7 +219,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNullptrMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -226,7 +230,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -237,7 +241,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -248,7 +252,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorDividesCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(4.0f);
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -259,7 +263,7 @@ TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForGeoVector3F) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_one(), result));
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -269,7 +273,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsFailureStatusWhenUnableToOperat
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -280,7 +284,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNullptrMessageOnFailureStatusWh
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -291,7 +295,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -302,7 +306,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -313,7 +317,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector2FZeroIsProvidedForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector4FZeroIsProvidedForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -324,7 +328,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureSta
   EXPECT_EQ(NovelRT_getErrMsgIsDivideByZero(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, addOperatorAddsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -336,7 +340,7 @@ TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForFloat) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, addOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -345,7 +349,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsFailureStatusWhenUnableToOperateFo
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -355,7 +359,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNullptrMessageOnFailureStatusWhenR
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -366,7 +370,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_zero();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -377,7 +381,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -388,7 +392,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNMessageOnFailureStatusWhenNaNIs
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorSubtractsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -400,7 +404,7 @@ TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForFloat) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_zero(), result));
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -409,7 +413,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsFailureStatusWhenUnableToOper
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -419,7 +423,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNullptrMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -430,7 +434,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_zero();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -441,7 +445,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -452,7 +456,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorMultipliesCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -464,7 +468,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForFloat) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(4.0f), result));
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -473,7 +477,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsFailureStatusWhenUnableToOper
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -483,7 +487,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNullptrMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -494,7 +498,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_zero();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -505,7 +509,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -516,7 +520,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorDividesCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(4.0f);
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -528,7 +532,7 @@ TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForFloat) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -537,7 +541,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsFailureStatusWhenUnableToOperat
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   
   const char* err;
@@ -547,7 +551,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNullptrMessageOnFailureStatusWh
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -558,7 +562,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_zero();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -569,7 +573,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -580,7 +584,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);  
 }
 
-TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusWhenFloatZeroIsProvidedForFloat) {
+TEST(InteropGeoVector4Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusWhenFloatZeroIsProvidedForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F result = NovelRT_GeoVector4F_zero();
   
@@ -591,7 +595,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureSta
   EXPECT_EQ(NovelRT_getErrMsgIsDivideByZero(), err);  
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -602,7 +606,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -612,7 +616,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsFailureStatusWhenUnableToOpe
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -623,7 +627,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatu
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -634,7 +638,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -645,7 +649,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -656,7 +660,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -667,7 +671,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyFo
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_zero(), test));
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -677,7 +681,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -688,7 +692,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailure
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -699,7 +703,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -710,7 +714,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -721,7 +725,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
 
   const char* err = nullptr;
@@ -732,7 +736,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyF
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(4.0f), test));
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -742,7 +746,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -753,7 +757,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailure
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -764,7 +768,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -775,7 +779,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -786,7 +790,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
 
   const char* err = nullptr;
@@ -797,7 +801,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeo
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_one(), test));
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsFailureStatusWhenUnableToOperateForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -807,7 +811,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsFailureStatusWhenUnableTo
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector2F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -818,7 +822,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureSt
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -829,7 +833,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -840,7 +844,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector4F) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -851,7 +855,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector2FZeroIsProvidedForGeoVector3F) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusWhenGeoVector4FZeroIsProvidedForGeoVector4F) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -862,7 +866,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFail
   EXPECT_EQ(NovelRT_getErrMsgIsDivideByZero(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -873,7 +877,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForFloat) {
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_addAssignFloat(nullptr, 1.0f, &err);
@@ -881,7 +885,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsFailureStatusWhenUnableToOpe
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_addAssignFloat(nullptr, 1.0f, &err);
@@ -890,7 +894,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNullptrMessageOnFailureStatu
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -901,7 +905,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -912,7 +916,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -923,7 +927,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNMessageOnFailureStatusWhe
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -934,7 +938,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyFo
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(0.0f), test));
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_subtractAssignFloat(nullptr, 1.0f, &err);
@@ -942,7 +946,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_subtractAssignFloat(nullptr, 1.0f, &err);
@@ -951,7 +955,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNullptrMessageOnFailure
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -962,7 +966,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -973,7 +977,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, subtractAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -984,7 +988,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
 
   const char* err = nullptr;
@@ -995,7 +999,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyF
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_multiplyAssignFloat(nullptr, 1.0f, &err);
@@ -1003,7 +1007,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsFailureStatusWhenUnable
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_multiplyAssignFloat(nullptr, 1.0f, &err);
@@ -1012,7 +1016,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNullptrMessageOnFailure
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -1023,7 +1027,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -1034,7 +1038,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -1045,7 +1049,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNMessageOnFailureStat
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_uniform(2.0f);
 
   const char* err = nullptr;
@@ -1056,7 +1060,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForFlo
   EXPECT_TRUE(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_uniform(1.0f), test));
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsFailureStatusWhenUnableToOperateForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_divideAssignFloat(nullptr, 1.0f, &err);
@@ -1064,7 +1068,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsFailureStatusWhenUnableTo
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNullptrMessageOnFailureStatusWhenResultPtrIsNullForFloat) {
   const char* err = nullptr;
 
   NovelRTResult nrtResult = NovelRT_GeoVector4F_divideAssignFloat(nullptr, 1.0f, &err);
@@ -1073,7 +1077,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNullptrMessageOnFailureSt
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForLhsForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -1084,7 +1088,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -1095,7 +1099,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForFloat) {
   NovelRTGeoVector4F test { NAN, NAN };
 
   const char* err = nullptr;
@@ -1106,7 +1110,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNMessageOnFailureStatus
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusWhenFloatZeroIsProvidedForFloat) {
+TEST(InteropGeoVector4Test, divideAssignOperatorReturnsDivideByZeroMessageOnFailureStatusWhenFloatZeroIsProvidedForFloat) {
   NovelRTGeoVector4F test = NovelRT_GeoVector4F_one();
 
   const char* err = nullptr;
@@ -1117,31 +1121,31 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsDivideByZeroMessageOnFail
   EXPECT_EQ(NovelRT_getErrMsgIsDivideByZero(), err);
 }
 
-TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector) {
+TEST(InteropGeoVector4Test, getNormalisedReturnsNormalisedGeoVector) {
   NovelRTGeoVector4F cVector = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F normal = NovelRT_GeoVector4F_getNormalised(cVector);
-  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
-  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2));
+  GeoVector4<float>& vec = reinterpret_cast<GeoVector4<float>&>(normal);
+  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
-TEST(InteropGeoVector3Test, getMagnitudeReturnsCorrectLength) {
+TEST(InteropGeoVector4Test, getMagnitudeReturnsCorrectLength) {
   NovelRTGeoVector4F cVector = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F normal = NovelRT_GeoVector4F_getNormalised(cVector);
-  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
-  EXPECT_FLOAT_EQ(NovelRT_GeoVector4F_getMagnitude(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  GeoVector4<float>& vec = reinterpret_cast<GeoVector4<float>&>(normal);
+  EXPECT_FLOAT_EQ(NovelRT_GeoVector4F_getMagnitude(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2)));
 }
 
-TEST(InteropGeoVector3Test, getLengthReturnsCorrectLength) {
+TEST(InteropGeoVector4Test, getLengthReturnsCorrectLength) {
   NovelRTGeoVector4F cVector = NovelRT_GeoVector4F_one();
   NovelRTGeoVector4F normal = NovelRT_GeoVector4F_getNormalised(cVector);
-  GeoVector3<float>& vec = reinterpret_cast<GeoVector3<float>&>(normal);
-  EXPECT_FLOAT_EQ(NovelRT_GeoVector4F_getLength(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  GeoVector4<float>& vec = reinterpret_cast<GeoVector4<float>&>(normal);
+  EXPECT_FLOAT_EQ(NovelRT_GeoVector4F_getLength(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2)));
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount) {
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   NovelRTGeoVector4F vec{0.0f, 1.0f};
-  NovelRTGeoVector4F zero = NovelRT_GeoVector4F_zero();
+  NovelRTGeoVector3F zero = NovelRT_GeoVector3F_zero();
 
   const char* err = nullptr;
 
@@ -1153,8 +1157,8 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount) {
   EXPECT_TRUE(NovelRT_GeoVector4F_epsilonEquals(vec, other, epsilon));
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointReturnsFailureStatucWhenUnableToOperate) {
-  NovelRTGeoVector4F zero = NovelRT_GeoVector4F_zero();
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointReturnsFailureStatucWhenUnableToOperate) {
+  NovelRTGeoVector3F zero = NovelRT_GeoVector3F_zero();
 
   const char* err = nullptr;
 
@@ -1165,8 +1169,8 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointReturnsFailureStatucWhenUnab
   EXPECT_EQ(nrtResult, NOVELRT_FAILURE);
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNullptrReturnsNullPtrMessageOnFailureStatus) {
-  NovelRTGeoVector4F zero = NovelRT_GeoVector4F_zero();
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointWhenGivenNullptrReturnsNullPtrMessageOnFailureStatus) {
+  NovelRTGeoVector3F zero = NovelRT_GeoVector3F_zero();
 
   const char* err = nullptr;
 
@@ -1178,9 +1182,9 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNullptrReturnsNullP
   EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), err);
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueInLhsReturnsNaNMessageOnFailureStatus) {
-  NovelRTGeoVector4F vec{ NAN, NAN };
-  NovelRTGeoVector4F zero = NovelRT_GeoVector4F_zero();
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointWhenGivenNaNValueInLhsReturnsNaNMessageOnFailureStatus) {
+  NovelRTGeoVector4F vec{ NAN, NAN, NAN, NAN };
+  NovelRTGeoVector3F zero = NovelRT_GeoVector3F_zero();
 
   const char* err = nullptr;
 
@@ -1192,9 +1196,9 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueInLhsReturn
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueInRhsReturnsNaNMessageOnFailureStatus) {
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointWhenGivenNaNValueInRhsReturnsNaNMessageOnFailureStatus) {
   NovelRTGeoVector4F vec{ 0.0f, 1.0f };
-  NovelRTGeoVector4F zero { NAN, NAN };
+  NovelRTGeoVector3F zero { NAN, NAN, NAN };
 
   const char* err = nullptr;
 
@@ -1206,9 +1210,9 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueInRhsReturn
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueForBothReturnsNaNMessageOnFailureStatus) {
-  NovelRTGeoVector4F vec{ NAN, NAN };
-  NovelRTGeoVector4F zero{ NAN, NAN };
+TEST(InteropGeoVector4Test, rotateToAngleAroundPointWhenGivenNaNValueForBothReturnsNaNMessageOnFailureStatus) {
+  NovelRTGeoVector4F vec{ NAN, NAN, NAN, NAN };
+  NovelRTGeoVector3F zero{ NAN, NAN, NAN };
 
   const char* err = nullptr;
 
@@ -1220,7 +1224,7 @@ TEST(InteropGeoVector3Test, rotateToAngleAroundPointWhenGivenNaNValueForBothRetu
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), err);
 }
 
-TEST(InteropGeoVector3Test, isNaNReturnsTrueNaNVector) {
+TEST(InteropGeoVector4Test, isNaNReturnsTrueNaNVector) {
   NovelRTGeoVector4F nanVec {NAN, NAN};
   EXPECT_TRUE(NovelRT_GeoVector4F_isNaN(nanVec));
 }

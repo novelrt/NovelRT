@@ -48,7 +48,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector4F_isNaN(*vector) || NovelRT_GeoVector4F_isNaN(point)) {
+    if(NovelRT_GeoVector4F_isNaN(*vector) || NovelRT_GeoVector3F_isNaN(point)) {
       if(errorMessage != nullptr) {
       *errorMessage = NovelRT_getErrMsgIsNaN();
       }

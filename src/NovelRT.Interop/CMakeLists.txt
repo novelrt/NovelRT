@@ -10,7 +10,7 @@ set(INTEROP_SOURCES
   Maths/NovelRTGeoBounds.cpp
   Maths/NovelRTGeoVector2F.cpp
   Maths/NovelRTGeoVector3F.cpp
-  #Maths/GeoVector4F_t.cpp
+  Maths/NovelRTGeoVector4F.cpp
   #Maths/QuadTree_t.cpp
   #Maths/QuadTreePoint_t.cpp
 
