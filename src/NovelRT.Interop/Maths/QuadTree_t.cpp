@@ -11,83 +11,83 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-   QuadTree_t QuadTree_create(const GeoBounds_t& bounds) {
+   NovelRTQuadTree NovelRT_QuadTree_create(GeoBounds_t bounds) {
      _treeCollection.push_back(std::make_shared<Maths::QuadTree>(reinterpret_cast<const Maths::GeoBounds&>(bounds)));
-     return reinterpret_cast<QuadTree_t>(_treeCollection.back().get());
+     return reinterpret_cast<NovelRTQuadTree>(_treeCollection.back().get());
    }
   
-   QuadTree_t QuadTree_getParent(QuadTree_t tree) {
+   NovelRTQuadTree NovelRT_QuadTree_getParent(NovelRTQuadTree tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
      auto parentTree = treePointer->getParent();
-     return reinterpret_cast<QuadTree_t&>(parentTree);
+     return reinterpret_cast<NovelRTQuadTree&>(parentTree);
    }
   
-   GeoBounds_t QuadTree_getBounds(QuadTree_t tree) {
+   GeoBounds_t NovelRT_QuadTree_getBounds(NovelRTQuadTree tree) {
      Maths::GeoBounds* bounds = new Maths::GeoBounds({ 0,0 }, {0,0}, 0);
      *bounds = reinterpret_cast<Maths::QuadTree*>(tree)->getBounds();
      return reinterpret_cast<const GeoBounds_t&>(*bounds);
    }
   
-   QuadTreePoint_t QuadTree_getPoint(QuadTree_t tree, size_t index) {
+   NovelRTQuadTreePoint NovelRT_QuadTree_getPoint(NovelRTQuadTree tree, size_t index) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
      auto point = treePointer->getPoint(index).get();
-     return reinterpret_cast<QuadTreePoint_t&>(point);
+     return reinterpret_cast<NovelRTQuadTreePoint&>(point);
    }
   
-   size_t QuadTree_getPointCount(QuadTree_t tree) {
+   size_t NovelRT_QuadTree_getPointCount(NovelRTQuadTree tree) {
      return reinterpret_cast<Maths::QuadTree*>(tree)->getPointCount();
    }
   
-   QuadTree_t QuadTree_getTopLeft(QuadTree_t tree) {
+   NovelRTQuadTree NovelRT_QuadTree_getTopLeft(NovelRTQuadTree tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-     return reinterpret_cast<QuadTree_t>(treePointer->getTopLeft().get());
+     return reinterpret_cast<NovelRTQuadTree>(treePointer->getTopLeft().get());
    }
 
-   QuadTree_t QuadTree_getTopRight(QuadTree_t tree) {
+   NovelRTQuadTree NovelRT_QuadTree_getTopRight(NovelRTQuadTree tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-     return reinterpret_cast<QuadTree_t>(treePointer->getTopRight().get());
+     return reinterpret_cast<NovelRTQuadTree>(treePointer->getTopRight().get());
    }
    
-   QuadTree_t QuadTree_getBottomLeft(QuadTree_t tree) {
+   NovelRTQuadTree NovelRT_QuadTree_getBottomLeft(NovelRTQuadTree tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-     return reinterpret_cast<QuadTree_t>(treePointer->getBottomLeft().get());
+     return reinterpret_cast<NovelRTQuadTree>(treePointer->getBottomLeft().get());
    }
    
-   QuadTree_t QuadTree_getBottomRight(QuadTree_t tree) {
+   NovelRTQuadTree NovelRT_QuadTree_getBottomRight(NovelRTQuadTree tree) {
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-     return reinterpret_cast<QuadTree_t>(treePointer->getBottomRight().get());
+     return reinterpret_cast<NovelRTQuadTree>(treePointer->getBottomRight().get());
    }
   
-   bool QuadTree_tryInsert(QuadTree_t tree, QuadTreePoint_t point) {
+   bool NovelRT_QuadTree_tryInsert(NovelRTQuadTree tree, NovelRTQuadTreePoint point) {
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
     return treePointer->tryInsert(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());
    }
   
-  bool QuadTree_tryRemove(QuadTree_t tree, QuadTreePoint_t point) {
+  bool NovelRT_QuadTree_tryRemove(NovelRTQuadTree tree, NovelRTQuadTreePoint point) {
     auto treePointer = reinterpret_cast<std::shared_ptr<Maths::QuadTree>&>(tree);
     return treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());
   }
   
-  PointVector QuadTree_getIntersectingPoints(QuadTree_t tree, const GeoBounds_t& bounds) {
+  NovelRTPointVector NovelRT_QuadTree_getIntersectingPoints(NovelRTQuadTree tree, GeoBounds_t bounds) {
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
     *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
-    return reinterpret_cast<PointVector>(points);
+    return reinterpret_cast<NovelRTPointVector>(points);
   }
 
-  void PointVector_delete(PointVector vector) {
+  void NovelRT_PointVector_delete(NovelRTPointVector vector) {
     delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
   }
 
-  size_t PointVector_getSize(PointVector vector) {
+  size_t NovelRT_PointVector_getSize(NovelRTPointVector vector) {
     return reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
   }
 
-  QuadTreePoint_t PointVector_getPointFromIndex(PointVector vector, size_t index) {
-    return reinterpret_cast<QuadTreePoint_t>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
+  NovelRTQuadTreePoint NovelRT_PointVector_getPointFromIndex(NovelRTPointVector vector, size_t index) {
+    return reinterpret_cast<NovelRTQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
   }
 
 //TODO: We should probably add return codes for stuff like this, because C.
-  void QuadTree_delete(QuadTree_t tree) {
+  void NovelRT_QuadTree_delete(NovelRTQuadTree tree) {
     _treeCollection.remove(reinterpret_cast<Maths::QuadTree*>(tree)->shared_from_this());
   }
 

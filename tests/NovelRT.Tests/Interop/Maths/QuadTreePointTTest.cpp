@@ -10,14 +10,14 @@ using namespace NovelRT::Maths;
 //TODO: ERROR. CODES.
 TEST(InteropQuadTreePointTest, QuadTreePoint_createReturnsValidHandle) {
   auto vec = GeoVector2F_create(1.0f, 1.0f);
-  auto point = reinterpret_cast<Maths::QuadTreePoint*>(QuadTreePoint_create(vec));
+  auto point = reinterpret_cast<Maths::QuadTreePoint*>(NovelRT_QuadTreePoint_create(vec));
   EXPECT_NE(point, nullptr);
 }
 
 TEST(InteropQuadTreePoint, QuadTreePoint_deleteReturnsSuccess) {
-  EXPECT_NO_THROW(QuadTreePoint_delete(QuadTreePoint_createFromFloat(1.0f, 1.0f)));
+  EXPECT_NO_THROW(NovelRT_QuadTreePoint_delete(NovelRT_QuadTreePoint_createFromFloat(1.0f, 1.0f)));
 }
 
 TEST(InteropQuadTreePointTest, QuadTreePoint_createFromFloatReturnsValidHandle) {
-  EXPECT_NE(reinterpret_cast<Maths::QuadTreePoint*>(QuadTreePoint_createFromFloat(1.0f, 1.0f)), nullptr);
+  EXPECT_NE(reinterpret_cast<Maths::QuadTreePoint*>(NovelRT_QuadTreePoint_createFromFloat(1.0f, 1.0f)), nullptr);
 }
