@@ -11,7 +11,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-   NovelRTQuadTree NovelRT_QuadTree_create(GeoBounds_t bounds) {
+   NovelRTQuadTree NovelRT_QuadTree_create(NovelRTGeoBounds bounds) {
      _treeCollection.push_back(std::make_shared<Maths::QuadTree>(reinterpret_cast<const Maths::GeoBounds&>(bounds)));
      return reinterpret_cast<NovelRTQuadTree>(_treeCollection.back().get());
    }
@@ -22,10 +22,10 @@ extern "C" {
      return reinterpret_cast<NovelRTQuadTree&>(parentTree);
    }
   
-   GeoBounds_t NovelRT_QuadTree_getBounds(NovelRTQuadTree tree) {
+   NovelRTGeoBounds NovelRT_QuadTree_getBounds(NovelRTQuadTree tree) {
      Maths::GeoBounds* bounds = new Maths::GeoBounds({ 0,0 }, {0,0}, 0);
      *bounds = reinterpret_cast<Maths::QuadTree*>(tree)->getBounds();
-     return reinterpret_cast<const GeoBounds_t&>(*bounds);
+     return reinterpret_cast<const NovelRTGeoBounds&>(*bounds);
    }
   
    NovelRTQuadTreePoint NovelRT_QuadTree_getPoint(NovelRTQuadTree tree, size_t index) {
@@ -68,7 +68,7 @@ extern "C" {
     return treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());
   }
   
-  NovelRTPointVector NovelRT_QuadTree_getIntersectingPoints(NovelRTQuadTree tree, GeoBounds_t bounds) {
+  NovelRTPointVector NovelRT_QuadTree_getIntersectingPoints(NovelRTQuadTree tree, NovelRTGeoBounds bounds) {
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
     *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
     return reinterpret_cast<NovelRTPointVector>(points);

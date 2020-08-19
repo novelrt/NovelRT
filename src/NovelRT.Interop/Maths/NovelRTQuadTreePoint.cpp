@@ -21,9 +21,20 @@ extern "C" {
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
-  NovelRTGeoVector2F NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint const point) {
+  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint const point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
+    if(point == nullptr || outputPosition == nullptr) {
+      if(errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+
+      return NOVELRT_FAILURE;
+    }
+
     const Maths::GeoVector2<float>& pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
-    return reinterpret_cast<const NovelRTGeoVector2F&>(pos);
+    NovelRTGeoVector2F returnValue = reinterpret_cast<const NovelRTGeoVector2F&>(pos);
+    *outputPosition = returnValue;
+
+    return NOVELRT_SUCCESS;
   }
 
   NovelRTResult NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point, const char** errorMessage) {
