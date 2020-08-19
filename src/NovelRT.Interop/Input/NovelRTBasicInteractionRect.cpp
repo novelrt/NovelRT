@@ -140,19 +140,19 @@ NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInte
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage) {
-    if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
+// NovelRTResult NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage) {
+//     if (object == nullptr) {
+//         if (errorMessage != nullptr) {
+//             *errorMessage = NovelRT_getErrMsgIsNullptr();
+//         }
+//         return NOVELRT_FAILURE;
+//     }
 
-    auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    std::function<void()> functionPtr = reinterpret_cast<std::function<void()>&>(ptr);
-    obj->Interacted -= functionPtr;
-    return NOVELRT_SUCCESS;
-}
+//     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
+//     std::function<void()> functionPtr = reinterpret_cast<std::function<void()>&>(ptr);
+//     obj->Interacted -= functionPtr;
+//     return NOVELRT_SUCCESS;
+// }
 
 #ifdef __cplusplus
 }

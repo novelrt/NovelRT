@@ -3,9 +3,10 @@ set(INTEROP_SOURCES
   NovelRTTransform.cpp
   NovelRTInteropUtils.cpp
 
-  Input/NovelRTKeyStateFrameChangeLog.cpp
+  Input/NovelRTBasicInteractionRect.cpp
   Input/NovelRTInteractionService.cpp
-
+  Input/NovelRTKeyStateFrameChangeLog.cpp
+  
   #Maths/GeoMatrix4x4F_t.cpp
   Maths/NovelRTGeoBounds.cpp
   Maths/NovelRTGeoVector2F.cpp
