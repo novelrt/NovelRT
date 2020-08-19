@@ -5,6 +5,7 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Input/NovelRTKeyCode.h"
 #include "NovelRT.Interop/Input/NovelRTKeyStateFrameChangeLog.h"
+#include "NovelRT.Interop/Input/NovelRTBasicInteractionRect.h"
 #ifndef NOVELRT_INTEROP_INPUT_INTERACTIONSERVICE_H
 #define NOVELRT_INTEROP_INPUT_INTERACTIONSERVICE_H
 
@@ -16,7 +17,7 @@ typedef struct InteractionServiceHandle* NovelRTInteractionService;
 
 NovelRTInteractionService NovelRT_InteractionService_create(const NovelRTWindowingService windowingService);
 NovelRTResult NovelRT_InteractionService_consumePlayerInput(const NovelRTInteractionService service, const char** errorMessage);
-//std::unique_ptr<BasicInteractionRect> createBasicInteractionRect(const NovelRTTransform& transform, int layer);
+NovelRTResult NovelRT_InteractionService_createBasicInteractionRect(const NovelRTInteractionService service, const NovelRTTransform transform, int layer, NovelRTBasicInteractionRect* outputRect, const char** errorMessage);
 NovelRTResult NovelRT_InteractionService_executeClickedInteractable(const NovelRTInteractionService service, const char** errorMessage);
 NovelRTResult NovelRT_InteractionService_setScreenSize(const NovelRTInteractionService service, NovelRTGeoVector2F value, const char** errorMessage);
 NovelRTResult NovelRT_InteractionService_getKeyState(const NovelRTInteractionService service, NovelRTKeyCode value, NovelRTKeyStateFrameChangeLog* output, const char** errorMessage);

@@ -6,7 +6,7 @@
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowCollection;
 std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionServiceCollection;
-//std::list<std::unique_ptr<NovelRT::Input::BasicInteractionRect>> _rectCollection;   <- not sure if this is needed.
+std::list<std::unique_ptr<NovelRT::Input::BasicInteractionRect>> _rectCollection;
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -32,7 +32,6 @@ NovelRTResult NovelRT_InteractionService_consumePlayerInput(NovelRTInteractionSe
   return NOVELRT_SUCCESS;
 }
 
-//std::unique_ptr<BasicInteractionRect> NovelRT_nteractionService_createBasicInteractionRect(const NovelRTTransform& transform, int layer);
 NovelRTResult NovelRT_InteractionService_executeClickedInteractable(const NovelRTInteractionService service, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr) {
@@ -68,6 +67,20 @@ NovelRTResult NovelRT_InteractionService_getKeyState(const NovelRTInteractionSer
   }
   auto changelog = servicePtr->getKeyState(reinterpret_cast<Input::KeyCode&>(value));
   *output = reinterpret_cast<NovelRTKeyStateFrameChangeLog&>(changelog);
+  return NOVELRT_SUCCESS;
+}
+
+NovelRTResult NovelRT_InteractionService_createBasicInteractionRect(const NovelRTInteractionService service, const NovelRTTransform transform, int layer, NovelRTBasicInteractionRect* outputRect, const char** errorMessage) {
+  auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
+  if (servicePtr == nullptr) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
+        }
+        return NOVELRT_FAILURE;
+  }
+
+  _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(servicePtr->createBasicInteractionRect(reinterpret_cast<const Transform&>(transform), layer)));
+  *outputRect = reinterpret_cast<NovelRTBasicInteractionRect>(_rectCollection.back().get());
   return NOVELRT_SUCCESS;
 }
 
