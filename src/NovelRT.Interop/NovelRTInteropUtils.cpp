@@ -16,7 +16,7 @@ const char* const cpuLangKey = "cpu";
 const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
 const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
 const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
-const char* const errMsgIsNotInCollection = "Unable to continue! The specific item is not in the collection."
+const char* const errMsgIsNotInCollection = "Unable to continue! The specific item is not in the collection.";
 
 std::vector<ErrorTranslationPair> cpuPair {
   ErrorTranslationPair {
@@ -60,7 +60,7 @@ const char* NovelRT_getErrMsgIsDivideByZero() {
 }
 
 const char* NovelRT_getErrMsgIsNotInCollection() {
-  return 
+  return errMsgIsNotInCollection;
 }
 
 const char* NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {
