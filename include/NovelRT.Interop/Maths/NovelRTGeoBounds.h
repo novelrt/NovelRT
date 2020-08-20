@@ -9,11 +9,12 @@
 extern "C" {
 #endif
   typedef struct {
-    NovelRTGeoVector2F _position;
-    float _rotation;
-    NovelRTGeoVector2F _size;
+    NovelRTGeoVector2F position;
+    float rotation;
+    NovelRTGeoVector2F size;
   } NovelRTGeoBounds;
 
+  NovelRTGeoBounds NovelRT_GeoBounds_zero();
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(const NovelRTGeoBounds bounds, int index);
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(const NovelRTGeoBounds bounds, int index);
   NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(const NovelRTGeoBounds bounds, const NovelRTGeoVector2F point);

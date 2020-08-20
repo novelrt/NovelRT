@@ -12,8 +12,8 @@ extern "C" {
   
   NovelRTQuadTreePoint NovelRT_QuadTreePoint_create(NovelRTGeoVector2F position);
   NovelRTQuadTreePoint NovelRT_QuadTreePoint_createFromFloat(float x, float y);
-  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint const point, NovelRTGeoVector2F* outputPosition, const char** errorMessage);
-  NovelRTResult NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point);
+  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition, const char** errorMessage);
+  NovelRTResult NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point, const char** errorMessage);
 
 #ifdef __cplusplus
 }

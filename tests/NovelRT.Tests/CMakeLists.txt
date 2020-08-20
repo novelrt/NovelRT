@@ -16,7 +16,7 @@ set(TEST_SOURCES
   Interop/Maths/GeoVector2FTest.cpp
   Interop/Maths/GeoVector3FTest.cpp  
   Interop/Maths/GeoVector4FTest.cpp
-  #Interop/QuadTreePointTTest.cpp
+  Interop/Maths/QuadTreePointTest.cpp
   #Interop/QuadTreeTTest.cpp
 
   Maths/GeoMatrix4x4Test.cpp

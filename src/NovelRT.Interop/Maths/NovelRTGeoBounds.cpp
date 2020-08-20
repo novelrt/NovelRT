@@ -10,6 +10,10 @@ extern "C" {
   using namespace NovelRT;
 #endif
 
+  NovelRTGeoBounds NovelRT_GeoBounds_zero() {
+    return NovelRTGeoBounds{NovelRT_GeoVector2F_zero(), 0.0f, NovelRT_GeoVector2F_zero()};
+  }
+
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(const NovelRTGeoBounds bounds, int index) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
     Maths::GeoVector2<float> corner = cBounds.getCornerInLocalSpace(index);

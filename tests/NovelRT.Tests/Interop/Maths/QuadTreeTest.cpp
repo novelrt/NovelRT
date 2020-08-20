@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <NovelRT.h>
-#include "NovelRT.Interop/Maths/QuadTree_t.h"
+#include "NovelRT.Interop/Maths/NovelRTQuadTree.h"
 
 
 using namespace NovelRT;
@@ -11,11 +11,11 @@ using namespace NovelRT::Maths;
 static const float TEST_WIDTH = 1920.0f;
 static const float TEST_HEIGHT = 1080.0f;
 
-GeoBounds_t getCenteredBoundsC(float width, float height) {
+NovelRTGeoBounds getCenteredBoundsC(float width, float height) {
   auto size = GeoVector2<float>(width, height);
   auto position = GeoVector2<float>(0, 0);
   GeoBounds* result = new GeoBounds(position, size, 0);
-  return reinterpret_cast<GeoBounds_t&>(*result);
+  return reinterpret_cast<NovelRTGeoBounds&>(*result);
 }
 
 bool checkPointsForEqualityC(NovelRTQuadTreePoint one, NovelRTQuadTreePoint two) {
@@ -28,7 +28,7 @@ bool checkPointsForEqualityCpp(Maths::QuadTreePoint* left, Maths::QuadTreePoint*
   return left->getPosition() == right->getPosition();
 }
 
-bool checkBoundsForEquality(GeoBounds_t one, GeoBounds_t two) {
+bool checkBoundsForEquality(NovelRTGeoBounds one, NovelRTGeoBounds two) {
   auto left = reinterpret_cast<GeoBounds&>(one);
   auto right = reinterpret_cast<GeoBounds&>(two);
   return left == right;
@@ -39,7 +39,7 @@ protected:
   NovelRTQuadTree _quadTree;
 
   void SetUp() override {
-    auto bounds = new GeoBounds_t{};
+    auto bounds = new NovelRTGeoBounds{};
     *bounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
     _quadTree = NovelRT_QuadTree_create(*bounds);
   }
@@ -53,16 +53,21 @@ TEST_F(InteropQuadTreeTest, QuadTree_createReturnsValidHandle) {
 
 //TODO: This test really REALLY needs return codes.
 TEST_F(InteropQuadTreeTest, QuadTree_deleteReturnsSuccess) {
-  EXPECT_NO_THROW(NovelRT_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)));
+  NovelRTQuadTree tree = NovelRT_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
+  EXPECT_EQ(NovelRT_QuadTree_delete(tree, nullptr), NOVELRT_SUCCESS);
 }
 
-TEST_F(InteropQuadTreeTest, PointVector_createReturnsValidHandle) {
-  auto points = NovelRT_QuadTree_getIntersectingPoints(_quadTree, getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
-  EXPECT_NO_THROW(NovelRT_PointVector_delete(points));
+TEST_F(InteropQuadTreeTest, QuadTree_getIntersectingPointsReturnsValidPointVectorHandleAndCanAlsoBeDeleted) {
+  NovelRTPointVector vec = nullptr;
+
+  NovelRTResult result = NovelRT_QuadTree_getIntersectingPoints(_quadTree, getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT), &vec, nullptr);
+  EXPECT_EQ(result, NOVELRT_SUCCESS);
+  EXPECT_EQ(NovelRT_PointVector_delete(vec, nullptr), NOVELRT_SUCCESS);
 }
 
 TEST_F(InteropQuadTreeTest, createCorrectlySetsBounds) {
-  auto expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+  NovelRTGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+  
   EXPECT_TRUE(checkBoundsForEquality(NovelRT_QuadTree_getBounds(_quadTree), expectedBounds));
 }
 

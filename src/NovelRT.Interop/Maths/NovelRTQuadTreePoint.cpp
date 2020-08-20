@@ -21,7 +21,7 @@ extern "C" {
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
-  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint const point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
+  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
     if(point == nullptr || outputPosition == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();

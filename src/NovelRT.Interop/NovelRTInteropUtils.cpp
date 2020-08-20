@@ -16,7 +16,7 @@ const char* const cpuLangKey = "cpu";
 const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
 const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
 const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
-const char* const errMsgIsNotInCollection = "Unable to continue! The specific item is not in the collection.";
+const char* const errMsgIsAlreadyDeletedOrRemoved = "Unable to continue! The specific item has already been deleted or removed.";
 
 std::vector<ErrorTranslationPair> cpuPair {
   ErrorTranslationPair {
@@ -32,8 +32,8 @@ std::vector<ErrorTranslationPair> cpuPair {
     "FAILURE_IS_DIVIDE_BY_ZERO"
   },
   ErrorTranslationPair {
-    errMsgIsNotInCollection,
-    "FAILURE_IS_ITEM_NOT_IN_COLLECTION"
+    errMsgIsAlreadyDeletedOrRemoved,
+    "FAILURE_IS_ITEM_ALREADY_DELETED_OR_REMOVED"
   }
 };
 
@@ -59,8 +59,8 @@ const char* NovelRT_getErrMsgIsDivideByZero() {
   return errMsgIsDivideByZero;
 }
 
-const char* NovelRT_getErrMsgIsNotInCollection() {
-  return errMsgIsNotInCollection;
+const char* NovelRT_getErrMsgIsAlreadyDeletedOrRemoved() {
+  return errMsgIsAlreadyDeletedOrRemoved;
 }
 
 const char* NovelRT_translateErrorCode(const char* const targetLanguage, const char* const errorPtr) {

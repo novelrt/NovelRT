@@ -12,8 +12,8 @@ set(INTEROP_SOURCES
   Maths/NovelRTGeoVector2F.cpp
   Maths/NovelRTGeoVector3F.cpp
   Maths/NovelRTGeoVector4F.cpp
-  #Maths/QuadTree_t.cpp
-  #Maths/QuadTreePoint_t.cpp
+  Maths/NovelRTQuadTree.cpp
+  Maths/NovelRTQuadTreePoint.cpp
 
   Windowing/NovelRTWindowingService.cpp
 )
