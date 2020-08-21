@@ -24,7 +24,11 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 
+include(OutputCopyLocal)
+
 add_subdirectory(src)
+
+add_subdirectory(resources)
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
@@ -39,5 +43,3 @@ if(NOVELRT_BUILD_TESTS)
 
   add_subdirectory(tests)
 endif()
-
-add_subdirectory(resources)

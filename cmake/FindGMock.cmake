@@ -16,18 +16,6 @@ find_package(PkgConfig)
 pkg_check_modules(pc_gmock QUIET gmock)
 pkg_check_modules(pc_gmock_main QUIET gmock_main)
 
-if(WIN32 AND NOT DEFINED gmock_USE_DEBUG_BUILD)
-  if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
-    set(GMock_BUILD_TYPE DEBUG)
-  else()
-    set(GMock_BUILD_TYPE RELEASE)
-  endif()
-elseif(gmock_USE_DEBUG_BUILD)
-  set(GMock_BUILD_TYPE DEBUG)
-else()
-  set(GMock_BUILD_TYPE RELEASE)
-endif()
-
 set(GMock_DEFINITIONS ${pc_gmock_CFLAGS_OTHER})
 set(GMock_Main_DEFINITIONS ${pc_gmock_main_CFLAGS_OTHER})
 set(gmock_search_dir ${gmock_ROOT_DIR} $ENV{gmock_INSTALL_DIR})
@@ -38,43 +26,25 @@ find_path(GMock_INCLUDE_DIR gmock/gmock.h
 )
 
 find_library(
-  GMock_LIBRARY_DEBUG NAMES gmockd
+  GMock_LIBRARY NAMES gmock
   HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
 
 find_library(
-  GMock_Main_LIBRARY_DEBUG NAMES gmock_maind
+  GMock_Main_LIBRARY NAMES gmock_main
   HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_main_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
 
-find_library(
-  GMock_LIBRARY_RELEASE NAMES gmock
-  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
-  PATH_SUFFIXES lib bin
-  ENV LIBRARY_PATH
-)
-
-find_library(
-  GMock_Main_LIBRARY_RELEASE NAMES gmock_main
-  HINTS ${gmock_search_dir} ${pc_gmock_LIBDIR} ${pc_gmock_main_LIBDIR} ${pc_gmock_LIBRARY_DIRS}
-  PATH_SUFFIXES lib bin
-  ENV LIBRARY_PATH
-)
-
-if(GMock_Main_LIBRARY_DEBUG OR GMock_Main_LIBRARY_RELEASE)
+if(GMock_Main_LIBRARY)
   set(GMock_Main_FOUND TRUE)
 endif()
 
-set(GMock_LIBRARIES_DEBUG ${GMock_LIBRARY_DEBUG})
-set(GMock_Main_LIBRARIES_DEBUG ${GMock_Main_LIBRARY_DEBUG})
-set(GMock_LIBRARIES_RELEASE ${GMock_LIBRARY_RELEASE})
-set(GMock_Main_LIBRARIES_RELEASE ${GMock_Main_LIBRARY_RELEASE})
-set(GMock_LIBRARIES ${GMock_LIBRARIES_${GMock_BUILD_TYPE}})
-set(GMock_Main_LIBRARIES ${GMock_Main_LIBRARIES_${GMock_BUILD_TYPE}})
+set(GMock_LIBRARIES ${GMock_LIBRARY})
+set(GMock_Main_LIBRARIES ${GMock_Main_LIBRARY})
 set(GMock_INCLUDE_DIRS ${GMock_INCLUDE_DIR})
 seT(GMock_VERSION ${pc_gmock_VERSION})
 

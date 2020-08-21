@@ -69,6 +69,11 @@ target_include_directories(Engine
     $<INSTALL_INTERFACE:include>
 )
 
+set_target_properties(Engine
+  PROPERTIES
+    COPY_LOCAL TRUE
+)
+
 if(MSVC)
   target_compile_options(Engine
     PRIVATE
@@ -106,7 +111,7 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    CoreCLR::nethost
+    Dotnet
     Freetype::Freetype
     Glad::GLAD
     GLFW::GLFW3
