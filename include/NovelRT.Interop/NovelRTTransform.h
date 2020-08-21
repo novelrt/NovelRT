@@ -10,9 +10,9 @@ extern "C" {
 #endif
 
 typedef struct {
-    NovelRTGeoVector2F _position;
+    NovelRTGeoVector2F position;
     NovelRTGeoVector2F _scale;
-    float _rotation;
+    float rotation;
 } NovelRTTransform;
 
 NovelRTGeoBounds NovelRT_Transform_getAABB(const NovelRTTransform transform);
