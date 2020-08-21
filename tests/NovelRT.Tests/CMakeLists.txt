@@ -62,6 +62,5 @@ add_custom_command(
     $<TARGET_FILE_DIR:Engine_Tests>
 )
 
-
-
-gtest_discover_tests(Engine_Tests)
+gtest_discover_tests(Engine_Tests
+  EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/")
