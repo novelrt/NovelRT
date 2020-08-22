@@ -26,7 +26,7 @@ extern "C" {
   NovelRTResult NovelRT_QuadTree_getBottomLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage);
   NovelRTResult NovelRT_QuadTree_getBottomRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage);
   NovelRTResult NovelRT_QuadTree_tryInsert(NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_QuadTree_tryRemove(NovelRTQuadTree const tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_QuadTree_tryRemove(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage);
   NovelRTResult NovelRT_QuadTree_getIntersectingPoints(const NovelRTQuadTree tree, NovelRTGeoBounds bounds, NovelRTPointVector* outputResultVector, const char** errorMessage);
   NovelRTResult NovelRT_PointVector_delete(NovelRTPointVector vector, const char** errorMessage);
   NovelRTResult NovelRT_PointVector_getSize(const NovelRTPointVector vector, size_t* outputSize, const char** errorMessage);

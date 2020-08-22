@@ -50,7 +50,7 @@ extern "C" {
 
     if(std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end()) { //TODO: This may prove to be a bottleneck later
       if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
+        *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
       }
 
       return NOVELRT_FAILURE;

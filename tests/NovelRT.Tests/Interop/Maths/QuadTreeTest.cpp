@@ -46,15 +46,28 @@ protected:
 
 };
 
-//TODO: Update all tests with return codes
 TEST_F(InteropQuadTreeTest, createReturnsValidHandle) {
   EXPECT_NE(reinterpret_cast<Maths::QuadTree*>(NovelRT_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT))), nullptr);
 }
 
-//TODO: This test really REALLY needs return codes.
-TEST_F(InteropQuadTreeTest, deleteReturnsSuccess) {
+TEST_F(InteropQuadTreeTest, deleteReturnsSuccessWhenGivenValidHandle) {
   NovelRTQuadTree tree = NovelRT_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
   EXPECT_EQ(NovelRT_QuadTree_delete(tree, nullptr), NOVELRT_SUCCESS);
+}
+
+TEST_F(InteropQuadTreeTest, deleteReturnsNullptrFailureWhenGivenNullptr) {
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_delete(nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), errorOutput);
+}
+
+TEST_F(InteropQuadTreeTest, deleteReturnsAlreadyDeletedOrRemovedFailureWhenPointIsBeingHeldOntoElsewhereAndHasAlreadyBeenDeletedFromCache) {
+  const char* errorOutput = nullptr;
+  auto handle = reinterpret_cast<Maths::QuadTree*>(NovelRT_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))->shared_from_this();
+  ASSERT_EQ(NovelRT_QuadTree_delete(reinterpret_cast<NovelRTQuadTree>(handle.get()), &errorOutput), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_QuadTree_delete(reinterpret_cast<NovelRTQuadTree>(handle.get()), &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsAlreadyDeletedOrRemoved(), errorOutput);
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsValidPointVectorHandleAndCanAlsoBeDeleted) {
@@ -65,6 +78,31 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsValidPointVectorHandleAn
   EXPECT_EQ(NovelRT_PointVector_delete(vec, nullptr), NOVELRT_SUCCESS);
 }
 
+TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenNullPtrForInput) {
+  NovelRTGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+  NovelRTPointVector outputVector = nullptr;
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getIntersectingPoints(nullptr, expectedBounds, &outputVector, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenNullPtrForOutput) {
+  NovelRTGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getIntersectingPoints(_quadTree, expectedBounds, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenNullPtrForBothInputAndOutput) {
+  NovelRTGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getIntersectingPoints(nullptr, expectedBounds, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
 TEST_F(InteropQuadTreeTest, getBoundsGetsCorrectBounds) {
   NovelRTGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
   NovelRTGeoBounds actualBounds = NovelRT_GeoBounds_zero();
@@ -73,13 +111,54 @@ TEST_F(InteropQuadTreeTest, getBoundsGetsCorrectBounds) {
   EXPECT_TRUE(checkBoundsForEquality(actualBounds, expectedBounds));
 }
 
+TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForInput) {
+  NovelRTGeoBounds outputBounds = NovelRT_GeoBounds_zero();
+  const char* errorOutput = nullptr;
+  ASSERT_EQ(NovelRT_QuadTree_getBounds(nullptr, &outputBounds, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForOutput) {
+  NovelRTGeoBounds outputBounds = NovelRT_GeoBounds_zero();
+  const char* errorOutput = nullptr;
+  ASSERT_EQ(NovelRT_QuadTree_getBounds(_quadTree, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForBothInputAndOutput) {
+  NovelRTGeoBounds outputBounds = NovelRT_GeoBounds_zero();
+  const char* errorOutput = nullptr;
+  ASSERT_EQ(NovelRT_QuadTree_getBounds(nullptr, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
 TEST_F(InteropQuadTreeTest, getPointCountReturnsZeroWhenTreeHasNoPoints) {
   size_t actualSize = 0;
   ASSERT_EQ(NovelRT_QuadTree_getPointCount(_quadTree, &actualSize, nullptr), NOVELRT_SUCCESS);
   EXPECT_EQ(actualSize, 0u);
 }
 
-TEST_F(InteropQuadTreeTest, getPointMethodsReturnNullptrWhenTreeHasNoChildren) {
+TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrForInput) {
+  size_t actualSize = 0;
+  const char* errorOutput = nullptr;
+  size_t size = 0;
+  ASSERT_EQ(NovelRT_QuadTree_getPointCount(nullptr, &actualSize, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  const char* errorOutput = nullptr;
+  ASSERT_EQ(NovelRT_QuadTree_getPointCount(_quadTree, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrForBothInputAndOutput) {
+  const char* errorOutput = nullptr;
+  ASSERT_EQ(NovelRT_QuadTree_getPointCount(nullptr, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getPointMethodsReturnsNullptrWhenTreeHasNoChildren) {
   NovelRTQuadTree topLeft = nullptr;
   NovelRTQuadTree topRight = nullptr;
   NovelRTQuadTree bottomLeft = nullptr;
@@ -113,6 +192,28 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex) {
   EXPECT_EQ(point3, nullptr);
 }
 
+TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForInput) {
+  NovelRTQuadTreePoint point = nullptr;
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getPoint(nullptr, 0, &point, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getPoint(_quadTree, 0, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForInputAndOutput) {
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_QuadTree_getPoint(nullptr, 0, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
 TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
   auto point0 = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   NovelRTBool result = NOVELRT_FALSE;
@@ -120,6 +221,31 @@ TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
   ASSERT_EQ(NovelRT_QuadTree_tryInsert(_quadTree, point0, &result, nullptr), NOVELRT_SUCCESS);
 
   EXPECT_TRUE(result);
+}
+
+TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInput) {
+  auto point0 = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  NovelRTBool result = NOVELRT_FALSE;
+  const char* errorOutput = nullptr;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryInsert(nullptr, point0, &result, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  auto point0 = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  const char* errorOutput = nullptr;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryInsert(_quadTree, point0, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInputAndOutput) {
+  auto point0 = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  const char* errorOutput = nullptr;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryInsert(nullptr, point0, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
 }
 
 TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
@@ -394,15 +520,22 @@ TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue) {
   ASSERT_EQ(NovelRT_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
-  NovelRTGeoBounds outputGeoBounds = NovelRT_GeoBounds_zero();
+  NovelRTGeoBounds inputGeoBounds = NovelRT_GeoBounds_zero();
   NovelRTPointVector resultVector = nullptr;
   size_t outputVectorSize = 0u;
 
-  ASSERT_EQ(NovelRT_QuadTree_getBounds(_quadTree, &outputGeoBounds, nullptr), NOVELRT_SUCCESS);
-  ASSERT_EQ(NovelRT_QuadTree_getIntersectingPoints(_quadTree, outputGeoBounds, &resultVector, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_QuadTree_getBounds(_quadTree, &inputGeoBounds, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_QuadTree_getIntersectingPoints(_quadTree, inputGeoBounds, &resultVector, nullptr), NOVELRT_SUCCESS);
   ASSERT_EQ(NovelRT_PointVector_getSize(resultVector, &outputVectorSize, nullptr), NOVELRT_SUCCESS);
 
   EXPECT_EQ(outputVectorSize, 5u);
+}
+
+TEST_F(InteropQuadTreeTest, PointVector_deleteReturnsNullptrFailureWhenGivenNullptr) {
+  const char* errorOutput = nullptr;
+
+  ASSERT_EQ(NovelRT_PointVector_delete(nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
@@ -477,6 +610,31 @@ TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
 
   ASSERT_EQ(NovelRT_QuadTree_tryRemove(_quadTree, point0, &outputBool, nullptr), NOVELRT_SUCCESS);
   EXPECT_FALSE(outputBool);
+}
+
+TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInput) {
+  auto point = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  const char* errorOutput = nullptr;
+  NovelRTBool outputBool = NOVELRT_FAILURE;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryRemove(nullptr, point, &outputBool, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  auto point = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  const char* errorOutput = nullptr;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryRemove(_quadTree, point, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
+}
+
+TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInputAndOutput) {
+  auto point = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+  const char* errorOutput = nullptr;
+  
+  ASSERT_EQ(NovelRT_QuadTree_tryRemove(nullptr, point, nullptr, &errorOutput), NOVELRT_FAILURE);
+  EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());
 }
 
 TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5) {

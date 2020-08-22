@@ -64,7 +64,7 @@ extern "C" {
    }
   
   NovelRTResult NovelRT_QuadTree_getPointCount(const NovelRTQuadTree tree, size_t* outputSize, const char** errorMessage) {
-     if(tree == nullptr) {
+     if(tree == nullptr || outputSize == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
        }
@@ -137,7 +137,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_tryInsert(NovelRTQuadTree const tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_QuadTree_tryInsert(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
      if(tree == nullptr || outputResult == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -152,7 +152,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_tryRemove(NovelRTQuadTree const tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_QuadTree_tryRemove(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
      if(tree == nullptr || outputResult == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
