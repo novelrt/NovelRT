@@ -14,7 +14,7 @@ TEST(InteropGeoMatrix4x4FTest, getDefaultIdentityReturnsCorrectIdentityMatrix) {
   EXPECT_EQ(Maths::GeoMatrix4x4<float>::getDefaultIdentity(), reinterpret_cast<Maths::GeoMatrix4x4<float> &>(mat4));
 }
 
-TEST(IntertopGeoMatrix4x4FTest, isNaNReturnsTrueWhenGivenNaNMatrix) {
+TEST(InteropGeoMatrix4x4FTest, isNaNReturnsTrueWhenGivenNaNMatrix) {
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_isNaN(NovelRTGeoMatrix4x4F{NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN)}));
 }
 
