@@ -85,7 +85,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
 }
 
-TEST(InteropGeoMatrix4x4FTest, subtrctMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
+TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), nullptr, &errorMessage), NOVELRT_FAILURE);
