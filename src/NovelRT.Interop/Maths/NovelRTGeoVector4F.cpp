@@ -39,7 +39,7 @@ extern "C" {
     return NovelRT_GeoVector4F_uniform(1.0f);
   }
 
-  NovelRTResult NovelRT_GeoVector4F_rotateToAngleAroundPoint(NovelRTGeoVector4F* const vector, float angleRotationValue, NovelRTGeoVector3F point, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_rotateToAngleAroundPoint(NovelRTGeoVector4F* vector, float angleRotationValue, NovelRTGeoVector3F point, const char** errorMessage) {
     if(vector == nullptr) {
       if(errorMessage != nullptr) {
       *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -162,7 +162,7 @@ extern "C" {
     return NOVELRT_FALSE;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -188,7 +188,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -213,7 +213,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -238,7 +238,7 @@ extern "C" {
     return NOVELRT_SUCCESS; 
   }
 
-  NovelRTResult NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -271,7 +271,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -295,7 +295,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -319,7 +319,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -343,7 +343,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -375,7 +375,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -399,7 +399,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -423,7 +423,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -447,7 +447,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -479,7 +479,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -502,7 +502,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -525,7 +525,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -548,7 +548,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage) {
+  NovelRTResult NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage) {
     if(lhs == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();

@@ -35,22 +35,22 @@ extern "C" {
   NovelRTBool NovelRT_GeoVector4F_lessThanOrEqualTo(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
   NovelRTBool NovelRT_GeoVector4F_greaterThan(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
   NovelRTBool NovelRT_GeoVector4F_greaterThanOrEqualTo(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
-  NovelRTResult NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* const outputResult, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* const lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage);
-  NovelRTResult NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* const lhs, float rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
+  NovelRTResult NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
   
 #ifdef __cplusplus
 }
