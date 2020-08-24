@@ -251,7 +251,7 @@ extern "C" {
     }
     
     Maths::GeoMatrix4x4<float>& cFirst = reinterpret_cast<Maths::GeoMatrix4x4<float>&>(lhs);
-    Maths::GeoMatrix4x4<float> resultToReturn = cFirst - rhs;
+    Maths::GeoMatrix4x4<float> resultToReturn = cFirst * rhs;
     *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
 
     return NOVELRT_SUCCESS;
