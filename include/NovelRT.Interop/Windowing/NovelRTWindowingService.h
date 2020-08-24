@@ -12,7 +12,7 @@ extern "C" {
 
 typedef struct WindowingServiceHandle* NovelRTWindowingService;
 
-NovelRTWindowingService WindowingService_create();
+NovelRTWindowingService NovelRT_WindowingService_create();
 
 NovelRTResult NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled, const char** errorMessage);
 NovelRTResult NovelRT_WindowingService_tearDown(NovelRTWindowingService service, const char** errorMessage);
