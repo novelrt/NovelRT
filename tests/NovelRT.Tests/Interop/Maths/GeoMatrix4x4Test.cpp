@@ -272,3 +272,122 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNaNFailureWhenGivenNan
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignMatrix(&nanInput, nanInput, &errorMessage), NOVELRT_FAILURE);
   EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
 }
+
+TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly) {
+  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::one(), Maths::GeoVector4<float>::one(), Maths::GeoVector4<float>::one(), Maths::GeoVector4<float>::one());
+  NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+  
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+}
+
+TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  const char* errorMessage = nullptr;
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanMatrixForLhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanFloatForRhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanValuesForBoth) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly) {
+  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero());
+  NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+  
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+}
+
+TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  const char* errorMessage = nullptr;
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanMatrixForLhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanFloatForRhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanValuesForBoth) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+//TODO: Finish this next lot. I'm taking a break to beat scrubs up at Mu-12 in BlazBlue - Ruby
+TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly) {
+  Maths::GeoMatrix4x4<float> inputMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
+  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f));
+  NovelRTGeoMatrix4x4F resultMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+  
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), &resultMatrix, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), resultMatrix));
+}
+
+TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
+  const char* errorMessage = nullptr;
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), nullptr, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNullptr(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrixForLhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, NovelRT_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrixForRhs) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
+
+TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrixForBoth) {
+  const char* errorMessage = nullptr;
+  NovelRTGeoMatrix4x4F outputThatDoesntGetUsed = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
+
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN), NovelRT_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_EQ(NovelRT_getErrMsgIsNaN(), errorMessage); 
+}
