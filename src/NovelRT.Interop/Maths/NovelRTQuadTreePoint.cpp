@@ -12,12 +12,12 @@ extern "C" {
 #endif
 
   NovelRTQuadTreePoint NovelRT_QuadTreePoint_create(NovelRTGeoVector2F position) {
-    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2<float>&>(position)));
+    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2F&>(position)));
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
   NovelRTQuadTreePoint NovelRT_QuadTreePoint_createFromFloat(float x, float y) {
-    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2<float>(x, y)));
+    _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2F(x, y)));
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
@@ -30,7 +30,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
+    const Maths::GeoVector2F& pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
     NovelRTGeoVector2F returnValue = reinterpret_cast<const NovelRTGeoVector2F&>(pos);
     *outputPosition = returnValue;
 

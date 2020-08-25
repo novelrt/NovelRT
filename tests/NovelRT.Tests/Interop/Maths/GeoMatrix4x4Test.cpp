@@ -11,7 +11,7 @@ using namespace NovelRT::Maths;
 
 TEST(InteropGeoMatrix4x4FTest, getDefaultIdentityReturnsCorrectIdentityMatrix) {
   NovelRTGeoMatrix4x4F mat4 = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
-  EXPECT_EQ(Maths::GeoMatrix4x4<float>::getDefaultIdentity(), reinterpret_cast<Maths::GeoMatrix4x4<float> &>(mat4));
+  EXPECT_EQ(Maths::GeoMatrix4x4F::getDefaultIdentity(), reinterpret_cast<Maths::GeoMatrix4x4F &>(mat4));
 }
 
 TEST(InteropGeoMatrix4x4FTest, isNaNReturnsTrueWhenGivenNaNMatrix) {
@@ -39,7 +39,7 @@ TEST(InteropGeoMatrix4x4FTest, notEqualsOperatorReturnsFalseWhenMatricesAreEqual
 }
 
 TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity() + Maths::GeoMatrix4x4<float>::getDefaultIdentity();
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F::getDefaultIdentity() + Maths::GeoMatrix4x4F::getDefaultIdentity();
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), &actualMatrix, nullptr), NOVELRT_SUCCESS);
@@ -78,7 +78,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNaNFailureWhenGivenNanMatrixForBo
 }
 
 TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero());
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero());
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), &actualMatrix, nullptr), NOVELRT_SUCCESS);
@@ -117,8 +117,8 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNaNFailureWhenGivenNanMatrix
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> inputMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f));
+  Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
   NovelRTGeoMatrix4x4F resultMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), &resultMatrix, nullptr), NOVELRT_SUCCESS);
@@ -158,7 +158,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrix
 
 TEST(InteropGeoMatrix4x4FTest, addAssignMatrixAddsMatricesTogetherCorrectly) {
   NovelRTGeoMatrix4x4F inputMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity() + Maths::GeoMatrix4x4<float>::getDefaultIdentity();
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F::getDefaultIdentity() + Maths::GeoMatrix4x4F::getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignMatrix(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), inputMatrix));
@@ -235,8 +235,8 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixReturnsNaNFailureWhenGivenNan
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixMultipliesMatricesTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> inputMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f), Maths::GeoVector4<float>::uniform(16.0f));
+  Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignMatrix(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix)));
@@ -274,7 +274,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNaNFailureWhenGivenNan
 }
 
 TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
@@ -313,7 +313,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanValuesForBot
 }
 
 TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero(), Maths::GeoVector4<float>::zero());
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero());
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
@@ -352,8 +352,8 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanValuesF
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyFloatMultipliesMatrixAndFloatTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> inputMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f));
+  Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
   NovelRTGeoMatrix4x4F resultMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyFloat(reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 2.0f, &resultMatrix, nullptr), NOVELRT_SUCCESS);
@@ -393,7 +393,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNaNFailureWhenGivenNanValuesF
 
 TEST(InteropGeoMatrix4x4FTest, addAssignFloatAddsMatrixAndFloatTogetherCorrectly) {
   NovelRTGeoMatrix4x4F inputMatrix { NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f) };
-  Maths::GeoMatrix4x4<float> expectedMatrix = reinterpret_cast<Maths::GeoMatrix4x4<float>&>(inputMatrix) + reinterpret_cast<Maths::GeoMatrix4x4<float>&>(inputMatrix);
+  Maths::GeoMatrix4x4F expectedMatrix = reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix) + reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix);
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignFloat(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 1.0f, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), inputMatrix));
@@ -470,8 +470,8 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatReturnsNaNFailureWhenGivenNanV
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatMultipliesMatrixAndFloatTogetherCorrectly) {
-  Maths::GeoMatrix4x4<float> inputMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f), Maths::GeoVector4<float>::uniform(2.0f));
-  Maths::GeoMatrix4x4<float> expectedMatrix = Maths::GeoMatrix4x4<float>(Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f), Maths::GeoVector4<float>::uniform(4.0f));
+  Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+  Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignFloat(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 2.0f, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix)));

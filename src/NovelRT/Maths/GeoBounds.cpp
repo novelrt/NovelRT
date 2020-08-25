@@ -3,12 +3,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Maths {
-  GeoBounds::GeoBounds(const GeoVector2<float>& position, const GeoVector2<float>& size, float rotation) :
+  GeoBounds::GeoBounds(const GeoVector2F& position, const GeoVector2F& size, float rotation) :
     _position(position),
     _rotation(rotation),
     _size(size) { }
 
-  bool GeoBounds::pointIsWithinBounds(const GeoVector2<float>& point) const {
+  bool GeoBounds::pointIsWithinBounds(const GeoVector2F& point) const {
     auto corner0 = getCornerInWorldSpace(0);
     auto corner2 = getCornerInWorldSpace(2);
 
@@ -32,21 +32,21 @@ namespace NovelRT::Maths {
     return result;
   }
 
-  GeoVector2<float> GeoBounds::getCornerInLocalSpace(int index) const {
-    GeoVector2<float> returnValue;
+  GeoVector2F GeoBounds::getCornerInLocalSpace(int index) const {
+    GeoVector2F returnValue;
     auto boundsSize = size();
     switch (index) {
     case 0:
-      returnValue = GeoVector2<float>(-(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
+      returnValue = GeoVector2F(-(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
       break;
     case 1:
-      returnValue = GeoVector2<float>(+(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
+      returnValue = GeoVector2F(+(boundsSize.getX() / 2), -(boundsSize.getY() / 2));
       break;
     case 2:
-      returnValue = GeoVector2<float>(+(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
+      returnValue = GeoVector2F(+(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
       break;
     case 3:
-      returnValue = GeoVector2<float>(-(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
+      returnValue = GeoVector2F(-(boundsSize.getX() / 2), +(boundsSize.getY() / 2));
       break;
     }
 
@@ -54,23 +54,23 @@ namespace NovelRT::Maths {
     return returnValue;
   }
 
-  GeoVector2<float> GeoBounds::getCornerInWorldSpace(int index) const {
+  GeoVector2F GeoBounds::getCornerInWorldSpace(int index) const {
     return _position + getCornerInLocalSpace(index);
   }
 
-  const GeoVector2<float>& GeoBounds::position() const {
+  const GeoVector2F& GeoBounds::position() const {
     return _position;
   }
 
-  GeoVector2<float>& GeoBounds::position() {
+  GeoVector2F& GeoBounds::position() {
     return _position;
   }
 
-  const GeoVector2<float>& GeoBounds::size() const {
+  const GeoVector2F& GeoBounds::size() const {
     return _size;
   }
 
-  GeoVector2<float>& GeoBounds::size() {
+  GeoVector2F& GeoBounds::size() {
     return _size;
   }
 
@@ -82,7 +82,7 @@ namespace NovelRT::Maths {
     return _rotation;
   }
 
-  GeoVector2<float> GeoBounds::getExtents() const {
+  GeoVector2F GeoBounds::getExtents() const {
     return _size / 2.0f;
   }
 }

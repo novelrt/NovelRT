@@ -52,7 +52,7 @@ NovelRTResult NovelRT_InteractionService_setScreenSize(const NovelRTInteractionS
         }
         return NOVELRT_FAILURE;
   }
-  auto vector = reinterpret_cast<Maths::GeoVector2<float>&>(value);
+  auto vector = reinterpret_cast<Maths::GeoVector2F&>(value);
   servicePtr->setScreenSize(vector);
   return NOVELRT_SUCCESS;
 }

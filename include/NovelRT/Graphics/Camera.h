@@ -12,40 +12,40 @@ namespace NovelRT::Graphics {
     friend class RenderingService;
 
   private:
-    Maths::GeoMatrix4x4<float> _viewMatrix;
-    Maths::GeoMatrix4x4<float> _projectionMatrix;
-    Utilities::Lazy<Maths::GeoMatrix4x4<float>> _cameraUboMatrix;
-    Maths::GeoMatrix4x4<float> generateUboMatrix();
+    Maths::GeoMatrix4x4F _viewMatrix;
+    Maths::GeoMatrix4x4F _projectionMatrix;
+    Utilities::Lazy<Maths::GeoMatrix4x4F> _cameraUboMatrix;
+    Maths::GeoMatrix4x4F generateUboMatrix();
     CameraFrameState _cameraFrameState;
-    std::function<void(Camera*, const Maths::GeoVector2<float>&)> _forceResizeCallback;
+    std::function<void(Camera*, const Maths::GeoVector2F&)> _forceResizeCallback;
 
     void initialiseCameraForFrame();
-    void forceResize(const Maths::GeoVector2<float>& windowSize);
+    void forceResize(const Maths::GeoVector2F& windowSize);
 
   public:
     Camera();
 
-    inline Maths::GeoMatrix4x4<float> getViewMatrix() const {
+    inline Maths::GeoMatrix4x4F getViewMatrix() const {
       return _viewMatrix;
     }
 
-    inline void setViewMatrix(const Maths::GeoMatrix4x4<float>& value) {
+    inline void setViewMatrix(const Maths::GeoMatrix4x4F& value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _viewMatrix = value;
     }
 
-    inline Maths::GeoMatrix4x4<float> getProjectionMatrix() const {
+    inline Maths::GeoMatrix4x4F getProjectionMatrix() const {
       return _projectionMatrix;
     }
 
-    inline void setProjectionMatrix(const Maths::GeoMatrix4x4<float>& value) {
+    inline void setProjectionMatrix(const Maths::GeoMatrix4x4F& value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _projectionMatrix = value;
     }
 
-    inline Maths::GeoMatrix4x4<float> getCameraUboMatrix() {
+    inline Maths::GeoMatrix4x4F getCameraUboMatrix() {
       return _cameraUboMatrix.getActual();
     }
 
@@ -53,23 +53,23 @@ namespace NovelRT::Graphics {
       return _cameraFrameState;
     }
 
-    inline const std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() const {
+    inline const std::function<void(Camera*, const Maths::GeoVector2F&)>& forceResizeCallback() const {
       return _forceResizeCallback;
     }
 
-    inline std::function<void(Camera*, const Maths::GeoVector2<float>&)>& forceResizeCallback() {
+    inline std::function<void(Camera*, const Maths::GeoVector2F&)>& forceResizeCallback() {
       return _forceResizeCallback;
     }
 
     /**
      * Creates an orthographic camera using default settings and the given window size.
      */
-    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize);
+    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2F& windowSize);
 
     /**
      * Creates a perspective camera using default settings and the given window size.
      */
-    static std::unique_ptr<Camera> createDefaultPerspectiveProjection(const Maths::GeoVector2<float>& windowSize);
+    static std::unique_ptr<Camera> createDefaultPerspectiveProjection(const Maths::GeoVector2F& windowSize);
   };
 }
 

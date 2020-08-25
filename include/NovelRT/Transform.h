@@ -13,8 +13,8 @@ namespace NovelRT {
    */
   class Transform {
   protected:
-    Maths::GeoVector2<float> _position;
-    Maths::GeoVector2<float> _scale;
+    Maths::GeoVector2F _position;
+    Maths::GeoVector2F _scale;
     float _rotation;
   public:
     /**
@@ -23,7 +23,7 @@ namespace NovelRT {
      * @param rotation The rotation, in degrees, which represents the rotation of the transform.
      * @param scale The scale which represents the size of the transform.
      */
-    Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept;
+    Transform(const Maths::GeoVector2F& position, float rotation, const Maths::GeoVector2F& scale) noexcept;
     /**
      * Creates a new Transform with the default values.
      */
@@ -34,7 +34,7 @@ namespace NovelRT {
      */
     inline Maths::GeoBounds getAABB() const {
       auto scale = fmaxf(_scale.getX(), _scale.getY());
-      return Maths::GeoBounds(_position, Maths::GeoVector2(scale, scale), 0);
+      return Maths::GeoBounds(_position, Maths::GeoVector2F(scale, scale), 0);
     }
 
     /**
@@ -47,14 +47,14 @@ namespace NovelRT {
     /**
      * Gets the position of this transform. This is the read-only version.
      */
-    inline const Maths::GeoVector2<float>& position() const {
+    inline const Maths::GeoVector2F& position() const {
       return _position;
     }
 
     /**
      * Gets the position of this transform.
      */
-    inline Maths::GeoVector2<float>& position() {
+    inline Maths::GeoVector2F& position() {
       return _position;
     }
 
@@ -75,14 +75,14 @@ namespace NovelRT {
     /**
      * Gets the scale of this transform. This is the read-only version.
      */
-    inline const Maths::GeoVector2<float>& scale() const {
+    inline const Maths::GeoVector2F& scale() const {
       return _scale;
     }
 
     /**
      * Gets the scale of this transform.
      */
-    inline Maths::GeoVector2<float>& scale() {
+    inline Maths::GeoVector2F& scale() {
       return _scale;
     }
   };

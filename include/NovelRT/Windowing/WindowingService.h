@@ -17,7 +17,7 @@ namespace NovelRT::Windowing {
     struct MouseClickEventArgs {
       int button = 0;
       int action = 0;
-      Maths::GeoVector2<float> mousePosition = Maths::GeoVector2<float>::zero();
+      Maths::GeoVector2F mousePosition = Maths::GeoVector2F::zero();
     };
 
     struct KeyboardButtonChangeEventArgs {
@@ -26,13 +26,13 @@ namespace NovelRT::Windowing {
     };
 
 
-    Utilities::Event<Maths::GeoVector2<float>> WindowResized;
+    Utilities::Event<Maths::GeoVector2F> WindowResized;
     Utilities::Event<> WindowTornDown;
     Utilities::Event<MouseClickEventArgs> MouseButtonClicked;
     Utilities::Event<KeyboardButtonChangeEventArgs> KeyboardButtonChanged;
 
   private:   
-    Maths::GeoVector2<float> _windowSize;
+    Maths::GeoVector2F _windowSize;
     std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
     std::string _windowTitle;
@@ -64,13 +64,13 @@ namespace NovelRT::Windowing {
       return glfwSetWindowTitle(getWindow(), _windowTitle.c_str());
     }
 
-    inline void setWindowSize(const Maths::GeoVector2<float>& value) {
+    inline void setWindowSize(const Maths::GeoVector2F& value) {
       _windowSize = value;
       glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.getX()), static_cast<int32_t>(value.getY()));
       WindowResized(_windowSize);
     }
 
-    inline Maths::GeoVector2<float> getWindowSize() const {
+    inline Maths::GeoVector2F getWindowSize() const {
       return _windowSize;
     }
   };
