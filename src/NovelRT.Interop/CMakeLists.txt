@@ -3,6 +3,8 @@ set(INTEROP_SOURCES
   NovelRTTransform.cpp
   NovelRTInteropUtils.cpp
 
+  Audio/NovelRTAudioService.cpp
+
   Input/NovelRTBasicInteractionRect.cpp
   Input/NovelRTInteractionService.cpp
   Input/NovelRTKeyStateFrameChangeLog.cpp
