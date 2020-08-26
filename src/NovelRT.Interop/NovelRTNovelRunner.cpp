@@ -86,6 +86,22 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
+
+//I don't like this but using Opaque Handles was breaking it....
+  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner* runner, void(*ptr)(), const char** errorMessage) {
+    if (runner == nullptr || ptr == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+    //Disabled -W-unused-parameter here because I don't want delta being touched with every function ptr being added.
+    cRunner->Update += [&](NovelRT::Timing::Timestamp delta){ ptr(); };
+    return NOVELRT_SUCCESS;
+  }
+
 #ifdef __cplusplus
 }
 #endif

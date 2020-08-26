@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 typedef struct BasicInteractionRectHandle* NovelRTBasicInteractionRect;
-typedef struct FunctionHandle* FunctionPointer;
 
 NovelRTResult NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage);
 NovelRTResult NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform, const char** errorMessage);
@@ -23,7 +22,7 @@ NovelRTResult NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTB
 NovelRTResult NovelRT_Input_BasicInteractionRect_validateInteractionPrimeter(NovelRTBasicInteractionRect object, const NovelRTGeoVector2F mousePosition, const char** errorMessage);
 NovelRTResult NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue, const char** errorMessage);
 NovelRTResult NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage);
+NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage);
 //NovelRTResult NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage);
 
 #ifdef __cplusplus

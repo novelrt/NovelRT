@@ -4,15 +4,29 @@
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 
+const char* error = " ";
+NovelRTResult res = NOVELRT_SUCCESS;
+NovelRTBool booleanResult = NOVELRT_TRUE;
+NovelRTAudioService audio = NULL;
+NovelRTInteractionService input = NULL;
+
+void inputTest() {
+    NovelRTKeyStateFrameChangeLog in = NULL;
+    res = NovelRT_InteractionService_getKeyState(input, W, &in, &error);
+    if (res == NOVELRT_SUCCESS) {
+        if (NovelRT_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NOVELRT_TRUE) {
+            fprintf(stdout, "W was pressed! \n");
+        }
+    }
+    else {
+        fprintf(stderr, error);
+    }
+}
+
 int main() {
-    const char* error = " ";
-    NovelRTResult res = NOVELRT_SUCCESS;
-    NovelRTBool booleanResult = NOVELRT_TRUE;
-    
     
     NovelRTNovelRunner* runner = NovelRunner_create(0);
-    NovelRTAudioService audio = NULL;
-    NovelRTInteractionService input = NULL;
+    
 
     res = NovelRT_NovelRunner_getAudioService(runner, &audio, &error);
     if (res == NOVELRT_FAILURE) {
@@ -43,7 +57,13 @@ int main() {
     }
 
 
+    void (*test)();
+    test = &inputTest;
+
+    NovelRT_NovelRunner_addUpdate(runner, test, &error);
+
     NovelRunner_runNovel(runner);
 
     return 0;
 }
+

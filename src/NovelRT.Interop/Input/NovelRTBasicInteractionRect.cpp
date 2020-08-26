@@ -126,7 +126,7 @@ NovelRTResult NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicIn
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage) {
+NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage) {
     if (object == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -135,8 +135,7 @@ NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInte
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    std::function<void()> functionPtr = reinterpret_cast<std::function<void()>&>(ptr);
-    obj->Interacted += functionPtr;
+    obj->Interacted += ptr;
     return NOVELRT_SUCCESS;
 }
 

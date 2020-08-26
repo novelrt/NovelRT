@@ -22,6 +22,8 @@ extern "C" {
   
   NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner* runner, NovelRTAudioService* outputService, const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner* runner, NovelRTInteractionService* outputService, const char** errorMessage);
+
+  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner* runner, void(*ptr)(), const char** errorMessage);
 // /// Gets the Rendering Service associated with this Runner.
 //     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
 //     /// Gets the Interaction Service associated with this Runner
