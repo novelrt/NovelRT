@@ -7,8 +7,7 @@ extern "C" {
 #endif
 
 //Mapped to GLFW for now
-enum NovelRTKeyCode 
-{
+typedef enum {
     Nothing = -1,
     Enter = 257,
     EscapeKey = 256,
@@ -143,7 +142,7 @@ enum NovelRTKeyCode
     MouseButtonEight = 7,
     FirstMouseButton = LeftMouseButton,
     LastMouseButton = MouseButtonEight
-};
+}  NovelRTKeyCode;
 
 #ifdef __cplusplus
 }

@@ -6,12 +6,12 @@
 extern "C" {
 #endif
 
-enum NovelRTKeyState {
+typedef enum {
     Idle = -1,
     KeyUp = 0,
     KeyDown = 1,
     KeyDownHeld = 2,
-};
+}  NovelRTKeyState;
 
 #ifdef __cplusplus
 }
