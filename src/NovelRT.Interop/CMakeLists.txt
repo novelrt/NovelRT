@@ -1,5 +1,5 @@
 set(INTEROP_SOURCES
-  #NovelRunner_t.cpp
+  NovelRTNovelRunner.cpp
   NovelRTTransform.cpp
   NovelRTInteropUtils.cpp
 
