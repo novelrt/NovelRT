@@ -12,8 +12,8 @@ static const float TEST_WIDTH = 1920.0f;
 static const float TEST_HEIGHT = 1080.0f;
 
 NovelRTGeoBounds getCenteredBoundsC(float width, float height) {
-  auto size = GeoVector2<float>(width, height);
-  auto position = GeoVector2<float>(0, 0);
+  auto size = GeoVector2F(width, height);
+  auto position = GeoVector2F(0, 0);
   GeoBounds* result = new GeoBounds(position, size, 0);
   return reinterpret_cast<NovelRTGeoBounds&>(*result);
 }

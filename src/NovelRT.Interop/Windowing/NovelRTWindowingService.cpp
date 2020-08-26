@@ -73,7 +73,7 @@ NovelRTResult NovelRT_WindowingService_setWindowSize(NovelRTWindowingService ser
         }
         return NOVELRT_FAILURE;
     }
-    servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2<float>*>(&value));
+    servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2F*>(&value));
     return NOVELRT_SUCCESS;
 }
 

@@ -20,12 +20,12 @@ namespace NovelRT::Input {
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
     std::array<std::map<KeyCode, KeyStateFrameChangeLog>, INPUT_BUFFER_COUNT> _keyStates;
-    Maths::GeoVector2<float> _screenSize;
-    Maths::GeoVector2<float> _cursorPosition;
+    Maths::GeoVector2F _screenSize;
+    Maths::GeoVector2F _cursorPosition;
     LoggingService _logger;
     void processKeyState(KeyCode code, KeyState state);
     void processKeyStates();
-    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
+    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2F& mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
@@ -37,7 +37,7 @@ namespace NovelRT::Input {
 
     void executeClickedInteractable();
 
-    inline void setScreenSize(const Maths::GeoVector2<float>& value) noexcept {
+    inline void setScreenSize(const Maths::GeoVector2F& value) noexcept {
       _screenSize = value;
     }
 

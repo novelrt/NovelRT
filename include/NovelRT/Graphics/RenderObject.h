@@ -13,8 +13,8 @@ namespace NovelRT::Graphics {
     virtual void drawObject() = 0;
     virtual void configureObjectBuffers();
     static GLuint generateStandardBuffer();
-    Maths::GeoMatrix4x4<float> generateViewData();
-    Maths::GeoMatrix4x4<float> generateCameraBlock();
+    Maths::GeoMatrix4x4F generateViewData();
+    Maths::GeoMatrix4x4F generateCameraBlock();
 
     Utilities::Lazy<GLuint> _vertexBuffer;
     Utilities::Lazy<GLuint> _vertexArrayObject;
@@ -22,7 +22,7 @@ namespace NovelRT::Graphics {
     std::vector<GLfloat> _vertexBufferData;
     bool _bufferInitialised;
     std::weak_ptr<Camera> _camera;
-    Utilities::Lazy<Maths::GeoMatrix4x4<float>> _finalViewMatrixData;
+    Utilities::Lazy<Maths::GeoMatrix4x4F> _finalViewMatrixData;
 
   public:
     RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera);

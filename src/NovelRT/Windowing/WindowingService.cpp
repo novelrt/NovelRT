@@ -4,7 +4,7 @@
 
 namespace NovelRT::Windowing {
   WindowingService::WindowingService() noexcept :
-    WindowResized(Utilities::Event<Maths::GeoVector2<float>>()),
+    WindowResized(Utilities::Event<Maths::GeoVector2F>()),
     WindowTornDown(Utilities::Event<>()),
     MouseButtonClicked(Utilities::Event<MouseClickEventArgs>()),
     KeyboardButtonChanged(Utilities::Event<KeyboardButtonChangeEventArgs>()),
@@ -106,10 +106,10 @@ namespace NovelRT::Windowing {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
-      thisPtr->_windowSize = Maths::GeoVector2<float>(static_cast<float>(w), static_cast<float>(h));
+      thisPtr->_windowSize = Maths::GeoVector2F(static_cast<float>(w), static_cast<float>(h));
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
       thisPtr->WindowResized(thisPtr->_windowSize); });
-    _windowSize = Maths::GeoVector2<float>(static_cast<float>(wData), static_cast<float>(hData));
+    _windowSize = Maths::GeoVector2F(static_cast<float>(wData), static_cast<float>(hData));
 
     glfwSetMouseButtonCallback(_window.get(), [](auto targetWindow, auto mouseButton, auto action, auto /*mods*/) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
@@ -117,7 +117,7 @@ namespace NovelRT::Windowing {
 
       double x = 0, y = 0;
       glfwGetCursorPos(targetWindow, &x, &y);
-      thisPtr->MouseButtonClicked(MouseClickEventArgs{ mouseButton, action, Maths::GeoVector2<float>((float)x, (float)y) });
+      thisPtr->MouseButtonClicked(MouseClickEventArgs{ mouseButton, action, Maths::GeoVector2F((float)x, (float)y) });
       });
 
 

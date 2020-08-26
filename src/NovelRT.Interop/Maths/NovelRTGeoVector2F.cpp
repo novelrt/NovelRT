@@ -54,16 +54,16 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(*vector);
-    const Maths::GeoVector2<float>& cPoint = reinterpret_cast<const Maths::GeoVector2<float>&>(point);
+    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*vector);
+    const Maths::GeoVector2F& cPoint = reinterpret_cast<const Maths::GeoVector2F&>(point);
     cVector.rotateToAngleAroundPoint(angleRotationValue, cPoint);
 
     return NOVELRT_SUCCESS;
   }
 
   NovelRTBool NovelRT_GeoVector2F_epsilonEquals(NovelRTGeoVector2F vector, NovelRTGeoVector2F other, NovelRTGeoVector2F epsilonValue) {
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector); const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(other);
-    const Maths::GeoVector2<float>& cEpsilonValue = reinterpret_cast<const Maths::GeoVector2<float>&>(epsilonValue);
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector); const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(other);
+    const Maths::GeoVector2F& cEpsilonValue = reinterpret_cast<const Maths::GeoVector2F&>(epsilonValue);
     
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
       return NOVELRT_TRUE;
@@ -77,8 +77,8 @@ extern "C" {
       return NovelRT_GeoVector2F_getNaN();
     }
     
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
-    Maths::GeoVector2<float> normal = cVector.getNormalised();
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
+    Maths::GeoVector2F normal = cVector.getNormalised();
     return reinterpret_cast<NovelRTGeoVector2F&>(normal);
   }
 
@@ -87,7 +87,7 @@ extern "C" {
       return NAN;
     }
 
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
     return cVector.getLength();
   }
 
@@ -96,13 +96,13 @@ extern "C" {
       return NAN;
     } 
 
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(vector);
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
     return cVector.getMagnitude();
   }
 
   NovelRTBool NovelRT_GeoVector2F_equal(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst == cOther) {
       return NOVELRT_TRUE;
     }
@@ -111,8 +111,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_notEqual(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst != cOther) {
       return NOVELRT_TRUE;
     }
@@ -121,8 +121,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_lessThan(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst < cOther) {
       return NOVELRT_TRUE;
     }
@@ -131,8 +131,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_lessThanOrEqualTo(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst <= cOther) {
       return NOVELRT_TRUE;
     }
@@ -141,8 +141,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_greaterThan(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst > cOther) {
       return NOVELRT_TRUE;
     }
@@ -151,8 +151,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_greaterThanOrEqualTo(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     if(cFirst >= cOther) {
       return NOVELRT_TRUE;
     }
@@ -177,10 +177,10 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     
-    Maths::GeoVector2<float> result = cFirst + cOther;
+    Maths::GeoVector2F result = cFirst + cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -203,9 +203,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
-    Maths::GeoVector2<float> result = cFirst - cOther;
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F result = cFirst - cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -228,9 +228,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
-    Maths::GeoVector2<float> result = cFirst * cOther;
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F result = cFirst * cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS; 
@@ -261,9 +261,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cFirst = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
-    Maths::GeoVector2<float> result = cFirst / cOther;
+    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F result = cFirst / cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -286,8 +286,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    Maths::GeoVector2<float> result = cVector + rhs;
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F result = cVector + rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -310,8 +310,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float> cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    Maths::GeoVector2<float> result = cVector - rhs;
+    const Maths::GeoVector2F cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F result = cVector - rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -334,8 +334,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    Maths::GeoVector2<float> result = cVector * rhs;
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F result = cVector * rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -366,8 +366,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2<float>& cVector = reinterpret_cast<const Maths::GeoVector2<float>&>(lhs);
-    Maths::GeoVector2<float> result = cVector / rhs;
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F result = cVector / rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
     return NOVELRT_SUCCESS;
@@ -390,8 +390,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cFirst = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     cFirst += cOther;
 
     return NOVELRT_SUCCESS;
@@ -414,8 +414,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cFirst = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     cFirst -= cOther;
 
     return NOVELRT_SUCCESS;
@@ -438,8 +438,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cFirst = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     cFirst *= cOther;
 
     return NOVELRT_SUCCESS;
@@ -470,8 +470,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cFirst = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
-    const Maths::GeoVector2<float>& cOther = reinterpret_cast<const Maths::GeoVector2<float>&>(rhs);
+    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
     cFirst /= cOther;
 
     return NOVELRT_SUCCESS;
@@ -494,7 +494,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
+    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
     cVector += rhs;
 
     return NOVELRT_SUCCESS;
@@ -517,7 +517,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
+    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
     cVector -= rhs;
 
     return NOVELRT_SUCCESS;
@@ -540,7 +540,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(rhs);
+    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(rhs);
     cVector *= rhs;
 
     return NOVELRT_SUCCESS;
@@ -571,7 +571,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2<float>& cVector = reinterpret_cast<Maths::GeoVector2<float>&>(*lhs);
+    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
     cVector /= rhs;
 
     return NOVELRT_SUCCESS;

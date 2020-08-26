@@ -92,12 +92,12 @@ namespace NovelRT::Input {
     _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, log);
   }
 
-  void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition) {
+  void InteractionService::acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2F& mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
-    auto value = Maths::GeoVector4<float>(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
+    auto value = Maths::GeoVector4F(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.getX(), 1080.0f / _screenSize.getY(), 0.0f));
 
-    _cursorPosition =  Maths::GeoVector2<float>(value.x, value.y);
+    _cursorPosition =  Maths::GeoVector2F(value.x, value.y);
     KeyStateFrameChangeLog log{};
 
     if (_keyStates.at(_currentBufferIndex).find(keyCode) != _keyStates.at(_currentBufferIndex).end()) {

@@ -43,7 +43,7 @@ namespace NovelRT::Graphics {
     if (_letterRects.size() < _text.length()) {
       size_t difference = _text.length() - _letterRects.size();
       auto modifiedTransform = transform();
-      modifiedTransform.scale() = Maths::GeoVector2<float>(50, 50);
+      modifiedTransform.scale() = Maths::GeoVector2F(50, 50);
       for (size_t i = 0; i < difference; i++) {
         auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
@@ -69,14 +69,14 @@ namespace NovelRT::Graphics {
 
       auto ch = _fontSet->getCharacterBasedonGLchar(c);
 
-      auto currentWorldPosition = Maths::GeoVector2<float>((ttfOrigin.getX() + ch.size.getX() / 2.0f) + ch.bearing.getX(),
-        (ttfOrigin.getY() - (ch.bearing.getY() / 2.0f))
-        + ((static_cast<float>(ch.size.getY()) - ch.bearing.getY()) / 2.0f));
+      auto currentWorldPosition = Maths::GeoVector2F((ttfOrigin.getX() + ch.sizeX / 2.0f) + ch.bearingX,
+        (ttfOrigin.getY() - (ch.bearingY / 2.0f))
+        + ((static_cast<float>(ch.sizeY - ch.bearingY) / 2.0f)));
 
       auto& target = _letterRects.at(i++);
       target->texture() = ch.texture;
       target->transform().position() = currentWorldPosition;
-      target->transform().scale() = Maths::GeoVector2<float>(static_cast<float>(ch.size.getX()), static_cast<float>(ch.size.getY()));
+      target->transform().scale() = Maths::GeoVector2F(static_cast<float>(ch.sizeX), static_cast<float>(ch.sizeY));
       target->setActive(true);
       ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
     }

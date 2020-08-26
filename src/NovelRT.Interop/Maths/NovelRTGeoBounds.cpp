@@ -16,19 +16,19 @@ extern "C" {
 
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(const NovelRTGeoBounds bounds, int index) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
-    Maths::GeoVector2<float> corner = cBounds.getCornerInLocalSpace(index);
+    Maths::GeoVector2F corner = cBounds.getCornerInLocalSpace(index);
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(const NovelRTGeoBounds bounds, int index) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
-    Maths::GeoVector2<float> corner = cBounds.getCornerInWorldSpace(index);
+    Maths::GeoVector2F corner = cBounds.getCornerInWorldSpace(index);
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
   NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(const NovelRTGeoBounds bounds, const NovelRTGeoVector2F point) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
-    const Maths::GeoVector2<float>& cPoint = reinterpret_cast<const Maths::GeoVector2<float>&>(point);
+    const Maths::GeoVector2F& cPoint = reinterpret_cast<const Maths::GeoVector2F&>(point);
     if (cBounds.pointIsWithinBounds(cPoint)) {
       return NOVELRT_TRUE;
     }
@@ -37,7 +37,7 @@ extern "C" {
 
   NovelRTGeoVector2F NovelRT_GeoBounds_getExtents(const NovelRTGeoBounds bounds) {
     const Maths::GeoBounds cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
-    Maths::GeoVector2<float> extents = cBounds.getExtents(); 
+    Maths::GeoVector2F extents = cBounds.getExtents(); 
     return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 

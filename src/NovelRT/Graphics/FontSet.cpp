@@ -67,8 +67,10 @@ namespace NovelRT::Graphics {
       // Now store character for later use
       GraphicsCharacterRenderData character = {
           _renderer->getTexture(),
-          Maths::GeoVector2<uint32_t>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          Maths::GeoVector2<int32_t>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+          static_cast<uint32_t>(face->glyph->bitmap.width),
+          static_cast<uint32_t>(face->glyph->bitmap.rows),
+          face->glyph->bitmap_left,
+          face->glyph->bitmap_top,
           GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
       };
       character.texture->setTextureIdInternal(textureId);

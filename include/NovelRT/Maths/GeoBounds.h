@@ -10,23 +10,23 @@
 namespace NovelRT::Maths {
   class GeoBounds {
   private:
-    GeoVector2<float> _position;
+    GeoVector2F _position;
     float _rotation;
-    GeoVector2<float> _size;
+    GeoVector2F _size;
 
   public:
-    GeoBounds(const GeoVector2<float>& position, const GeoVector2<float>& size, float rotation);
-    bool pointIsWithinBounds(const GeoVector2<float>& point) const;
+    GeoBounds(const GeoVector2F& position, const GeoVector2F& size, float rotation);
+    bool pointIsWithinBounds(const GeoVector2F& point) const;
     bool intersectsWith(const GeoBounds& otherBounds) const;
-    GeoVector2<float> getCornerInLocalSpace(int index) const;
-    GeoVector2<float> getCornerInWorldSpace(int index) const;
-    const GeoVector2<float>& position() const;
-    GeoVector2<float>& position();
-    const GeoVector2<float>& size() const;
-    GeoVector2<float>& size();
+    GeoVector2F getCornerInLocalSpace(int index) const;
+    GeoVector2F getCornerInWorldSpace(int index) const;
+    const GeoVector2F& position() const;
+    GeoVector2F& position();
+    const GeoVector2F& size() const;
+    GeoVector2F& size();
     const float& rotation() const;
     float& rotation();
-    GeoVector2<float> getExtents() const;
+    GeoVector2F getExtents() const;
 
     inline bool operator==(const GeoBounds& other) const {
       return _position == other._position
