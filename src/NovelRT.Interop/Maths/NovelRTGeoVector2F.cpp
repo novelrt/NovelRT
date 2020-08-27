@@ -62,7 +62,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_epsilonEquals(NovelRTGeoVector2F vector, NovelRTGeoVector2F other, NovelRTGeoVector2F epsilonValue) {
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector); const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(other);
+    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector); 
+    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(other);
     const Maths::GeoVector2F& cEpsilonValue = reinterpret_cast<const Maths::GeoVector2F&>(epsilonValue);
     
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {

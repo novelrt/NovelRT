@@ -17,11 +17,11 @@ namespace NovelRT::Maths {
   private:
     GeoVector4F(glm::vec4 value) : NovelRTGeoVector4F { value.x, value.y, value.z, value.w } {}
 
-    const glm::vec4& vec4Value() const {
+    inline const glm::vec4& vec4Value() const {
       return reinterpret_cast<const glm::vec4&>(*this);
     }
 
-    glm::vec4& vec4Value() {
+    inline glm::vec4& vec4Value() {
       return reinterpret_cast<glm::vec4&>(*this);
     }
 

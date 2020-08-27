@@ -20,11 +20,11 @@ namespace NovelRT::Maths {
 
     GeoVector2F(glm::vec2 value) : NovelRTGeoVector2F { value.x, value.y } {}
 
-    const glm::vec2& vec2Value() const {
+    inline const glm::vec2& vec2Value() const {
       return reinterpret_cast<const glm::vec2&>(*this);
     }
 
-    glm::vec2& vec2Value() {
+    inline glm::vec2& vec2Value() {
       return reinterpret_cast<glm::vec2&>(*this);
     }
 

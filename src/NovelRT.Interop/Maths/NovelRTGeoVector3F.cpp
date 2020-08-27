@@ -9,7 +9,7 @@ extern "C" {
   
   NovelRTGeoVector3F NovelRT_GeoVector3F_createFromGeoVector2F(NovelRTGeoVector2F vector) {
   	Maths::GeoVector2F cVector2 = reinterpret_cast<const Maths::GeoVector2F&>(vector);
-  	return NovelRTGeoVector3F{ cVector2.getX(), cVector2.getY(), 0.0f };
+  	return NovelRTGeoVector3F{ cVector2.x, cVector2.y, 0.0f };
   }
 
   NovelRTGeoVector3F NovelRT_GeoVector3F_getNaN() {

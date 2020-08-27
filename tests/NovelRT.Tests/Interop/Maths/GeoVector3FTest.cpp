@@ -1125,7 +1125,7 @@ TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector) {
   NovelRTGeoVector3F cVector = NovelRT_GeoVector3F_one();
   NovelRTGeoVector3F normal = NovelRT_GeoVector3F_getNormalised(cVector);
   GeoVector3F& vec = reinterpret_cast<GeoVector3F&>(normal);
-  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2));
+  float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
@@ -1133,14 +1133,14 @@ TEST(InteropGeoVector3Test, getMagnitudeReturnsCorrectLength) {
   NovelRTGeoVector3F cVector = NovelRT_GeoVector3F_one();
   NovelRTGeoVector3F normal = NovelRT_GeoVector3F_getNormalised(cVector);
   GeoVector3F& vec = reinterpret_cast<GeoVector3F&>(normal);
-  EXPECT_FLOAT_EQ(NovelRT_GeoVector3F_getMagnitude(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  EXPECT_FLOAT_EQ(NovelRT_GeoVector3F_getMagnitude(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
 TEST(InteropGeoVector3Test, getLengthReturnsCorrectLength) {
   NovelRTGeoVector3F cVector = NovelRT_GeoVector3F_one();
   NovelRTGeoVector3F normal = NovelRT_GeoVector3F_getNormalised(cVector);
   GeoVector3F& vec = reinterpret_cast<GeoVector3F&>(normal);
-  EXPECT_FLOAT_EQ(NovelRT_GeoVector3F_getLength(normal), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  EXPECT_FLOAT_EQ(NovelRT_GeoVector3F_getLength(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
 TEST(InteropGeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount) {

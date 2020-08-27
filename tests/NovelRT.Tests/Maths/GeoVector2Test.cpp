@@ -139,18 +139,18 @@ TEST(GeoVector2Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateTy
 
 TEST(GeoVector2Test, getNormalisedReturnsNormalisedGeoVector) {
   auto vec = GeoVector2F::one().getNormalised();
-  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2));
+  float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
 TEST(GeoVector2Test, getMagnitudeReturnsCorrectLength) {
   auto vec = GeoVector2F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2)));
+  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
 
 TEST(GeoVector2Test, getLengthReturnsCorrectLength) {
   auto vec = GeoVector2F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2)));
+  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
 
 TEST(GeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount) {

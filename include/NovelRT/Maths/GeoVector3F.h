@@ -18,11 +18,11 @@ namespace NovelRT::Maths {
 
     GeoVector3F(glm::vec3 value) : NovelRTGeoVector3F { value.x, value.y, value.z } {}
 
-    const glm::vec3& vec3Value() const {
+    inline const glm::vec3& vec3Value() const {
       return reinterpret_cast<const glm::vec3&>(*this);
     }
 
-    glm::vec3& vec3Value() {
+    inline glm::vec3& vec3Value() {
       return reinterpret_cast<glm::vec3&>(*this);
     }
 

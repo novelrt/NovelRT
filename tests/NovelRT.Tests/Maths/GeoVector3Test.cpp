@@ -139,18 +139,18 @@ TEST(GeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateTy
 
 TEST(GeoVector3Test, getNormalisedReturnsNormalisedGeoVector) {
   auto vec = GeoVector3F::one().getNormalised();
-  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2));
+  float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
 TEST(GeoVector3Test, getMagnitudeReturnsCorrectLength) {
   auto vec = GeoVector3F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
 TEST(GeoVector3Test, getLengthReturnsCorrectLength) {
   auto vec = GeoVector3F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2)));
+  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
 TEST(GeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount) {

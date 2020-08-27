@@ -139,18 +139,18 @@ TEST(GeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateTy
 
 TEST(GeoVector4Test, getNormalisedReturnsNormalisedGeoVector) {
   auto vec = GeoVector4F::one().getNormalised();
-  float normalisedTotal = sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2));
+  float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
   EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
 TEST(GeoVector4Test, getMagnitudeReturnsCorrectLength) {
   auto vec = GeoVector4F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2)));
+  EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
 }
 
 TEST(GeoVector4Test, getLengthReturnsCorrectLength) {
   auto vec = GeoVector4F::one().getNormalised();
-  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.getX(), 2) + powf(vec.getY(), 2) + powf(vec.getZ(), 2) + powf(vec.getW(), 2)));
+  EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
 }
 
 TEST(GeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount) {
