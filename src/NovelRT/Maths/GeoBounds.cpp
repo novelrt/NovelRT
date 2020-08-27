@@ -12,8 +12,8 @@ namespace NovelRT::Maths {
     auto corner0 = getCornerInWorldSpace(0);
     auto corner2 = getCornerInWorldSpace(2);
 
-    if (point.x >= corner0.x && point.x <= corner2.x && point.x <= corner2.x
-      && point.x >= corner0.x)
+    if (point.x >= corner0.x && point.x <= corner2.x && point.y <= corner2.y
+      && point.y >= corner0.y)
       return true;
 
     return false;
@@ -37,16 +37,16 @@ namespace NovelRT::Maths {
     auto boundsSize = size();
     switch (index) {
     case 0:
-      returnValue = GeoVector2F(-(boundsSize.x / 2), -(boundsSize.x / 2));
+      returnValue = GeoVector2F(-(boundsSize.x / 2), -(boundsSize.y / 2));
       break;
     case 1:
-      returnValue = GeoVector2F(+(boundsSize.x / 2), -(boundsSize.x / 2));
+      returnValue = GeoVector2F(+(boundsSize.x / 2), -(boundsSize.y / 2));
       break;
     case 2:
-      returnValue = GeoVector2F(+(boundsSize.x / 2), +(boundsSize.x / 2));
+      returnValue = GeoVector2F(+(boundsSize.x / 2), +(boundsSize.y / 2));
       break;
     case 3:
-      returnValue = GeoVector2F(-(boundsSize.x / 2), +(boundsSize.x / 2));
+      returnValue = GeoVector2F(-(boundsSize.x / 2), +(boundsSize.y / 2));
       break;
     }
 
