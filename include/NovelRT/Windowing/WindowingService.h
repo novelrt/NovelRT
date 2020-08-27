@@ -66,7 +66,7 @@ namespace NovelRT::Windowing {
 
     inline void setWindowSize(const Maths::GeoVector2F& value) {
       _windowSize = value;
-      glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.getX()), static_cast<int32_t>(value.getY()));
+      glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.x), static_cast<int32_t>(value.y));
       WindowResized(_windowSize);
     }
 

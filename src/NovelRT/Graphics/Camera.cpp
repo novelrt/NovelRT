@@ -10,8 +10,8 @@ namespace NovelRT::Graphics {
 
   std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector2F& windowSize) {  
     auto callback = [](Camera* camera, const Maths::GeoVector2F& windowSize) {
-      camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::ortho(0.0f, windowSize.getX(), windowSize.getY(), 0.0f, 0.0f, 65535.0f)));
-      camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+      camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::ortho(0.0f, windowSize.x, windowSize.y, 0.0f, 0.0f, 65535.0f)));
+      camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::scale(glm::vec3(windowSize.x / 1920.0f, windowSize.y / 1080.0f, -1.0f))));
     };
 
     auto returnVal = std::make_unique<Camera>();
@@ -25,7 +25,7 @@ namespace NovelRT::Graphics {
   std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(const Maths::GeoVector2F& windowSize) {
     auto callback = [](Camera* camera, const Maths::GeoVector2F& windowSize) {
 
-      auto aspect = windowSize.getY() != 0 ? windowSize.getX() / windowSize.getY() : 0;
+      auto aspect = windowSize.y != 0 ? windowSize.x / windowSize.y : 0;
       
       camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::perspective(glm::radians(90.0f), aspect, 0.1f, 100.0f)));
       camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))));

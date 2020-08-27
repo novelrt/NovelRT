@@ -26,9 +26,9 @@ namespace NovelRT::Graphics {
 
     auto windowSize = (optionalWindowSize == nullptr) ? _windowingService->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
-    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
+    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.x));
     infoScreenSize.append("x");
-    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.getY())));
+    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.y)));
     _logger.logInfo("Screen size: {}", infoScreenSize);
 
     if (completeLaunch) {
@@ -64,7 +64,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _camera->forceResize(windowSize);
-      glViewport(0, 0, static_cast<GLsizei>(windowSize.getX()), static_cast<GLsizei>(windowSize.getY()));
+      glViewport(0, 0, static_cast<GLsizei>(windowSize.x), static_cast<GLsizei>(windowSize.y));
     }
 
     return true;

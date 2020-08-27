@@ -33,7 +33,7 @@ namespace NovelRT {
      * Gets the Axis Aligned Bounding Box based on the position and scale of this transform.
      */
     inline Maths::GeoBounds getAABB() const {
-      auto scale = fmaxf(_scale.getX(), _scale.getY());
+      auto scale = fmaxf(_scale.x, _scale.y);
       return Maths::GeoBounds(_position, Maths::GeoVector2F(scale, scale), 0);
     }
 

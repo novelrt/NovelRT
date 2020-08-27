@@ -39,12 +39,12 @@ namespace NovelRT::Graphics {
     auto topRight = Maths::GeoVector2F(0.5f, 0.5f);
     auto bottomLeft = Maths::GeoVector2F(-0.5f, -0.5f);
     _vertexBufferData = {
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
-        topRight.getX(), topRight.getY(), 0.0f,
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomLeft.getX(), bottomLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
+        topLeft.x, topLeft.y, 0.0f,
+        bottomRight.x, bottomRight.y, 0.0f,
+        topRight.x, topRight.y, 0.0f,
+        topLeft.x, topLeft.y, 0.0f,
+        bottomLeft.x, bottomLeft.y, 0.0f,
+        bottomRight.x, bottomRight.y, 0.0f,
     };
 
     _vertexArrayObject.getActual(); //this is just here to force initialisation.

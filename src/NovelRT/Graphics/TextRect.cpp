@@ -69,8 +69,8 @@ namespace NovelRT::Graphics {
 
       auto ch = _fontSet->getCharacterBasedonGLchar(c);
 
-      auto currentWorldPosition = Maths::GeoVector2F((ttfOrigin.getX() + ch.sizeX / 2.0f) + ch.bearingX,
-        (ttfOrigin.getY() - (ch.bearingY / 2.0f))
+      auto currentWorldPosition = Maths::GeoVector2F((ttfOrigin.x + ch.sizeX / 2.0f) + ch.bearingX,
+        (ttfOrigin.y - (ch.bearingY / 2.0f))
         + ((static_cast<float>(ch.sizeY - ch.bearingY) / 2.0f)));
 
       auto& target = _letterRects.at(i++);
@@ -78,7 +78,7 @@ namespace NovelRT::Graphics {
       target->transform().position() = currentWorldPosition;
       target->transform().scale() = Maths::GeoVector2F(static_cast<float>(ch.sizeX), static_cast<float>(ch.sizeY));
       target->setActive(true);
-      ttfOrigin.setX(ttfOrigin.getX() + (ch.advance >> 6));
+      ttfOrigin.x = ttfOrigin.x + (ch.advance >> 6);
     }
 
     if (_letterRects.size() == static_cast<size_t>(i) + 1)

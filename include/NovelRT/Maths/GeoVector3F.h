@@ -31,30 +31,6 @@ namespace NovelRT::Maths {
     GeoVector3F(float x, float y, float z) : NovelRTGeoVector3F { x, y, z } {}
     GeoVector3F(const GeoVector2F& vec2Value) : NovelRTGeoVector3F { vec2Value.x, vec2Value.y, 0.0f } {}
 
-    float getX() const {
-      return vec3Value().x;
-    }
-
-    void setX(float value) {
-      vec3Value().x = value;
-    }
-
-    float getY() const {
-      return vec3Value().y;
-    }
-
-    void setY(float value) {
-      vec3Value().y = value;
-    }
-
-    float getZ() const {
-      return vec3Value().z;
-    }
-
-    void setZ(float value) {
-      vec3Value().z = value;
-    }
-
     inline GeoVector3F getNormalised() const noexcept {
       return GeoVector3F(glm::normalize(vec3Value()));
     }

@@ -32,22 +32,6 @@ namespace NovelRT::Maths {
     GeoVector2F() : NovelRTGeoVector2F { 0.0f, 0.0f } {}
     GeoVector2F(float x, float y) : NovelRTGeoVector2F { x, y } {}
 
-    float getX() const {
-      return vec2Value().x;
-    }
-
-    void setX(float value) {
-      vec2Value().x = value;
-    }
-
-    float getY() const {
-      return vec2Value().y;
-    }
-
-    void setY(float value) {
-      vec2Value().y = value;
-    }
-
     inline GeoVector2F getNormalised() const noexcept {
       return GeoVector2F(glm::normalize(vec2Value()));
     }
