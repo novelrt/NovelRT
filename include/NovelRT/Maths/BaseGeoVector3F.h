@@ -1,8 +1,8 @@
 
   // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_MATHS_GEOVECTOR4FSTRUCT_H
-#define NOVELRT_MATHS_GEOVECTOR4FSTRUCT_H
+#ifndef NOVELRT_MATHS_BASEGEOVECTOR3F_H
+#define NOVELRT_MATHS_BASEGEOVECTOR3F_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,8 +12,7 @@ extern "C" {
     float x;
     float y;
     float z;
-    float w;
-  } NovelRTGeoVector4F;
+  } NovelRTGeoVector3F;
 
 #ifdef __cplusplus
 }

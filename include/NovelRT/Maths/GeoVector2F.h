@@ -7,7 +7,7 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "GeoVector2FStruct.h"
+#include "BaseGeoVector2F.h"
 
 namespace NovelRT::Maths {
   class GeoVector2F : public NovelRTGeoVector2F {

@@ -4,7 +4,7 @@
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
 
 #include "../NovelRTInteropUtils.h"
-#include "NovelRT/Maths/GeoVector2FStruct.h"
+#include "NovelRT/Maths/BaseGeoVector2F.h"
 
 
 #ifdef __cplusplus

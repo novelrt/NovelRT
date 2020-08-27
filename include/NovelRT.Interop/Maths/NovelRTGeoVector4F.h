@@ -7,7 +7,7 @@
 
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector3F.h"
-#include "NovelRT/Maths/GeoVector4FStruct.h"
+#include "NovelRT/Maths/BaseGeoVector4F.h"
 
 #ifdef __cplusplus
 extern "C" {
