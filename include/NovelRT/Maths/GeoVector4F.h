@@ -7,29 +7,29 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
+#include "GeoVector4FStruct.h"
+
 namespace NovelRT::Maths {
-  class GeoVector4F {
+  class GeoVector4F : public NovelRTGeoVector4F {
     friend class Input::InteractionService;
     friend class GeoMatrix4x4F;
 
   private:
-    GeoVector4F(glm::vec4 value) : _value(value) {}
+    GeoVector4F(glm::vec4 value) : NovelRTGeoVector4F { value.x, value.y, value.z, value.w } {}
 
     const glm::vec4& vec4Value() const {
-      return _value;
+      return reinterpret_cast<const glm::vec4&>(*this);
     }
 
     glm::vec4& vec4Value() {
-      return _value;
+      return reinterpret_cast<glm::vec4&>(*this);
     }
-
-    glm::vec4 _value;
 
   public:
     GeoVector4F() {}
-    GeoVector4F(float x, float y, float z, float w) : _value(glm::vec4(x, y, z, w)) {}
-    GeoVector4F(const GeoVector2F& vec2Value) : _value(vec2Value.vec2Value(), 0, 0) {}
-    GeoVector4F(const GeoVector3F& vec3Value) : _value(vec3Value.vec3Value(), 0) {}
+    GeoVector4F(float x, float y, float z, float w) : NovelRTGeoVector4F { x, y, z, w } {}
+    GeoVector4F(const GeoVector2F& vec2Value) : NovelRTGeoVector4F { vec2Value.x, vec2Value.y, 0.0f, 0.0f } {}
+    GeoVector4F(const GeoVector3F& vec3Value) : NovelRTGeoVector4F { vec3Value.x, vec3Value.y, vec3Value.z, 0.0f } {}
 
     float getX() const {
       return vec4Value().x;

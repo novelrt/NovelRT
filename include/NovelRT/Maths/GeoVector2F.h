@@ -7,29 +7,30 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
+#include "GeoVector2FStruct.h"
+
 namespace NovelRT::Maths {
-  class GeoVector2F {
+  class GeoVector2F : public NovelRTGeoVector2F {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
     friend class GeoVector3F;
     friend class GeoVector4F;
 
   private:
-    glm::vec2 _value;
 
-    GeoVector2F(glm::vec2 value) : _value(glm::vec2(value)) {}
+    GeoVector2F(glm::vec2 value) : NovelRTGeoVector2F { value.x, value.y } {}
 
     const glm::vec2& vec2Value() const {
-      return _value;
+      return reinterpret_cast<const glm::vec2&>(*this);
     }
 
     glm::vec2& vec2Value() {
-      return _value;
+      return reinterpret_cast<glm::vec2&>(*this);
     }
 
   public:
-    GeoVector2F() {}
-    GeoVector2F(float x, float y) : _value(glm::vec2(x, y)) {}
+    GeoVector2F() : NovelRTGeoVector2F { 0.0f, 0.0f } {}
+    GeoVector2F(float x, float y) : NovelRTGeoVector2F { x, y } {}
 
     float getX() const {
       return vec2Value().x;

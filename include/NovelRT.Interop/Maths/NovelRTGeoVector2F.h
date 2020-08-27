@@ -4,16 +4,12 @@
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
 
 #include "../NovelRTInteropUtils.h"
+#include "NovelRT/Maths/GeoVector2FStruct.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  typedef struct {
-    float x;
-    float y;
-  } NovelRTGeoVector2F;
 
   NovelRTBool NovelRT_GeoVector2F_isNaN(NovelRTGeoVector2F vector);
   NovelRTGeoVector2F NovelRT_GeoVector2F_uniform(float value);

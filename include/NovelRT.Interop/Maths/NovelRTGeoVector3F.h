@@ -1,19 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
-
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR3F_H
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR3F_H
+
+#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
+#include "NovelRT/Maths/GeoVector3FStruct.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  typedef struct {
-    float x;
-    float y;
-    float z;
-  } NovelRTGeoVector3F;
 
   NovelRTGeoVector3F NovelRT_GeoVector3F_createFromGeoVector2F(NovelRTGeoVector2F vector);
   NovelRTBool NovelRT_GeoVector3F_isNaN(NovelRTGeoVector3F vector);
