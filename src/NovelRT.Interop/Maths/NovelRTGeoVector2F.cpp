@@ -54,17 +54,16 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*vector);
-    const Maths::GeoVector2F& cPoint = reinterpret_cast<const Maths::GeoVector2F&>(point);
-    cVector.rotateToAngleAroundPoint(angleRotationValue, cPoint);
+    Maths::GeoVector2F cPoint = *reinterpret_cast<const Maths::GeoVector2F*>(&point);
+    (*reinterpret_cast<Maths::GeoVector2F*>(vector)).rotateToAngleAroundPoint(angleRotationValue, cPoint);
 
     return NOVELRT_SUCCESS;
   }
 
   NovelRTBool NovelRT_GeoVector2F_epsilonEquals(NovelRTGeoVector2F vector, NovelRTGeoVector2F other, NovelRTGeoVector2F epsilonValue) {
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector); 
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(other);
-    const Maths::GeoVector2F& cEpsilonValue = reinterpret_cast<const Maths::GeoVector2F&>(epsilonValue);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector); 
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&other);
+    Maths::GeoVector2F cEpsilonValue = *reinterpret_cast<const Maths::GeoVector2F*>(&epsilonValue);
     
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
       return NOVELRT_TRUE;
@@ -74,36 +73,36 @@ extern "C" {
   }
 
   NovelRTGeoVector2F NovelRT_GeoVector2F_getNormalised(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) ) {
+    if(NovelRT_GeoVector2F_isNaN(vector)) {
       return NovelRT_GeoVector2F_getNaN();
     }
     
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
     Maths::GeoVector2F normal = cVector.getNormalised();
-    return reinterpret_cast<NovelRTGeoVector2F&>(normal);
+    return *reinterpret_cast<NovelRTGeoVector2F*>(&normal);
   }
 
   float NovelRT_GeoVector2F_getLength(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) ) {
+    if(NovelRT_GeoVector2F_isNaN(vector)) {
       return NAN;
     }
 
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
     return cVector.getLength();
   }
 
   float NovelRT_GeoVector2F_getMagnitude(NovelRTGeoVector2F vector) {
-    if(NovelRT_GeoVector2F_isNaN(vector) ) {
+    if(NovelRT_GeoVector2F_isNaN(vector)) {
       return NAN;
     } 
 
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(vector);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
     return cVector.getMagnitude();
   }
 
   NovelRTBool NovelRT_GeoVector2F_equal(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst == cOther) {
       return NOVELRT_TRUE;
     }
@@ -112,8 +111,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_notEqual(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst != cOther) {
       return NOVELRT_TRUE;
     }
@@ -122,8 +121,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_lessThan(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst < cOther) {
       return NOVELRT_TRUE;
     }
@@ -132,8 +131,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_lessThanOrEqualTo(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst <= cOther) {
       return NOVELRT_TRUE;
     }
@@ -142,8 +141,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_greaterThan(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst > cOther) {
       return NOVELRT_TRUE;
     }
@@ -152,8 +151,8 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoVector2F_greaterThanOrEqualTo(NovelRTGeoVector2F lhs, NovelRTGeoVector2F rhs) {
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     if(cFirst >= cOther) {
       return NOVELRT_TRUE;
     }
@@ -178,8 +177,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     
     Maths::GeoVector2F result = cFirst + cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
@@ -204,8 +203,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     Maths::GeoVector2F result = cFirst - cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -229,8 +228,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     Maths::GeoVector2F result = cFirst * cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -254,7 +253,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_equal(lhs, NovelRT_GeoVector2F_zero())  || NovelRT_GeoVector2F_equal(rhs, NovelRT_GeoVector2F_zero()) ) {
+    if(NovelRT_GeoVector2F_equal(lhs, NovelRT_GeoVector2F_zero())  || NovelRT_GeoVector2F_equal(rhs, NovelRT_GeoVector2F_zero())) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsDivideByZero();
       }
@@ -262,8 +261,8 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cFirst = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
+    Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+    Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     Maths::GeoVector2F result = cFirst / cOther;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -287,7 +286,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
     Maths::GeoVector2F result = cVector + rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -311,7 +310,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    const Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
     Maths::GeoVector2F result = cVector - rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -335,7 +334,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
     Maths::GeoVector2F result = cVector * rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -367,7 +366,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& cVector = reinterpret_cast<const Maths::GeoVector2F&>(lhs);
+    Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
     Maths::GeoVector2F result = cVector / rhs;
     *outputResult = reinterpret_cast<NovelRTGeoVector2F&>(result);
 
@@ -383,17 +382,15 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNaN();
       }
 
       return NOVELRT_FAILURE;
     }
-
-    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
-    cFirst += cOther;
+    
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) += *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -407,7 +404,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNaN();
       }
@@ -415,9 +412,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
-    cFirst -= cOther;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) -= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -431,7 +426,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNaN();
       }
@@ -439,9 +434,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
-    cFirst *= cOther;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) *= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -455,7 +448,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs) ) {
+    if(NovelRT_GeoVector2F_isNaN(*lhs)  || NovelRT_GeoVector2F_isNaN(rhs)) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNaN();
       }
@@ -471,9 +464,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cFirst = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    const Maths::GeoVector2F& cOther = reinterpret_cast<const Maths::GeoVector2F&>(rhs);
-    cFirst /= cOther;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) /= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -495,8 +486,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    cVector += rhs;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) += rhs;
 
     return NOVELRT_SUCCESS;
   }
@@ -518,8 +508,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    cVector -= rhs;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) -= rhs;
 
     return NOVELRT_SUCCESS;
   }
@@ -541,8 +530,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(rhs);
-    cVector *= rhs;
+    *reinterpret_cast<Maths::GeoVector2F*>(&rhs) *= rhs;
 
     return NOVELRT_SUCCESS;
   }
@@ -572,8 +560,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    Maths::GeoVector2F& cVector = reinterpret_cast<Maths::GeoVector2F&>(*lhs);
-    cVector /= rhs;
+    *reinterpret_cast<Maths::GeoVector2F*>(lhs) /= rhs;
 
     return NOVELRT_SUCCESS;
   }
