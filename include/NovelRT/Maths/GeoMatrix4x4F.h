@@ -20,13 +20,6 @@ namespace NovelRT::Maths {
     friend class Graphics::Camera;
 
   private:
-    inline const glm::mat4& underlyingMatrix() const {
-      return *reinterpret_cast<const glm::mat4*>(this);
-    }
-
-    inline glm::mat4& underlyingMatrix() {
-      return *reinterpret_cast<glm::mat4*>(this);
-    }
 
     explicit GeoMatrix4x4F(glm::mat4 matrix) {
       x = *reinterpret_cast<NovelRTGeoVector4F*>(&matrix[0]);
@@ -49,64 +42,64 @@ namespace NovelRT::Maths {
       } {}
 
     inline bool operator==(const GeoMatrix4x4F& other) const {
-      return underlyingMatrix() == other.underlyingMatrix();
+      return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
     }
 
     inline bool operator!=(const GeoMatrix4x4F& other) const {
-      return underlyingMatrix() != other.underlyingMatrix();
+      return *reinterpret_cast<const glm::mat4*>(this) != *reinterpret_cast<const glm::mat4*>(&other);
     }
 
     inline GeoMatrix4x4F operator+(const GeoMatrix4x4F& other) const {
-      return GeoMatrix4x4F(underlyingMatrix() + other.underlyingMatrix());
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) + *reinterpret_cast<const glm::mat4*>(&other));
     }
 
     inline GeoMatrix4x4F operator-(const GeoMatrix4x4F& other) const {
-      return GeoMatrix4x4F(underlyingMatrix() - other.underlyingMatrix());
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) - *reinterpret_cast<const glm::mat4*>(&other));
     }
 
     inline GeoMatrix4x4F operator*(const GeoMatrix4x4F& other) const {
-      return GeoMatrix4x4F(underlyingMatrix() * other.underlyingMatrix());
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * *reinterpret_cast<const glm::mat4*>(&other));
     }
 
     inline GeoMatrix4x4F& operator+=(const GeoMatrix4x4F& other) {
-      underlyingMatrix() += other.underlyingMatrix();
+      *reinterpret_cast<glm::mat4*>(this) += *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
 
     inline GeoMatrix4x4F& operator-=(const GeoMatrix4x4F& other) {
-      underlyingMatrix() -= other.underlyingMatrix();
+      *reinterpret_cast<glm::mat4*>(this) -= *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
 
     inline GeoMatrix4x4F& operator*=(const GeoMatrix4x4F& other) {
-      underlyingMatrix() *= other.underlyingMatrix();
+      *reinterpret_cast<glm::mat4*>(this) *= *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
 
     inline GeoMatrix4x4F operator+(float other) const {
-      return GeoMatrix4x4F(underlyingMatrix() + other);
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) + other);
     }
 
     inline GeoMatrix4x4F operator-(float other) const {
-      return GeoMatrix4x4F(underlyingMatrix() - other);
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) - other);
     }
 
     inline GeoMatrix4x4F operator*(float other) const {
-      return GeoMatrix4x4F(underlyingMatrix() * other);
+      return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * other);
     }
 
     inline GeoMatrix4x4F& operator+=(float other) {
-      underlyingMatrix() += other;
+      *reinterpret_cast<glm::mat4*>(this) += other;
       return *this;
     }
 
     inline GeoMatrix4x4F& operator-=(float other) {
-      underlyingMatrix() -= other;
+      *reinterpret_cast<glm::mat4*>(this) -= other;
       return *this;
     }
 
     inline GeoMatrix4x4F& operator*=(float other) {
-      underlyingMatrix() *= other;
+      *reinterpret_cast<glm::mat4*>(this) *= other;
       return *this;
     }
 
