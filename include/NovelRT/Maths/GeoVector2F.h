@@ -21,8 +21,9 @@ namespace NovelRT::Maths {
     GeoVector2F(glm::vec2 value) : NovelRTGeoVector2F { value.x, value.y } {}
 
   public:
-    GeoVector2F() : NovelRTGeoVector2F { 0.0f, 0.0f } {}
-    GeoVector2F(float x, float y) : NovelRTGeoVector2F { x, y } {}
+    GeoVector2F() noexcept : NovelRTGeoVector2F { 0.0f, 0.0f } {}
+    GeoVector2F(float x, float y) noexcept : NovelRTGeoVector2F { x, y } {}
+    GeoVector2F(const NovelRTGeoVector2F& cStruct) noexcept {}
 
     inline GeoVector2F getNormalised() const noexcept {
       return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));
@@ -127,7 +128,7 @@ namespace NovelRT::Maths {
       return *this;
     }
 
-    GeoVector2F operator/=(float other) {
+    inline GeoVector2F operator/=(float other) {
       *reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) / other;
       return *this;
     }
@@ -156,6 +157,7 @@ namespace NovelRT::Maths {
   inline GeoVector2F operator*(float lhs, const GeoVector2F& rhs) {
     return rhs * lhs;
   }
+
 }
 
 #endif //!NOVELRT_MATHS_GEOVECTOR2_H
