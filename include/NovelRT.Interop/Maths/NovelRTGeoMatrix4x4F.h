@@ -4,18 +4,11 @@
 #define NOVELRT_INTEROP_MATHS_GEOMATRIX4X4F_H
 
 #include "NovelRT.Interop/Maths/NovelRTGeoVector4F.h"
+#include "NovelRT/Maths/BaseGeoMatrix4x4F.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  struct NovelRTGeoMatrix4x4F
-  {
-    NovelRTGeoVector4F x;
-    NovelRTGeoVector4F y;
-    NovelRTGeoVector4F z;
-    NovelRTGeoVector4F w;
-  };
 
   NovelRTBool NovelRT_GeoMatrix4x4F_isNaN(NovelRTGeoMatrix4x4F matrix);
   NovelRTGeoMatrix4x4F NovelRT_GeoMatrix4x4F_getDefaultIdentity();

@@ -38,42 +38,6 @@ TEST_F(GeoMatrix4x4Test, getDefaultIdentityReturnsIdentityMatrix) {
   ASSERT_EQ(GeoMatrix4x4F::getDefaultIdentity(), _dummyMatrix);
 }
 
-TEST_F(GeoMatrix4x4Test, getXReturnsExpectedGeoVector4) {
-  ASSERT_EQ(GeoVector4F(1.0f, 0.0f, 0.0f, 0.0f), _dummyMatrix.getX());
-}
-
-TEST_F(GeoMatrix4x4Test, setXSetsExpectedGeoVector4) {
-  _dummyMatrix.setX(GeoVector4F::one());
-  ASSERT_EQ(GeoVector4F::one(), _dummyMatrix.getX());
-}
-
-TEST_F(GeoMatrix4x4Test, getYReturnsExpectedGeoVector4) {
-  ASSERT_EQ(GeoVector4F(0.0f, 1.0f, 0.0f, 0.0f), _dummyMatrix.getY());
-}
-
-TEST_F(GeoMatrix4x4Test, setYSetsExpectedGeoVector4) {
-  _dummyMatrix.setY(GeoVector4F::one());
-  ASSERT_EQ(GeoVector4F::one(), _dummyMatrix.getY());
-}
-
-TEST_F(GeoMatrix4x4Test, getZReturnsExpectedGeoVector4) {
-  ASSERT_EQ(GeoVector4F(0.0f, 0.0f, 1.0f, 0.0f), _dummyMatrix.getZ());
-}
-
-TEST_F(GeoMatrix4x4Test, setZSetsExpectedGeoVector4) {
-  _dummyMatrix.setZ(GeoVector4F::one());
-  ASSERT_EQ(GeoVector4F::one(), _dummyMatrix.getZ());
-}
-
-TEST_F(GeoMatrix4x4Test, getWReturnsExpectedGeoVector4) {
-  ASSERT_EQ(GeoVector4F(0.0f, 0.0f, 0.0f, 1.0f), _dummyMatrix.getW());
-}
-
-TEST_F(GeoMatrix4x4Test, setWSetsExpectedGeoVector4) {
-  _dummyMatrix.setW(GeoVector4F::one());
-  ASSERT_EQ(GeoVector4F::one(), _dummyMatrix.getW());
-}
-
 TEST_F(GeoMatrix4x4Test, addOperatorAddsCorrectlyForGeoMatrix4x4) {
   auto testMatOne = GeoMatrix4x4F(GeoVector4F::one(), GeoVector4F::one(), GeoVector4F::one(), GeoVector4F::one());
   auto testMatTwo = GeoMatrix4x4F(GeoVector4F::uniform(2.0f), GeoVector4F::uniform(2.0f), GeoVector4F::uniform(2.0f), GeoVector4F::uniform(2.0f));
