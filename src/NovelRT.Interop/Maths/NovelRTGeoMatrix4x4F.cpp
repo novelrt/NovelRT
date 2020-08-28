@@ -19,11 +19,11 @@ extern "C" {
 
   NovelRTGeoMatrix4x4F NovelRT_GeoMatrix4x4F_getDefaultIdentity() {
     auto identity = Maths::GeoMatrix4x4F::getDefaultIdentity();
-    return reinterpret_cast<NovelRTGeoMatrix4x4F&>(identity);
+    return *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&identity);
   }
 
   NovelRTBool NovelRT_GeoMatrix4x4F_equal(NovelRTGeoMatrix4x4F lhs, NovelRTGeoMatrix4x4F rhs) {
-    if(reinterpret_cast<const Maths::GeoMatrix4x4F&>(lhs) == reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs)) {
+    if(*reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs) == *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs)) {
       return NOVELRT_TRUE;
     }
 
@@ -31,7 +31,7 @@ extern "C" {
   }
 
   NovelRTBool NovelRT_GeoMatrix4x4F_notEqual(NovelRTGeoMatrix4x4F lhs, NovelRTGeoMatrix4x4F rhs) {
-    if(reinterpret_cast<const Maths::GeoMatrix4x4F&>(lhs) != reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs)) {
+    if(*reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs) != *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs)) {
       return NOVELRT_TRUE;
     }
 
@@ -55,10 +55,10 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    const Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4F&>(lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
+    Maths::GeoMatrix4x4F cOther = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst + cOther;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -80,10 +80,10 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    const Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4F&>(lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
+    Maths::GeoMatrix4x4F cOther = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst - cOther;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -105,10 +105,10 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    const Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<const Maths::GeoMatrix4x4F&>(lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
+    Maths::GeoMatrix4x4F cOther = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst * cOther;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -130,9 +130,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
-    cFirst += cOther;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) += *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -154,9 +152,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
-    cFirst -= cOther;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) -= *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -178,9 +174,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    const Maths::GeoMatrix4x4F& cOther = reinterpret_cast<const Maths::GeoMatrix4x4F&>(rhs);
-    cFirst *= cOther;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) *= *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
 
     return NOVELRT_SUCCESS;
   }
@@ -202,9 +196,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(lhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst + rhs;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -226,9 +220,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(lhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst - rhs;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -250,9 +244,9 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(lhs);
+    Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
     Maths::GeoMatrix4x4F resultToReturn = cFirst * rhs;
-    *result = reinterpret_cast<NovelRTGeoMatrix4x4F&>(resultToReturn);
+    *result = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&resultToReturn);
 
     return NOVELRT_SUCCESS;
   }
@@ -274,8 +268,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    cFirst += rhs;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) += rhs;
 
     return NOVELRT_SUCCESS;
   }
@@ -297,8 +290,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    cFirst -= rhs;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) -= rhs;
 
     return NOVELRT_SUCCESS;
   }
@@ -320,8 +312,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
     
-    Maths::GeoMatrix4x4F& cFirst = reinterpret_cast<Maths::GeoMatrix4x4F&>(*lhs);
-    cFirst *= rhs;
+    *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) *= rhs;
 
     return NOVELRT_SUCCESS;
   }
