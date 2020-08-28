@@ -1,7 +1,46 @@
 find_package(Doxygen 1.8.8 REQUIRED
   COMPONENTS dot)
 
-set(DOXYGEN_PROJECT_LOGO novel-chan_doxy.png)
+function(append_string_to_first_list_element APPEND_ARGS_INPUT APPEND_ARGS_APPENDATURE APPEND_OUT)
+  string(REPLACE "\n" ";" APPEND_LISTED_STRING ${APPEND_ARGS_INPUT})
+  list(GET APPEND_LISTED_STRING 0 APPEND_LISTED_STRING_FIRST)
+  set(APPEND_LISTED_STRING_FIRST_TAGGED "${APPEND_LISTED_STRING_FIRST} ${APPEND_ARGS_APPENDATURE}")
+
+  list(REMOVE_AT APPEND_LISTED_STRING 0)
+  list(INSERT APPEND_LISTED_STRING 0 "${APPEND_LISTED_STRING_FIRST_TAGGED}")
+
+  list(JOIN APPEND_LISTED_STRING "\n" APPEND_FINAL)
+  set(${APPEND_OUT} ${APPEND_FINAL} PARENT_SCOPE)
+endfunction()
+
+set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/doxygen)
+set(DOCS_MAINPAGE
+        ${CMAKE_SOURCE_DIR}/README.md
+        ${CMAKE_SOURCE_DIR}/LICENCE.md
+        ${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md
+        )
+
+foreach(docFile ${DOCS_MAINPAGE})
+  file(READ ${docFile} TEMP_DOC_FILE_CONTENTS)
+  get_filename_component(TEMP_DOC_FILE_NAME ${docFile} NAME)
+  file(REMOVE ${DOXYGEN_OUTPUT_DIR}/${TEMP_DOC_FILE_NAME})
+
+  if(${TEMP_DOC_FILE_NAME} STREQUAL "README.md")
+    append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#mainpage}" TEMP_DOC_FILE_CONTENTS)
+    string(REPLACE "(CODE_OF_CONDUCT.md)" "(@ref conduct)" TEMP_DOC_FILE_CONTENTS ${TEMP_DOC_FILE_CONTENTS})
+    string(REPLACE "(LICENCE.md)" "(@ref licence)" TEMP_DOC_FILE_CONTENTS ${TEMP_DOC_FILE_CONTENTS})
+  endif()
+  if(${TEMP_DOC_FILE_NAME} STREQUAL "CODE_OF_CONDUCT.md")
+    append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#conduct}" TEMP_DOC_FILE_CONTENTS)
+  endif()
+  if(${TEMP_DOC_FILE_NAME} STREQUAL "LICENCE.md")
+    append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#licence}" TEMP_DOC_FILE_CONTENTS)
+  endif()
+
+  file(WRITE ${DOXYGEN_OUTPUT_DIR}/${TEMP_DOC_FILE_NAME} "${TEMP_DOC_FILE_CONTENTS}")
+endforeach()
+
+set(DOXYGEN_PROJECT_LOGO novel-chan-header_doxy.jpg)
 
 set(DOXYGEN_JAVADOC_AUTOBRIEF YES)
 set(DOXYGEN_JAVADOC_BANNER YES)
@@ -17,10 +56,13 @@ set(DOXYGEN_CALL_GRAPH YES)
 set(DOXYGEN_CALLER_GRAPH YES)
 set(DOXYGEN_INTERACTIVE_SVG YES)
 
-set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
+set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md CODE_OF_CONDUCT.md LICENCE.md")
 
-doxygen_add_docs(Doxygen ALL
-  COMMENT "Generating documentation"
-  ${CMAKE_SOURCE_DIR}/README.md
-  ${CMAKE_SOURCE_DIR}/include
-)
+doxygen_add_docs(Doxygen
+        ALL
+        COMMENT "Generating documentation"
+        ${DOXYGEN_OUTPUT_DIR}/README.md
+        ${DOXYGEN_OUTPUT_DIR}/CODE_OF_CONDUCT.md
+        ${DOXYGEN_OUTPUT_DIR}/LICENCE.md
+        ${CMAKE_SOURCE_DIR}/include
+        )

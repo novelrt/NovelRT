@@ -1,4 +1,5 @@
-# NovelRT license #
+NovelRT licence
+===============
 
 MIT Licence
 
