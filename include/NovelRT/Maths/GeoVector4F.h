@@ -18,7 +18,7 @@ namespace NovelRT::Maths {
     GeoVector4F(glm::vec4 value) : NovelRTGeoVector4F { value.x, value.y, value.z, value.w } {}
 
     inline const glm::vec4& vec4Value() const {
-      return reinterpret_cast<const glm::vec4&>(*this);
+      return *reinterpret_cast<const glm::vec4*>(this);
     }
 
     inline glm::vec4& vec4Value() {
@@ -36,7 +36,7 @@ namespace NovelRT::Maths {
     }
 
     inline float getMagnitude() const noexcept {
-      return glm::length(vec4Value());
+      return glm::length(*reinterpret_cast<const glm::vec4*>(this));
     }
 
     inline float getLength() const noexcept {
@@ -44,103 +44,103 @@ namespace NovelRT::Maths {
     }
 
     inline bool operator==(const GeoVector4F& other) const {
-      return vec4Value() == other.vec4Value();
+      return *reinterpret_cast<const glm::vec4*>(this) == *reinterpret_cast<const glm::vec4*>(&other);
     }
 
     inline bool operator!=(const GeoVector4F& other) const {
-      return vec4Value() != other.vec4Value();
+      return *reinterpret_cast<const glm::vec4*>(this) != *reinterpret_cast<const glm::vec4*>(&other);
     }
 
     inline bool operator<(const GeoVector4F& other) const {
-      return glm::any(glm::lessThan(vec4Value(), other.vec4Value()));
+      return glm::any(glm::lessThan(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other)));
     }
 
     inline bool operator<=(const GeoVector4F& other) const {
-      return glm::any(glm::lessThanEqual(vec4Value(), other.vec4Value()));
+      return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other)));
     }
 
     inline bool operator>(const GeoVector4F& other) const {
-      return glm::any(glm::greaterThan(vec4Value(), other.vec4Value()));
+      return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other)));
     }
 
     inline bool operator>=(const GeoVector4F& other) const {
-      return glm::any(glm::greaterThanEqual(vec4Value(), other.vec4Value()));
+      return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other)));
     }
 
     inline GeoVector4F operator+(const GeoVector4F& other) const {
-      return GeoVector4F(vec4Value() + other.vec4Value());
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) + *reinterpret_cast<const glm::vec4*>(&other));
     }
 
     inline GeoVector4F operator-(const GeoVector4F& other) const {
-      return GeoVector4F(vec4Value() - other.vec4Value());
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&other));
     }
 
     inline GeoVector4F operator*(const GeoVector4F& other) const {
-      return GeoVector4F(vec4Value() * other.vec4Value());
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) * *reinterpret_cast<const glm::vec4*>(&other));
     }
 
     GeoVector4F operator/(const GeoVector4F& other) const {
-      return GeoVector4F(vec4Value() / other.vec4Value());
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) / *reinterpret_cast<const glm::vec4*>(&other));
     }
 
     inline GeoVector4F operator+(float other) const {
-      return GeoVector4F(vec4Value() + other);
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) + other);
     }
 
     inline GeoVector4F operator-(float other) const {
-      return GeoVector4F(vec4Value() - other);
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) - other);
     }
 
     inline GeoVector4F operator*(float other) const {
-      return GeoVector4F(vec4Value() * other);
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) * other);
     }
 
     GeoVector4F operator/(float other) const {
-      return GeoVector4F(vec4Value() / other);
+      return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) / other);
     }
 
     inline GeoVector4F& operator+=(const GeoVector4F& other) {
-      vec4Value() += other.vec4Value();
+      *reinterpret_cast<glm::vec4*>(this) += *reinterpret_cast<const glm::vec4*>(&other);
       return *this;
     }
 
     inline GeoVector4F& operator-=(const GeoVector4F& other) {
-      vec4Value() -= other.vec4Value();
+      *reinterpret_cast<glm::vec4*>(this) -= *reinterpret_cast<const glm::vec4*>(&other);
       return *this;
     }
 
     inline GeoVector4F operator*=(const GeoVector4F& other) {
-      vec4Value() *= other.vec4Value();
+      *reinterpret_cast<glm::vec4*>(this) *= *reinterpret_cast<const glm::vec4*>(&other);
       return *this;
     }
 
     GeoVector4F operator/=(const GeoVector4F& other) {
-      vec4Value() /= other.vec4Value();
+      *reinterpret_cast<glm::vec4*>(this) /= *reinterpret_cast<const glm::vec4*>(&other);
       return *this;
     }
 
     inline GeoVector4F operator+=(float other) {
-      vec4Value() += other;
+      *reinterpret_cast<glm::vec4*>(this) += other;
       return *this;
     }
 
     inline GeoVector4F operator-=(float other) {
-      vec4Value() -= other;
+      *reinterpret_cast<glm::vec4*>(this) -= other;
       return *this;
     }
 
     inline GeoVector4F operator*=(float other) {
-      vec4Value() *= other;
+      *reinterpret_cast<glm::vec4*>(this) *= other;
       return *this;
     }
 
     GeoVector4F operator/=(float other) {
-      vec4Value() /= other;
+      *reinterpret_cast<glm::vec4*>(this) /= other;
       return *this;
     }
 
     void rotateToAngleAroundPoint(float angleRotationValue, const GeoVector4F& point, const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept {
-      vec4Value() = glm::rotate((vec4Value() - point.vec4Value()), glm::radians(angleRotationValue), axis.vec3Value()) + point.vec4Value();
+      *reinterpret_cast<glm::vec4*>(this) = glm::rotate((*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&point)), glm::radians(angleRotationValue), *reinterpret_cast<const glm::vec3*>(&axis)) + *reinterpret_cast<const glm::vec4*>(&point);
     }
 
     bool epsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept {

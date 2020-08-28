@@ -18,25 +18,17 @@ namespace NovelRT::Maths {
 
     GeoVector3F(glm::vec3 value) : NovelRTGeoVector3F { value.x, value.y, value.z } {}
 
-    inline const glm::vec3& vec3Value() const {
-      return reinterpret_cast<const glm::vec3&>(*this);
-    }
-
-    inline glm::vec3& vec3Value() {
-      return reinterpret_cast<glm::vec3&>(*this);
-    }
-
   public:
     GeoVector3F() : NovelRTGeoVector3F { 0.0f, 0.0f, 0.0f } {}
     GeoVector3F(float x, float y, float z) : NovelRTGeoVector3F { x, y, z } {}
     GeoVector3F(const GeoVector2F& vec2Value) : NovelRTGeoVector3F { vec2Value.x, vec2Value.y, 0.0f } {}
 
     inline GeoVector3F getNormalised() const noexcept {
-      return GeoVector3F(glm::normalize(vec3Value()));
+      return GeoVector3F(glm::normalize(*reinterpret_cast<const glm::vec3*>(this)));
     }
 
     inline float getMagnitude() const noexcept {
-      return glm::length(vec3Value());
+      return glm::length(*reinterpret_cast<const glm::vec3*>(this));
     }
 
     inline float getLength() const noexcept {
@@ -44,107 +36,107 @@ namespace NovelRT::Maths {
     }
 
     inline bool operator==(const GeoVector3F& other) const {
-      return vec3Value() == other.vec3Value();
+      return *reinterpret_cast<const glm::vec3*>(this) == *reinterpret_cast<const glm::vec3*>(&other);
     }
 
     inline bool operator!=(const GeoVector3F& other) const {
-      return vec3Value() != other.vec3Value();
+      return *reinterpret_cast<const glm::vec3*>(this) != *reinterpret_cast<const glm::vec3*>(&other);
     }
 
     inline bool operator<(const GeoVector3F& other) const {
-      return glm::any(glm::lessThan(vec3Value(), other.vec3Value()));
+      return glm::any(glm::lessThan(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other)));
     }
 
     inline bool operator<=(const GeoVector3F& other) const {
-      return glm::any(glm::lessThanEqual(vec3Value(), other.vec3Value()));
+      return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other)));
     }
 
     inline bool operator>(const GeoVector3F& other) const {
-      return glm::any(glm::greaterThan(vec3Value(), other.vec3Value()));
+      return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other)));
     }
 
     inline bool operator>=(const GeoVector3F& other) const {
-      return glm::any(glm::greaterThanEqual(vec3Value(), other.vec3Value()));
+      return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other)));
     }
 
     inline GeoVector3F operator+(const GeoVector3F& other) const {
-      return GeoVector3F(vec3Value() + other.vec3Value());
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) + *reinterpret_cast<const glm::vec3*>(&other));
     }
 
     inline GeoVector3F operator-(const GeoVector3F& other) const {
-      return GeoVector3F(vec3Value() - other.vec3Value());
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&other));
     }
 
     inline GeoVector3F operator*(const GeoVector3F& other) const {
-      return GeoVector3F(vec3Value() * other.vec3Value());
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) * *reinterpret_cast<const glm::vec3*>(&other));
     }
 
     GeoVector3F operator/(const GeoVector3F& other) const {
-      return GeoVector3F(vec3Value() / other.vec3Value());
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) / *reinterpret_cast<const glm::vec3*>(&other));
     }
 
     inline GeoVector3F operator+(float other) const {
-      return GeoVector3F(vec3Value() + other);
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) + other);
     }
 
     inline GeoVector3F operator-(float other) const {
-      return GeoVector3F(vec3Value() - other);
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) - other);
     }
 
     inline GeoVector3F operator*(float other) const {
-      return GeoVector3F(vec3Value() * other);
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) * other);
     }
 
     GeoVector3F operator/(float other) const {
-      return GeoVector3F(vec3Value() / other);
+      return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) / other);
     }
 
     inline GeoVector3F& operator+=(const GeoVector3F& other) {
-      vec3Value() = vec3Value() + other.vec3Value();
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) + *reinterpret_cast<const glm::vec3*>(&other);
       return *this;
     }
 
     inline GeoVector3F& operator-=(const GeoVector3F& other) {
-      vec3Value() = vec3Value() - other.vec3Value();
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&other);
       return *this;
     }
 
     inline GeoVector3F operator*=(const GeoVector3F& other) {
-      vec3Value() = vec3Value() * other.vec3Value();
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) * *reinterpret_cast<const glm::vec3*>(&other);
       return *this;
     }
 
     GeoVector3F operator/=(const GeoVector3F& other) {
-      vec3Value() = vec3Value() / other.vec3Value();
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) / *reinterpret_cast<const glm::vec3*>(&other);
       return *this;
     }
 
     inline GeoVector3F operator+=(float other) {
-      vec3Value() = vec3Value() + other;
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) + other;
       return *this;
     }
 
     inline GeoVector3F operator-=(float other) {
-      vec3Value() = vec3Value() - other;
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) - other;
       return *this;
     }
 
     inline GeoVector3F operator*=(float other) {
-      vec3Value() = vec3Value() * other;
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) * other;
       return *this;
     }
 
     GeoVector3F operator/=(float other) {
-      vec3Value() = vec3Value() / other;
+      *reinterpret_cast<glm::vec3*>(this) = *reinterpret_cast<const glm::vec3*>(this) / other;
       return *this;
     }
 
     void rotateToAngleAroundPoint(float angleRotationValue, const GeoVector3F& point, const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept {
-      vec3Value() = glm::rotate((vec3Value() - point.vec3Value()), glm::radians(angleRotationValue), axis.vec3Value()) + point.vec3Value();
+      *reinterpret_cast<glm::vec3*>(this) = glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)), glm::radians(angleRotationValue), *reinterpret_cast<const glm::vec3*>(&axis)) + *reinterpret_cast<const glm::vec3*>(&point);
     }
 
     bool epsilonEquals(const GeoVector3F& other, const GeoVector3F& epsilonValue) const noexcept {
-      return glm::all(glm::equal(vec3Value(), other.vec3Value(), epsilonValue.vec3Value()));
+      return glm::all(glm::equal(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other), *reinterpret_cast<const glm::vec3*>(&epsilonValue)));
     }
 
     static const GeoVector3F zero() {
