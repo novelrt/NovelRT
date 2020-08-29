@@ -26,9 +26,9 @@ extern "C" {
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(const NovelRTGeoBounds bounds, const NovelRTGeoVector2F point) {
+  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(const NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
     const Maths::GeoBounds& cBounds = reinterpret_cast<const Maths::GeoBounds&>(bounds);
-    const Maths::GeoVector2F& cPoint = reinterpret_cast<const Maths::GeoVector2F&>(point);
+    Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
     if (cBounds.pointIsWithinBounds(cPoint)) {
       return NOVELRT_TRUE;
     }

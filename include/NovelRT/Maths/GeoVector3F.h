@@ -23,7 +23,7 @@ namespace NovelRT::Maths {
 
     GeoVector3F() : x(0.0f), y(0.0f), z(0.0f) {}
     GeoVector3F(float x, float y, float z) : x(x), y(y), z(z) {}
-    GeoVector3F(const GeoVector2F& vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f) {}
+    GeoVector3F(GeoVector2F vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f) {}
 
     inline GeoVector3F getNormalised() const noexcept {
       return GeoVector3F(glm::normalize(*reinterpret_cast<const glm::vec3*>(this)));

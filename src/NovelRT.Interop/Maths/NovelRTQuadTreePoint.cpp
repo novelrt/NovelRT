@@ -30,7 +30,7 @@ extern "C" {
       return NOVELRT_FAILURE;
     }
 
-    const Maths::GeoVector2F& pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
+    Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
     NovelRTGeoVector2F returnValue = reinterpret_cast<const NovelRTGeoVector2F&>(pos);
     *outputPosition = returnValue;
 

@@ -37,43 +37,43 @@ namespace NovelRT::Maths {
       return getMagnitude();
     }
 
-    inline bool operator==(const GeoVector2F& other) const {
+    inline bool operator==(GeoVector2F other) const {
       return *reinterpret_cast<const glm::vec2*>(this) == *reinterpret_cast<const glm::vec2*>(&other);
     }
 
-    inline bool operator!=(const GeoVector2F& other) const {
+    inline bool operator!=(GeoVector2F other) const {
       return *reinterpret_cast<const glm::vec2*>(this) != *reinterpret_cast<const glm::vec2*>(&other);
     }
 
-    inline bool operator<(const GeoVector2F& other) const {
+    inline bool operator<(GeoVector2F other) const {
       return glm::any(glm::lessThan(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other)));
     }
 
-    inline bool operator<=(const GeoVector2F& other) const {
+    inline bool operator<=(GeoVector2F other) const {
       return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other)));
     }
 
-    inline bool operator>(const GeoVector2F& other) const {
+    inline bool operator>(GeoVector2F other) const {
       return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other)));
     }
 
-    inline bool operator>=(const GeoVector2F& other) const {
+    inline bool operator>=(GeoVector2F other) const {
       return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other)));
     }
 
-    inline GeoVector2F operator+(const GeoVector2F& other) const {
+    inline GeoVector2F operator+(GeoVector2F other) const {
       return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) + *reinterpret_cast<const glm::vec2*>(&other));
     }
 
-    inline GeoVector2F operator-(const GeoVector2F& other) const {
+    inline GeoVector2F operator-(GeoVector2F other) const {
       return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) - *reinterpret_cast<const glm::vec2*>(&other));
     }
 
-    inline GeoVector2F operator*(const GeoVector2F& other) const {
+    inline GeoVector2F operator*(GeoVector2F other) const {
       return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) * *reinterpret_cast<const glm::vec2*>(&other));
     }
 
-    GeoVector2F operator/(const GeoVector2F& other) const {
+    GeoVector2F operator/(GeoVector2F other) const {
       return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / *reinterpret_cast<const glm::vec2*>(&other));
     }
 
@@ -93,22 +93,22 @@ namespace NovelRT::Maths {
       return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / other);
     }
 
-    inline GeoVector2F& operator+=(const GeoVector2F& other) {
+    inline GeoVector2F& operator+=(GeoVector2F other) {
       *reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) + *reinterpret_cast<const glm::vec2*>(&other);
       return *this;
     }
 
-    inline GeoVector2F& operator-=(const GeoVector2F& other) {
+    inline GeoVector2F& operator-=(GeoVector2F other) {
       *reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) - *reinterpret_cast<const glm::vec2*>(&other);
       return *this;
     }
 
-    inline GeoVector2F operator*=(const GeoVector2F& other) {
+    inline GeoVector2F operator*=(GeoVector2F other) {
       *reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) * *reinterpret_cast<const glm::vec2*>(&other);
       return *this;
     }
 
-    GeoVector2F operator/=(const GeoVector2F& other) {
+    GeoVector2F operator/=(GeoVector2F other) {
       *reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) / *reinterpret_cast<const glm::vec2*>(&other);
       return *this;
     }
@@ -133,28 +133,28 @@ namespace NovelRT::Maths {
       return *this;
     }
 
-    void rotateToAngleAroundPoint(float angleRotationValue, const GeoVector2F& point) noexcept {
+    void rotateToAngleAroundPoint(float angleRotationValue, GeoVector2F point) noexcept {
       *reinterpret_cast<glm::vec2*>(this) = glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) - *reinterpret_cast<const glm::vec2*>(&point)), glm::radians(angleRotationValue)) + *reinterpret_cast<const glm::vec2*>(&point);
     }
 
-    bool epsilonEquals(const GeoVector2F& other, const GeoVector2F& epsilonValue) const noexcept {
+    bool epsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept {
       return glm::all(glm::equal(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other), *reinterpret_cast<const glm::vec2*>(&epsilonValue)));
     }
 
-    static const GeoVector2F zero() {
+    static GeoVector2F zero() {
       return GeoVector2F::uniform(0);
     }
 
-    static const GeoVector2F one() {
+    static GeoVector2F one() {
       return GeoVector2F::uniform(1);
     }
 
-    static const GeoVector2F uniform(float value) {
+    static GeoVector2F uniform(float value) {
       return GeoVector2F(value, value);
     }
   };
 
-  inline GeoVector2F operator*(float lhs, const GeoVector2F& rhs) {
+  inline GeoVector2F operator*(float lhs, GeoVector2F rhs) {
     return rhs * lhs;
   }
 

@@ -3,12 +3,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Maths {
-  GeoBounds::GeoBounds(const GeoVector2F& position, const GeoVector2F& size, float rotation) noexcept :
+  GeoBounds::GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept :
     position(position),
     rotation(rotation),
     size(size) { }
 
-  bool GeoBounds::pointIsWithinBounds(const GeoVector2F& point) const {
+  bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const {
     auto corner0 = getCornerInWorldSpace(0);
     auto corner2 = getCornerInWorldSpace(2);
 

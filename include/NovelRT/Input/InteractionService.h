@@ -25,7 +25,7 @@ namespace NovelRT::Input {
     LoggingService _logger;
     void processKeyState(KeyCode code, KeyState state);
     void processKeyStates();
-    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2F& mousePosition);
+    void acceptMouseButtonClickPush(int button, int action, Maths::GeoVector2F mousePosition);
     void acceptKeyboardInputBindingPush(int key, int action);
 
   public:
@@ -37,7 +37,7 @@ namespace NovelRT::Input {
 
     void executeClickedInteractable();
 
-    inline void setScreenSize(const Maths::GeoVector2F& value) noexcept {
+    inline void setScreenSize(Maths::GeoVector2F value) noexcept {
       _screenSize = value;
     }
 

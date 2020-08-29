@@ -31,7 +31,7 @@ namespace NovelRT::Maths {
 
     GeoVector4F() {}
     GeoVector4F(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-    GeoVector4F(const GeoVector2F& vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f) {}
+    GeoVector4F(GeoVector2F vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f) {}
     GeoVector4F(const GeoVector3F& vec3Value) : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f) {}
 
     inline GeoVector4F getNormalised() const noexcept {

@@ -12,18 +12,18 @@ namespace NovelRT {
    * Represents a 2D position, scale and rotation.
    */
   class Transform {
-  protected:
-    Maths::GeoVector2F _position;
-    Maths::GeoVector2F _scale;
-    float _rotation;
   public:
+    Maths::GeoVector2F position;
+    Maths::GeoVector2F scale;
+    float rotation;
+
     /**
      * Creates a new Transform with the specified position, rotation and scale.
      * @param position The position which represents the position of the transform in a given space such as screen or world space.
      * @param rotation The rotation, in degrees, which represents the rotation of the transform.
      * @param scale The scale which represents the size of the transform.
      */
-    Transform(const Maths::GeoVector2F& position, float rotation, const Maths::GeoVector2F& scale) noexcept;
+    Transform(Maths::GeoVector2F position, float rotation, Maths::GeoVector2F scale) noexcept;
     /**
      * Creates a new Transform with the default values.
      */
@@ -33,57 +33,15 @@ namespace NovelRT {
      * Gets the Axis Aligned Bounding Box based on the position and scale of this transform.
      */
     inline Maths::GeoBounds getAABB() const {
-      auto scale = fmaxf(_scale.x, _scale.y);
-      return Maths::GeoBounds(_position, Maths::GeoVector2F(scale, scale), 0);
+      auto maxFscale = fmaxf(scale.x, scale.y);
+      return Maths::GeoBounds(position, Maths::GeoVector2F(maxFscale, maxFscale), 0);
     }
 
     /**
      * Gets the bounds based on the position, scale and rotation of this transform.
      */
     inline Maths::GeoBounds getBounds() const {
-      return Maths::GeoBounds(_position, _scale, _rotation);
-    }
-
-    /**
-     * Gets the position of this transform. This is the read-only version.
-     */
-    inline const Maths::GeoVector2F& position() const {
-      return _position;
-    }
-
-    /**
-     * Gets the position of this transform.
-     */
-    inline Maths::GeoVector2F& position() {
-      return _position;
-    }
-
-    /**
-     * Gets the rotation, in degrees, of this transform. This is the read-only version.
-     */
-    inline const float& rotation() const {
-      return _rotation;
-    }
-
-    /**
-     * Gets the rotation, in degrees, of this transform.
-     */
-    inline float& rotation() {
-      return _rotation;
-    }
-
-    /**
-     * Gets the scale of this transform. This is the read-only version.
-     */
-    inline const Maths::GeoVector2F& scale() const {
-      return _scale;
-    }
-
-    /**
-     * Gets the scale of this transform.
-     */
-    inline Maths::GeoVector2F& scale() {
-      return _scale;
+      return Maths::GeoBounds(position, scale, rotation);
     }
   };
 }

@@ -39,7 +39,7 @@ namespace NovelRT::Graphics {
       return _textureFile;
     }
 
-    inline const Maths::GeoVector2F& getSize() const noexcept {
+    inline Maths::GeoVector2F getSize() const noexcept {
       return _size;
     }
 

@@ -8,8 +8,8 @@ namespace NovelRT::Graphics {
     _cameraFrameState(CameraFrameState::ModifiedInCurrent) {
   }
 
-  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector2F& windowSize) {  
-    auto callback = [](Camera* camera, const Maths::GeoVector2F& windowSize) {
+  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(Maths::GeoVector2F windowSize) {  
+    auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
       camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::ortho(0.0f, windowSize.x, windowSize.y, 0.0f, 0.0f, 65535.0f)));
       camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::scale(glm::vec3(windowSize.x / 1920.0f, windowSize.y / 1080.0f, -1.0f))));
     };
@@ -22,8 +22,8 @@ namespace NovelRT::Graphics {
     return returnVal;
   }
 
-  std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(const Maths::GeoVector2F& windowSize) {
-    auto callback = [](Camera* camera, const Maths::GeoVector2F& windowSize) {
+  std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize) {
+    auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
 
       auto aspect = windowSize.y != 0 ? windowSize.x / windowSize.y : 0;
       
@@ -56,7 +56,7 @@ namespace NovelRT::Graphics {
     }
   }
 
-  void Camera::forceResize(const Maths::GeoVector2F& windowSize) {
+  void Camera::forceResize(Maths::GeoVector2F windowSize) {
     forceResizeCallback()(this, windowSize);
   }
 }

@@ -17,10 +17,10 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<Maths::GeoMatrix4x4F> _cameraUboMatrix;
     Maths::GeoMatrix4x4F generateUboMatrix();
     CameraFrameState _cameraFrameState;
-    std::function<void(Camera*, const Maths::GeoVector2F&)> _forceResizeCallback;
+    std::function<void(Camera*, Maths::GeoVector2F)> _forceResizeCallback;
 
     void initialiseCameraForFrame();
-    void forceResize(const Maths::GeoVector2F& windowSize);
+    void forceResize(Maths::GeoVector2F windowSize);
 
   public:
     Camera();
@@ -53,23 +53,23 @@ namespace NovelRT::Graphics {
       return _cameraFrameState;
     }
 
-    inline const std::function<void(Camera*, const Maths::GeoVector2F&)>& forceResizeCallback() const {
+    inline const std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback() const {
       return _forceResizeCallback;
     }
 
-    inline std::function<void(Camera*, const Maths::GeoVector2F&)>& forceResizeCallback() {
+    inline std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback() {
       return _forceResizeCallback;
     }
 
     /**
      * Creates an orthographic camera using default settings and the given window size.
      */
-    static std::unique_ptr<Camera> createDefaultOrthographicProjection(const Maths::GeoVector2F& windowSize);
+    static std::unique_ptr<Camera> createDefaultOrthographicProjection(Maths::GeoVector2F windowSize);
 
     /**
      * Creates a perspective camera using default settings and the given window size.
      */
-    static std::unique_ptr<Camera> createDefaultPerspectiveProjection(const Maths::GeoVector2F& windowSize);
+    static std::unique_ptr<Camera> createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize);
   };
 }
 

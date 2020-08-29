@@ -43,7 +43,7 @@ namespace NovelRT::Graphics {
     if (_letterRects.size() < _text.length()) {
       size_t difference = _text.length() - _letterRects.size();
       auto modifiedTransform = transform();
-      modifiedTransform.scale() = Maths::GeoVector2F(50, 50);
+      modifiedTransform.scale = Maths::GeoVector2F(50, 50);
       for (size_t i = 0; i < difference; i++) {
         auto rect = std::make_unique<ImageRect>(
           modifiedTransform,
@@ -62,7 +62,7 @@ namespace NovelRT::Graphics {
   }
   void TextRect::reloadText() {
 
-    auto ttfOrigin = transform().position();
+    auto ttfOrigin = transform().position;
 
     size_t i = 0;
     for (const char& c : getText()) {
@@ -75,8 +75,8 @@ namespace NovelRT::Graphics {
 
       auto& target = _letterRects.at(i++);
       target->texture() = ch.texture;
-      target->transform().position() = currentWorldPosition;
-      target->transform().scale() = Maths::GeoVector2F(static_cast<float>(ch.sizeX), static_cast<float>(ch.sizeY));
+      target->transform().position = currentWorldPosition;
+      target->transform().scale = Maths::GeoVector2F(static_cast<float>(ch.sizeX), static_cast<float>(ch.sizeY));
       target->setActive(true);
       ttfOrigin.x = ttfOrigin.x + (ch.advance >> 6);
     }

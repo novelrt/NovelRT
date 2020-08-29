@@ -18,7 +18,7 @@ namespace NovelRT::Maths {
     QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2F(x, y)) {
     }
 
-    const GeoVector2F& getPosition() const noexcept {
+    GeoVector2F getPosition() const noexcept {
       return _position;
     }
   };
