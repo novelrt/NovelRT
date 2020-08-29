@@ -1,18 +1,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRTMATHSGEOBOUNDSH
-#define NOVELRTMATHSGEOBOUNDSH
+#ifndef NOVELRT_MATHS_GEOBOUNDS_H
+#define NOVELRT_MATHS_GEOBOUNDS_H
 
-#ifndef NOVELRTH
+#ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "BaseGeoBounds.h"
-
 namespace NovelRT::Maths {
-  class GeoBounds : public NovelRTGeoBounds {
+  class GeoBounds {
   public:
-    GeoBounds(const GeoVector2F& position, const GeoVector2F& size, float rotation);
+    GeoVector2F position;
+    float rotation;
+    GeoVector2F size;
+
+    GeoBounds(const GeoVector2F& position, const GeoVector2F& size, float rotation) noexcept;
     bool pointIsWithinBounds(const GeoVector2F& point) const;
     bool intersectsWith(const GeoBounds& otherBounds) const;
     GeoVector2F getCornerInLocalSpace(int index) const;
@@ -33,4 +35,4 @@ namespace NovelRT::Maths {
   };
 }
 
-#endif //NOVELRTMATHSGEOBOUNDSH
+#endif //!NOVELRT_MATHS_GEOBOUNDS_H

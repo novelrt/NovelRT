@@ -7,10 +7,8 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "BaseGeoVector2F.h"
-
 namespace NovelRT::Maths {
-  class GeoVector2F : public NovelRTGeoVector2F {
+  class GeoVector2F {
     friend class Graphics::RenderObject;
     friend class Input::InteractionService;
     friend class GeoVector3F;
@@ -18,12 +16,14 @@ namespace NovelRT::Maths {
 
   private:
 
-    GeoVector2F(glm::vec2 value) : NovelRTGeoVector2F { value.x, value.y } {}
+    GeoVector2F(glm::vec2 value) : x(value.x), y(value.y) {}
 
   public:
-    GeoVector2F() noexcept : NovelRTGeoVector2F { 0.0f, 0.0f } {}
-    GeoVector2F(float x, float y) noexcept : NovelRTGeoVector2F { x, y } {}
-    GeoVector2F(const NovelRTGeoVector2F& cStruct) noexcept {}
+    float x;
+    float y;
+
+    GeoVector2F() noexcept : x(0.0f), y(0.0f) {}
+    GeoVector2F(float x, float y) noexcept : x(x), y(y) {}
 
     inline GeoVector2F getNormalised() const noexcept {
       return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));

@@ -7,15 +7,13 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "BaseGeoVector4F.h"
-
 namespace NovelRT::Maths {
-  class GeoVector4F : public NovelRTGeoVector4F {
+  class GeoVector4F {
     friend class Input::InteractionService;
     friend class GeoMatrix4x4F;
 
   private:
-    GeoVector4F(glm::vec4 value) : NovelRTGeoVector4F { value.x, value.y, value.z, value.w } {}
+    GeoVector4F(glm::vec4 value) : x(value.x), y(value.y), z(value.z), w(value.w) {}
 
     inline const glm::vec4& vec4Value() const {
       return *reinterpret_cast<const glm::vec4*>(this);
@@ -26,10 +24,15 @@ namespace NovelRT::Maths {
     }
 
   public:
+    float x;
+    float y;
+    float z;
+    float w;
+
     GeoVector4F() {}
-    GeoVector4F(float x, float y, float z, float w) : NovelRTGeoVector4F { x, y, z, w } {}
-    GeoVector4F(const GeoVector2F& vec2Value) : NovelRTGeoVector4F { vec2Value.x, vec2Value.y, 0.0f, 0.0f } {}
-    GeoVector4F(const GeoVector3F& vec3Value) : NovelRTGeoVector4F { vec3Value.x, vec3Value.y, vec3Value.z, 0.0f } {}
+    GeoVector4F(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+    GeoVector4F(const GeoVector2F& vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f) {}
+    GeoVector4F(const GeoVector3F& vec3Value) : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f) {}
 
     inline GeoVector4F getNormalised() const noexcept {
       return GeoVector4F(glm::normalize(vec4Value()));

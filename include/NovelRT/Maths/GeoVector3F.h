@@ -7,21 +7,23 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "BaseGeoVector3F.h"
-
 namespace NovelRT::Maths {
-  class GeoVector3F : public NovelRTGeoVector3F {
+  class GeoVector3F {
     friend class Input::InteractionService;
     friend class GeoVector4F;
 
   private:
 
-    GeoVector3F(glm::vec3 value) : NovelRTGeoVector3F { value.x, value.y, value.z } {}
+    GeoVector3F(glm::vec3 value) : x(value.x), y(value.y), z(value.z) {}
 
   public:
-    GeoVector3F() : NovelRTGeoVector3F { 0.0f, 0.0f, 0.0f } {}
-    GeoVector3F(float x, float y, float z) : NovelRTGeoVector3F { x, y, z } {}
-    GeoVector3F(const GeoVector2F& vec2Value) : NovelRTGeoVector3F { vec2Value.x, vec2Value.y, 0.0f } {}
+    float x;
+    float y;
+    float z;
+
+    GeoVector3F() : x(0.0f), y(0.0f), z(0.0f) {}
+    GeoVector3F(float x, float y, float z) : x(x), y(y), z(z) {}
+    GeoVector3F(const GeoVector2F& vec2Value) : x(vec2Value.x), y(vec2Value.y), z(0.0f) {}
 
     inline GeoVector3F getNormalised() const noexcept {
       return GeoVector3F(glm::normalize(*reinterpret_cast<const glm::vec3*>(this)));

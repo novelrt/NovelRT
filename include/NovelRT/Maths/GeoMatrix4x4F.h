@@ -7,11 +7,10 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-#include "BaseGeoMatrix4x4F.h"
 
 namespace NovelRT::Maths {
 
-  class GeoMatrix4x4F : public NovelRTGeoMatrix4x4F {
+  class GeoMatrix4x4F {
     friend class Graphics::RenderObject;
     friend class Graphics::ImageRect;
     friend class Graphics::BasicFillRect;
@@ -21,25 +20,37 @@ namespace NovelRT::Maths {
 
   private:
 
-    explicit GeoMatrix4x4F(glm::mat4 matrix) {
-      x = *reinterpret_cast<NovelRTGeoVector4F*>(&matrix[0]);
-      y = *reinterpret_cast<NovelRTGeoVector4F*>(&matrix[1]);
-      z = *reinterpret_cast<NovelRTGeoVector4F*>(&matrix[2]);
-      w = *reinterpret_cast<NovelRTGeoVector4F*>(&matrix[3]);
-    }
+    explicit GeoMatrix4x4F(glm::mat4 matrix) :
+      x(*reinterpret_cast<GeoVector4F*>(&matrix[0])),
+      y(*reinterpret_cast<GeoVector4F*>(&matrix[1])),
+      z(*reinterpret_cast<GeoVector4F*>(&matrix[2])),
+      w(*reinterpret_cast<GeoVector4F*>(&matrix[3]))
+      {}
+    
 
   public:
-    GeoMatrix4x4F() {}
+    GeoVector4F x;
+    GeoVector4F y;
+    GeoVector4F z;
+    GeoVector4F w;
+
+
+    GeoMatrix4x4F() :
+    x(GeoVector4F::zero()),
+    y(GeoVector4F::zero()),
+    z(GeoVector4F::zero()),
+    w(GeoVector4F::zero())
+    {}
 
     GeoMatrix4x4F(GeoVector4F x,
       GeoVector4F y,
       GeoVector4F z,
-      GeoVector4F w) : NovelRTGeoMatrix4x4F {
-        x,
-        y,
-        z,
-        w
-      } {}
+      GeoVector4F w) :
+        x(x),
+        y(y),
+        z(z),
+        w(w)
+    {}
 
     inline bool operator==(const GeoMatrix4x4F& other) const {
       return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
