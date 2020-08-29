@@ -8,6 +8,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
   typedef struct {
     NovelRTGeoVector2F position;
     float rotation;

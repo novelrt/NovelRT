@@ -7,11 +7,17 @@
 
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector3F.h"
-#include "NovelRT/Maths/BaseGeoVector4F.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+  typedef struct {
+    float x;
+    float y;
+    float z;
+    float w;
+  } NovelRTGeoVector4F;
 
   NovelRTGeoVector4F NovelRT_GeoVector4F_createFromGeoVector2F(NovelRTGeoVector2F vector);
   NovelRTGeoVector4F NovelRT_GeoVector4F_createFromGeoVector3F(NovelRTGeoVector3F vector);

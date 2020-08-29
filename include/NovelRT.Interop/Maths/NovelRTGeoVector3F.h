@@ -4,11 +4,16 @@
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR3F_H
 
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
-#include "NovelRT/Maths/BaseGeoVector3F.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+  typedef struct {
+    float x;
+    float y;
+    float z;
+  } NovelRTGeoVector3F;
 
   NovelRTGeoVector3F NovelRT_GeoVector3F_createFromGeoVector2F(NovelRTGeoVector2F vector);
   NovelRTBool NovelRT_GeoVector3F_isNaN(NovelRTGeoVector3F vector);
