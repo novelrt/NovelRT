@@ -19,7 +19,7 @@ namespace NovelRT::Maths {
     return false;
   }
 
-  bool GeoBounds::intersectsWith(const GeoBounds& otherBounds) const {
+  bool GeoBounds::intersectsWith(GeoBounds otherBounds) const {
     if (rotation != 0.0f) throw std::runtime_error("Box intersection does not currently support rotated bounds. AABB support only.");
 
     auto minA = position - getExtents();

@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
    NovelRTQuadTree NovelRT_QuadTree_create(NovelRTGeoBounds bounds) {
-     _treeCollection.push_back(std::make_shared<Maths::QuadTree>(reinterpret_cast<const Maths::GeoBounds&>(bounds)));
+     _treeCollection.push_back(std::make_shared<Maths::QuadTree>(*reinterpret_cast<const Maths::GeoBounds*>(&bounds)));
      return reinterpret_cast<NovelRTQuadTree>(_treeCollection.back().get());
    }
   
@@ -177,7 +177,7 @@ extern "C" {
      }
 
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
-    *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(reinterpret_cast<const Maths::GeoBounds&>(bounds));
+    *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(*reinterpret_cast<const Maths::GeoBounds*>(&bounds));
     *outputResultVector = reinterpret_cast<NovelRTPointVector>(points);
 
     return NOVELRT_SUCCESS;

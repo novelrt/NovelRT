@@ -15,7 +15,7 @@ NovelRTGeoBounds getCenteredBoundsC(float width, float height) {
   auto size = GeoVector2F(width, height);
   auto position = GeoVector2F(0, 0);
   GeoBounds* result = new GeoBounds(position, size, 0);
-  return reinterpret_cast<NovelRTGeoBounds&>(*result);
+  return *reinterpret_cast<NovelRTGeoBounds*>(&*result);
 }
 
 bool checkPointsForEqualityC(NovelRTQuadTreePoint one, NovelRTQuadTreePoint two) {

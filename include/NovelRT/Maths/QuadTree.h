@@ -26,7 +26,7 @@ namespace NovelRT::Maths {
 
   public:
 
-    explicit QuadTree(const GeoBounds& bounds, std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept :
+    explicit QuadTree(GeoBounds bounds, std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept :
       _parent(parent),
       _bounds(bounds),
       _points(),
@@ -38,7 +38,7 @@ namespace NovelRT::Maths {
       return _parent;
     }
 
-    const GeoBounds& getBounds() const noexcept {
+    GeoBounds getBounds() const noexcept {
       return _bounds;
     }
 
@@ -96,7 +96,7 @@ namespace NovelRT::Maths {
 
     //TODO: This doesn't seem right at all lol
     template <typename TQuadTreePoint, typename... TArgs>
-    bool tryInsert(const GeoBounds& bounds, TArgs... args) {
+    bool tryInsert(GeoBounds bounds, TArgs... args) {
       return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0), std::forward<TArgs>(args)...)) ||
              tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(1), std::forward<TArgs>(args)...)) ||
              tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(3), std::forward<TArgs>(args)...)) ||
@@ -128,7 +128,7 @@ namespace NovelRT::Maths {
     }
 
     //TODO: Why are we returning via a parameter and not the signature's return type?
-    void getIntersectingPoints(const GeoBounds& bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints) {
+    void getIntersectingPoints(GeoBounds bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints) {
       if (getBounds().intersectsWith(bounds)) {
         return;
       }
@@ -148,7 +148,7 @@ namespace NovelRT::Maths {
       }
     }
 
-    std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(const GeoBounds& bounds) {
+    std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(GeoBounds bounds) {
       auto intersectingPoints = std::vector<std::shared_ptr<QuadTreePoint>>();
       getIntersectingPoints(bounds, intersectingPoints);
       return intersectingPoints;
