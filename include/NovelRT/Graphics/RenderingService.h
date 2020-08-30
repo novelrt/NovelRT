@@ -41,20 +41,20 @@ namespace NovelRT::Graphics {
     int initialiseRendering();
     void tearDown() const;
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const RGBAConfig& colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig);
+    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, RGBAConfig colourConfig);
 
-    std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, const RGBAConfig& colourConfig, float fontSize, const std::string& fontFilePath);
+    std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
 
     std::weak_ptr<Camera> getCamera() const;
 
     void beginFrame() const;
     void endFrame() const;
 
-    void setBackgroundColour(const RGBAConfig& colour);
+    void setBackgroundColour(RGBAConfig colour);
 
     std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
     std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);

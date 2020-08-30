@@ -201,25 +201,25 @@ namespace NovelRT::Graphics {
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
     int layer,
     const std::string& filePath,
-    const RGBAConfig& colourTint) {
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
     int layer,
-    const RGBAConfig& colourTint) {
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
   std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
     int layer,
-    const RGBAConfig& colourConfig,
+    RGBAConfig colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, RGBAConfig colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
@@ -280,7 +280,7 @@ namespace NovelRT::Graphics {
     return returnValue;
   }
 
-  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
+  void RenderingService::setBackgroundColour(RGBAConfig colour) {
     _framebufferColour = colour;
   }
 }

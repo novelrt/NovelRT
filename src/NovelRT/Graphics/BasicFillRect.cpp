@@ -8,7 +8,7 @@ namespace NovelRT::Graphics {
     int layer,
     std::weak_ptr<Camera> camera,
     ShaderProgram shaderProgram,
-    const RGBAConfig& fillColour) :
+    RGBAConfig fillColour) :
     RenderObject(transform, layer, shaderProgram, camera), _colourConfig(fillColour),
     _colourBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)) {}
 
@@ -55,7 +55,7 @@ namespace NovelRT::Graphics {
     return _colourConfig;
   }
 
-  void BasicFillRect::setColourConfig(const RGBAConfig& value) {
+  void BasicFillRect::setColourConfig(RGBAConfig value) {
     _colourConfig = value;
     configureObjectBuffers();
   }

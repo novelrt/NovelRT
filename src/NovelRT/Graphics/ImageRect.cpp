@@ -8,7 +8,7 @@ namespace NovelRT::Graphics {
     ShaderProgram shaderProgram,
     std::weak_ptr<Camera> camera,
     std::shared_ptr<Texture> texture,
-    const RGBAConfig& colourTint) :
+    RGBAConfig colourTint) :
     RenderObject(transform,
       layer,
       shaderProgram,
@@ -23,7 +23,7 @@ namespace NovelRT::Graphics {
      int layer,
      ShaderProgram shaderProgram,
      std::weak_ptr<Camera> camera,
-     const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
+     RGBAConfig colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
    }
 
    void ImageRect::drawObject() {

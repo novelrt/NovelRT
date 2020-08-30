@@ -30,7 +30,7 @@ namespace NovelRT::Graphics {
       ShaderProgram programId,
       std::weak_ptr<Camera> camera,
       std::shared_ptr<FontSet> fontSet,
-      const RGBAConfig& colourConfig);
+      RGBAConfig colourConfig);
 
     void drawObject() final;
 
@@ -38,7 +38,7 @@ namespace NovelRT::Graphics {
       return _colourConfig;
     }
 
-    void setColourConfig(const RGBAConfig& value);
+    void setColourConfig(RGBAConfig value);
 
     std::string getText() const;
     void setText(const std::string& value);

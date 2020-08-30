@@ -23,11 +23,11 @@ namespace NovelRT::Graphics {
       int layer,
       std::weak_ptr<Camera> camera,
       ShaderProgram shaderProgram,
-      const RGBAConfig& fillColour);
+      RGBAConfig fillColour);
 
     void drawObject() final;
     const RGBAConfig getColourConfig() const;
-    void setColourConfig(const RGBAConfig& value);
+    void setColourConfig(RGBAConfig value);
   };
 }
 

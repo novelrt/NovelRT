@@ -11,32 +11,32 @@ namespace NovelRT::Graphics {
   class RGBAConfig {
 
   private:
-    int _r;
-    int _g;
-    int _b;
-    int _a;
+    int32_t _r;
+    int32_t _g;
+    int32_t _b;
+    int32_t _a;
 
   public:
-    RGBAConfig(int r,
-               int g,
-               int b,
-               int a);
+    RGBAConfig(int32_t r,
+               int32_t g,
+               int32_t b,
+               int32_t a) noexcept;
 
-    int getR() const;
-    float getRScalar() const;
-    void setR(int value);
+    int32_t getR() const noexcept;
+    float getRScalar() const noexcept;
+    void setR(int32_t value) noexcept;
 
-    int getG() const;
-    float getGScalar() const;
-    void setG(int value);
+    int32_t getG() const noexcept;
+    float getGScalar() const noexcept;
+    void setG(int32_t value) noexcept;
 
-    int getB() const;
-    float getBScalar() const;
-    void setB(int value);
+    int32_t getB() const noexcept;
+    float getBScalar() const noexcept;
+    void setB(int32_t value) noexcept;
 
-    int getA() const;
-    float getAScalar() const;
-    void setA(int value);
+    int32_t getA() const noexcept;
+    float getAScalar() const noexcept;
+    void setA(int32_t value) noexcept;
   };
 }
 
