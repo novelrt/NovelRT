@@ -43,7 +43,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly) {
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), &actualMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -82,7 +82,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractMatrix(NovelRT_GeoMatrix4x4F_getDefaultIdentity(), NovelRT_GeoMatrix4x4F_getDefaultIdentity(), &actualMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -121,8 +121,8 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly
   Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
   NovelRTGeoMatrix4x4F resultMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), &resultMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), resultMatrix));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyMatrix(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), &resultMatrix, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), resultMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -160,8 +160,8 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixAddsMatricesTogetherCorrectly) {
   NovelRTGeoMatrix4x4F inputMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F::getDefaultIdentity() + Maths::GeoMatrix4x4F::getDefaultIdentity();
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignMatrix(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), inputMatrix));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignMatrix(reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), inputMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, addAssignMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -238,8 +238,8 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixMultipliesMatricesTogetherCor
   Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
   Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignMatrix(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix)));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignMatrix(reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix)));
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -278,7 +278,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly) {
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -317,7 +317,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorr
   NovelRTGeoMatrix4x4F actualMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F { NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one(), NovelRT_GeoVector4F_one() }, 1.0f, &actualMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), actualMatrix));
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -356,8 +356,8 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatMultipliesMatrixAndFloatTogetherCorr
   Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
   NovelRTGeoMatrix4x4F resultMatrix = NovelRT_GeoMatrix4x4F_getDefaultIdentity();
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyFloat(reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 2.0f, &resultMatrix, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), resultMatrix));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyFloat(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), 2.0f, &resultMatrix, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), resultMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -395,8 +395,8 @@ TEST(InteropGeoMatrix4x4FTest, addAssignFloatAddsMatrixAndFloatTogetherCorrectly
   NovelRTGeoMatrix4x4F inputMatrix { NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f) };
   Maths::GeoMatrix4x4F expectedMatrix = reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix) + reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix);
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignFloat(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 1.0f, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), inputMatrix));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignFloat(reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), 1.0f, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), inputMatrix));
 }
 
 TEST(InteropGeoMatrix4x4FTest, addAssignFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
@@ -473,8 +473,8 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatMultipliesMatrixAndFloatTogeth
   Maths::GeoMatrix4x4F inputMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
   Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
   
-  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignFloat(&reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix), 2.0f, nullptr), NOVELRT_SUCCESS);
-  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(reinterpret_cast<NovelRTGeoMatrix4x4F&>(expectedMatrix), reinterpret_cast<NovelRTGeoMatrix4x4F&>(inputMatrix)));
+  ASSERT_EQ(NovelRT_GeoMatrix4x4F_multiplyAssignFloat(reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), 2.0f, nullptr), NOVELRT_SUCCESS);
+  EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix)));
 }
 
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {

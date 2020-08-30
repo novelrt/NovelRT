@@ -29,7 +29,7 @@ namespace NovelRT::Graphics {
       return _viewMatrix;
     }
 
-    inline void setViewMatrix(const Maths::GeoMatrix4x4F& value) {
+    inline void setViewMatrix(Maths::GeoMatrix4x4F value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _viewMatrix = value;
@@ -39,7 +39,7 @@ namespace NovelRT::Graphics {
       return _projectionMatrix;
     }
 
-    inline void setProjectionMatrix(const Maths::GeoMatrix4x4F& value) {
+    inline void setProjectionMatrix(Maths::GeoMatrix4x4F value) {
       _cameraFrameState = CameraFrameState::ModifiedInCurrent;
       _cameraUboMatrix.reset();
       _projectionMatrix = value;

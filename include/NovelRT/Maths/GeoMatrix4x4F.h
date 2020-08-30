@@ -52,37 +52,37 @@ namespace NovelRT::Maths {
         w(w)
     {}
 
-    inline bool operator==(const GeoMatrix4x4F& other) const {
+    inline bool operator==(GeoMatrix4x4F other) const {
       return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
     }
 
-    inline bool operator!=(const GeoMatrix4x4F& other) const {
+    inline bool operator!=(GeoMatrix4x4F other) const {
       return *reinterpret_cast<const glm::mat4*>(this) != *reinterpret_cast<const glm::mat4*>(&other);
     }
 
-    inline GeoMatrix4x4F operator+(const GeoMatrix4x4F& other) const {
+    inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const {
       return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) + *reinterpret_cast<const glm::mat4*>(&other));
     }
 
-    inline GeoMatrix4x4F operator-(const GeoMatrix4x4F& other) const {
+    inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const {
       return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) - *reinterpret_cast<const glm::mat4*>(&other));
     }
 
-    inline GeoMatrix4x4F operator*(const GeoMatrix4x4F& other) const {
+    inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const {
       return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * *reinterpret_cast<const glm::mat4*>(&other));
     }
 
-    inline GeoMatrix4x4F& operator+=(const GeoMatrix4x4F& other) {
+    inline GeoMatrix4x4F operator+=(GeoMatrix4x4F other) {
       *reinterpret_cast<glm::mat4*>(this) += *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
 
-    inline GeoMatrix4x4F& operator-=(const GeoMatrix4x4F& other) {
+    inline GeoMatrix4x4F operator-=(GeoMatrix4x4F other) {
       *reinterpret_cast<glm::mat4*>(this) -= *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
 
-    inline GeoMatrix4x4F& operator*=(const GeoMatrix4x4F& other) {
+    inline GeoMatrix4x4F operator*=(GeoMatrix4x4F other) {
       *reinterpret_cast<glm::mat4*>(this) *= *reinterpret_cast<const glm::mat4*>(&other);
       return *this;
     }
@@ -99,17 +99,17 @@ namespace NovelRT::Maths {
       return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * other);
     }
 
-    inline GeoMatrix4x4F& operator+=(float other) {
+    inline GeoMatrix4x4F operator+=(float other) {
       *reinterpret_cast<glm::mat4*>(this) += other;
       return *this;
     }
 
-    inline GeoMatrix4x4F& operator-=(float other) {
+    inline GeoMatrix4x4F operator-=(float other) {
       *reinterpret_cast<glm::mat4*>(this) -= other;
       return *this;
     }
 
-    inline GeoMatrix4x4F& operator*=(float other) {
+    inline GeoMatrix4x4F operator*=(float other) {
       *reinterpret_cast<glm::mat4*>(this) *= other;
       return *this;
     }
