@@ -11,13 +11,13 @@ extern "C" {
 #endif
 
 NovelRTGeoBounds NovelRT_Transform_getAABB(const NovelRTTransform transform) {
-    const Transform& cTransform = reinterpret_cast<const Transform&>(transform);
+    const Transform& cTransform = *reinterpret_cast<const Transform*>(&transform);
     auto aabb = cTransform.getAABB();
     return *reinterpret_cast<NovelRTGeoBounds*>(&aabb);
 }
 
 NovelRTGeoBounds NovelRT_Transform_getBounds(const NovelRTTransform transform) {
-    const Transform& cTransform = reinterpret_cast<const Transform&>(transform);
+    const Transform& cTransform = *reinterpret_cast<const Transform*>(&transform);
     auto bounds = cTransform.getBounds();
     return *reinterpret_cast<NovelRTGeoBounds*>(&bounds);
 }

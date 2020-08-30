@@ -198,20 +198,20 @@ namespace NovelRT::Graphics {
     glfwSwapBuffers(_windowingService->getWindow());
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
     int layer,
     const std::string& filePath,
     RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
     int layer,
     RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
-  std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
+  std::unique_ptr<TextRect> RenderingService::createTextRect(Transform transform,
     int layer,
     RGBAConfig colourConfig,
     float fontSize,
@@ -219,7 +219,7 @@ namespace NovelRT::Graphics {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, RGBAConfig colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform, int layer, RGBAConfig colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 

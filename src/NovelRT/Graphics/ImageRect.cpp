@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  ImageRect::ImageRect(const Transform& transform,
+  ImageRect::ImageRect(Transform transform,
     int layer,
     ShaderProgram shaderProgram,
     std::weak_ptr<Camera> camera,
@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
     _colourTint(colourTint),
     _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
-   ImageRect::ImageRect(const Transform& transform,
+   ImageRect::ImageRect(Transform transform,
      int layer,
      ShaderProgram shaderProgram,
      std::weak_ptr<Camera> camera,

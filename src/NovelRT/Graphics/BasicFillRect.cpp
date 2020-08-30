@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
 
-  BasicFillRect::BasicFillRect(const Transform& transform,
+  BasicFillRect::BasicFillRect(Transform transform,
     int layer,
     std::weak_ptr<Camera> camera,
     ShaderProgram shaderProgram,

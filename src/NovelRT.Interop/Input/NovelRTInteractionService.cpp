@@ -79,7 +79,7 @@ NovelRTResult NovelRT_InteractionService_createBasicInteractionRect(const NovelR
         return NOVELRT_FAILURE;
   }
 
-  _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(servicePtr->createBasicInteractionRect(reinterpret_cast<const Transform&>(transform), layer)));
+  _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(servicePtr->createBasicInteractionRect(*reinterpret_cast<const Transform*>(&transform), layer)));
   *outputRect = reinterpret_cast<NovelRTBasicInteractionRect>(_rectCollection.back().get());
   return NOVELRT_SUCCESS;
 }

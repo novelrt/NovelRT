@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
 
-  RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera) :
+  RenderObject::RenderObject(Transform transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera) :
     WorldObject(transform, layer),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {

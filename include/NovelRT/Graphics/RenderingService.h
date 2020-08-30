@@ -41,13 +41,13 @@ namespace NovelRT::Graphics {
     int initialiseRendering();
     void tearDown() const;
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(Transform transform, int layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<ImageRect> createImageRect(const Transform& transform, int layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(Transform transform, int layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(const Transform& transform, int layer, RGBAConfig colourConfig);
+    std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int layer, RGBAConfig colourConfig);
 
-    std::unique_ptr<TextRect> createTextRect(const Transform& transform, int layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
+    std::unique_ptr<TextRect> createTextRect(Transform transform, int layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
 
     std::weak_ptr<Camera> getCamera() const;
 

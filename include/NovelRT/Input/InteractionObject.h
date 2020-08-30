@@ -19,7 +19,7 @@ namespace NovelRT::Input {
     std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
 
   public:
-    InteractionObject(const Transform& transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+    InteractionObject(Transform transform, int layer, const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
 
     void executeObjectBehaviour() final;
     virtual bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const = 0;

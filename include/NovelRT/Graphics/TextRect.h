@@ -25,7 +25,7 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    TextRect(const Transform& transform,
+    TextRect(Transform transform,
       int layer,
       ShaderProgram programId,
       std::weak_ptr<Camera> camera,

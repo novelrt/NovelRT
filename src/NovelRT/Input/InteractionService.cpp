@@ -134,7 +134,7 @@ void InteractionService::consumePlayerInput() {
 
 }
 
-  std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(const Transform& transform, int layer) {
+  std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(Transform transform, int layer) {
     return std::make_unique<BasicInteractionRect>(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });
   }
   void InteractionService::executeClickedInteractable() {

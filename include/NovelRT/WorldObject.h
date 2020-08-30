@@ -24,7 +24,7 @@ namespace NovelRT {
     bool _isDirty;
 
   public:
-    WorldObject(const Transform& transform, int layer);
+    WorldObject(Transform transform, int layer);
     virtual ~WorldObject() { }
 
     inline Transform& transform() {

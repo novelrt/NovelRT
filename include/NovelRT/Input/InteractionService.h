@@ -33,7 +33,7 @@ namespace NovelRT::Input {
 
     void consumePlayerInput();
 
-    std::unique_ptr<BasicInteractionRect> createBasicInteractionRect(const Transform& transform, int layer);
+    std::unique_ptr<BasicInteractionRect> createBasicInteractionRect(Transform transform, int layer);
 
     void executeClickedInteractable();
 

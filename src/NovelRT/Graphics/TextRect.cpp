@@ -18,7 +18,7 @@ namespace NovelRT::Graphics {
     reloadText();
   }
 
-  TextRect::TextRect(const Transform& transform,
+  TextRect::TextRect(Transform transform,
     int layer,
     ShaderProgram shaderProgram,
     std::weak_ptr<Camera> camera,

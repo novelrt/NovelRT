@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    BasicFillRect(const Transform& transform,
+    BasicFillRect(Transform transform,
       int layer,
       std::weak_ptr<Camera> camera,
       ShaderProgram shaderProgram,

@@ -25,7 +25,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<Maths::GeoMatrix4x4F> _finalViewMatrixData;
 
   public:
-    RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera);
+    RenderObject(Transform transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera);
 
     void executeObjectBehaviour() final;
     virtual ~RenderObject();

@@ -23,14 +23,14 @@ namespace NovelRT::Graphics {
     void configureObjectBuffers() final;
 
   public:
-    ImageRect(const Transform& transform,
+    ImageRect(Transform transform,
       int layer,
       ShaderProgram shaderProgram,
       std::weak_ptr<Camera> camera,
       std::shared_ptr<Texture> texture,
       RGBAConfig colourTint);
 
-    ImageRect(const Transform& transform,
+    ImageRect(Transform transform,
       int layer,
       ShaderProgram shaderProgram,
       std::weak_ptr<Camera> camera,

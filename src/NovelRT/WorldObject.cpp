@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  WorldObject::WorldObject(const Transform& transform, int layer) : _transform(transform), _layer(layer), _active(true) {}
+  WorldObject::WorldObject(Transform transform, int layer) : _transform(transform), _layer(layer), _active(true) {}
 
   bool WorldObject::getActive() const {
 	  return _active;
