@@ -6,6 +6,7 @@
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
 #include <NovelRT.h>
 #include <stdint.h>
+#include <list>
 
 std::list<std::shared_ptr<NovelRT::Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionCollection;
