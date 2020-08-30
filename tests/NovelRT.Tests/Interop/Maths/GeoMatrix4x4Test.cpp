@@ -393,7 +393,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNaNFailureWhenGivenNanValuesF
 
 TEST(InteropGeoMatrix4x4FTest, addAssignFloatAddsMatrixAndFloatTogetherCorrectly) {
   NovelRTGeoMatrix4x4F inputMatrix { NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f), NovelRT_GeoVector4F_uniform(1.0f) };
-  Maths::GeoMatrix4x4F expectedMatrix = reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix) + reinterpret_cast<Maths::GeoMatrix4x4F&>(inputMatrix);
+  Maths::GeoMatrix4x4F expectedMatrix = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&inputMatrix) + *reinterpret_cast<Maths::GeoMatrix4x4F*>(&inputMatrix);
   
   ASSERT_EQ(NovelRT_GeoMatrix4x4F_addAssignFloat(reinterpret_cast<NovelRTGeoMatrix4x4F*>(&inputMatrix), 1.0f, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(NovelRT_GeoMatrix4x4F_equal(*reinterpret_cast<NovelRTGeoMatrix4x4F*>(&expectedMatrix), inputMatrix));
