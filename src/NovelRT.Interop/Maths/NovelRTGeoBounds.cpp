@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
   NovelRTGeoBounds NovelRT_GeoBounds_zero() {
-    return NovelRTGeoBounds{ NovelRT_GeoVector2F_zero(), 0.0f, NovelRT_GeoVector2F_zero() };
+    return NovelRTGeoBounds{ NovelRT_GeoVector2F_zero(),  NovelRT_GeoVector2F_zero(), 0.0f };
   }
 
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(const NovelRTGeoBounds bounds, int index) {

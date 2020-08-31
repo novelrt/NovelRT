@@ -480,10 +480,10 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
   ASSERT_EQ(boundsResultBottomLeft, NOVELRT_SUCCESS);
   ASSERT_EQ(boundsResultBottomRight, NOVELRT_SUCCESS);
 
-  EXPECT_TRUE(checkBoundsForEquality(outputBoundsTopLeft, NovelRTGeoBounds { NovelRTGeoVector2F { -TEST_WIDTH / 4, TEST_HEIGHT / 4 }, 0, expectedSize }));
-  EXPECT_TRUE(checkBoundsForEquality(outputBoundsTopRight, NovelRTGeoBounds { NovelRTGeoVector2F { TEST_WIDTH / 4, TEST_HEIGHT / 4 }, 0, expectedSize }));
-  EXPECT_TRUE(checkBoundsForEquality(outputBoundsBottomLeft, NovelRTGeoBounds { NovelRTGeoVector2F { -TEST_WIDTH / 4, -TEST_HEIGHT / 4 }, 0, expectedSize }));
-  EXPECT_TRUE(checkBoundsForEquality(outputBoundsBottomRight, NovelRTGeoBounds { NovelRTGeoVector2F { TEST_WIDTH / 4, -TEST_HEIGHT / 4 }, 0, expectedSize }));
+  EXPECT_TRUE(checkBoundsForEquality(outputBoundsTopLeft, NovelRTGeoBounds { NovelRTGeoVector2F { -TEST_WIDTH / 4, TEST_HEIGHT / 4 }, expectedSize, 0 }));
+  EXPECT_TRUE(checkBoundsForEquality(outputBoundsTopRight, NovelRTGeoBounds { NovelRTGeoVector2F { TEST_WIDTH / 4, TEST_HEIGHT / 4 }, expectedSize, 0 }));
+  EXPECT_TRUE(checkBoundsForEquality(outputBoundsBottomLeft, NovelRTGeoBounds { NovelRTGeoVector2F { -TEST_WIDTH / 4, -TEST_HEIGHT / 4 }, expectedSize, 0 }));
+  EXPECT_TRUE(checkBoundsForEquality(outputBoundsBottomRight, NovelRTGeoBounds { NovelRTGeoVector2F { TEST_WIDTH / 4, -TEST_HEIGHT / 4 },  expectedSize, 0 }));
 }
 
 TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {

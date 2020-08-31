@@ -11,8 +11,8 @@ extern "C" {
 
   typedef struct {
     NovelRTGeoVector2F position;
-    float rotation;
     NovelRTGeoVector2F size;
+    float rotation;
   } NovelRTGeoBounds;
 
   NovelRTGeoBounds NovelRT_GeoBounds_zero();

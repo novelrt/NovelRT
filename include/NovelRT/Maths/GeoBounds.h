@@ -11,8 +11,8 @@ namespace NovelRT::Maths {
   class GeoBounds {
   public:
     GeoVector2F position;
-    float rotation;
     GeoVector2F size;
+    float rotation;
 
     GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
     bool pointIsWithinBounds(GeoVector2F point) const;

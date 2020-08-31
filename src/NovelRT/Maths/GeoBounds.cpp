@@ -5,8 +5,8 @@
 namespace NovelRT::Maths {
   GeoBounds::GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept :
     position(position),
-    rotation(rotation),
-    size(size) { }
+    size(size),
+    rotation(rotation) {}
 
   bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const {
     auto corner0 = getCornerInWorldSpace(0);
