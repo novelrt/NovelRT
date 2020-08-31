@@ -1,4 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+#ifdef WIN32
+#pragma warning(disable:4100)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+
 #include "NovelRT.Interop/Audio/NovelRTAudioService.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
@@ -103,6 +110,27 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
+  NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner* runner, void(*ptr)(), const char** errorMessage) {
+    if (runner == nullptr || ptr == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+    //Disabled -W-unused-parameter here because I don't want delta being touched with every function ptr being added.
+    cRunner->SceneConstructionRequested += [&](){ ptr(); };
+    return NOVELRT_SUCCESS;
+  }
+
+  
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef WIN32
+#pragma warning(default:4100)
+#else
+#pragma GCC diagnostic pop
 #endif
