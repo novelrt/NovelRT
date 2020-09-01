@@ -24,12 +24,11 @@ namespace NovelRT::Maths {
 
     auto minA = position - getExtents();
     auto maxA = position + getExtents();
-
+   
     auto minB = otherBounds.position - otherBounds.getExtents();
     auto maxB = otherBounds.position + otherBounds.getExtents();
 
-    auto result = (minA > maxB) || (minB > maxA);
-    return result;
+    return ((minA >= maxB) || (minB >= maxA)) || ((minA <= maxB) || (minB <= maxA));
   }
 
   GeoVector2F GeoBounds::getCornerInLocalSpace(int index) const {

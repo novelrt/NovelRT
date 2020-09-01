@@ -27,5 +27,5 @@ TEST(GeoBoundsTest, pointIsWithinBoundsReturnsFalseWhenNotWithinBounds) {
 TEST(GeoBoundsTest, intersectsWithReturnsTrueWhenIntersecting) {
     GeoBounds bounds0(GeoVector2F::uniform(0.0f), GeoVector2F::uniform(5.0f), 0.0f);
     GeoBounds bounds1(GeoVector2F::uniform(1.0f), GeoVector2F::uniform(5.0f), 0.0f);
-    EXPECT_TRUE(bounds0.intersectsWith(bounds1));
+    EXPECT_TRUE(bounds1.intersectsWith(bounds0));
 }

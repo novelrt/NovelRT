@@ -129,7 +129,7 @@ namespace NovelRT::Maths {
 
     //TODO: Why are we returning via a parameter and not the signature's return type?
     void getIntersectingPoints(GeoBounds bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints) {
-      if (getBounds().intersectsWith(bounds)) {
+      if (!getBounds().intersectsWith(bounds)) {
         return;
       }
 
