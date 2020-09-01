@@ -30,7 +30,7 @@ TEST(GeoBoundsTest, intersectsWithReturnsTrueWhenIntersecting) {
   EXPECT_TRUE(bounds0.intersectsWith(bounds1));
 }
 
-TEST(GeoBoundsTest, intersectsWithReturnsTrueWhenIntersectingInverted) {
+TEST(GeoBoundsTest, intersectsWithReturnsTrueWhenIntersectingInversed) {
   GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 0.0f);
   GeoBounds bounds1(GeoVector2F::uniform(1.0f), GeoVector2F::uniform(5.0f), 0.0f);
   EXPECT_TRUE(bounds1.intersectsWith(bounds0));
@@ -42,7 +42,7 @@ TEST(GeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersecting) {
   EXPECT_FALSE(bounds0.intersectsWith(bounds1));
 }
 
-TEST(GeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersectingInverted) {
+TEST(GeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersectingInversed) {
   GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 0.0f);
   GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
   EXPECT_FALSE(bounds1.intersectsWith(bounds0));
@@ -52,6 +52,12 @@ TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotated) {
   GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 20.0f);
   GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
   EXPECT_THROW(bounds0.intersectsWith(bounds1), std::runtime_error);
+}
+
+TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotatedInversed) {
+  GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 20.0f);
+  GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
+  EXPECT_THROW(bounds1.intersectsWith(bounds0), std::runtime_error);
 }
 
 TEST(GeoBoundsTest, getCornerInLocalSpaceReturnsCorrectValues) {
