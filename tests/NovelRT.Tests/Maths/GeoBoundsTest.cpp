@@ -65,7 +65,7 @@ TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotated) {
 TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotatedInversed) {
   GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 20.0f);
   GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
-  
+
   EXPECT_THROW(bounds1.intersectsWith(bounds0), std::runtime_error);
 }
 
@@ -91,4 +91,32 @@ TEST(GeoBoundsTest, getExtentsReturnsCorrectExtentsValue) {
   GeoBounds bounds(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
 
   EXPECT_EQ(GeoVector2F::uniform(2.5f), bounds.getExtents());
+}
+
+TEST(GeoBoundsTest, equalsOperatorReturnsTrueWhenBoundsAreEqual) {
+  GeoBounds bounds0(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+  GeoBounds bounds1(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+
+  EXPECT_EQ(bounds0, bounds1);
+}
+
+TEST(GeoBoundsTest, equalsOperatorReturnsFalseWhenBoundsAreNotEqual) {
+  GeoBounds bounds0(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+  GeoBounds bounds1(GeoVector2F::one(), GeoVector2F::uniform(10.0f), 0.0f);
+
+  EXPECT_FALSE(bounds0 == bounds1);
+}
+
+TEST(GeoBoundsTest, notEqualsOperatorReturnsTrueWhenBoundsAreNotEqual) {
+  GeoBounds bounds0(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+  GeoBounds bounds1(GeoVector2F::one(), GeoVector2F::uniform(10.0f), 0.0f);
+
+  EXPECT_NE(bounds0, bounds1);
+}
+
+TEST(GeoBoundsTest, notEqualsOperatorReturnsFalseWhenBoundsAreEqual) {
+  GeoBounds bounds0(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+  GeoBounds bounds1(GeoVector2F::one(), GeoVector2F::uniform(5.0f), 0.0f);
+
+  EXPECT_FALSE(bounds0 != bounds1);
 }
