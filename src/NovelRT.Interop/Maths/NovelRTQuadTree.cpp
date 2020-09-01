@@ -42,7 +42,7 @@ extern "C" {
      
      Maths::GeoBounds bounds = Maths::GeoBounds({ 0,0 }, {0,0}, 0);
      bounds = reinterpret_cast<Maths::QuadTree*>(tree)->getBounds();
-     *outputGeoBounds = reinterpret_cast<const NovelRTGeoBounds&>(bounds);
+     *outputGeoBounds = *reinterpret_cast<NovelRTGeoBounds*>(&bounds);
 
      return NOVELRT_SUCCESS;
    }

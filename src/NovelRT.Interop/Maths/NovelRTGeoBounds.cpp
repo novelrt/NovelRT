@@ -14,19 +14,19 @@ extern "C" {
     return NovelRTGeoBounds{ NovelRT_GeoVector2F_zero(),  NovelRT_GeoVector2F_zero(), 0.0f };
   }
 
-  NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(const NovelRTGeoBounds bounds, int index) {
+  NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(NovelRTGeoBounds bounds, int index) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F corner = cBounds.getCornerInLocalSpace(index);
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(const NovelRTGeoBounds bounds, int index) {
+  NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(NovelRTGeoBounds bounds, int index) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F corner = cBounds.getCornerInWorldSpace(index);
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(const NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
+  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
     if (cBounds.pointIsWithinBounds(cPoint)) {
@@ -35,13 +35,13 @@ extern "C" {
     return NOVELRT_FALSE;
   }
 
-  NovelRTGeoVector2F NovelRT_GeoBounds_getExtents(const NovelRTGeoBounds bounds) {
+  NovelRTGeoVector2F NovelRT_GeoBounds_getExtents(NovelRTGeoBounds bounds) {
     const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F extents = cBounds.getExtents(); 
     return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 
-  NovelRTBool NovelRT_GeoBounds_intersectsWith(const NovelRTGeoBounds first, const NovelRTGeoBounds other) {
+  NovelRTBool NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other) {
     Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
     Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
     if (cFirst.intersectsWith(cOther)) {
@@ -49,5 +49,26 @@ extern "C" {
     }
     return NOVELRT_FALSE;
   }
+
+  NovelRTBool NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
+    Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
+    Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
+
+    if(cFirst == cOther) {
+      return NOVELRT_TRUE;
+    }
+    return NOVELRT_FALSE;
+  }
+
+  NovelRTBool NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
+    Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
+    Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
+
+    if(cFirst != cOther) {
+      return NOVELRT_TRUE;
+    }
+    return NOVELRT_FALSE;
+  }
+
 }
 
