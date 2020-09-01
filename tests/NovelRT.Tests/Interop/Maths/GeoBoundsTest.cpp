@@ -41,3 +41,12 @@ TEST(InteropGeoBoundsTest, notEqualsOperatorReturnsTrueWhenBoundsAreNotEqual) {
   EXPECT_TRUE(NovelRT_GeoBounds_notEqual(bounds0, bounds1));
 }
 
+TEST(InteropGeoBoundsTest, getCornerInLocalSpaceReturnsCorrectValues) {
+  NovelRTGeoBounds bounds { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
+
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(-2.5f), NovelRT_GeoBounds_getCornerInLocalSpace(bounds, 0)));
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRTGeoVector2F { +2.5f, -2.5f }, NovelRT_GeoBounds_getCornerInLocalSpace(bounds, 1)));
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRT_GeoVector2F_uniform(+2.5f), NovelRT_GeoBounds_getCornerInLocalSpace(bounds, 2)));
+  EXPECT_TRUE(NovelRT_GeoVector2F_equal(NovelRTGeoVector2F {-2.5f, +2.5f }, NovelRT_GeoBounds_getCornerInLocalSpace(bounds, 3)));
+}
+
