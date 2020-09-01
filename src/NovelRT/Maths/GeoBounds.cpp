@@ -28,7 +28,7 @@ namespace NovelRT::Maths {
     auto minB = otherBounds.position - otherBounds.getExtents();
     auto maxB = otherBounds.position + otherBounds.getExtents();
 
-    return ((minA >= maxB) || (minB >= maxA)) || ((minA <= maxB) || (minB <= maxA));
+    return !((minA >= maxB) || (maxA <= minB));
   }
 
   GeoVector2F GeoBounds::getCornerInLocalSpace(int index) const {
