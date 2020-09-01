@@ -41,13 +41,33 @@ extern "C" {
     return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 
-  NovelRTBool NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other) {
-    Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
-    Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
-    if (cFirst.intersectsWith(cOther)) {
-      return NOVELRT_TRUE;
+  NovelRTResult NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, NovelRTBool* outputResult, const char** errorMessage) {
+    if(outputResult == nullptr) {
+      if(errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
     }
-    return NOVELRT_FALSE;
+
+    try {
+      Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
+      Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
+      if (cFirst.intersectsWith(cOther)) {
+        *outputResult = NOVELRT_TRUE;
+      } else {
+        *outputResult = NOVELRT_FALSE;
+      }
+      
+      return NOVELRT_SUCCESS;
+
+    } catch (const std::exception& ex) {
+      (void)ex;
+      if(errorMessage != nullptr) {
+        *errorMessage = "TODO: Figure out how to push exception message proper.";
+      }
+
+      return NOVELRT_FAILURE;
+    }
   }
 
   NovelRTBool NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
