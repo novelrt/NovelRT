@@ -1,16 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#ifdef WIN32
-#pragma warning(disable:4100)
-#else
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
 
 #include "NovelRT.Interop/Audio/NovelRTAudioService.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
+#include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include <NovelRT.h>
 #include <stdint.h>
 #include <list>
@@ -95,8 +90,7 @@ extern "C" {
   }
 
 
-//I don't like this but using Opaque Handles was breaking it....
-  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner* runner, void(*ptr)(), const char** errorMessage) {
+  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner* runner, void(*ptr)(NovelRTTimestamp), const char** errorMessage) {
     if (runner == nullptr || ptr == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -106,7 +100,7 @@ extern "C" {
     NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
     //Disabled -W-unused-parameter here because I don't want delta being touched with every function ptr being added.
-    cRunner->Update += [&](NovelRT::Timing::Timestamp delta){ ptr(); };
+    cRunner->Update += [&](NovelRT::Timing::Timestamp delta){ ptr(reinterpret_cast<NovelRTTimestamp>(&delta)); };
     return NOVELRT_SUCCESS;
   }
 
@@ -127,10 +121,4 @@ extern "C" {
   
 #ifdef __cplusplus
 }
-#endif
-
-#ifdef WIN32
-#pragma warning(default:4100)
-#else
-#pragma GCC diagnostic pop
 #endif
