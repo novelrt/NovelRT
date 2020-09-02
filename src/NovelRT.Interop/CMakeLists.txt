@@ -17,6 +17,8 @@ set(INTEROP_SOURCES
   Maths/NovelRTQuadTree.cpp
   Maths/NovelRTQuadTreePoint.cpp
 
+  Timing/NovelRTTimestamp.cpp
+
   Windowing/NovelRTWindowingService.cpp
 )
 
@@ -36,7 +38,6 @@ if(MSVC)
       /W4
       /WX
       /wd4611
-      /wd4100
   )
   get_target_property(opts Interop COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -49,7 +50,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       -Werror
       -Wno-float-equal
       -Wno-padded
-      -Wno-unused-parameter
   )
 else()
   target_compile_options(Interop
@@ -64,7 +64,6 @@ else()
       -Wno-float-equal
       -Wno-padded
       -Wno-reserved-id-macro
-      -Wno-unused-parameter
   )
 endif()
 
