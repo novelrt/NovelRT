@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <memory.h>
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include "NovelRT.Interop/Timing/NovelRTStepTimer.h"
 #include "NovelRT.Interop/Utilities/NovelRTEvents.h"
+#include "NovelRT.Interop/NovelRTLoggingService.h"
 
 const char* error = " ";
 NovelRTResult res = NOVELRT_SUCCESS;
 NovelRTBool booleanResult = NOVELRT_TRUE;
 NovelRTAudioService audio = NULL;
 NovelRTInteractionService input = NULL;
+NovelRTLoggingService console = NULL;
 NovelRTStepTimer timer = NULL;
 NovelRTUpdateEventWithTimestamp updateEvent = NULL;
 
@@ -20,13 +23,15 @@ void inputTest(NovelRTTimestamp delta) {
     res = NovelRT_InteractionService_getKeyState(input, W, &in, &error);
     if (res == NOVELRT_SUCCESS) {
         if (NovelRT_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NOVELRT_TRUE) {
-            fprintf(stdout, "W was pressed! \r\n");
+            NovelRT_LoggingService_logInfoLine(console, "W was pressed!", &error);
             float vn = NovelRT_Timestamp_getSecondsFloat(delta);
+            //Need to find a way for variadic messages in NovelRT_LoggingService
             fprintf(stdout, "Timestamp: %f \r\n", vn);
         }
     }
     else {
-        fprintf(stderr, error);
+        char* errMsg = error;
+        NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
     }
 }
 
@@ -43,31 +48,43 @@ int main() {
     
     NovelRTNovelRunner runner = NovelRT_NovelRunner_create(0);
     
+    console = NovelRT_LoggingService_createCustomTitle("Interop");
+
     res = NovelRT_NovelRunner_getAudioService(runner, &audio, &error);
     if (res == NOVELRT_FAILURE) {
-        fprintf(stderr, "Error getting AudioService:");
-        fprintf(stderr, error);
+        char* precursor = "Error getting AudioService: ";
+        char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
+        strcpy(errMsg, precursor);
+        strcpy(errMsg, error);
+        NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
         return -1;
     }
     else {
+        res = NovelRT_LoggingService_throwIfNullPtr(console, &audio, "AudioService was not returned properly! Exiting...", &error);
         res = NovelRT_AudioService_initialiseAudio(audio, &booleanResult, &error);
         if (res == NOVELRT_SUCCESS) {
-            fprintf(stdout, "\nInitialised Audio from C API!\n");
+            NovelRT_LoggingService_logInfoLine(console, "Initialised Audio from C API!", &error);
         }
         else {
-            fprintf(stderr, "Error initialising Audio:");
-            fprintf(stderr, error);
+            char* precursor = "Error initialising Audio: ";
+            char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
+            strcpy(errMsg, precursor);
+            strcpy(errMsg, error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
         }   
     }
 
     res = NovelRT_NovelRunner_getInteractionService(runner, &input, &error);
-    if (res == NOVELRT_FAILURE) {
-        fprintf(stderr, "Error getting InteractionService:");
-        fprintf(stderr, error);
-        return -1;
+    if (res == NOVELRT_SUCCESS) {
+        NovelRT_LoggingService_logInfoLine(console, "Received InteractionService from C API!", &error);
     }
     else {
-       fprintf(stdout, "\nInitialised Input from C API!\n");
+       char* precursor = "Error getting InteractionService: ";
+            char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
+            strcpy(errMsg, precursor);
+            strcpy(errMsg, error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+            return -1;
     }
 
     res = NovelRT_StepTimer_create(60.0, 0.1, &timer, &error);
@@ -76,7 +93,7 @@ int main() {
     NovelRT_StepTimer_tick(timer, updateEvent, &error);
     
     NovelRT_NovelRunner_addUpdate(runner, &inputTest, &error);
-    NovelRT_NovelRunner_addUpdate(runner, &timerTest, &error);
+    //NovelRT_NovelRunner_addUpdate(runner, &timerTest, &error);
 
     NovelRT_NovelRunner_runNovel(runner, &error);
 

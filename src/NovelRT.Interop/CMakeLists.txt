@@ -1,7 +1,8 @@
 set(INTEROP_SOURCES
+  NovelRTInteropUtils.cpp
+  NovelRTLoggingService.cpp
   NovelRTNovelRunner.cpp
   NovelRTTransform.cpp
-  NovelRTInteropUtils.cpp
 
   Audio/NovelRTAudioService.cpp
 
