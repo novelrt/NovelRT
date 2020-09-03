@@ -11,7 +11,7 @@ extern "C" {
 
 typedef struct UpdateEventWithTimestampHandle* NovelRTUpdateEventWithTimestamp;
 
-NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner* runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
+NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
 
 #ifdef __cplusplus
 }

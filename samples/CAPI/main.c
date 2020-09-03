@@ -20,9 +20,9 @@ void inputTest(NovelRTTimestamp delta) {
     res = NovelRT_InteractionService_getKeyState(input, W, &in, &error);
     if (res == NOVELRT_SUCCESS) {
         if (NovelRT_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NOVELRT_TRUE) {
-            fprintf(stdout, "W was pressed! \n");
+            fprintf(stdout, "W was pressed! \r\n");
             float vn = NovelRT_Timestamp_getSecondsFloat(delta);
-            fprintf(stdout, "Timestamp: %f \n", vn);
+            fprintf(stdout, "Timestamp: %f \r\n", vn);
         }
     }
     else {
@@ -41,11 +41,11 @@ void timerTest(NovelRTTimestamp delta) {
 
 int main() {
     
-    NovelRTNovelRunner* runner = NovelRunner_create(0);
-
+    NovelRTNovelRunner runner = NovelRT_NovelRunner_create(0);
+    
     res = NovelRT_NovelRunner_getAudioService(runner, &audio, &error);
     if (res == NOVELRT_FAILURE) {
-        fprintf(stderr, "Error:");
+        fprintf(stderr, "Error getting AudioService:");
         fprintf(stderr, error);
         return -1;
     }
@@ -55,14 +55,14 @@ int main() {
             fprintf(stdout, "\nInitialised Audio from C API!\n");
         }
         else {
-            fprintf(stderr, "Error:");
+            fprintf(stderr, "Error initialising Audio:");
             fprintf(stderr, error);
         }   
     }
 
     res = NovelRT_NovelRunner_getInteractionService(runner, &input, &error);
     if (res == NOVELRT_FAILURE) {
-        fprintf(stderr, "Error:");
+        fprintf(stderr, "Error getting InteractionService:");
         fprintf(stderr, error);
         return -1;
     }
@@ -70,21 +70,15 @@ int main() {
        fprintf(stdout, "\nInitialised Input from C API!\n");
     }
 
-    res = NovelRT_StepTimer_create(0.0, 0.1, &timer, &error);
+    res = NovelRT_StepTimer_create(60.0, 0.1, &timer, &error);
     res = NovelRT_Events_getNovelRunnerUpdateEvent(runner, &updateEvent, &error);
 
     NovelRT_StepTimer_tick(timer, updateEvent, &error);
     
-    void (*test)(NovelRTTimestamp);
-    void (*testTwo)(NovelRTTimestamp);
+    NovelRT_NovelRunner_addUpdate(runner, &inputTest, &error);
+    NovelRT_NovelRunner_addUpdate(runner, &timerTest, &error);
 
-    test = &inputTest;
-    testTwo = &timerTest;
-
-    NovelRT_NovelRunner_addUpdate(runner, test, &error);
-    NovelRT_NovelRunner_addUpdate(runner, testTwo, &error);
-
-    NovelRunner_runNovel(runner);
+    NovelRT_NovelRunner_runNovel(runner, &error);
 
     return 0;
 }

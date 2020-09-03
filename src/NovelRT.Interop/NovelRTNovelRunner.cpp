@@ -12,45 +12,58 @@
 
 std::list<std::shared_ptr<NovelRT::Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionCollection;
+std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowingCollection;
 
 #ifdef __cplusplus
-using namespace NovelRT;
 extern "C" {
 #endif
 
   //TODO: FIX EVERYTHING SO WE CHECK SAFELY FOR NULLPTR, D'OH!
 
-  NovelRTNovelRunner* NovelRunner_create(int displayNumber) {
-    NovelRunner* runner = new NovelRunner(displayNumber);
-
-    return reinterpret_cast<NovelRTNovelRunner*>(runner);
+  NovelRTNovelRunner NovelRT_NovelRunner_create(int displayNumber) {
+    NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber);
+    return reinterpret_cast<NovelRTNovelRunner>(runner);
   }
 
-  NovelRTNovelRunner* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
-    NovelRunner* runner = new NovelRunner(displayNumber, windowTitle, targetFrameRate);
-
-    return reinterpret_cast<NovelRTNovelRunner*>(runner);
+  NovelRTNovelRunner NovelRT_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
+    NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber, windowTitle, targetFrameRate);
+    return reinterpret_cast<NovelRTNovelRunner>(runner);
   }
 
-  int NovelRunner_runNovel(NovelRTNovelRunner* runner) {
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
-
-    return cRunner->runNovel();
+  NovelRTResult NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner, const char** errorMessage) {
+    if (runner == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    cRunner->runNovel();
+    return NOVELRT_SUCCESS;
   }
 
-  void NovelRunner_destroy(NovelRTNovelRunner* runner) {
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
-    return cRunner->~NovelRunner();
+  NovelRTResult NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner, const char** errorMessage) {
+    if (runner == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    
+    cRunner->~NovelRunner();
+    return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner* runner, NovelRTAudioService* outputService, const char** errorMessage) {
+  NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService, const char** errorMessage) {
     if (runner == nullptr || outputService == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
       }
       return NOVELRT_FAILURE;
     }
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _audioCollection.push_back(cRunner->getAudioService());
 
     auto ptr = _audioCollection.back().get();
@@ -66,14 +79,14 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner* runner, NovelRTInteractionService* outputService, const char** errorMessage)  {
+  NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage)  {
     if (runner == nullptr || outputService == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
       }
       return NOVELRT_FAILURE;
     }
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _interactionCollection.push_back(cRunner->getInteractionService());
 
     auto ptr = _interactionCollection.back().get();
@@ -89,32 +102,54 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-
-  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner* runner, void(*ptr)(NovelRTTimestamp), const char** errorMessage) {
-    if (runner == nullptr || ptr == nullptr) {
+NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage) {
+    if (runner == nullptr || outputService == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
       }
       return NOVELRT_FAILURE;
     }
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    _windowingCollection.push_back(cRunner->getWindowingService());
 
-    //Disabled -W-unused-parameter here because I don't want delta being touched with every function ptr being added.
-    cRunner->Update += [&](NovelRT::Timing::Timestamp delta){ ptr(reinterpret_cast<NovelRTTimestamp>(&delta)); };
+    auto ptr = _windowingCollection.back().get();
+    if (ptr == nullptr)
+    {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    *outputService = reinterpret_cast<NovelRTWindowingService>(ptr);
+    
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner* runner, void(*ptr)(), const char** errorMessage) {
-    if (runner == nullptr || ptr == nullptr) {
+  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage) {
+    if (runner == nullptr || func == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
       }
       return NOVELRT_FAILURE;
     }
-    NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
 
-    //Disabled -W-unused-parameter here because I don't want delta being touched with every function ptr being added.
-    cRunner->SceneConstructionRequested += [&](){ ptr(); };
+    cRunner->Update += [func](NovelRT::Timing::Timestamp delta){
+       func(reinterpret_cast<NovelRTTimestamp>(&delta)); 
+      };
+    return NOVELRT_SUCCESS;
+  }
+
+  NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage) {
+    if (runner == nullptr || func == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+
+    cRunner->SceneConstructionRequested += [func](){ func(); };
     return NOVELRT_SUCCESS;
   }
 

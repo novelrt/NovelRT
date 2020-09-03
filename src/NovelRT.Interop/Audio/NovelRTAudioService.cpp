@@ -26,7 +26,7 @@ NovelRTResult NovelRT_AudioService_destroy(NovelRTAudioService service, const ch
 }
 
 NovelRTResult NovelRT_AudioService_initialiseAudio(NovelRTAudioService service, NovelRTBool* output, const char** errorMessage) {
-    if (service == nullptr) {
+    if (service == NULL) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }

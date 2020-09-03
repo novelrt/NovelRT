@@ -3,7 +3,7 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Utilities/NovelRTEvents.h"
 
-NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner* runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage) {
+NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage) {
     if (runner == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
