@@ -4,6 +4,10 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NovelRTResult NovelRT_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NovelRTStepTimer* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
@@ -200,4 +204,6 @@ NovelRTResult NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUpdateEventW
     return NOVELRT_SUCCESS;
 }
 
-
+#ifdef __cplusplus
+}
+#endif

@@ -3,6 +3,11 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 NovelRTBool NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp) {
     if(std::isnan(static_cast<double>(timestamp))) {
       return NOVELRT_TRUE;
@@ -246,4 +251,6 @@ NovelRTBool NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rh
     return NOVELRT_FALSE;
 }
 
-
+#ifdef __cplusplus
+}
+#endif

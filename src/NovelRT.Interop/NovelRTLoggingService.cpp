@@ -4,6 +4,10 @@
 #include "NovelRT.Interop/NovelRTLogLevel.h"
 #include "NovelRT.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NovelRTLoggingService NovelRT_LoggingService_create() {
     NovelRT::LoggingService* service = new NovelRT::LoggingService();
     return reinterpret_cast<NovelRTLoggingService&>(service);
@@ -143,3 +147,7 @@ NovelRTResult NovelRT_LoggingService_throwIfNotZero(NovelRTLoggingService servic
 
     return NOVELRT_SUCCESS;
 }
+
+#ifdef __cplusplus
+}
+#endif

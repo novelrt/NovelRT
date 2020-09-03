@@ -207,7 +207,6 @@ NovelRTResult NovelRT_AudioService_tearDown(NovelRTAudioService service, const c
     return NOVELRT_SUCCESS;
 }
 
-
 #ifdef __cplusplus
 }
 #endif

@@ -3,6 +3,10 @@
 #include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
 #include "NovelRT.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NovelRTRuntimeService NovelRT_RuntimeService_create() {
     NovelRT::DotNet::RuntimeService* service = new NovelRT::DotNet::RuntimeService();
     return reinterpret_cast<NovelRTRuntimeService&>(service);
@@ -59,3 +63,7 @@ NovelRTResult NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, con
     cService->tearDown();
     return NOVELRT_SUCCESS;
 }
+
+#ifdef __cplusplus
+}
+#endif

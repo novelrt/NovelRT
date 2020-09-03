@@ -3,6 +3,10 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Utilities/NovelRTEvents.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage) {
     if (runner == nullptr) {
         if (errorMessage != nullptr) {
@@ -15,3 +19,7 @@ NovelRTResult NovelRT_Events_getNovelRunnerUpdateEvent(NovelRTNovelRunner runner
     *outputEvent = reinterpret_cast<NovelRTUpdateEventWithTimestamp&>(cRunner->Update);
     return NOVELRT_SUCCESS;
 }
+
+#ifdef __cplusplus
+}
+#endif
