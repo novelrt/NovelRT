@@ -606,7 +606,7 @@ TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
 TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
   auto point0 = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   
-  NovelRTBool outputBool = NOVELRT_FAILURE;
+  NovelRTBool outputBool = NOVELRT_FALSE;
 
   ASSERT_EQ(NovelRT_QuadTree_tryRemove(_quadTree, point0, &outputBool, nullptr), NOVELRT_SUCCESS);
   EXPECT_FALSE(outputBool);
@@ -615,7 +615,7 @@ TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
 TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInput) {
   auto point = NovelRT_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
-  NovelRTBool outputBool = NOVELRT_FAILURE;
+  NovelRTBool outputBool = NOVELRT_FALSE;
   
   ASSERT_EQ(NovelRT_QuadTree_tryRemove(nullptr, point, &outputBool, &errorOutput), NOVELRT_FAILURE);
   EXPECT_EQ(errorOutput, NovelRT_getErrMsgIsNullptr());

@@ -13,10 +13,12 @@ typedef enum {
   NOVELRT_FAILURE = 1
 } NovelRTResult;
 
-typedef uint32_t NovelRTBool;
+//typedef uint32_t NovelRTBool;
 
-#define NOVELRT_TRUE 1u
-#define NOVELRT_FALSE 0u
+typedef enum {
+  NOVELRT_FALSE = 0,
+  NOVELRT_TRUE = 1
+} NovelRTBool;
 
 const char* NovelRT_getCpuLangKey();
 const char* NovelRT_getErrMsgIsNullptr();

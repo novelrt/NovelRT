@@ -33,7 +33,7 @@ NovelRTResult NovelRT_AudioService_initialiseAudio(NovelRTAudioService service, 
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    *output = serv->initializeAudio();
+    *output = serv->initializeAudio()? NOVELRT_TRUE : NOVELRT_FALSE;
     return NOVELRT_SUCCESS;
 }
 

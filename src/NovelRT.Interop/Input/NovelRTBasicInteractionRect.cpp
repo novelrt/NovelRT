@@ -83,7 +83,7 @@ NovelRTResult NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteracti
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = obj->getActive();
+    *outputValue = obj->getActive()? NOVELRT_TRUE : NOVELRT_FALSE;
     return NOVELRT_SUCCESS;
 }
 

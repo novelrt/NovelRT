@@ -160,7 +160,7 @@ NovelRTResult NovelRT_StepTimer_getIsFixedTimeStep(NovelRTStepTimer timer, Novel
     }
 
     NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-    *output = time.isFixedTimeStep();
+    *output = time.isFixedTimeStep()? NOVELRT_TRUE : NOVELRT_FALSE;
     return NOVELRT_SUCCESS;
 }
 
