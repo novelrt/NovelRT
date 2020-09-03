@@ -15,11 +15,13 @@ extern "C" {
 
   typedef struct NovelRunnerHandle* NovelRTNovelRunner;
 
-  NovelRTNovelRunner* NovelRunner_create(int displayNumber);
-  NovelRTNovelRunner* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
-  int NovelRunner_runNovel(NovelRTNovelRunner* runner);
-  void NovelRunner_destroy(NovelRTNovelRunner* runner);
+  // NovelRTNovelRunner* NovelRunner_create(int displayNumber);
+  // NovelRTNovelRunner* NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
+  // int NovelRunner_runNovel(NovelRTNovelRunner* runner);
+  // void NovelRunner_destroy(NovelRTNovelRunner* runner);
 
+  NovelRTResult NovelRT_NovelRunner_create(int displayNumber, NovelRTNovelRunner* output, const char** errorMessage);
+  NovelRTResult NovelRT_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate, NovelRTNovelRunner* output, const char** errorMessage);
   
   NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner* runner, NovelRTAudioService* outputService, const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner* runner, NovelRTInteractionService* outputService, const char** errorMessage);

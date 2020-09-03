@@ -18,6 +18,9 @@ set(INTEROP_SOURCES
   Maths/NovelRTQuadTreePoint.cpp
 
   Timing/NovelRTTimestamp.cpp
+  Timing/NovelRTStepTimer.cpp
+
+  Utilities/NovelRTEvents.cpp
 
   Windowing/NovelRTWindowingService.cpp
 )

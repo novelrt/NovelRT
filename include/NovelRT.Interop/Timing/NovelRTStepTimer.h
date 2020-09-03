@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
+#include "NovelRT.Interop/Utilities/NovelRTEvents.h"
 
 #ifndef NOVELRT_INTEROP_TIMING_STEPTIMER_H
 #define NOVELRT_INTEROP_TIMING_STEPTIMER_H
@@ -9,8 +10,7 @@
 extern "C" {
 #endif
 
-typedef StepTimerHandle* NovelRTStepTimer;
-typedef UpdateEventWithTimestampHandle* NovelRTUpdateEventWithTimestamp;
+typedef struct StepTimerHandle* NovelRTStepTimer;
 
 NovelRTResult NovelRT_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NovelRTStepTimer* output, const char** errorMessage);
 NovelRTResult NovelRT_StepTimer_getElapsedTicks(NovelRTStepTimer timer, uint64_t* output, const char** errorMessage);
