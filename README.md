@@ -1,4 +1,6 @@
-# NovelRT
+NovelRT
+=======
+
 NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
 
 | Job | Debug Status | Release Status |
@@ -55,7 +57,7 @@ First, you must install the dependencies. Using Ubuntu 20.04, this looks somethi
 ```
 sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
     libglm-dev libgmock-dev libgtest-dev liblua5.3-dev libopenal-dev libsndfile1-dev \
-    libspdlog-dev pyhon3-glad
+    libspdlog-dev python3-glad
 ```
 Then, clone and build NovelRT:
 ```
@@ -94,7 +96,7 @@ Examples will be placed here when we have created some. In the meantime, we advi
 ## Contributing
 First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on.
 
-**NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Discord via direct message or by contacting us via email at admin@novelrt.dev.**
+**NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Developer via direct message on Discord or by contacting us via [email](mailto:admin%40novelrt.dev).**
 
 ## Licence
 Unless otherwise specified, all files are copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT).
