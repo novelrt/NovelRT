@@ -6,6 +6,7 @@
 #include "NovelRT.Interop/Input/NovelRTKeyStateFrameChangeLog.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
+#include "NovelRT.Interop/Utilities/NovelRTCommonEvents.h"
 
 #ifndef NOVELRT_INTEROP_NOVELRUNNER_H
 #define NOVELRT_INTEROP_NOVELRUNNER_H
@@ -28,7 +29,7 @@ extern "C" {
 
   NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage);
-
+  NovelRTResult NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
 // /// Gets the Rendering Service associated with this Runner.
 //     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
 //     /// Gets the Debug Service associated with this Runner.

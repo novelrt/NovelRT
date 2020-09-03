@@ -6,7 +6,7 @@
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include "NovelRT.Interop/Timing/NovelRTStepTimer.h"
-#include "NovelRT.Interop/Utilities/NovelRTEvents.h"
+#include "NovelRT.Interop/Utilities/NovelRTCommonEvents.h"
 #include "NovelRT.Interop/NovelRTLoggingService.h"
 
 const char* error = " ";
@@ -103,7 +103,7 @@ int main() {
 
     NovelRT_RuntimeService_initialise(dotnet, &error);
     res = NovelRT_StepTimer_create(60.0, 0.1, &timer, &error);
-    res = NovelRT_Events_getNovelRunnerUpdateEvent(runner, &updateEvent, &error);
+    res = NovelRT_NovelRunner_getUpdateEvent(runner, &updateEvent, &error);
 
     NovelRT_StepTimer_tick(timer, updateEvent, &error);
     

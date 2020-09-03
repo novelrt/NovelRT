@@ -23,8 +23,6 @@ set(INTEROP_SOURCES
   Timing/NovelRTTimestamp.cpp
   Timing/NovelRTStepTimer.cpp
 
-  Utilities/NovelRTEvents.cpp
-
   Windowing/NovelRTWindowingService.cpp
 )
 
