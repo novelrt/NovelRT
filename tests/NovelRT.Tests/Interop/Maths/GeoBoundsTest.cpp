@@ -121,6 +121,16 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsErrorCodeWhenBoundsAreRotated) {
   EXPECT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, nullptr), NOVELRT_FAILURE);
 }
 
+TEST(InteropGeoBoundsTest, intersectsWithReturnsExceptionFailureWhenNotAABB) {
+  NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 20.0f };
+  NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
+  const char* errorMessage = nullptr;
+  NovelRTBool output = NOVELRT_FALSE;
+
+  ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, &errorMessage), NOVELRT_FAILURE);
+  EXPECT_TRUE(strcmp(errorMessage, "Box intersection does not currently support rotated bounds. AABB support only.") == 0);
+}
+
 TEST(InteropGeoBoundsTest, intersectsWithReturnsNullptrFailurWhenGivenNullptr) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 20.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };

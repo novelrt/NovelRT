@@ -61,9 +61,10 @@ extern "C" {
       return NOVELRT_SUCCESS;
 
     } catch (const std::exception& ex) {
-      (void)ex;
       if(errorMessage != nullptr) {
-        *errorMessage = "TODO: Figure out how to push exception message proper.";
+        char* arr = reinterpret_cast<char*>(malloc(strlen(ex.what()) + 1));
+        strcpy_s(arr, strlen(ex.what()) + 1, ex.what());
+        *errorMessage = arr;
       }
 
       return NOVELRT_FAILURE;
