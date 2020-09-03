@@ -62,8 +62,10 @@ extern "C" {
 
     } catch (const std::exception& ex) {
       if(errorMessage != nullptr) {
-        char* arr = reinterpret_cast<char*>(malloc(strlen(ex.what()) + 1));
-        strcpy_s(arr, strlen(ex.what()) + 1, ex.what());
+        std::string_view tempView{ex.what()};
+        char* arr = reinterpret_cast<char*>(malloc(tempView.size() + 1));
+        tempView.copy(arr, tempView.size());
+        arr[tempView.size()] = 0;
         *errorMessage = arr;
       }
 

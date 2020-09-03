@@ -128,6 +128,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsExceptionFailureWhenNotAABB) {
   NovelRTBool output = NOVELRT_FALSE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, &errorMessage), NOVELRT_FAILURE);
+  std::cout << errorMessage << std::endl;
   EXPECT_TRUE(strcmp(errorMessage, "Box intersection does not currently support rotated bounds. AABB support only.") == 0);
 }
 
