@@ -9,15 +9,10 @@
 
 namespace NovelRT::Timing {
   class Timestamp {
-  private:
+  public:
     uint64_t _ticks;
 
-  public:
     explicit Timestamp(uint64_t ticks) noexcept : _ticks(ticks) {}
-
-    inline uint64_t getTicks() const {
-      return _ticks;
-    }
 
     inline double getSecondsDouble() const {
       auto returnVal = static_cast<double>(_ticks) / TicksPerSecond;
@@ -40,63 +35,63 @@ namespace NovelRT::Timing {
     }
 
     inline Timestamp operator+(const Timestamp& other) const {
-      return Timestamp(_ticks + other.getTicks());
+      return Timestamp(_ticks + other._ticks);
     }
 
     inline Timestamp operator-(const Timestamp& other) const {
-      return Timestamp(_ticks - other.getTicks());
+      return Timestamp(_ticks - other._ticks);
     }
 
     inline Timestamp operator*(const Timestamp& other) const {
-      return Timestamp(_ticks * other.getTicks());
+      return Timestamp(_ticks * other._ticks);
     }
 
     inline Timestamp operator/(const Timestamp& other) const {
-      return Timestamp(_ticks / other.getTicks());
+      return Timestamp(_ticks / other._ticks);
     }
 
     inline Timestamp& operator+=(const Timestamp& other) {
-      _ticks += other.getTicks();
+      _ticks += other._ticks;
       return *this;
     }
 
     inline Timestamp operator-=(const Timestamp& other) {
-      _ticks -= other.getTicks();
+      _ticks -= other._ticks;
       return *this;
     }
 
     inline Timestamp operator*=(const Timestamp& other) {
-      _ticks *= other.getTicks();
+      _ticks *= other._ticks;
       return *this;
     }
 
     inline Timestamp operator/=(const Timestamp& other) {
-      _ticks /= other.getTicks();
+      _ticks /= other._ticks;
       return *this;
     }
 
     inline bool operator<(const Timestamp& other) const {
-      return _ticks < other.getTicks();
+      return _ticks < other._ticks;
     }
 
     inline bool operator>(const Timestamp& other) const {
-      return _ticks > other.getTicks();
+      return _ticks > other._ticks;
     }
 
     inline bool operator<=(const Timestamp& other) const {
-      return _ticks <= other.getTicks();
+      return _ticks <= other._ticks;
     }
 
     inline bool operator>=(const Timestamp& other) const {
-      return _ticks >= other.getTicks();
+      return _ticks >= other._ticks;
     }
 
     inline bool operator==(const Timestamp& other) const {
-      return _ticks == other.getTicks();
+      return _ticks == other._ticks;
     }
 
     inline bool operator!=(const Timestamp& other) const {
-      return _ticks != other.getTicks();
+      return _ticks != other._ticks;
     }
   };
 }

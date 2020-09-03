@@ -3,284 +3,247 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
 
-NovelRTResult NovelRT_Timestamp_create(uint64_t ticks, NovelRTTimestamp* output, const char** errorMessage) {
-    if (output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp) {
+    if(std::isnan(static_cast<double>(timestamp))) {
+      return NOVELRT_TRUE;
     }
 
+    return NOVELRT_FALSE;
+  }
+
+NovelRTTimestamp NovelRT_Timestamp_create(uint64_t ticks) {
     auto stamp = NovelRT::Timing::Timestamp(ticks);
-    *output = reinterpret_cast<NovelRTTimestamp>(&stamp);
-    return NOVELRT_SUCCESS;
+    return reinterpret_cast<NovelRTTimestamp&>(stamp);
 }
 
-NovelRTResult NovelRT_Timestamp_getTicks(NovelRTTimestamp timestamp, uint64_t* output, const char** errorMessage) {
-    if (timestamp == nullptr || output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
-
-    auto cStamp = reinterpret_cast<NovelRT::Timing::Timestamp&>(timestamp);
-    *output = cStamp.getTicks();
-    return NOVELRT_SUCCESS;
+double NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp) {
+    auto stamp = reinterpret_cast<NovelRT::Timing::Timestamp&>(timestamp);
+    return stamp.getSecondsDouble();
 }
 
-NovelRTResult NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp, double* output, const char** errorMessage) {
-    if (timestamp == nullptr || output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
-
-    auto cStamp = reinterpret_cast<NovelRT::Timing::Timestamp&>(timestamp);
-    *output = cStamp.getSecondsDouble();
-    return NOVELRT_SUCCESS;
+float NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp) {
+    auto stamp = reinterpret_cast<NovelRT::Timing::Timestamp&>(timestamp);
+    return stamp.getSecondsFloat();
 }
 
-NovelRTResult NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp, float* output, const char** errorMessage) {
-    if (timestamp == nullptr || output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
-
-    auto cStamp = reinterpret_cast<NovelRT::Timing::Timestamp&>(timestamp);
-    *output = cStamp.getSecondsFloat();
-    return NOVELRT_SUCCESS;
+NovelRTTimestamp NovelRT_Timestamp_zero() {
+    auto stamp = NovelRT::Timing::Timestamp::zero();
+    return reinterpret_cast<NovelRTTimestamp&>(stamp);
 }
 
-NovelRTResult NovelRT_Timestamp_zero(NovelRTTimestamp* output, const char** errorMessage) {
+NovelRTTimestamp NovelRT_Timestamp_fromSeconds(double seconds) {
+    auto stamp = NovelRT::Timing::Timestamp::fromSeconds(seconds);
+    return reinterpret_cast<NovelRTTimestamp&>(stamp);
+}
+
+NovelRTResult NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
+    
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
+    if (NovelRT_Timestamp_isNaN(first) || NovelRT_Timestamp_isNaN(other)) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNaN();
+        }
+        return NOVELRT_FAILURE;
+    }
 
-    auto newStamp = NovelRT::Timing::Timestamp::zero();
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
+    NovelRT::Timing::Timestamp result = cFirst + cOther;
+    *output = reinterpret_cast<NovelRTTimestamp&>(result);
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_fromSeconds(double seconds, NovelRTTimestamp* output, const char** errorMessage) {
+NovelRTResult NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
+    
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
+    if (NovelRT_Timestamp_isNaN(first) || NovelRT_Timestamp_isNaN(other)) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNaN();
+        }
+        return NOVELRT_FAILURE;
+    }
 
-    auto newStamp = NovelRT::Timing::Timestamp::fromSeconds(seconds);
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
+    NovelRT::Timing::Timestamp result = cFirst - cOther;
+    *output = reinterpret_cast<NovelRTTimestamp&>(result);
     return NOVELRT_SUCCESS;
 }
 
- NovelRTResult NovelRT_Timestamp_add(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
+NovelRTResult NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+    if (output == nullptr) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
+        }
+        return NOVELRT_FAILURE;
+    }
+    
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
+    if (NovelRT_Timestamp_isNaN(first) || NovelRT_Timestamp_isNaN(other)) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNaN();
+        }
+        return NOVELRT_FAILURE;
+    }
+
+    NovelRT::Timing::Timestamp result = cFirst * cOther;
+    *output = reinterpret_cast<NovelRTTimestamp&>(result);
+    return NOVELRT_SUCCESS;
+}
+
+NovelRTResult NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+    if (output == nullptr) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
+        }
+        return NOVELRT_FAILURE;
+    }
+    
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
+    if (NovelRT_Timestamp_isNaN(first) || NovelRT_Timestamp_isNaN(other)) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNaN();
+        }
+        return NOVELRT_FAILURE;
+    }
+
+    if (other == 0) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsDivideByZero();
+        }
+        return NOVELRT_FAILURE;
+    }
+
+    NovelRT::Timing::Timestamp result = cFirst / cOther;
+    *output = reinterpret_cast<NovelRTTimestamp&>(result);
+    return NOVELRT_SUCCESS;
+}
+
+NovelRTResult NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+    if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    auto newStamp = cFirst + cOther;
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
+    *reinterpret_cast<NovelRT::Timing::Timestamp*>(first) += reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_subtract(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
+NovelRTResult NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+    if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    auto newStamp = cFirst - cOther;
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
+    *reinterpret_cast<NovelRT::Timing::Timestamp*>(first) -= reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_multiply(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
+NovelRTResult NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+    if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    auto newStamp = cFirst * cOther;
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
+    *reinterpret_cast<NovelRT::Timing::Timestamp*>(first) *= reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_divide(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
+NovelRTResult NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+    if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
         }
         return NOVELRT_FAILURE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    auto newStamp = cFirst / cOther;
-    *output = reinterpret_cast<NovelRTTimestamp>(&newStamp);
-    return NOVELRT_SUCCESS;
-}
-
-NovelRTResult NovelRT_Timestamp_addIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
+    if (other == 0) {
         if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
+            *errorMessage = NovelRT_getErrMsgIsDivideByZero();
         }
         return NOVELRT_FAILURE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    cFirst += cOther;
-    first = reinterpret_cast<NovelRTTimestamp>(&cFirst);
+    *reinterpret_cast<NovelRT::Timing::Timestamp*>(first) /= reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_subtractIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst < cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    cFirst -= cOther;
-    first = reinterpret_cast<NovelRTTimestamp>(&cFirst);
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_multiplyIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst <= cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    cFirst *= cOther;
-    first = reinterpret_cast<NovelRTTimestamp>(&cFirst);
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_divideIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst > cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    cFirst /= cOther;
-    first = reinterpret_cast<NovelRTTimestamp>(&cFirst);
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_lessThan(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst >= cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst < cOther;
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst == cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst <= cOther;
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_greaterThan(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
+NovelRTBool NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+    NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
+    NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
+    if(cFirst != cOther) {
+      return NOVELRT_TRUE;
     }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst > cOther;
-    return NOVELRT_SUCCESS;
+    return NOVELRT_FALSE;
 }
 
-NovelRTResult NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
 
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst >= cOther;
-    return NOVELRT_SUCCESS;
-}
-
-NovelRTResult NovelRT_Timestamp_equal(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
-
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst == cOther;
-    return NOVELRT_SUCCESS;
-}
-
-NovelRTResult NovelRT_Timestamp_notEqual(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage) {
-    if (first == nullptr || other == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-    }
-
-    auto cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(first);
-    auto cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(other);
-    *result = cFirst != cOther;
-    return NOVELRT_SUCCESS;
-}

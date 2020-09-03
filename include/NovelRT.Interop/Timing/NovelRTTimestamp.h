@@ -8,30 +8,29 @@
 extern "C" {
 #endif
 
-typedef struct TimestampHandle* NovelRTTimestamp;
+typedef uint64_t NovelRTTimestamp;
 
-NovelRTResult NovelRT_Timestamp_create(uint64_t ticks, NovelRTTimestamp* output, const char** errorMessage);
+NovelRTTimestamp NovelRT_Timestamp_create(uint64_t ticks);
 
-NovelRTResult NovelRT_Timestamp_getTicks(NovelRTTimestamp timestamp, uint64_t* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp, double* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp, float* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_zero(NovelRTTimestamp* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_fromSeconds(double seconds, NovelRTTimestamp* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_add(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage); 
-NovelRTResult NovelRT_Timestamp_subtract(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_multiply(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_divide(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_addIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage); 
-NovelRTResult NovelRT_Timestamp_subtractIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_multiplyIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_divideIntoTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_lessThan(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_greaterThan(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_equal(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-NovelRTResult NovelRT_Timestamp_notEqual(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTBool* result, const char** errorMessage);
-
+NovelRTBool NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp);
+double NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp);
+float NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp);
+NovelRTTimestamp NovelRT_Timestamp_zero();
+NovelRTTimestamp NovelRT_Timestamp_fromSeconds(double seconds);
+NovelRTResult NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
+NovelRTResult NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
+NovelRTBool NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+NovelRTBool NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+NovelRTBool NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+NovelRTBool NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+NovelRTBool NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+NovelRTBool NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
 
 #ifdef __cplusplus
 }
