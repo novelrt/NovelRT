@@ -5,6 +5,7 @@
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.Interop/Input/NovelRTKeyStateFrameChangeLog.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
+#include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
 
 #ifndef NOVELRT_INTEROP_NOVELRUNNER_H
 #define NOVELRT_INTEROP_NOVELRUNNER_H
@@ -23,6 +24,7 @@ extern "C" {
   NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService, const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage);
+  NovelRTResult NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage);
 
   NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage);
   NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage);
@@ -31,8 +33,6 @@ extern "C" {
 //     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
 //     /// Gets the Debug Service associated with this Runner.
 //     std::shared_ptr<DebugService> getDebugService() const;
-//     /// Gets the .NET Runtime Service associated with this Runner.
-//     std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
 
 #ifdef __cplusplus
 }

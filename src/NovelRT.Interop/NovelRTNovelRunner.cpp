@@ -5,6 +5,7 @@
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
+#include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include <NovelRT.h>
 #include <stdint.h>
@@ -13,6 +14,7 @@
 std::list<std::shared_ptr<NovelRT::Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionCollection;
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowingCollection;
+std::list<std::shared_ptr<NovelRT::DotNet::RuntimeService>> _runtimeCollection;
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,7 +104,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage) {
+  NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage) {
     if (runner == nullptr || outputService == nullptr) {
       if (errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -121,6 +123,29 @@ NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner,
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTWindowingService>(ptr);
+    
+    return NOVELRT_SUCCESS;
+  }
+
+  NovelRTResult NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage) {
+    if (runner == nullptr || outputService == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    _runtimeCollection.push_back(cRunner->getDotNetRuntimeService());
+
+    auto ptr = _runtimeCollection.back().get();
+    if (ptr == nullptr)
+    {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    *outputService = reinterpret_cast<NovelRTRuntimeService>(ptr);
     
     return NOVELRT_SUCCESS;
   }

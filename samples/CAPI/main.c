@@ -15,6 +15,7 @@ NovelRTBool booleanResult = NOVELRT_TRUE;
 NovelRTAudioService audio = NULL;
 NovelRTInteractionService input = NULL;
 NovelRTLoggingService console = NULL;
+NovelRTRuntimeService dotnet = NULL;
 NovelRTStepTimer timer = NULL;
 NovelRTUpdateEventWithTimestamp updateEvent = NULL;
 
@@ -76,7 +77,7 @@ int main() {
 
     res = NovelRT_NovelRunner_getInteractionService(runner, &input, &error);
     if (res == NOVELRT_SUCCESS) {
-        NovelRT_LoggingService_logInfoLine(console, "Received InteractionService from C API!", &error);
+        NovelRT_LoggingService_logInfoLine(console, "Received InteractionService from C!", &error);
     }
     else {
        char* precursor = "Error getting InteractionService: ";
@@ -87,6 +88,20 @@ int main() {
             return -1;
     }
 
+    res = NovelRT_NovelRunner_getRuntimeService(runner, &dotnet, &error);
+    if (res == NOVELRT_SUCCESS) {
+        NovelRT_LoggingService_logInfoLine(console, "Received .NET RuntimeService from C!", &error);
+    }
+    else {
+       char* precursor = "Error getting RuntimeService: ";
+            char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
+            strcpy(errMsg, precursor);
+            strcpy(errMsg, error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+            return -1;
+    }
+
+    NovelRT_RuntimeService_initialise(dotnet, &error);
     res = NovelRT_StepTimer_create(60.0, 0.1, &timer, &error);
     res = NovelRT_Events_getNovelRunnerUpdateEvent(runner, &updateEvent, &error);
 

@@ -6,6 +6,8 @@ set(INTEROP_SOURCES
 
   Audio/NovelRTAudioService.cpp
 
+  DotNet/NovelRTRuntimeService.cpp
+
   Input/NovelRTBasicInteractionRect.cpp
   Input/NovelRTInteractionService.cpp
   Input/NovelRTKeyStateFrameChangeLog.cpp
