@@ -26,7 +26,7 @@ extern "C" {
     return reinterpret_cast<NovelRTGeoVector2F&>(corner);
   }
 
-  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
+  int32_t NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
     if (cBounds.pointIsWithinBounds(cPoint)) {
@@ -41,7 +41,7 @@ extern "C" {
     return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 
-  NovelRTResult NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, NovelRTBool* outputResult, const char** errorMessage) {
+  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult, const char** errorMessage) {
     if(outputResult == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -73,7 +73,7 @@ extern "C" {
     }
   }
 
-  NovelRTBool NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
+  int32_t NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
     Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
     Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
 
@@ -83,7 +83,7 @@ extern "C" {
     return NOVELRT_FALSE;
   }
 
-  NovelRTBool NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
+  int32_t NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs) {
     Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
     Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
 

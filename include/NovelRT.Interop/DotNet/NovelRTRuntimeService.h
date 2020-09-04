@@ -12,10 +12,10 @@ extern "C" {
   typedef struct RuntimeFunctionHandle* NovelRTRuntimeFunction;
 
   NovelRTRuntimeService NovelRT_RuntimeService_create();
-  NovelRTResult NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char** errorMessage);
-//   NovelRTResult NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName, const char** errorMessage);
-  NovelRTResult NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const char** errorMessage);
-  NovelRTResult NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, const char** errorMessage);
+  int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char** errorMessage);
+//   int32_t NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName, const char** errorMessage);
+  int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const char** errorMessage);
+  int32_t NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, const char** errorMessage);
 
 #ifdef __cplusplus
 }

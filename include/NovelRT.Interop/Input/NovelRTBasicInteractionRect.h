@@ -11,19 +11,19 @@ extern "C" {
 
 typedef struct BasicInteractionRectHandle* NovelRTBasicInteractionRect;
 
-NovelRTResult NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionRect object, NovelRTTransform transform, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect object, int* outputValue, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect object, int value, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect object, NovelRTBool* outputValue, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect object, NovelRTBool value, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_validateInteractionPrimeter(NovelRTBasicInteractionRect object, const NovelRTGeoVector2F mousePosition, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value, const char** errorMessage);
-NovelRTResult NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage);
-//NovelRTResult NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionRect object, NovelRTTransform transform, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect object, int* outputValue, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect object, int value, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect object, int32_t* outputValue, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect object, int32_t value, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_validateInteractionPrimeter(NovelRTBasicInteractionRect object, const NovelRTGeoVector2F mousePosition, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value, const char** errorMessage);
+int32_t NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage);
+//int32_t NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage);
 
 #ifdef __cplusplus
 }

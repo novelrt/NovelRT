@@ -19,17 +19,17 @@ extern "C" {
 
   NovelRTNovelRunner NovelRT_NovelRunner_create(int displayNumber);
   NovelRTNovelRunner NovelRT_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
-  NovelRTResult NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner, const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner, const char** errorMessage);
 
-  NovelRTResult NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService, const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage);
 
-  NovelRTResult NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage);
-  NovelRTResult NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage);
+  int32_t NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
 // /// Gets the Rendering Service associated with this Runner.
 //     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
 //     /// Gets the Debug Service associated with this Runner.

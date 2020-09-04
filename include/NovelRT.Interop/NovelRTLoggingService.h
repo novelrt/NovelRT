@@ -14,15 +14,15 @@ extern "C" {
   NovelRTLoggingService NovelRT_LoggingService_create();
   NovelRTLoggingService NovelRT_LoggingService_createCustomTitle(const char* core);
   NovelRTLoggingService NovelRT_LoggingService_createCustomTitleAndLevel(const char* core, NovelRTLogLevel level);
-  NovelRTResult NovelRT_LoggingService_log(NovelRTLoggingService service, const char* message, NovelRTLogLevel level, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_logInfoLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_logErrorLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_logWarningLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_logDebugLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_logInternal(NovelRTLoggingService service, const char* message, NovelRTLogLevel level, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_setLogLevel(NovelRTLoggingService service, NovelRTLogLevel level, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_throwIfNullPtr(NovelRTLoggingService service, void* object, const char* exceptionMessage, const char** errorMessage);
-  NovelRTResult NovelRT_LoggingService_throwIfNotZero(NovelRTLoggingService service, int32_t error, const char* exceptionMessage, const char** errorMessage);
+  int32_t NovelRT_LoggingService_log(NovelRTLoggingService service, const char* message, NovelRTLogLevel level, const char** errorMessage);
+  int32_t NovelRT_LoggingService_logInfoLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
+  int32_t NovelRT_LoggingService_logErrorLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
+  int32_t NovelRT_LoggingService_logWarningLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
+  int32_t NovelRT_LoggingService_logDebugLine(NovelRTLoggingService service, const char* message, const char** errorMessage);
+  int32_t NovelRT_LoggingService_logInternal(NovelRTLoggingService service, const char* message, NovelRTLogLevel level, const char** errorMessage);
+  int32_t NovelRT_LoggingService_setLogLevel(NovelRTLoggingService service, NovelRTLogLevel level, const char** errorMessage);
+  int32_t NovelRT_LoggingService_throwIfNullPtr(NovelRTLoggingService service, void* object, const char* exceptionMessage, const char** errorMessage);
+  int32_t NovelRT_LoggingService_throwIfNotZero(NovelRTLoggingService service, int32_t error, const char* exceptionMessage, const char** errorMessage);
 
 
 #ifdef __cplusplus

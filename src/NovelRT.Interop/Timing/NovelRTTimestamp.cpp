@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 
-NovelRTBool NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp) {
+int32_t NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp) {
     if(std::isnan(static_cast<double>(timestamp))) {
       return NOVELRT_TRUE;
     }
@@ -41,7 +41,7 @@ NovelRTTimestamp NovelRT_Timestamp_fromSeconds(double seconds) {
     return reinterpret_cast<NovelRTTimestamp&>(stamp);
 }
 
-NovelRTResult NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+int32_t NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -63,7 +63,7 @@ NovelRTResult NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTime
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+int32_t NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -85,7 +85,7 @@ NovelRTResult NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelR
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+int32_t NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -107,7 +107,7 @@ NovelRTResult NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelR
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
+int32_t NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage) {
     if (output == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -136,7 +136,7 @@ NovelRTResult NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTT
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+int32_t NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
     if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -148,7 +148,7 @@ NovelRTResult NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, Nove
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+int32_t NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
     if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -160,7 +160,7 @@ NovelRTResult NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first,
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+int32_t NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
     if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -172,7 +172,7 @@ NovelRTResult NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first,
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
+int32_t NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage) {
     if (first == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -191,7 +191,7 @@ NovelRTResult NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, N
     return NOVELRT_SUCCESS;
 }
 
-NovelRTBool NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst < cOther) {
@@ -201,7 +201,7 @@ NovelRTBool NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rh
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst <= cOther) {
@@ -211,7 +211,7 @@ NovelRTBool NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTim
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst > cOther) {
@@ -221,7 +221,7 @@ NovelRTBool NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst >= cOther) {
@@ -231,7 +231,7 @@ NovelRTBool NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRT
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst == cOther) {
@@ -241,7 +241,7 @@ NovelRTBool NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs) 
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
+int32_t NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs) {
     NovelRT::Timing::Timestamp cFirst = reinterpret_cast<NovelRT::Timing::Timestamp&>(lhs);
     NovelRT::Timing::Timestamp cOther = reinterpret_cast<NovelRT::Timing::Timestamp&>(rhs);
     if(cFirst != cOther) {

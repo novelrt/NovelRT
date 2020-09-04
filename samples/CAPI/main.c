@@ -10,8 +10,8 @@
 #include "NovelRT.Interop/NovelRTLoggingService.h"
 
 const char* error = " ";
-NovelRTResult res = NOVELRT_SUCCESS;
-NovelRTBool booleanResult = NOVELRT_TRUE;
+int32_t res = NOVELRT_SUCCESS;
+int32_t booleanResult = NOVELRT_TRUE;
 NovelRTAudioService audio = NULL;
 NovelRTInteractionService input = NULL;
 NovelRTLoggingService console = NULL;

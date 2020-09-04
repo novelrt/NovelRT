@@ -12,7 +12,7 @@ NovelRTRuntimeService NovelRT_RuntimeService_create() {
     return reinterpret_cast<NovelRTRuntimeService&>(service);
 }
 
-NovelRTResult NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char** errorMessage) {
     if (service == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -25,7 +25,7 @@ NovelRTResult NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, cons
     return NOVELRT_SUCCESS;
 }
 
-// NovelRTResult NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName, const char** errorMessage) {
+// int32_t NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName, const char** errorMessage) {
 //     if (service == nullptr || outputFunction == nullptr) {
 //         if (errorMessage != nullptr) {
 //             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -38,7 +38,7 @@ NovelRTResult NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, cons
 //     return NOVELRT_SUCCESS;
 // }
 
-NovelRTResult NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const char** errorMessage) {
     if (service == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -51,7 +51,7 @@ NovelRTResult NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, c
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, const char** errorMessage) {
     if (service == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();

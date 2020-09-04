@@ -12,12 +12,12 @@ extern "C" {
 
 typedef struct ChangeLogHandle* NovelRTKeyStateFrameChangeLog;
 
-NovelRTResult NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage);
+int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage);
 
-NovelRTResult NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage);
+int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage);
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs);
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs);
+int32_t NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs);
+int32_t NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs);
 
 #ifdef __cplusplus
 }

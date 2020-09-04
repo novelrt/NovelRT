@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#ifndef NOVELRT_INTEROP_NOVELRTRESULT_H
-#define NOVELRT_INTEROP_NOVELRTRESULT_H
+#ifndef NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H
+#define NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H
 
 #include <stdint.h>
 
@@ -8,17 +8,16 @@
 extern "C" {
 #endif
 
-typedef enum {
+enum {
   NOVELRT_SUCCESS = 0,
   NOVELRT_FAILURE = 1
-} NovelRTResult;
+};
 
-//typedef uint32_t NovelRTBool;
 
-typedef enum {
+enum {
   NOVELRT_FALSE = 0,
   NOVELRT_TRUE = 1
-} NovelRTBool;
+};
 
 const char* NovelRT_getCpuLangKey();
 const char* NovelRT_getErrMsgIsNullptr();
@@ -31,4 +30,4 @@ const char* NovelRT_translateErrorCode(const char* targetLanguage, const char* e
 }
 #endif
 
-#endif // NOVELRT_INTEROP_NOVELRTRESULT_H
+#endif // NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H

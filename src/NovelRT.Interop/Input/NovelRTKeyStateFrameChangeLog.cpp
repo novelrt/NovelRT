@@ -7,7 +7,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-NovelRTResult NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage) {
+int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
     if (output == nullptr) {
         if (errorMessage != nullptr) {
@@ -20,7 +20,7 @@ NovelRTResult NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFram
     return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage) {
+int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
     if (output == nullptr) {
         if (errorMessage != nullptr) {
@@ -32,7 +32,7 @@ NovelRTResult NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrame
     return NOVELRT_SUCCESS;
 }
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs) {
+int32_t NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(lhs);
     auto keyState = reinterpret_cast<const Input::KeyState&>(rhs);
     if (log == keyState) {
@@ -41,7 +41,7 @@ NovelRTBool NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrame
     return NOVELRT_FALSE;
 }
 
-NovelRTBool NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs) {
+int32_t NovelRT_KeyStateFrameChangeLog_compareKeyState(NovelRTKeyState lhs, NovelRTKeyStateFrameChangeLog rhs) {
     return NovelRT_KeyStateFrameChangeLog_compareChangeLog(rhs, lhs);
 }
 

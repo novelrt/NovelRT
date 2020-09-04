@@ -80,7 +80,7 @@ TEST(InteropGeoBoundsTest, getExtentsReturnsCorrectExtentsValue) {
 TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersecting) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
-  NovelRTBool output = NOVELRT_FALSE;
+  int32_t output = NOVELRT_FALSE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds0, bounds1, &output, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(output);
@@ -89,7 +89,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersecting) {
 TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersectingInversed) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
-  NovelRTBool output = NOVELRT_FALSE;
+  int32_t output = NOVELRT_FALSE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, nullptr), NOVELRT_SUCCESS);
   EXPECT_TRUE(output);
@@ -98,7 +98,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersectingInversed) {
 TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersecting) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(100.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
-  NovelRTBool output = NOVELRT_TRUE;
+  int32_t output = NOVELRT_TRUE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds0, bounds1, &output, nullptr), NOVELRT_SUCCESS);
   EXPECT_FALSE(output);
@@ -107,7 +107,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersecting) {
 TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersectingInversed) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(100.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
-  NovelRTBool output = NOVELRT_TRUE;
+  int32_t output = NOVELRT_TRUE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, nullptr), NOVELRT_SUCCESS);
   EXPECT_FALSE(output);
@@ -116,7 +116,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersectingInversed
 TEST(InteropGeoBoundsTest, intersectsWithReturnsErrorCodeWhenBoundsAreRotated) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 20.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
-  NovelRTBool output = NOVELRT_FALSE;
+  int32_t output = NOVELRT_FALSE;
 
   EXPECT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, nullptr), NOVELRT_FAILURE);
 }
@@ -125,7 +125,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsExceptionFailureWhenNotAABB) {
   NovelRTGeoBounds bounds0 { NovelRT_GeoVector2F_zero(), NovelRT_GeoVector2F_uniform(5.0f), 20.0f };
   NovelRTGeoBounds bounds1 { NovelRT_GeoVector2F_uniform(1.0f), NovelRT_GeoVector2F_uniform(5.0f), 0.0f };
   const char* errorMessage = nullptr;
-  NovelRTBool output = NOVELRT_FALSE;
+  int32_t output = NOVELRT_FALSE;
 
   ASSERT_EQ(NovelRT_GeoBounds_intersectsWith(bounds1, bounds0, &output, &errorMessage), NOVELRT_FAILURE);
   std::cout << errorMessage << std::endl;

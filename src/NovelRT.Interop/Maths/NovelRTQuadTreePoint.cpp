@@ -21,7 +21,7 @@ extern "C" {
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
-  NovelRTResult NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
+  int32_t NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
     if(point == nullptr || outputPosition == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -37,7 +37,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point, const char** errorMessage) {
+  int32_t NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point, const char** errorMessage) {
     if(point == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();

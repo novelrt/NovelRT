@@ -20,7 +20,7 @@ NovelRTInteractionService NovelRT_InteractionService_create(const NovelRTWindowi
   return reinterpret_cast<NovelRTInteractionService>(_interactionServiceCollection.back().get());
 }
 
-NovelRTResult NovelRT_InteractionService_consumePlayerInput(NovelRTInteractionService service, const char** errorMessage) {
+int32_t NovelRT_InteractionService_consumePlayerInput(NovelRTInteractionService service, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
@@ -32,7 +32,7 @@ NovelRTResult NovelRT_InteractionService_consumePlayerInput(NovelRTInteractionSe
   return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_InteractionService_executeClickedInteractable(const NovelRTInteractionService service, const char** errorMessage) {
+int32_t NovelRT_InteractionService_executeClickedInteractable(const NovelRTInteractionService service, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
@@ -44,7 +44,7 @@ NovelRTResult NovelRT_InteractionService_executeClickedInteractable(const NovelR
   return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_InteractionService_setScreenSize(const NovelRTInteractionService service, NovelRTGeoVector2F value, const char** errorMessage) {
+int32_t NovelRT_InteractionService_setScreenSize(const NovelRTInteractionService service, NovelRTGeoVector2F value, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
@@ -57,7 +57,7 @@ NovelRTResult NovelRT_InteractionService_setScreenSize(const NovelRTInteractionS
   return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_InteractionService_getKeyState(const NovelRTInteractionService service, NovelRTKeyCode value, NovelRTKeyStateFrameChangeLog* output, const char** errorMessage) {
+int32_t NovelRT_InteractionService_getKeyState(const NovelRTInteractionService service, NovelRTKeyCode value, NovelRTKeyStateFrameChangeLog* output, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr || output == nullptr) {
         if (errorMessage != nullptr) {
@@ -70,7 +70,7 @@ NovelRTResult NovelRT_InteractionService_getKeyState(const NovelRTInteractionSer
   return NOVELRT_SUCCESS;
 }
 
-NovelRTResult NovelRT_InteractionService_createBasicInteractionRect(const NovelRTInteractionService service, const NovelRTTransform transform, int layer, NovelRTBasicInteractionRect* outputRect, const char** errorMessage) {
+int32_t NovelRT_InteractionService_createBasicInteractionRect(const NovelRTInteractionService service, const NovelRTTransform transform, int layer, NovelRTBasicInteractionRect* outputRect, const char** errorMessage) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
   if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {

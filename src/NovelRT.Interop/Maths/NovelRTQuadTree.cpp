@@ -15,7 +15,7 @@ extern "C" {
      return reinterpret_cast<NovelRTQuadTree>(_treeCollection.back().get());
    }
   
-  NovelRTResult NovelRT_QuadTree_getParent(const NovelRTQuadTree tree, NovelRTQuadTree* outputParentTree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getParent(const NovelRTQuadTree tree, NovelRTQuadTree* outputParentTree, const char** errorMessage) {
      if(tree == nullptr || outputParentTree == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -31,7 +31,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_getBounds(const NovelRTQuadTree tree, NovelRTGeoBounds* outputGeoBounds, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getBounds(const NovelRTQuadTree tree, NovelRTGeoBounds* outputGeoBounds, const char** errorMessage) {
      if(tree == nullptr || outputGeoBounds == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -47,7 +47,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_getPoint(const NovelRTQuadTree tree, size_t index, NovelRTQuadTreePoint* outputPoint, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getPoint(const NovelRTQuadTree tree, size_t index, NovelRTQuadTreePoint* outputPoint, const char** errorMessage) {
      if(tree == nullptr || outputPoint == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -63,7 +63,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_getPointCount(const NovelRTQuadTree tree, size_t* outputSize, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getPointCount(const NovelRTQuadTree tree, size_t* outputSize, const char** errorMessage) {
      if(tree == nullptr || outputSize == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -77,7 +77,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_getTopLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getTopLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -92,7 +92,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
 
-  NovelRTResult NovelRT_QuadTree_getTopRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getTopRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -107,7 +107,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
    
-  NovelRTResult NovelRT_QuadTree_getBottomLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getBottomLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -122,7 +122,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
    
-  NovelRTResult NovelRT_QuadTree_getBottomRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getBottomRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree, const char** errorMessage) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -137,7 +137,7 @@ extern "C" {
      return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_tryInsert(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_tryInsert(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, int32_t* outputResult, const char** errorMessage) {
      if(tree == nullptr || outputResult == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -147,12 +147,12 @@ extern "C" {
      }
 
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-    *outputResult = static_cast<NovelRTBool>(treePointer->tryInsert(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
+    *outputResult = static_cast<int32_t>(treePointer->tryInsert(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
 
     return NOVELRT_SUCCESS;
    }
   
-  NovelRTResult NovelRT_QuadTree_tryRemove(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, NovelRTBool* outputResult, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_tryRemove(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, int32_t* outputResult, const char** errorMessage) {
      if(tree == nullptr || outputResult == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -162,12 +162,12 @@ extern "C" {
      }
 
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-    *outputResult = static_cast<NovelRTBool>(treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
+    *outputResult = static_cast<int32_t>(treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
 
     return NOVELRT_SUCCESS;
   }
   
-  NovelRTResult NovelRT_QuadTree_getIntersectingPoints(const NovelRTQuadTree tree, NovelRTGeoBounds bounds, NovelRTPointVector* outputResultVector, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_getIntersectingPoints(const NovelRTQuadTree tree, NovelRTGeoBounds bounds, NovelRTPointVector* outputResultVector, const char** errorMessage) {
      if(tree == nullptr || outputResultVector == nullptr) {
        if(errorMessage != nullptr) {
          *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -183,7 +183,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_PointVector_delete(NovelRTPointVector vector, const char** errorMessage) {
+  int32_t NovelRT_PointVector_delete(NovelRTPointVector vector, const char** errorMessage) {
     if(vector == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -197,7 +197,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_PointVector_getSize(const NovelRTPointVector vector, size_t* outputSize, const char** errorMessage) {
+  int32_t NovelRT_PointVector_getSize(const NovelRTPointVector vector, size_t* outputSize, const char** errorMessage) {
     if(vector == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -211,7 +211,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_PointVector_getPointFromIndex(const NovelRTPointVector vector, size_t index, NovelRTQuadTreePoint* outputPoint, const char** errorMessage) {
+  int32_t NovelRT_PointVector_getPointFromIndex(const NovelRTPointVector vector, size_t index, NovelRTQuadTreePoint* outputPoint, const char** errorMessage) {
     if(vector == nullptr || outputPoint == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -225,7 +225,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  NovelRTResult NovelRT_QuadTree_delete(NovelRTQuadTree tree, const char** errorMessage) {
+  int32_t NovelRT_QuadTree_delete(NovelRTQuadTree tree, const char** errorMessage) {
     if(tree == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();

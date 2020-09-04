@@ -18,11 +18,11 @@ extern "C" {
   NovelRTGeoBounds NovelRT_GeoBounds_zero();
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInLocalSpace(NovelRTGeoBounds bounds, int index);
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(NovelRTGeoBounds bounds, int index);
-  NovelRTBool NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point);
+  int32_t NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point);
   NovelRTGeoVector2F NovelRT_GeoBounds_getExtents(NovelRTGeoBounds bounds);
-  NovelRTResult NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, NovelRTBool* outputResult, const char** errorMessage);
-  NovelRTBool NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
-  NovelRTBool NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
+  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult, const char** errorMessage);
+  int32_t NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
+  int32_t NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
   
 #ifdef __cplusplus
 }
