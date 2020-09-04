@@ -21,6 +21,7 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
+    void drawObject() final;
 
   public:
     ImageRect(Transform transform,
@@ -43,8 +44,6 @@ namespace NovelRT::Graphics {
     std::shared_ptr<Texture>& texture() noexcept {
       return _texture;
     }
-
-    void drawObject() final;
 
     inline RGBAConfig colourTint() const {
       return _colourTint;

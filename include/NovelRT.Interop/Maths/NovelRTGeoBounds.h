@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
-#include "NovelRT.Interop/NovelRTInteropUtils.h"
+#include "NovelRTGeoVector2F.h"
+#include "../NovelRTInteropUtils.h"
 
 #ifndef NOVELRT_INTEROP_MATHS_GEOBOUNDS_H
 #define NOVELRT_INTEROP_MATHS_GEOBOUNDS_H

@@ -2,6 +2,7 @@
 #include "NovelRT.Interop/Maths/NovelRTQuadTree.h"
 #include "NovelRT.h"
 #include <list>
+#include <cmath>
 
 std::list<std::shared_ptr<NovelRT::Maths::QuadTree>> _treeCollection;
 

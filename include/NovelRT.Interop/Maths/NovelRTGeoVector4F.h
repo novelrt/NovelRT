@@ -1,12 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-
-
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR4F_H
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR4F_H
 
-#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
-#include "NovelRT.Interop/Maths/NovelRTGeoVector3F.h"
+#include "NovelRTGeoVector2F.h"
+#include "NovelRTGeoVector3F.h"
 
 #ifdef __cplusplus
 extern "C" {

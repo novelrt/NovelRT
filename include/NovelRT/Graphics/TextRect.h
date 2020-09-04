@@ -23,7 +23,8 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
-
+    void drawObject() final;
+    
   public:
     TextRect(Transform transform,
       int layer,
@@ -32,7 +33,6 @@ namespace NovelRT::Graphics {
       std::shared_ptr<FontSet> fontSet,
       RGBAConfig colourConfig);
 
-    void drawObject() final;
 
     inline RGBAConfig getColourConfig() const noexcept {
       return _colourConfig;

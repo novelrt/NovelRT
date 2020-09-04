@@ -17,7 +17,8 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
-
+    void drawObject() final;
+    
   public:
     BasicFillRect(Transform transform,
       int layer,
@@ -25,7 +26,6 @@ namespace NovelRT::Graphics {
       ShaderProgram shaderProgram,
       RGBAConfig fillColour);
 
-    void drawObject() final;
     const RGBAConfig getColourConfig() const;
     void setColourConfig(RGBAConfig value);
   };
