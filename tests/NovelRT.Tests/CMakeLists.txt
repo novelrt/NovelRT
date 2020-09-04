@@ -20,6 +20,7 @@ set(TEST_SOURCES
   Interop/Maths/GeoVector4FTest.cpp
   Interop/Maths/QuadTreePointTest.cpp
   Interop/Maths/QuadTreeTest.cpp
+  Interop/Timing/NovelRTTimestampTest.cpp
 
   Maths/GeoBoundsTest.cpp
   Maths/GeoMatrix4x4Test.cpp
