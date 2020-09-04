@@ -3,7 +3,7 @@
 #include "../NovelRTInteropUtils.h"
 
 #ifndef NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
-
+#define NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,7 +25,7 @@ extern "C" {
     int32_t NovelRT_RGBAConfig_getGScalar(NovelRTRGBAConfig colourConfig, float* outputValue, const char** errorMessage);
     int32_t NovelRT_RGBAConfig_getBScalar(NovelRTRGBAConfig colourConfig, float* outputValue, const char** errorMessage);
     int32_t NovelRT_RGBAConfig_getAScalar(NovelRTRGBAConfig colourConfig, float* outputValue, const char** errorMessage);
-    
+
 #ifdef __cplusplus
 }
 #endif
