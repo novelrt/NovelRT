@@ -20,6 +20,8 @@ set(INTEROP_SOURCES
   Maths/NovelRTQuadTree.cpp
   Maths/NovelRTQuadTreePoint.cpp
 
+  SceneGraph/NovelRTSceneNode.cpp
+
   Timing/NovelRTTimestamp.cpp
   Timing/NovelRTStepTimer.cpp
 
