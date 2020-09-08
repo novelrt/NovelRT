@@ -31,6 +31,8 @@ static int average(lua_State* luaState) {
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+
+
   lua_State* L;
 
   std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
@@ -66,7 +68,11 @@ int main(int /*argc*/, char* /*argv*/[])
   lua_close(L);
 
   auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
+
+  NovelRT::Plugins::PluginInfo info;
+
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
+
   auto audio = runner.getAudioService();
   audio->initializeAudio();
   auto bgm = audio->loadMusic((soundsDirPath / "marisa.ogg").string());

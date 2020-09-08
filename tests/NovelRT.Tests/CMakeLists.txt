@@ -18,6 +18,8 @@ set(TEST_SOURCES
   Maths/GeoVector4Test.cpp
   Maths/QuadTreeTest.cpp
 
+  Plugins/PluginServiceTest.cpp
+
   SceneGraph/SceneNodeTest.cpp
 
   Timing/TimestampTest.cpp
@@ -29,6 +31,7 @@ set(TEST_SOURCES
 )
 
 add_executable(Engine_Tests ${TEST_SOURCES})
+add_dependencies(Engine_Tests DoTest)
 target_link_libraries(Engine_Tests
   PUBLIC
     Engine
@@ -54,6 +57,21 @@ if(WIN32)
       $<TARGET_FILE_DIR:Engine_Tests>
   )
 endif()
+
+add_custom_command(
+  TARGET Engine_Tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  $<TARGET_FILE_DIR:DoTest>
+  $<TARGET_FILE_DIR:Engine_Tests>/Resources/Plugins
+)
+
+#TODO: This is REALLY terrible but whatever, don't do this at home kids
+add_custom_command(
+  TARGET Engine_Tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+  $<TARGET_FILE_DIR:DoTest>/testlibconf.json
+  $<TARGET_FILE_DIR:Engine_Tests>/Resources/Plugins/DummyFolder/testlibconf.json
+)
 
 add_custom_command(
   TARGET Engine_Tests POST_BUILD
