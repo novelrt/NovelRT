@@ -21,6 +21,7 @@ set(INTEROP_SOURCES
   Maths/NovelRTQuadTreePoint.cpp
 
   SceneGraph/NovelRTSceneNode.cpp
+  SceneGraph/NovelRTSceneNodeBreadthFirstIterator.cpp
 
   Timing/NovelRTTimestamp.cpp
   Timing/NovelRTStepTimer.cpp

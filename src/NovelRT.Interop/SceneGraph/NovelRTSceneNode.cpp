@@ -3,16 +3,29 @@
 #include <list>
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
+#include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeBreadthFirstIterator.h"
 #include "NovelRT.h"
+using namespace NovelRT;
 
 std::list<std::shared_ptr<NovelRT::SceneGraph::SceneNode>> _sceneNodeCollection;
-void(*_function)(NovelRTSceneNode) = NULL;
+void(*_voidFunction)(NovelRTSceneNode) = NULL;
+int32_t(*_intFunction)(NovelRTSceneNode) = NULL;
+
+
+//Defining internal methods first to prevent compilation issues
+void Internal_VoidSceneNodeFunctionInvoker(const std::shared_ptr<SceneGraph::SceneNode> node) {
+    _voidFunction(reinterpret_cast<NovelRTSceneNode>(node.get()));
+}
+
+int32_t Internal_Int32TSceneNodeFunctionInvoker(const std::shared_ptr<SceneGraph::SceneNode> node) {
+  return _intFunction(reinterpret_cast<NovelRTSceneNode>(node.get()));
+}
 
 #ifdef __cplusplus
-using namespace NovelRT;
 extern "C" {
 #endif
 
+//External methods
 NovelRTSceneNode NovelRT_SceneNode_create() {
     _sceneNodeCollection.push_back(std::make_shared<SceneGraph::SceneNode>());
     return reinterpret_cast<NovelRTSceneNode>(_sceneNodeCollection.back().get());
@@ -94,9 +107,24 @@ int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*acti
      }
 
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
-    _function = action;
-    nodePointer->traverseBreadthFirst(reinterpret_cast<std::function<void(std::shared_ptr<SceneGraph::SceneNode>)>&>(_function));
+    _voidFunction = action;
+    nodePointer->traverseBreadthFirst(Internal_VoidSceneNodeFunctionInvoker);
      return NOVELRT_SUCCESS;
+}
+
+int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage) {
+  if(node == nullptr || action == nullptr || outputIterator == nullptr) {
+       if(errorMessage != nullptr) {
+         *errorMessage = NovelRT_getErrMsgIsNullptr();
+       }
+       return NOVELRT_FAILURE;
+     }
+
+    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
+    _intFunction = action;
+    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> it = nodePointer->traverseBreadthFirst<int32_t>(Internal_Int32TSceneNodeFunctionInvoker);
+    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator&>(it);
+    return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage) {
@@ -108,8 +136,9 @@ int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action
      }
 
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
-    _function = action;
-    nodePointer->traverseDepthFirst(reinterpret_cast<std::function<void(std::shared_ptr<SceneGraph::SceneNode>)>&>(_function));
+    _voidFunction = action;
+
+    nodePointer->traverseDepthFirst(Internal_VoidSceneNodeFunctionInvoker);
      return NOVELRT_SUCCESS;
 }
 
@@ -180,11 +209,6 @@ int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nod
   auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
   *outputSceneNode = reinterpret_cast<NovelRTSceneNode&>(cNodeSet[index]);
   return NOVELRT_SUCCESS;
-}
-
-//Hidden bootstrapping method to act as "delegate" for C functions requiring `NovelRTSceneNode`
-void SceneNodeFunctionInvoker(const std::shared_ptr<SceneGraph::SceneNode> node) {
-    _function(reinterpret_cast<NovelRTSceneNode>(node.get()));
 }
 
 #ifdef __cplusplus

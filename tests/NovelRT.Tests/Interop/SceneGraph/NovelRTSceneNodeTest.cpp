@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <NovelRT.h>
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
+#include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeBreadthFirstIterator.h"
 
 using namespace NovelRT;
 using namespace NovelRT::SceneGraph;
@@ -13,6 +14,8 @@ bool compareNodeWithSet(NovelRTSceneNode lhs, NovelRTSceneNodeSet rhs) {
 
   return left == right;
 }
+
+
 
 TEST(InteropSceneNodeTest, createHasZeroChildren) {
   NovelRTSceneNode sceneNode = NovelRT_SceneNode_create();
@@ -113,74 +116,109 @@ TEST(InteropSceneNodeTest, removeNodeUpdatesParentChildRelationship)
   ASSERT_EQ(0, childrenSetSize);
 }
 
-// TEST(InteropSceneNodeTest, removeNodeTwiceReturnsFalse)
-// {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+TEST(InteropSceneNodeTest, removeNodeTwiceReturnsFalse)
+{
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
+  NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
+  NovelRT_SceneNode_remove(parentNode, childNode, &result, nullptr);
+  
+  NovelRT_SceneNode_remove(parentNode, childNode, &result, nullptr);
 
-//   parentSceneNode->insert(childSceneNode);
-//   parentSceneNode->remove(childSceneNode);
+  ASSERT_FALSE(result);
+}
 
-//   ASSERT_EQ(false, parentSceneNode->remove(childSceneNode));
-// }
+TEST(InteropSceneNodeTest, unrelatedNodesAreNotAdjacent) {
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
 
-// TEST(InteropSceneNodeTest, unrelatedNodesAreNotAdjacent) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+  NovelRT_SceneNode_isAdjacent(parentNode, childNode, &result, nullptr);
+  ASSERT_FALSE(result);
+  NovelRT_SceneNode_isAdjacent(childNode, parentNode, &result, nullptr);
+  ASSERT_FALSE(result);
+}
 
-//   ASSERT_EQ(false, parentSceneNode->isAdjacent(childSceneNode));
-//   ASSERT_EQ(false, childSceneNode->isAdjacent(parentSceneNode));
-// }
+TEST(InteropSceneNodeTest, parentChildNodesAreAdjacent) {
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
+  NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
 
-// TEST(InteropSceneNodeTest, parentChildNodesAreAdjacent) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+  NovelRT_SceneNode_isAdjacent(parentNode, childNode, &result, nullptr);
+  ASSERT_TRUE(result);
+  NovelRT_SceneNode_isAdjacent(childNode, parentNode, &result, nullptr);
+  ASSERT_TRUE(result);
+}
 
-//   parentSceneNode->insert(childSceneNode);
+TEST(InteropSceneNodeTest, childNodeIsReachableFromParent) {
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
 
-//   ASSERT_EQ(true, parentSceneNode->isAdjacent(childSceneNode));
-//   ASSERT_EQ(true, childSceneNode->isAdjacent(parentSceneNode));
-// }
+  NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
 
-// TEST(InteropSceneNodeTest, childNodeIsReachableFromParent) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+  NovelRT_SceneNode_canReach(parentNode, childNode, &result, nullptr);
+  ASSERT_TRUE(result);
+}
 
-//   parentSceneNode->insert(childSceneNode);
+TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
+  typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
+  
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
 
-//   ASSERT_EQ(true, parentSceneNode->canReach(childSceneNode));
-// }
+  NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
 
-// TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+  std::function<int32_t(NovelRTSceneNode)> func = [childNode](NovelRTSceneNode traversedNode) {
+    return traversedNode == childNode;
+  };
 
-//   parentSceneNode->insert(childSceneNode);
+  auto vari = reinterpret_cast<int32_t(*)(NovelRTSceneNode)>(&func);
 
-//   auto result = parentSceneNode->traverseBreadthFirst<bool>([&](const std::shared_ptr<SceneNode>& traversedNode) {
-//     return traversedNode == childSceneNode;
-//   });
+  NovelRTSceneNodeBreadthFirstIterator it = nullptr;
+  auto res = NovelRT_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it, nullptr);
+  ASSERT_EQ(res, 0);
 
-//   while ((*result != true) && !result.isEnd()) {
-//     result++;
-//   }
+  int32_t loopResult = 0;
+  int32_t isEqual = 0;
+  res = NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
+  ASSERT_EQ(res, 0);
 
-//   ASSERT_EQ(true, *result);
-// }
+  res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
+  ASSERT_EQ(res, 0);  
 
-// TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+  while ((isEqual != true) && (loopResult == false)) {
+    NovelRT_SceneNodeBreadthFirstIterator_increment(it, nullptr);
+    NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
+    NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
+  }
 
-//   parentSceneNode->insert(childSceneNode);
+  ASSERT_EQ(true, isEqual);
+}
 
-//   ASSERT_EQ(false, childSceneNode->canReach(parentSceneNode));
-// }
+TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild) {
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
 
-// TEST(InteropSceneNodeTest, nodeIsReachableFromSelf) {
-//   auto sceneNode = std::make_shared<SceneNode>();
-//   ASSERT_EQ(true, sceneNode->canReach(sceneNode));
-// }
+  NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
+
+  NovelRT_SceneNode_canReach(childNode, parentNode, &result, nullptr);
+  
+  ASSERT_EQ(false, result);
+}
+
+TEST(InteropSceneNodeTest, nodeIsReachableFromSelf) {
+  NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
+
+  NovelRT_SceneNode_canReach(parentNode, parentNode, &result, nullptr);
+  
+  ASSERT_EQ(true, result);
+}
 
 // TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
 //   auto parentSceneNode = std::make_shared<SceneNode>();
