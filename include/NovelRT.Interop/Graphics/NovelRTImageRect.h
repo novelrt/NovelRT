@@ -26,7 +26,6 @@ int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture input
 int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig* outputColourTint, const char** errorMessage);
 int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint, const char** errorMessage);
 
-
 #ifdef __cplusplus
 }
 #endif
