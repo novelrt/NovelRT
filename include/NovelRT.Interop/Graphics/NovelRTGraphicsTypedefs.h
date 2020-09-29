@@ -8,7 +8,10 @@ extern "C" {
   typedef struct RenderingServiceHandle* NovelRTRenderingService;
   typedef struct TextureHandle* NovelRTTexture;
   typedef struct FontSetHandle* NovelRTFontSet;
+  typedef struct BasicFillRectHandle* NovelRTBasicFillRect;
   typedef struct ImageRectHandle* NovelRTImageRect;
+  typedef struct TextRectHandle* NovelRTTextRect;
+  typedef struct CameraHandle* NovelRTCamera;
 
 #ifdef __cplusplus
 }
