@@ -27,14 +27,14 @@ namespace NovelRT::Graphics {
     ImageRect(Transform transform,
       int layer,
       ShaderProgram shaderProgram,
-      std::weak_ptr<Camera> camera,
+      std::shared_ptr<Camera> camera,
       std::shared_ptr<Texture> texture,
       RGBAConfig colourTint);
 
     ImageRect(Transform transform,
       int layer,
       ShaderProgram shaderProgram,
-      std::weak_ptr<Camera> camera,
+      std::shared_ptr<Camera> camera,
       RGBAConfig colourTint);
 
     const std::shared_ptr<Texture>& texture() const noexcept {

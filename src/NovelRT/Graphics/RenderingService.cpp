@@ -223,7 +223,7 @@ namespace NovelRT::Graphics {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
-  std::weak_ptr<Camera> RenderingService::getCamera() const {
+  std::shared_ptr<Camera> RenderingService::getCamera() const {
     return _camera;
   }
 

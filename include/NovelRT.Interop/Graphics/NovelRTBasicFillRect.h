@@ -25,3 +25,7 @@ int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRT
 int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage);
 
 #ifdef __cplusplus
+}
+#endif
+
+#endif //!NOVELRT_INTEROP_GRAPHICS_BASICFILLRECT_H

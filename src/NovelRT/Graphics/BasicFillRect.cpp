@@ -6,7 +6,7 @@ namespace NovelRT::Graphics {
 
   BasicFillRect::BasicFillRect(Transform transform,
     int layer,
-    std::weak_ptr<Camera> camera,
+    std::shared_ptr<Camera> camera,
     ShaderProgram shaderProgram,
     RGBAConfig fillColour) :
     RenderObject(transform, layer, shaderProgram, camera), _colourConfig(fillColour),

@@ -49,7 +49,7 @@ namespace NovelRT::Graphics {
 
     std::unique_ptr<TextRect> createTextRect(Transform transform, int layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
 
-    std::weak_ptr<Camera> getCamera() const;
+    std::shared_ptr<Camera> getCamera() const;
 
     void beginFrame() const;
     void endFrame() const;

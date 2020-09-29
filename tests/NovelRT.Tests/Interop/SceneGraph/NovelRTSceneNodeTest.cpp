@@ -4,6 +4,7 @@
 #include <NovelRT.h>
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeBreadthFirstIterator.h"
+#include "NovelRT.Interop/NovelRTInteropUtils.h"
 
 using namespace NovelRT;
 using namespace NovelRT::SceneGraph;
@@ -163,20 +164,30 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParent) {
   ASSERT_TRUE(result);
 }
 
+NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+
 TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
   typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
   
   NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
-  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+
   int32_t result = 0;
 
   NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
 
-  std::function<int32_t(NovelRTSceneNode)> func = [childNode](NovelRTSceneNode traversedNode) {
-    return traversedNode == childNode;
+  auto func = [](NovelRTSceneNode traversedNode) -> int32_t {
+    if(traversedNode == childNode) {
+      return NOVELRT_TRUE;
+    }
+
+    return NOVELRT_FALSE;
   };
 
-  auto vari = reinterpret_cast<int32_t(*)(NovelRTSceneNode)>(&func);
+  func(childNode);
+
+  int32_t(*vari)(NovelRTSceneNode) = func;
+
+  vari(childNode);
 
   NovelRTSceneNodeBreadthFirstIterator it = nullptr;
   auto res = NovelRT_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it, nullptr);
@@ -190,7 +201,7 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
   res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
   ASSERT_EQ(res, 0);  
 
-  while ((isEqual != true) && (loopResult == false)) {
+  while ((isEqual != NOVELRT_TRUE) && (loopResult == NOVELRT_FALSE)) {
     NovelRT_SceneNodeBreadthFirstIterator_increment(it, nullptr);
     NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
     NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
