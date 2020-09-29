@@ -1,9 +1,10 @@
 
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../NovelRTInteropUtils.h"
 
 #ifndef NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
 #define NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
+
+#include "../NovelRTInteropUtils.h"
 
 #ifdef __cplusplus
 extern "C" {

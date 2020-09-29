@@ -1,8 +1,4 @@
-
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../NovelRTTransform.h"
-#include "NovelRTRGBAConfig.h"
-#include "NovelRTGraphicsTypedefs.h"
 
 #ifndef NOVELRT_INTEROP_GRAPHICS_IMAGERECT_H
 #define NOVELRT_INTEROP_GRAPHICS_IMAGERECT_H
@@ -10,6 +6,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "../NovelRTTransform.h"
+#include "NovelRTRGBAConfig.h"
+#include "NovelRTGraphicsTypedefs.h"
 
 //base type
 int32_t NovelRT_ImageRect_getTransform(NovelRTImageRect rect, NovelRTTransform* outputTransform, const char** errorMessage);
