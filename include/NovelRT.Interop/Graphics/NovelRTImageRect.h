@@ -21,6 +21,10 @@ int32_t NovelRT_ImageRect_setActive(NovelRTImageRect rect, int32_t inputBool, co
 int32_t NovelRT_ImageRect_executeObjectBehaviour(NovelRTImageRect rect, const char** errorMessage);
 
 //actual type
+int32_t NovelRT_ImageRect_getTexture(NovelRTImageRect rect, NovelRTTexture* outputTexture, const char** errorMessage);
+int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture inputTexture, const char** errorMessage);
+int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig* outputColourTint, const char** errorMessage);
+int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint, const char** errorMessage);
 
 
 #ifdef __cplusplus
