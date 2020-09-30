@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 NovelRTAudioService NovelRT_AudioService_create() {
-    return reinterpret_cast<NovelRTAudioService>(new Audio::AudioService());
+    return reinterpret_cast<NovelRTAudioService>(new Audio::AudioService()); //TODO: WTF??
 }
 
 int32_t NovelRT_AudioService_destroy(NovelRTAudioService service, const char** errorMessage) {

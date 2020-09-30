@@ -11,7 +11,7 @@ namespace NovelRT::Windowing {
   /**
    * Manages the game window and window events such as resizing.
    */
-  class WindowingService {
+  class WindowingService : public std::enable_shared_from_this<WindowingService> {
 
   public:
     struct MouseClickEventArgs {

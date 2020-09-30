@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTWindowingService* outputRenderingService, const char** errorMessage);
+  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService, const char** errorMessage);
   int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService, const char** errorMessage); //this function has its own return codes, so in theory we can combine them both into the main return code
   int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService, const char** errorMessage);
   int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint, const char** errorMessage);

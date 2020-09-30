@@ -7,6 +7,7 @@
 using namespace NovelRT;
 using namespace NovelRT::Graphics;
 
+//COSPLAY
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -138,7 +139,8 @@ int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRT
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-  *outputColourConfig = *reinterpret_cast<NovelRTRGBAConfig*>(&cppRect->getColourConfig());
+  auto colourConfig = cppRect->getColourConfig();
+  *outputColourConfig = *reinterpret_cast<NovelRTRGBAConfig*>(&colourConfig);
 
   return NOVELRT_SUCCESS;
 }
@@ -157,7 +159,6 @@ int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRT
 
   return NOVELRT_SUCCESS;
 }
-
 
 #ifdef __cplusplus
 }
