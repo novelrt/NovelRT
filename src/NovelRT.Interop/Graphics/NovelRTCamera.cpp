@@ -4,7 +4,6 @@
 #include "NovelRT.h"
 #include <list>
 
-
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
 

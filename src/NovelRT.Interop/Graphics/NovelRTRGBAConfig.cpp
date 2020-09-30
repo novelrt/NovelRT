@@ -4,7 +4,6 @@
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Graphics/NovelRTRGBAConfig.h"
 
-
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
 using namespace NovelRT;
