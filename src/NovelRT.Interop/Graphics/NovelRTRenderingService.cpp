@@ -270,18 +270,19 @@ extern "C" {
     
     
     for (auto& service : _renderingServiceCollection) {
-      if(service.get() == renderingServicePtr) {
-        _renderingServiceCollection.remove(service);
-        break;
+      if(service.get() != renderingServicePtr) {
+        continue;
       }
 
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-      }
-      return NOVELRT_FAILURE;
+      _renderingServiceCollection.remove(service);
+        
+      return NOVELRT_SUCCESS;
     }
 
-    return NOVELRT_SUCCESS;
+    if(errorMessage != nullptr) {
+      *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
+    }
+    return NOVELRT_FAILURE;
   }
 
 #ifdef __cplusplus
