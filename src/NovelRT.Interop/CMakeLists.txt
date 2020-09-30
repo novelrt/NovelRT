@@ -12,6 +12,7 @@ set(INTEROP_SOURCES
   Graphics/NovelRTCamera.cpp
   Graphics/NovelRTImageRect.cpp
   Graphics/NovelRTRenderingService.cpp
+  Graphics/NovelRTRGBAConfig.cpp
 
   Input/NovelRTBasicInteractionRect.cpp
   Input/NovelRTInteractionService.cpp

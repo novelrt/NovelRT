@@ -7,11 +7,9 @@
 #include "NovelRT.h"
 #include <list>
 
-//DON'T FUCKING DO THIS
 using namespace NovelRT;
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Windowing;
-//EVER
 
   std::list<std::shared_ptr<RenderingService>> _renderingServiceCollection;
   std::list<std::unique_ptr<BasicFillRect>> _basicFillRectCollection;
@@ -20,7 +18,6 @@ using namespace NovelRT::Windowing;
   std::list<std::shared_ptr<Texture>> _textureCollection;
   std::list<std::shared_ptr<FontSet>> _fontSetCollection;
 
-//COSPLAY
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,7 +81,6 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    //DEFINITELY DO NOT DO THIS I AM AWFUL
     _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, std::string(filePath), *reinterpret_cast<RGBAConfig*>(&colourTint)));
     *outputImageRect = reinterpret_cast<NovelRTImageRect>(_imageRectCollection.back().get());
 
@@ -102,7 +98,6 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    //DEFINITELY DO NOT DO THIS I AM AWFUL
     _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(&colourTint)));
     *outputImageRect = reinterpret_cast<NovelRTImageRect>(_imageRectCollection.back().get());
 
@@ -120,7 +115,6 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    //DEFINITELY DO NOT DO THIS I AM AWFUL
     _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(&colourConfig)));
     *outputBasicFillRect = reinterpret_cast<NovelRTBasicFillRect>(_basicFillRectCollection.back().get());
 
@@ -232,7 +226,6 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     
-    //DEFINITELY DO NOT DO THIS I AM AWFUL
     _textureCollection.push_back(renderingServicePtr->getTexture(std::string(fileTarget)));
     *outputTexture = reinterpret_cast<NovelRTTexture>(_textureCollection.back().get());
 
@@ -250,7 +243,6 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     
-    //DEFINITELY DO NOT DO THIS I AM AWFUL
     _fontSetCollection.push_back(renderingServicePtr->getFontSet(std::string(fileTarget), fontSize));
     *outputFontSet = reinterpret_cast<NovelRTFontSet>(_fontSetCollection.back().get());
 
