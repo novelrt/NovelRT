@@ -29,8 +29,8 @@ extern "C" {
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-    auto mat4 = &cameraPtr->getViewMatrix();
-    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(mat4);
+    auto mat4 = cameraPtr->getViewMatrix();
+    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&mat4);
 
     return NOVELRT_SUCCESS;
   }
@@ -60,8 +60,8 @@ extern "C" {
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-    auto mat4 = &cameraPtr->getProjectionMatrix();
-    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(mat4);
+    auto mat4 = cameraPtr->getProjectionMatrix();
+    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&mat4);
 
     return NOVELRT_SUCCESS;
   }
@@ -92,8 +92,8 @@ extern "C" {
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-    auto mat4 = &cameraPtr->getCameraUboMatrix();
-    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(mat4);
+    auto mat4 = cameraPtr->getCameraUboMatrix();
+    *outputMatrix = *reinterpret_cast<NovelRTGeoMatrix4x4F*>(&mat4);
 
     return NOVELRT_SUCCESS;
   }
@@ -124,8 +124,9 @@ extern "C" {
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-    cameraPtr->forceResizeCallback() = std::function<void(Camera*, GeoVector2F)>([callback](auto camera, auto newSize){ callback(reinterpret_cast<NovelRTCamera>(camera), *reinterpret_cast<GeoVector2F*>(&newSize)); });
+    cameraPtr->forceResizeCallback() = std::function<void(Camera*, GeoVector2F)>([callback](auto camera, auto newSize){ callback(reinterpret_cast<NovelRTCamera>(camera), *reinterpret_cast<NovelRTGeoVector2F*>(&newSize)); });
 
+    return NOVELRT_SUCCESS;
   }
 
   NovelRTCamera NovelRT_Camera_createDefaultOrthographicProjection(NovelRTGeoVector2F windowSize) {
@@ -150,19 +151,20 @@ extern "C" {
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
     
     for (auto& cppCamera : _cameraCollection) {
-      if (cppCamera.get() == cameraPtr) {
-        _cameraCollection.remove(cppCamera);
-        break;
+      if (cppCamera.get() != cameraPtr) {
+        continue;
       }
+
+      _cameraCollection.remove(cppCamera);
+      
+      return NOVELRT_SUCCESS;
+    }
 
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
       }
       
       return NOVELRT_FAILURE;
-    }
-
-    return NOVELRT_SUCCESS;
   }
 
 #ifdef __cplusplus

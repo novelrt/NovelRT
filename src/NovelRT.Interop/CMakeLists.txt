@@ -9,7 +9,8 @@ set(INTEROP_SOURCES
   DotNet/NovelRTRuntimeService.cpp
 
   Graphics/NovelRTBasicFillRect.cpp
-  #Graphics/NovelRTCamera.cpp
+  Graphics/NovelRTCamera.cpp
+  Graphics/NovelRTImageRect.cpp
   Graphics/NovelRTRenderingService.cpp
 
   Input/NovelRTBasicInteractionRect.cpp

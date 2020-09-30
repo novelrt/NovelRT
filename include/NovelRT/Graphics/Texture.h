@@ -6,7 +6,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class Texture {
+  class Texture : public std::enable_shared_from_this<Texture> {
     friend class ImageRect;
     friend class TextRect;
     friend class RenderingService;
