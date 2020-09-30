@@ -26,6 +26,7 @@ extern "C" {
   int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char** errorMessage);
   int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget, const char** errorMessage);
   int32_t NovelRT_RenderingService_getFontSet(NovelRTRenderingService renderingService, NovelRTFontSet* outputFontSet, const char* fileTarget, float fontSize, const char**errorMessage);
+  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService, const char** errorMessage);
 
 #ifdef __cplusplus
 }

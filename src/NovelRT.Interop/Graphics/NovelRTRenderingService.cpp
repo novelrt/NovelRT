@@ -257,6 +257,33 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
+  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService, const char** errorMessage) {
+    if(renderingService == nullptr) {
+      if (errorMessage != nullptr) {
+          *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      
+      return NOVELRT_FAILURE;
+    }
+    
+    RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
+    
+    
+    for (auto& service : _renderingServiceCollection) {
+      if(service.get() == renderingServicePtr) {
+        _renderingServiceCollection.remove(service);
+        break;
+      }
+
+      if(errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
+      }
+      return NOVELRT_FAILURE;
+    }
+
+    return NOVELRT_SUCCESS;
+  }
+
 #ifdef __cplusplus
 }
 #endif
