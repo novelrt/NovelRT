@@ -51,7 +51,7 @@ namespace NovelRT::Graphics {
 
   }
 
-  const RGBAConfig BasicFillRect::getColourConfig() const {
+  RGBAConfig BasicFillRect::getColourConfig() const {
     return _colourConfig;
   }
 

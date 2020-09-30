@@ -26,7 +26,7 @@ namespace NovelRT::Graphics {
       ShaderProgram shaderProgram,
       RGBAConfig fillColour);
 
-    const RGBAConfig getColourConfig() const;
+    RGBAConfig getColourConfig() const;
     void setColourConfig(RGBAConfig value);
   };
 }

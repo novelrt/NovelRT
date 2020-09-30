@@ -8,6 +8,8 @@ set(INTEROP_SOURCES
 
   DotNet/NovelRTRuntimeService.cpp
 
+  Graphics/NovelRTBasicFillRect.cpp
+
   Input/NovelRTBasicInteractionRect.cpp
   Input/NovelRTInteractionService.cpp
   Input/NovelRTKeyStateFrameChangeLog.cpp
