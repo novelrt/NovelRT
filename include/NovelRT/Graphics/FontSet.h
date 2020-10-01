@@ -6,7 +6,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class FontSet {
+  class FontSet : public std::enable_shared_from_this<FontSet> {
     friend class ImageRect;
     friend class TextRect;
     friend class RenderingService;

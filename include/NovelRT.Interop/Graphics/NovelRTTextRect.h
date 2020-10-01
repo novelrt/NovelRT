@@ -12,7 +12,6 @@
 extern "C" {
 #endif
 
-//base type
 int32_t NovelRT_TextRect_getTransform(NovelRTTextRect rect, NovelRTTransform* outputTransform, const char** errorMessage);
 int32_t NovelRT_TextRect_setTransform(NovelRTTextRect rect, NovelRTTransform inputTransform, const char** errorMessage);
 int32_t NovelRT_TextRect_getLayer(NovelRTTextRect rect, int32_t* outputLayer, const char** errorMessage);
@@ -20,8 +19,6 @@ int32_t NovelRT_TextRect_setLayer(NovelRTTextRect rect, int32_t inputLayer, cons
 int32_t NovelRT_TextRect_getActive(NovelRTTextRect rect, int32_t* outputBool, const char** errorMessage);
 int32_t NovelRT_TextRect_setActive(NovelRTTextRect rect, int32_t inputBool, const char** errorMessage);
 int32_t NovelRT_TextRect_executeObjectBehaviour(NovelRTTextRect rect, const char** errorMessage);
-
-//actual type
 int32_t NovelRT_TextRect_getColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage);
 int32_t NovelRT_TextRect_setColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage);
 int32_t NovelRT_TextRect_getText(NovelRTTextRect rect, const char** outputText, const char** errorMessage);
