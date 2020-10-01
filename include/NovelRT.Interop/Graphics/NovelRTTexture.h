@@ -13,7 +13,6 @@
 extern "C" {
 #endif
 
-  int32_t NovelRT_Texture_getId(NovelRTTexture targetTexture, uintptr_t* outputId, const char** errorMessage);
   int32_t NovelRT_Texture_loadPngAsTexture(NovelRTTexture targetTexture, const char* file, const char** errorMessage);
   int32_t NovelRT_Texture_getTextureFile(NovelRTTexture targetTexture, const char** outputFile, const char** errorMessage);
   int32_t NovelRT_Texture_getSize(NovelRTTexture targetTexture, NovelRTGeoVector2F* outputSize, const char** errorMessage);
