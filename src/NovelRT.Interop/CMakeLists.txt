@@ -10,6 +10,7 @@ set(INTEROP_SOURCES
 
   Graphics/NovelRTBasicFillRect.cpp
   Graphics/NovelRTCamera.cpp
+  Graphics/NovelRTFontSet.cpp
   Graphics/NovelRTImageRect.cpp
   Graphics/NovelRTRenderingService.cpp
   Graphics/NovelRTRGBAConfig.cpp
