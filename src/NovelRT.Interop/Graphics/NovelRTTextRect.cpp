@@ -134,7 +134,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-int32_t NovelRT_TextRect_getColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage) {
+  int32_t NovelRT_TextRect_getColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -148,9 +148,9 @@ int32_t NovelRT_TextRect_getColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig
     *outputColourConfig = reinterpret_cast<NovelRTRGBAConfig>(&outputColourConfig);
 
     return NOVELRT_SUCCESS;
-}
+  }
 
-int32_t NovelRT_TextRect_setColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage) {
+  int32_t NovelRT_TextRect_setColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -163,9 +163,9 @@ int32_t NovelRT_TextRect_setColourConfig(NovelRTTextRect rect, NovelRTRGBAConfig
     textRectPtr->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
 
     return NOVELRT_SUCCESS;
-}
+  }
 
-int32_t NovelRT_TextRect_getText(NovelRTTextRect rect, const char** outputText, const char** errorMessage) {
+  int32_t NovelRT_TextRect_getText(NovelRTTextRect rect, const char** outputText, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -178,9 +178,9 @@ int32_t NovelRT_TextRect_getText(NovelRTTextRect rect, const char** outputText, 
     *outputText = textRectPtr->getText().c_str(); //TODO: This might break lol. Not sure.
 
     return NOVELRT_SUCCESS;
-}
+  }
 
-int32_t NovelRT_TextRect_setText(NovelRTTextRect rect, const char* inputText, const char** errorMessage) {
+  int32_t NovelRT_TextRect_setText(NovelRTTextRect rect, const char* inputText, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -193,9 +193,9 @@ int32_t NovelRT_TextRect_setText(NovelRTTextRect rect, const char* inputText, co
     textRectPtr->setText(std::string(inputText));
 
     return NOVELRT_SUCCESS;
-}
+  }
 
-int32_t NovelRT_TextRect_getFontSet(NovelRTTextRect rect, NovelRTFontSet* outputFontSet, const char** errorMessage) {
+  int32_t NovelRT_TextRect_getFontSet(NovelRTTextRect rect, NovelRTFontSet* outputFontSet, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -209,9 +209,9 @@ int32_t NovelRT_TextRect_getFontSet(NovelRTTextRect rect, NovelRTFontSet* output
     *outputFontSet = reinterpret_cast<NovelRTFontSet>(fontSet.get());
 
     return NOVELRT_SUCCESS;
-}
+  }
 
-int32_t NovelRT_TextRect_setFontSet(NovelRTTextRect rect, NovelRTFontSet inputFontSet, const char** errorMessage) {
+  int32_t NovelRT_TextRect_setFontSet(NovelRTTextRect rect, NovelRTFontSet inputFontSet, const char** errorMessage) {
     if(rect == nullptr) {
       if(errorMessage != nullptr) {
         *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -224,7 +224,22 @@ int32_t NovelRT_TextRect_setFontSet(NovelRTTextRect rect, NovelRTFontSet inputFo
     textRectPtr->setFontSet(reinterpret_cast<FontSet*>(inputFontSet)->shared_from_this());
 
     return NOVELRT_SUCCESS;
-}
+  }
+
+
+  int32_t NovelRT_TextRect_getAsRenderObjectPtr(NovelRTTextRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage) {
+    if(rect == nullptr) {
+      if(errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+
+      return NOVELRT_FAILURE;
+    }
+
+    *outputRenderObject = reinterpret_cast<NovelRTRenderObject>(rect);
+
+    return NOVELRT_SUCCESS;
+  }
 
 #ifdef __cplusplus
 }

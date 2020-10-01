@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+  typedef struct RenderObjectHandle* NovelRTRenderObject;
   typedef struct RenderingServiceHandle* NovelRTRenderingService;
   typedef struct TextureHandle* NovelRTTexture;
   typedef struct FontSetHandle* NovelRTFontSet;

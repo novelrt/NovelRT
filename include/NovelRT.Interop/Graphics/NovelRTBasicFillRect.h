@@ -24,6 +24,8 @@ int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect, 
 int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage);
 int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage);
 
+int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage);
+
 #ifdef __cplusplus
 }
 #endif

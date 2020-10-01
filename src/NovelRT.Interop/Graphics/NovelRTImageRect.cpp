@@ -198,6 +198,20 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
+  int32_t NovelRT_ImageRect_getAsRenderObjectPtr(NovelRTImageRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage) {
+    if(rect == nullptr) {
+      if(errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+
+      return NOVELRT_FAILURE;
+    }
+
+    *outputRenderObject = reinterpret_cast<NovelRTRenderObject>(rect);
+
+    return NOVELRT_SUCCESS;
+  }
+
 #ifdef __cplusplus
 }
 #endif

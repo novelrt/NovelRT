@@ -160,6 +160,20 @@ int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRT
   return NOVELRT_SUCCESS;
 }
 
+int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage) {
+  if(rect == nullptr) {
+    if(errorMessage != nullptr) {
+      *errorMessage = NovelRT_getErrMsgIsNullptr();
+    }
+
+    return NOVELRT_FAILURE;
+  }
+
+  *outputRenderObject = reinterpret_cast<NovelRTRenderObject>(rect);
+
+  return NOVELRT_SUCCESS;
+}
+
 #ifdef __cplusplus
 }
 #endif
