@@ -123,7 +123,7 @@ int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
     _intFunction = action;
     SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> it = nodePointer->traverseBreadthFirst<int32_t>(Internal_Int32TSceneNodeFunctionInvoker);
-    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator&>(it);
+    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator>(&it);
     return NOVELRT_SUCCESS;
 }
 

@@ -191,15 +191,16 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
 
   NovelRTSceneNodeBreadthFirstIterator it = nullptr;
   auto res = NovelRT_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it, nullptr);
-  ASSERT_EQ(res, 0);
+  ASSERT_EQ(res, NOVELRT_SUCCESS);
 
   int32_t loopResult = 0;
   int32_t isEqual = 0;
   res = NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
-  ASSERT_EQ(res, 0);
+  ASSERT_EQ(res, NOVELRT_SUCCESS);
 
-  res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
-  ASSERT_EQ(res, 0);  
+  //res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
+  //ASSERT_EQ(res, NOVELRT_SUCCESS);
+  //ASSERT_EQ(isEqual, NOVELRT_FALSE);  
 
   while ((isEqual != NOVELRT_TRUE) && (loopResult == NOVELRT_FALSE)) {
     NovelRT_SceneNodeBreadthFirstIterator_increment(it, nullptr);
