@@ -170,7 +170,7 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
   typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
   
   NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
-
+  
   int32_t result = 0;
 
   NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
@@ -191,11 +191,13 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
 
   NovelRTSceneNodeBreadthFirstIterator it = nullptr;
   auto res = NovelRT_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it, nullptr);
+
+  auto test = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(it);
   ASSERT_EQ(res, NOVELRT_SUCCESS);
 
   int32_t loopResult = 0;
   int32_t isEqual = 0;
-  res = NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
+  res = NovelRT_SceneNode_BreadthFirstIterator_isEnd(it, &loopResult, nullptr);
   ASSERT_EQ(res, NOVELRT_SUCCESS);
 
   //res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);

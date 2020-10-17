@@ -67,9 +67,9 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirst
        }
        return NOVELRT_FAILURE;
      }
-
-    auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>&>(iterator);
-    *outputResult = cppIterator.isEnd();
+    
+    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
+    *outputResult = cppIterator->isEnd();
 
     return NOVELRT_SUCCESS;
 }
