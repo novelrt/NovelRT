@@ -231,9 +231,7 @@ int32_t parentSceneNodeHitCount = 0;
 int32_t childSceneNodeHitCount = 0;
 int32_t otherSceneNodeHitCount = 0;
 
-TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
-typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
-  
+TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {  
   childNode = NovelRT_SceneNode_create();
   int32_t result = 0;
 
@@ -263,31 +261,37 @@ typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
   ASSERT_EQ(0, otherSceneNodeHitCount);  
 }
 
-// TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {  
+  parentNode = NovelRT_SceneNode_create();
+  childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
+  parentSceneNodeHitCount = 0;
+  childSceneNodeHitCount = 0;
+  otherSceneNodeHitCount = 0;
 
-//   parentSceneNode->insert(childSceneNode);
-//   childSceneNode->insert(parentSceneNode);
+  ASSERT_EQ(NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(result, true);
+  ASSERT_EQ(NovelRT_SceneNode_insert(childNode, parentNode, &result, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(result, true);
+  
+  auto func = [](NovelRTSceneNode traversedNode) -> void {
+    if (traversedNode == parentNode) {
+      parentSceneNodeHitCount++;
+     }
+     else if (traversedNode == childNode) {
+       childSceneNodeHitCount++;
+     }
+     else {
+       otherSceneNodeHitCount++;
+     }
+  };
 
-//   int32_t parentSceneNodeHitCount = 0;
-//   int32_t childSceneNodeHitCount = 0;
-//   int32_t otherSceneNodeHitCount = 0;
+  void(*vari)(NovelRTSceneNode) = func;
 
-//   parentSceneNode->traverseDepthFirst([&](const std::shared_ptr<SceneNode>& traversedNode) {
-//     if (traversedNode == parentSceneNode) {
-//       parentSceneNodeHitCount++;
-//     }
-//     else if (traversedNode == childSceneNode) {
-//       childSceneNodeHitCount++;
-//     }
-//     else {
-//       otherSceneNodeHitCount++;
-//     }
-//     });
-
-//   ASSERT_EQ(1, parentSceneNodeHitCount);
-//   ASSERT_EQ(1, childSceneNodeHitCount);
-//   ASSERT_EQ(0, otherSceneNodeHitCount);
-// }
+  auto res = NovelRT_SceneNode_traverseDepthFirst(parentNode, vari, nullptr);
+  ASSERT_EQ(res, NOVELRT_SUCCESS);
+  ASSERT_EQ(1, parentSceneNodeHitCount);
+  ASSERT_EQ(1, childSceneNodeHitCount);
+  ASSERT_EQ(0, otherSceneNodeHitCount);  
+}
 

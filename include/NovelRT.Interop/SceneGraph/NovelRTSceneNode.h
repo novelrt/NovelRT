@@ -11,6 +11,7 @@ extern "C" {
 typedef struct SceneNodeHandle* NovelRTSceneNode;
 typedef struct StdSet_SceneNode* NovelRTSceneNodeSet;
 typedef struct BreadthFirstIterator* NovelRTSceneNodeBreadthFirstIterator;
+typedef struct DepthFirstIterator* NovelRTSceneNodeDepthFirstIterator;
 
 NovelRTSceneNode NovelRT_SceneNode_create();
 int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet, const char** errorMessage);
@@ -21,6 +22,7 @@ int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNod
 int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage);
 int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage);
 int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage);
+int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator, const char** errorMessage);
 int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage);
 int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node, const char** errorMessage);
 

@@ -9,7 +9,7 @@ using namespace NovelRT;
 
 int32_t(*_function)(NovelRTSceneNode) = NULL;
 
-int32_t Internal_IteratorFunctionDelegate(const std::shared_ptr<SceneGraph::SceneNode>& node) {
+int32_t Internal_BreadthFirstIteratorFunctionDelegate(const std::shared_ptr<SceneGraph::SceneNode>& node) {
     return _function(reinterpret_cast<NovelRTSceneNode>(node.get()));
 }
 
@@ -28,7 +28,7 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int3
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
     _function = func;
-    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> iterator = SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_IteratorFunctionDelegate);
+    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> iterator = SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_BreadthFirstIteratorFunctionDelegate);
     *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator>(&iterator); 
 
     return NOVELRT_SUCCESS;

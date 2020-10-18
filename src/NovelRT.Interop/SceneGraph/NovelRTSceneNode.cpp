@@ -137,13 +137,28 @@ int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action
        return NOVELRT_FAILURE;
      }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
+    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-    
     _voidFunction = action;
-
     nodePointer->traverseDepthFirst(Internal_VoidSceneNodeFunctionInvoker);
      return NOVELRT_SUCCESS;
+}
+
+int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator, const char** errorMessage) {
+  if(node == nullptr || action == nullptr || outputIterator == nullptr) {
+       if(errorMessage != nullptr) {
+         *errorMessage = NovelRT_getErrMsgIsNullptr();
+       }
+       return NOVELRT_FAILURE;
+     }
+
+    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
+
+    _intFunction = action;
+    SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
+    *outputIterator = reinterpret_cast<NovelRTSceneNodeDepthFirstIterator>(itPtr);
+
+    return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage) {

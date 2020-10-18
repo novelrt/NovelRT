@@ -31,6 +31,7 @@ set(INTEROP_SOURCES
 
   SceneGraph/NovelRTSceneNode.cpp
   SceneGraph/NovelRTSceneNodeBreadthFirstIterator.cpp
+  SceneGraph/NovelRTSceneNodeDepthFirstIterator.cpp
 
   Timing/NovelRTTimestamp.cpp
   Timing/NovelRTStepTimer.cpp
