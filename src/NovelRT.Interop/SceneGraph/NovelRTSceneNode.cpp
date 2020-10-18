@@ -8,7 +8,6 @@
 using namespace NovelRT;
 
 std::list<std::shared_ptr<SceneGraph::SceneNode>> _sceneNodeCollection;
-//std::list<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>> _iteratorCollection;
 void(*_voidFunction)(NovelRTSceneNode) = NULL;
 int32_t(*_intFunction)(NovelRTSceneNode) = NULL;
 
@@ -110,7 +109,7 @@ int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*acti
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
     _voidFunction = action;
     nodePointer->traverseBreadthFirst(Internal_VoidSceneNodeFunctionInvoker);
-     return NOVELRT_SUCCESS;
+    return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage) {
@@ -124,9 +123,8 @@ int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
     _intFunction = action;
-    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> it = nodePointer->traverseBreadthFirst<int32_t>(Internal_Int32TSceneNodeFunctionInvoker);
-
-    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator&>(it);
+    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
+    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator>(itPtr);
 
     return NOVELRT_SUCCESS;
 }
@@ -215,20 +213,6 @@ int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nod
   auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
   *outputSceneNode = reinterpret_cast<NovelRTSceneNode&>(cNodeSet[index]);
   return NOVELRT_SUCCESS;
-}
-
-int32_t NovelRT_SceneNode_BreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult, const char** errorMessage) {
-  if(iterator == nullptr || outputResult == nullptr) {
-        if(errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
-        return NOVELRT_FAILURE;
-      }
-      
-      SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
-      
-      *outputResult = cppIterator->isEnd();
-      return NOVELRT_SUCCESS;
 }
 
 #ifdef __cplusplus

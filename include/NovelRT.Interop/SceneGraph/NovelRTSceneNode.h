@@ -28,8 +28,6 @@ int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet, const char** er
 int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize, const char** errorMessage);
 int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode, const char** errorMessage);
 
-int32_t NovelRT_SceneNode_BreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult, const char** errorMessage);
-
 #ifdef __cplusplus
 }
 #endif

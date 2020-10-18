@@ -61,17 +61,17 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_postFixIncrement(NovelRTSceneNodeB
 }
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult, const char** errorMessage) {
-    if(iterator == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
-       return NOVELRT_FAILURE;
-     }
-    
-    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
-    *outputResult = cppIterator->isEnd();
-
-    return NOVELRT_SUCCESS;
+  if(iterator == nullptr || outputResult == nullptr) {
+        if(errorMessage != nullptr) {
+          *errorMessage = NovelRT_getErrMsgIsNullptr();
+        }
+        return NOVELRT_FAILURE;
+      }
+      
+      SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
+      
+      *outputResult = cppIterator->isEnd();
+      return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_isEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult, const char** errorMessage) {

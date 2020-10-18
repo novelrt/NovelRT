@@ -183,26 +183,17 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
     return NOVELRT_FALSE;
   };
 
-  func(childNode);
-
   int32_t(*vari)(NovelRTSceneNode) = func;
-
-  vari(childNode);
 
   NovelRTSceneNodeBreadthFirstIterator it = nullptr;
   auto res = NovelRT_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it, nullptr);
 
-  auto test = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(it);
   ASSERT_EQ(res, NOVELRT_SUCCESS);
 
   int32_t loopResult = 0;
   int32_t isEqual = 0;
-  res = NovelRT_SceneNode_BreadthFirstIterator_isEnd(it, &loopResult, nullptr);
+  res = NovelRT_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
   ASSERT_EQ(res, NOVELRT_SUCCESS);
-
-  //res = NovelRT_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);
-  //ASSERT_EQ(res, NOVELRT_SUCCESS);
-  //ASSERT_EQ(isEqual, NOVELRT_FALSE);  
 
   while ((isEqual != NOVELRT_TRUE) && (loopResult == NOVELRT_FALSE)) {
     NovelRT_SceneNodeBreadthFirstIterator_increment(it, nullptr);
@@ -234,33 +225,43 @@ TEST(InteropSceneNodeTest, nodeIsReachableFromSelf) {
   ASSERT_EQ(true, result);
 }
 
-// TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
-//   auto parentSceneNode = std::make_shared<SceneNode>();
-//   auto childSceneNode = std::make_shared<SceneNode>();
+//These are now defined here as they needed to be referenced for the lambda functions.
+NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
+int32_t parentSceneNodeHitCount = 0;
+int32_t childSceneNodeHitCount = 0;
+int32_t otherSceneNodeHitCount = 0;
 
-//   parentSceneNode->insert(childSceneNode);
-//   childSceneNode->insert(parentSceneNode);
+TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
+typedef int32_t(*wrapperFunction)(NovelRTSceneNode);
+  
+  childNode = NovelRT_SceneNode_create();
+  int32_t result = 0;
 
-//   int32_t parentSceneNodeHitCount = 0;
-//   int32_t childSceneNodeHitCount = 0;
-//   int32_t otherSceneNodeHitCount = 0;
+  ASSERT_EQ(NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(result, true);
+  ASSERT_EQ(NovelRT_SceneNode_insert(childNode, parentNode, &result, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(result, true);
+  
+  auto func = [](NovelRTSceneNode traversedNode) -> void {
+    if (traversedNode == parentNode) {
+      parentSceneNodeHitCount++;
+     }
+     else if (traversedNode == childNode) {
+       childSceneNodeHitCount++;
+     }
+     else {
+       otherSceneNodeHitCount++;
+     }
+  };
 
-//   parentSceneNode->traverseBreadthFirst([&](const std::shared_ptr<SceneNode>& traversedNode) {
-//     if (traversedNode == parentSceneNode) {
-//       parentSceneNodeHitCount++;
-//     }
-//     else if (traversedNode == childSceneNode) {
-//       childSceneNodeHitCount++;
-//     }
-//     else {
-//       otherSceneNodeHitCount++;
-//     }
-//   });
+  void(*vari)(NovelRTSceneNode) = func;
 
-//   ASSERT_EQ(1, parentSceneNodeHitCount);
-//   ASSERT_EQ(1, childSceneNodeHitCount);
-//   ASSERT_EQ(0, otherSceneNodeHitCount);
-// }
+  auto res = NovelRT_SceneNode_traverseBreadthFirst(parentNode, vari, nullptr);
+  ASSERT_EQ(res, NOVELRT_SUCCESS);
+  ASSERT_EQ(1, parentSceneNodeHitCount);
+  ASSERT_EQ(1, childSceneNodeHitCount);
+  ASSERT_EQ(0, otherSceneNodeHitCount);  
+}
 
 // TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {
 //   auto parentSceneNode = std::make_shared<SceneNode>();
