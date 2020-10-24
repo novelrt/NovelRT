@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdint.h>
+#include <stddef.h>
 #include <list>
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"

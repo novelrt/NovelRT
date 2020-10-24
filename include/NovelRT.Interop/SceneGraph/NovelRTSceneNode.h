@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdint.h>
+#include <stddef.h>
 
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
 #define NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
