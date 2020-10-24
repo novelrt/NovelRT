@@ -1,5 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdint.h>
+#ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
+#include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
+#endif
 
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
 #define NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
@@ -10,9 +13,6 @@ extern "C" {
 
 typedef struct QuadTreeScenePointHandle* NovelRTQuadTreeScenePoint;
 
-#ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
-typedef struct {} NovelRTGeoVector2F;
-#endif
 
 #ifndef NOVELRT__INTEROP_SCENEGRAPH_SCENENODE_H
 typedef struct SceneNodeHandle* NovelRTSceneNode;
