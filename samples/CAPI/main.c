@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <memory.h>
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"

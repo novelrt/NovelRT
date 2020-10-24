@@ -16,7 +16,7 @@ NovelRTWindowingService NovelRT_WindowingService_create() {
     return reinterpret_cast<NovelRTWindowingService>(_windowingServiceCollection.back().get());
 }
 
-int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, bool transparencyEnabled, const char** errorMessage) {
+int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled, const char** errorMessage) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
         if (errorMessage != nullptr) {
@@ -24,7 +24,7 @@ int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService servic
         }
         return NOVELRT_FAILURE;
     }
-    servicePtr->initialiseWindow(displayNumber, windowTitle, transparencyEnabled);
+    servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<bool>(transparencyEnabled));
     return NOVELRT_SUCCESS;
 }
 
