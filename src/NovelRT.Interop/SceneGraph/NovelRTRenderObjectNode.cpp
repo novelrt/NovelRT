@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdint.h>
 #include <list>
+#include "NovelRT.Interop/Graphics/NovelRTGraphicsTypedefs.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTRenderObjectNode.h"
-#include "NovelRT.Interop/Graphics/NovelRTGraphicsTypeDefs.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
 using namespace NovelRT;
