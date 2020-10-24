@@ -145,7 +145,7 @@ extern "C" {
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
     auto colourConfig = textRectPtr->getColourConfig();
-    *outputColourConfig = reinterpret_cast<NovelRTRGBAConfig>(&outputColourConfig);
+    *outputColourConfig = reinterpret_cast<NovelRTRGBAConfig>(&colourConfig);
 
     return NOVELRT_SUCCESS;
   }
