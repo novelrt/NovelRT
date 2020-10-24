@@ -16,8 +16,6 @@ bool compareNodeWithSet(NovelRTSceneNode lhs, NovelRTSceneNodeSet rhs) {
   return left == right;
 }
 
-
-
 TEST(InteropSceneNodeTest, createHasZeroChildren) {
   NovelRTSceneNode sceneNode = NovelRT_SceneNode_create();
   NovelRTSceneNodeSet nodeSet = NULL;
@@ -202,11 +200,14 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
   }
 
   ASSERT_EQ(true, isEqual);
+  
+  ASSERT_EQ(NovelRT_SceneNode_delete(parentNode, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_SceneNode_delete(childNode, nullptr), NOVELRT_SUCCESS);
 }
 
 TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild) {
   NovelRTSceneNode parentNode = NovelRT_SceneNode_create();
-  NovelRTSceneNode childNode = NovelRT_SceneNode_create();
+  childNode = NovelRT_SceneNode_create();
   int32_t result = 0;
 
   NovelRT_SceneNode_insert(parentNode, childNode, &result, nullptr);
@@ -214,6 +215,8 @@ TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild) {
   NovelRT_SceneNode_canReach(childNode, parentNode, &result, nullptr);
   
   ASSERT_EQ(false, result);
+  ASSERT_EQ(NovelRT_SceneNode_delete(childNode, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_SceneNode_delete(parentNode, nullptr), NOVELRT_SUCCESS);
 }
 
 TEST(InteropSceneNodeTest, nodeIsReachableFromSelf) {
@@ -223,6 +226,7 @@ TEST(InteropSceneNodeTest, nodeIsReachableFromSelf) {
   NovelRT_SceneNode_canReach(parentNode, parentNode, &result, nullptr);
   
   ASSERT_EQ(true, result);
+  ASSERT_EQ(NovelRT_SceneNode_delete(parentNode, nullptr), NOVELRT_SUCCESS);
 }
 
 //These are now defined here as they needed to be referenced for the lambda functions.
@@ -259,6 +263,9 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
   ASSERT_EQ(1, parentSceneNodeHitCount);
   ASSERT_EQ(1, childSceneNodeHitCount);
   ASSERT_EQ(0, otherSceneNodeHitCount);  
+
+  ASSERT_EQ(NovelRT_SceneNode_delete(parentNode, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_SceneNode_delete(childNode, nullptr), NOVELRT_SUCCESS);
 }
 
  TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle) {  
@@ -293,5 +300,8 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
   ASSERT_EQ(1, parentSceneNodeHitCount);
   ASSERT_EQ(1, childSceneNodeHitCount);
   ASSERT_EQ(0, otherSceneNodeHitCount);  
+
+  ASSERT_EQ(NovelRT_SceneNode_delete(parentNode, nullptr), NOVELRT_SUCCESS);
+  ASSERT_EQ(NovelRT_SceneNode_delete(childNode, nullptr), NOVELRT_SUCCESS);
 }
 

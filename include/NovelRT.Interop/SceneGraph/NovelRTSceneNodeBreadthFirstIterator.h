@@ -10,7 +10,7 @@ extern "C" {
 
 typedef struct BreadthFirstIterator* NovelRTSceneNodeBreadthFirstIterator;
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
-typedef struct SceneNodeHandle* NovelRTSceneNode;   //this worked? oh my gosssshhhhh
+typedef struct SceneNodeHandle* NovelRTSceneNode;
 #endif
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage);
