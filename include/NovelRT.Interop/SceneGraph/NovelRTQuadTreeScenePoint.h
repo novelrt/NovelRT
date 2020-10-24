@@ -11,7 +11,7 @@ extern "C" {
 typedef struct QuadTreeScenePointHandle* NovelRTQuadTreeScenePoint;
 
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
-typedef struct NovelRTGeoVector2F;
+typedef struct {} NovelRTGeoVector2F;
 #endif
 
 #ifndef NOVELRT__INTEROP_SCENEGRAPH_SCENENODE_H
