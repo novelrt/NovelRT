@@ -4,6 +4,9 @@ set(INTEROP_SOURCES
   NovelRTNovelRunner.cpp
   NovelRTTransform.cpp
 
+  Animation/NovelRTSpriteAnimatorFrame.cpp
+  Animation/NovelRTSpriteAnimatorState.cpp
+
   Audio/NovelRTAudioService.cpp
 
   DotNet/NovelRTRuntimeService.cpp
