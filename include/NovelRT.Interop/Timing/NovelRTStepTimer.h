@@ -27,7 +27,7 @@ int32_t NovelRT_StepTimer_getIsFixedTimeStep(NovelRTStepTimer timer, int32_t* ou
 int32_t NovelRT_StepTimer_setIsFixedTimeStep(NovelRTStepTimer timer, int32_t input, const char** errorMessage);
 int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer, const char** errorMessage);
 int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer, const char** errorMessage);
-int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUpdateEventWithTimestamp event, const char** errorMessage);
+int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUtilitiesEventWithTimestamp event, const char** errorMessage);
 
 #ifdef __cplusplus
 }

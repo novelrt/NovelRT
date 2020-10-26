@@ -7,7 +7,8 @@
 extern "C" {
 #endif
 
-typedef struct UpdateEventWithTimestampHandle* NovelRTUpdateEventWithTimestamp;
+typedef struct UtilitiesEventWithTimestampHandle* NovelRTUtilitiesEventWithTimestamp;
+typedef struct UtilitiesEventHandle* NovelRTUtilitiesEvent;
 
 #ifdef __cplusplus
 }

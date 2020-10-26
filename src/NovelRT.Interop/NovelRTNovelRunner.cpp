@@ -9,12 +9,12 @@ std::list<std::shared_ptr<NovelRT::Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionCollection;
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowingCollection;
 std::list<std::shared_ptr<NovelRT::DotNet::RuntimeService>> _runtimeCollection;
+std::list<std::shared_ptr<NovelRT::Graphics::RenderingService>> _rendererCollection;
+std::list<std::shared_ptr<NovelRT::DebugService>> _debugServiceCollection;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  //TODO: FIX EVERYTHING SO WE CHECK SAFELY FOR NULLPTR, D'OH!
 
   NovelRTNovelRunner NovelRT_NovelRunner_create(int displayNumber) {
     NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber);
@@ -105,6 +105,7 @@ extern "C" {
       }
       return NOVELRT_FAILURE;
     }
+    
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _windowingCollection.push_back(cRunner->getWindowingService());
 
@@ -144,6 +145,54 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
+  int32_t NovelRT_NovelRunner_getRenderer(NovelRTNovelRunner runner, NovelRTRenderingService* outputService, const char** errorMessage) {
+    if (runner == nullptr || outputService == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    _rendererCollection.push_back(cRunner->getRenderer());
+
+    auto ptr = _rendererCollection.back().get();
+    if (ptr == nullptr)
+    {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    *outputService = reinterpret_cast<NovelRTRenderingService>(ptr);
+    
+    return NOVELRT_SUCCESS;
+  }
+
+  int32_t NovelRT_NovelRunner_getDebugService(NovelRTNovelRunner runner, NovelRTDebugService* outputService, const char** errorMessage) {
+    if (runner == nullptr || outputService == nullptr) {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    _debugServiceCollection.push_back(cRunner->getDebugService());
+
+    auto ptr = _debugServiceCollection.back().get();
+    if (ptr == nullptr)
+    {
+      if (errorMessage != nullptr) {
+        *errorMessage = NovelRT_getErrMsgIsNullptr();
+      }
+      return NOVELRT_FAILURE;
+    }
+    *outputService = reinterpret_cast<NovelRTDebugService>(ptr);
+    
+    return NOVELRT_SUCCESS;
+  }
+
   int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage) {
     if (runner == nullptr || func == nullptr) {
       if (errorMessage != nullptr) {
@@ -172,7 +221,7 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEventWithTimestamp* outputEvent, const char** errorMessage) {
     if (runner == nullptr || outputEvent == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -181,9 +230,10 @@ extern "C" {
     }
 
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
-    *outputEvent = reinterpret_cast<NovelRTUpdateEventWithTimestamp&>(cRunner->Update);
+    *outputEvent = reinterpret_cast<NovelRTUtilitiesEventWithTimestamp&>(cRunner->Update);
     return NOVELRT_SUCCESS;
 }
+
 #ifdef __cplusplus
 }
 #endif

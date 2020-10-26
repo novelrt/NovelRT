@@ -190,7 +190,7 @@ int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer, const char** 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUpdateEventWithTimestamp event, const char** errorMessage) {
+int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUtilitiesEventWithTimestamp event, const char** errorMessage) {
     if (event == nullptr) {
         if (errorMessage != nullptr) {
             *errorMessage = NovelRT_getErrMsgIsNullptr();

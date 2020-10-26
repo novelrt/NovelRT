@@ -7,6 +7,8 @@
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
 #include "NovelRT.Interop/Utilities/NovelRTCommonEvents.h"
+#include "NovelRT.Interop/Graphics/NovelRTRenderingService.h"
+#include "NovelRT.Interop/NovelRTDebugService.h"
 
 #ifndef NOVELRT_INTEROP_NOVELRUNNER_H
 #define NOVELRT_INTEROP_NOVELRUNNER_H
@@ -26,14 +28,13 @@ extern "C" {
   int32_t NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage);
   int32_t NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage);
   int32_t NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getRenderer(NovelRTNovelRunner runner, NovelRTRenderingService* outputService, const char** errorMessage);
+  int32_t NovelRT_NovelRunner_getDebugService(NovelRTNovelRunner runner, NovelRTDebugService* outputService, const char** errorMessage);
 
   int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage);
   int32_t NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage);
-  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUpdateEventWithTimestamp* outputEvent, const char** errorMessage);
-// /// Gets the Rendering Service associated with this Runner.
-//     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
-//     /// Gets the Debug Service associated with this Runner.
-//     std::shared_ptr<DebugService> getDebugService() const;
+  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEventWithTimestamp* outputEvent, const char** errorMessage);
+
 
 #ifdef __cplusplus
 }

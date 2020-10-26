@@ -3,6 +3,7 @@ set(INTEROP_SOURCES
   NovelRTLoggingService.cpp
   NovelRTNovelRunner.cpp
   NovelRTTransform.cpp
+  NovelRTDebugService.cpp
 
   Animation/NovelRTSpriteAnimatorFrame.cpp
   Animation/NovelRTSpriteAnimatorState.cpp
