@@ -8,9 +8,9 @@ extern "C" {
 #endif
 
 typedef enum {
-    Stopped = -1,
+    Stopped = 0,
     Playing = 1,
-    Paused = 0
+    Paused = 2
 } NovelRTAnimatorPlayState;
 
 #ifdef __cplusplus

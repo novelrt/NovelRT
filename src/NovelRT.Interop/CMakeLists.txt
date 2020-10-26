@@ -6,6 +6,7 @@ set(INTEROP_SOURCES
 
   Animation/NovelRTSpriteAnimatorFrame.cpp
   Animation/NovelRTSpriteAnimatorState.cpp
+  Animation/NovelRTSpriteAnimator.cpp
 
   Audio/NovelRTAudioService.cpp
 
