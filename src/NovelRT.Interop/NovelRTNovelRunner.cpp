@@ -234,6 +234,19 @@ extern "C" {
     return NOVELRT_SUCCESS;
 }
 
+int32_t NovelRT_NovelRunner_getSceneConstructionEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEvent* outputEvent, const char** errorMessage) {
+    if (runner == nullptr || outputEvent == nullptr) {
+        if (errorMessage != nullptr) {
+            *errorMessage = NovelRT_getErrMsgIsNullptr();
+        }
+        return NOVELRT_FAILURE;
+    }
+
+    NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+    *outputEvent = reinterpret_cast<NovelRTUtilitiesEvent&>(cRunner->SceneConstructionRequested);
+    return NOVELRT_SUCCESS;
+}
+
 #ifdef __cplusplus
 }
 #endif
