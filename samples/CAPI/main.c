@@ -24,6 +24,7 @@ NovelRTLoggingService console = NULL;
 NovelRTRuntimeService dotnet = NULL;
 NovelRTStepTimer timer = NULL;
 NovelRTUtilitiesEventWithTimestamp updateEvent = NULL;
+NovelRTRGBAConfig colourChange = NULL;
 
 NovelRTImageRect nChanRect = NULL;
 
@@ -66,18 +67,22 @@ void appendFilePath(char* toAppend, char* destination) {
 
 strcat(destination, dirMarker);
 strcat(destination, toAppend);
-}
+} 
 
 void moveNovelChan(NovelRTTimestamp delta) {
     if (nChanRect == NULL) return;
+    
+    int32_t bounced = 0;
+    float trueDelta = 0.0f;
+    float moveAmount = 100.0f;
 
-    float trueDelta = NovelRT_Timestamp_getSecondsFloat(delta);
+    NovelRT_Timestamp_getSecondsFloat(delta, &trueDelta, &error);
     NovelRTTransform transform = {{0, 0}, {0, 0}, 0};
     NovelRT_ImageRect_getTransform(nChanRect, &transform, &error);
-    
+   
+
     float xOrigin = transform.position.x;
     float yOrigin = transform.position.y;
-    
 
     float rectXSize = transform.scale.x;
     float rectQuarterSizeX = rectXSize / 4.0f;
@@ -90,39 +95,52 @@ void moveNovelChan(NovelRTTimestamp delta) {
     float yMin = 0.0f;
     
     if (hMove == 1) {
-        transform.position.x += (10 * trueDelta);
+        transform.position.x += (moveAmount * trueDelta);
         if (transform.position.x >= (xMax - rectQuarterSizeX)) {
             hMove = 0;
+            bounced = 1;
             NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.", &error);
         } 
     } else {
-        transform.position.x -= (10 * trueDelta);
+        transform.position.x -= (moveAmount * trueDelta);
         if (transform.position.x <= (xMin + rectQuarterSizeX)) {
             hMove = 1;
+            bounced = 1;
             NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.", &error);
         }
     }
 
     if (vMove == 1) {
-        transform.position.y += (10 * trueDelta);
+        transform.position.y += (moveAmount * trueDelta);
         if (transform.position.y >= (yMax - rectQuarterSizeY)) {
             vMove = 0;
+            bounced = 1;
             NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.", &error);
         } 
     } else {
-        transform.position.y -= (10 * trueDelta);
+        transform.position.y -= (moveAmount * trueDelta);
         if (transform.position.y <= (yMin + rectQuarterSizeY)) {
             vMove = 1;
+            bounced = 1;
             NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.", &error);
         }
     }
 
+    if (bounced == 1) {
+        bounced = 0;
+        NovelRT_RGBAConfig_setR(colourChange, (rand() % 256), NULL);
+        NovelRT_RGBAConfig_setG(colourChange, (rand() % 256), NULL);
+        NovelRT_RGBAConfig_setB(colourChange, (rand() % 256), NULL);
+        NovelRT_ImageRect_setColourTint(nChanRect, colourChange, &error);
+    }
+
     NovelRT_ImageRect_setTransform(nChanRect, transform, &error);
+    
 }
 
 
 int main() {
-    
+    srand(time(NULL));
     NovelRTNovelRunner runner = NovelRT_NovelRunner_create(0);
     
     console = NovelRT_LoggingService_createCustomTitle("Interop");
@@ -184,11 +202,14 @@ int main() {
 
     NovelRTRenderingService renderer = NULL;
     res = NovelRT_NovelRunner_getRenderer(runner, &renderer, &error);
+    colourChange = NovelRT_RGBAConfig_Create(0,0,0,255);
 
-    NovelRTGeoVector2F nChanPosition = {1920 / 2, 1080 / 2 };
+    NovelRTRGBAConfig background = NovelRT_RGBAConfig_Create(0,0,0,0);
+    NovelRT_RenderingService_setBackgroundColour(renderer, background, &error);
+
+    NovelRTGeoVector2F nChanPosition = { 1920 / 2, 1080 / 2 };
     NovelRTGeoVector2F nChanSize = { 762, 881 };
     NovelRTTransform nChanTransform = { nChanPosition, nChanSize, 0 };
-    //NovelRT::Graphics::RGBAConfig(255, 0, 255, 255)
     NovelRTRGBAConfig nChanColours = NovelRT_RGBAConfig_Create(255, 255, 255, 255);
 
     char* nChanFileLocation = "";
