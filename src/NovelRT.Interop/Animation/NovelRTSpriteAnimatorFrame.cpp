@@ -56,7 +56,7 @@ int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame
     Timing::Timestamp* cppDuration = new Timing::Timestamp(0);
     *cppDuration = cppFrame->duration();
     
-    *outputTimestamp = reinterpret_cast<NovelRTTimestamp>(&*cppDuration);
+    *outputTimestamp = reinterpret_cast<NovelRTTimestamp>(&cppDuration);
     return NOVELRT_SUCCESS;
 }
 
@@ -69,7 +69,7 @@ int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame
     }
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
-    cppFrame->duration() = reinterpret_cast<Timing::Timestamp&>(timestamp);
+    cppFrame->duration() = *reinterpret_cast<Timing::Timestamp*>(timestamp);
     
     return NOVELRT_SUCCESS;
 }

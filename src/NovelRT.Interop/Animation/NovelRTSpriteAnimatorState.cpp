@@ -135,7 +135,6 @@ int32_t NovelRT_SpriteAnimatorState_tryFindValidTransition(NovelRTSpriteAnimator
     return NOVELRT_SUCCESS;    
 }
 
-//std::vector<SpriteAnimatorFrame>
 NovelRTSpriteAnimatorFrameVector NovelRT_SpriteAnimatorFrameVector_create() {
     std::vector<Animation::SpriteAnimatorFrame>* vector = new std::vector<Animation::SpriteAnimatorFrame>();
     return reinterpret_cast<NovelRTSpriteAnimatorFrameVector>(vector);

@@ -55,8 +55,9 @@ int32_t NovelRT_StepTimer_getElapsedTime(NovelRTStepTimer timer, NovelRTTimestam
         return NOVELRT_FAILURE;
     }
 
-    NovelRT::Timing::Timestamp time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getElapsedTime();
-    *output = reinterpret_cast<NovelRTTimestamp&>(time);
+    NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
+    *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getElapsedTime();
+    *output = reinterpret_cast<NovelRTTimestamp>(&time);
     return NOVELRT_SUCCESS;
 }
 
@@ -68,8 +69,9 @@ int32_t NovelRT_StepTimer_getTotalTime(NovelRTStepTimer timer, NovelRTTimestamp*
         return NOVELRT_FAILURE;
     }
 
-    NovelRT::Timing::Timestamp time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTotalTime();
-    *output = reinterpret_cast<NovelRTTimestamp&>(time);
+    NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
+    *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTotalTime();
+    *output = reinterpret_cast<NovelRTTimestamp>(&time);
     return NOVELRT_SUCCESS;
 }
 
@@ -107,8 +109,9 @@ int32_t NovelRT_StepTimer_getTargetElapsedTime(NovelRTStepTimer timer, NovelRTTi
         return NOVELRT_FAILURE;
     }
 
-    NovelRT::Timing::Timestamp time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTargetElapsedTime();
-    *output = reinterpret_cast<NovelRTTimestamp&>(time);
+    NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
+    *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTargetElapsedTime();
+    *output = reinterpret_cast<NovelRTTimestamp>(&time);
     return NOVELRT_SUCCESS;
 }
 
@@ -121,7 +124,7 @@ int32_t NovelRT_StepTimer_setTargetElapsedTime(NovelRTStepTimer timer, NovelRTTi
     }
     
     NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-    time.setTargetElapsedTime(reinterpret_cast<NovelRT::Timing::Timestamp&>(target));
+    time.setTargetElapsedTime(*reinterpret_cast<NovelRT::Timing::Timestamp*>(target));
     return NOVELRT_SUCCESS;
 }
 

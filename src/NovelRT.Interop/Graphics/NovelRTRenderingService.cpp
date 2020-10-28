@@ -193,7 +193,7 @@ extern "C" {
     }
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    renderingServicePtr->setBackgroundColour(*reinterpret_cast<RGBAConfig*>(&colour));
+    renderingServicePtr->setBackgroundColour(*reinterpret_cast<RGBAConfig*>(colour));
 
     return NOVELRT_SUCCESS;
   }

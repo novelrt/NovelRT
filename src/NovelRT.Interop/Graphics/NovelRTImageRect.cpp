@@ -193,7 +193,7 @@ extern "C" {
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
-    imageRectPtr->colourTint() = *reinterpret_cast<RGBAConfig*>(&inputColourTint);
+    imageRectPtr->colourTint() = *reinterpret_cast<RGBAConfig*>(inputColourTint);
 
     return NOVELRT_SUCCESS;
   }

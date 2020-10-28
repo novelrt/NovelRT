@@ -8,29 +8,29 @@
 extern "C" {
 #endif
 
-typedef uint64_t NovelRTTimestamp;
+typedef struct TimestampHandle* NovelRTTimestamp;
 
-NovelRTTimestamp NovelRT_Timestamp_create(uint64_t ticks);
+int32_t NovelRT_Timestamp_create(uint64_t ticks, NovelRTTimestamp* outputTimestamp, const char** errorMessage);
 
-int32_t NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp);
-double NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp);
-float NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp);
-NovelRTTimestamp NovelRT_Timestamp_zero();
-NovelRTTimestamp NovelRT_Timestamp_fromSeconds(double seconds);
+int32_t NovelRT_Timestamp_isNaN(NovelRTTimestamp timestamp, const char** errorMessage);
+int32_t NovelRT_Timestamp_getSecondsDouble(NovelRTTimestamp timestamp, double* output, const char** errorMessage);
+int32_t NovelRT_Timestamp_getSecondsFloat(NovelRTTimestamp timestamp, float* output, const char** errorMessage);
+int32_t NovelRT_Timestamp_zero(NovelRTTimestamp* outputTimestamp, const char** errorMessage);
+int32_t NovelRT_Timestamp_fromSeconds(double seconds, NovelRTTimestamp* outputTimestamp, const char** errorMessage);
 int32_t NovelRT_Timestamp_addTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
 int32_t NovelRT_Timestamp_subtractTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
 int32_t NovelRT_Timestamp_multiplyTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
 int32_t NovelRT_Timestamp_divideTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, NovelRTTimestamp* output, const char** errorMessage);
-int32_t NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
-int32_t NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
-int32_t NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
-int32_t NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp* first, NovelRTTimestamp other, const char** errorMessage);
-int32_t NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
-int32_t NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
-int32_t NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
-int32_t NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
-int32_t NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
-int32_t NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs);
+int32_t NovelRT_Timestamp_addAssignTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
+int32_t NovelRT_Timestamp_subtractAssignTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
+int32_t NovelRT_Timestamp_multiplyAssignTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
+int32_t NovelRT_Timestamp_divideAssignTimestamp(NovelRTTimestamp first, NovelRTTimestamp other, const char** errorMessage);
+int32_t NovelRT_Timestamp_lessThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
+int32_t NovelRT_Timestamp_lessThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
+int32_t NovelRT_Timestamp_greaterThan(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
+int32_t NovelRT_Timestamp_greaterThanOrEqualTo(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
+int32_t NovelRT_Timestamp_equal(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
+int32_t NovelRT_Timestamp_notEqual(NovelRTTimestamp lhs, NovelRTTimestamp rhs, const char** errorMessage);
 
 #ifdef __cplusplus
 }
