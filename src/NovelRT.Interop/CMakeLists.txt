@@ -45,6 +45,8 @@ set(INTEROP_SOURCES
   Timing/NovelRTTimestamp.cpp
   Timing/NovelRTStepTimer.cpp
 
+  Utilities/NovelRTMisc.cpp
+
   Windowing/NovelRTWindowingService.cpp
 )
 

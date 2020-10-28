@@ -80,7 +80,7 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, std::string(filePath), *reinterpret_cast<RGBAConfig*>(&colourTint)));
+    _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, std::string(filePath), *reinterpret_cast<RGBAConfig*>(colourTint)));
     *outputImageRect = reinterpret_cast<NovelRTImageRect>(_imageRectCollection.back().get());
 
     return NOVELRT_SUCCESS;

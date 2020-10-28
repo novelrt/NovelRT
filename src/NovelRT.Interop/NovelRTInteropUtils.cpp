@@ -5,7 +5,6 @@
 #include <vector>
 
 
-
 struct ErrorTranslationPair {
   const char* originalText;
   const char* translatedText;
