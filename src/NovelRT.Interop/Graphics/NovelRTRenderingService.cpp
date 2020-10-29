@@ -77,7 +77,7 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(&colourTint)));
+    _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourTint)));
     *outputImageRect = reinterpret_cast<NovelRTImageRect>(_imageRectCollection.back().get());
 
     return NOVELRT_SUCCESS;
@@ -90,7 +90,7 @@ extern "C" {
     
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
-    _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(&colourConfig)));
+    _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig)));
     *outputBasicFillRect = reinterpret_cast<NovelRTBasicFillRect>(_basicFillRectCollection.back().get());
 
     return NOVELRT_SUCCESS;
@@ -104,7 +104,7 @@ extern "C" {
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     
     //DEFINITELY DO NOT DO THIS I AM AWFUL
-    _textRectCollection.push_back(renderingServicePtr->createTextRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(&colourConfig), fontSize, std::string(fontFilePath)));
+    _textRectCollection.push_back(renderingServicePtr->createTextRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig), fontSize, std::string(fontFilePath)));
     *outputTextRect = reinterpret_cast<NovelRTTextRect>(_textRectCollection.back().get());
 
     return NOVELRT_SUCCESS;
