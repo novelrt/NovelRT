@@ -13,16 +13,16 @@ extern "C" {
 #endif
 
   NovelRTCamera NovelRT_Camera_create();
-  int32_t NovelRT_Camera_getViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage);
-  int32_t NovelRT_Camera_setViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix, const char** errorMessage);
-  int32_t NovelRT_Camera_getProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage);
-  int32_t NovelRT_Camera_setProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix, const char** errorMessage);
-  int32_t NovelRT_Camera_getCameraUboMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage);
-  int32_t NovelRT_Camera_getFrameState(NovelRTCamera camera, NovelRTCameraFrameState* outputFrameState, const char** errorMessage);
-  int32_t NovelRT_Camera_setForceResizeCallback(NovelRTCamera camera, void(*callback)(NovelRTCamera, NovelRTGeoVector2F), const char** errorMessage);
+  int32_t NovelRT_Camera_getViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix);
+  int32_t NovelRT_Camera_setViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix);
+  int32_t NovelRT_Camera_getProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix);
+  int32_t NovelRT_Camera_setProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix);
+  int32_t NovelRT_Camera_getCameraUboMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix);
+  int32_t NovelRT_Camera_getFrameState(NovelRTCamera camera, NovelRTCameraFrameState* outputFrameState);
+  int32_t NovelRT_Camera_setForceResizeCallback(NovelRTCamera camera, void(*callback)(NovelRTCamera, NovelRTGeoVector2F));
   NovelRTCamera NovelRT_Camera_createDefaultOrthographicProjection(NovelRTGeoVector2F windowSize);
   NovelRTCamera NovelRT_Camera_createDefaultPerspectiveProjection(NovelRTGeoVector2F windowSize);
-  int32_t NovelRT_Camera_destroy(NovelRTCamera camera, const char** errorMessage);
+  int32_t NovelRT_Camera_destroy(NovelRTCamera camera);
 
 #ifdef __cplusplus
 }

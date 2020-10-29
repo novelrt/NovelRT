@@ -12,11 +12,11 @@ extern "C" {
 
 typedef struct DebugServiceHandle* NovelRTDebugService;
 
-int32_t NovelRT_DebugService_create(NovelRTUtilitiesEvent sceneConstructionEvent, NovelRTRenderingService renderingService, NovelRTDebugService* outputService, const char** errorMessage);
-int32_t NovelRT_DebugService_getIsFpsCounterVisible(NovelRTDebugService service, int32_t* result, const char** errorMessage);
-int32_t NovelRT_DebugService_setIsFpsCounterVisible(NovelRTDebugService service, int32_t value, const char** errorMessage);
-int32_t NovelRT_DebugService_getFramesPerSecond(NovelRTDebugService service, uint32_t* outputValue, const char** errorMessage);
-int32_t NovelRT_DebugService_setFramesPerSecond(NovelRTDebugService service, uint32_t value, const char** errorMessage);
+int32_t NovelRT_DebugService_create(NovelRTUtilitiesEvent sceneConstructionEvent, NovelRTRenderingService renderingService, NovelRTDebugService* outputService);
+int32_t NovelRT_DebugService_getIsFpsCounterVisible(NovelRTDebugService service, int32_t* result);
+int32_t NovelRT_DebugService_setIsFpsCounterVisible(NovelRTDebugService service, int32_t value);
+int32_t NovelRT_DebugService_getFramesPerSecond(NovelRTDebugService service, uint32_t* outputValue);
+int32_t NovelRT_DebugService_setFramesPerSecond(NovelRTDebugService service, uint32_t value);
 
 #ifdef __cplusplus
 }

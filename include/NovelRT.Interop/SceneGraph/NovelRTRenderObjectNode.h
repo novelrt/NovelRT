@@ -13,9 +13,9 @@ typedef struct RenderObjectNodeHandle* NovelRTRenderObjectNode;
 typedef struct RenderObjectHandle* NovelRTRenderObject;
 #endif
 
-int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRenderObjectNode* outputNode, const char** errorMessage);
-int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NovelRTRenderObject* outputObject, const char** errorMessage);
-int32_t NovelRT_RenderObjectNode_delete(NovelRTRenderObjectNode node, const char** errorMessage);
+int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRenderObjectNode* outputNode);
+int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NovelRTRenderObject* outputObject);
+int32_t NovelRT_RenderObjectNode_delete(NovelRTRenderObjectNode node);
 
 #ifdef __cplusplus
 }

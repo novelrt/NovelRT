@@ -18,9 +18,9 @@ typedef struct QuadTreeScenePointHandle* NovelRTQuadTreeScenePoint;
 typedef struct SceneNodeHandle* NovelRTSceneNode;
 #endif
 
-int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeScenePoint_getSceneNode(NovelRTQuadTreeScenePoint point, NovelRTSceneNode* outputNode, const char** errorMessage);
+int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint);
+int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint);
+int32_t NovelRT_QuadTreeScenePoint_getSceneNode(NovelRTQuadTreeScenePoint point, NovelRTSceneNode* outputNode);
 
 #ifdef __cplusplus
 }

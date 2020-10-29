@@ -20,7 +20,7 @@ extern "C" {
   NovelRTGeoVector2F NovelRT_GeoBounds_getCornerInWorldSpace(NovelRTGeoBounds bounds, int index);
   int32_t NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point);
   NovelRTGeoVector2F NovelRT_GeoBounds_getExtents(NovelRTGeoBounds bounds);
-  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult, const char** errorMessage);
+  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult);
   int32_t NovelRT_GeoBounds_equal(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
   int32_t NovelRT_GeoBounds_notEqual(NovelRTGeoBounds lhs, NovelRTGeoBounds rhs);
   

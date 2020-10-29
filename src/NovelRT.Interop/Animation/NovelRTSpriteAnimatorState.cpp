@@ -21,11 +21,8 @@ NovelRTSpriteAnimatorState NovelRT_SpriteAnimatorState_create() {
     return reinterpret_cast<NovelRTSpriteAnimatorState>(state);    
 }
 
-int32_t NovelRT_SpriteAnimatorState_insertNewState(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorState stateTarget, NovelRTSpriteAnimatorStateConditionFunctions vector, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_insertNewState(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorState stateTarget, NovelRTSpriteAnimatorStateConditionFunctions vector) {
     if (state == nullptr || stateTarget == nullptr || vector == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -37,11 +34,8 @@ int32_t NovelRT_SpriteAnimatorState_insertNewState(NovelRTSpriteAnimatorState st
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_removeStateAtIndex(NovelRTSpriteAnimatorState state, size_t index, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_removeStateAtIndex(NovelRTSpriteAnimatorState state, size_t index) {
     if (state == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -52,11 +46,8 @@ int32_t NovelRT_SpriteAnimatorState_removeStateAtIndex(NovelRTSpriteAnimatorStat
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_getShouldLoop(NovelRTSpriteAnimatorState state, int32_t* outputLoop, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_getShouldLoop(NovelRTSpriteAnimatorState state, int32_t* outputLoop) {
     if (state == nullptr || outputLoop == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -67,11 +58,8 @@ int32_t NovelRT_SpriteAnimatorState_getShouldLoop(NovelRTSpriteAnimatorState sta
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_setShouldLoop(NovelRTSpriteAnimatorState state, int32_t loop, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_setShouldLoop(NovelRTSpriteAnimatorState state, int32_t loop) {
     if (state == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -82,11 +70,8 @@ int32_t NovelRT_SpriteAnimatorState_setShouldLoop(NovelRTSpriteAnimatorState sta
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_getFrames(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorFrameVector* outputFrames, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_getFrames(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorFrameVector* outputFrames) {
     if (state == nullptr || outputFrames == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -98,11 +83,8 @@ int32_t NovelRT_SpriteAnimatorState_getFrames(NovelRTSpriteAnimatorState state, 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_setFrames(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorFrameVector frames, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_setFrames(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorFrameVector frames) {
     if (state == nullptr || frames == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -112,11 +94,8 @@ int32_t NovelRT_SpriteAnimatorState_setFrames(NovelRTSpriteAnimatorState state, 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorState_tryFindValidTransition(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorState* outputTransitionState, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorState_tryFindValidTransition(NovelRTSpriteAnimatorState state, NovelRTSpriteAnimatorState* outputTransitionState) {
     if (state == nullptr || outputTransitionState == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -126,9 +105,7 @@ int32_t NovelRT_SpriteAnimatorState_tryFindValidTransition(NovelRTSpriteAnimator
         *outputTransitionState = reinterpret_cast<NovelRTSpriteAnimatorState>(cppState->tryFindValidTransition().get());
     }
     catch (const std::exception& ex) {
-        if (errorMessage != nullptr) {
-            *errorMessage = ex.what();
-        }
+        (void)ex; //TODO: clean this up when error handling is redone
         return NOVELRT_FAILURE;
     }
     
@@ -140,11 +117,8 @@ NovelRTSpriteAnimatorFrameVector NovelRT_SpriteAnimatorFrameVector_create() {
     return reinterpret_cast<NovelRTSpriteAnimatorFrameVector>(vector);
 }
 
-int32_t NovelRT_SpriteAnimatorFrameVector_addFrame(NovelRTSpriteAnimatorFrameVector vector, NovelRTSpriteAnimatorFrame frame, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrameVector_addFrame(NovelRTSpriteAnimatorFrameVector vector, NovelRTSpriteAnimatorFrame frame) {
     if (vector == nullptr || frame == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -154,11 +128,8 @@ int32_t NovelRT_SpriteAnimatorFrameVector_addFrame(NovelRTSpriteAnimatorFrameVec
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrameVector_getFrameAtIndex(NovelRTSpriteAnimatorFrameVector vector, int32_t index, NovelRTSpriteAnimatorFrame* outputFrame, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrameVector_getFrameAtIndex(NovelRTSpriteAnimatorFrameVector vector, int32_t index, NovelRTSpriteAnimatorFrame* outputFrame) {
     if (vector == nullptr || outputFrame == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -168,11 +139,8 @@ int32_t NovelRT_SpriteAnimatorFrameVector_getFrameAtIndex(NovelRTSpriteAnimatorF
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrameVector_removeFrameAtIndex(NovelRTSpriteAnimatorFrameVector vector, int32_t index, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrameVector_removeFrameAtIndex(NovelRTSpriteAnimatorFrameVector vector, int32_t index) {
     if (vector == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -181,11 +149,8 @@ int32_t NovelRT_SpriteAnimatorFrameVector_removeFrameAtIndex(NovelRTSpriteAnimat
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrameVector_delete(NovelRTSpriteAnimatorFrameVector vector, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrameVector_delete(NovelRTSpriteAnimatorFrameVector vector) {
     if (vector == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

@@ -21,12 +21,8 @@ using namespace NovelRT::Windowing;
 extern "C" {
 #endif
 
-  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService) {
     if(windowingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
 
@@ -39,12 +35,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -54,12 +46,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -69,12 +57,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -86,12 +70,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_createImageRectWithNothing(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourTint, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_createImageRectWithNothing(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourTint) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -103,12 +83,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_createBasicFillRect(NovelRTRenderingService renderingService, NovelRTBasicFillRect* outputBasicFillRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_createBasicFillRect(NovelRTRenderingService renderingService, NovelRTBasicFillRect* outputBasicFillRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -120,12 +96,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_createTextRect(NovelRTRenderingService renderingService, NovelRTTextRect* outputTextRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, float fontSize, const char* fontFilePath, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_createTextRect(NovelRTRenderingService renderingService, NovelRTTextRect* outputTextRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, float fontSize, const char* fontFilePath) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -138,12 +110,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_getCamera(NovelRTRenderingService renderingService, NovelRTCamera* outputCamera, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_getCamera(NovelRTRenderingService renderingService, NovelRTCamera* outputCamera) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -153,12 +121,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_beginFrame(NovelRTRenderingService renderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_beginFrame(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -168,12 +132,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_endFrame(NovelRTRenderingService renderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_endFrame(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -183,12 +143,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_setBackgroundColour(NovelRTRenderingService renderingService, NovelRTRGBAConfig colour, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_setBackgroundColour(NovelRTRenderingService renderingService, NovelRTRGBAConfig colour) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -198,12 +154,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -214,12 +166,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -231,12 +179,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_getFontSet(NovelRTRenderingService renderingService, NovelRTFontSet* outputFontSet, const char* fileTarget, float fontSize, const char**errorMessage) {
+  int32_t NovelRT_RenderingService_getFontSet(NovelRTRenderingService renderingService, NovelRTFontSet* outputFontSet, const char* fileTarget, float fontSize) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -248,12 +192,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService, const char** errorMessage) {
+  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
-      if (errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
     
@@ -270,9 +210,6 @@ extern "C" {
       return NOVELRT_SUCCESS;
     }
 
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-    }
     return NOVELRT_FAILURE;
   }
 

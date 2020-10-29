@@ -13,13 +13,13 @@ typedef struct BreadthFirstIterator* NovelRTSceneNodeBreadthFirstIterator;
 typedef struct SceneNodeHandle* NovelRTSceneNode;
 #endif
 
-int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_increment(NovelRTSceneNodeBreadthFirstIterator iterator, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_postFixIncrement(NovelRTSceneNodeBreadthFirstIterator iterator, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_runFunction(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_isEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNodeBreadthFirstIterator_isNotEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult, const char** errorMessage);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_increment(NovelRTSceneNodeBreadthFirstIterator iterator);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_postFixIncrement(NovelRTSceneNodeBreadthFirstIterator iterator);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_runFunction(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_isEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult);
+int32_t NovelRT_SceneNodeBreadthFirstIterator_isNotEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult);
 
 
 

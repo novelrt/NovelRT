@@ -16,36 +16,27 @@ NovelRTWindowingService NovelRT_WindowingService_create() {
     return reinterpret_cast<NovelRTWindowingService>(_windowingServiceCollection.back().get());
 }
 
-int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled, const char** errorMessage) {
+int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<bool>(transparencyEnabled));
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_WindowingService_tearDown(NovelRTWindowingService service, const char** errorMessage) {
+int32_t NovelRT_WindowingService_tearDown(NovelRTWindowingService service) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     servicePtr->tearDown();
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService service, const char** windowTitle, const char** errorMessage) {
+int32_t NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService service, const char** windowTitle) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || windowTitle == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     *windowTitle = servicePtr->getWindowTitle().c_str();
@@ -53,36 +44,27 @@ int32_t NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService service,
     
 }
 
-int32_t NovelRT_WindowingService_setWindowTitle(NovelRTWindowingService service, const char* value, const char** errorMessage) {
+int32_t NovelRT_WindowingService_setWindowTitle(NovelRTWindowingService service, const char* value) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || value == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     servicePtr->setWindowTitle(value);
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_WindowingService_setWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F value, const char** errorMessage) {
+int32_t NovelRT_WindowingService_setWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F value) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2F*>(&value));
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_WindowingService_getWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F* output, const char** errorMessage) {
+int32_t NovelRT_WindowingService_getWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F* output) {
     auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
     if (servicePtr == nullptr || output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto vector = servicePtr->getWindowSize();

@@ -26,11 +26,8 @@ extern "C" {
     return reinterpret_cast<NovelRTNovelRunner>(runner);
   }
 
-  int32_t NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner) {
     if (runner == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
@@ -38,11 +35,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner) {
     if (runner == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -52,45 +46,34 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _audioCollection.push_back(cRunner->getAudioService());
 
     auto ptr = _audioCollection.back().get();
-    if (ptr == nullptr)
-    {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
+    if (ptr == nullptr) {
       return NOVELRT_FAILURE;
     }
+
     *outputService = reinterpret_cast<NovelRTAudioService>(ptr);
     
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService, const char** errorMessage)  {
+  int32_t NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService)  {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
+    
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _interactionCollection.push_back(cRunner->getInteractionService());
 
     auto ptr = _interactionCollection.back().get();
     if (ptr == nullptr)
     {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTInteractionService>(ptr);
@@ -98,11 +81,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -112,9 +92,6 @@ extern "C" {
     auto ptr = _windowingCollection.back().get();
     if (ptr == nullptr)
     {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTWindowingService>(ptr);
@@ -122,11 +99,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
@@ -135,9 +109,6 @@ extern "C" {
     auto ptr = _runtimeCollection.back().get();
     if (ptr == nullptr)
     {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTRuntimeService>(ptr);
@@ -145,11 +116,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getRenderer(NovelRTNovelRunner runner, NovelRTRenderingService* outputService, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getRenderer(NovelRTNovelRunner runner, NovelRTRenderingService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
 
@@ -159,9 +127,6 @@ extern "C" {
     auto ptr = _rendererCollection.back().get();
     if (ptr == nullptr)
     {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTRenderingService>(ptr);
@@ -169,11 +134,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getDebugService(NovelRTNovelRunner runner, NovelRTDebugService* outputService, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getDebugService(NovelRTNovelRunner runner, NovelRTDebugService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -183,9 +145,6 @@ extern "C" {
     auto ptr = _debugServiceCollection.back().get();
     if (ptr == nullptr)
     {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     *outputService = reinterpret_cast<NovelRTDebugService>(ptr);
@@ -193,11 +152,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp), const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp)) {
     if (runner == nullptr || func == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
@@ -208,11 +164,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)(), const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)()) {
     if (runner == nullptr || func == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
@@ -221,11 +174,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEventWithTimestamp* outputEvent, const char** errorMessage) {
+  int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEventWithTimestamp* outputEvent) {
     if (runner == nullptr || outputEvent == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -234,11 +184,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_NovelRunner_getSceneConstructionEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEvent* outputEvent, const char** errorMessage) {
+int32_t NovelRT_NovelRunner_getSceneConstructionEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEvent* outputEvent) {
     if (runner == nullptr || outputEvent == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

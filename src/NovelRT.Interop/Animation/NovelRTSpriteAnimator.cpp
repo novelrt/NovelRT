@@ -12,11 +12,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRect rect, NovelRTSpriteAnimator* outputAnimator, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRect rect, NovelRTSpriteAnimator* outputAnimator) {
     if (runner == nullptr || rect == nullptr || outputAnimator == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -25,11 +22,8 @@ int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRec
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -38,11 +32,8 @@ int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator, const char**
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -51,11 +42,8 @@ int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator, const char*
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -64,11 +52,8 @@ int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator, const char**
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animator, NovelRTAnimatorPlayState* outputPlayState, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animator, NovelRTAnimatorPlayState* outputPlayState) {
     if (animator == nullptr || outputPlayState == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -78,11 +63,8 @@ int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animato
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimator_insertNewState(NovelRTSpriteAnimator animator, NovelRTSpriteAnimatorState state, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimator_insertNewState(NovelRTSpriteAnimator animator, NovelRTSpriteAnimatorState state) {
     if (animator == nullptr || state == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

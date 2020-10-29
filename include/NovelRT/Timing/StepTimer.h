@@ -63,7 +63,7 @@ namespace NovelRT::Timing {
       return Timestamp(ticks);
     }
     inline void setTargetElapsedTime(Timestamp value) {
-      targetElapsedTicks() = value._ticks;
+      targetElapsedTicks() = value.ticks;
     }
 
     inline uint32_t getFrameCount() const {

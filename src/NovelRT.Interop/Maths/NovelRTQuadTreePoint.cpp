@@ -21,13 +21,8 @@ extern "C" {
     return reinterpret_cast<NovelRTQuadTreePoint>(_pointCollection.back().get());
   }
 
-  int32_t NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition, const char** errorMessage) {
-    if(point == nullptr || outputPosition == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition) {
+    if(point == nullptr || outputPosition == nullptr) {      return NOVELRT_FAILURE;
     }
 
     Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
@@ -37,22 +32,13 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point, const char** errorMessage) {
-    if(point == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point) {
+    if(point == nullptr) {      return NOVELRT_FAILURE;
     }
 
     auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this();
 
     if(std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end()) { //TODO: This may prove to be a bottleneck later
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-      }
-
       return NOVELRT_FAILURE;
     }
 

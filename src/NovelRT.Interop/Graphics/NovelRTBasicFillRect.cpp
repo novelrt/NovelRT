@@ -12,12 +12,8 @@ using namespace NovelRT::Graphics;
 extern "C" {
 #endif
 
-int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTransform* outputTransform, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTransform* outputTransform) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
   
@@ -27,12 +23,8 @@ int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTra
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTransform inputTransform, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTransform inputTransform) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
   
@@ -42,12 +34,8 @@ int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTra
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outputLayer, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outputLayer) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
   
@@ -57,12 +45,8 @@ int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outpu
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputLayer, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputLayer) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
   
@@ -72,12 +56,8 @@ int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputL
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outputBool, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outputBool) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 
@@ -92,12 +72,8 @@ int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outp
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t inputBool, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t inputBool) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 
@@ -114,12 +90,8 @@ int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t input
 }
 
 
-int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 
@@ -129,12 +101,8 @@ int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect, 
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 
@@ -145,12 +113,8 @@ int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRT
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 
@@ -160,12 +124,8 @@ int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRT
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage) {
+int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject) {
   if(rect == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-    }
-
     return NOVELRT_FAILURE;
   }
 

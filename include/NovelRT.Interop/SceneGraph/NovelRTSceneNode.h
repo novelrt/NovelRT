@@ -15,21 +15,21 @@ typedef struct BreadthFirstIterator* NovelRTSceneNodeBreadthFirstIterator;
 typedef struct DepthFirstIterator* NovelRTSceneNodeDepthFirstIterator;
 
 NovelRTSceneNode NovelRT_SceneNode_create();
-int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet, const char** errorMessage);
-int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet, const char** errorMessage);
-int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToInsert, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToRemove, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage);
-int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage);
-int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage);
-int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator, const char** errorMessage);
-int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node, const char** errorMessage);
+int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet);
+int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet);
+int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToInsert, int32_t* outputResult);
+int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToRemove, int32_t* outputResult);
+int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult);
+int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode));
+int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator);
+int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode));
+int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator);
+int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult);
+int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node);
 
-int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet, const char** errorMessage);
-int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize, const char** errorMessage);
-int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode, const char** errorMessage);
+int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet);
+int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize);
+int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode);
 
 #ifdef __cplusplus
 }

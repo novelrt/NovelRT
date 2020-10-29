@@ -23,12 +23,12 @@ extern "C" {
 
 typedef struct SpriteAnimatorHandle* NovelRTSpriteAnimator;
 
-int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRect rect, NovelRTSpriteAnimator* outputAnimator, const char** errorMessage);
-int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator, const char** errorMessage);
-int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator, const char** errorMessage);
-int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator, const char** errorMessage);
-int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animator, NovelRTAnimatorPlayState* outputPlayState, const char** errorMessage);
-int32_t NovelRT_SpriteAnimator_insertNewState(NovelRTSpriteAnimator animator, NovelRTSpriteAnimatorState state, const char** errorMessage);
+int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRect rect, NovelRTSpriteAnimator* outputAnimator);
+int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator);
+int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator);
+int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator);
+int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animator, NovelRTAnimatorPlayState* outputPlayState);
+int32_t NovelRT_SpriteAnimator_insertNewState(NovelRTSpriteAnimator animator, NovelRTSpriteAnimatorState state);
 
 #ifdef __cplusplus
 }

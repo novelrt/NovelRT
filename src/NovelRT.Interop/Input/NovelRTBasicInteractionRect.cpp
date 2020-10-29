@@ -9,11 +9,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -22,11 +19,8 @@ int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicIn
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -35,11 +29,8 @@ int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionR
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionRect object, NovelRTTransform transform, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionRect object, NovelRTTransform transform) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -48,11 +39,8 @@ int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionR
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect object, int* outputValue, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect object, int* outputValue) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -61,11 +49,8 @@ int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect object, int value, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect object, int value) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -74,11 +59,8 @@ int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect object, int32_t* outputValue, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect object, int32_t* outputValue) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -87,11 +69,8 @@ int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect object, int32_t value, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect object, int32_t value) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -100,11 +79,8 @@ int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -113,11 +89,8 @@ int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteract
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value, const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -126,11 +99,8 @@ int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteract
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)(), const char** errorMessage) {
+int32_t NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)()) {
     if (object == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -139,7 +109,7 @@ int32_t NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractio
     return NOVELRT_SUCCESS;
 }
 
-// int32_t NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr, const char** errorMessage) {
+// int32_t NovelRT_Input_BasicInteractionRect_removeInteraction(NovelRTBasicInteractionRect object, FunctionPointer ptr) {
 //     if (object == nullptr) {
 //         if (errorMessage != nullptr) {
 //             *errorMessage = NovelRT_getErrMsgIsNullptr();

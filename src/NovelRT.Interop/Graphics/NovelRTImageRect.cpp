@@ -14,13 +14,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t NovelRT_ImageRect_getTransform(NovelRTImageRect rect, NovelRTTransform *outputTransform, const char **errorMessage) {
-    if(rect == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getTransform(NovelRTImageRect rect, NovelRTTransform *outputTransform) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -30,13 +25,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_setTransform(NovelRTImageRect rect, NovelRTTransform inputTransform, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_setTransform(NovelRTImageRect rect, NovelRTTransform inputTransform) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -45,13 +35,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_getLayer(NovelRTImageRect rect, int32_t *outputLayer, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getLayer(NovelRTImageRect rect, int32_t *outputLayer) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -60,13 +45,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_setLayer(NovelRTImageRect rect, int32_t inputLayer, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_setLayer(NovelRTImageRect rect, int32_t inputLayer) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -75,13 +55,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_getActive(NovelRTImageRect rect, int32_t *outputBool, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getActive(NovelRTImageRect rect, int32_t *outputBool) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -96,13 +71,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_setActive(NovelRTImageRect rect, int32_t inputBool, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_setActive(NovelRTImageRect rect, int32_t inputBool) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -117,13 +87,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_executeObjectBehaviour(NovelRTImageRect rect, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_executeObjectBehaviour(NovelRTImageRect rect) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -134,13 +99,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_getTexture(NovelRTImageRect rect, NovelRTTexture *outputTexture, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getTexture(NovelRTImageRect rect, NovelRTTexture *outputTexture) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -151,13 +111,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture inputTexture, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture inputTexture) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -166,13 +121,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig *outputColourTint, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig *outputColourTint) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -183,13 +133,8 @@ extern "C" {
 
   }
 
-  int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint, const char **errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -198,13 +143,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_ImageRect_getAsRenderObjectPtr(NovelRTImageRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage) {
-    if(rect == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_ImageRect_getAsRenderObjectPtr(NovelRTImageRect rect, NovelRTRenderObject* outputRenderObject) {
+    if(rect == nullptr) {      return NOVELRT_FAILURE;
     }
 
     *outputRenderObject = reinterpret_cast<NovelRTRenderObject>(rect);

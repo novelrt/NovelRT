@@ -13,11 +13,8 @@ const char* NovelRT_getExecutablePath() {
     return path;
 }
 
-int32_t NovelRT_getExecutableDirPath(const char** path, const char** errorMessage) {
+int32_t NovelRT_getExecutableDirPath(const char** path) {
     if (path == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

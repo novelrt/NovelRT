@@ -41,12 +41,8 @@ extern "C" {
     return reinterpret_cast<NovelRTGeoVector2F&>(extents);
   }
 
-  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult, const char** errorMessage) {
-    if(outputResult == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult) {
+    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
     }
 
     try {
@@ -61,14 +57,7 @@ extern "C" {
       return NOVELRT_SUCCESS;
 
     } catch (const std::exception& ex) {
-      if(errorMessage != nullptr) {
-        std::string_view tempView{ex.what()};
-        char* arr = reinterpret_cast<char*>(malloc(tempView.size() + 1));
-        tempView.copy(arr, tempView.size());
-        arr[tempView.size()] = 0;
-        *errorMessage = arr;
-      }
-
+      (void)ex; //TODO: ensure this gets fixed when new error handling is added.
       return NOVELRT_FAILURE;
     }
   }

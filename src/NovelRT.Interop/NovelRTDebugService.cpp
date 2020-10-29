@@ -15,11 +15,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_DebugService_create(NovelRTUtilitiesEvent sceneConstructionEvent, NovelRTRenderingService renderingService, NovelRTDebugService* outputService, const char** errorMessage) {
+int32_t NovelRT_DebugService_create(NovelRTUtilitiesEvent sceneConstructionEvent, NovelRTRenderingService renderingService, NovelRTDebugService* outputService) {
     if (sceneConstructionEvent == nullptr || renderingService == nullptr ||outputService == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -31,11 +28,8 @@ int32_t NovelRT_DebugService_create(NovelRTUtilitiesEvent sceneConstructionEvent
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_DebugService_getIsFpsCounterVisible(NovelRTDebugService service, int32_t* result, const char** errorMessage) {
+int32_t NovelRT_DebugService_getIsFpsCounterVisible(NovelRTDebugService service, int32_t* result) {
     if (service == nullptr || result == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -44,11 +38,8 @@ int32_t NovelRT_DebugService_getIsFpsCounterVisible(NovelRTDebugService service,
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_DebugService_setIsFpsCounterVisible(NovelRTDebugService service, int32_t value, const char** errorMessage) {
+int32_t NovelRT_DebugService_setIsFpsCounterVisible(NovelRTDebugService service, int32_t value) {
     if (service == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -57,11 +48,8 @@ int32_t NovelRT_DebugService_setIsFpsCounterVisible(NovelRTDebugService service,
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_DebugService_getFramesPerSecond(NovelRTDebugService service, uint32_t* outputValue, const char** errorMessage) {
+int32_t NovelRT_DebugService_getFramesPerSecond(NovelRTDebugService service, uint32_t* outputValue) {
     if (service == nullptr || outputValue == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -70,11 +58,8 @@ int32_t NovelRT_DebugService_getFramesPerSecond(NovelRTDebugService service, uin
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_DebugService_setFramesPerSecond(NovelRTDebugService service, uint32_t value, const char** errorMessage) {
+int32_t NovelRT_DebugService_setFramesPerSecond(NovelRTDebugService service, uint32_t value) {
     if (service == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
       return NOVELRT_FAILURE;
     }
     

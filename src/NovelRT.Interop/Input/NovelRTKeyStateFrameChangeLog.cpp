@@ -7,12 +7,9 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output, const char** errorMessage) {
+int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
     if (output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto state = log.getCurrentState();
@@ -20,12 +17,9 @@ int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChang
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output, const char** errorMessage) {
+int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
     if (output == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     *output = log.getChangeCount();

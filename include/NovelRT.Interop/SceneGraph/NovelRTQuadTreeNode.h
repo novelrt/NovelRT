@@ -19,15 +19,15 @@ typedef struct QuadTreeScenePointHandle* NovelRTQuadTreeScenePoint;
 typedef struct SceneNodeHandle* NovelRTSceneNode;
 #endif
 
-int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, NovelRTQuadTreeNode* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
-int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage);
+int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, NovelRTQuadTreeNode* outputPoint);
+int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint);
+int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint);
+int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint);
+int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint);
 
 int32_t NovelRT_QuadTreeScenePointArray_create(NovelRTQuadTreeScenePoint pointOne, NovelRTQuadTreeScenePoint pointTwo, 
     NovelRTQuadTreeScenePoint pointThree, NovelRTQuadTreeScenePoint pointFour, 
-    NovelRTQuadTreeScenePointArray* outputArray, const char** errorMessage);
+    NovelRTQuadTreeScenePointArray* outputArray);
 
 #ifdef __cplusplus
 }

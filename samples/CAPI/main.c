@@ -30,10 +30,10 @@ NovelRTImageRect nChanRect = NULL;
 
 // void inputTest(NovelRTTimestamp delta) {    
 //     NovelRTKeyStateFrameChangeLog in = NULL;
-//     res = NovelRT_InteractionService_getKeyState(input, W, &in, &error);
+//     res = NovelRT_InteractionService_getKeyState(input, W, &in);
 //     if (res == NOVELRT_SUCCESS) {
 //         if (NovelRT_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NOVELRT_TRUE) {
-//             NovelRT_LoggingService_logInfoLine(console, "W was pressed!", &error);
+//             NovelRT_LoggingService_logInfoLine(console, "W was pressed!");
 //             float vn = NovelRT_Timestamp_getSecondsFloat(delta);
 //             //Need to find a way for variadic messages in NovelRT_LoggingService
 //             fprintf(stdout, "Timestamp: %f \r\n", vn);
@@ -41,13 +41,13 @@ NovelRTImageRect nChanRect = NULL;
 //     }
 //     else {
 //         char* errMsg = error;
-//         NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+//         NovelRT_LoggingService_logErrorLine(console, errMsg);
 //     }
 // }
 
 // void timerTest(NovelRTTimestamp delta) {
 //     uint32_t fps = 0;
-//     res = NovelRT_StepTimer_getFramesPerSecond(timer, &fps, &error);
+//     res = NovelRT_StepTimer_getFramesPerSecond(timer, &fps);
 //     NovelRT_Timestamp_getSecondsFloat(delta);
 //     if (res == NOVELRT_SUCCESS) {
 //         fprintf(stdout, "FPS: %f \n", (double)(fps));
@@ -55,7 +55,7 @@ NovelRTImageRect nChanRect = NULL;
 // }
 
 void renderNovelChan() {
-    NovelRT_ImageRect_executeObjectBehaviour(nChanRect, &error);
+    NovelRT_ImageRect_executeObjectBehaviour(nChanRect);
 }
 
 void appendFilePath(char* toAppend, char* destination) {
@@ -76,9 +76,9 @@ void moveNovelChan(NovelRTTimestamp delta) {
     float trueDelta = 0.0f;
     float moveAmount = 100.0f;
 
-    NovelRT_Timestamp_getSecondsFloat(delta, &trueDelta, &error);
+    NovelRT_Timestamp_getSecondsFloat(delta, &trueDelta);
     NovelRTTransform transform = {{0, 0}, {0, 0}, 0};
-    NovelRT_ImageRect_getTransform(nChanRect, &transform, &error);
+    NovelRT_ImageRect_getTransform(nChanRect, &transform);
    
 
     float xOrigin = transform.position.x;
@@ -99,14 +99,14 @@ void moveNovelChan(NovelRTTimestamp delta) {
         if (transform.position.x >= (xMax - rectQuarterSizeX)) {
             hMove = 0;
             bounced = 1;
-            NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.", &error);
+            NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.");
         } 
     } else {
         transform.position.x -= (moveAmount * trueDelta);
         if (transform.position.x <= (xMin + rectQuarterSizeX)) {
             hMove = 1;
             bounced = 1;
-            NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.", &error);
+            NovelRT_LoggingService_logInfoLine(console, "Flipped X axis movement.");
         }
     }
 
@@ -115,26 +115,26 @@ void moveNovelChan(NovelRTTimestamp delta) {
         if (transform.position.y >= (yMax - rectQuarterSizeY)) {
             vMove = 0;
             bounced = 1;
-            NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.", &error);
+            NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.");
         } 
     } else {
         transform.position.y -= (moveAmount * trueDelta);
         if (transform.position.y <= (yMin + rectQuarterSizeY)) {
             vMove = 1;
             bounced = 1;
-            NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.", &error);
+            NovelRT_LoggingService_logInfoLine(console, "Flipped Y axis movement.");
         }
     }
 
     if (bounced == 1) {
         bounced = 0;
-        NovelRT_RGBAConfig_setR(colourChange, (rand() % 256), NULL);
-        NovelRT_RGBAConfig_setG(colourChange, (rand() % 256), NULL);
-        NovelRT_RGBAConfig_setB(colourChange, (rand() % 256), NULL);
-        NovelRT_ImageRect_setColourTint(nChanRect, colourChange, &error);
+        NovelRT_RGBAConfig_setR(colourChange, (rand() % 256));
+        NovelRT_RGBAConfig_setG(colourChange, (rand() % 256));
+        NovelRT_RGBAConfig_setB(colourChange, (rand() % 256));
+        NovelRT_ImageRect_setColourTint(nChanRect, colourChange);
     }
 
-    NovelRT_ImageRect_setTransform(nChanRect, transform, &error);
+    NovelRT_ImageRect_setTransform(nChanRect, transform);
     
 }
 
@@ -146,66 +146,66 @@ int main() {
     console = NovelRT_LoggingService_createCustomTitle("Interop");
 
     char* path = "";
-    NovelRT_getExecutableDirPath(&path, &error);
+    NovelRT_getExecutableDirPath(&path);
     appendFilePath("Resources", path);
-    res = NovelRT_NovelRunner_getAudioService(runner, &audio, &error);
+    res = NovelRT_NovelRunner_getAudioService(runner, &audio);
     if (res == NOVELRT_FAILURE) {
         char* precursor = "Error getting AudioService: ";
         char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
         strcpy(errMsg, precursor);
         strcpy(errMsg, error);
-        NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+        NovelRT_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
     else {
-        res = NovelRT_LoggingService_throwIfNullPtr(console, &audio, "AudioService was not returned properly! Exiting...", &error);
-        res = NovelRT_AudioService_initialiseAudio(audio, &booleanResult, &error);
+        res = NovelRT_LoggingService_throwIfNullPtr(console, &audio, "AudioService was not returned properly! Exiting...");
+        res = NovelRT_AudioService_initialiseAudio(audio, &booleanResult);
         if (res == NOVELRT_SUCCESS) {
-            NovelRT_LoggingService_logInfoLine(console, "Initialised Audio from C API!", &error);
+            NovelRT_LoggingService_logInfoLine(console, "Initialised Audio from C API!");
         }
         else {
             char* precursor = "Error initialising Audio: ";
             char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
             strcpy(errMsg, precursor);
             strcpy(errMsg, error);
-            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg);
         }   
     }
 
-    res = NovelRT_NovelRunner_getInteractionService(runner, &input, &error);
+    res = NovelRT_NovelRunner_getInteractionService(runner, &input);
     if (res == NOVELRT_SUCCESS) {
-        NovelRT_LoggingService_logInfoLine(console, "Received InteractionService from C!", &error);
+        NovelRT_LoggingService_logInfoLine(console, "Received InteractionService from C!");
     }
     else {
        char* precursor = "Error getting InteractionService: ";
             char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
             strcpy(errMsg, precursor);
             strcpy(errMsg, error);
-            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg);
             return -1;
     }
 
-    res = NovelRT_NovelRunner_getRuntimeService(runner, &dotnet, &error);
+    res = NovelRT_NovelRunner_getRuntimeService(runner, &dotnet);
     if (res == NOVELRT_SUCCESS) {
-        NovelRT_LoggingService_logInfoLine(console, "Received .NET RuntimeService from C!", &error);
+        NovelRT_LoggingService_logInfoLine(console, "Received .NET RuntimeService from C!");
     }
     else {
        char* precursor = "Error getting RuntimeService: ";
             char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
             strcpy(errMsg, precursor);
             strcpy(errMsg, error);
-            NovelRT_LoggingService_logErrorLine(console, errMsg, &error);
+            NovelRT_LoggingService_logErrorLine(console, errMsg);
             return -1;
     }
 
-    NovelRT_RuntimeService_initialise(dotnet, &error);
+    NovelRT_RuntimeService_initialise(dotnet);
 
     NovelRTRenderingService renderer = NULL;
-    res = NovelRT_NovelRunner_getRenderer(runner, &renderer, &error);
+    res = NovelRT_NovelRunner_getRenderer(runner, &renderer);
     colourChange = NovelRT_RGBAConfig_Create(0,0,0,255);
 
     NovelRTRGBAConfig background = NovelRT_RGBAConfig_Create(0,0,0,0);
-    NovelRT_RenderingService_setBackgroundColour(renderer, background, &error);
+    NovelRT_RenderingService_setBackgroundColour(renderer, background);
 
     NovelRTGeoVector2F nChanPosition = { 1920 / 2, 1080 / 2 };
     NovelRTGeoVector2F nChanSize = { 762, 881 };
@@ -216,14 +216,14 @@ int main() {
     strcat(nChanFileLocation, path);
     appendFilePath("Images", nChanFileLocation);
     appendFilePath("novel-chan.png", nChanFileLocation);
-    NovelRT_LoggingService_logInfoLine(console, nChanFileLocation, &error);
-    res = NovelRT_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation, nChanColours, &error);
+    NovelRT_LoggingService_logInfoLine(console, nChanFileLocation);
+    res = NovelRT_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation, nChanColours);
 
-    NovelRT_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan, &error);
+    NovelRT_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan);
 
-    NovelRT_NovelRunner_addUpdate(runner, moveNovelChan, &error);
+    NovelRT_NovelRunner_addUpdate(runner, moveNovelChan);
 
-    NovelRT_NovelRunner_runNovel(runner, &error);
+    NovelRT_NovelRunner_runNovel(runner);
 
     return 0;
 }

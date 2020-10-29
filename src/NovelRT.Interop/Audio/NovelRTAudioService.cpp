@@ -13,11 +13,8 @@ NovelRTAudioService NovelRT_AudioService_create() {
     return reinterpret_cast<NovelRTAudioService>(new Audio::AudioService()); //TODO: WTF??
 }
 
-int32_t NovelRT_AudioService_destroy(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_destroy(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -25,11 +22,8 @@ int32_t NovelRT_AudioService_destroy(NovelRTAudioService service, const char** e
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_initialiseAudio(NovelRTAudioService service, int32_t* output, const char** errorMessage) {
+int32_t NovelRT_AudioService_initialiseAudio(NovelRTAudioService service, int32_t* output) {
     if (service == NULL) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -38,11 +32,8 @@ int32_t NovelRT_AudioService_initialiseAudio(NovelRTAudioService service, int32_
 }
 
 
-int32_t loadMusic(NovelRTAudioService service, char* input, NovelRTAudioServiceIterator* output, const char** errorMessage) {
+int32_t loadMusic(NovelRTAudioService service, char* input, NovelRTAudioServiceIterator* output) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -51,11 +42,8 @@ int32_t loadMusic(NovelRTAudioService service, char* input, NovelRTAudioServiceI
     return NOVELRT_SUCCESS;
 }
     
-int32_t NovelRT_AudioService_setSoundVolume(NovelRTAudioService service, unsigned int source, float val, const char** errorMessage) {
+int32_t NovelRT_AudioService_setSoundVolume(NovelRTAudioService service, unsigned int source, float val) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -63,11 +51,8 @@ int32_t NovelRT_AudioService_setSoundVolume(NovelRTAudioService service, unsigne
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_setSoundPosition(NovelRTAudioService service, unsigned int source, float posX, float posY, const char** errorMessage) {
+int32_t NovelRT_AudioService_setSoundPosition(NovelRTAudioService service, unsigned int source, float posX, float posY) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -75,11 +60,8 @@ int32_t NovelRT_AudioService_setSoundPosition(NovelRTAudioService service, unsig
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_resumeMusic(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_resumeMusic(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -87,11 +69,8 @@ int32_t NovelRT_AudioService_resumeMusic(NovelRTAudioService service, const char
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_playMusic(NovelRTAudioService service, NovelRTAudioServiceIterator handle, int loops, const char** errorMessage) {
+int32_t NovelRT_AudioService_playMusic(NovelRTAudioService service, NovelRTAudioServiceIterator handle, int loops) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -99,11 +78,8 @@ int32_t NovelRT_AudioService_playMusic(NovelRTAudioService service, NovelRTAudio
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_pauseMusic(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_pauseMusic(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -111,11 +87,8 @@ int32_t NovelRT_AudioService_pauseMusic(NovelRTAudioService service, const char*
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_stopMusic(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_stopMusic(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -123,11 +96,8 @@ int32_t NovelRT_AudioService_stopMusic(NovelRTAudioService service, const char**
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_setMusicVolume(NovelRTAudioService service, float value, const char** errorMessage) {
+int32_t NovelRT_AudioService_setMusicVolume(NovelRTAudioService service, float value) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -135,11 +105,8 @@ int32_t NovelRT_AudioService_setMusicVolume(NovelRTAudioService service, float v
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_checkSources(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_checkSources(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -147,11 +114,8 @@ int32_t NovelRT_AudioService_checkSources(NovelRTAudioService service, const cha
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_loadSound(NovelRTAudioService service, char* input, unsigned int* output, const char** errorMessage) {
+int32_t NovelRT_AudioService_loadSound(NovelRTAudioService service, char* input, unsigned int* output) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -159,11 +123,8 @@ int32_t NovelRT_AudioService_loadSound(NovelRTAudioService service, char* input,
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_unload(NovelRTAudioService service, unsigned int handle, const char** errorMessage) {
+int32_t NovelRT_AudioService_unload(NovelRTAudioService service, unsigned int handle) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -171,11 +132,8 @@ int32_t NovelRT_AudioService_unload(NovelRTAudioService service, unsigned int ha
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_playSound(NovelRTAudioService service, unsigned int handle, int loops, const char** errorMessage) {
+int32_t NovelRT_AudioService_playSound(NovelRTAudioService service, unsigned int handle, int loops) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -183,11 +141,8 @@ int32_t NovelRT_AudioService_playSound(NovelRTAudioService service, unsigned int
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_stopSound(NovelRTAudioService service, unsigned int handle, const char** errorMessage) {
+int32_t NovelRT_AudioService_stopSound(NovelRTAudioService service, unsigned int handle) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -195,11 +150,8 @@ int32_t NovelRT_AudioService_stopSound(NovelRTAudioService service, unsigned int
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_AudioService_tearDown(NovelRTAudioService service, const char** errorMessage) {
+int32_t NovelRT_AudioService_tearDown(NovelRTAudioService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
     auto serv = reinterpret_cast<Audio::AudioService*>(service);

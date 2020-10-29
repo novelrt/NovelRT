@@ -12,12 +12,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t NovelRT_Texture_loadPngAsTexture(NovelRTTexture targetTexture, const char* file, const char** errorMessage) {
+  int32_t NovelRT_Texture_loadPngAsTexture(NovelRTTexture targetTexture, const char* file) {
     if (targetTexture == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
 
@@ -27,12 +23,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Texture_getTextureFile(NovelRTTexture targetTexture, const char** outputFile, const char** errorMessage) {
+  int32_t NovelRT_Texture_getTextureFile(NovelRTTexture targetTexture, const char** outputFile) {
     if (targetTexture == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
 
@@ -42,12 +34,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Texture_getSize(NovelRTTexture targetTexture, NovelRTGeoVector2F* outputSize, const char** errorMessage) {
+  int32_t NovelRT_Texture_getSize(NovelRTTexture targetTexture, NovelRTGeoVector2F* outputSize) {
     if (targetTexture == nullptr) {
-      if (errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      
       return NOVELRT_FAILURE;
     }
 

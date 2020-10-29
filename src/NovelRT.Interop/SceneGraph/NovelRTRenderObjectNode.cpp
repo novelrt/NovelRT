@@ -14,11 +14,9 @@ std::list<std::shared_ptr<Graphics::RenderObject>> _renderObjectNodeCollection;
 extern "C" {
 #endif
 
-int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRenderObjectNode* outputNode, const char** errorMessage) {
+int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRenderObjectNode* outputNode) {
     if(object == nullptr|| outputNode == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -29,11 +27,9 @@ int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRende
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NovelRTRenderObject* outputObject, const char** errorMessage) {
+int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NovelRTRenderObject* outputObject) {
     if(node == nullptr|| outputObject == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -43,11 +39,9 @@ int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, N
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_RenderObjectNode_delete(NovelRTRenderObjectNode node, const char** errorMessage) {
+int32_t NovelRT_RenderObjectNode_delete(NovelRTRenderObjectNode node) {
     if(node == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 

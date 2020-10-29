@@ -13,11 +13,9 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -28,11 +26,9 @@ int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, Nov
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -43,11 +39,9 @@ int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNod
 }
 
 
-int32_t NovelRT_QuadTreeScenePoint_getSceneNode(NovelRTQuadTreeScenePoint point, NovelRTSceneNode* outputNode, const char** errorMessage) {
+int32_t NovelRT_QuadTreeScenePoint_getSceneNode(NovelRTQuadTreeScenePoint point, NovelRTSceneNode* outputNode) {
     if(point == nullptr|| outputNode == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 

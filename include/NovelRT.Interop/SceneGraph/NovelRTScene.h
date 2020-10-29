@@ -16,10 +16,10 @@ typedef struct StdSet_SceneNode* NovelRTSceneNodeSet;
 #endif
 
 NovelRTScene NovelRT_Scene_create();
-int32_t NovelRT_Scene_getNodes(NovelRTScene scene, NovelRTSceneNodeSet* outputSet, const char** errorMessage);
-int32_t NovelRT_Scene_insert(NovelRTScene scene, NovelRTSceneNode nodeToInsert, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_Scene_remove(NovelRTScene scene, NovelRTSceneNode nodeToRemove, int32_t* outputResult, const char** errorMessage);
-int32_t NovelRT_Scene_delete(NovelRTScene scene, const char** errorMessage);
+int32_t NovelRT_Scene_getNodes(NovelRTScene scene, NovelRTSceneNodeSet* outputSet);
+int32_t NovelRT_Scene_insert(NovelRTScene scene, NovelRTSceneNode nodeToInsert, int32_t* outputResult);
+int32_t NovelRT_Scene_remove(NovelRTScene scene, NovelRTSceneNode nodeToRemove, int32_t* outputResult);
+int32_t NovelRT_Scene_delete(NovelRTScene scene);
 
 #ifdef __cplusplus
 }

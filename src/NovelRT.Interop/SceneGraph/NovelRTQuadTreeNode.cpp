@@ -12,11 +12,9 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, NovelRTQuadTreeNode* outputNode, const char** errorMessage) {
+int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, NovelRTQuadTreeNode* outputNode) {
   if(points == nullptr || outputNode == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -26,13 +24,10 @@ int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, Novel
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
-       return NOVELRT_FAILURE;
-     }
+    return NOVELRT_FAILURE;
+  }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
@@ -41,13 +36,10 @@ int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTre
   return NOVELRT_SUCCESS;
   }
 
-int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
        return NOVELRT_FAILURE;
-     }
+  }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
@@ -57,11 +49,9 @@ int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTr
 }
 
 
-int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -72,13 +62,10 @@ int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuad
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint, const char** errorMessage) {
+int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
-       return NOVELRT_FAILURE;
-     }
+    return NOVELRT_FAILURE;
+  }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
@@ -89,13 +76,10 @@ int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQua
 
 int32_t NovelRT_QuadTreeScenePointArray_create(NovelRTQuadTreeScenePoint pointOne, NovelRTQuadTreeScenePoint pointTwo, 
     NovelRTQuadTreeScenePoint pointThree, NovelRTQuadTreeScenePoint pointFour, 
-    NovelRTQuadTreeScenePointArray* outputArray, const char** errorMessage) {
+    NovelRTQuadTreeScenePointArray* outputArray) {
       if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
-       return NOVELRT_FAILURE;
-     }
+        return NOVELRT_FAILURE;
+      }
 
       std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointOne = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointOne));
       std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointTwo = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointTwo));

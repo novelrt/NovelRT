@@ -12,11 +12,8 @@ NovelRTRuntimeService NovelRT_RuntimeService_create() {
     return reinterpret_cast<NovelRTRuntimeService&>(service);
 }
 
-int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -25,7 +22,7 @@ int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char
     return NOVELRT_SUCCESS;
 }
 
-// int32_t NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName, const char** errorMessage) {
+// int32_t NovelRT_RuntimeService_getFunction(NovelRTRuntimeService service, NovelRTRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
 //     if (service == nullptr || outputFunction == nullptr) {
 //         if (errorMessage != nullptr) {
 //             *errorMessage = NovelRT_getErrMsgIsNullptr();
@@ -38,11 +35,8 @@ int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service, const char
 //     return NOVELRT_SUCCESS;
 // }
 
-int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -51,11 +45,8 @@ int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service, const c
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service, const char** errorMessage) {
+int32_t NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service) {
     if (service == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

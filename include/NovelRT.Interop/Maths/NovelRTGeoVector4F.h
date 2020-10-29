@@ -23,7 +23,7 @@ extern "C" {
   NovelRTGeoVector4F NovelRT_GeoVector4F_uniform(float value);
   NovelRTGeoVector4F NovelRT_GeoVector4F_zero();
   NovelRTGeoVector4F NovelRT_GeoVector4F_one();
-  int32_t NovelRT_GeoVector4F_rotateToAngleAroundPoint(NovelRTGeoVector4F* const vector, float angleRotationValue, NovelRTGeoVector3F point, const char** errorMessage);
+  int32_t NovelRT_GeoVector4F_rotateToAngleAroundPoint(NovelRTGeoVector4F* const vector, float angleRotationValue, NovelRTGeoVector3F point);
   int32_t NovelRT_GeoVector4F_epsilonEquals(NovelRTGeoVector4F vector, NovelRTGeoVector4F other, NovelRTGeoVector4F epsilonValue);
   NovelRTGeoVector4F NovelRT_GeoVector4F_getNormalised(NovelRTGeoVector4F vector);
   float NovelRT_GeoVector4F_getLength(NovelRTGeoVector4F vector);
@@ -34,22 +34,22 @@ extern "C" {
   int32_t NovelRT_GeoVector4F_lessThanOrEqualTo(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
   int32_t NovelRT_GeoVector4F_greaterThan(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
   int32_t NovelRT_GeoVector4F_greaterThanOrEqualTo(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs);
-  int32_t NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
-  int32_t NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* lhs, float rhs, const char** errorMessage);
+  int32_t NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult);
+  int32_t NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs);
+  int32_t NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs);
+  int32_t NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs);
+  int32_t NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs);
+  int32_t NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* lhs, float rhs);
+  int32_t NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* lhs, float rhs);
+  int32_t NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* lhs, float rhs);
+  int32_t NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* lhs, float rhs);
   
 #ifdef __cplusplus
 }

@@ -21,13 +21,13 @@ typedef struct SpriteAnimatorFrameHandle* NovelRTSpriteAnimatorFrame;
 
 NovelRTSpriteAnimatorFrame NovelRT_SpriteAnimatorFrame_create();
 
-int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture* outputTexture, const char** errorMessage);
-int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture texture, const char** errorMessage);
-int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp* outputTimestamp, const char** errorMessage);
-int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp timestamp, const char** errorMessage);
+int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture* outputTexture);
+int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture texture);
+int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp* outputTimestamp);
+int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp timestamp);
 
-int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame frame, void(*func)(), const char** errorMessage);
-int32_t NovelRT_SpriteAnimatorFrame_addFrameExit(NovelRTSpriteAnimatorFrame frame, void(*func)(), const char** errorMessage);
+int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame frame, void(*func)());
+int32_t NovelRT_SpriteAnimatorFrame_addFrameExit(NovelRTSpriteAnimatorFrame frame, void(*func)());
 
 #ifdef __cplusplus
 }

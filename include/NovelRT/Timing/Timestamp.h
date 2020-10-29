@@ -10,19 +10,19 @@
 namespace NovelRT::Timing {
   class Timestamp {
   public:
-    uint64_t _ticks;
+    uint64_t ticks;
 
-    explicit Timestamp(uint64_t ticks) noexcept : _ticks(ticks) {}
+    explicit Timestamp(uint64_t ticks) noexcept : ticks(ticks) {}
 
     inline double getSecondsDouble() const {
-      auto returnVal = static_cast<double>(_ticks) / TicksPerSecond;
-      assert((returnVal != 0.0 || _ticks == 0) && "Timestamp can't be represented in seconds as a double, tick value is too small!");
+      auto returnVal = static_cast<double>(ticks) / TicksPerSecond;
+      assert((returnVal != 0.0 || ticks == 0) && "Timestamp can't be represented in seconds as a double, tick value is too small!");
       return returnVal;
     }
 
     inline float getSecondsFloat() const {
       auto returnVal = static_cast<float>(getSecondsDouble());
-      assert((returnVal != 0.0f || _ticks == 0) && "Timestamp can't be represented in seconds as a float, tick value is too small!");
+      assert((returnVal != 0.0f || ticks == 0) && "Timestamp can't be represented in seconds as a float, tick value is too small!");
       return returnVal;
     }
 
@@ -35,63 +35,63 @@ namespace NovelRT::Timing {
     }
 
     inline Timestamp operator+(const Timestamp& other) const {
-      return Timestamp(_ticks + other._ticks);
+      return Timestamp(ticks + other.ticks);
     }
 
     inline Timestamp operator-(const Timestamp& other) const {
-      return Timestamp(_ticks - other._ticks);
+      return Timestamp(ticks - other.ticks);
     }
 
     inline Timestamp operator*(const Timestamp& other) const {
-      return Timestamp(_ticks * other._ticks);
+      return Timestamp(ticks * other.ticks);
     }
 
     inline Timestamp operator/(const Timestamp& other) const {
-      return Timestamp(_ticks / other._ticks);
+      return Timestamp(ticks / other.ticks);
     }
 
     inline Timestamp& operator+=(const Timestamp& other) {
-      _ticks += other._ticks;
+      ticks += other.ticks;
       return *this;
     }
 
     inline Timestamp operator-=(const Timestamp& other) {
-      _ticks -= other._ticks;
+      ticks -= other.ticks;
       return *this;
     }
 
     inline Timestamp operator*=(const Timestamp& other) {
-      _ticks *= other._ticks;
+      ticks *= other.ticks;
       return *this;
     }
 
     inline Timestamp operator/=(const Timestamp& other) {
-      _ticks /= other._ticks;
+      ticks /= other.ticks;
       return *this;
     }
 
     inline bool operator<(const Timestamp& other) const {
-      return _ticks < other._ticks;
+      return ticks < other.ticks;
     }
 
     inline bool operator>(const Timestamp& other) const {
-      return _ticks > other._ticks;
+      return ticks > other.ticks;
     }
 
     inline bool operator<=(const Timestamp& other) const {
-      return _ticks <= other._ticks;
+      return ticks <= other.ticks;
     }
 
     inline bool operator>=(const Timestamp& other) const {
-      return _ticks >= other._ticks;
+      return ticks >= other.ticks;
     }
 
     inline bool operator==(const Timestamp& other) const {
-      return _ticks == other._ticks;
+      return ticks == other.ticks;
     }
 
     inline bool operator!=(const Timestamp& other) const {
-      return _ticks != other._ticks;
+      return ticks != other.ticks;
     }
   };
 }

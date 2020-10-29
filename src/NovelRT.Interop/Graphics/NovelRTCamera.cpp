@@ -18,12 +18,8 @@ extern "C" {
     return reinterpret_cast<NovelRTCamera>(_cameraCollection.back().get());
   }
   
-  int32_t NovelRT_Camera_getViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage) {
+  int32_t NovelRT_Camera_getViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -34,12 +30,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Camera_setViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix, const char** errorMessage) {
+  int32_t NovelRT_Camera_setViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -49,12 +41,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Camera_getProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage) {
+  int32_t NovelRT_Camera_getProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -65,12 +53,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Camera_setProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix, const char** errorMessage) {
+  int32_t NovelRT_Camera_setProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -81,12 +65,8 @@ extern "C" {
 
   }
 
-  int32_t NovelRT_Camera_getCameraUboMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix, const char** errorMessage) {
+  int32_t NovelRT_Camera_getCameraUboMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -97,12 +77,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Camera_getFrameState(NovelRTCamera camera, NovelRTCameraFrameState* outputFrameState, const char** errorMessage) {
+  int32_t NovelRT_Camera_getFrameState(NovelRTCamera camera, NovelRTCameraFrameState* outputFrameState) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -113,12 +89,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_Camera_setForceResizeCallback(NovelRTCamera camera, void(*callback)(NovelRTCamera, NovelRTGeoVector2F), const char** errorMessage) {
+  int32_t NovelRT_Camera_setForceResizeCallback(NovelRTCamera camera, void(*callback)(NovelRTCamera, NovelRTGeoVector2F)) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -138,12 +110,8 @@ extern "C" {
     return reinterpret_cast<NovelRTCamera>(_cameraCollection.back().get());
   }
 
-  int32_t NovelRT_Camera_destroy(NovelRTCamera camera, const char** errorMessage) {
+  int32_t NovelRT_Camera_destroy(NovelRTCamera camera) {
     if(camera == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
       return NOVELRT_FAILURE;
     }
 
@@ -158,12 +126,8 @@ extern "C" {
       
       return NOVELRT_SUCCESS;
     }
-
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-      }
       
-      return NOVELRT_FAILURE;
+    return NOVELRT_FAILURE;
   }
 
 #ifdef __cplusplus

@@ -14,11 +14,8 @@ NovelRTScene NovelRT_Scene_create() {
     return reinterpret_cast<NovelRTScene>(new SceneGraph::Scene());
 }
 
-int32_t NovelRT_Scene_getNodes(NovelRTScene scene, NovelRTSceneNodeSet* outputSet, const char** errorMessage) {
+int32_t NovelRT_Scene_getNodes(NovelRTScene scene, NovelRTSceneNodeSet* outputSet) {
     if (scene == nullptr || outputSet == nullptr){
-        if (*errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -31,11 +28,8 @@ int32_t NovelRT_Scene_getNodes(NovelRTScene scene, NovelRTSceneNodeSet* outputSe
 }
 
 
-int32_t NovelRT_Scene_insert(NovelRTScene scene, NovelRTSceneNode nodeToInsert, int32_t* outputResult, const char** errorMessage) {
-    if (scene == nullptr || nodeToInsert == nullptr || outputResult == nullptr){
-        if (*errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
+int32_t NovelRT_Scene_insert(NovelRTScene scene, NovelRTSceneNode nodeToInsert, int32_t* outputResult) {
+    if (scene == nullptr || nodeToInsert == nullptr || outputResult == nullptr) {
         return NOVELRT_FAILURE;
     }
 
@@ -46,11 +40,8 @@ int32_t NovelRT_Scene_insert(NovelRTScene scene, NovelRTSceneNode nodeToInsert, 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Scene_remove(NovelRTScene scene, NovelRTSceneNode nodeToRemove, int32_t* outputResult, const char** errorMessage) {
-    if (scene == nullptr || nodeToRemove == nullptr || outputResult == nullptr){
-        if (*errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
+int32_t NovelRT_Scene_remove(NovelRTScene scene, NovelRTSceneNode nodeToRemove, int32_t* outputResult) {
+    if (scene == nullptr || nodeToRemove == nullptr || outputResult == nullptr) {
         return NOVELRT_FAILURE;
     }
 
@@ -61,24 +52,19 @@ int32_t NovelRT_Scene_remove(NovelRTScene scene, NovelRTSceneNode nodeToRemove, 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_Scene_delete(NovelRTScene scene, const char** errorMessage) {
-    if (scene == nullptr){
-        if (*errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
+int32_t NovelRT_Scene_delete(NovelRTScene scene) {
+    if (scene == nullptr) {
         return NOVELRT_FAILURE;
     }
 
 
     auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
     try {
-        delete cppScene;
+        delete cppScene; //TODO: This can throw?????
     }
     catch(const std::exception& e) {
-        if (*errorMessage != nullptr) {
-            *errorMessage = e.what();
-        }
-        return NOVELRT_FAILURE;
+        (void)e; //TODO: fix this when proper error handling is reintroduced
+      return NOVELRT_FAILURE;
     }
     
     return NOVELRT_SUCCESS;

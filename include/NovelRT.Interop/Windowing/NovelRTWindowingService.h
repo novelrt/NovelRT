@@ -14,12 +14,12 @@ typedef struct WindowingServiceHandle* NovelRTWindowingService;
 
 NovelRTWindowingService NovelRT_WindowingService_create();
 
-int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled, const char** errorMessage);
-int32_t NovelRT_WindowingService_tearDown(NovelRTWindowingService service, const char** errorMessage);
-int32_t NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService service, const char** windowTitle, const char** errorMessage);
-int32_t NovelRT_WindowingService_setWindowTitle(NovelRTWindowingService service, const char* value, const char** errorMessage);
-int32_t NovelRT_WindowingService_setWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F value, const char** errorMessage);
-int32_t NovelRT_WindowingService_getWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F* output, const char** errorMessage);
+int32_t NovelRT_WindowingService_initialiseWindow(NovelRTWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled);
+int32_t NovelRT_WindowingService_tearDown(NovelRTWindowingService service);
+int32_t NovelRT_WindowingService_getWindowTitle(NovelRTWindowingService service, const char** windowTitle);
+int32_t NovelRT_WindowingService_setWindowTitle(NovelRTWindowingService service, const char* value);
+int32_t NovelRT_WindowingService_setWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F value);
+int32_t NovelRT_WindowingService_getWindowSize(NovelRTWindowingService service, NovelRTGeoVector2F* output);
 
 #ifdef __cplusplus
 }

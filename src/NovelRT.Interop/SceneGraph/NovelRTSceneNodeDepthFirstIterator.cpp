@@ -17,11 +17,9 @@ int32_t Internal_DepthFirstIteratorFunctionDelegate(const std::shared_ptr<SceneG
 extern "C" {
 #endif
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator) {
     if(node == nullptr|| func == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
     
@@ -34,11 +32,9 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_create(NovelRTSceneNode node, int32_
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_increment(NovelRTSceneNodeDepthFirstIterator iterator, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_increment(NovelRTSceneNodeDepthFirstIterator iterator) {
     if(iterator == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -47,11 +43,9 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_increment(NovelRTSceneNodeDepthFirst
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_postFixIncrement(NovelRTSceneNodeDepthFirstIterator iterator, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_postFixIncrement(NovelRTSceneNodeDepthFirstIterator iterator) {
     if(iterator == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -60,11 +54,8 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_postFixIncrement(NovelRTSceneNodeDep
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_isEnd(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_isEnd(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
-        if(errorMessage != nullptr) {
-          *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
       }
       
@@ -74,11 +65,9 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_isEnd(NovelRTSceneNodeDepthFirstIter
       return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_isEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_isEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult) {
     if(iterator == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -89,11 +78,9 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_isEqual(NovelRTSceneNodeDepthFirstIt
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_isNotEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_isNotEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult) {
     if(iterator == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -104,11 +91,9 @@ int32_t NovelRT_SceneNodeDepthFirstIterator_isNotEqual(NovelRTSceneNodeDepthFirs
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeDepthFirstIterator_runFunction(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNodeDepthFirstIterator_runFunction(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult) {
     if(iterator == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
      auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);

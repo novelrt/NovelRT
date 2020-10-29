@@ -13,13 +13,8 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t NovelRT_FontSet_loadFontAsTextureSet(NovelRTFontSet fontSet, const char* file, float fontSize, const char** errorMessage) {
-    if(fontSet == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_FontSet_loadFontAsTextureSet(NovelRTFontSet fontSet, const char* file, float fontSize) {
+    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -28,13 +23,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_FontSet_getFontFile(NovelRTFontSet fontSet, const char** outputFontFile, const char** errorMessage) {
-    if(fontSet == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_FontSet_getFontFile(NovelRTFontSet fontSet, const char** outputFontFile) {
+    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -43,13 +33,8 @@ extern "C" {
     return NOVELRT_SUCCESS;
   }
 
-  int32_t NovelRT_FontSet_getFontSize(NovelRTFontSet fontSet, float* outputFontSize, const char** errorMessage) {
-    if(fontSet == nullptr) {
-      if(errorMessage != nullptr) {
-        *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-
-      return NOVELRT_FAILURE;
+  int32_t NovelRT_FontSet_getFontSize(NovelRTFontSet fontSet, float* outputFontSize) {
+    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);

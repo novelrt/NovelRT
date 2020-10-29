@@ -12,22 +12,22 @@ extern "C" {
 
 typedef struct StepTimerHandle* NovelRTStepTimer;
 
-int32_t NovelRT_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NovelRTStepTimer* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getElapsedTicks(NovelRTStepTimer timer, uint64_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getTotalTicks(NovelRTStepTimer timer, uint64_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getTotalTime(NovelRTStepTimer timer, NovelRTTimestamp* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getTargetElapsedTicks(NovelRTStepTimer timer, uint64_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_setTargetElapsedTicks(NovelRTStepTimer timer, uint64_t input, const char** errorMessage);
-int32_t NovelRT_StepTimer_getTargetElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_setTargetElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp target, const char** errorMessage);
-int32_t NovelRT_StepTimer_getFrameCount(NovelRTStepTimer timer, uint32_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getFramesPerSecond(NovelRTStepTimer timer, uint32_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_getIsFixedTimeStep(NovelRTStepTimer timer, int32_t* output, const char** errorMessage);
-int32_t NovelRT_StepTimer_setIsFixedTimeStep(NovelRTStepTimer timer, int32_t input, const char** errorMessage);
-int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer, const char** errorMessage);
-int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer, const char** errorMessage);
-int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUtilitiesEventWithTimestamp event, const char** errorMessage);
+int32_t NovelRT_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NovelRTStepTimer* output);
+int32_t NovelRT_StepTimer_getElapsedTicks(NovelRTStepTimer timer, uint64_t* output);
+int32_t NovelRT_StepTimer_getTotalTicks(NovelRTStepTimer timer, uint64_t* output);
+int32_t NovelRT_StepTimer_getElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp* output);
+int32_t NovelRT_StepTimer_getTotalTime(NovelRTStepTimer timer, NovelRTTimestamp* output);
+int32_t NovelRT_StepTimer_getTargetElapsedTicks(NovelRTStepTimer timer, uint64_t* output);
+int32_t NovelRT_StepTimer_setTargetElapsedTicks(NovelRTStepTimer timer, uint64_t input);
+int32_t NovelRT_StepTimer_getTargetElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp* output);
+int32_t NovelRT_StepTimer_setTargetElapsedTime(NovelRTStepTimer timer, NovelRTTimestamp target);
+int32_t NovelRT_StepTimer_getFrameCount(NovelRTStepTimer timer, uint32_t* output);
+int32_t NovelRT_StepTimer_getFramesPerSecond(NovelRTStepTimer timer, uint32_t* output);
+int32_t NovelRT_StepTimer_getIsFixedTimeStep(NovelRTStepTimer timer, int32_t* output);
+int32_t NovelRT_StepTimer_setIsFixedTimeStep(NovelRTStepTimer timer, int32_t input);
+int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer);
+int32_t NovelRT_StepTimer_resetElapsedTime(NovelRTStepTimer timer);
+int32_t NovelRT_StepTimer_tick(NovelRTStepTimer timer, NovelRTUtilitiesEventWithTimestamp event);
 
 #ifdef __cplusplus
 }

@@ -32,11 +32,9 @@ NovelRTSceneNode NovelRT_SceneNode_create() {
     return reinterpret_cast<NovelRTSceneNode>(_sceneNodeCollection.back().get());
 }
 
-int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet, const char** errorMessage) {
+int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet) {
     if(node == nullptr|| outputSet == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -46,11 +44,9 @@ int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet, const char** errorMessage) {
+int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet) {
     if(node == nullptr|| outputSet == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -60,11 +56,9 @@ int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet*
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToInsert, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToInsert, int32_t* outputResult) {
     if(node == nullptr|| outputResult == nullptr || nodeToInsert == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -73,11 +67,9 @@ int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToI
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToRemove, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToRemove, int32_t* outputResult) {
     if(node == nullptr|| outputResult == nullptr || nodeToRemove == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -86,11 +78,9 @@ int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToR
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult) {
     if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -99,11 +89,9 @@ int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNod
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage) {
+int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode)) {
     if(node == nullptr|| action == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -113,11 +101,9 @@ int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*acti
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator, const char** errorMessage) {
+int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -130,11 +116,9 @@ int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode), const char** errorMessage) {
+int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode)) {
     if(node == nullptr|| action == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -145,11 +129,9 @@ int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator, const char** errorMessage) {
+int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -162,11 +144,9 @@ int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, 
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult, const char** errorMessage) {
+int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult) {
     if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
-       if(errorMessage != nullptr) {
-         *errorMessage = NovelRT_getErrMsgIsNullptr();
-       }
+       
        return NOVELRT_FAILURE;
      }
 
@@ -175,19 +155,14 @@ int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode 
      return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node, const char** errorMessage) {
+int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node) {
   if(node == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
+    
       return NOVELRT_FAILURE;
      }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
   if(std::find(_sceneNodeCollection.begin(), _sceneNodeCollection.end(), nodePointer) == _sceneNodeCollection.end()) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-      }
       return NOVELRT_FAILURE;
     }
     
@@ -195,11 +170,9 @@ int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node, const char** errorMessag
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet, const char** errorMessage) {
+int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet) {
   if(nodeSet == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
+    
       return NOVELRT_FAILURE;
       }
 
@@ -207,24 +180,18 @@ int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet, const char** er
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize, const char** errorMessage) {
+int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize) {
   if(nodeSet == nullptr || outputSize == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      return NOVELRT_FAILURE;
+          return NOVELRT_FAILURE;
     }
   
   *outputSize = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet)->size();
   return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode, const char** errorMessage) {
+int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode) {
   if(nodeSet == nullptr || outputSceneNode == nullptr) {
-    if(errorMessage != nullptr) {
-      *errorMessage = NovelRT_getErrMsgIsNullptr();
-      }
-      return NOVELRT_FAILURE;
+          return NOVELRT_FAILURE;
     }
   auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
   *outputSceneNode = reinterpret_cast<NovelRTSceneNode&>(cNodeSet[index]);

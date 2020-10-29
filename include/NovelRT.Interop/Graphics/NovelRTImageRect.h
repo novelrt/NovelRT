@@ -11,20 +11,20 @@
 extern "C" {
 #endif
 
-  int32_t NovelRT_ImageRect_getTransform(NovelRTImageRect rect, NovelRTTransform* outputTransform, const char** errorMessage);
-  int32_t NovelRT_ImageRect_setTransform(NovelRTImageRect rect, NovelRTTransform inputTransform, const char** errorMessage);
-  int32_t NovelRT_ImageRect_getLayer(NovelRTImageRect rect, int32_t* outputLayer, const char** errorMessage);
-  int32_t NovelRT_ImageRect_setLayer(NovelRTImageRect rect, int32_t inputLayer, const char** errorMessage);
-  int32_t NovelRT_ImageRect_getActive(NovelRTImageRect rect, int32_t* outputBool, const char** errorMessage);
-  int32_t NovelRT_ImageRect_setActive(NovelRTImageRect rect, int32_t inputBool, const char** errorMessage);
-  int32_t NovelRT_ImageRect_executeObjectBehaviour(NovelRTImageRect rect, const char** errorMessage);
-  int32_t NovelRT_ImageRect_getTexture(NovelRTImageRect rect, NovelRTTexture* outputTexture, const char** errorMessage);
-  int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture inputTexture, const char** errorMessage);
-  int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig* outputColourTint, const char** errorMessage);
-  int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint, const char** errorMessage);
+  int32_t NovelRT_ImageRect_getTransform(NovelRTImageRect rect, NovelRTTransform* outputTransform);
+  int32_t NovelRT_ImageRect_setTransform(NovelRTImageRect rect, NovelRTTransform inputTransform);
+  int32_t NovelRT_ImageRect_getLayer(NovelRTImageRect rect, int32_t* outputLayer);
+  int32_t NovelRT_ImageRect_setLayer(NovelRTImageRect rect, int32_t inputLayer);
+  int32_t NovelRT_ImageRect_getActive(NovelRTImageRect rect, int32_t* outputBool);
+  int32_t NovelRT_ImageRect_setActive(NovelRTImageRect rect, int32_t inputBool);
+  int32_t NovelRT_ImageRect_executeObjectBehaviour(NovelRTImageRect rect);
+  int32_t NovelRT_ImageRect_getTexture(NovelRTImageRect rect, NovelRTTexture* outputTexture);
+  int32_t NovelRT_ImageRect_setTexture(NovelRTImageRect rect, NovelRTTexture inputTexture);
+  int32_t NovelRT_ImageRect_getColourTint(NovelRTImageRect rect, NovelRTRGBAConfig* outputColourTint);
+  int32_t NovelRT_ImageRect_setColourTint(NovelRTImageRect rect, NovelRTRGBAConfig inputColourTint);
 
 
-  int32_t NovelRT_ImageRect_getAsRenderObjectPtr(NovelRTImageRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage);
+  int32_t NovelRT_ImageRect_getAsRenderObjectPtr(NovelRTImageRect rect, NovelRTRenderObject* outputRenderObject);
 
 #ifdef __cplusplus
 }

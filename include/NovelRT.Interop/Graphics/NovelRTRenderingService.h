@@ -12,21 +12,21 @@
 extern "C" {
 #endif
 
-  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService, const char** errorMessage);
-  int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService, const char** errorMessage); //this function has its own return codes, so in theory we can combine them both into the main return code
-  int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService, const char** errorMessage);
-  int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint, const char** errorMessage);
-  int32_t NovelRT_RenderingService_createImageRectWithNothing(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourTint, const char** errorMessage);
-  int32_t NovelRT_RenderingService_createBasicFillRect(NovelRTRenderingService renderingService, NovelRTBasicFillRect* outputBasicFillRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, const char** errorMessage);
-  int32_t NovelRT_RenderingService_createTextRect(NovelRTRenderingService renderingService, NovelRTTextRect* outputTextRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, float fontSize, const char* fontFilePath, const char** errorMessage);
-  int32_t NovelRT_RenderingService_getCamera(NovelRTRenderingService renderingService, NovelRTCamera* outputCamera, const char** errorMessage);
-  int32_t NovelRT_RenderingService_beginFrame(NovelRTRenderingService renderingService, const char** errorMessage);
-  int32_t NovelRT_RenderingService_endFrame(NovelRTRenderingService renderingService, const char** errorMessage);
-  int32_t NovelRT_RenderingService_setBackgroundColour(NovelRTRenderingService renderingService, NovelRTRGBAConfig colour, const char** errorMessage);
-  int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char** errorMessage);
-  int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget, const char** errorMessage);
+  int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService);
+  int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService); //this function has its own return codes, so in theory we can combine them both into the main return code
+  int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService);
+  int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint);
+  int32_t NovelRT_RenderingService_createImageRectWithNothing(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourTint);
+  int32_t NovelRT_RenderingService_createBasicFillRect(NovelRTRenderingService renderingService, NovelRTBasicFillRect* outputBasicFillRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig);
+  int32_t NovelRT_RenderingService_createTextRect(NovelRTRenderingService renderingService, NovelRTTextRect* outputTextRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, float fontSize, const char* fontFilePath);
+  int32_t NovelRT_RenderingService_getCamera(NovelRTRenderingService renderingService, NovelRTCamera* outputCamera);
+  int32_t NovelRT_RenderingService_beginFrame(NovelRTRenderingService renderingService);
+  int32_t NovelRT_RenderingService_endFrame(NovelRTRenderingService renderingService);
+  int32_t NovelRT_RenderingService_setBackgroundColour(NovelRTRenderingService renderingService, NovelRTRGBAConfig colour);
+  int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture);
+  int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget);
   int32_t NovelRT_RenderingService_getFontSet(NovelRTRenderingService renderingService, NovelRTFontSet* outputFontSet, const char* fileTarget, float fontSize, const char**errorMessage);
-  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService, const char** errorMessage);
+  int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService);
 
 #ifdef __cplusplus
 }

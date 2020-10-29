@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 const char* NovelRT_getExecutablePath();
-int32_t NovelRT_getExecutableDirPath(const char** path, const char** errorMessage);
+int32_t NovelRT_getExecutableDirPath(const char** path);
 
 #ifdef __cplusplus
 }

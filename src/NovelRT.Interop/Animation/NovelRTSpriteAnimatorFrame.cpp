@@ -15,11 +15,8 @@ NovelRTSpriteAnimatorFrame NovelRT_SpriteAnimatorFrame_create() {
     return reinterpret_cast<NovelRTSpriteAnimatorFrame>(frame);
 }
 
-int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture* outputTexture, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture* outputTexture) {
     if (frame == nullptr || outputTexture == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -30,11 +27,8 @@ int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame,
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture texture, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture texture) {
     if (frame == nullptr || texture == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -44,11 +38,8 @@ int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame,
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp* outputTimestamp, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp* outputTimestamp) {
     if (frame == nullptr || outputTimestamp == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -60,11 +51,8 @@ int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp timestamp, const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp timestamp) {
     if (frame == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -75,11 +63,8 @@ int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame
 }
 
 
-int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame frame, void(*func)(), const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 
@@ -89,11 +74,8 @@ int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame fra
     return NOVELRT_SUCCESS;
 }
 
-int32_t NovelRT_SpriteAnimatorFrame_addFrameExit(NovelRTSpriteAnimatorFrame frame, void(*func)(), const char** errorMessage) {
+int32_t NovelRT_SpriteAnimatorFrame_addFrameExit(NovelRTSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
-        if (errorMessage != nullptr) {
-            *errorMessage = NovelRT_getErrMsgIsNullptr();
-        }
         return NOVELRT_FAILURE;
     }
 

@@ -12,19 +12,19 @@ extern "C" {
 #endif
 
 //base type
-int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTransform* outputTransform, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTransform inputTransform, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outputLayer, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputLayer, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outputBool, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t inputBool, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect, const char** errorMessage);
+int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTransform* outputTransform);
+int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTransform inputTransform);
+int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outputLayer);
+int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputLayer);
+int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outputBool);
+int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t inputBool);
+int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect);
 
 //actual type
-int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig, const char** errorMessage);
-int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig, const char** errorMessage);
+int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig);
+int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig);
 
-int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject, const char** errorMessage);
+int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject);
 
 #ifdef __cplusplus
 }
