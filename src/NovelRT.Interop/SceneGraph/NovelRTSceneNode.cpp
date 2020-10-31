@@ -1,7 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <stdint.h>
 #include <stddef.h>
 #include <list>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeBreadthFirstIterator.h"
@@ -28,153 +30,154 @@ extern "C" {
 
 //External methods
 NovelRTSceneNode NovelRT_SceneNode_create() {
-    _sceneNodeCollection.push_back(std::make_shared<SceneGraph::SceneNode>());
-    return reinterpret_cast<NovelRTSceneNode>(_sceneNodeCollection.back().get());
+  _sceneNodeCollection.push_back(std::make_shared<SceneGraph::SceneNode>());
+  return reinterpret_cast<NovelRTSceneNode>(_sceneNodeCollection.back().get());
 }
 
 int32_t NovelRT_SceneNode_getChildren(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet) {
-    if(node == nullptr|| outputSet == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(node == nullptr|| outputSet == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
-    *nodeSet = reinterpret_cast<SceneGraph::SceneNode*>(node)->getChildren();
-    *outputSet = reinterpret_cast<NovelRTSceneNodeSet>(nodeSet);
-     return NOVELRT_SUCCESS;
+  std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
+  *nodeSet = reinterpret_cast<SceneGraph::SceneNode*>(node)->getChildren();
+  *outputSet = reinterpret_cast<NovelRTSceneNodeSet>(nodeSet);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_getParents(NovelRTSceneNode node, NovelRTSceneNodeSet* outputSet) {
-    if(node == nullptr|| outputSet == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(node == nullptr|| outputSet == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
-    *nodeSet = reinterpret_cast<SceneGraph::SceneNode*>(node)->getParents();
-    *outputSet = reinterpret_cast<NovelRTSceneNodeSet>(nodeSet);
-     return NOVELRT_SUCCESS;
+  std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
+  *nodeSet = reinterpret_cast<SceneGraph::SceneNode*>(node)->getParents();
+  *outputSet = reinterpret_cast<NovelRTSceneNodeSet>(nodeSet);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_insert(NovelRTSceneNode node, NovelRTSceneNode nodeToInsert, int32_t* outputResult) {
-    if(node == nullptr|| outputResult == nullptr || nodeToInsert == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(node == nullptr|| outputResult == nullptr || nodeToInsert == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
-    *outputResult = static_cast<int32_t>(nodePointer->insert(reinterpret_cast<SceneGraph::SceneNode*>(nodeToInsert)->shared_from_this()));
-     return NOVELRT_SUCCESS;
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
+  *outputResult = static_cast<int32_t>(nodePointer->insert(reinterpret_cast<SceneGraph::SceneNode*>(nodeToInsert)->shared_from_this()));
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_remove(NovelRTSceneNode node, NovelRTSceneNode nodeToRemove, int32_t* outputResult) {
-    if(node == nullptr|| outputResult == nullptr || nodeToRemove == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(node == nullptr|| outputResult == nullptr || nodeToRemove == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
-    *outputResult = static_cast<int32_t>(nodePointer->remove(reinterpret_cast<SceneGraph::SceneNode*>(nodeToRemove)->shared_from_this()));
-     return NOVELRT_SUCCESS;
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
+  *outputResult = static_cast<int32_t>(nodePointer->remove(reinterpret_cast<SceneGraph::SceneNode*>(nodeToRemove)->shared_from_this()));
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_isAdjacent(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult) {
-    if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
-    *outputResult = static_cast<int32_t>(nodePointer->isAdjacent(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
-     return NOVELRT_SUCCESS;
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
+  *outputResult = static_cast<int32_t>(nodePointer->isAdjacent(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseBreadthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode)) {
-    if(node == nullptr|| action == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(node == nullptr|| action == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
-    _voidFunction = action;
-    nodePointer->traverseBreadthFirst(Internal_VoidSceneNodeFunctionInvoker);
-    return NOVELRT_SUCCESS;
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
+  _voidFunction = action;
+  nodePointer->traverseBreadthFirst(Internal_VoidSceneNodeFunctionInvoker);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseBreadthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-    _intFunction = action;
-    SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
-    *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator>(itPtr);
+  _intFunction = action;
+  SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
+  *outputIterator = reinterpret_cast<NovelRTSceneNodeBreadthFirstIterator>(itPtr);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseDepthFirst(NovelRTSceneNode node, void(*action)(NovelRTSceneNode)) {
     if(node == nullptr|| action == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
+    }
 
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
     _voidFunction = action;
     nodePointer->traverseDepthFirst(Internal_VoidSceneNodeFunctionInvoker);
-     return NOVELRT_SUCCESS;
+    return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_traverseDepthFirstWithIterator(NovelRTSceneNode node, int32_t(*action)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-    _intFunction = action;
-    SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
-    *outputIterator = reinterpret_cast<NovelRTSceneNodeDepthFirstIterator>(itPtr);
+  _intFunction = action;
+  SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* itPtr = new SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_Int32TSceneNodeFunctionInvoker);
+  *outputIterator = reinterpret_cast<NovelRTSceneNodeDepthFirstIterator>(itPtr);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_canReach(NovelRTSceneNode firstNode, NovelRTSceneNode secondNode, int32_t* outputResult) {
-    if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto firstNodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
-    *outputResult = static_cast<int32_t>(firstNodePointer->canReach(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
-     return NOVELRT_SUCCESS;
+  auto firstNodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
+  *outputResult = static_cast<int32_t>(firstNodePointer->canReach(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNode_delete(NovelRTSceneNode node) {
   if(node == nullptr) {
-    
-      return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
   if(std::find(_sceneNodeCollection.begin(), _sceneNodeCollection.end(), nodePointer) == _sceneNodeCollection.end()) {
-      return NOVELRT_FAILURE;
-    }
+    NovelRT_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+    return NOVELRT_FAILURE;
+  }
     
-    _sceneNodeCollection.remove(nodePointer);
-    return NOVELRT_SUCCESS;
+  _sceneNodeCollection.remove(nodePointer);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet) {
   if(nodeSet == nullptr) {
-    
-      return NOVELRT_FAILURE;
-      }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   delete reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
   return NOVELRT_SUCCESS;
@@ -182,8 +185,9 @@ int32_t NovelRT_SceneNodeSet_delete(NovelRTSceneNodeSet nodeSet) {
 
 int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* outputSize) {
   if(nodeSet == nullptr || outputSize == nullptr) {
-          return NOVELRT_FAILURE;
-    }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
   
   *outputSize = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet)->size();
   return NOVELRT_SUCCESS;
@@ -191,8 +195,10 @@ int32_t NovelRT_SceneNodeSet_getSize(const NovelRTSceneNodeSet nodeSet, size_t* 
 
 int32_t NovelRT_SceneNodeSet_getSceneNodeFromIndex(const NovelRTSceneNodeSet nodeSet, size_t index, NovelRTSceneNode* outputSceneNode) {
   if(nodeSet == nullptr || outputSceneNode == nullptr) {
-          return NOVELRT_FAILURE;
-    }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
+
   auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
   *outputSceneNode = reinterpret_cast<NovelRTSceneNode&>(cNodeSet[index]);
   return NOVELRT_SUCCESS;

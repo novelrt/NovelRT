@@ -1,5 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <NovelRT.h>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector4F.h"
 
 #ifdef __cplusplus
@@ -41,11 +43,13 @@ extern "C" {
 
   int32_t NovelRT_GeoVector4F_rotateToAngleAroundPoint(NovelRTGeoVector4F* vector, float angleRotationValue, NovelRTGeoVector3F point) {
     if(vector == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*vector) || NovelRT_GeoVector3F_isNaN(point)) {
-            return NOVELRT_FAILURE;
+      NovelRT_setErrMsgIsNaNInternal();
+      return NOVELRT_FAILURE;
     }
 
     Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
@@ -155,10 +159,12 @@ extern "C" {
 
   int32_t NovelRT_GeoVector4F_addVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult) {
     if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs) || NovelRT_GeoVector4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -173,10 +179,12 @@ extern "C" {
 
   int32_t NovelRT_GeoVector4F_subtractVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult) {
     if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs) || NovelRT_GeoVector4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -190,10 +198,12 @@ extern "C" {
 
   int32_t NovelRT_GeoVector4F_multiplyVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult) {
     if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs) || NovelRT_GeoVector4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -207,14 +217,17 @@ extern "C" {
 
   int32_t NovelRT_GeoVector4F_divideVector(NovelRTGeoVector4F lhs, NovelRTGeoVector4F rhs, NovelRTGeoVector4F* outputResult) {
     if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs) || NovelRT_GeoVector4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector4F_equal(lhs, NovelRT_GeoVector4F_zero())  || NovelRT_GeoVector4F_equal(rhs, NovelRT_GeoVector4F_zero()) ) {
+    if(NovelRT_GeoVector4F_equal(rhs, NovelRT_GeoVector4F_zero()) ) {
+      NovelRT_setErrMsgIsDivideByZeroInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -227,10 +240,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_addFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult) {
-    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
+    if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -242,10 +258,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_subtractFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult) {
-    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
+    if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -257,10 +276,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_multiplyFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult) {
-    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
+    if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -272,14 +294,18 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_divideFloat(NovelRTGeoVector4F lhs, float rhs, NovelRTGeoVector4F* outputResult) {
-    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
+    if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
     if(rhs == 0.0f) {
+      NovelRT_setErrMsgIsDivideByZeroInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -291,10 +317,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_addAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || NovelRT_GeoVector4F_isNaN(rhs) ) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -304,10 +333,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_subtractAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || NovelRT_GeoVector4F_isNaN(rhs) ) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -317,10 +349,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_multiplyAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || NovelRT_GeoVector4F_isNaN(rhs) ) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -330,14 +365,18 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_divideAssignVector(NovelRTGeoVector4F* lhs, NovelRTGeoVector4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
-    if(NovelRT_GeoVector4F_isNaN(*lhs)  || NovelRT_GeoVector4F_isNaN(rhs) ) {
+    if(NovelRT_GeoVector4F_isNaN(*lhs)  || NovelRT_GeoVector4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_equal(NovelRT_GeoVector4F_zero(), rhs)) {
+      NovelRT_setErrMsgIsDivideByZeroInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -347,10 +386,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_addAssignFloat(NovelRTGeoVector4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -360,10 +402,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_subtractAssignFloat(NovelRTGeoVector4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -373,10 +418,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_multiplyAssignFloat(NovelRTGeoVector4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -386,14 +434,18 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoVector4F_divideAssignFloat(NovelRTGeoVector4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoVector4F_isNaN(*lhs)  || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
 
     if(rhs == 0.0f) {
+      NovelRT_setErrMsgIsDivideByZeroInternal();
       return NOVELRT_FAILURE;
     }
 

@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Animation/NovelRTAnimatorPlayState.h"
 #include "NovelRT.Interop/Animation/NovelRTSpriteAnimatorState.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
@@ -14,6 +15,7 @@ extern "C" {
 
 int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRect rect, NovelRTSpriteAnimator* outputAnimator) {
     if (runner == nullptr || rect == nullptr || outputAnimator == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -24,6 +26,7 @@ int32_t NovelRT_SpriteAnimator_create(NovelRTNovelRunner runner, NovelRTImageRec
 
 int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -34,6 +37,7 @@ int32_t NovelRT_SpriteAnimator_play(NovelRTSpriteAnimator animator) {
 
 int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -44,6 +48,7 @@ int32_t NovelRT_SpriteAnimator_pause(NovelRTSpriteAnimator animator) {
 
 int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator) {
     if (animator == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -54,6 +59,7 @@ int32_t NovelRT_SpriteAnimator_stop(NovelRTSpriteAnimator animator) {
 
 int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animator, NovelRTAnimatorPlayState* outputPlayState) {
     if (animator == nullptr || outputPlayState == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -65,6 +71,7 @@ int32_t NovelRT_SpriteAnimator_getCurrentPlayState(NovelRTSpriteAnimator animato
 
 int32_t NovelRT_SpriteAnimator_insertNewState(NovelRTSpriteAnimator animator, NovelRTSpriteAnimatorState state) {
     if (animator == nullptr || state == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 

@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Graphics/NovelRTCamera.h"
 #include "NovelRT.h"
 #include <list>
@@ -20,6 +21,7 @@ extern "C" {
   
   int32_t NovelRT_Camera_getViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -32,6 +34,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_setViewMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -43,6 +46,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_getProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -55,6 +59,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_setProjectionMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -67,6 +72,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_getCameraUboMatrix(NovelRTCamera camera, NovelRTGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -79,6 +85,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_getFrameState(NovelRTCamera camera, NovelRTCameraFrameState* outputFrameState) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -91,6 +98,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_setForceResizeCallback(NovelRTCamera camera, void(*callback)(NovelRTCamera, NovelRTGeoVector2F)) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -112,6 +120,7 @@ extern "C" {
 
   int32_t NovelRT_Camera_destroy(NovelRTCamera camera) {
     if(camera == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 

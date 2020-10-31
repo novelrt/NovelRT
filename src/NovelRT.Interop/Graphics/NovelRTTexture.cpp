@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRT.h"
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Graphics/NovelRTTexture.h"
 
@@ -14,6 +15,7 @@ extern "C" {
 
   int32_t NovelRT_Texture_loadPngAsTexture(NovelRTTexture targetTexture, const char* file) {
     if (targetTexture == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -25,6 +27,7 @@ extern "C" {
 
   int32_t NovelRT_Texture_getTextureFile(NovelRTTexture targetTexture, const char** outputFile) {
     if (targetTexture == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -36,6 +39,7 @@ extern "C" {
 
   int32_t NovelRT_Texture_getSize(NovelRTTexture targetTexture, NovelRTGeoVector2F* outputSize) {
     if (targetTexture == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 

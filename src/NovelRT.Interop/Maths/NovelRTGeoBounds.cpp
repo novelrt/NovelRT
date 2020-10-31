@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRT.h"
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoBounds.h"
 
@@ -29,9 +30,11 @@ extern "C" {
   int32_t NovelRT_GeoBounds_pointIsWithinBounds(NovelRTGeoBounds bounds, NovelRTGeoVector2F point) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
+
     if (cBounds.pointIsWithinBounds(cPoint)) {
       return NOVELRT_TRUE;
     }
+
     return NOVELRT_FALSE;
   }
 
@@ -42,12 +45,15 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoBounds_intersectsWith(NovelRTGeoBounds first, NovelRTGeoBounds other, int32_t* outputResult) {
-    if(outputResult == nullptr) {      return NOVELRT_FAILURE;
+    if(outputResult == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     try {
       Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
       Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
+
       if (cFirst.intersectsWith(cOther)) {
         *outputResult = NOVELRT_TRUE;
       } else {
@@ -57,7 +63,9 @@ extern "C" {
       return NOVELRT_SUCCESS;
 
     } catch (const std::exception& ex) {
-      (void)ex; //TODO: ensure this gets fixed when new error handling is added.
+      const char* message = ex.what();
+      char* destination = new char[strlen(message) + 1];
+      NovelRT_setErrMsgCustomInternal(destination);
       return NOVELRT_FAILURE;
     }
   }
@@ -69,6 +77,7 @@ extern "C" {
     if(cFirst == cOther) {
       return NOVELRT_TRUE;
     }
+
     return NOVELRT_FALSE;
   }
 
@@ -79,6 +88,7 @@ extern "C" {
     if(cFirst != cOther) {
       return NOVELRT_TRUE;
     }
+    
     return NOVELRT_FALSE;
   }
 

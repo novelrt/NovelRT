@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include"../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
 #include "NovelRT.Interop/Graphics/NovelRTGraphicsTypedefs.h"
@@ -17,6 +19,7 @@ NovelRTSpriteAnimatorFrame NovelRT_SpriteAnimatorFrame_create() {
 
 int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture* outputTexture) {
     if (frame == nullptr || outputTexture == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -29,6 +32,7 @@ int32_t NovelRT_SpriteAnimatorFrame_getTexture(NovelRTSpriteAnimatorFrame frame,
 
 int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame, NovelRTTexture texture) {
     if (frame == nullptr || texture == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -40,6 +44,7 @@ int32_t NovelRT_SpriteAnimatorFrame_setTexture(NovelRTSpriteAnimatorFrame frame,
 
 int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp* outputTimestamp) {
     if (frame == nullptr || outputTimestamp == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -53,6 +58,7 @@ int32_t NovelRT_SpriteAnimatorFrame_getDuration(NovelRTSpriteAnimatorFrame frame
 
 int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame, NovelRTTimestamp timestamp) {
     if (frame == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -65,6 +71,7 @@ int32_t NovelRT_SpriteAnimatorFrame_setDuration(NovelRTSpriteAnimatorFrame frame
 
 int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -76,6 +83,7 @@ int32_t NovelRT_SpriteAnimatorFrame_addFrameEnter(NovelRTSpriteAnimatorFrame fra
 
 int32_t NovelRT_SpriteAnimatorFrame_addFrameExit(NovelRTSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 

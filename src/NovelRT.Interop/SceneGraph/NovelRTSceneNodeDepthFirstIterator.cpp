@@ -1,6 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <stdint.h>
 #include <list>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeDepthFirstIterator.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
@@ -10,7 +12,7 @@ using namespace NovelRT;
 int32_t(*_depthFunction)(NovelRTSceneNode) = NULL;
 
 int32_t Internal_DepthFirstIteratorFunctionDelegate(const std::shared_ptr<SceneGraph::SceneNode>& node) {
-    return _depthFunction(reinterpret_cast<NovelRTSceneNode>(node.get()));
+  return _depthFunction(reinterpret_cast<NovelRTSceneNode>(node.get()));
 }
 
 #ifdef __cplusplus
@@ -18,87 +20,89 @@ extern "C" {
 #endif
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeDepthFirstIterator* outputIterator) {
-    if(node == nullptr|| func == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
-    
-    auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
+  if(node == nullptr|| func == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    _depthFunction = func;
-    SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t> iterator = SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_DepthFirstIteratorFunctionDelegate);
-    *outputIterator = reinterpret_cast<NovelRTSceneNodeDepthFirstIterator>(&iterator); 
+  auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-    return NOVELRT_SUCCESS;
+  _depthFunction = func;
+  SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t> iterator = SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_DepthFirstIteratorFunctionDelegate);
+  *outputIterator = reinterpret_cast<NovelRTSceneNodeDepthFirstIterator>(&iterator); 
+
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_increment(NovelRTSceneNodeDepthFirstIterator iterator) {
-    if(iterator == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(iterator == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-    cppIterator->operator++();
-    return NOVELRT_SUCCESS;
+  auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+  cppIterator->operator++();
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_postFixIncrement(NovelRTSceneNodeDepthFirstIterator iterator) {
-    if(iterator == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(iterator == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-    ++cppIterator;
-    return NOVELRT_SUCCESS;
+  auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+  ++cppIterator;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_isEnd(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
-        return NOVELRT_FAILURE;
-      }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
       
-      SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-      
-      *outputResult = cppIterator->isEnd();
-      return NOVELRT_SUCCESS;
+  SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+
+  *outputResult = cppIterator->isEnd();
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_isEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult) {
-    if(iterator == nullptr || outputResult == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-    auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(other);
+  auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+  auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(other);
 
-    *outputResult = (*cppIterator == *otherCppIterator);
-    return NOVELRT_SUCCESS;
+  *outputResult = (*cppIterator == *otherCppIterator);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_isNotEqual(NovelRTSceneNodeDepthFirstIterator iterator, NovelRTSceneNodeDepthFirstIterator other, int32_t* outputResult) {
-    if(iterator == nullptr || outputResult == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-    auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(other);
+  auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+  auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(other);
 
-    *outputResult = (*cppIterator != *otherCppIterator);
-    return NOVELRT_SUCCESS;
+  *outputResult = (*cppIterator != *otherCppIterator);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeDepthFirstIterator_runFunction(NovelRTSceneNodeDepthFirstIterator iterator, int32_t* outputResult) {
-    if(iterator == nullptr || outputResult == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
-     auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
-     *outputResult = cppIterator->operator*();
-     return NOVELRT_SUCCESS;
+  if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
+
+  auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
+  *outputResult = cppIterator->operator*();
+  return NOVELRT_SUCCESS;
 }
 
 #ifdef __cplusplus

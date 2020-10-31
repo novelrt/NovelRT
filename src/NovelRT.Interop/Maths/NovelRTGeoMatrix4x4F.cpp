@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRT.h"
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoMatrix4x4F.h"
 #include <cmath>
 
@@ -39,7 +40,9 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_addMatrix(NovelRTGeoMatrix4x4F lhs, NovelRTGeoMatrix4x4F rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
@@ -55,10 +58,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_subtractMatrix(NovelRTGeoMatrix4x4F lhs, NovelRTGeoMatrix4x4F rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -71,10 +77,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_multiplyMatrix(NovelRTGeoMatrix4x4F lhs, NovelRTGeoMatrix4x4F rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -87,7 +96,9 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_addAssignMatrix(NovelRTGeoMatrix4x4F* lhs, NovelRTGeoMatrix4x4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
@@ -100,10 +111,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_subtractAssignMatrix(NovelRTGeoMatrix4x4F* lhs, NovelRTGeoMatrix4x4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -113,10 +127,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_multiplyAssignMatrix(NovelRTGeoMatrix4x4F* lhs, NovelRTGeoMatrix4x4F rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || NovelRT_GeoMatrix4x4F_isNaN(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -126,10 +143,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_addFloat(NovelRTGeoMatrix4x4F lhs, float rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -141,10 +161,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_subtractFloat(NovelRTGeoMatrix4x4F lhs, float rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -156,10 +179,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_multiplyFloat(NovelRTGeoMatrix4x4F lhs, float rhs, NovelRTGeoMatrix4x4F* result) {
-    if(result == nullptr) {      return NOVELRT_FAILURE;
+    if(result == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -171,10 +197,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_addAssignFloat(NovelRTGeoMatrix4x4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -184,10 +213,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_subtractAssignFloat(NovelRTGeoMatrix4x4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -197,10 +229,13 @@ extern "C" {
   }
 
   int32_t NovelRT_GeoMatrix4x4F_multiplyAssignFloat(NovelRTGeoMatrix4x4F* lhs, float rhs) {
-    if(lhs == nullptr) {      return NOVELRT_FAILURE;
+    if(lhs == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     if(NovelRT_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
+      NovelRT_setErrMsgIsNaNInternal();
       return NOVELRT_FAILURE;
     }
     

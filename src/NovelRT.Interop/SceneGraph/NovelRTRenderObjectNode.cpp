@@ -15,16 +15,15 @@ extern "C" {
 #endif
 
 int32_t NovelRT_RenderObjectNode_create(NovelRTRenderObject object, NovelRTRenderObjectNode* outputNode) {
-    if(object == nullptr|| outputNode == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(object == nullptr|| outputNode == nullptr) {
+    return NOVELRT_FAILURE;
+  }
 
-    auto ptr = reinterpret_cast<Graphics::RenderObject*>(object);
-    std::shared_ptr<Graphics::RenderObject> cppObject = std::shared_ptr<Graphics::RenderObject>(ptr);
-    _renderObjectNodeCollection.push_back(cppObject);
-    *outputNode = reinterpret_cast<NovelRTRenderObjectNode>(new SceneGraph::RenderObjectNode(cppObject));
-    return NOVELRT_SUCCESS;
+  auto ptr = reinterpret_cast<Graphics::RenderObject*>(object);
+  std::shared_ptr<Graphics::RenderObject> cppObject = std::shared_ptr<Graphics::RenderObject>(ptr);
+  _renderObjectNodeCollection.push_back(cppObject);
+  *outputNode = reinterpret_cast<NovelRTRenderObjectNode>(new SceneGraph::RenderObjectNode(cppObject));
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NovelRTRenderObject* outputObject) {

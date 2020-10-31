@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTNovelRunner.h"
 #include <NovelRT.h>
 #include <stdint.h>
@@ -28,8 +29,10 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_runNovel(NovelRTNovelRunner runner) {
     if (runner == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     cRunner->runNovel();
     return NOVELRT_SUCCESS;
@@ -37,6 +40,7 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_destroy(NovelRTNovelRunner runner) {
     if (runner == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -48,8 +52,10 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getAudioService(NovelRTNovelRunner runner, NovelRTAudioService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _audioCollection.push_back(cRunner->getAudioService());
 
@@ -65,6 +71,7 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getInteractionService(NovelRTNovelRunner runner, NovelRTInteractionService* outputService)  {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -83,6 +90,7 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getWindowingService(NovelRTNovelRunner runner, NovelRTWindowingService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -101,8 +109,10 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getRuntimeService(NovelRTNovelRunner runner, NovelRTRuntimeService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _runtimeCollection.push_back(cRunner->getDotNetRuntimeService());
 
@@ -118,6 +128,7 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getRenderer(NovelRTNovelRunner runner, NovelRTRenderingService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -136,6 +147,7 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getDebugService(NovelRTNovelRunner runner, NovelRTDebugService* outputService) {
     if (runner == nullptr || outputService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -154,20 +166,25 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_addUpdate(NovelRTNovelRunner runner, void(*func)(NovelRTTimestamp)) {
     if (runner == nullptr || func == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
 
     cRunner->Update += [func](NovelRT::Timing::Timestamp delta){
-       func(reinterpret_cast<NovelRTTimestamp>(&delta)); 
-      };
+      func(reinterpret_cast<NovelRTTimestamp>(&delta)); 
+    };
+
     return NOVELRT_SUCCESS;
   }
 
   int32_t NovelRT_NovelRunner_addSceneConstructionRequested(NovelRTNovelRunner runner, void(*func)()) {
     if (runner == nullptr || func == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
 
     cRunner->SceneConstructionRequested += [func](){ func(); };
@@ -176,7 +193,8 @@ extern "C" {
 
   int32_t NovelRT_NovelRunner_getUpdateEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEventWithTimestamp* outputEvent) {
     if (runner == nullptr || outputEvent == nullptr) {
-        return NOVELRT_FAILURE;
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
@@ -186,7 +204,8 @@ extern "C" {
 
 int32_t NovelRT_NovelRunner_getSceneConstructionEvent(NovelRTNovelRunner runner, NovelRTUtilitiesEvent* outputEvent) {
     if (runner == nullptr || outputEvent == nullptr) {
-        return NOVELRT_FAILURE;
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);

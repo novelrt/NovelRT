@@ -1,12 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <stdint.h>
 #include <list>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/Maths/NovelRTGeoVector2F.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTQuadTreeScenePoint.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
-
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -15,9 +16,9 @@ extern "C" {
 
 int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   Maths::GeoVector2F cPosition = *reinterpret_cast<const Maths::GeoVector2F*>(&position);
   std::shared_ptr<SceneGraph::SceneNode> cNode = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -28,9 +29,9 @@ int32_t NovelRT_QuadTreeScenePoint_createVector(NovelRTGeoVector2F position, Nov
 
 int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   std::shared_ptr<SceneGraph::SceneNode> cNode = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
   SceneGraph::QuadTreeScenePoint* cppPoint = new SceneGraph::QuadTreeScenePoint(x, y, cNode);
@@ -40,10 +41,10 @@ int32_t NovelRT_QuadTreeScenePoint_createFloat(float x, float y, NovelRTSceneNod
 
 
 int32_t NovelRT_QuadTreeScenePoint_getSceneNode(NovelRTQuadTreeScenePoint point, NovelRTSceneNode* outputNode) {
-    if(point == nullptr|| outputNode == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+  if(point == nullptr || outputNode == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   SceneGraph::QuadTreeScenePoint* cppPoint = reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(point);
   std::shared_ptr<SceneGraph::SceneNode> node = cppPoint->getSceneNode();

@@ -19,12 +19,7 @@ enum {
   NOVELRT_TRUE = 1
 };
 
-const char* NovelRT_getCpuLangKey();
-const char* NovelRT_getErrMsgIsNullptr();
-const char* NovelRT_getErrMsgIsNaN();
-const char* NovelRT_getErrMsgIsDivideByZero();
-const char* NovelRT_getErrMsgIsAlreadyDeletedOrRemoved();
-const char* NovelRT_translateErrorCode(const char* targetLanguage, const char* errorPtr);
+const char* NovelRT_getLastError();
   
 #ifdef __cplusplus
 }

@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Input/NovelRTBasicInteractionRect.h"
 #include "NovelRT.Interop/NovelRTTransform.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
@@ -11,6 +13,7 @@ extern "C" {
 
 int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicInteractionRect object) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -21,6 +24,7 @@ int32_t NovelRT_Input_BasicInteractionRect_executeObjectBehaviour(NovelRTBasicIn
 
 int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionRect object, NovelRTTransform* outputTransform) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -31,6 +35,7 @@ int32_t NovelRT_Input_BasicInteractionRect_getTransform(NovelRTBasicInteractionR
 
 int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionRect object, NovelRTTransform transform) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -41,6 +46,7 @@ int32_t NovelRT_Input_BasicInteractionRect_setTransform(NovelRTBasicInteractionR
 
 int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect object, int* outputValue) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -51,6 +57,7 @@ int32_t NovelRT_Input_BasicInteractionRect_getLayer(NovelRTBasicInteractionRect 
 
 int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect object, int value) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -61,6 +68,7 @@ int32_t NovelRT_Input_BasicInteractionRect_setLayer(NovelRTBasicInteractionRect 
 
 int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect object, int32_t* outputValue) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -71,6 +79,7 @@ int32_t NovelRT_Input_BasicInteractionRect_getActive(NovelRTBasicInteractionRect
 
 int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect object, int32_t value) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -81,6 +90,7 @@ int32_t NovelRT_Input_BasicInteractionRect_setActive(NovelRTBasicInteractionRect
 
 int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode* outputValue) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -91,6 +101,7 @@ int32_t NovelRT_Input_BasicInteractionRect_getSubscribedKey(NovelRTBasicInteract
 
 int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteractionRect object, NovelRTKeyCode value) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -101,6 +112,7 @@ int32_t NovelRT_Input_BasicInteractionRect_setSubscribedKey(NovelRTBasicInteract
 
 int32_t NovelRT_Input_BasicInteractionRect_addInteraction(NovelRTBasicInteractionRect object, void(*ptr)()) {
     if (object == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 

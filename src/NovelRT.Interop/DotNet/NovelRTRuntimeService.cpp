@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/DotNet/NovelRTRuntimeService.h"
 #include "NovelRT.h"
@@ -14,6 +16,7 @@ NovelRTRuntimeService NovelRT_RuntimeService_create() {
 
 int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service) {
     if (service == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -37,6 +40,7 @@ int32_t NovelRT_RuntimeService_destroy(NovelRTRuntimeService service) {
 
 int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service) {
     if (service == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 
@@ -47,6 +51,7 @@ int32_t NovelRT_RuntimeService_initialise(NovelRTRuntimeService service) {
 
 int32_t NovelRT_RuntimeService_tearDown(NovelRTRuntimeService service) {
     if (service == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
 

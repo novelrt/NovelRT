@@ -1,11 +1,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <stdint.h>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTQuadTreeScenePoint.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTQuadTreeNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
-
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -14,9 +15,9 @@ extern "C" {
 
 int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, NovelRTQuadTreeNode* outputNode) {
   if(points == nullptr || outputNode == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4> cppArray = *reinterpret_cast<std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>*>(points);
   SceneGraph::QuadTreeNode* cppNode = new SceneGraph::QuadTreeNode(cppArray);
@@ -26,6 +27,7 @@ int32_t NovelRT_QuadTreeNode_create(NovelRTQuadTreeScenePointArray points, Novel
 
 int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -38,7 +40,8 @@ int32_t NovelRT_QuadTreeNode_getTopLeft(NovelRTQuadTreeNode node, NovelRTQuadTre
 
 int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       return NOVELRT_FAILURE;
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
   }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
@@ -51,9 +54,9 @@ int32_t NovelRT_QuadTreeNode_getTopRight(NovelRTQuadTreeNode node, NovelRTQuadTr
 
 int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
-       
-       return NOVELRT_FAILURE;
-     }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
@@ -64,6 +67,7 @@ int32_t NovelRT_QuadTreeNode_getBottomLeft(NovelRTQuadTreeNode node, NovelRTQuad
 
 int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -75,22 +79,23 @@ int32_t NovelRT_QuadTreeNode_getBottomRight(NovelRTQuadTreeNode node, NovelRTQua
 }
 
 int32_t NovelRT_QuadTreeScenePointArray_create(NovelRTQuadTreeScenePoint pointOne, NovelRTQuadTreeScenePoint pointTwo, 
-    NovelRTQuadTreeScenePoint pointThree, NovelRTQuadTreeScenePoint pointFour, 
-    NovelRTQuadTreeScenePointArray* outputArray) {
-      if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {
-        return NOVELRT_FAILURE;
-      }
+  NovelRTQuadTreeScenePoint pointThree, NovelRTQuadTreeScenePoint pointFour, 
+  NovelRTQuadTreeScenePointArray* outputArray) { //TODO: can we not make this read nicer?
+  if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-      std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointOne = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointOne));
-      std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointTwo = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointTwo));
-      std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointThree = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointThree));
-      std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointFour = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointFour));
+  std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointOne = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointOne));
+  std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointTwo = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointTwo));
+  std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointThree = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointThree));
+  std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointFour = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointFour));
 
-      std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>* quadTreePoints = new std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>();
-      *quadTreePoints = { cppPointOne, cppPointTwo, cppPointThree, cppPointFour };
-      *outputArray = reinterpret_cast<NovelRTQuadTreeScenePointArray>(&quadTreePoints);
-      return NOVELRT_SUCCESS;
-    }
+  std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>* quadTreePoints = new std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>();
+  *quadTreePoints = { cppPointOne, cppPointTwo, cppPointThree, cppPointFour };
+  *outputArray = reinterpret_cast<NovelRTQuadTreeScenePointArray>(&quadTreePoints);
+  return NOVELRT_SUCCESS;
+}
 
 #ifdef __cplusplus
 }

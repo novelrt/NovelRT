@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/NovelRTLoggingService.h"
 #include "NovelRT.Interop/NovelRTLogLevel.h"
@@ -9,116 +11,125 @@ extern "C" {
 #endif
 
 NovelRTLoggingService NovelRT_LoggingService_create() {
-    NovelRT::LoggingService* service = new NovelRT::LoggingService();
-    return reinterpret_cast<NovelRTLoggingService&>(service);
+  NovelRT::LoggingService* service = new NovelRT::LoggingService();
+  return reinterpret_cast<NovelRTLoggingService&>(service);
 }
 
 NovelRTLoggingService NovelRT_LoggingService_createCustomTitle(const char* core) {
-    NovelRT::LoggingService* service = new NovelRT::LoggingService(core);
-    return reinterpret_cast<NovelRTLoggingService&>(service);
+  NovelRT::LoggingService* service = new NovelRT::LoggingService(core);
+  return reinterpret_cast<NovelRTLoggingService&>(service);
 }
 
 NovelRTLoggingService NovelRT_LoggingService_createCustomTitleAndLevel(const char* core, NovelRTLogLevel level) {
-    NovelRT::LoggingService* service = new NovelRT::LoggingService(core, static_cast<NovelRT::LogLevel>(level));
-    return reinterpret_cast<NovelRTLoggingService&>(service);
+  NovelRT::LoggingService* service = new NovelRT::LoggingService(core, static_cast<NovelRT::LogLevel>(level));
+  return reinterpret_cast<NovelRTLoggingService&>(service);
 }
 
 int32_t NovelRT_LoggingService_log(NovelRTLoggingService service, const char* message, NovelRTLogLevel level) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->log(message, static_cast<NovelRT::LogLevel>(level));
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->log(message, static_cast<NovelRT::LogLevel>(level));
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_logInfoLine(NovelRTLoggingService service, const char* message) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->logInfoLine(message);
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->logInfoLine(message);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_logErrorLine(NovelRTLoggingService service, const char* message) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->logErrorLine(message);
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->logErrorLine(message);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_logWarningLine(NovelRTLoggingService service, const char* message) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->logWarningLine(message);
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->logWarningLine(message);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_logDebugLine(NovelRTLoggingService service, const char* message) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->logDebugLine(message);
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->logDebugLine(message);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_logInternal(NovelRTLoggingService service, const char* message, NovelRTLogLevel level) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->logInternal(message, static_cast<NovelRT::LogLevel>(level));
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->logInternal(message, static_cast<NovelRT::LogLevel>(level));
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_setLogLevel(NovelRTLoggingService service, NovelRTLogLevel level) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->setLogLevel(static_cast<NovelRT::LogLevel>(level));
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->setLogLevel(static_cast<NovelRT::LogLevel>(level));
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_throwIfNullPtr(NovelRTLoggingService service, void* object, const char* exceptionMessage) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->throwIfNullPtr(object, exceptionMessage);
-    return NOVELRT_SUCCESS;
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->throwIfNullPtr(object, exceptionMessage);
+  return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_LoggingService_throwIfNotZero(NovelRTLoggingService service, int32_t error, const char* exceptionMessage) {
-    if (service == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+  if (service == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
 
-    NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-    cService->throwIfNotZero(error, exceptionMessage);
+  NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+  cService->throwIfNotZero(error, exceptionMessage);
 
-    return NOVELRT_SUCCESS;
+  return NOVELRT_SUCCESS;
 }
 
 #ifdef __cplusplus

@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NovelRTQuadTreePoint.h"
 #include "NovelRT.h"
 #include <list>
@@ -22,7 +24,9 @@ extern "C" {
   }
 
   int32_t NovelRT_QuadTreePoint_getPosition(const NovelRTQuadTreePoint point, NovelRTGeoVector2F* outputPosition) {
-    if(point == nullptr || outputPosition == nullptr) {      return NOVELRT_FAILURE;
+    if(point == nullptr || outputPosition == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
@@ -33,12 +37,15 @@ extern "C" {
   }
 
   int32_t NovelRT_QuadTreePoint_delete(NovelRTQuadTreePoint point) {
-    if(point == nullptr) {      return NOVELRT_FAILURE;
+    if(point == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this();
 
     if(std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end()) { //TODO: This may prove to be a bottleneck later
+      NovelRT_setErrMsgIsAlreadyDeletedOrRemovedInternal();
       return NOVELRT_FAILURE;
     }
 

@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
 #include "NovelRT.Interop/Graphics/NovelRTBasicFillRect.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
@@ -23,6 +24,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_create(NovelRTWindowingService windowingService, NovelRTRenderingService* outputRenderingService) {
     if(windowingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
 
@@ -37,6 +39,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_initialiseRendering(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -48,6 +51,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_tearDown(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -59,6 +63,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_createImageRectWithFile(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, const char* filePath, NovelRTRGBAConfig colourTint) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -72,6 +77,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_createImageRectWithNothing(NovelRTRenderingService renderingService, NovelRTImageRect* outputImageRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourTint) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -85,6 +91,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_createBasicFillRect(NovelRTRenderingService renderingService, NovelRTBasicFillRect* outputBasicFillRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -98,6 +105,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_createTextRect(NovelRTRenderingService renderingService, NovelRTTextRect* outputTextRect, NovelRTTransform transform, int32_t layer, NovelRTRGBAConfig colourConfig, float fontSize, const char* fontFilePath) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -112,6 +120,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_getCamera(NovelRTRenderingService renderingService, NovelRTCamera* outputCamera) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -123,6 +132,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_beginFrame(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -134,6 +144,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_endFrame(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -145,6 +156,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_setBackgroundColour(NovelRTRenderingService renderingService, NovelRTRGBAConfig colour) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -156,6 +168,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_getTextureWithNothing(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -168,6 +181,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_getTextureWithFile(NovelRTRenderingService renderingService, NovelRTTexture* outputTexture, const char* fileTarget) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -181,6 +195,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_getFontSet(NovelRTRenderingService renderingService, NovelRTFontSet* outputFontSet, const char* fileTarget, float fontSize) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -194,6 +209,7 @@ extern "C" {
 
   int32_t NovelRT_RenderingService_destroy(NovelRTRenderingService renderingService) {
     if(renderingService == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
       return NOVELRT_FAILURE;
     }
     
@@ -210,6 +226,7 @@ extern "C" {
       return NOVELRT_SUCCESS;
     }
 
+    NovelRT_setErrMsgIsAlreadyDeletedOrRemovedInternal();
     return NOVELRT_FAILURE;
   }
 

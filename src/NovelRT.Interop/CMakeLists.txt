@@ -1,4 +1,5 @@
 set(INTEROP_SOURCES
+  NovelRTInteropErrorHandlingInternal.cpp  
   NovelRTInteropUtils.cpp
   NovelRTLoggingService.cpp
   NovelRTNovelRunner.cpp

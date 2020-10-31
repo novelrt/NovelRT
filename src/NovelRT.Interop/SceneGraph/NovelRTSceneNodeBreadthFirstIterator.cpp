@@ -1,6 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include <stdint.h>
 #include <list>
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNodeBreadthFirstIterator.h"
 #include "NovelRT.Interop/SceneGraph/NovelRTSceneNode.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
@@ -19,6 +21,7 @@ extern "C" {
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int32_t(*func)(NovelRTSceneNode), NovelRTSceneNodeBreadthFirstIterator* outputIterator) {
   if(node == nullptr|| func == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
     
@@ -32,6 +35,7 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_create(NovelRTSceneNode node, int3
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_increment(NovelRTSceneNodeBreadthFirstIterator iterator) {
   if(iterator == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -42,16 +46,18 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_increment(NovelRTSceneNodeBreadthF
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_postFixIncrement(NovelRTSceneNodeBreadthFirstIterator iterator) {
   if(iterator == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
   auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
-  ++cppIterator;
+  ++cppIterator; //TODO: is this correct lol?
   return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
       
@@ -63,6 +69,7 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_isEnd(NovelRTSceneNodeBreadthFirst
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_isEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -75,6 +82,7 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_isEqual(NovelRTSceneNodeBreadthFir
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_isNotEqual(NovelRTSceneNodeBreadthFirstIterator iterator, NovelRTSceneNodeBreadthFirstIterator other, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -87,6 +95,7 @@ int32_t NovelRT_SceneNodeBreadthFirstIterator_isNotEqual(NovelRTSceneNodeBreadth
 
 int32_t NovelRT_SceneNodeBreadthFirstIterator_runFunction(NovelRTSceneNodeBreadthFirstIterator iterator, int32_t* outputResult) {
   if(iterator == nullptr || outputResult == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 

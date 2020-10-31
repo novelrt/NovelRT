@@ -1,5 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
 #include "NovelRT.h"
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Input/NovelRTKeyStateFrameChangeLog.h"
 
 #ifdef __cplusplus
@@ -9,9 +11,12 @@ extern "C" {
 
 int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChangeLog changeLog, NovelRTKeyState* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
+
     if (output == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
+
     auto state = log.getCurrentState();
     *output = reinterpret_cast<NovelRTKeyState&>(state);
     return NOVELRT_SUCCESS;
@@ -19,9 +24,12 @@ int32_t NovelRT_KeyStateFrameChangeLog_getCurrentState(NovelRTKeyStateFrameChang
 
 int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChangeLog changeLog, uint32_t* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
+    
     if (output == nullptr) {
+        NovelRT_setErrMsgIsNullptrInternal();
         return NOVELRT_FAILURE;
     }
+
     *output = log.getChangeCount();
     return NOVELRT_SUCCESS;
 }
@@ -29,9 +37,11 @@ int32_t NovelRT_KeyStateFrameChangeLog_getChangeCount(NovelRTKeyStateFrameChange
 int32_t NovelRT_KeyStateFrameChangeLog_compareChangeLog(NovelRTKeyStateFrameChangeLog lhs, NovelRTKeyState rhs) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(lhs);
     auto keyState = reinterpret_cast<const Input::KeyState&>(rhs);
+
     if (log == keyState) {
         return NOVELRT_TRUE;
     }
+
     return NOVELRT_FALSE;
 }
 

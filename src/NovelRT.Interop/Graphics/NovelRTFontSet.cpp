@@ -2,6 +2,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include "NovelRT.h"
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.Interop/Graphics/NovelRTFontSet.h"
 
@@ -14,7 +15,9 @@ extern "C" {
 #endif
 
   int32_t NovelRT_FontSet_loadFontAsTextureSet(NovelRTFontSet fontSet, const char* file, float fontSize) {
-    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
+    if(fontSet == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -24,7 +27,9 @@ extern "C" {
   }
 
   int32_t NovelRT_FontSet_getFontFile(NovelRTFontSet fontSet, const char** outputFontFile) {
-    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
+    if(fontSet == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -34,7 +39,9 @@ extern "C" {
   }
 
   int32_t NovelRT_FontSet_getFontSize(NovelRTFontSet fontSet, float* outputFontSize) {
-    if(fontSet == nullptr) {      return NOVELRT_FAILURE;
+    if(fontSet == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);

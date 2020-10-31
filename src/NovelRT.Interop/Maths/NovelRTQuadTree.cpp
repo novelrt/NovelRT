@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NovelRTQuadTree.h"
 #include "NovelRT.h"
 #include <list>
@@ -18,6 +20,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getParent(const NovelRTQuadTree tree, NovelRTQuadTree* outputParentTree) {
      if(tree == nullptr || outputParentTree == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
      
@@ -30,6 +33,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getBounds(const NovelRTQuadTree tree, NovelRTGeoBounds* outputGeoBounds) {
      if(tree == nullptr || outputGeoBounds == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
      
@@ -42,6 +46,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getPoint(const NovelRTQuadTree tree, size_t index, NovelRTQuadTreePoint* outputPoint) {
      if(tree == nullptr || outputPoint == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
      
@@ -54,6 +59,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getPointCount(const NovelRTQuadTree tree, size_t* outputSize) {
      if(tree == nullptr || outputSize == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
      
@@ -64,6 +70,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getTopLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -75,6 +82,7 @@ extern "C" {
 
   int32_t NovelRT_QuadTree_getTopRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -86,6 +94,7 @@ extern "C" {
    
   int32_t NovelRT_QuadTree_getBottomLeft(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -97,6 +106,7 @@ extern "C" {
    
   int32_t NovelRT_QuadTree_getBottomRight(const NovelRTQuadTree tree, NovelRTQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -108,6 +118,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_tryInsert(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -119,6 +130,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_tryRemove(const NovelRTQuadTree tree, NovelRTQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -130,6 +142,7 @@ extern "C" {
   
   int32_t NovelRT_QuadTree_getIntersectingPoints(const NovelRTQuadTree tree, NovelRTGeoBounds bounds, NovelRTPointVector* outputResultVector) {
      if(tree == nullptr || outputResultVector == nullptr) {
+       NovelRT_setErrMsgIsNullptrInternal();
        return NOVELRT_FAILURE;
      }
 
@@ -141,7 +154,9 @@ extern "C" {
   }
 
   int32_t NovelRT_PointVector_delete(NovelRTPointVector vector) {
-    if(vector == nullptr) {      return NOVELRT_FAILURE;
+    if(vector == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
@@ -150,7 +165,9 @@ extern "C" {
   }
 
   int32_t NovelRT_PointVector_getSize(const NovelRTPointVector vector, size_t* outputSize) {
-    if(vector == nullptr) {      return NOVELRT_FAILURE;
+    if(vector == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     *outputSize = reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
@@ -159,7 +176,9 @@ extern "C" {
   }
 
   int32_t NovelRT_PointVector_getPointFromIndex(const NovelRTPointVector vector, size_t index, NovelRTQuadTreePoint* outputPoint) {
-    if(vector == nullptr || outputPoint == nullptr) {      return NOVELRT_FAILURE;
+    if(vector == nullptr || outputPoint == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
     
     *outputPoint = reinterpret_cast<NovelRTQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
@@ -168,13 +187,16 @@ extern "C" {
   }
 
   int32_t NovelRT_QuadTree_delete(NovelRTQuadTree tree) {
-    if(tree == nullptr) {      return NOVELRT_FAILURE;
+    if(tree == nullptr) {
+      NovelRT_setErrMsgIsNullptrInternal();
+      return NOVELRT_FAILURE;
     }
 
     auto ptr = reinterpret_cast<Maths::QuadTree*>(tree)->shared_from_this();
 
     if(std::find(_treeCollection.begin(), _treeCollection.end(), ptr) == _treeCollection.end()) {
-            return NOVELRT_FAILURE;
+      NovelRT_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+      return NOVELRT_FAILURE;
     }
 
     _treeCollection.remove(ptr);

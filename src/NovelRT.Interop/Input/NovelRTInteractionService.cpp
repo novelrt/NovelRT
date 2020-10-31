@@ -1,4 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Windowing/NovelRTWindowingService.h"
 #include "NovelRT.Interop/Input/NovelRTInteractionService.h"
 #include "NovelRT.h"
@@ -22,29 +24,36 @@ NovelRTInteractionService NovelRT_InteractionService_create(const NovelRTWindowi
 
 int32_t NovelRT_InteractionService_consumePlayerInput(NovelRTInteractionService service) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
+
   if (servicePtr == nullptr) {
-        return NOVELRT_FAILURE;
-    }
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
+  }
+
   servicePtr->consumePlayerInput();  
   return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_InteractionService_executeClickedInteractable(const NovelRTInteractionService service) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
-  if (servicePtr == nullptr) {
 
-        return NOVELRT_FAILURE;
+  if (servicePtr == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
   }
+
   servicePtr->executeClickedInteractable();
   return NOVELRT_SUCCESS;
 }
 
 int32_t NovelRT_InteractionService_setScreenSize(const NovelRTInteractionService service, NovelRTGeoVector2F value) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
-  if (servicePtr == nullptr) {
 
-        return NOVELRT_FAILURE;
+  if (servicePtr == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
   }
+
   auto vector = reinterpret_cast<Maths::GeoVector2F&>(value);
   servicePtr->setScreenSize(vector);
   return NOVELRT_SUCCESS;
@@ -52,10 +61,12 @@ int32_t NovelRT_InteractionService_setScreenSize(const NovelRTInteractionService
 
 int32_t NovelRT_InteractionService_getKeyState(const NovelRTInteractionService service, NovelRTKeyCode value, NovelRTKeyStateFrameChangeLog* output) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
-  if (servicePtr == nullptr || output == nullptr) {
 
-        return NOVELRT_FAILURE;
+  if (servicePtr == nullptr || output == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
   }
+
   auto changelog = servicePtr->getKeyState(reinterpret_cast<Input::KeyCode&>(value));
   *output = reinterpret_cast<NovelRTKeyStateFrameChangeLog&>(changelog);
   return NOVELRT_SUCCESS;
@@ -63,9 +74,10 @@ int32_t NovelRT_InteractionService_getKeyState(const NovelRTInteractionService s
 
 int32_t NovelRT_InteractionService_createBasicInteractionRect(const NovelRTInteractionService service, const NovelRTTransform transform, int layer, NovelRTBasicInteractionRect* outputRect) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
-  if (servicePtr == nullptr) {
 
-        return NOVELRT_FAILURE;
+  if (servicePtr == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
+    return NOVELRT_FAILURE;
   }
 
   _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(servicePtr->createBasicInteractionRect(*reinterpret_cast<const Transform*>(&transform), layer)));

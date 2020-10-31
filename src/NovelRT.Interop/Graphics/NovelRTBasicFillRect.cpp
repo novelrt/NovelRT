@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include "../NovelRTInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Graphics/NovelRTBasicFillRect.h"
 #include "NovelRT.Interop/NovelRTInteropUtils.h"
 #include "NovelRT.h"
@@ -14,6 +15,7 @@ extern "C" {
 
 int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTransform* outputTransform) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
   
@@ -25,6 +27,7 @@ int32_t NovelRT_BasicFillRect_getTransform(NovelRTBasicFillRect rect, NovelRTTra
 
 int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTransform inputTransform) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
   
@@ -36,6 +39,7 @@ int32_t NovelRT_BasicFillRect_setTransform(NovelRTBasicFillRect rect, NovelRTTra
 
 int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outputLayer) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
   
@@ -47,6 +51,7 @@ int32_t NovelRT_BasicFillRect_getLayer(NovelRTBasicFillRect rect, int32_t* outpu
 
 int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputLayer) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
   
@@ -58,6 +63,7 @@ int32_t NovelRT_BasicFillRect_setLayer(NovelRTBasicFillRect rect, int32_t inputL
 
 int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outputBool) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -74,6 +80,7 @@ int32_t NovelRT_BasicFillRect_getActive(NovelRTBasicFillRect rect, int32_t* outp
 
 int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t inputBool) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -92,6 +99,7 @@ int32_t NovelRT_BasicFillRect_setActive(NovelRTBasicFillRect rect, int32_t input
 
 int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -103,6 +111,7 @@ int32_t NovelRT_BasicFillRect_executeObjectBehaviour(NovelRTBasicFillRect rect) 
 
 int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig* outputColourConfig) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -115,6 +124,7 @@ int32_t NovelRT_BasicFillRect_getColourConfig(NovelRTBasicFillRect rect, NovelRT
 
 int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRTRGBAConfig inputColourConfig) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
@@ -126,6 +136,7 @@ int32_t NovelRT_BasicFillRect_setColourConfig(NovelRTBasicFillRect rect, NovelRT
 
 int32_t NovelRT_BasicFillRect_getAsRenderObjectPtr(NovelRTBasicFillRect rect, NovelRTRenderObject* outputRenderObject) {
   if(rect == nullptr) {
+    NovelRT_setErrMsgIsNullptrInternal();
     return NOVELRT_FAILURE;
   }
 
