@@ -22,7 +22,7 @@ NrtInteractionService Nrt_InteractionService_create(const NrtWindowingService wi
   return reinterpret_cast<NrtInteractionService>(_interactionServiceCollection.back().get());
 }
 
-int32_t Nrt_InteractionService_consumePlayerInput(NrtInteractionService service) {
+NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionService service) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {
@@ -34,7 +34,7 @@ int32_t Nrt_InteractionService_consumePlayerInput(NrtInteractionService service)
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_InteractionService_executeClickedInteractable(const NrtInteractionService service) {
+NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionService service) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {
@@ -46,7 +46,7 @@ int32_t Nrt_InteractionService_executeClickedInteractable(const NrtInteractionSe
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_InteractionService_setScreenSize(const NrtInteractionService service, NrtGeoVector2F value) {
+NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionService service, NrtGeoVector2F value) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {
@@ -59,7 +59,7 @@ int32_t Nrt_InteractionService_setScreenSize(const NrtInteractionService service
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_InteractionService_getKeyState(const NrtInteractionService service, NrtKeyCode value, NrtKeyStateFrameChangeLog* output) {
+NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service, NrtKeyCode value, NrtKeyStateFrameChangeLog* output) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr || output == nullptr) {
@@ -72,7 +72,7 @@ int32_t Nrt_InteractionService_getKeyState(const NrtInteractionService service, 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int layer, NrtBasicInteractionRect* outputRect) {
+NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int layer, NrtBasicInteractionRect* outputRect) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {

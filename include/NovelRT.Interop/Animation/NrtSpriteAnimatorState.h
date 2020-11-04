@@ -20,20 +20,20 @@ typedef struct SpriteAnimatorFrameVectorHandle* NrtSpriteAnimatorFrameVector;
 
 //SpriteAnimatorState
 NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create();
-int32_t Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget, NrtSpriteAnimatorStateConditionFunctions vector);
-int32_t Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index);
-int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int32_t* outputLoop);
-int32_t Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop);
-int32_t Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector* outputFramess);
-int32_t Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames);
-int32_t Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state, NrtSpriteAnimatorState* outputTransitionState);
+NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget, NrtSpriteAnimatorStateConditionFunctions vector);
+NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index);
+NrtResult Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int32_t* outputLoop);
+NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop);
+NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector* outputFramess);
+NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames);
+NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state, NrtSpriteAnimatorState* outputTransitionState);
 
 //std::vector<SpriteAnimatorFrame>
 NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create();
-int32_t Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame);
-int32_t Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index, NrtSpriteAnimatorFrame* outputFrame);
-int32_t Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index);
-int32_t Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector);
+NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame);
+NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index, NrtSpriteAnimatorFrame* outputFrame);
+NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index);
+NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector);
 
 #ifdef __cplusplus
 }

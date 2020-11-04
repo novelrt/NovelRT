@@ -25,8 +25,8 @@ enum NrtResultKind {
 typedef int32_t NrtBool;
 
 enum NrtBoolKind {
-  NOVELRT_FALSE = 0,
-  NOVELRT_TRUE = 1
+  NRT_FALSE = 0,
+  NRT_TRUE = 1
 };
 
 const char* Nrt_getLastError();

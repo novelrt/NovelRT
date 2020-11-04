@@ -21,20 +21,20 @@ extern "C" {
 
   NrtNovelRunner Nrt_NovelRunner_create(int displayNumber);
   NrtNovelRunner Nrt_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
-  int32_t Nrt_NovelRunner_runNovel(NrtNovelRunner runner);
-  int32_t Nrt_NovelRunner_destroy(NrtNovelRunner runner);
+  NrtResult Nrt_NovelRunner_runNovel(NrtNovelRunner runner);
+  NrtResult Nrt_NovelRunner_destroy(NrtNovelRunner runner);
 
-  int32_t Nrt_NovelRunner_getAudioService(NrtNovelRunner runner, NrtAudioService* outputService);
-  int32_t Nrt_NovelRunner_getInteractionService(NrtNovelRunner runner, NrtInteractionService* outputService);
-  int32_t Nrt_NovelRunner_getWindowingService(NrtNovelRunner runner, NrtWindowingService* outputService);
-  int32_t Nrt_NovelRunner_getRuntimeService(NrtNovelRunner runner, NrtRuntimeService* outputService);
-  int32_t Nrt_NovelRunner_getRenderer(NrtNovelRunner runner, NrtRenderingService* outputService);
-  int32_t Nrt_NovelRunner_getDebugService(NrtNovelRunner runner, NrtDebugService* outputService);
+  NrtResult Nrt_NovelRunner_getAudioService(NrtNovelRunner runner, NrtAudioService* outputService);
+  NrtResult Nrt_NovelRunner_getInteractionService(NrtNovelRunner runner, NrtInteractionService* outputService);
+  NrtResult Nrt_NovelRunner_getWindowingService(NrtNovelRunner runner, NrtWindowingService* outputService);
+  NrtResult Nrt_NovelRunner_getRuntimeService(NrtNovelRunner runner, NrtRuntimeService* outputService);
+  NrtResult Nrt_NovelRunner_getRenderer(NrtNovelRunner runner, NrtRenderingService* outputService);
+  NrtResult Nrt_NovelRunner_getDebugService(NrtNovelRunner runner, NrtDebugService* outputService);
 
-  int32_t Nrt_NovelRunner_addUpdate(NrtNovelRunner runner, void(*func)(NrtTimestamp));
-  int32_t Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunner runner, void(*func)());
-  int32_t Nrt_NovelRunner_getUpdateEvent(NrtNovelRunner runner, NrtUtilitiesEventWithTimestamp* outputEvent);
-  int32_t Nrt_NovelRunner_getSceneConstructionEvent(NrtNovelRunner runner, NrtUtilitiesEvent* outputEvent);
+  NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunner runner, void(*func)(NrtTimestamp));
+  NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunner runner, void(*func)());
+  NrtResult Nrt_NovelRunner_getUpdateEvent(NrtNovelRunner runner, NrtUtilitiesEventWithTimestamp* outputEvent);
+  NrtResult Nrt_NovelRunner_getSceneConstructionEvent(NrtNovelRunner runner, NrtUtilitiesEvent* outputEvent);
 
 #ifdef __cplusplus
 }

@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-int32_t Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output) {
+NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -21,7 +21,7 @@ int32_t Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, Nr
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
+NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -32,7 +32,7 @@ int32_t Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
+NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -43,7 +43,7 @@ int32_t Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
+NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -55,7 +55,7 @@ int32_t Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
+NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -67,7 +67,7 @@ int32_t Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output) {
+NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -78,7 +78,7 @@ int32_t Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input) {
+NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -89,7 +89,7 @@ int32_t Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input) 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
+NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -101,7 +101,7 @@ int32_t Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* out
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target) {
+NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -112,7 +112,7 @@ int32_t Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp targ
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
+NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -123,7 +123,7 @@ int32_t Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output) {
+NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -134,18 +134,18 @@ int32_t Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output) {
+NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.isFixedTimeStep()? NOVELRT_TRUE : NOVELRT_FALSE;
+  *output = time.isFixedTimeStep()? NRT_TRUE : NRT_FALSE;
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
+NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -156,7 +156,7 @@ int32_t Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer) {
+NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -167,7 +167,7 @@ int32_t Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event) {
+NrtResult Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event) {
   if (event == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

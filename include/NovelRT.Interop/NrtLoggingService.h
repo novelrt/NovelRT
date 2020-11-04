@@ -15,15 +15,15 @@ extern "C" {
   NrtLoggingService Nrt_LoggingService_create();
   NrtLoggingService Nrt_LoggingService_createCustomTitle(const char* core);
   NrtLoggingService Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level);
-  int32_t Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level);
-  int32_t Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message);
-  int32_t Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message);
-  int32_t Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message);
-  int32_t Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message);
-  int32_t Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level);
-  int32_t Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level);
-  int32_t Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage);
-  int32_t Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage);
+  NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level);
+  NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message);
+  NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message);
+  NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message);
+  NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message);
+  NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level);
+  NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level);
+  NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage);
+  NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage);
 
 
 #ifdef __cplusplus

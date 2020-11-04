@@ -17,7 +17,7 @@ NrtScene Nrt_Scene_create() {
   return reinterpret_cast<NrtScene>(new SceneGraph::Scene());
 }
 
-int32_t Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet) {
+NrtResult Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet) {
   if (scene == nullptr || outputSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -32,7 +32,7 @@ int32_t Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet) {
 }
 
 
-int32_t Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert, int32_t* outputResult) {
+NrtResult Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert, int32_t* outputResult) {
   if (scene == nullptr || nodeToInsert == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -45,7 +45,7 @@ int32_t Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert, int32_t* out
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove, int32_t* outputResult) {
+NrtResult Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove, int32_t* outputResult) {
   if (scene == nullptr || nodeToRemove == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -58,7 +58,7 @@ int32_t Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove, int32_t* out
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Scene_delete(NrtScene scene) {
+NrtResult Nrt_Scene_delete(NrtScene scene) {
   if (scene == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

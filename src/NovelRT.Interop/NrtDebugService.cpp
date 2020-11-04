@@ -16,7 +16,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRenderingService renderingService, NrtDebugService* outputService) {
+NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRenderingService renderingService, NrtDebugService* outputService) {
   if (sceneConstructionEvent == nullptr || renderingService == nullptr ||outputService == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -30,7 +30,7 @@ int32_t Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRen
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32_t* result) {
+NrtResult Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32_t* result) {
   if (service == nullptr || result == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -41,7 +41,7 @@ int32_t Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32_t
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value) {
+NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -52,7 +52,7 @@ int32_t Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t* outputValue) {
+NrtResult Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t* outputValue) {
   if (service == nullptr || outputValue == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -63,7 +63,7 @@ int32_t Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t* o
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value) {
+NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

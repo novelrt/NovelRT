@@ -18,7 +18,7 @@ extern "C" {
      return reinterpret_cast<NrtQuadTree>(_treeCollection.back().get());
    }
   
-  int32_t Nrt_QuadTree_getParent(const NrtQuadTree tree, NrtQuadTree* outputParentTree) {
+  NrtResult Nrt_QuadTree_getParent(const NrtQuadTree tree, NrtQuadTree* outputParentTree) {
      if(tree == nullptr || outputParentTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -31,7 +31,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_getBounds(const NrtQuadTree tree, NrtGeoBounds* outputGeoBounds) {
+  NrtResult Nrt_QuadTree_getBounds(const NrtQuadTree tree, NrtGeoBounds* outputGeoBounds) {
      if(tree == nullptr || outputGeoBounds == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -44,7 +44,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_getPoint(const NrtQuadTree tree, size_t index, NrtQuadTreePoint* outputPoint) {
+  NrtResult Nrt_QuadTree_getPoint(const NrtQuadTree tree, size_t index, NrtQuadTreePoint* outputPoint) {
      if(tree == nullptr || outputPoint == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -57,7 +57,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_getPointCount(const NrtQuadTree tree, size_t* outputSize) {
+  NrtResult Nrt_QuadTree_getPointCount(const NrtQuadTree tree, size_t* outputSize) {
      if(tree == nullptr || outputSize == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -68,7 +68,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_getTopLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
+  NrtResult Nrt_QuadTree_getTopLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -80,7 +80,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
 
-  int32_t Nrt_QuadTree_getTopRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
+  NrtResult Nrt_QuadTree_getTopRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -92,7 +92,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
    
-  int32_t Nrt_QuadTree_getBottomLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
+  NrtResult Nrt_QuadTree_getBottomLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -104,7 +104,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
    
-  int32_t Nrt_QuadTree_getBottomRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
+  NrtResult Nrt_QuadTree_getBottomRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -116,7 +116,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
+  NrtResult Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -128,7 +128,7 @@ extern "C" {
     return NRT_SUCCESS;
    }
   
-  int32_t Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
+  NrtResult Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -140,7 +140,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
   
-  int32_t Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds, NrtPointVector* outputResultVector) {
+  NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds, NrtPointVector* outputResultVector) {
      if(tree == nullptr || outputResultVector == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_UNKOWN;
@@ -153,7 +153,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_PointVector_delete(NrtPointVector vector) {
+  NrtResult Nrt_PointVector_delete(NrtPointVector vector) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -164,7 +164,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_PointVector_getSize(const NrtPointVector vector, size_t* outputSize) {
+  NrtResult Nrt_PointVector_getSize(const NrtPointVector vector, size_t* outputSize) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -175,7 +175,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index, NrtQuadTreePoint* outputPoint) {
+  NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index, NrtQuadTreePoint* outputPoint) {
     if(vector == nullptr || outputPoint == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -186,7 +186,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_QuadTree_delete(NrtQuadTree tree) {
+  NrtResult Nrt_QuadTree_delete(NrtQuadTree tree) {
     if(tree == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

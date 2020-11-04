@@ -25,7 +25,7 @@ NrtLoggingService Nrt_LoggingService_createCustomTitleAndLevel(const char* core,
   return reinterpret_cast<NrtLoggingService&>(service);
 }
 
-int32_t Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level) {
+NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -37,7 +37,7 @@ int32_t Nrt_LoggingService_log(NrtLoggingService service, const char* message, N
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message) {
+NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -49,7 +49,7 @@ int32_t Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* me
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message) {
+NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -61,7 +61,7 @@ int32_t Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* m
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message) {
+NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -73,7 +73,7 @@ int32_t Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char*
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message) {
+NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -85,7 +85,7 @@ int32_t Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* m
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level) {
+NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -97,7 +97,7 @@ int32_t Nrt_LoggingService_logInternal(NrtLoggingService service, const char* me
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level) {
+NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -109,7 +109,7 @@ int32_t Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel le
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage) {
+NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -120,7 +120,7 @@ int32_t Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* objec
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage) {
+NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

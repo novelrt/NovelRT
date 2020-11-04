@@ -13,19 +13,19 @@ extern "C" {
 
 typedef struct BasicInteractionRectHandle* NrtBasicInteractionRect;
 
-int32_t Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object);
-int32_t Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform);
-int32_t Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform);
-int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue);
-int32_t Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value);
-int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue);
-int32_t Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value);
-int32_t Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object);
-int32_t Nrt_Input_BasicInteractionRect_validateInteractionPrimeter(NrtBasicInteractionRect object, const NrtGeoVector2F mousePosition);
-int32_t Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode* outputValue);
-int32_t Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode value);
-int32_t Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void(*ptr)());
-//int32_t Nrt_Input_BasicInteractionRect_removeInteraction(NrtBasicInteractionRect object, void(*ptr)());
+NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object);
+NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform);
+NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform);
+NrtResult Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue);
+NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value);
+NrtResult Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue);
+NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value);
+NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object);
+NrtResult Nrt_Input_BasicInteractionRect_validateInteractionPrimeter(NrtBasicInteractionRect object, const NrtGeoVector2F mousePosition);
+NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode* outputValue);
+NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode value);
+NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void(*ptr)());
+//NrtResult Nrt_Input_BasicInteractionRect_removeInteraction(NrtBasicInteractionRect object, void(*ptr)());
 
 #ifdef __cplusplus
 }

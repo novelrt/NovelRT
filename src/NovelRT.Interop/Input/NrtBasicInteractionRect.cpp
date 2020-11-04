@@ -11,7 +11,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object) {
+NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -22,7 +22,7 @@ int32_t Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractio
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform) {
+NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -33,7 +33,7 @@ int32_t Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect obje
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform) {
+NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -44,7 +44,7 @@ int32_t Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect obje
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue) {
+NrtResult Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -55,7 +55,7 @@ int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, 
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value) {
+NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -66,18 +66,18 @@ int32_t Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, 
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue) {
+NrtResult Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = obj->getActive()? NOVELRT_TRUE : NOVELRT_FALSE;
+    *outputValue = obj->getActive()? NRT_TRUE : NRT_FALSE;
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value) {
+NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -88,7 +88,7 @@ int32_t Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object,
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode* outputValue) {
+NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -99,7 +99,7 @@ int32_t Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect 
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode value) {
+NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -110,7 +110,7 @@ int32_t Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect 
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void(*ptr)()) {
+NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void(*ptr)()) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -121,7 +121,7 @@ int32_t Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect ob
     return NRT_SUCCESS;
 }
 
-// int32_t Nrt_Input_BasicInteractionRect_removeInteraction(NrtBasicInteractionRect object, FunctionPointer ptr) {
+// NrtResult Nrt_Input_BasicInteractionRect_removeInteraction(NrtBasicInteractionRect object, FunctionPointer ptr) {
 //     if (object == nullptr) {
 //         if (errorMessage != nullptr) {
 //             *errorMessage = Nrt_getErrMsgIsNullptr();

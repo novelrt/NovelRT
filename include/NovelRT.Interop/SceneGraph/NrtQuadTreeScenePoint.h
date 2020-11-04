@@ -4,6 +4,7 @@
 #define NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
 
 #include <stdint.h>
+#include "../NrtInteropUtils.h"
 
 //TODO:This is redundant. This header already has include guards.
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
@@ -21,9 +22,9 @@ typedef struct QuadTreeScenePointHandle* NrtQuadTreeScenePoint;
 typedef struct SceneNodeHandle* NrtSceneNode;
 #endif
 
-int32_t Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint);
-int32_t Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint);
-int32_t Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode);
+NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode);
 
 #ifdef __cplusplus
 }

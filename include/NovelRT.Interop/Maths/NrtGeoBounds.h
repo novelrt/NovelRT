@@ -19,11 +19,11 @@ extern "C" {
   NrtGeoBounds Nrt_GeoBounds_zero();
   NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int index);
   NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, int index);
-  int32_t Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);
+  NrtBool Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);
   NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds);
-  int32_t Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, int32_t* outputResult);
-  int32_t Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs);
-  int32_t Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs);
+  NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, NrtBool* outputResult); //TODO: This should NOT be an NrtResult wtf
+  NrtBool Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs);
+  NrtBool Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs);
   
 #ifdef __cplusplus
 }

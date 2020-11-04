@@ -4,13 +4,14 @@
 #define NOVELRT_INTEROP_UTILITIES_MISC_H
 
 #include <stdint.h>
+#include "../NrtInteropUtils.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath();
-int32_t Nrt_getExecutableDirPath(const char** path);
+NrtResult Nrt_getExecutableDirPath(const char** path);
 
 #ifdef __cplusplus
 }

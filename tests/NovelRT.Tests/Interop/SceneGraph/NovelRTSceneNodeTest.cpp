@@ -175,10 +175,10 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
 
   auto func = [](NrtSceneNode traversedNode) -> int32_t {
     if(traversedNode == childNode) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   };
 
   int32_t(*vari)(NrtSceneNode) = func;
@@ -193,7 +193,7 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst) {
   res = Nrt_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
   ASSERT_EQ(res, NRT_SUCCESS);
 
-  while ((isEqual != NOVELRT_TRUE) && (loopResult == NOVELRT_FALSE)) {
+  while ((isEqual != NRT_TRUE) && (loopResult == NRT_FALSE)) {
     Nrt_SceneNodeBreadthFirstIterator_increment(it, nullptr);
     Nrt_SceneNodeBreadthFirstIterator_isEnd(it, &loopResult, nullptr);
     Nrt_SceneNodeBreadthFirstIterator_runFunction(it, &isEqual, nullptr);

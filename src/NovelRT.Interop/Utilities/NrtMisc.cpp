@@ -14,7 +14,7 @@ const char* Nrt_getExecutablePath() {
   return path;
 }
 
-int32_t Nrt_getExecutableDirPath(const char** path) {
+NrtResult Nrt_getExecutableDirPath(const char** path) {
   if (path == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

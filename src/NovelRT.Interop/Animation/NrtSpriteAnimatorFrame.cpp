@@ -17,7 +17,7 @@ NrtSpriteAnimatorFrame Nrt_SpriteAnimatorFrame_create() {
     return reinterpret_cast<NrtSpriteAnimatorFrame>(frame);
 }
 
-int32_t Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture) {
+NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture) {
     if (frame == nullptr || outputTexture == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -30,7 +30,7 @@ int32_t Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtText
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture) {
+NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture) {
     if (frame == nullptr || texture == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -42,7 +42,7 @@ int32_t Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtText
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp) {
+NrtResult Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp) {
     if (frame == nullptr || outputTimestamp == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -56,7 +56,7 @@ int32_t Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTim
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp) {
+NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp) {
     if (frame == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -69,7 +69,7 @@ int32_t Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTim
 }
 
 
-int32_t Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void(*func)()) {
+NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -81,7 +81,7 @@ int32_t Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, void(*func)()) {
+NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, void(*func)()) {
     if (frame == nullptr || func == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;

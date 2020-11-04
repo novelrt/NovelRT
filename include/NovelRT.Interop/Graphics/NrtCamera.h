@@ -13,16 +13,16 @@ extern "C" {
 #endif
 
   NrtCamera Nrt_Camera_create();
-  int32_t Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
-  int32_t Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix);
-  int32_t Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
-  int32_t Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix);
-  int32_t Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
-  int32_t Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState);
-  int32_t Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F));
+  NrtResult Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
+  NrtResult Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix);
+  NrtResult Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
+  NrtResult Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix);
+  NrtResult Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix);
+  NrtResult Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState);
+  NrtResult Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F));
   NrtCamera Nrt_Camera_createDefaultOrthographicProjection(NrtGeoVector2F windowSize);
   NrtCamera Nrt_Camera_createDefaultPerspectiveProjection(NrtGeoVector2F windowSize);
-  int32_t Nrt_Camera_destroy(NrtCamera camera);
+  NrtResult Nrt_Camera_destroy(NrtCamera camera);
 
 #ifdef __cplusplus
 }

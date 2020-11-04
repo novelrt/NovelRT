@@ -14,7 +14,7 @@ std::list<std::shared_ptr<Graphics::RenderObject>> _renderObjectNodeCollection;
 extern "C" {
 #endif
 
-int32_t Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectNode* outputNode) {
+NrtResult Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectNode* outputNode) {
   if(object == nullptr|| outputNode == nullptr) {
     return NRT_FAILURE_UNKOWN;
   }
@@ -26,7 +26,7 @@ int32_t Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectN
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRenderObject* outputObject) {
+NrtResult Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRenderObject* outputObject) {
     if(node == nullptr|| outputObject == nullptr) {
        
        return NRT_FAILURE_UNKOWN;
@@ -38,7 +38,7 @@ int32_t Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRe
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_RenderObjectNode_delete(NovelRTRenderObjectNode node) {
+NrtResult Nrt_RenderObjectNode_delete(NovelRTRenderObjectNode node) {
     if(node == nullptr) {
        
        return NRT_FAILURE_UNKOWN;

@@ -19,7 +19,7 @@ extern "C" {
     return reinterpret_cast<NrtCamera>(_cameraCollection.back().get());
   }
   
-  int32_t Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
+  NrtResult Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -32,7 +32,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
+  NrtResult Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -44,7 +44,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
+  NrtResult Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -57,7 +57,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
+  NrtResult Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -70,7 +70,7 @@ extern "C" {
 
   }
 
-  int32_t Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
+  NrtResult Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -83,7 +83,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState) {
+  NrtResult Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -96,7 +96,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F)) {
+  NrtResult Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F)) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -118,7 +118,7 @@ extern "C" {
     return reinterpret_cast<NrtCamera>(_cameraCollection.back().get());
   }
 
-  int32_t Nrt_Camera_destroy(NrtCamera camera) {
+  NrtResult Nrt_Camera_destroy(NrtCamera camera) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

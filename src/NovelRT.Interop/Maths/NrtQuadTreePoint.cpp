@@ -23,7 +23,7 @@ extern "C" {
     return reinterpret_cast<NrtQuadTreePoint>(_pointCollection.back().get());
   }
 
-  int32_t Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point, NrtGeoVector2F* outputPosition) {
+  NrtResult Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point, NrtGeoVector2F* outputPosition) {
     if(point == nullptr || outputPosition == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -36,7 +36,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_QuadTreePoint_delete(NrtQuadTreePoint point) {
+  NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point) {
     if(point == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

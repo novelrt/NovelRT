@@ -11,20 +11,20 @@
 extern "C" {
 #endif
 
-  int32_t Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform* outputTransform);
-  int32_t Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform);
-  int32_t Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t* outputLayer);
-  int32_t Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer);
-  int32_t Nrt_ImageRect_getActive(NrtImageRect rect, int32_t* outputBool);
-  int32_t Nrt_ImageRect_setActive(NrtImageRect rect, int32_t inputBool);
-  int32_t Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect);
-  int32_t Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture* outputTexture);
-  int32_t Nrt_ImageRect_setTexture(NrtImageRect rect, NrtTexture inputTexture);
-  int32_t Nrt_ImageRect_getColourTint(NrtImageRect rect, NrtRGBAConfig* outputColourTint);
-  int32_t Nrt_ImageRect_setColourTint(NrtImageRect rect, NrtRGBAConfig inputColourTint);
+  NrtResult Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform* outputTransform);
+  NrtResult Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform);
+  NrtResult Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t* outputLayer);
+  NrtResult Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer);
+  NrtResult Nrt_ImageRect_getActive(NrtImageRect rect, NrtBool* outputBool);
+  NrtResult Nrt_ImageRect_setActive(NrtImageRect rect, NrtBool inputBool);
+  NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect);
+  NrtResult Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture* outputTexture);
+  NrtResult Nrt_ImageRect_setTexture(NrtImageRect rect, NrtTexture inputTexture);
+  NrtResult Nrt_ImageRect_getColourTint(NrtImageRect rect, NrtRGBAConfig* outputColourTint);
+  NrtResult Nrt_ImageRect_setColourTint(NrtImageRect rect, NrtRGBAConfig inputColourTint);
 
 
-  int32_t Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRect rect, NrtRenderObject* outputRenderObject);
+  NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRect rect, NrtRenderObject* outputRenderObject);
 
 #ifdef __cplusplus
 }

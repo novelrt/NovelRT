@@ -13,7 +13,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file) {
+  NrtResult Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -25,7 +25,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile) {
+  NrtResult Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -37,7 +37,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize) {
+  NrtResult Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

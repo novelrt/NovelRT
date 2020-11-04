@@ -18,12 +18,12 @@ extern "C" {
     return NrtGeoVector3F{NAN, NAN, NAN};
   }
 
-  int32_t Nrt_GeoVector3F_isNaN(NrtGeoVector3F vector) {
+  NrtBool Nrt_GeoVector3F_isNaN(NrtGeoVector3F vector) {
     if(std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
   NrtGeoVector3F Nrt_GeoVector3F_uniform(float value) {
@@ -38,7 +38,7 @@ extern "C" {
     return Nrt_GeoVector3F_uniform(1.0f);
   }
 
-  int32_t Nrt_GeoVector3F_rotateToAngleAroundPoint(NrtGeoVector3F* vector, float angleRotationValue, NrtGeoVector3F point) {
+  NrtResult Nrt_GeoVector3F_rotateToAngleAroundPoint(NrtGeoVector3F* vector, float angleRotationValue, NrtGeoVector3F point) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -55,15 +55,15 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_epsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue) {
+  NrtBool Nrt_GeoVector3F_epsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue) {
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector); Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&other);
     Maths::GeoVector3F cEpsilonValue = *reinterpret_cast<const Maths::GeoVector3F*>(&epsilonValue);
     
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
   NrtGeoVector3F Nrt_GeoVector3F_getNormalised(NrtGeoVector3F vector) {
@@ -94,67 +94,67 @@ extern "C" {
     return cVector.getMagnitude();
   }
 
-  int32_t Nrt_GeoVector3F_equal(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_equal(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst == cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_notEqual(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_notEqual(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst != cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_lessThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_lessThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst < cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_lessThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_lessThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst <= cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_greaterThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_greaterThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst > cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_greaterThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
+  NrtBool Nrt_GeoVector3F_greaterThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs) {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     if(cFirst >= cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -174,7 +174,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -193,7 +193,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -212,7 +212,7 @@ extern "C" {
     return NRT_SUCCESS; 
   }
 
-  int32_t Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -236,7 +236,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -254,7 +254,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -272,7 +272,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -290,7 +290,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
+  NrtResult Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -313,7 +313,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
+  NrtResult Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -329,7 +329,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
+  NrtResult Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -345,7 +345,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
+  NrtResult Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -361,7 +361,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
+  NrtResult Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -382,7 +382,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs) {
+  NrtResult Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -398,7 +398,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs) {
+  NrtResult Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -414,7 +414,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs) {
+  NrtResult Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -430,7 +430,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs) {
+  NrtResult Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

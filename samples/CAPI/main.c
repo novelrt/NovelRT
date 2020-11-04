@@ -15,7 +15,7 @@
 
 const char* error = " ";
 int32_t res = NRT_SUCCESS;
-int32_t booleanResult = NOVELRT_TRUE;
+int32_t booleanResult = NRT_TRUE;
 int32_t hMove = 1;      // 1 == move right, 0 == move left
 int32_t vMove = 1;      // 1 == move up, 0 == move down
 NrtAudioService audio = NULL;
@@ -32,7 +32,7 @@ NrtImageRect nChanRect = NULL;
 //     NrtKeyStateFrameChangeLog in = NULL;
 //     res = Nrt_InteractionService_getKeyState(input, W, &in);
 //     if (res == NRT_SUCCESS) {
-//         if (Nrt_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NOVELRT_TRUE) {
+//         if (Nrt_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NRT_TRUE) {
 //             Nrt_LoggingService_logInfoLine(console, "W was pressed!");
 //             float vn = Nrt_Timestamp_getSecondsFloat(delta);
 //             //Need to find a way for variadic messages in Nrt_LoggingService

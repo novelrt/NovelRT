@@ -13,22 +13,22 @@ extern "C" {
 
 typedef struct StepTimerHandle* NrtStepTimer;
 
-int32_t Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output);
-int32_t Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output);
-int32_t Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output);
-int32_t Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
-int32_t Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output);
-int32_t Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output);
-int32_t Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input);
-int32_t Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
-int32_t Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target);
-int32_t Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output);
-int32_t Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output);
-int32_t Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output);
-int32_t Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input);
-int32_t Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
-int32_t Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
-int32_t Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event);
+NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output);
+NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output);
+NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output);
+NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
+NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output);
+NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output);
+NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input);
+NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
+NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target);
+NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output);
+NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output);
+NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output);
+NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input);
+NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
+NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
+NrtResult Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event);
 
 #ifdef __cplusplus
 }

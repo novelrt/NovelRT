@@ -14,7 +14,7 @@ NrtRuntimeService Nrt_RuntimeService_create() {
     return reinterpret_cast<NrtRuntimeService&>(service);
 }
 
-int32_t Nrt_RuntimeService_destroy(NrtRuntimeService service) {
+NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -25,7 +25,7 @@ int32_t Nrt_RuntimeService_destroy(NrtRuntimeService service) {
     return NRT_SUCCESS;
 }
 
-// int32_t Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
+// NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
 //     if (service == nullptr || outputFunction == nullptr) {
 //         if (errorMessage != nullptr) {
 //             *errorMessage = Nrt_getErrMsgIsNullptr();
@@ -38,7 +38,7 @@ int32_t Nrt_RuntimeService_destroy(NrtRuntimeService service) {
 //     return NOVELRT_SUCCESS;
 // }
 
-int32_t Nrt_RuntimeService_initialise(NrtRuntimeService service) {
+NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -49,7 +49,7 @@ int32_t Nrt_RuntimeService_initialise(NrtRuntimeService service) {
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_RuntimeService_tearDown(NrtRuntimeService service) {
+NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;

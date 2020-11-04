@@ -27,15 +27,15 @@ extern "C" {
     return reinterpret_cast<NrtGeoVector2F&>(corner);
   }
 
-  int32_t Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point) {
+  NrtBool Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
 
     if (cBounds.pointIsWithinBounds(cPoint)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
   NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds) {
@@ -44,7 +44,7 @@ extern "C" {
     return reinterpret_cast<NrtGeoVector2F&>(extents);
   }
 
-  int32_t Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, int32_t* outputResult) {
+  NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, NrtBool* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -55,9 +55,9 @@ extern "C" {
       Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
 
       if (cFirst.intersectsWith(cOther)) {
-        *outputResult = NOVELRT_TRUE;
+        *outputResult = NRT_TRUE;
       } else {
-        *outputResult = NOVELRT_FALSE;
+        *outputResult = NRT_FALSE;
       }
       
       return NRT_SUCCESS;
@@ -70,26 +70,26 @@ extern "C" {
     }
   }
 
-  int32_t Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs) {
+  NrtBool Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs) {
     Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
     Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
 
     if(cFirst == cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs) {
+  NrtBool Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs) {
     Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
     Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
 
     if(cFirst != cOther) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
     
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
 }

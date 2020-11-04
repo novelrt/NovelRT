@@ -11,20 +11,20 @@ extern "C" {
 #endif
 
 //TODO: NOTHING IN THIS CLASS WORKS
-int32_t Nrt_Timestamp_isNaN(NrtTimestamp timestamp) {
+NrtBool Nrt_Timestamp_isNaN(NrtTimestamp timestamp) {
   if (timestamp == nullptr) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
   Timing::Timestamp* ts = reinterpret_cast<Timing::Timestamp*>(timestamp);
   if(std::isnan(static_cast<double>(ts->ticks))) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_create(uint64_t ticks, NrtTimestamp* outputTimestamp) {
+NrtResult Nrt_Timestamp_create(uint64_t ticks, NrtTimestamp* outputTimestamp) {
   if (outputTimestamp == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -35,7 +35,7 @@ int32_t Nrt_Timestamp_create(uint64_t ticks, NrtTimestamp* outputTimestamp) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_getSecondsDouble(NrtTimestamp timestamp, double* output) {
+NrtResult Nrt_Timestamp_getSecondsDouble(NrtTimestamp timestamp, double* output) {
   if (timestamp == nullptr || output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -51,7 +51,7 @@ int32_t Nrt_Timestamp_getSecondsDouble(NrtTimestamp timestamp, double* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_getSecondsFloat(NrtTimestamp timestamp, float* output) {
+NrtResult Nrt_Timestamp_getSecondsFloat(NrtTimestamp timestamp, float* output) {
   if (timestamp == nullptr || output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -67,7 +67,7 @@ int32_t Nrt_Timestamp_getSecondsFloat(NrtTimestamp timestamp, float* output) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_zero(NrtTimestamp* outputTimestamp) {
+NrtResult Nrt_Timestamp_zero(NrtTimestamp* outputTimestamp) {
   if (outputTimestamp == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -78,7 +78,7 @@ int32_t Nrt_Timestamp_zero(NrtTimestamp* outputTimestamp) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_fromSeconds(double seconds, NrtTimestamp* outputTimestamp) {
+NrtResult Nrt_Timestamp_fromSeconds(double seconds, NrtTimestamp* outputTimestamp) {
   if (outputTimestamp == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -90,7 +90,7 @@ int32_t Nrt_Timestamp_fromSeconds(double seconds, NrtTimestamp* outputTimestamp)
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
+NrtResult Nrt_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -110,7 +110,7 @@ int32_t Nrt_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTi
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
+NrtResult Nrt_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -130,7 +130,7 @@ int32_t Nrt_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp other, 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
+NrtResult Nrt_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -148,7 +148,7 @@ int32_t Nrt_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp other, 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
+NrtResult Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -172,7 +172,7 @@ int32_t Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, Nr
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_addAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
+NrtResult Nrt_Timestamp_addAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
   if (first == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -187,7 +187,7 @@ int32_t Nrt_Timestamp_addAssignTimestamp(NrtTimestamp first, NrtTimestamp other)
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
+NrtResult Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
   if (first == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -202,7 +202,7 @@ int32_t Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp first, NrtTimestamp o
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
+NrtResult Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
   if (first == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -217,7 +217,7 @@ int32_t Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp first, NrtTimestamp o
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
+NrtResult Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
   if (first == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -237,7 +237,7 @@ int32_t Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp oth
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtBool Nrt_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -251,13 +251,13 @@ int32_t Nrt_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst < cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtResult Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -271,13 +271,13 @@ int32_t Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst <= cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtBool Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -291,13 +291,13 @@ int32_t Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst > cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtBool Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -311,13 +311,13 @@ int32_t Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst >= cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtBool Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -331,13 +331,13 @@ int32_t Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst == cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
-int32_t Nrt_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs) {
+NrtBool Nrt_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs) {
   if (lhs == nullptr || rhs == nullptr)  {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -351,10 +351,10 @@ int32_t Nrt_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs) {
   Timing::Timestamp cFirst = *reinterpret_cast<Timing::Timestamp*>(lhs);
   Timing::Timestamp cOther = *reinterpret_cast<Timing::Timestamp*>(rhs);
   if(cFirst != cOther) {
-    return NOVELRT_TRUE;
+    return NRT_TRUE;
   }
 
-  return NOVELRT_FALSE;
+  return NRT_FALSE;
 }
 
 #ifdef __cplusplus

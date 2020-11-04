@@ -34,7 +34,7 @@ NrtSceneNode Nrt_SceneNode_create() {
   return reinterpret_cast<NrtSceneNode>(_sceneNodeCollection.back().get());
 }
 
-int32_t Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
+NrtResult Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
   if(node == nullptr|| outputSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -46,7 +46,7 @@ int32_t Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSet)
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
+NrtResult Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
   if(node == nullptr|| outputSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -58,7 +58,7 @@ int32_t Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet) 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert, int32_t* outputResult) {
+NrtResult Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert, int32_t* outputResult) {
   if(node == nullptr|| outputResult == nullptr || nodeToInsert == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -69,7 +69,7 @@ int32_t Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert, int32
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove, int32_t* outputResult) {
+NrtResult Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove, int32_t* outputResult) {
   if(node == nullptr|| outputResult == nullptr || nodeToRemove == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -80,7 +80,7 @@ int32_t Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove, int32
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
+NrtResult Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
   if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -91,7 +91,7 @@ int32_t Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNode
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
+NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
   if(node == nullptr|| action == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -103,7 +103,7 @@ int32_t Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void(*action)(NrtS
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeBreadthFirstIterator* outputIterator) {
+NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeBreadthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -118,7 +118,7 @@ int32_t Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int32_
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
+NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
     if(node == nullptr|| action == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -131,7 +131,7 @@ int32_t Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void(*action)(NrtSce
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeDepthFirstIterator* outputIterator) {
+NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeDepthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -146,7 +146,7 @@ int32_t Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_t(
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
+NrtResult Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
   if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -157,7 +157,7 @@ int32_t Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode, 
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNode_delete(NrtSceneNode node) {
+NrtResult Nrt_SceneNode_delete(NrtSceneNode node) {
   if(node == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -173,7 +173,7 @@ int32_t Nrt_SceneNode_delete(NrtSceneNode node) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet) {
+NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet) {
   if(nodeSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -183,7 +183,7 @@ int32_t Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet, size_t* outputSize) {
+NrtResult Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet, size_t* outputSize) {
   if(nodeSet == nullptr || outputSize == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -193,7 +193,7 @@ int32_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet, size_t* outputSi
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet, size_t index, NrtSceneNode* outputSceneNode) {
+NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet, size_t index, NrtSceneNode* outputSceneNode) {
   if(nodeSet == nullptr || outputSceneNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

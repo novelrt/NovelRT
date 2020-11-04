@@ -13,9 +13,9 @@
 extern "C" {
 #endif
 
-  int32_t Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file);
-  int32_t Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile);
-  int32_t Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize);
+  NrtResult Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file);
+  NrtResult Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile);
+  NrtResult Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize);
 
 #ifdef __cplusplus
 }

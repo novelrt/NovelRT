@@ -14,7 +14,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -27,7 +27,7 @@ int32_t Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNod
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -40,7 +40,7 @@ int32_t Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, 
 }
 
 
-int32_t Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode) {
+NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode) {
   if(point == nullptr || outputNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;

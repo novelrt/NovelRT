@@ -22,7 +22,7 @@ using namespace NovelRT::Windowing;
 extern "C" {
 #endif
 
-  int32_t Nrt_RenderingService_create(NrtWindowingService windowingService, NrtRenderingService* outputRenderingService) {
+  NrtResult Nrt_RenderingService_create(NrtWindowingService windowingService, NrtRenderingService* outputRenderingService) {
     if(windowingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -37,7 +37,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_initialiseRendering(NrtRenderingService renderingService) {
+  NrtResult Nrt_RenderingService_initialiseRendering(NrtRenderingService renderingService) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -49,7 +49,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_tearDown(NrtRenderingService renderingService) {
+  NrtResult Nrt_RenderingService_tearDown(NrtRenderingService renderingService) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -61,7 +61,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_createImageRectWithFile(NrtRenderingService renderingService, NrtImageRect* outputImageRect, NrtTransform transform, int32_t layer, const char* filePath, NrtRGBAConfig colourTint) {
+  NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingService renderingService, NrtImageRect* outputImageRect, NrtTransform transform, int32_t layer, const char* filePath, NrtRGBAConfig colourTint) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -75,7 +75,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_createImageRectWithNothing(NrtRenderingService renderingService, NrtImageRect* outputImageRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourTint) {
+  NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingService renderingService, NrtImageRect* outputImageRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourTint) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -89,7 +89,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_createBasicFillRect(NrtRenderingService renderingService, NrtBasicFillRect* outputBasicFillRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourConfig) {
+  NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingService renderingService, NrtBasicFillRect* outputBasicFillRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourConfig) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -103,7 +103,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_createTextRect(NrtRenderingService renderingService, NrtTextRect* outputTextRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourConfig, float fontSize, const char* fontFilePath) {
+  NrtResult Nrt_RenderingService_createTextRect(NrtRenderingService renderingService, NrtTextRect* outputTextRect, NrtTransform transform, int32_t layer, NrtRGBAConfig colourConfig, float fontSize, const char* fontFilePath) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -118,7 +118,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_getCamera(NrtRenderingService renderingService, NrtCamera* outputCamera) {
+  NrtResult Nrt_RenderingService_getCamera(NrtRenderingService renderingService, NrtCamera* outputCamera) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -130,7 +130,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_beginFrame(NrtRenderingService renderingService) {
+  NrtResult Nrt_RenderingService_beginFrame(NrtRenderingService renderingService) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -142,7 +142,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_endFrame(NrtRenderingService renderingService) {
+  NrtResult Nrt_RenderingService_endFrame(NrtRenderingService renderingService) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -154,7 +154,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_setBackgroundColour(NrtRenderingService renderingService, NrtRGBAConfig colour) {
+  NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingService renderingService, NrtRGBAConfig colour) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -166,7 +166,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_getTextureWithNothing(NrtRenderingService renderingService, NrtTexture* outputTexture) {
+  NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingService renderingService, NrtTexture* outputTexture) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -179,7 +179,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService, NrtTexture* outputTexture, const char* fileTarget) {
+  NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService, NrtTexture* outputTexture, const char* fileTarget) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -193,7 +193,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_getFontSet(NrtRenderingService renderingService, NrtFontSet* outputFontSet, const char* fileTarget, float fontSize) {
+  NrtResult Nrt_RenderingService_getFontSet(NrtRenderingService renderingService, NrtFontSet* outputFontSet, const char* fileTarget, float fontSize) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -207,7 +207,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_RenderingService_destroy(NrtRenderingService renderingService) {
+  NrtResult Nrt_RenderingService_destroy(NrtRenderingService renderingService) {
     if(renderingService == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

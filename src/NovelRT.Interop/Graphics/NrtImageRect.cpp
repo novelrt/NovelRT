@@ -15,7 +15,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform *outputTransform) {
+  NrtResult Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform *outputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -28,7 +28,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform) {
+  NrtResult Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -40,7 +40,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t *outputLayer) {
+  NrtResult Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t *outputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -52,7 +52,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer) {
+  NrtResult Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -64,7 +64,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_getActive(NrtImageRect rect, int32_t *outputBool) {
+  NrtResult Nrt_ImageRect_getActive(NrtImageRect rect, NrtBool* outputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -73,16 +73,16 @@ extern "C" {
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
 
     if(imageRectPtr->getActive()) {
-      *outputBool = NOVELRT_TRUE;
+      *outputBool = NRT_TRUE;
     }
     else {
-      *outputBool = NOVELRT_FALSE;
+      *outputBool = NRT_FALSE;
     }
 
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_setActive(NrtImageRect rect, int32_t inputBool) {
+  NrtResult Nrt_ImageRect_setActive(NrtImageRect rect, NrtBool inputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -90,7 +90,7 @@ extern "C" {
 
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
 
-    if(inputBool == NOVELRT_TRUE) {
+    if(inputBool == NRT_TRUE) {
       imageRectPtr->setActive(true);
     }
     else {
@@ -100,7 +100,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect) {
+  NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -114,7 +114,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture *outputTexture) {
+  NrtResult Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture *outputTexture) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -128,7 +128,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_setTexture(NrtImageRect rect, NrtTexture inputTexture) {
+  NrtResult Nrt_ImageRect_setTexture(NrtImageRect rect, NrtTexture inputTexture) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -140,7 +140,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_getColourTint(NrtImageRect rect, NrtRGBAConfig *outputColourTint) {
+  NrtResult Nrt_ImageRect_getColourTint(NrtImageRect rect, NrtRGBAConfig *outputColourTint) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -154,7 +154,7 @@ extern "C" {
 
   }
 
-  int32_t Nrt_ImageRect_setColourTint(NrtImageRect rect, NrtRGBAConfig inputColourTint) {
+  NrtResult Nrt_ImageRect_setColourTint(NrtImageRect rect, NrtRGBAConfig inputColourTint) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -166,7 +166,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRect rect, NrtRenderObject* outputRenderObject) {
+  NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRect rect, NrtRenderObject* outputRenderObject) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

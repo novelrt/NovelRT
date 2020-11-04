@@ -4,6 +4,7 @@
 #define NOVELRT_INTEROP_SCENEGRAPH_BREADTHFIRSTITERATOR_H
 
 #include <stdint.h>
+#include "../NrtInteropUtils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,13 +15,13 @@ typedef struct BreadthFirstIterator* NrtSceneNodeBreadthFirstIterator;
 typedef struct SceneNodeHandle* NrtSceneNode;
 #endif
 
-int32_t Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNode node, int32_t(*func)(NrtSceneNode), NrtSceneNodeBreadthFirstIterator* outputIterator);
-int32_t Nrt_SceneNodeBreadthFirstIterator_increment(NrtSceneNodeBreadthFirstIterator iterator);
-int32_t Nrt_SceneNodeBreadthFirstIterator_postFixIncrement(NrtSceneNodeBreadthFirstIterator iterator);
-int32_t Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
-int32_t Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
-int32_t Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult);
-int32_t Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNode node, int32_t(*func)(NrtSceneNode), NrtSceneNodeBreadthFirstIterator* outputIterator);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_increment(NrtSceneNodeBreadthFirstIterator iterator);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_postFixIncrement(NrtSceneNodeBreadthFirstIterator iterator);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult);
+NrtResult Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult);
 
 
 

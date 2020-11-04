@@ -9,7 +9,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog changeLog, NrtKeyState* output) {
+NrtResult Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog changeLog, NrtKeyState* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
 
     if (output == nullptr) {
@@ -22,7 +22,7 @@ int32_t Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog cha
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog changeLog, uint32_t* output) {
+NrtResult Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog changeLog, uint32_t* output) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
     
     if (output == nullptr) {
@@ -34,18 +34,18 @@ int32_t Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog chan
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_KeyStateFrameChangeLog_compareChangeLog(NrtKeyStateFrameChangeLog lhs, NrtKeyState rhs) {
+NrtBool Nrt_KeyStateFrameChangeLog_compareChangeLog(NrtKeyStateFrameChangeLog lhs, NrtKeyState rhs) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(lhs);
     auto keyState = reinterpret_cast<const Input::KeyState&>(rhs);
 
     if (log == keyState) {
-        return NOVELRT_TRUE;
+        return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
 }
 
-int32_t Nrt_KeyStateFrameChangeLog_compareKeyState(NrtKeyState lhs, NrtKeyStateFrameChangeLog rhs) {
+NrtBool Nrt_KeyStateFrameChangeLog_compareKeyState(NrtKeyState lhs, NrtKeyStateFrameChangeLog rhs) {
     return Nrt_KeyStateFrameChangeLog_compareChangeLog(rhs, lhs);
 }
 

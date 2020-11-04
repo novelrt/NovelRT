@@ -23,12 +23,12 @@ extern "C" {
 
 typedef struct SpriteAnimatorHandle* NrtSpriteAnimator;
 
-int32_t Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator);
-int32_t Nrt_SpriteAnimator_play(NrtSpriteAnimator animator);
-int32_t Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator);
-int32_t Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator);
-int32_t Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState);
-int32_t Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state);
+NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator);
+NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator);
+NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator);
+NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator);
+NrtResult Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState);
+NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state);
 
 #ifdef __cplusplus
 }

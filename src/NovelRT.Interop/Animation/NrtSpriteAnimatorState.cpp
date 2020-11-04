@@ -22,7 +22,7 @@ NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create() {
     return reinterpret_cast<NrtSpriteAnimatorState>(state);    
 }
 
-int32_t Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget, NrtSpriteAnimatorStateConditionFunctions vector) {
+NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget, NrtSpriteAnimatorStateConditionFunctions vector) {
     if (state == nullptr || stateTarget == nullptr || vector == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -36,7 +36,7 @@ int32_t Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, Nrt
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index) {
+NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index) {
     if (state == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -49,7 +49,7 @@ int32_t Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state,
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int32_t* outputLoop) {
+NrtResult Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int32_t* outputLoop) {
     if (state == nullptr || outputLoop == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -62,7 +62,7 @@ int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int3
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop) {
+NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop) {
     if (state == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -75,7 +75,7 @@ int32_t Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int3
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector* outputFrames) {
+NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector* outputFrames) {
     if (state == nullptr || outputFrames == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -89,7 +89,7 @@ int32_t Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state, NrtSprit
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames) {
+NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames) {
     if (state == nullptr || frames == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -101,7 +101,7 @@ int32_t Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSprit
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state, NrtSpriteAnimatorState* outputTransitionState) {
+NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state, NrtSpriteAnimatorState* outputTransitionState) {
     if (state == nullptr || outputTransitionState == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -128,7 +128,7 @@ NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create() {
     return reinterpret_cast<NrtSpriteAnimatorFrameVector>(vector);
 }
 
-int32_t Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame) {
+NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame) {
     if (vector == nullptr || frame == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -140,7 +140,7 @@ int32_t Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vect
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index, NrtSpriteAnimatorFrame* outputFrame) {
+NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index, NrtSpriteAnimatorFrame* outputFrame) {
     if (vector == nullptr || outputFrame == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -152,7 +152,7 @@ int32_t Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVect
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index) {
+NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index) {
     if (vector == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -163,7 +163,7 @@ int32_t Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameV
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector) {
+NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector) {
     if (vector == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;

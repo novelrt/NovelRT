@@ -13,7 +13,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputNode) {
+NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputNode) {
   if(points == nullptr || outputNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -25,7 +25,7 @@ int32_t Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNo
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -38,7 +38,7 @@ int32_t Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint*
   return NRT_SUCCESS;
   }
 
-int32_t Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -52,7 +52,7 @@ int32_t Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint
 }
 
 
-int32_t Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -65,7 +65,7 @@ int32_t Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoi
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
+NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_UNKOWN;
@@ -78,7 +78,7 @@ int32_t Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePo
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo, 
+NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo, 
   NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour, 
   NrtQuadTreeScenePointArray* outputArray) { //TODO: can we not make this read nicer?
   if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {

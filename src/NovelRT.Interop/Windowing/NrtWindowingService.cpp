@@ -19,7 +19,7 @@ NrtWindowingService Nrt_WindowingService_create() {
   return reinterpret_cast<NrtWindowingService>(_windowingServiceCollection.back().get());
 }
 
-int32_t Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled) {
+NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
@@ -30,7 +30,7 @@ int32_t Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int d
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_WindowingService_tearDown(NrtWindowingService service) {
+NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
@@ -41,7 +41,7 @@ int32_t Nrt_WindowingService_tearDown(NrtWindowingService service) {
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_WindowingService_getWindowTitle(NrtWindowingService service, const char** windowTitle) {
+NrtResult Nrt_WindowingService_getWindowTitle(NrtWindowingService service, const char** windowTitle) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr || windowTitle == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
@@ -52,7 +52,7 @@ int32_t Nrt_WindowingService_getWindowTitle(NrtWindowingService service, const c
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value) {
+NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr || value == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
@@ -63,7 +63,7 @@ int32_t Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const c
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVector2F value) {
+NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVector2F value) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
@@ -74,7 +74,7 @@ int32_t Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVe
   return NRT_SUCCESS;
 }
 
-int32_t Nrt_WindowingService_getWindowSize(NrtWindowingService service, NrtGeoVector2F* output) {
+NrtResult Nrt_WindowingService_getWindowSize(NrtWindowingService service, NrtGeoVector2F* output) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr || output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();

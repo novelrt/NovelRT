@@ -4,6 +4,7 @@
 #define NOVELRT_INTEROP_SCENEGRAPH_QuadTreeNode_H
 
 #include <stdint.h>
+#include "../NrtInteropUtils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,13 +21,13 @@ typedef struct QuadTreeScenePointHandle* NrtQuadTreeScenePoint;
 typedef struct SceneNodeHandle* NrtSceneNode;
 #endif
 
-int32_t Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputPoint);
-int32_t Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
-int32_t Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
-int32_t Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
-int32_t Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputPoint);
+NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
+NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
 
-int32_t Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo, 
+NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo, 
     NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour, 
     NrtQuadTreeScenePointArray* outputArray);
 

@@ -13,10 +13,10 @@ extern "C" {
   typedef struct RuntimeFunctionHandle* NrtRuntimeFunction;
 
   NrtRuntimeService Nrt_RuntimeService_create();
-  int32_t Nrt_RuntimeService_destroy(NrtRuntimeService service);
-//   int32_t Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName);
-  int32_t Nrt_RuntimeService_initialise(NrtRuntimeService service);
-  int32_t Nrt_RuntimeService_tearDown(NrtRuntimeService service);
+  NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service);
+//   NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName);
+  NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service);
+  NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service);
 
 #ifdef __cplusplus
 }

@@ -216,7 +216,7 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForInpu
 
 TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t result = NOVELRT_FALSE;
+  int32_t result = NRT_FALSE;
 
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &result, nullptr), NRT_SUCCESS);
 
@@ -225,7 +225,7 @@ TEST_F(InteropQuadTreeTest, insertOneReturnsTrue) {
 
 TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInput) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t result = NOVELRT_FALSE;
+  int32_t result = NRT_FALSE;
   const char* errorOutput = nullptr;
   
   ASSERT_EQ(Nrt_QuadTree_tryInsert(nullptr, point0, &result, &errorOutput), NRT_FAILURE_UNKOWN);
@@ -250,22 +250,22 @@ TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInputA
 
 TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
@@ -306,27 +306,27 @@ TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide) {
 
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
@@ -400,27 +400,27 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect) {
 
 TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
@@ -489,34 +489,34 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect) {
 TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
 
-  int32_t outputBool = NOVELRT_FALSE;
+  int32_t outputBool = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &outputBool, nullptr), NRT_SUCCESS);
-  EXPECT_EQ(NOVELRT_FALSE, outputBool);
+  EXPECT_EQ(NRT_FALSE, outputBool);
 }
 
 TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
@@ -540,27 +540,27 @@ TEST_F(InteropQuadTreeTest, PointVector_deleteReturnsNullptrFailureWhenGivenNull
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
@@ -594,8 +594,8 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints) {
 TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
 
-  int32_t outputInsertBool = NOVELRT_FALSE;
-  int32_t outputRemoveBool = NOVELRT_FALSE;
+  int32_t outputInsertBool = NRT_FALSE;
+  int32_t outputRemoveBool = NRT_FALSE;
 
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &outputInsertBool, nullptr), NRT_SUCCESS);
   ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point0, &outputRemoveBool, nullptr), NRT_SUCCESS);
@@ -606,7 +606,7 @@ TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue) {
 TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   
-  int32_t outputBool = NOVELRT_FALSE;
+  int32_t outputBool = NRT_FALSE;
 
   ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point0, &outputBool, nullptr), NRT_SUCCESS);
   EXPECT_FALSE(outputBool);
@@ -615,7 +615,7 @@ TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse) {
 TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInput) {
   auto point = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
-  int32_t outputBool = NOVELRT_FALSE;
+  int32_t outputBool = NRT_FALSE;
   
   ASSERT_EQ(Nrt_QuadTree_tryRemove(nullptr, point, &outputBool, &errorOutput), NRT_FAILURE_UNKOWN);
   EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr());
@@ -639,31 +639,31 @@ TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInputA
 
 TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
-  int32_t tryRemoveOutputBool = NOVELRT_FALSE;
+  int32_t tryRemoveOutputBool = NRT_FALSE;
 
   ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point4, &tryRemoveOutputBool, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(tryRemoveOutputBool);
@@ -706,36 +706,36 @@ TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5)
 
 TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 
   auto point5 = Nrt_QuadTreePoint_createFromFloat(0.5f, 0.5f);
-  int32_t point5InsertResult = NOVELRT_FALSE;
+  int32_t point5InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point5, &point5InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point5InsertResult);
 
-  int32_t tryRemoveOutputBool = NOVELRT_FALSE;
+  int32_t tryRemoveOutputBool = NRT_FALSE;
 
   ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point5, &tryRemoveOutputBool, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(tryRemoveOutputBool);
@@ -801,27 +801,27 @@ TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMore
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll) {
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-  int32_t point0InsertResult = NOVELRT_FALSE;
+  int32_t point0InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, &point0InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point0InsertResult);
 
   auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-  int32_t point1InsertResult = NOVELRT_FALSE;
+  int32_t point1InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point1, &point1InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point1InsertResult);
 
   auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-  int32_t point2InsertResult = NOVELRT_FALSE;
+  int32_t point2InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point2, &point2InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point2InsertResult);
 
   auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-  int32_t point3InsertResult = NOVELRT_FALSE;
+  int32_t point3InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point3, &point3InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point3InsertResult);
 
   auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-  int32_t point4InsertResult = NOVELRT_FALSE;
+  int32_t point4InsertResult = NRT_FALSE;
   ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point4, &point4InsertResult, nullptr), NRT_SUCCESS);
   EXPECT_TRUE(point4InsertResult);
 

@@ -13,7 +13,7 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-int32_t Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator) {
+NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator) {
     if (runner == nullptr || rect == nullptr || outputAnimator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -24,7 +24,7 @@ int32_t Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtS
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimator_play(NrtSpriteAnimator animator) {
+NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -35,7 +35,7 @@ int32_t Nrt_SpriteAnimator_play(NrtSpriteAnimator animator) {
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator) {
+NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -46,7 +46,7 @@ int32_t Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator) {
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator) {
+NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -57,7 +57,7 @@ int32_t Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator) {
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState) {
+NrtResult Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState) {
     if (animator == nullptr || outputPlayState == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
@@ -69,7 +69,7 @@ int32_t Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAn
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state) {
+NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state) {
     if (animator == nullptr || state == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;

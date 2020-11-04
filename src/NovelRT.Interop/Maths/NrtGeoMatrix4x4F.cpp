@@ -10,12 +10,12 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  int32_t Nrt_GeoMatrix4x4F_isNaN(NrtGeoMatrix4x4F matrix) {
+  NrtBool Nrt_GeoMatrix4x4F_isNaN(NrtGeoMatrix4x4F matrix) {
     if(Nrt_GeoVector4F_isNaN(matrix.x) || Nrt_GeoVector4F_isNaN(matrix.y) || Nrt_GeoVector4F_isNaN(matrix.z) || Nrt_GeoVector4F_isNaN(matrix.w)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
   NrtGeoMatrix4x4F Nrt_GeoMatrix4x4F_getDefaultIdentity() {
@@ -23,23 +23,23 @@ extern "C" {
     return *reinterpret_cast<NrtGeoMatrix4x4F*>(&identity);
   }
 
-  int32_t Nrt_GeoMatrix4x4F_equal(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs) {
+  NrtBool Nrt_GeoMatrix4x4F_equal(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs) {
     if(*reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs) == *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_notEqual(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs) {
+  NrtBool Nrt_GeoMatrix4x4F_notEqual(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs) {
     if(*reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs) != *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs)) {
-      return NOVELRT_TRUE;
+      return NRT_TRUE;
     }
 
-    return NOVELRT_FALSE;
+    return NRT_FALSE;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -57,7 +57,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -76,7 +76,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -95,7 +95,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_addAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_addAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -110,7 +110,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_subtractAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_subtractAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -126,7 +126,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_multiplyAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_multiplyAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -142,7 +142,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -160,7 +160,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -178,7 +178,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
+  NrtResult Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -196,7 +196,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_addAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_addAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -212,7 +212,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_subtractAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_subtractAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -228,7 +228,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_GeoMatrix4x4F_multiplyAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
+  NrtResult Nrt_GeoMatrix4x4F_multiplyAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;

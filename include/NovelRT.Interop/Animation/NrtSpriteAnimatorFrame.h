@@ -22,13 +22,13 @@ typedef struct SpriteAnimatorFrameHandle* NrtSpriteAnimatorFrame;
 
 NrtSpriteAnimatorFrame Nrt_SpriteAnimatorFrame_create();
 
-int32_t Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture);
-int32_t Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture);
-int32_t Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp);
-int32_t Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp);
+NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture);
+NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture);
+NrtResult Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp);
+NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp);
 
-int32_t Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void(*func)());
-int32_t Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, void(*func)());
+NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void(*func)());
+NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, void(*func)());
 
 #ifdef __cplusplus
 }

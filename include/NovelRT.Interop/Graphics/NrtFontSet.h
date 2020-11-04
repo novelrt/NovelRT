@@ -12,9 +12,9 @@
 extern "C" {
 #endif
 
-  int32_t Nrt_FontSet_loadFontAsTextureSet(NrtFontSet fontSet, const char* file, float fontSize);
-  int32_t Nrt_FontSet_getFontFile(NrtFontSet fontSet, const char** outputFontFile);
-  int32_t Nrt_FontSet_getFontSize(NrtFontSet fontSet, float* outputFontSize);
+  NrtResult Nrt_FontSet_loadFontAsTextureSet(NrtFontSet fontSet, const char* file, float fontSize);
+  NrtResult Nrt_FontSet_getFontFile(NrtFontSet fontSet, const char** outputFontFile);
+  NrtResult Nrt_FontSet_getFontSize(NrtFontSet fontSet, float* outputFontSize);
 
 #ifdef __cplusplus
 }

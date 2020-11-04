@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 
-  int32_t Nrt_TextRect_getTransform(NrtTextRect rect, NrtTransform *outputTransform) {
+  NrtResult Nrt_TextRect_getTransform(NrtTextRect rect, NrtTransform *outputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -27,7 +27,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setTransform(NrtTextRect rect, NrtTransform inputTransform) {
+  NrtResult Nrt_TextRect_setTransform(NrtTextRect rect, NrtTransform inputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -39,7 +39,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_getLayer(NrtTextRect rect, int32_t *outputLayer) {
+  NrtResult Nrt_TextRect_getLayer(NrtTextRect rect, int32_t *outputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -51,7 +51,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer) {
+  NrtResult Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -63,7 +63,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_getActive(NrtTextRect rect, int32_t *outputBool) {
+  NrtResult Nrt_TextRect_getActive(NrtTextRect rect, NrtBool* outputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -72,16 +72,16 @@ extern "C" {
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
 
     if(textRectPtr->getActive()) {
-      *outputBool = NOVELRT_TRUE;
+      *outputBool = NRT_TRUE;
     }
     else {
-      *outputBool = NOVELRT_FALSE;
+      *outputBool = NRT_FALSE;
     }
 
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setActive(NrtTextRect rect, int32_t inputBool) {
+  NrtResult Nrt_TextRect_setActive(NrtTextRect rect, NrtBool inputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -89,7 +89,7 @@ extern "C" {
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
 
-    if(inputBool == NOVELRT_TRUE) {
+    if(inputBool == NRT_TRUE) {
       textRectPtr->setActive(true);
     }
     else {
@@ -99,7 +99,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_executeObjectBehaviour(NrtTextRect rect) {
+  NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRect rect) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -113,7 +113,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_getColourConfig(NrtTextRect rect, NrtRGBAConfig* outputColourConfig) {
+  NrtResult Nrt_TextRect_getColourConfig(NrtTextRect rect, NrtRGBAConfig* outputColourConfig) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -126,7 +126,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setColourConfig(NrtTextRect rect, NrtRGBAConfig inputColourConfig) {
+  NrtResult Nrt_TextRect_setColourConfig(NrtTextRect rect, NrtRGBAConfig inputColourConfig) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -138,7 +138,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_getText(NrtTextRect rect, const char** outputText) {
+  NrtResult Nrt_TextRect_getText(NrtTextRect rect, const char** outputText) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -150,7 +150,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setText(NrtTextRect rect, const char* inputText) {
+  NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -162,7 +162,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_getFontSet(NrtTextRect rect, NrtFontSet* outputFontSet) {
+  NrtResult Nrt_TextRect_getFontSet(NrtTextRect rect, NrtFontSet* outputFontSet) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -175,7 +175,7 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  int32_t Nrt_TextRect_setFontSet(NrtTextRect rect, NrtFontSet inputFontSet) {
+  NrtResult Nrt_TextRect_setFontSet(NrtTextRect rect, NrtFontSet inputFontSet) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
@@ -188,7 +188,7 @@ extern "C" {
   }
 
 
-  int32_t Nrt_TextRect_getAsRenderObjectPtr(NrtTextRect rect, NrtRenderObject* outputRenderObject) {
+  NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRect rect, NrtRenderObject* outputRenderObject) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_UNKOWN;
