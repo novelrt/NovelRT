@@ -1,54 +1,54 @@
 set(INTEROP_SOURCES
-  NovelRTInteropErrorHandlingInternal.cpp  
-  NovelRTInteropUtils.cpp
-  NovelRTLoggingService.cpp
-  NovelRTNovelRunner.cpp
-  NovelRTTransform.cpp
-  NovelRTDebugService.cpp
+  NrtInteropErrorHandlingInternal.cpp  
+  NrtInteropUtils.cpp
+  NrtLoggingService.cpp
+  NrtNovelRunner.cpp
+  NrtTransform.cpp
+  NrtDebugService.cpp
 
-  Animation/NovelRTSpriteAnimatorFrame.cpp
-  Animation/NovelRTSpriteAnimatorState.cpp
-  Animation/NovelRTSpriteAnimator.cpp
+  Animation/NrtSpriteAnimatorFrame.cpp
+  Animation/NrtSpriteAnimatorState.cpp
+  Animation/NrtSpriteAnimator.cpp
 
-  Audio/NovelRTAudioService.cpp
+  Audio/NrtAudioService.cpp
 
-  DotNet/NovelRTRuntimeService.cpp
+  DotNet/NrtRuntimeService.cpp
 
-  Graphics/NovelRTBasicFillRect.cpp
-  Graphics/NovelRTCamera.cpp
-  Graphics/NovelRTFontSet.cpp
-  Graphics/NovelRTImageRect.cpp
-  Graphics/NovelRTRenderingService.cpp
-  Graphics/NovelRTRGBAConfig.cpp
-  Graphics/NovelRTTextRect.cpp
-  Graphics/NovelRTTexture.cpp
+  Graphics/NrtBasicFillRect.cpp
+  Graphics/NrtCamera.cpp
+  Graphics/NrtFontSet.cpp
+  Graphics/NrtImageRect.cpp
+  Graphics/NrtRenderingService.cpp
+  Graphics/NrtRGBAConfig.cpp
+  Graphics/NrtTextRect.cpp
+  Graphics/NrtTexture.cpp
 
-  Input/NovelRTBasicInteractionRect.cpp
-  Input/NovelRTInteractionService.cpp
-  Input/NovelRTKeyStateFrameChangeLog.cpp
+  Input/NrtBasicInteractionRect.cpp
+  Input/NrtInteractionService.cpp
+  Input/NrtKeyStateFrameChangeLog.cpp
   
-  Maths/NovelRTGeoMatrix4x4F.cpp
-  Maths/NovelRTGeoBounds.cpp
-  Maths/NovelRTGeoVector2F.cpp
-  Maths/NovelRTGeoVector3F.cpp
-  Maths/NovelRTGeoVector4F.cpp
-  Maths/NovelRTQuadTree.cpp
-  Maths/NovelRTQuadTreePoint.cpp
+  Maths/NrtGeoMatrix4x4F.cpp
+  Maths/NrtGeoBounds.cpp
+  Maths/NrtGeoVector2F.cpp
+  Maths/NrtGeoVector3F.cpp
+  Maths/NrtGeoVector4F.cpp
+  Maths/NrtQuadTree.cpp
+  Maths/NrtQuadTreePoint.cpp
 
-  SceneGraph/NovelRTSceneNode.cpp
-  SceneGraph/NovelRTSceneNodeBreadthFirstIterator.cpp
-  SceneGraph/NovelRTSceneNodeDepthFirstIterator.cpp
-  SceneGraph/NovelRTScene.cpp
-  SceneGraph/NovelRTRenderObjectNode.cpp
-  SceneGraph/NovelRTQuadTreeScenePoint.cpp
-  SceneGraph/NovelRTQuadTreeNode.cpp
+  SceneGraph/NrtSceneNode.cpp
+  SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
+  SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
+  SceneGraph/NrtScene.cpp
+  SceneGraph/NrtRenderObjectNode.cpp
+  SceneGraph/NrtQuadTreeScenePoint.cpp
+  SceneGraph/NrtQuadTreeNode.cpp
 
-  Timing/NovelRTTimestamp.cpp
-  Timing/NovelRTStepTimer.cpp
+  Timing/NrtTimestamp.cpp
+  Timing/NrtStepTimer.cpp
 
-  Utilities/NovelRTMisc.cpp
+  Utilities/NrtMisc.cpp
 
-  Windowing/NovelRTWindowingService.cpp
+  Windowing/NrtWindowingService.cpp
 )
 
 add_library(Interop SHARED ${INTEROP_SOURCES})

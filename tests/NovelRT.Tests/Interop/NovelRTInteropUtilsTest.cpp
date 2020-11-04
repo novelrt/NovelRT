@@ -5,6 +5,6 @@
 #include <string>
 
 TEST(InteropUtilsTest, translateErrorCodeTranslatesErrorCodeFromDefaultToCpuCode) {
-    const char* ptr = NovelRT_translateErrorCode(NovelRT_getCpuLangKey(), NovelRT_getErrMsgIsNullptr());
+    const char* ptr = Nrt_translateErrorCode(Nrt_getCpuLangKey(), Nrt_getErrMsgIsNullptr());
     EXPECT_EQ(std::string("FAILURE_IS_NULLPTR"), std::string(ptr));
 }
