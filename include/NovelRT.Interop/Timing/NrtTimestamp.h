@@ -9,29 +9,29 @@
 extern "C" {
 #endif
 
-typedef struct TimestampHandle* NrtTimestamp;
+typedef uint64_t NrtTimestamp;
 
-NrtResult Nrt_Timestamp_create(uint64_t ticks, NrtTimestamp* outputTimestamp);
+NrtTimestamp Nrt_Timestamp_create(uint64_t ticks);
 
-NrtBool Nrt_Timestamp_isNaN(NrtTimestamp timestamp);
-NrtResult Nrt_Timestamp_getSecondsDouble(NrtTimestamp timestamp, double* output);
-NrtResult Nrt_Timestamp_getSecondsFloat(NrtTimestamp timestamp, float* output);
-NrtResult Nrt_Timestamp_zero(NrtTimestamp* outputTimestamp);
-NrtResult Nrt_Timestamp_fromSeconds(double seconds, NrtTimestamp* outputTimestamp);
-NrtResult Nrt_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
-NrtResult Nrt_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
-NrtResult Nrt_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
-NrtResult Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
-NrtResult Nrt_Timestamp_addAssignTimestamp(NrtTimestamp first, NrtTimestamp other);
-NrtResult Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp first, NrtTimestamp other);
-NrtResult Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp first, NrtTimestamp other);
-NrtResult Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp other);
-NrtBool Nrt_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs);
-NrtBool Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs);
-NrtBool Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs);
-NrtBool Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs);
-NrtBool Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs);
-NrtBool Nrt_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_isNaN(NrtTimestamp timestamp);
+double NovelRT_Timestamp_getSecondsDouble(NrtTimestamp timestamp);
+float NovelRT_Timestamp_getSecondsFloat(NrtTimestamp timestamp);
+NrtTimestamp NovelRT_Timestamp_zero();
+NrtTimestamp NovelRT_Timestamp_fromSeconds(double seconds);
+NrtResult NovelRT_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
+NrtResult NovelRT_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
+NrtResult NovelRT_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
+NrtResult NovelRT_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, NrtTimestamp* output);
+NrtResult NovelRT_Timestamp_addAssignTimestamp(NrtTimestamp* first, NrtTimestamp other);
+NrtResult NovelRT_Timestamp_subtractAssignTimestamp(NrtTimestamp* first, NrtTimestamp other);
+NrtResult NovelRT_Timestamp_multiplyAssignTimestamp(NrtTimestamp* first, NrtTimestamp other);
+NrtResult NovelRT_Timestamp_divideAssignTimestamp(NrtTimestamp* first, NrtTimestamp other);
+NrtBool NovelRT_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs);
+NrtBool NovelRT_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs);
 
 #ifdef __cplusplus
 }
