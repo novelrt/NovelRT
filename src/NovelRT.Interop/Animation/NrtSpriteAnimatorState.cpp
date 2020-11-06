@@ -2,6 +2,7 @@
 
 #include "../NrtInteropErrorHandlingInternal.h"
 #include <stddef.h>
+#include <stdlib.h>
 #include "NovelRT.Interop/NrtInteropUtils.h"
 #include "NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h"
 #include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
