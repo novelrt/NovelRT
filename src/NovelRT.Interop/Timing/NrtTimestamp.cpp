@@ -139,39 +139,58 @@ NrtResult Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp other, 
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Timestamp_addAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
-  if (Nrt_Timestamp_isNaN(first) || Nrt_Timestamp_isNaN(other)) {
+NrtResult Nrt_Timestamp_addAssignTimestamp(NrtTimestamp* first, NrtTimestamp other) {
+  if (first == nullptr) {
+    Nrt_setErrMsgIsNullptrInternal();
+    return NRT_FAILURE_NULLPTR_PROVIDED;
+  }
+  
+  if (Nrt_Timestamp_isNaN(*first) || Nrt_Timestamp_isNaN(other)) {
+    Nrt_setErrMsgIsNaNInternal();
+    return NRT_FAILURE_UNKOWN;
+  }
+  
+  reinterpret_cast<Timing::Timestamp&>(*first) += Timing::Timestamp(other);
+  return NRT_SUCCESS;
+}
+
+NrtResult Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp* first, NrtTimestamp other) {
+  if (first == nullptr) {
+    Nrt_setErrMsgIsNullptrInternal();
+    return NRT_FAILURE_NULLPTR_PROVIDED;
+  }
+  
+  if (Nrt_Timestamp_isNaN(*first) || Nrt_Timestamp_isNaN(other)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
   }
 
-  //Not sure this will work....
-  *reinterpret_cast<Timing::Timestamp*>(first) += Timing::Timestamp(other);
+  reinterpret_cast<Timing::Timestamp&>(*first) -= Timing::Timestamp(other);
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Timestamp_subtractAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
-  if (Nrt_Timestamp_isNaN(first) || Nrt_Timestamp_isNaN(other)) {
+NrtResult Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp* first, NrtTimestamp other) {
+  if (first == nullptr) {
+    Nrt_setErrMsgIsNullptrInternal();
+    return NRT_FAILURE_NULLPTR_PROVIDED;
+  }
+  
+  if (Nrt_Timestamp_isNaN(*first) || Nrt_Timestamp_isNaN(other)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
   }
 
-  *reinterpret_cast<Timing::Timestamp*>(first) -= Timing::Timestamp(other);
+  reinterpret_cast<Timing::Timestamp&>(*first) *= Timing::Timestamp(other);
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Timestamp_multiplyAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
-  if (Nrt_Timestamp_isNaN(first) || Nrt_Timestamp_isNaN(other)) {
-    Nrt_setErrMsgIsNaNInternal();
-    return NRT_FAILURE_UNKOWN;
+NrtResult Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp* first, NrtTimestamp other) {
+  if (first == nullptr) {
+    Nrt_setErrMsgIsNullptrInternal();
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-
-  *reinterpret_cast<Timing::Timestamp*>(first) *= Timing::Timestamp(other);
-  return NRT_SUCCESS;
-}
-
-NrtResult Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp other) {
-  if (Nrt_Timestamp_isNaN(first) || Nrt_Timestamp_isNaN(other)) {
+  
+  if (Nrt_Timestamp_isNaN(*first) || Nrt_Timestamp_isNaN(other)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
   }
@@ -181,7 +200,7 @@ NrtResult Nrt_Timestamp_divideAssignTimestamp(NrtTimestamp first, NrtTimestamp o
     return NRT_FAILURE_UNKOWN;
   }
 
-  *reinterpret_cast<Timing::Timestamp*>(first) /= Timing::Timestamp(other);
+  reinterpret_cast<Timing::Timestamp&>(*first) /= Timing::Timestamp(other);
   return NRT_SUCCESS;
 }
 

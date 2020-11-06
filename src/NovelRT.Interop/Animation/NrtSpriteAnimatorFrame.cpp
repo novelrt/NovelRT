@@ -52,7 +52,7 @@ NrtResult Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtT
     Timing::Timestamp* cppDuration = new Timing::Timestamp(0);
     *cppDuration = cppFrame->duration();
     
-    *outputTimestamp = reinterpret_cast<NrtTimestamp>(&cppDuration);
+    *outputTimestamp = reinterpret_cast<NrtTimestamp&>(*cppDuration);
     return NRT_SUCCESS;
 }
 
@@ -63,7 +63,7 @@ NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtT
     }
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
-    cppFrame->duration() = *reinterpret_cast<Timing::Timestamp*>(timestamp);
+    cppFrame->duration() = Timing::Timestamp(timestamp);
     
     return NRT_SUCCESS;
 }

@@ -11,11 +11,6 @@
 using namespace NovelRT;
 extern "C" {
 #endif
-/*
-typedef struct BoolFunctionVectorHandle* NrtSpriteAnimatorStateConditionFunctions;
-typedef struct BoolFunctionHandle* NrtSpriteAnimatorStateBooleanFunction;   //Not known if this is needed yet.
-typedef struct SpriteAnimatorFrameVectorHandle* NrtSpriteAnimatorFrameVector;
-*/
 
 NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create() {
     Animation::SpriteAnimatorState* state = new Animation::SpriteAnimatorState();
@@ -96,7 +91,7 @@ NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpr
     }
 
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    std::vector<Animation::SpriteAnimatorFrame>* cppFrames = reinterpret_cast<std::vector<Animation::SpriteAnimatorFrame>*>(frames);//new std::vector<Animation::SpriteAnimatorFrame>();
+    std::vector<Animation::SpriteAnimatorFrame>* cppFrames = reinterpret_cast<std::vector<Animation::SpriteAnimatorFrame>*>(frames);
     cppState->frames() = *cppFrames;
     return NRT_SUCCESS;
 }
@@ -171,7 +166,6 @@ NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vect
 
     std::vector<Animation::SpriteAnimatorFrame>* cppVector = reinterpret_cast<std::vector<Animation::SpriteAnimatorFrame>*>(vector);
     cppVector->clear();
-    delete cppVector;
     return NRT_SUCCESS;
 }
 

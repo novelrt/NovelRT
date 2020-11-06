@@ -51,7 +51,7 @@ NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output)
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getElapsedTime();
-  *output = reinterpret_cast<NrtTimestamp>(&time);
+  *output = reinterpret_cast<NrtTimestamp&>(*time);
   return NRT_SUCCESS;
 }
 
@@ -63,7 +63,7 @@ NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTotalTime();
-  *output = reinterpret_cast<NrtTimestamp>(&time);
+  *output = reinterpret_cast<NrtTimestamp&>(*time);
   return NRT_SUCCESS;
 }
 
@@ -97,7 +97,7 @@ NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* o
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTargetElapsedTime();
-  *output = reinterpret_cast<NrtTimestamp>(&time);
+  *output = reinterpret_cast<NrtTimestamp&>(*time);
   return NRT_SUCCESS;
 }
 
@@ -108,7 +108,7 @@ NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp ta
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  time.setTargetElapsedTime(*reinterpret_cast<NovelRT::Timing::Timestamp*>(target));
+  time.setTargetElapsedTime(NovelRT::Timing::Timestamp(target));
   return NRT_SUCCESS;
 }
 

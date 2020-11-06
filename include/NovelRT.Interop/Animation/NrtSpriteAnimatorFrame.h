@@ -3,22 +3,15 @@
 #ifndef NOVELRT_INTEROP_ANIMATION_SPRITEANIMATORFRAME_H
 #define NOVELRT_INTEROP_ANIMATION_SPRITEANIMATORFRAME_H
 
-//TODO: Fix these includes. Idk why we have repeated guards here.
+
 #include "../NrtInteropUtils.h" 
-
-#ifndef NOVELRT_INTEROP_TIMING_TIMESTAMP_H
 #include "../Timing/NrtTimestamp.h"
-#endif
-
-#ifndef NOVELRT_INTEROP_GRAPHICS_GRAPHICSTYPEDEFS_H
 #include "../Graphics/NrtGraphicsTypedefs.h"
-#endif
+#include "NovelRT.Interop/Animation/NrtAnimationTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct SpriteAnimatorFrameHandle* NrtSpriteAnimatorFrame;
 
 NrtSpriteAnimatorFrame Nrt_SpriteAnimatorFrame_create();
 
