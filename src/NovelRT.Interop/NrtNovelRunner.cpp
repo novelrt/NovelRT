@@ -173,7 +173,7 @@ extern "C" {
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
 
     cRunner->Update += [func](NovelRT::Timing::Timestamp delta){
-      func(reinterpret_cast<NrtTimestamp>(&delta)); 
+      func(reinterpret_cast<NrtTimestamp&>(delta)); 
     };
 
     return NRT_SUCCESS;
