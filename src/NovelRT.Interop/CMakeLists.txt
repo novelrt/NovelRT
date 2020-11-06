@@ -67,6 +67,7 @@ if(MSVC)
       /W4
       /WX
       /wd4611
+      /MP
   )
   get_target_property(opts Interop COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
