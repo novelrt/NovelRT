@@ -2,16 +2,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "NovelRT.Interop/NovelRTInteropUtils.h"
-#include "NovelRT.Interop/NovelRTNovelRunner.h"
-#include "NovelRT.Interop/Input/NovelRTInteractionService.h"
-#include "NovelRT.Interop/Timing/NovelRTTimestamp.h"
-#include "NovelRT.Interop/Timing/NovelRTStepTimer.h"
-#include "NovelRT.Interop/Utilities/NovelRTCommonEvents.h"
-#include "NovelRT.Interop/NovelRTLoggingService.h"
-#include "NovelRT.Interop/Graphics/NovelRTGraphicsTypedefs.h"
-#include "NovelRT.Interop/Utilities/NovelRTMisc.h"
-#include "NovelRT.Interop/Graphics/NovelRTImageRect.h"
+#include "NovelRT.Interop/NrtInteropUtils.h"
+#include "NovelRT.Interop/NrtNovelRunner.h"
+#include "NovelRT.Interop/Input/NrtInteractionService.h"
+#include "NovelRT.Interop/Timing/NrtTimestamp.h"
+#include "NovelRT.Interop/Timing/NrtStepTimer.h"
+#include "NovelRT.Interop/Utilities/NrtCommonEvents.h"
+#include "NovelRT.Interop/NrtLoggingService.h"
+#include "NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h"
+#include "NovelRT.Interop/Utilities/NrtMisc.h"
+#include "NovelRT.Interop/Graphics/NrtImageRect.h"
 
 const char* error = " ";
 int32_t res = NRT_SUCCESS;
@@ -27,32 +27,6 @@ NrtUtilitiesEventWithTimestamp updateEvent = NULL;
 NrtRGBAConfig colourChange = NULL;
 
 NrtImageRect nChanRect = NULL;
-
-// void inputTest(NrtTimestamp delta) {    
-//     NrtKeyStateFrameChangeLog in = NULL;
-//     res = Nrt_InteractionService_getKeyState(input, W, &in);
-//     if (res == NRT_SUCCESS) {
-//         if (Nrt_KeyStateFrameChangeLog_compareKeyState(KeyDown, in) == NRT_TRUE) {
-//             Nrt_LoggingService_logInfoLine(console, "W was pressed!");
-//             float vn = Nrt_Timestamp_getSecondsFloat(delta);
-//             //Need to find a way for variadic messages in Nrt_LoggingService
-//             fprintf(stdout, "Timestamp: %f \r\n", vn);
-//         }
-//     }
-//     else {
-//         char* errMsg = error;
-//         Nrt_LoggingService_logErrorLine(console, errMsg);
-//     }
-// }
-
-// void timerTest(NrtTimestamp delta) {
-//     uint32_t fps = 0;
-//     res = Nrt_StepTimer_getFramesPerSecond(timer, &fps);
-//     Nrt_Timestamp_getSecondsFloat(delta);
-//     if (res == NRT_SUCCESS) {
-//         fprintf(stdout, "FPS: %f \n", (double)(fps));
-//     }
-// }
 
 void renderNovelChan() {
     Nrt_ImageRect_executeObjectBehaviour(nChanRect);
@@ -76,7 +50,7 @@ void moveNovelChan(NrtTimestamp delta) {
     float trueDelta = 0.0f;
     float moveAmount = 100.0f;
 
-    Nrt_Timestamp_getSecondsFloat(delta, &trueDelta);
+    trueDelta = Nrt_Timestamp_getSecondsFloat(delta);
     NrtTransform transform = {{0, 0}, {0, 0}, 0};
     Nrt_ImageRect_getTransform(nChanRect, &transform);
    
