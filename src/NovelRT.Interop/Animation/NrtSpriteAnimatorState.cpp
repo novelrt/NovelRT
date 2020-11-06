@@ -2,7 +2,6 @@
 
 #include "../NrtInteropErrorHandlingInternal.h"
 #include <stddef.h>
-#include <stdlib.h>
 #include "NovelRT.Interop/NrtInteropUtils.h"
 #include "NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h"
 #include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
@@ -104,18 +103,7 @@ NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState 
     }
 
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    
-    try {
-        *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorState>(cppState->tryFindValidTransition().get());
-    }
-    catch (const std::exception& ex) {
-        const char* message = ex.what();
-        char* target = new char[strlen(message) + 1];
-        strcpy_s(target, strlen(message + 1), message);
-        Nrt_setErrMsgCustomInternal(target);
-        return NRT_FAILURE_UNKOWN;
-    }
-    
+    *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorState>(cppState->tryFindValidTransition().get());
     return NRT_SUCCESS;    
 }
 
