@@ -12,7 +12,7 @@ extern "C" {
 
 NrtBool Nrt_Timestamp_isNaN(NrtTimestamp timestamp) {
   Timing::Timestamp ts = Timing::Timestamp(timestamp);
-  if(std::isnan(static_cast<double>(ts._ticks))) {
+  if(std::isnan(static_cast<double>(ts.ticks))) {
     return NRT_TRUE;
   }
 
@@ -30,7 +30,7 @@ double Nrt_Timestamp_getSecondsDouble(NrtTimestamp timestamp) {
     return NRT_FAILURE_UNKOWN;
   }
 
-  Timing::Timestamp ts = Timing::Timestamp(ticks);
+  Timing::Timestamp ts = Timing::Timestamp(timestamp);
   return ts.getSecondsDouble();
 }
 
@@ -40,7 +40,7 @@ float Nrt_Timestamp_getSecondsFloat(NrtTimestamp timestamp) {
     return NRT_FAILURE_UNKOWN;
   }
 
-  Timing::Timestamp ts = Timing::Timestamp(ticks);
+  Timing::Timestamp ts = Timing::Timestamp(timestamp);
   return ts.getSecondsFloat();
 }
 
@@ -201,11 +201,6 @@ NrtBool Nrt_Timestamp_lessThan(NrtTimestamp lhs, NrtTimestamp rhs) {
 }
 
 NrtBool Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
-  if (lhs == nullptr || rhs == nullptr)  {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
-  }
-
   if (Nrt_Timestamp_isNaN(lhs) || Nrt_Timestamp_isNaN(rhs)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
@@ -221,11 +216,6 @@ NrtBool Nrt_Timestamp_lessThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
 }
 
 NrtBool Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs) {
-  if (lhs == nullptr || rhs == nullptr)  {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
-  }
-
   if (Nrt_Timestamp_isNaN(lhs) || Nrt_Timestamp_isNaN(rhs)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
@@ -241,11 +231,6 @@ NrtBool Nrt_Timestamp_greaterThan(NrtTimestamp lhs, NrtTimestamp rhs) {
 }
 
 NrtBool Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
-  if (lhs == nullptr || rhs == nullptr)  {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
-  }
-
   if (Nrt_Timestamp_isNaN(lhs) || Nrt_Timestamp_isNaN(rhs)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
@@ -261,11 +246,6 @@ NrtBool Nrt_Timestamp_greaterThanOrEqualTo(NrtTimestamp lhs, NrtTimestamp rhs) {
 }
 
 NrtBool Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs) {
-  if (lhs == nullptr || rhs == nullptr)  {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
-  }
-
   if (Nrt_Timestamp_isNaN(lhs) || Nrt_Timestamp_isNaN(rhs)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
@@ -281,11 +261,6 @@ NrtBool Nrt_Timestamp_equal(NrtTimestamp lhs, NrtTimestamp rhs) {
 }
 
 NrtBool Nrt_Timestamp_notEqual(NrtTimestamp lhs, NrtTimestamp rhs) {
-  if (lhs == nullptr || rhs == nullptr)  {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
-  }
-
   if (Nrt_Timestamp_isNaN(lhs) || Nrt_Timestamp_isNaN(rhs)) {
     Nrt_setErrMsgIsNaNInternal();
     return NRT_FAILURE_UNKOWN;
