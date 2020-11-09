@@ -11,7 +11,9 @@ typedef enum {
     KeyUp = 0,
     KeyDown = 1,
     KeyDownHeld = 2,
-}  NrtKeyState;
+}  NrtKeyStateKind;
+
+typedef int32_t NrtKeyState;
 
 #ifdef __cplusplus
 }

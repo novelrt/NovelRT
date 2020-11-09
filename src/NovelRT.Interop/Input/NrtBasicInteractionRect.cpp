@@ -88,18 +88,18 @@ NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect objec
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode* outputValue) {
+NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = reinterpret_cast<NrtKeyCode&>(obj->subscribedKey());
+    *outputValue = reinterpret_cast<NrtKeyCodeKind&>(obj->subscribedKey());
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCode value) {
+NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_UNKOWN;

@@ -3,15 +3,19 @@
 #ifndef NOVELRT_INTEROP_ANIMATION_ANIMATORPLAYSTATE_H
 #define NOVELRT_INTEROP_ANIMATION_ANIMATORPLAYSTATE_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-    STOPPED = 0,
-    PLAYING = 1,
-    PAUSED = 2
-} NrtAnimatorPlayState;
+    NRT_PLAY_STATE_STOPPED = 0,
+    NRT_PLAY_STATE_PLAYING = 1,
+    NRT_PLAY_STATE_PAUSED = 2
+} NrtAnimatorPlayStateKind;
+
+typedef int32_t NrtAnimatorPlayState;
 
 #ifdef __cplusplus
 }
