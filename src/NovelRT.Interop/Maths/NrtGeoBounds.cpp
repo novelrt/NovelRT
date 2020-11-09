@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.h"
+#include <NovelRT.h>
 #include "../NrtInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Maths/NrtGeoVector2F.h"
 #include "NovelRT.Interop/Maths/NrtGeoBounds.h"
@@ -65,6 +65,7 @@ extern "C" {
     } catch (const std::exception& ex) {
       const char* message = ex.what();
       char* destination = new char[strlen(message) + 1];
+      strcpy_s(destination, strlen(message) + 1, message);
       Nrt_setErrMsgCustomInternal(destination);
       return NRT_FAILURE_UNKOWN;
     }

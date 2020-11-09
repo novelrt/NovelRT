@@ -48,7 +48,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly) {
 TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix3x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
   ////EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -87,7 +87,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
 TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
   ////EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -127,7 +127,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly
 TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -283,7 +283,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly) {
 TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -322,7 +322,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -362,7 +362,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatMultipliesMatrixAndFloatTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
