@@ -13,7 +13,7 @@ set(TEST_SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
   Interop/NovelRTInteropUtilsTest.cpp
-  Interop/Animation/NovelRTSpriteAnimatorStateTest.cpp
+  Interop/Animation/SpriteAnimatorStateTest.cpp
   Interop/Maths/GeoBoundsTest.cpp
   Interop/Maths/GeoMatrix4x4Test.cpp
   Interop/Maths/GeoVector2FTest.cpp

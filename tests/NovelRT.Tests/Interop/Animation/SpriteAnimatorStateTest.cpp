@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <gtest/gtest.h>
-#include "NovelRT.Interop/NovelRTInteropUtils.h"
-#include "NovelRT.Interop/Animation/NovelRTSpriteAnimatorState.h"
+#include "NovelRT.Interop/NrtInteropUtils.h"
+#include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
 #include <NovelRT.h>
 
 using namespace NovelRT;
@@ -30,14 +30,14 @@ protected:
      std::vector<std::function<bool()>>* conditionsPtr = new std::vector<std::function<bool()>>();
      *conditionsPtr = conditions;
       NrtSpriteAnimatorStateConditionFunctions cond = reinterpret_cast<NrtSpriteAnimatorStateConditionFunctions>(conditionsPtr);
-      Nrt_SpriteAnimatorState_insertNewState(targets.at(i), targets.at(nextTarget), cond, nullptr);
+      Nrt_SpriteAnimatorState_insertNewState(targets.at(i), targets.at(nextTarget), cond);
    }
  }
 
 TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsNullptrWhenNoRelationships) {
   NrtSpriteAnimatorState mockState = Nrt_SpriteAnimatorState_create();
   int32_t res = 0;
-  res = Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockState, nullptr);
+  res = Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockState);
   EXPECT_EQ(mockState, nullptr);
 }
 
@@ -50,11 +50,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsSpriteAnimat
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, _states.at(1));
   EXPECT_EQ(mockStateTwo, _states.at(2));
@@ -72,11 +72,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsSpriteAnimat
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, _states.at(1));
   EXPECT_EQ(mockStateTwo, _states.at(2));
@@ -94,11 +94,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsSpriteAnimat
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, nullptr);
   EXPECT_EQ(mockStateTwo, nullptr);
@@ -116,11 +116,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsSpriteAnimat
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, _states.at(1));
   EXPECT_EQ(mockStateTwo, _states.at(2));
@@ -138,11 +138,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsNullptrWhenA
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, nullptr);
   EXPECT_EQ(mockStateTwo, nullptr);
@@ -160,11 +160,11 @@ TEST_F(InteropSpriteAnimatorStateTest, tryFindValidTransitionReturnsNullptrWhenO
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, nullptr);
   EXPECT_EQ(mockStateTwo, nullptr);
@@ -182,9 +182,9 @@ TEST_F(InteropSpriteAnimatorStateTest, insertNewStateWithNullStateCausesNoStateT
   *conditionsPtr = std::vector<std::function<bool()>>();
   NrtSpriteAnimatorStateConditionFunctions cond = reinterpret_cast<NrtSpriteAnimatorStateConditionFunctions>(conditionsPtr);
   
-  Nrt_SpriteAnimatorState_insertNewState(_states.at(0), mockNullState, cond, nullptr);
+  Nrt_SpriteAnimatorState_insertNewState(_states.at(0), mockNullState, cond);
   NrtSpriteAnimatorState mockStateOne = Nrt_SpriteAnimatorState_create();
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
 
   EXPECT_EQ(mockStateOne, nullptr);
 }
@@ -198,11 +198,11 @@ TEST_F(InteropSpriteAnimatorStateTest, insertNewStateWithNullFunctionCausesNullF
   NrtSpriteAnimatorState mockStateFour = Nrt_SpriteAnimatorState_create();
   NrtSpriteAnimatorState mockStateFive = Nrt_SpriteAnimatorState_create();
 
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour, nullptr);
-  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive, nullptr);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(0), &mockStateOne);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(1), &mockStateTwo);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(2), &mockStateThree);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(3), &mockStateFour);
+  Nrt_SpriteAnimatorState_tryFindValidTransition(_states.at(4), &mockStateFive);
   
   EXPECT_EQ(mockStateOne, _states.at(1));
   EXPECT_EQ(mockStateTwo, _states.at(2));
