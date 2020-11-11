@@ -36,6 +36,9 @@
 *.out
 *.app
 
+# User Configuration
+CMakeSettings.json
+
 ### Visual Studio ###
 .vs/
 .vscode/

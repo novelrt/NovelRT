@@ -36,10 +36,13 @@ int main(int /*argc*/, char* /*argv*/[])
   std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
   std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
   std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
+  std::unique_ptr<NovelRT::Graphics::BasicFillRect> inkButton;
   std::unique_ptr<NovelRT::Graphics::BasicFillRect> myBasicFillRect;
   std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButton;
   std::unique_ptr<NovelRT::Graphics::BasicFillRect> playAudioButtonTwoElectricBoogaloo;
+  std::unique_ptr<NovelRT::Graphics::TextRect> inkText;
   std::unique_ptr<NovelRT::Graphics::TextRect> playAudioText;
+  std::unique_ptr<NovelRT::Input::BasicInteractionRect> inkInteractionRect;
   std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
   std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
@@ -153,6 +156,17 @@ int main(int /*argc*/, char* /*argv*/[])
 
   playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
+  auto inkButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(novelChanTransform.position().getX() - 500, novelChanTransform.position().getY() - 200), 0, NovelRT::Maths::GeoVector2<float>(200, 200));
+  inkButton = runner.getRenderer()->createBasicFillRect(inkButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+  auto inkTextTransform = inkButtonTransform;
+  inkTextTransform.scale() = NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f);
+  auto inkTextTransformPosition = inkButtonTransform.position();
+  inkTextTransformPosition.setX(inkButtonTransform.position().getX() - 75);
+  inkTextTransform.position() = inkTextTransformPosition;
+  inkText = runner.getRenderer()->createTextRect(inkTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, (fontsDirPath / "Gayathri-Regular.ttf").string());
+  inkText->setText("Ink!");
+  inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);
+  inkInteractionRect->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
   runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -206,19 +220,16 @@ int main(int /*argc*/, char* /*argv*/[])
 };
 
   runner.SceneConstructionRequested += [&] {
-
-
     playAudioButton->executeObjectBehaviour();
-
     playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
-
     playAudioText->executeObjectBehaviour();
 
+    inkButton->executeObjectBehaviour();
+    inkText->executeObjectBehaviour();
 
     memeInteractionRect->executeObjectBehaviour();
-
-
     interactionRect->executeObjectBehaviour();
+    inkInteractionRect->executeObjectBehaviour();
 
     novelChanRect->executeObjectBehaviour();
 
@@ -231,9 +242,37 @@ int main(int /*argc*/, char* /*argv*/[])
     lineRect->executeObjectBehaviour();
   };
 
-  runner.getDotNetRuntimeService()->initialise();
-  audio->playMusic(bgm, -1);
+  auto dotnetRuntimeService = runner.getDotNetRuntimeService();
+  dotnetRuntimeService->initialise();
 
+  auto inkService = dotnetRuntimeService->getInkService();
+  inkService->initialise();
+
+  std::shared_ptr<NovelRT::Ink::Story> story;
+
+  std::ifstream storyJsonStream(scriptsDirPath / "story.json", std::ios::in);
+  if (storyJsonStream.is_open()) {
+    std::stringstream sstr;
+    sstr << storyJsonStream.rdbuf();
+
+    auto storyJsonString = sstr.str();
+    storyJsonStream.close();
+
+    story = inkService->createStory(storyJsonString.c_str());
+    story->ResetState(); // Force initialization to happen
+  }
+
+  inkInteractionRect->Interacted += [&] {
+    if (!story->CanContinue()) {
+      story->ResetState();
+    }
+
+    auto result = story->Continue();
+    console.logDebug(result);
+    dotnetRuntimeService->freeString(result);
+  };
+
+  audio->playMusic(bgm, -1);
   runner.runNovel();
 
   return 0;
