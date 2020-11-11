@@ -7,14 +7,14 @@ namespace NovelRT::Graphics {
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
     _windowingService(windowingService),
     _cameraObjectRenderUbo(std::function<GLuint()>([] {
-      GLuint tempHandle;
-      glGenBuffers(1, &tempHandle);
-      glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
-      glBindBuffer(GL_UNIFORM_BUFFER, 0);
-      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
-      return tempHandle;
-    })),
+    GLuint tempHandle;
+    glGenBuffers(1, &tempHandle);
+    glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
+    return tempHandle;
+      })),
     _camera(nullptr),
     _framebufferColour(RGBAConfig(0,0,102,255)) {
     _windowingService->WindowResized += ([this](auto input) {
@@ -242,7 +242,7 @@ namespace NovelRT::Graphics {
 
   std::shared_ptr<Texture> RenderingService::getTexture(const std::string& fileTarget) {
     if (!fileTarget.empty()) {
-      for(auto& pair : _textureCache) {
+      for (auto& pair : _textureCache) {
         auto result = pair.second.lock();
         if (result->getTextureFile() != fileTarget) continue;
 
@@ -253,7 +253,7 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
-      return returnValue; 
+      return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn

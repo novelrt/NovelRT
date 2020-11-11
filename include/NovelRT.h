@@ -32,10 +32,13 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
+#include <any>
 
 #if defined(_WIN32) || defined(_WIN64)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#else
+#include <dlfcn.h>
 #endif
 
 //Freetype
@@ -80,6 +83,8 @@
 
 //libpng
 #include <png.h>
+
+
 
 /**
  * NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
@@ -131,6 +136,18 @@ namespace NovelRT::Input {
   typedef class InteractionObject InteractionObject;
   typedef class InteractionService InteractionService;
 }
+
+/**
+ * Contains aliasing for native library plugins
+ */
+namespace NovelRT::Plugins {
+#if defined(WIN32) || defined(WIN64)
+  using NRTPluginPointer = HMODULE;
+#else
+  using NRTPluginPointer = void*;
+#endif
+}
+
 /**
  * Contains scene graph features.
  */
@@ -163,6 +180,7 @@ namespace NovelRT::Windowing {
 
 //value types
 #include "NovelRT/Atom.h"
+#include "NovelRT/Plugins/PluginKind.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Event.h" //these have to exist up here due to include order issues
 #include "NovelRT/Utilities/Lazy.h"
@@ -197,6 +215,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/Texture.h"
 #include "NovelRT/Graphics/FontSet.h"
+
 #include "NovelRT/Graphics/RenderObject.h"
 #include "NovelRT/Graphics/BasicFillRect.h"
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
@@ -208,13 +227,20 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Input/BasicInteractionRect.h"
 #include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
+//Plugins types
+#include "NovelRT/Plugins/PluginInfo.h"
+
 //Engine service types
+#include "NovelRT/Graphics/IRenderingService.h"
+#include "NovelRT/Graphics/IRenderingServiceFactory.h" //TODO: This stuff is probably an internal implementation detail? Revisit later...
 #include "NovelRT/Audio/AudioService.h"
 #include "NovelRT/DebugService.h"
 #include "NovelRT/DotNet/RuntimeService.h"
 #include "NovelRT/Input/InteractionService.h"
 #include "NovelRT/Windowing/WindowingService.h"
 #include "NovelRT/Graphics/RenderingService.h"
+#include "NovelRT/Plugins/PluginService.h"
+
 
 // Scene Graph types
 #include "NovelRT/SceneGraph/SceneNode.h"

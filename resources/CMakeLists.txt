@@ -12,6 +12,7 @@ set(RESOURCES_FILES
   Shaders/FontVertexShader.glsl
   Shaders/TexturedFragmentShader.glsl
   Shaders/TexturedVertexShader.glsl
+  
 )
 
 foreach(resource ${RESOURCES_FILES})

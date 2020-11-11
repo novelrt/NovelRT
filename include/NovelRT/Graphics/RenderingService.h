@@ -8,7 +8,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class RenderingService : public std::enable_shared_from_this<RenderingService> {
+  class RenderingService : public std::enable_shared_from_this<RenderingService>, public IRenderingService {
     friend class ImageRect;
     friend class TextRect;
     friend class Texture;

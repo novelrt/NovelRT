@@ -49,6 +49,10 @@ set(ENGINE_SOURCES
 
   NovelRunner.cpp
 
+  Plugins/jsoncpp/jsoncpp.cpp
+  Plugins/LoadLibHelper.cpp
+  Plugins/PluginService.cpp
+
   Timing/StepTimer.cpp
 
   Transform.cpp
