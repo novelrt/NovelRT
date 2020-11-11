@@ -16,7 +16,7 @@ extern "C" {
   NrtResult Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
@@ -28,7 +28,7 @@ extern "C" {
   NrtResult Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
@@ -40,7 +40,7 @@ extern "C" {
   NrtResult Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize) {
     if (targetTexture == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);

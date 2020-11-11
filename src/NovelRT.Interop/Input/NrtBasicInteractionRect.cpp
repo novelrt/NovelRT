@@ -14,7 +14,7 @@ extern "C" {
 NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -25,7 +25,7 @@ NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteract
 NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -36,7 +36,7 @@ NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect ob
 NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -47,7 +47,7 @@ NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect ob
 NrtResult Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -58,7 +58,7 @@ NrtResult Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object
 NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -69,7 +69,7 @@ NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object
 NrtResult Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -80,7 +80,7 @@ NrtResult Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect objec
 NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -91,7 +91,7 @@ NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect objec
 NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind* outputValue) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -102,7 +102,7 @@ NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRec
 NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -113,7 +113,7 @@ NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRec
 NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void(*ptr)()) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);

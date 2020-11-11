@@ -123,7 +123,7 @@ int main() {
     Nrt_getExecutableDirPath(&path);
     appendFilePath("Resources", path);
     res = Nrt_NovelRunner_getAudioService(runner, &audio);
-    if (res == NRT_FAILURE_UNKOWN) {
+    if (res != NRT_SUCCESS) {
         char* precursor = "Error getting AudioService: ";
         char* errMsg = (char*)malloc(1+strlen(precursor)+strlen(error));
         strcpy(errMsg, precursor);

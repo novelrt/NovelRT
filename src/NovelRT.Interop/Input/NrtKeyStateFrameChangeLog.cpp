@@ -14,7 +14,7 @@ NrtResult Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog c
 
     if (output == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto state = log.getCurrentState();
@@ -27,7 +27,7 @@ NrtResult Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog ch
     
     if (output == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     *output = log.getChangeCount();

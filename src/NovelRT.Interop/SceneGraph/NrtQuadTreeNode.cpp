@@ -16,7 +16,7 @@ extern "C" {
 NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputNode) {
   if(points == nullptr || outputNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4> cppArray = *reinterpret_cast<std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>*>(points);
@@ -28,7 +28,7 @@ NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTree
 NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
@@ -41,7 +41,7 @@ NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoin
 NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
@@ -55,7 +55,7 @@ NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoi
 NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
@@ -68,7 +68,7 @@ NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeSceneP
 NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr || outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
@@ -83,7 +83,7 @@ NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, Nrt
   NrtQuadTreeScenePointArray* outputArray) { //TODO: can we not make this read nicer?
   if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::shared_ptr<SceneGraph::QuadTreeScenePoint> cppPointOne = std::shared_ptr<SceneGraph::QuadTreeScenePoint>(reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(pointOne));

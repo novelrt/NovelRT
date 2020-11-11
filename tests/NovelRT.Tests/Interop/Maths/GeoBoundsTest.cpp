@@ -118,7 +118,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsErrorCodeWhenBoundsAreRotated) {
   NrtGeoBounds bounds1 { Nrt_GeoVector2F_uniform(1.0f), Nrt_GeoVector2F_uniform(5.0f), 0.0f };
   int32_t output = NRT_FALSE;
 
-  EXPECT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_UNKOWN);
+  EXPECT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_UNKNOWN);
 }
 
 TEST(InteropGeoBoundsTest, intersectsWithReturnsExceptionFailureWhenNotAABB) {
@@ -127,7 +127,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsExceptionFailureWhenNotAABB) {
   const char* errorMessage = nullptr;
   int32_t output = NRT_FALSE;
 
-  ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_UNKNOWN);
   errorMessage = Nrt_getLastError();
   std::cout << errorMessage << std::endl;
   EXPECT_TRUE(strcmp(errorMessage, "Box intersection does not currently support rotated bounds. AABB support only.") == 0);
@@ -137,5 +137,5 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsNullptrFailureWhenGivenNullptr) 
   NrtGeoBounds bounds0 { Nrt_GeoVector2F_zero(), Nrt_GeoVector2F_uniform(5.0f), 20.0f };
   NrtGeoBounds bounds1 { Nrt_GeoVector2F_uniform(1.0f), Nrt_GeoVector2F_uniform(5.0f), 0.0f };
 
-  ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
 }

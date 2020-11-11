@@ -57,7 +57,7 @@ TEST_F(InteropQuadTreeTest, deleteReturnsSuccessWhenGivenValidHandle) {
 TEST_F(InteropQuadTreeTest, deleteReturnsNullptrFailureWhenGivenNullptr) {
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_delete(nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_delete(nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorOutput); //TODO: fix this
 }
 
@@ -65,7 +65,7 @@ TEST_F(InteropQuadTreeTest, deleteReturnsAlreadyDeletedOrRemovedFailureWhenPoint
   const char* errorOutput = nullptr;
   auto handle = reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))->shared_from_this();
   ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTree>(handle.get())), NRT_SUCCESS);
-  ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTree>(handle.get())), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTree>(handle.get())), NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
   //EXPECT_EQ(Nrt_getErrMsgIsAlreadyDeletedOrRemoved(), errorOutput); //TODO: fix this
 }
 
@@ -82,7 +82,7 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenN
   NrtPointVector outputVector = nullptr;
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, &outputVector), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, &outputVector), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -90,7 +90,7 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenN
   NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, expectedBounds, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, expectedBounds, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -98,7 +98,7 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenN
   NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -113,21 +113,21 @@ TEST_F(InteropQuadTreeTest, getBoundsGetsCorrectBounds) {
 TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForInput) {
   NrtGeoBounds outputBounds = Nrt_GeoBounds_zero();
   const char* errorOutput = nullptr;
-  ASSERT_EQ(Nrt_QuadTree_getBounds(nullptr, &outputBounds), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getBounds(nullptr, &outputBounds), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForOutput) {
   NrtGeoBounds outputBounds = Nrt_GeoBounds_zero();
   const char* errorOutput = nullptr;
-  ASSERT_EQ(Nrt_QuadTree_getBounds(_quadTree, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getBounds(_quadTree, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getBoundsReturnsNullptrFailureWhenGivenNullPtrForBothInputAndOutput) {
   NrtGeoBounds outputBounds = Nrt_GeoBounds_zero();
   const char* errorOutput = nullptr;
-  ASSERT_EQ(Nrt_QuadTree_getBounds(nullptr, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getBounds(nullptr, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -141,19 +141,19 @@ TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrFo
   size_t actualSize = 0;
   const char* errorOutput = nullptr;
   size_t size = 0;
-  ASSERT_EQ(Nrt_QuadTree_getPointCount(nullptr, &actualSize), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPointCount(nullptr, &actualSize), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorOutput = nullptr;
-  ASSERT_EQ(Nrt_QuadTree_getPointCount(_quadTree, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPointCount(_quadTree, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getPointCountReturnsNullptrFailureWhenGivenNullptrForBothInputAndOutput) {
   const char* errorOutput = nullptr;
-  ASSERT_EQ(Nrt_QuadTree_getPointCount(nullptr, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPointCount(nullptr, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -195,21 +195,21 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForInpu
   NrtQuadTreePoint point = nullptr;
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, &point), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, &point), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
 TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForInputAndOutput) {
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -227,7 +227,7 @@ TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInput)
   int32_t result = NRT_FALSE;
   const char* errorOutput = nullptr;
   
-  ASSERT_EQ(Nrt_QuadTree_tryInsert(nullptr, point0, &result), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryInsert(nullptr, point0, &result), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -235,7 +235,7 @@ TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForOutput
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
   
-  ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryInsert(_quadTree, point0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -243,7 +243,7 @@ TEST_F(InteropQuadTreeTest, insertReturnsNullptrFailureWhenGivenNullptrForInputA
   auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
   
-  ASSERT_EQ(Nrt_QuadTree_tryInsert(nullptr, point0, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryInsert(nullptr, point0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -533,7 +533,7 @@ TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue) {
 TEST_F(InteropQuadTreeTest, PointVector_deleteReturnsNullptrFailureWhenGivenNullptr) {
   const char* errorOutput = nullptr;
 
-  ASSERT_EQ(Nrt_PointVector_delete(nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_PointVector_delete(nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -616,7 +616,7 @@ TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInput)
   const char* errorOutput = nullptr;
   int32_t outputBool = NRT_FALSE;
   
-  ASSERT_EQ(Nrt_QuadTree_tryRemove(nullptr, point, &outputBool), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryRemove(nullptr, point, &outputBool), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -624,7 +624,7 @@ TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForOutput
   auto point = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
   
-  ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryRemove(_quadTree, point, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -632,7 +632,7 @@ TEST_F(InteropQuadTreeTest, removeReturnsNullptrFailureWhenGivenNullptrForInputA
   auto point = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
   const char* errorOutput = nullptr;
   
-  ASSERT_EQ(Nrt_QuadTree_tryRemove(nullptr, point, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTree_tryRemove(nullptr, point, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(errorOutput, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 

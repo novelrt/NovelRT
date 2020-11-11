@@ -14,7 +14,7 @@ extern "C" {
 NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator) {
     if (runner == nullptr || rect == nullptr || outputAnimator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* animator = new Animation::SpriteAnimator(reinterpret_cast<NovelRunner*>(runner), reinterpret_cast<Graphics::ImageRect*>(rect));
@@ -25,7 +25,7 @@ NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, Nr
 NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -36,7 +36,7 @@ NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator) {
 NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -47,7 +47,7 @@ NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator) {
 NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator) {
     if (animator == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -58,7 +58,7 @@ NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator) {
 NrtResult Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState) {
     if (animator == nullptr || outputPlayState == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -70,7 +70,7 @@ NrtResult Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, Nrt
 NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state) {
     if (animator == nullptr || state == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);

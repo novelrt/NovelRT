@@ -13,7 +13,7 @@ extern "C" {
 NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer timer = NovelRT::Timing::StepTimer(targetFrameRate, maxSecondDelta);
@@ -24,7 +24,7 @@ NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, 
 NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -35,7 +35,7 @@ NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
 NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -46,7 +46,7 @@ NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
 NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
@@ -58,7 +58,7 @@ NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output)
 NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
@@ -70,7 +70,7 @@ NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
 NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -81,7 +81,7 @@ NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* outp
 NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -92,7 +92,7 @@ NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input
 NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
@@ -104,7 +104,7 @@ NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* o
 NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -115,7 +115,7 @@ NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp ta
 NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -126,7 +126,7 @@ NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
 NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -137,7 +137,7 @@ NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output)
 NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output) {
   if (output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -148,7 +148,7 @@ NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output) 
 NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -159,7 +159,7 @@ NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
 NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer) {
   if (timer == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
@@ -170,7 +170,7 @@ NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer) {
 NrtResult Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event) {
   if (event == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);

@@ -17,7 +17,7 @@ const char* Nrt_getExecutablePath() {
 NrtResult Nrt_getExecutableDirPath(const char** path) {
   if (path == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::string cppPath = NovelRT::Utilities::Misc::getExecutableDirPath().string();

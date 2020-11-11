@@ -47,7 +47,7 @@ extern "C" {
   NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, NrtBool* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     try {
@@ -67,7 +67,7 @@ extern "C" {
       char* destination = new char[strlen(message) + 1];
       strcpy_s(destination, strlen(message) + 1, message);
       Nrt_setErrMsgCustomInternal(destination);
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_UNKNOWN;
     }
   }
 

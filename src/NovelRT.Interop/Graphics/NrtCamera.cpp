@@ -22,7 +22,7 @@ extern "C" {
   NrtResult Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -35,7 +35,7 @@ extern "C" {
   NrtResult Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -47,7 +47,7 @@ extern "C" {
   NrtResult Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -60,7 +60,7 @@ extern "C" {
   NrtResult Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -73,7 +73,7 @@ extern "C" {
   NrtResult Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -86,7 +86,7 @@ extern "C" {
   NrtResult Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -99,7 +99,7 @@ extern "C" {
   NrtResult Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F)) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -121,7 +121,7 @@ extern "C" {
   NrtResult Nrt_Camera_destroy(NrtCamera camera) {
     if(camera == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -132,11 +132,11 @@ extern "C" {
       }
 
       _cameraCollection.remove(cppCamera);
-      
       return NRT_SUCCESS;
     }
-      
-    return NRT_FAILURE_UNKOWN;
+
+    Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+    return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
   }
 
 #ifdef __cplusplus

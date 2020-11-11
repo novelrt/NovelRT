@@ -17,7 +17,7 @@ extern "C" {
 NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   Maths::GeoVector2F cPosition = *reinterpret_cast<const Maths::GeoVector2F*>(&position);
@@ -30,7 +30,7 @@ NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneN
 NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node, NrtQuadTreeScenePoint* outputPoint) {
   if(node == nullptr|| outputPoint == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::shared_ptr<SceneGraph::SceneNode> cNode = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -43,7 +43,7 @@ NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node
 NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode) {
   if(point == nullptr || outputNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   SceneGraph::QuadTreeScenePoint* cppPoint = reinterpret_cast<SceneGraph::QuadTreeScenePoint*>(point);

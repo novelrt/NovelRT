@@ -26,7 +26,7 @@ extern "C" {
   NrtResult Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point, NrtGeoVector2F* outputPosition) {
     if(point == nullptr || outputPosition == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
@@ -39,14 +39,14 @@ extern "C" {
   NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point) {
     if(point == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this();
 
     if(std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end()) { //TODO: This may prove to be a bottleneck later
       Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
     _pointCollection.remove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());

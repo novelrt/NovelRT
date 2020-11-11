@@ -21,7 +21,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getParent(const NrtQuadTree tree, NrtQuadTree* outputParentTree) {
      if(tree == nullptr || outputParentTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
      
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -34,7 +34,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getBounds(const NrtQuadTree tree, NrtGeoBounds* outputGeoBounds) {
      if(tree == nullptr || outputGeoBounds == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
      
      Maths::GeoBounds bounds = Maths::GeoBounds({ 0,0 }, {0,0}, 0);
@@ -47,7 +47,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getPoint(const NrtQuadTree tree, size_t index, NrtQuadTreePoint* outputPoint) {
      if(tree == nullptr || outputPoint == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
      
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -60,7 +60,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getPointCount(const NrtQuadTree tree, size_t* outputSize) {
      if(tree == nullptr || outputSize == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
      
      *outputSize = reinterpret_cast<Maths::QuadTree*>(tree)->getPointCount();
@@ -71,7 +71,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getTopLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -83,7 +83,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getTopRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -95,7 +95,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getBottomLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -107,7 +107,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getBottomRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -119,7 +119,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -131,7 +131,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -143,7 +143,7 @@ extern "C" {
   NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds, NrtPointVector* outputResultVector) {
      if(tree == nullptr || outputResultVector == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_UNKOWN;
+       return NRT_FAILURE_NULLPTR_PROVIDED;
      }
 
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
@@ -156,7 +156,7 @@ extern "C" {
   NrtResult Nrt_PointVector_delete(NrtPointVector vector) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
@@ -167,7 +167,7 @@ extern "C" {
   NrtResult Nrt_PointVector_getSize(const NrtPointVector vector, size_t* outputSize) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     *outputSize = reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
@@ -178,7 +178,7 @@ extern "C" {
   NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index, NrtQuadTreePoint* outputPoint) {
     if(vector == nullptr || outputPoint == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     
     *outputPoint = reinterpret_cast<NrtQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
@@ -189,14 +189,14 @@ extern "C" {
   NrtResult Nrt_QuadTree_delete(NrtQuadTree tree) {
     if(tree == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto ptr = reinterpret_cast<Maths::QuadTree*>(tree)->shared_from_this();
 
     if(std::find(_treeCollection.begin(), _treeCollection.end(), ptr) == _treeCollection.end()) {
       Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
     _treeCollection.remove(ptr);

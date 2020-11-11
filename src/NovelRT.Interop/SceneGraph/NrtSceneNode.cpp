@@ -37,7 +37,7 @@ NrtSceneNode Nrt_SceneNode_create() {
 NrtResult Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
   if(node == nullptr|| outputSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
@@ -49,7 +49,7 @@ NrtResult Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSe
 NrtResult Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet) {
   if(node == nullptr|| outputSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet = new std::set<std::shared_ptr<SceneGraph::SceneNode>>();
@@ -61,7 +61,7 @@ NrtResult Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet
 NrtResult Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert, int32_t* outputResult) {
   if(node == nullptr|| outputResult == nullptr || nodeToInsert == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
@@ -72,7 +72,7 @@ NrtResult Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert, int
 NrtResult Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove, int32_t* outputResult) {
   if(node == nullptr|| outputResult == nullptr || nodeToRemove == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
@@ -83,7 +83,7 @@ NrtResult Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove, int
 NrtResult Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
   if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
@@ -94,7 +94,7 @@ NrtResult Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNo
 NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
   if(node == nullptr|| action == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -106,7 +106,7 @@ NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void(*action)(Nr
 NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeBreadthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -121,7 +121,7 @@ NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int3
 NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void(*action)(NrtSceneNode)) {
     if(node == nullptr|| action == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -134,7 +134,7 @@ NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void(*action)(NrtS
 NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_t(*action)(NrtSceneNode), NrtSceneNodeDepthFirstIterator* outputIterator) {
   if(node == nullptr || action == nullptr || outputIterator == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -149,7 +149,7 @@ NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_
 NrtResult Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode, int32_t* outputResult) {
   if(firstNode == nullptr|| secondNode == nullptr || outputResult == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto firstNodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
@@ -160,13 +160,13 @@ NrtResult Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode
 NrtResult Nrt_SceneNode_delete(NrtSceneNode node) {
   if(node == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
   if(std::find(_sceneNodeCollection.begin(), _sceneNodeCollection.end(), nodePointer) == _sceneNodeCollection.end()) {
     Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
   }
     
   _sceneNodeCollection.remove(nodePointer);
@@ -176,7 +176,7 @@ NrtResult Nrt_SceneNode_delete(NrtSceneNode node) {
 NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet) {
   if(nodeSet == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   delete reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
@@ -186,7 +186,7 @@ NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet) {
 NrtResult Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet, size_t* outputSize) {
   if(nodeSet == nullptr || outputSize == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
   
   *outputSize = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet)->size();
@@ -196,7 +196,7 @@ NrtResult Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet, size_t* output
 NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet, size_t index, NrtSceneNode* outputSceneNode) {
   if(nodeSet == nullptr || outputSceneNode == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);

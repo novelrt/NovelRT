@@ -16,7 +16,7 @@ extern "C" {
 NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRect rect, NrtTransform* outputTransform) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
   
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -28,7 +28,7 @@ NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRect rect, NrtTransform* ou
 NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRect rect, NrtTransform inputTransform) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
   
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -40,7 +40,7 @@ NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRect rect, NrtTransform inp
 NrtResult Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect, int32_t* outputLayer) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
   
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -52,7 +52,7 @@ NrtResult Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect, int32_t* outputLayer
 NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
   
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -64,7 +64,7 @@ NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer) 
 NrtResult Nrt_BasicFillRect_getActive(NrtBasicFillRect rect, NrtBool* outputBool) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -81,7 +81,7 @@ NrtResult Nrt_BasicFillRect_getActive(NrtBasicFillRect rect, NrtBool* outputBool
 NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -100,7 +100,7 @@ NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool) 
 NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRect rect) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -112,7 +112,7 @@ NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRect rect) {
 NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRect rect, NrtRGBAConfig* outputColourConfig) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -125,7 +125,7 @@ NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRect rect, NrtRGBAConfig
 NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRect rect, NrtRGBAConfig inputColourConfig) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -137,7 +137,7 @@ NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRect rect, NrtRGBAConfig
 NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRect rect, NrtRenderObject* outputRenderObject) {
   if(rect == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   *outputRenderObject = reinterpret_cast<NrtRenderObject>(rect);

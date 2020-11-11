@@ -42,11 +42,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
-      return NRT_FAILURE_UNKOWN;
+      Nrt_setErrMsgIsNaNInternal();
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
@@ -60,12 +61,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
@@ -79,12 +80,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&lhs);
@@ -98,11 +99,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_addAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
-      return NRT_FAILURE_UNKOWN;
+      Nrt_setErrMsgIsNaNInternal();
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) += *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
@@ -113,12 +115,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_subtractAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) -= *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
@@ -129,12 +131,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_multiplyAssignMatrix(NrtGeoMatrix4x4F* lhs, NrtGeoMatrix4x4F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || Nrt_GeoMatrix4x4F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) *= *reinterpret_cast<const Maths::GeoMatrix4x4F*>(&rhs);
@@ -145,12 +147,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
@@ -163,12 +165,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
@@ -181,12 +183,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F lhs, float rhs, NrtGeoMatrix4x4F* result) {
     if(result == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     Maths::GeoMatrix4x4F cFirst = *reinterpret_cast<Maths::GeoMatrix4x4F*>(&lhs);
@@ -199,12 +201,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_addAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) += rhs;
@@ -215,12 +217,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_subtractAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) -= rhs;
@@ -231,12 +233,12 @@ extern "C" {
   NrtResult Nrt_GeoMatrix4x4F_multiplyAssignFloat(NrtGeoMatrix4x4F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoMatrix4x4F_isNaN(*lhs) || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
     
     *reinterpret_cast<Maths::GeoMatrix4x4F*>(lhs) *= rhs;

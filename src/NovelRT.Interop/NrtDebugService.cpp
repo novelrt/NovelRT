@@ -19,7 +19,7 @@ extern "C" {
 NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRenderingService renderingService, NrtDebugService* outputService) {
   if (sceneConstructionEvent == nullptr || renderingService == nullptr ||outputService == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
     
   Utilities::Event<> constructionEvent = *reinterpret_cast<Utilities::Event<>*>(sceneConstructionEvent);
@@ -33,7 +33,7 @@ NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtR
 NrtResult Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32_t* result) {
   if (service == nullptr || result == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   DebugService* cppService = reinterpret_cast<DebugService*>(service);
@@ -44,7 +44,7 @@ NrtResult Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32
 NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   DebugService* cppService = reinterpret_cast<DebugService*>(service);
@@ -55,7 +55,7 @@ NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32
 NrtResult Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t* outputValue) {
   if (service == nullptr || outputValue == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   DebugService* cppService = reinterpret_cast<DebugService*>(service);
@@ -66,7 +66,7 @@ NrtResult Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t*
 NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   DebugService* cppService = reinterpret_cast<DebugService*>(service);

@@ -22,7 +22,7 @@ TEST(InteropQuadTreePointTest, deleteReturnsSuccess) {
 
 TEST(InteropQuadTreePointTest, deleteReturnsNullptrFailureWhenGivenNullptr) {
   const char* outputError = nullptr;
-  ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(outputError, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 
@@ -30,7 +30,7 @@ TEST(InteropQuadTreePointTest, deleteReturnsAlreadyDeletedOrRemovedWhenPointIsBe
   const char* outputError = nullptr;
   auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f))->shared_from_this();
   ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePoint>(ptr.get())), NRT_SUCCESS);
-  ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePoint>(ptr.get())), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePoint>(ptr.get())), NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
   
   //EXPECT_EQ(outputError, Nrt_getErrMsgIsAlreadyDeletedOrRemoved()); //TODO: fix this
 }

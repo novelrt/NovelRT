@@ -27,7 +27,7 @@ NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionService servic
 
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   servicePtr->consumePlayerInput();  
@@ -39,7 +39,7 @@ NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteraction
 
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   servicePtr->executeClickedInteractable();
@@ -51,7 +51,7 @@ NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionService servi
 
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto vector = reinterpret_cast<Maths::GeoVector2F&>(value);
@@ -64,7 +64,7 @@ NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service
 
   if (servicePtr == nullptr || output == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   auto changelog = servicePtr->getKeyState(reinterpret_cast<Input::KeyCode&>(value));
@@ -77,7 +77,7 @@ NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteraction
 
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(servicePtr->createBasicInteractionRect(*reinterpret_cast<const Transform*>(&transform), layer)));

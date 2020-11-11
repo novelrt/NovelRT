@@ -18,7 +18,7 @@ NrtAudioService Nrt_AudioService_create() {
 NrtResult Nrt_AudioService_destroy(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -29,7 +29,7 @@ NrtResult Nrt_AudioService_destroy(NrtAudioService service) {
 NrtResult Nrt_AudioService_initialiseAudio(NrtAudioService service, int32_t* output) {
     if (service == NULL) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -41,7 +41,7 @@ NrtResult Nrt_AudioService_initialiseAudio(NrtAudioService service, int32_t* out
 int32_t loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -53,7 +53,7 @@ int32_t loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator*
 NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int source, float val) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -64,7 +64,7 @@ NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int 
 NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned int source, float posX, float posY) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -75,7 +75,7 @@ NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned in
 NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -86,7 +86,7 @@ NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
 NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int loops) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -97,7 +97,7 @@ NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIte
 NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -108,7 +108,7 @@ NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service) {
 NrtResult Nrt_AudioService_stopMusic(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -119,7 +119,7 @@ NrtResult Nrt_AudioService_stopMusic(NrtAudioService service) {
 NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -130,7 +130,7 @@ NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) 
 NrtResult Nrt_AudioService_checkSources(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -141,7 +141,7 @@ NrtResult Nrt_AudioService_checkSources(NrtAudioService service) {
 NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsigned int* output) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -152,7 +152,7 @@ NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsig
 NrtResult Nrt_AudioService_unload(NrtAudioService service, unsigned int handle) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -163,7 +163,7 @@ NrtResult Nrt_AudioService_unload(NrtAudioService service, unsigned int handle) 
 NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handle, int loops) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -174,7 +174,7 @@ NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handl
 NrtResult Nrt_AudioService_stopSound(NrtAudioService service, unsigned int handle) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -185,7 +185,7 @@ NrtResult Nrt_AudioService_stopSound(NrtAudioService service, unsigned int handl
 NrtResult Nrt_AudioService_tearDown(NrtAudioService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);

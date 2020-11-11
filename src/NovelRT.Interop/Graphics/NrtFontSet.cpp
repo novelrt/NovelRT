@@ -17,7 +17,7 @@ extern "C" {
   NrtResult Nrt_FontSet_loadFontAsTextureSet(NrtFontSet fontSet, const char* file, float fontSize) {
     if(fontSet == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -29,7 +29,7 @@ extern "C" {
   NrtResult Nrt_FontSet_getFontFile(NrtFontSet fontSet, const char** outputFontFile) {
     if(fontSet == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -41,7 +41,7 @@ extern "C" {
   NrtResult Nrt_FontSet_getFontSize(NrtFontSet fontSet, float* outputFontSize) {
     if(fontSet == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);

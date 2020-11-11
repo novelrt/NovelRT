@@ -22,7 +22,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getR(NrtRGBAConfig colourConfig, int32_t* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -34,7 +34,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_setR(NrtRGBAConfig colourConfig, int32_t inputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -46,7 +46,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getG(NrtRGBAConfig colourConfig, int32_t* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -58,7 +58,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_setG(NrtRGBAConfig colourConfig, int32_t inputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -70,7 +70,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getB(NrtRGBAConfig colourConfig, int32_t* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -82,7 +82,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_setB(NrtRGBAConfig colourConfig, int32_t inputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -94,7 +94,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getA(NrtRGBAConfig colourConfig, int32_t* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -106,7 +106,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_setA(NrtRGBAConfig colourConfig, int32_t inputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -118,7 +118,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getRScalar(NrtRGBAConfig colourConfig, float* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -130,7 +130,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getGScalar(NrtRGBAConfig colourConfig, float* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -142,7 +142,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getBScalar(NrtRGBAConfig colourConfig, float* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -154,7 +154,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_getAScalar(NrtRGBAConfig colourConfig, float* outputValue) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
@@ -166,7 +166,7 @@ extern "C" {
   NrtResult Nrt_RGBAConfig_destroy(NrtRGBAConfig colourConfig) {
     if(colourConfig == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);

@@ -17,7 +17,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getTransform(NrtTextRect rect, NrtTransform *outputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -30,7 +30,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setTransform(NrtTextRect rect, NrtTransform inputTransform) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -42,7 +42,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getLayer(NrtTextRect rect, int32_t *outputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -54,7 +54,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -66,7 +66,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getActive(NrtTextRect rect, NrtBool* outputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -84,7 +84,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setActive(NrtTextRect rect, NrtBool inputBool) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -102,7 +102,7 @@ extern "C" {
   NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRect rect) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -116,7 +116,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getColourConfig(NrtTextRect rect, NrtRGBAConfig* outputColourConfig) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -129,7 +129,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setColourConfig(NrtTextRect rect, NrtRGBAConfig inputColourConfig) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -141,7 +141,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getText(NrtTextRect rect, const char** outputText) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -153,7 +153,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -165,7 +165,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getFontSet(NrtTextRect rect, NrtFontSet* outputFontSet) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -178,7 +178,7 @@ extern "C" {
   NrtResult Nrt_TextRect_setFontSet(NrtTextRect rect, NrtFontSet inputFontSet) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -191,7 +191,7 @@ extern "C" {
   NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRect rect, NrtRenderObject* outputRenderObject) {
     if(rect == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     *outputRenderObject = reinterpret_cast<NrtRenderObject>(rect);

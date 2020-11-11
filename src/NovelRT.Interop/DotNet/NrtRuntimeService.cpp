@@ -17,7 +17,7 @@ NrtRuntimeService Nrt_RuntimeService_create() {
 NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -41,7 +41,7 @@ NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service) {
 NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -52,7 +52,7 @@ NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
 NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_UNKOWN;
+        return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);

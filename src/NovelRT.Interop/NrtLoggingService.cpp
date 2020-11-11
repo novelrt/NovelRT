@@ -28,7 +28,7 @@ NrtLoggingService Nrt_LoggingService_createCustomTitleAndLevel(const char* core,
 NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -40,7 +40,7 @@ NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message,
 NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -52,7 +52,7 @@ NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* 
 NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -64,7 +64,7 @@ NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char*
 NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -76,7 +76,7 @@ NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const cha
 NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -88,7 +88,7 @@ NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char*
 NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -100,7 +100,7 @@ NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* 
 NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -112,7 +112,7 @@ NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel 
 NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -123,7 +123,7 @@ NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* obj
 NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage) {
   if (service == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_UNKOWN;
+    return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
   NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);

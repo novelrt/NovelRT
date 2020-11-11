@@ -41,12 +41,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_rotateToAngleAroundPoint(NrtGeoVector3F* vector, float angleRotationValue, NrtGeoVector3F point) {
     if(vector == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*vector) || Nrt_GeoVector3F_isNaN(point)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
@@ -157,12 +157,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs) || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -177,12 +177,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs) || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -196,12 +196,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs) || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -215,17 +215,17 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs) || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     if(Nrt_GeoVector3F_equal(rhs, Nrt_GeoVector3F_zero())) {
       Nrt_setErrMsgIsDivideByZeroInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_DIVIDE_BY_ZERO;
     }
 
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -239,12 +239,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -257,12 +257,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     const Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -275,12 +275,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -293,17 +293,17 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
     if(outputResult == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     if(rhs == 0.0f) {
       Nrt_setErrMsgIsDivideByZeroInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_DIVIDE_BY_ZERO;
     }
 
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
@@ -316,12 +316,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) += *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -332,12 +332,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) -= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -348,12 +348,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) *= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -364,17 +364,17 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || Nrt_GeoVector3F_isNaN(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     if(Nrt_GeoVector3F_equal(Nrt_GeoVector3F_zero(), rhs)) {
       Nrt_setErrMsgIsDivideByZeroInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_DIVIDE_BY_ZERO;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) /= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -385,12 +385,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) += rhs;
@@ -401,12 +401,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) -= rhs;
@@ -417,12 +417,12 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(&rhs) *= rhs;
@@ -433,17 +433,17 @@ extern "C" {
   NrtResult Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs) {
     if(lhs == nullptr) {
       Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
     if(Nrt_GeoVector3F_isNaN(*lhs)  || std::isnan(rhs)) {
       Nrt_setErrMsgIsNaNInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_NOT_A_NUMBER;
     }
 
     if(rhs == 0.0f) {
       Nrt_setErrMsgIsDivideByZeroInternal();
-      return NRT_FAILURE_UNKOWN;
+      return NRT_FAILURE_DIVIDE_BY_ZERO;
     }
 
     *reinterpret_cast<Maths::GeoVector3F*>(lhs) /= rhs;

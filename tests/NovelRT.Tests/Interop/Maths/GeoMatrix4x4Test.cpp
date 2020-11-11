@@ -48,7 +48,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly) {
 TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   ////EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -56,7 +56,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNaNFailureWhenGivenNanMatrixForLh
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   ////EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -64,7 +64,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNaNFailureWhenGivenNanMatrixForRh
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   ////EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -72,7 +72,7 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixReturnsNaNFailureWhenGivenNanMatrixForBo
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   ////EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -87,7 +87,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
 TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   ////EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -95,7 +95,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   ////EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -103,7 +103,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   ////EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this//TODO: fix this
 }
 
@@ -111,7 +111,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -127,7 +127,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly
 TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity(), nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -135,7 +135,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, Nrt_GeoMatrix4x4F_getDefaultIdentity(), &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -143,7 +143,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -151,7 +151,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyMatrixReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyMatrix(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -166,7 +166,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixAddsMatricesTogetherCorrectly) {
 TEST(InteropGeoMatrix4x4FTest, addAssignMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -174,7 +174,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixReturnsNaNFailureWhenGivenNanMatri
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -182,7 +182,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixReturnsNaNFailureWhenGivenNanMatri
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -190,7 +190,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixReturnsNaNFailureWhenGivenNanMatri
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&nanInput, nanInput), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignMatrix(&nanInput, nanInput), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -205,7 +205,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixSubtractsMatricesTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -213,7 +213,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -221,7 +221,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -229,7 +229,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&nanInput, nanInput), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignMatrix(&nanInput, nanInput), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -244,7 +244,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixMultipliesMatricesTogetherCor
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(nullptr, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -252,7 +252,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&nanInput, Nrt_GeoMatrix4x4F_getDefaultIdentity()), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -260,7 +260,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&dummyInput, NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -268,7 +268,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixReturnsNaNFailureWhenGivenNan
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&nanInput, nanInput), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignMatrix(&nanInput, nanInput), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -283,7 +283,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly) {
 TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -291,7 +291,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanMatrixForLhs
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -299,7 +299,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanFloatForRhs)
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -307,7 +307,7 @@ TEST(InteropGeoMatrix4x4FTest, addFloatReturnsNaNFailureWhenGivenNanValuesForBot
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -322,7 +322,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -330,7 +330,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanMatrixF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -338,7 +338,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanFloatFo
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -346,7 +346,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatReturnsNaNFailureWhenGivenNanValuesF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -362,7 +362,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatMultipliesMatrixAndFloatTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), 1.0f, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -370,7 +370,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNaNFailureWhenGivenNanMatrixF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, 1.0f, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -378,7 +378,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNaNFailureWhenGivenNanFloatFo
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(Nrt_GeoMatrix4x4F_getDefaultIdentity(), NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -386,7 +386,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyFloatReturnsNaNFailureWhenGivenNanValuesF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F outputThatDoesntGetUsed = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyFloat(NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) }, NAN, &outputThatDoesntGetUsed), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -401,7 +401,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignFloatAddsMatrixAndFloatTogetherCorrectly
 TEST(InteropGeoMatrix4x4FTest, addAssignFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(nullptr, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(nullptr, 1.0f), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -409,7 +409,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignFloatReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&nanInput, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&nanInput, 1.0f), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -417,7 +417,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignFloatReturnsNaNFailureWhenGivenNanFloatF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&dummyInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&dummyInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -425,7 +425,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignFloatReturnsNaNFailureWhenGivenNanMatrix
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&nanInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_addAssignFloat(&nanInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -440,7 +440,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatSubtractsMatrixAndFloatTogethe
 TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(nullptr, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(nullptr, 1.0f), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -448,7 +448,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatReturnsNaNFailureWhenGivenNanM
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&nanInput, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&nanInput, 1.0f), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -456,7 +456,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatReturnsNaNFailureWhenGivenNanF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&dummyInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&dummyInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -464,7 +464,7 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatReturnsNaNFailureWhenGivenNanV
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&nanInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_subtractAssignFloat(&nanInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -479,7 +479,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatMultipliesMatrixAndFloatTogeth
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatReturnsNullptrFailureWhenGivenNullptrForOutput) {
   const char* errorMessage = nullptr;
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(nullptr, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(nullptr, 1.0f), NRT_FAILURE_NULLPTR_PROVIDED);
   //EXPECT_EQ(Nrt_getErrMsgIsNullptr(), errorMessage);  //TODO: fix this
 }
 
@@ -487,7 +487,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatReturnsNaNFailureWhenGivenNanM
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&nanInput, 1.0f), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&nanInput, 1.0f), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -495,7 +495,7 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatReturnsNaNFailureWhenGivenNanF
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F dummyInput = Nrt_GeoMatrix4x4F_getDefaultIdentity();
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&dummyInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&dummyInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
 
@@ -503,6 +503,6 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatReturnsNaNFailureWhenGivenNanV
   const char* errorMessage = nullptr;
   NrtGeoMatrix4x4F nanInput = NrtGeoMatrix4x4F { Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN), Nrt_GeoVector4F_uniform(NAN) };
 
-  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&nanInput, NAN), NRT_FAILURE_UNKOWN);
+  ASSERT_EQ(Nrt_GeoMatrix4x4F_multiplyAssignFloat(&nanInput, NAN), NRT_FAILURE_NOT_A_NUMBER);
   //EXPECT_EQ(Nrt_getErrMsgIsNaN(), errorMessage);  //TODO: fix this
 }
