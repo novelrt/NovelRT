@@ -39,4 +39,4 @@ namespace NovelRT::Ink {
   };
 }
 
-#endif // NOVELRT_TIMING_STEPTIMER_H
+#endif // NOVELRT_INK_STORY_H
