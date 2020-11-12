@@ -63,7 +63,7 @@ TEST(InteropGeoVector2Test, addOperatorAddsCorrectlyForGeoVector2F) {
   EXPECT_TRUE(Nrt_GeoVector2F_equal(Nrt_GeoVector2F_uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector2Test, addOperatorReturnsNullptrFailureStatusWhenGivenNullptrForGeoVector2F) {
+TEST(InteropGeoVector2Test, addOperatorReturnsNullptrFailureWhenGivenNullptrForGeoVector2F) {
   NrtGeoVector2F test = Nrt_GeoVector2F_one();
   NrtGeoVector2F result = Nrt_GeoVector2F_zero();
   
