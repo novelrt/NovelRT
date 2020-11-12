@@ -28,49 +28,45 @@ TEST_F(InteropTimestampTest, GetSecondsFloatShouldReturnCorrectValue) {
 }
 
 TEST_F(InteropTimestampTest, AddOperatorAddsCorrectly) {
-  NrtTimestamp result = NULL;
-  Nrt_Timestamp_addTimestamp(Nrt_Timestamp_create(0), Nrt_Timestamp_create(1), &result);
+  NrtTimestamp result = Nrt_Timestamp_addTimestamp(Nrt_Timestamp_create(0), Nrt_Timestamp_create(1));
   ASSERT_EQ(result, 1);
 }
 
 TEST_F(InteropTimestampTest, SubtractOperatorSubtractsCorrectly) {
-  NrtTimestamp result = NULL;
-  Nrt_Timestamp_subtractTimestamp(Nrt_Timestamp_create(1), Nrt_Timestamp_create(1), &result);
+  NrtTimestamp result = Nrt_Timestamp_subtractTimestamp(Nrt_Timestamp_create(1), Nrt_Timestamp_create(1));
   ASSERT_EQ(result, 0);
 }
 
 TEST_F(InteropTimestampTest, MultiplyOperatorMultipliesCorrectly) {
-  NrtTimestamp result = NULL;
-  Nrt_Timestamp_multiplyTimestamp(Nrt_Timestamp_create(2), Nrt_Timestamp_create(2), &result);
+  NrtTimestamp result = Nrt_Timestamp_multiplyTimestamp(Nrt_Timestamp_create(2), Nrt_Timestamp_create(2));
   ASSERT_EQ(result, 4);
 }
 
 TEST_F(InteropTimestampTest, DivideOperatorDividesCorrectly) {
-  NrtTimestamp result = NULL;
-  Nrt_Timestamp_divideTimestamp(Nrt_Timestamp_create(2), Nrt_Timestamp_create(2), &result);
+  NrtTimestamp result = Nrt_Timestamp_divideTimestamp(Nrt_Timestamp_create(2), Nrt_Timestamp_create(2));
   ASSERT_EQ(result, 1);
 }
 
 TEST_F(InteropTimestampTest, AddAssignOperatorAddsAndAssignsCorrectly) {
-  auto result = Nrt_Timestamp_create(0);
+  NrtTimestamp result = Nrt_Timestamp_create(0);
   Nrt_Timestamp_addAssignTimestamp(&result, Nrt_Timestamp_create(1));
   ASSERT_EQ(result, 1);
 }
 
 TEST_F(InteropTimestampTest, SubtractAssignOperatorSubtractsAndAssignsCorrectly) {
-  auto result = Nrt_Timestamp_create(1);
+  NrtTimestamp result = Nrt_Timestamp_create(1);
   Nrt_Timestamp_subtractAssignTimestamp(&result, Nrt_Timestamp_create(1));
   ASSERT_EQ(result, 0);
 }
 
 TEST_F(InteropTimestampTest, MultiplyAssignOperatorMultipliesAndAssignsCorrectly) {
-  auto result = Nrt_Timestamp_create(2);
+  NrtTimestamp result = Nrt_Timestamp_create(2);
   Nrt_Timestamp_multiplyAssignTimestamp(&result, Nrt_Timestamp_create(2));
   ASSERT_EQ(result, 4);
 }
 
 TEST_F(InteropTimestampTest, DivideAssignOperatorDividesAndAssignsCorrectly) {
-  auto result = Nrt_Timestamp_create(2);
+  NrtTimestamp result = Nrt_Timestamp_create(2);
   Nrt_Timestamp_divideAssignTimestamp(&result, Nrt_Timestamp_create(2));
   ASSERT_EQ(result, 1);
 }
