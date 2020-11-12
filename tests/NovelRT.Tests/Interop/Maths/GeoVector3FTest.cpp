@@ -85,7 +85,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForLhsF
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addVector(test, Nrt_GeoVector3F_zero(), &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -95,7 +95,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsF
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addVector(Nrt_GeoVector3F_zero(), test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -105,7 +105,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForBoth
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addVector(test, test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForGeoVector3F) {
@@ -136,7 +136,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractVector(test, Nrt_GeoVector3F_zero(), &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);  
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);  
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -146,7 +146,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractVector(Nrt_GeoVector3F_zero(), test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -156,7 +156,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNMessageOnFailureStatusWhen
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractVector(test, test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForGeoVector3F) {
@@ -187,7 +187,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_multiplyVector(test, Nrt_GeoVector3F_zero(), &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -197,7 +197,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_multiplyVector(Nrt_GeoVector3F_zero(), test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER); 
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER); 
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -207,7 +207,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNMessageOnFailureStatusWhen
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractVector(test, test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForGeoVector3F) {
@@ -238,7 +238,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideVector(test, Nrt_GeoVector3F_zero(), &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -248,7 +248,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideVector(Nrt_GeoVector3F_zero(), test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -258,7 +258,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNMessageOnFailureStatusWhenNa
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideVector(test, test, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureStatusReturnsGeoVector3FZeroIsProvidedForGeoVector3F) {
@@ -268,7 +268,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroMessageOnFailureSta
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideVector(test, Nrt_GeoVector3F_zero(), &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_DIVIDE_BY_ZERO);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_DIVIDE_BY_ZERO);
 }
 
 TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForFloat) {
@@ -299,7 +299,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForLhsF
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addFloat(test, 0.0f, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForFloat) {
@@ -309,7 +309,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsF
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForFloat) {
@@ -319,7 +319,7 @@ TEST(InteropGeoVector3Test, addOperatorReturnsNaNFailureWhenNaNIsProvidedForBoth
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_addFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForFloat) {
@@ -350,7 +350,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractFloat(test, 0.0f, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForFloat) {
@@ -360,7 +360,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForFloat) {
@@ -370,7 +370,7 @@ TEST(InteropGeoVector3Test, subtractOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_subtractFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForFloat) {
@@ -401,7 +401,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_multiplyFloat(test, 0.0f, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForFloat) {
@@ -411,7 +411,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_multiplyFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForFloat) {
@@ -421,7 +421,7 @@ TEST(InteropGeoVector3Test, multiplyOperatorReturnsNaNFailureWhenNaNIsProvidedFo
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_multiplyFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForFloat) {
@@ -452,7 +452,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNFailureWhenNaNIsProvidedForL
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideFloat(test, 0.0f, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForFloat) {
@@ -462,7 +462,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNFailureWhenNaNIsProvidedForR
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForFloat) {
@@ -472,7 +472,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsNaNFailureWhenNaNIsProvidedForB
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideFloat(test, NAN, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroFailureWhenFloatZeroIsProvidedForFloat) {
@@ -482,7 +482,7 @@ TEST(InteropGeoVector3Test, divideOperatorReturnsDivideByZeroFailureWhenFloatZer
   const char* err;
   int32_t nrtResult = Nrt_GeoVector3F_divideFloat(test, 0.0f, &result);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_DIVIDE_BY_ZERO);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_DIVIDE_BY_ZERO);
 }
 
 TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector3F) {
@@ -513,8 +513,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNFailureWhenNaNIsProvidedF
 
   int32_t nrtResult = Nrt_GeoVector3F_addAssignVector(&test, Nrt_GeoVector3F_one());
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
-  //EXPECT_EQ(Nrt_getErrMsgIsNaN(), err); //TODO: fix this
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -524,7 +523,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNFailureWhenNaNIsProvidedF
 
   int32_t nrtResult = Nrt_GeoVector3F_addAssignVector(&test, Nrt_GeoVector3F_uniform(NAN));
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -534,7 +533,7 @@ TEST(InteropGeoVector3Test, addAssignOperatorReturnsNaNFailureWhenNaNIsProvidedF
 
   int32_t nrtResult = Nrt_GeoVector3F_addAssignVector(&test, test);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector3F) {
@@ -565,7 +564,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_subtractAssignVector(&test, Nrt_GeoVector3F_one());
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -575,7 +574,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_subtractAssignVector(&test, Nrt_GeoVector3F_uniform(NAN));
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -585,7 +584,7 @@ TEST(InteropGeoVector3Test, subtractAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_subtractAssignVector(&test, test);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector3F) {
@@ -616,7 +615,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_multiplyAssignVector(&test, Nrt_GeoVector3F_one());
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
@@ -626,7 +625,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_multiplyAssignVector(&test, Nrt_GeoVector3F_uniform(NAN));
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForBothForGeoVector3F) {
@@ -636,7 +635,7 @@ TEST(InteropGeoVector3Test, multiplyAssignOperatorReturnsNaNFailureWhenNaNIsProv
 
   int32_t nrtResult = Nrt_GeoVector3F_multiplyAssignVector(&test, test);
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector3F) {
@@ -667,7 +666,7 @@ TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNFailureWhenNaNIsProvid
 
   int32_t nrtResult = Nrt_GeoVector3F_divideAssignVector(&test, Nrt_GeoVector3F_one());
 
-  ASSERT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
+  EXPECT_EQ(nrtResult, NRT_FAILURE_NOT_A_NUMBER);
 }
 
 TEST(InteropGeoVector3Test, divideAssignOperatorReturnsNaNFailureWhenNaNIsProvidedForRhsForGeoVector3F) {
