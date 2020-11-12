@@ -14,17 +14,17 @@ extern "C" {
 typedef struct StepTimerHandle* NrtStepTimer;
 
 NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimer* output);
-NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output);
-NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output);
-NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
-NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output);
-NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output);
+uint64_t Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer);
+uint64_t Nrt_StepTimer_getTotalTicks(NrtStepTimer timer);
+NrtTimestamp Nrt_StepTimer_getElapsedTime(NrtStepTimer timer);
+NrtTimestamp Nrt_StepTimer_getTotalTime(NrtStepTimer timer);
+uint64_t Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer);
 NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input);
-NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output);
+NrtTimestamp Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer);
 NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target);
-NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output);
-NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output);
-NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output);
+uint32_t Nrt_StepTimer_getFrameCount(NrtStepTimer timer);
+uint32_t Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer);
+NrtBool Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer);
 NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input);
 NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
 NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);

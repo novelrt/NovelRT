@@ -21,61 +21,31 @@ NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, 
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer, uint64_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint64_t Nrt_StepTimer_getElapsedTicks(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.getElapsedTicks();
-  return NRT_SUCCESS;
+  return time.getElapsedTicks();
 }
 
-NrtResult Nrt_StepTimer_getTotalTicks(NrtStepTimer timer, uint64_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint64_t Nrt_StepTimer_getTotalTicks(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.getTotalTicks();
-  return NRT_SUCCESS;
+  return time.getTotalTicks();
 }
 
-NrtResult Nrt_StepTimer_getElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtTimestamp Nrt_StepTimer_getElapsedTime(NrtStepTimer timer) {
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getElapsedTime();
-  *output = reinterpret_cast<NrtTimestamp&>(*time);
-  return NRT_SUCCESS;
+  return reinterpret_cast<NrtTimestamp&>(*time);
 }
 
-NrtResult Nrt_StepTimer_getTotalTime(NrtStepTimer timer, NrtTimestamp* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtTimestamp Nrt_StepTimer_getTotalTime(NrtStepTimer timer) {
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTotalTime();
-  *output = reinterpret_cast<NrtTimestamp&>(*time);
-  return NRT_SUCCESS;
+  return reinterpret_cast<NrtTimestamp&>(*time);
 }
 
-NrtResult Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer, uint64_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint64_t Nrt_StepTimer_getTargetElapsedTicks(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.targetElapsedTicks();
-  return NRT_SUCCESS;
+  return time.targetElapsedTicks();
 }
 
 NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input) {
@@ -89,16 +59,10 @@ NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimer timer, uint64_t input
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer, NrtTimestamp* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtTimestamp Nrt_StepTimer_getTargetElapsedTime(NrtStepTimer timer) {
   NovelRT::Timing::Timestamp* time = new NovelRT::Timing::Timestamp(0);
   *time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer).getTargetElapsedTime();
-  *output = reinterpret_cast<NrtTimestamp&>(*time);
-  return NRT_SUCCESS;
+  return reinterpret_cast<NrtTimestamp&>(*time);
 }
 
 NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp target) {
@@ -112,37 +76,19 @@ NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimer timer, NrtTimestamp ta
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_StepTimer_getFrameCount(NrtStepTimer timer, uint32_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint32_t Nrt_StepTimer_getFrameCount(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.getFrameCount();
-  return NRT_SUCCESS;
+  return time.getFrameCount();
 }
 
-NrtResult Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer, uint32_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint32_t Nrt_StepTimer_getFramesPerSecond(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.getFramesPerSecond();
-  return NRT_SUCCESS;
+  return time.getFramesPerSecond();
 }
 
-NrtResult Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer, int32_t* output) {
-  if (output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer) {
   NovelRT::Timing::StepTimer time = reinterpret_cast<NovelRT::Timing::StepTimer&>(timer);
-  *output = time.isFixedTimeStep()? NRT_TRUE : NRT_FALSE;
-  return NRT_SUCCESS;
+  return time.isFixedTimeStep() ? NRT_TRUE : NRT_FALSE;
 }
 
 NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input) {
