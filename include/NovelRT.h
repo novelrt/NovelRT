@@ -124,6 +124,13 @@ namespace NovelRT::Graphics {
   typedef class TextRect TextRect;
 }
 /**
+ * Contains bindings for Ink.
+ */
+namespace NovelRT::Ink {
+  typedef class InkService InkService;
+  typedef class Story Story;
+}
+/**
  * Contains input features, such as keyboard and mouse interactivity.
  */
 namespace NovelRT::Input {
@@ -202,6 +209,10 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
+
+//Ink types
+#include "NovelRT/Ink/Story.h"
+#include "NovelRT/Ink/InkService.h"
 
 //Input types
 #include "NovelRT/Input/InteractionObject.h"

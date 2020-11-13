@@ -53,8 +53,7 @@ $DotNetExe = Join-Path -Path $DotNetInstallDirectory -ChildPath "dotnet.exe"
 Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile $DotNetInstallScript -UseBasicParsing
 New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 
-& $DotNetInstallScript -Channel 3.1 -Version latest -InstallDir $DotNetInstallDirectory
-& $DotNetInstallScript -Channel 2.1 -Version latest -InstallDir $DotNetInstallDirectory -Runtime dotnet
+& $DotNetInstallScript -Channel master -Version 5.0.100 -InstallDir $DotNetInstallDirectory
 
 if ($LastExitCode -ne 0) {
   throw "'dotnet-install' failed"

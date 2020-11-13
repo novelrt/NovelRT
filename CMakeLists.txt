@@ -24,6 +24,14 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 
+find_package(Doxygen 1.8.8
+  COMPONENTS dot)
+
+if(NOT DOXYGEN_FOUND)
+  message("Doxygen 1.8.8 was not found, building documentation is disabled.")
+  set(NOVELRT_BUILD_DOCUMENTATION OFF)
+endif()
+
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)

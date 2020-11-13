@@ -38,6 +38,9 @@ set(ENGINE_SOURCES
   Graphics/TextRect.cpp
   Graphics/Texture.cpp
 
+  Ink/InkService.cpp
+  Ink/Story.cpp
+
   Input/BasicInteractionRect.cpp
   Input/InteractionObject.cpp
   Input/InteractionService.cpp
