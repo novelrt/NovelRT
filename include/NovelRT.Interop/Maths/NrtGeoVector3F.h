@@ -31,22 +31,22 @@ extern "C" {
   NrtBool Nrt_GeoVector3F_lessThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs);
   NrtBool Nrt_GeoVector3F_greaterThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs);
   NrtBool Nrt_GeoVector3F_greaterThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs);
-  NrtResult Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
-  NrtResult Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
-  NrtResult Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
-  NrtResult Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
-  NrtResult Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
-  NrtResult Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs);
-  NrtResult Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs);
-  NrtResult Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs);
-  NrtResult Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs);
+  NrtGeoVector3 Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
+  NrtGeoVector3 Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult);
+  void Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
+  void Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
+  void Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
+  void Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs);
+  void Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs);
+  void Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs);
+  void Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs);
+  void Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs);
 
 #ifdef __cplusplus
 }

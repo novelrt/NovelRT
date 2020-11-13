@@ -19,7 +19,7 @@ extern "C" {
   NrtGeoVector2F Nrt_GeoVector2F_uniform(float value);
   NrtGeoVector2F Nrt_GeoVector2F_zero();
   NrtGeoVector2F Nrt_GeoVector2F_one();
-  NrtResult Nrt_GeoVector2F_rotateToAngleAroundPoint(NrtGeoVector2F* vector, float angleRotationValue, NrtGeoVector2F point);
+  void Nrt_GeoVector2F_rotateToAngleAroundPoint(NrtGeoVector2F* vector, float angleRotationValue, NrtGeoVector2F point);
   NrtBool Nrt_GeoVector2F_epsilonEquals(NrtGeoVector2F vector, NrtGeoVector2F other, NrtGeoVector2F epsilonValue);
   NrtGeoVector2F Nrt_GeoVector2F_getNormalised(NrtGeoVector2F vector);
   float Nrt_GeoVector2F_getLength(NrtGeoVector2F vector);
@@ -30,22 +30,22 @@ extern "C" {
   NrtBool Nrt_GeoVector2F_lessThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
   NrtBool Nrt_GeoVector2F_greaterThan(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
   NrtBool Nrt_GeoVector2F_greaterThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
-  NrtResult Nrt_GeoVector2F_addVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_subtractVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_multiplyVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_divideVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_addFloat(NrtGeoVector2F lhs, float rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_subtractFloat(NrtGeoVector2F lhs, float rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_multiplyFloat(NrtGeoVector2F lhs, float rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_divideFloat(NrtGeoVector2F lhs, float rhs, NrtGeoVector2F* outputResult);
-  NrtResult Nrt_GeoVector2F_addAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
-  NrtResult Nrt_GeoVector2F_subtractAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
-  NrtResult Nrt_GeoVector2F_multiplyAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
-  NrtResult Nrt_GeoVector2F_divideAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
-  NrtResult Nrt_GeoVector2F_addAssignFloat(NrtGeoVector2F* lhs, float rhs);
-  NrtResult Nrt_GeoVector2F_subtractAssignFloat(NrtGeoVector2F* lhs, float rhs);
-  NrtResult Nrt_GeoVector2F_multiplyAssignFloat(NrtGeoVector2F* lhs, float rhs);
-  NrtResult Nrt_GeoVector2F_divideAssignFloat(NrtGeoVector2F* lhs, float rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_addVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_subtractVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_multiplyVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_divideVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_addFloat(NrtGeoVector2F lhs, float rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_subtractFloat(NrtGeoVector2F lhs, float rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_multiplyFloat(NrtGeoVector2F lhs, float rhs);
+  NrtGeoVector2F Nrt_GeoVector2F_divideFloat(NrtGeoVector2F lhs, float rhs);
+  void Nrt_GeoVector2F_addAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
+  void Nrt_GeoVector2F_subtractAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
+  void Nrt_GeoVector2F_multiplyAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
+  void Nrt_GeoVector2F_divideAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs);
+  void Nrt_GeoVector2F_addAssignFloat(NrtGeoVector2F* lhs, float rhs);
+  void Nrt_GeoVector2F_subtractAssignFloat(NrtGeoVector2F* lhs, float rhs);
+  void Nrt_GeoVector2F_multiplyAssignFloat(NrtGeoVector2F* lhs, float rhs);
+  void Nrt_GeoVector2F_divideAssignFloat(NrtGeoVector2F* lhs, float rhs);
 
 #ifdef __cplusplus
 }
