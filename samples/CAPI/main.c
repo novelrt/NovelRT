@@ -37,6 +37,7 @@ NrtStory story = NULL;
 //Function to render NovelChan
 void renderNovelChan() {
     Nrt_ImageRect_executeObjectBehaviour(nChanRect);
+    Nrt_Input_BasicInteractionRect_executeObjectBehaviour(interactRect);
 }
 
 //Filesystem string helper
