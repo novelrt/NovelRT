@@ -27,15 +27,15 @@ NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service) {
 
 // NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
 //     if (service == nullptr || outputFunction == nullptr) {
-//         if (errorMessage != nullptr) {
-//             *errorMessage = Nrt_getErrMsgIsNullptr();
-//         }
-//         return NOVELRT_FAILURE;
+//         Nrt_setErrMsgIsNullptrInternal();
+//         return NRT_FAILURE_NULLPTR_PROVIDED;
 //     }
 
 //     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
-//     auto func = cService->getFunction(assemblyName, typeName, methodName, delegateTypeName);
-//     return NOVELRT_SUCCESS;
+
+//     //std::function<void(void)> func = cService->getFunction(assemblyName, typeName, methodName, delegateTypeName);
+//     //*outputFunction = reinterpret_cast<NrtRuntimeFunction>(func);
+//     return NRT_SUCCESS;
 // }
 
 NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {

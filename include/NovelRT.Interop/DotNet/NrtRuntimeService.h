@@ -9,12 +9,18 @@
 extern "C" {
 #endif
 
+  #if defined(WIN32)
+    typedef wchar_t char_t;
+  #else
+    typedef char char_t;
+  #endif
+
   typedef struct RuntimeServiceHandle* NrtRuntimeService;
-  typedef struct RuntimeFunctionHandle* NrtRuntimeFunction;
+  typedef void* NrtRuntimeFunction;
 
   NrtRuntimeService Nrt_RuntimeService_create();
   NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service);
-//   NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName);
+  //NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName);
   NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service);
   NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service);
 
