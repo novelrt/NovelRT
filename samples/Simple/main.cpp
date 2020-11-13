@@ -156,13 +156,13 @@ int main(int /*argc*/, char* /*argv*/[])
 
   playAudioButtonTwoElectricBoogaloo = runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
-  auto inkButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2<float>(novelChanTransform.position().getX() - 500, novelChanTransform.position().getY() - 200), 0, NovelRT::Maths::GeoVector2<float>(200, 200));
+  auto inkButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2F(novelChanTransform.position.x - 500, novelChanTransform.position.y - 200), 0, NovelRT::Maths::GeoVector2F(200, 200));
   inkButton = runner.getRenderer()->createBasicFillRect(inkButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
   auto inkTextTransform = inkButtonTransform;
-  inkTextTransform.scale() = NovelRT::Maths::GeoVector2<float>(1.0f, 1.0f);
-  auto inkTextTransformPosition = inkButtonTransform.position();
-  inkTextTransformPosition.setX(inkButtonTransform.position().getX() - 75);
-  inkTextTransform.position() = inkTextTransformPosition;
+  inkTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+  auto inkTextTransformPosition = inkButtonTransform.position;
+  inkTextTransformPosition.x = inkButtonTransform.position.x - 75;
+  inkTextTransform.position = inkTextTransformPosition;
   inkText = runner.getRenderer()->createTextRect(inkTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36, (fontsDirPath / "Gayathri-Regular.ttf").string());
   inkText->setText("Ink!");
   inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);
