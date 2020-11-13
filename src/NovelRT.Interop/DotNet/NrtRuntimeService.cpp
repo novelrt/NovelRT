@@ -4,6 +4,10 @@
 #include "NovelRT.Interop/NrtInteropUtils.h"
 #include "NovelRT.Interop/DotNet/NrtRuntimeService.h"
 #include "NovelRT.h"
+#include <list>
+
+using namespace NovelRT;
+std::list<std::shared_ptr<Ink::InkService>> _inkServiceCollection;
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,19 +29,6 @@ NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service) {
     return NRT_SUCCESS;
 }
 
-// NrtResult Nrt_RuntimeService_getFunction(NrtRuntimeService service, NrtRuntimeFunction* outputFunction, const char_t* assemblyName, const char_t* typeName, const char_t* methodName, const char_t* delegateTypeName) {
-//     if (service == nullptr || outputFunction == nullptr) {
-//         Nrt_setErrMsgIsNullptrInternal();
-//         return NRT_FAILURE_NULLPTR_PROVIDED;
-//     }
-
-//     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
-
-//     //std::function<void(void)> func = cService->getFunction(assemblyName, typeName, methodName, delegateTypeName);
-//     //*outputFunction = reinterpret_cast<NrtRuntimeFunction>(func);
-//     return NRT_SUCCESS;
-// }
-
 NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
@@ -57,6 +48,41 @@ NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service) {
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
     cService->tearDown();
+    return NRT_SUCCESS;
+}
+
+NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeService service, intptr_t obj) {
+  if (service == nullptr) {
+        Nrt_setErrMsgIsNullptrInternal();
+        return NRT_FAILURE_NULLPTR_PROVIDED;
+    }
+
+    NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
+    cService->freeObject(obj);
+    return NRT_SUCCESS;
+}
+
+NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* str) {
+  if (service == nullptr || str == nullptr) {
+        Nrt_setErrMsgIsNullptrInternal();
+        return NRT_FAILURE_NULLPTR_PROVIDED;
+    }
+
+    NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
+    cService->freeString(str);
+    return NRT_SUCCESS;
+}
+
+NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkService* outputInkService) {
+  if (service == nullptr || outputInkService == nullptr) {
+        Nrt_setErrMsgIsNullptrInternal();
+        return NRT_FAILURE_NULLPTR_PROVIDED;
+    }
+
+    NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
+    auto inkServicePtr = cService->getInkService();
+    _inkServiceCollection.push_back(inkServicePtr);
+    *outputInkService = reinterpret_cast<NrtInkService>(inkServicePtr.get());
     return NRT_SUCCESS;
 }
 

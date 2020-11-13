@@ -1,5 +1,5 @@
 set(INTEROP_SOURCES
-  NrtInteropErrorHandlingInternal.cpp  
+  NrtInteropErrorHandlingInternal.cpp
   NrtInteropUtils.cpp
   NrtLoggingService.cpp
   NrtNovelRunner.cpp
@@ -13,6 +13,8 @@ set(INTEROP_SOURCES
   Audio/NrtAudioService.cpp
 
   DotNet/NrtRuntimeService.cpp
+  Ink/NrtInkService.cpp
+  Ink/NrtStory.cpp
 
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
@@ -26,7 +28,7 @@ set(INTEROP_SOURCES
   Input/NrtBasicInteractionRect.cpp
   Input/NrtInteractionService.cpp
   Input/NrtKeyStateFrameChangeLog.cpp
-  
+
   Maths/NrtGeoMatrix4x4F.cpp
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoVector2F.cpp
