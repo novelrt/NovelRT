@@ -170,7 +170,7 @@ extern "C" {
     return *reinterpret_cast<NrtGeoVector3F*>(&result);
   }
 
-  NrtGeoVector3F Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs, NrtGeoVector3F* outputResult) {
+  NrtGeoVector3F Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs) {
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F result = cVector * rhs;
     return *reinterpret_cast<NrtGeoVector3F*>(&result);
@@ -207,7 +207,7 @@ extern "C" {
   }
 
   void Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs) {
-    *reinterpret_cast<Maths::GeoVector3F*>(&rhs) *= rhs;
+    *reinterpret_cast<Maths::GeoVector3F*>(lhs) *= rhs;
   }
 
   void Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs) {

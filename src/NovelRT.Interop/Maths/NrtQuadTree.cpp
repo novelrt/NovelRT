@@ -116,7 +116,7 @@ extern "C" {
      return NRT_SUCCESS;
    }
   
-  NrtResult Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
+  NrtResult Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, NrtBool* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_NULLPTR_PROVIDED;
@@ -128,7 +128,7 @@ extern "C" {
     return NRT_SUCCESS;
    }
   
-  NrtResult Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, int32_t* outputResult) {
+  NrtResult Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, NrtBool* outputResult) {
      if(tree == nullptr || outputResult == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_NULLPTR_PROVIDED;
