@@ -11,7 +11,9 @@ extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath();
-NrtResult Nrt_getExecutableDirPath(const char** path);
+const char* Nrt_getExecutableDirPath();
+const char* Nrt_appendFilePath(int numberOfArgs, ...);
+const char* Nrt_appendText(int numberOfArgs, ...);
 
 #ifdef __cplusplus
 }
