@@ -71,7 +71,11 @@ NrtResult Nrt_Scene_delete(NrtScene scene) {
   catch(const std::exception& ex) {
     const char* message = ex.what();
     char* target = new char[strlen(message) + 1];
+#if defined(WIN32)
     strcpy_s(target, strlen(message) + 1, message);
+#else
+    target = strdup(message);
+#endif
     Nrt_setErrMsgCustomInternal(target);
     return NRT_FAILURE_UNKNOWN;
   }

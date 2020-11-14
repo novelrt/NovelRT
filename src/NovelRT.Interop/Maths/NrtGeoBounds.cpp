@@ -40,7 +40,7 @@ extern "C" {
 
   NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds) {
     const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-    Maths::GeoVector2F extents = cBounds.getExtents(); 
+    Maths::GeoVector2F extents = cBounds.getExtents();
     return reinterpret_cast<NrtGeoVector2F&>(extents);
   }
 
@@ -59,13 +59,18 @@ extern "C" {
       } else {
         *outputResult = NRT_FALSE;
       }
-      
+
       return NRT_SUCCESS;
 
     } catch (const std::exception& ex) {
       const char* message = ex.what();
       char* destination = new char[strlen(message) + 1];
+#if defined(WIN32)
       strcpy_s(destination, strlen(message) + 1, message);
+#else
+      destination = strdup(message);
+#endif
+
       Nrt_setErrMsgCustomInternal(destination);
       return NRT_FAILURE_UNKNOWN;
     }
@@ -89,7 +94,7 @@ extern "C" {
     if(cFirst != cOther) {
       return NRT_TRUE;
     }
-    
+
     return NRT_FALSE;
   }
 

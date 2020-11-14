@@ -1,32 +1,30 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-
 #include "../NrtInteropErrorHandlingInternal.h"
 #include "NovelRT.Interop/Utilities/NrtMisc.h"
 #include "NovelRT.Interop/NrtInteropUtils.h"
 #include <NovelRT.h>
 #include <stdarg.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath() {
-  const char* path = NovelRT::Utilities::Misc::getExecutablePath().string().c_str();
+  std::string cppPath = NovelRT::Utilities::Misc::getExecutablePath().string();
+  char* path = new char[cppPath.length() + 1];
+  if (strlen(path) < cppPath.length() + 1) {
+    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
+    return NULL;
+  }
+
+#if defined(WIN32)
+  strcpy_s(path, cppPath.length()+1, cppPath.c_str());
+#else
+  path = strdup(cppPath.c_str());
+#endif
   return path;
 }
-
-// NrtResult Nrt_getExecutableDirPath(const char** path) {
-//   if (path == nullptr) {
-//     Nrt_setErrMsgIsNullptrInternal();
-//     return NRT_FAILURE_NULLPTR_PROVIDED;
-//   }
-
-//   std::string cppPath = NovelRT::Utilities::Misc::getExecutableDirPath().string();
-//   char* heapPath = new char[cppPath.length() + 1];
-//   strcpy_s(heapPath, cppPath.length()+1,  cppPath.c_str());
-//   *path = heapPath;
-//   return NRT_SUCCESS;
-// }
 
 const char* Nrt_getExecutableDirPath() {
   std::string cppPath = NovelRT::Utilities::Misc::getExecutableDirPath().string();
@@ -36,7 +34,11 @@ const char* Nrt_getExecutableDirPath() {
     return NULL;
   }
 
+#if defined(WIN32)
   strcpy_s(path, cppPath.length()+1, cppPath.c_str());
+#else
+  path = strdup(cppPath.c_str());
+#endif
   return path;
 }
 
@@ -46,8 +48,8 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
     return NULL;
   }
 
-  char* dirMarker = "/";
-#if defined(_WIN32) || defined(WIN32)
+  const char* dirMarker = static_cast<const char*>("/");
+#if defined(WIN32)
   dirMarker = "\\";
 #endif
 
@@ -69,7 +71,12 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
     return NULL;
   }
 
+//strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
+#if defined(WIN32)
   strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
+#else
+  finalPath = strdup(finalString.c_str());
+#endif
   return finalPath;
 }
 
@@ -94,7 +101,11 @@ const char* Nrt_appendText(int numberOfArgs, ...) {
     return NULL;
   }
 
+  #if defined(WIN32)
   strcpy_s(finalText, finalString.length() + 1, finalString.c_str());
+#else
+  finalText = strdup(finalString.c_str());
+#endif
   return finalText;
 }
 

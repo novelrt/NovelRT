@@ -1,4 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-lambda-capture"
+#endif
 
 #include <NovelRT.h>
 
@@ -32,3 +36,7 @@ namespace NovelRT::Ink {
     return _runtimeService;
   }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
