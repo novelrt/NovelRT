@@ -11,35 +11,13 @@ extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath() {
-  std::string cppPath = NovelRT::Utilities::Misc::getExecutablePath().string();
-  char* path = new char[cppPath.length() + 1];
-  if (strlen(path) < cppPath.length() + 1) {
-    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
-    return NULL;
-  }
-
-#if defined(WIN32)
-  strcpy_s(path, cppPath.length()+1, cppPath.c_str());
-#else
-  path = strdup(cppPath.c_str());
-#endif
-  return path;
+  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
+  return cppPath->c_str();
 }
 
 const char* Nrt_getExecutableDirPath() {
-  std::string cppPath = NovelRT::Utilities::Misc::getExecutableDirPath().string();
-  char* path = new char[cppPath.length() + 1];
-  if(strlen(path) < (cppPath.length() + 1)) {
-    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
-    return NULL;
-  }
-
-#if defined(WIN32)
-  strcpy_s(path, cppPath.length()+1, cppPath.c_str());
-#else
-  path = strdup(cppPath.c_str());
-#endif
-  return path;
+  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
+  return cppPath->c_str();
 }
 
 const char* Nrt_appendFilePath(int numberOfArgs, ...) {
@@ -58,7 +36,9 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
   va_start(args, numberOfArgs);
 
   for(int i = 0; i < numberOfArgs; i++) {
-    finalString.append(va_arg(args, const char*));
+    const char* arg = va_arg(args, const char*);
+    std::cout << arg << std::endl;
+    finalString.append(arg);
     if (i < numberOfArgs-1) {
       finalString.append(dirMarker);
     }

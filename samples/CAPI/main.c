@@ -137,7 +137,13 @@ int main() {
   console = Nrt_LoggingService_createCustomTitle("Interop");
 
   //Getting a constant to the Resources folder
-  const char* path = Nrt_appendFilePath(2, Nrt_getExecutableDirPath(), "Resources");
+  const char* execPath = Nrt_getExecutableDirPath();
+  const char* error = Nrt_getLastError();
+  if (error != NULL) {
+    Nrt_LoggingService_logErrorLine(console, error);
+    return -1;
+  }
+  const char* path = Nrt_appendFilePath(2, execPath, "Resources");
 
   //Getting & Initialising AudioService
   res = Nrt_NovelRunner_getAudioService(runner, &audio);
