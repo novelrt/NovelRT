@@ -25,26 +25,14 @@ extern "C" {
     cStory->ChooseChoiceIndex(choiceIdx);
   }
 
-  NrtResult Nrt_Story_continue(NrtStory story, const char** outputString) {
-    if(outputString == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  const char* Nrt_Story_continue(NrtStory story) {
     Ink::Story* cStory = reinterpret_cast<Ink::Story*>(story);
-    *outputString = cStory->Continue();
-    return NRT_SUCCESS;
+    return cStory->Continue();
   }
 
-  NrtResult Nrt_Story_continueMaximally(NrtStory story, const char** outputString) {
-    if(outputString == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  const char* Nrt_Story_continueMaximally(NrtStory story) {
     Ink::Story* cStory = reinterpret_cast<Ink::Story*>(story);
-    *outputString = cStory->ContinueMaximally();
-    return NRT_SUCCESS;
+    return cStory->ContinueMaximally();
   }
 
   void Nrt_Story_resetState(NrtStory story) {

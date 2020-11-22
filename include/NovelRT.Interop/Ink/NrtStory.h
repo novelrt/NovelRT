@@ -10,11 +10,10 @@
 extern "C" {
 #endif
 
-//NrtInkStory Nrt_InkStory_createStory(NrtInkService service, void(*getExports)(Exports* exports), const char* jsonString)
   NrtBool Nrt_Story_canContinue(NrtStory story);
   void Nrt_Story_chooseChoiceIndex(NrtStory story, int choiceIdx);
-  NrtResult Nrt_Story_continue(NrtStory story, const char** outputString);
-  NrtResult Nrt_Story_continueMaximally(NrtStory story, const char** outputString);
+  const char* Nrt_Story_continue(NrtStory story);
+  const char* Nrt_Story_continueMaximally(NrtStory story);
   void Nrt_Story_resetState(NrtStory story);
 
 #ifdef __cplusplus
