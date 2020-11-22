@@ -44,15 +44,9 @@ NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect ob
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object, int* outputValue) {
-    if (object == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
-    auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = obj->layer();
-    return NRT_SUCCESS;
+int Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object) {
+  auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
+  return obj->layer();
 }
 
 NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value) {
@@ -66,15 +60,9 @@ NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object, int32_t* outputValue) {
-    if (object == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object) {
     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = obj->getActive()? NRT_TRUE : NRT_FALSE;
-    return NRT_SUCCESS;
+    return obj->getActive()? NRT_TRUE : NRT_FALSE;
 }
 
 NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value) {
@@ -88,15 +76,9 @@ NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect objec
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind* outputValue) {
-    if (object == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
-    auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-    *outputValue = reinterpret_cast<NrtKeyCodeKind&>(obj->subscribedKey());
-    return NRT_SUCCESS;
+NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object) {
+  auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
+  return reinterpret_cast<NrtKeyCodeKind&>(obj->subscribedKey());
 }
 
 NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind value) {
@@ -120,20 +102,6 @@ NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect 
     obj->Interacted += ptr;
     return NRT_SUCCESS;
 }
-
-// NrtResult Nrt_Input_BasicInteractionRect_removeInteraction(NrtBasicInteractionRect object, FunctionPointer ptr) {
-//     if (object == nullptr) {
-//         if (errorMessage != nullptr) {
-//             *errorMessage = Nrt_getErrMsgIsNullptr();
-//         }
-//         return NOVELRT_FAILURE;
-//     }
-
-//     auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-//     std::function<void()> functionPtr = reinterpret_cast<std::function<void()>&>(ptr);
-//     obj->Interacted -= functionPtr;
-//     return NOVELRT_SUCCESS;
-// }
 
 #ifdef __cplusplus
 }
