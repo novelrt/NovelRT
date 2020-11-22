@@ -26,19 +26,12 @@ NrtResult Nrt_AudioService_destroy(NrtAudioService service) {
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_AudioService_initialiseAudio(NrtAudioService service, int32_t* output) {
-    if (service == NULL) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+NrtBool Nrt_AudioService_initialiseAudio(NrtAudioService service) {
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    *output = serv->initializeAudio()? NRT_TRUE : NRT_FALSE;
-    return NRT_SUCCESS;
+    return serv->initializeAudio()? NRT_TRUE : NRT_FALSE;
 }
 
-
-int32_t loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output) {
+NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_NULLPTR_PROVIDED;
@@ -49,7 +42,7 @@ int32_t loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator*
     *output = reinterpret_cast<NrtAudioServiceIterator&>(out);
     return NRT_SUCCESS;
 }
-    
+
 NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int source, float val) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
