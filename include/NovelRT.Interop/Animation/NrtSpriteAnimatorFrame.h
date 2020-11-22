@@ -4,7 +4,7 @@
 #define NOVELRT_INTEROP_ANIMATION_SPRITEANIMATORFRAME_H
 
 
-#include "../NrtInteropUtils.h" 
+#include "../NrtInteropUtils.h"
 #include "../Timing/NrtTimestamp.h"
 #include "../Graphics/NrtGraphicsTypedefs.h"
 #include "NovelRT.Interop/Animation/NrtAnimationTypedefs.h"
@@ -17,7 +17,7 @@ NrtSpriteAnimatorFrame Nrt_SpriteAnimatorFrame_create();
 
 NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture);
 NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture);
-NrtResult Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp);
+NrtTimestamp Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame);
 NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp);
 
 NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void(*func)());

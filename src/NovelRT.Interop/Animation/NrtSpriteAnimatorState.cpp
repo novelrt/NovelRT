@@ -14,7 +14,7 @@ extern "C" {
 
 NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create() {
     Animation::SpriteAnimatorState* state = new Animation::SpriteAnimatorState();
-    return reinterpret_cast<NrtSpriteAnimatorState>(state);    
+    return reinterpret_cast<NrtSpriteAnimatorState>(state);
 }
 
 NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget, NrtSpriteAnimatorStateConditionFunctions vector) {
@@ -26,7 +26,7 @@ NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, N
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
     std::shared_ptr<Animation::SpriteAnimatorState> cppStateTarget = std::shared_ptr<Animation::SpriteAnimatorState>(reinterpret_cast<Animation::SpriteAnimatorState*>(stateTarget));
     std::vector<std::function<bool()>> conditions = *reinterpret_cast<std::vector<std::function<bool()>>*>(vector);
-    
+
     cppState->insertNewState(cppStateTarget, conditions);
     return NRT_SUCCESS;
 }
@@ -38,23 +38,15 @@ NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState stat
     }
 
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    
+
     cppState->removeStateAtIndex(index);
-    
+
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state, int32_t* outputLoop) {
-    if (state == nullptr || outputLoop == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state) {
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    
-    *outputLoop = static_cast<int32_t>(cppState->shouldLoop());
-    
-    return NRT_SUCCESS;
+    return static_cast<int32_t>(cppState->shouldLoop());
 }
 
 NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop) {
@@ -64,9 +56,9 @@ NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, in
     }
 
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    
+
     cppState->shouldLoop() = static_cast<bool>(loop);
-    
+
     return NRT_SUCCESS;
 }
 
@@ -104,7 +96,7 @@ NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState 
 
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
     *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorState>(cppState->tryFindValidTransition().get());
-    return NRT_SUCCESS;    
+    return NRT_SUCCESS;
 }
 
 NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create() {

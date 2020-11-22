@@ -25,7 +25,7 @@ NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTe
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     std::shared_ptr<Graphics::Texture> cppTexture = cppFrame->texture();
-    
+
     *outputTexture = reinterpret_cast<NrtTexture>(cppTexture.get());
     return NRT_SUCCESS;
 }
@@ -38,22 +38,16 @@ NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTe
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     cppFrame->texture() = reinterpret_cast<Graphics::Texture*>(texture)->shared_from_this();
-    
+
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp* outputTimestamp) {
-    if (frame == nullptr || outputTimestamp == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+NrtTimestamp Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame) {
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     Timing::Timestamp* cppDuration = new Timing::Timestamp(0);
     *cppDuration = cppFrame->duration();
-    
-    *outputTimestamp = reinterpret_cast<NrtTimestamp&>(*cppDuration);
-    return NRT_SUCCESS;
+
+    return reinterpret_cast<NrtTimestamp&>(*cppDuration);
 }
 
 NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp) {
@@ -64,7 +58,7 @@ NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtT
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     cppFrame->duration() = Timing::Timestamp(timestamp);
-    
+
     return NRT_SUCCESS;
 }
 
@@ -77,7 +71,7 @@ NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, vo
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     cppFrame->FrameEnter += func;
-    
+
     return NRT_SUCCESS;
 }
 
@@ -89,7 +83,7 @@ NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, voi
 
     Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
     cppFrame->FrameExit += func;
-    
+
     return NRT_SUCCESS;
 }
 

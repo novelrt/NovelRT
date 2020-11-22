@@ -17,7 +17,7 @@ NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, Nr
 NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator);
 NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator);
 NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator);
-NrtResult Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator, NrtAnimatorPlayState* outputPlayState);
+NrtAnimatorPlayState Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator);
 NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state);
 
 #ifdef __cplusplus
