@@ -19,16 +19,9 @@ extern "C" {
    return reinterpret_cast<NrtRGBAConfig>(newColour);
   }
 
-  NrtResult Nrt_RGBAConfig_getR(NrtRGBAConfig colourConfig, int32_t* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  int32_t Nrt_RGBAConfig_getR(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getR();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getR();
   }
 
   NrtResult Nrt_RGBAConfig_setR(NrtRGBAConfig colourConfig, int32_t inputValue) {
@@ -42,17 +35,10 @@ extern "C" {
 
     return NRT_SUCCESS;
   }
-  
-  NrtResult Nrt_RGBAConfig_getG(NrtRGBAConfig colourConfig, int32_t* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
 
+  int32_t Nrt_RGBAConfig_getG(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getG();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getG();
   }
 
   NrtResult Nrt_RGBAConfig_setG(NrtRGBAConfig colourConfig, int32_t inputValue) {
@@ -67,16 +53,9 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_RGBAConfig_getB(NrtRGBAConfig colourConfig, int32_t* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  int32_t Nrt_RGBAConfig_getB(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getB();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getB();
   }
 
   NrtResult Nrt_RGBAConfig_setB(NrtRGBAConfig colourConfig, int32_t inputValue) {
@@ -91,16 +70,9 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_RGBAConfig_getA(NrtRGBAConfig colourConfig, int32_t* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  int32_t Nrt_RGBAConfig_getA(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getA();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getA();
   }
 
   NrtResult Nrt_RGBAConfig_setA(NrtRGBAConfig colourConfig, int32_t inputValue) {
@@ -115,52 +87,24 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_RGBAConfig_getRScalar(NrtRGBAConfig colourConfig, float* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  float Nrt_RGBAConfig_getRScalar(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getRScalar();
-
-    return NRT_SUCCESS;
-  }
-  
-  NrtResult Nrt_RGBAConfig_getGScalar(NrtRGBAConfig colourConfig, float* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
-    RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getGScalar();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getRScalar();
   }
 
-  NrtResult Nrt_RGBAConfig_getBScalar(NrtRGBAConfig colourConfig, float* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  float Nrt_RGBAConfig_getGScalar(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getBScalar();
-
-    return NRT_SUCCESS;
+    return colourConfigPtr->getGScalar();
   }
 
-  NrtResult Nrt_RGBAConfig_getAScalar(NrtRGBAConfig colourConfig, float* outputValue) {
-    if(colourConfig == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  float Nrt_RGBAConfig_getBScalar(NrtRGBAConfig colourConfig) {
     RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
-    *outputValue = colourConfigPtr->getAScalar();
+    return colourConfigPtr->getBScalar();
+  }
 
-    return NRT_SUCCESS;
+  float Nrt_RGBAConfig_getAScalar(NrtRGBAConfig colourConfig) {
+    RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+    return colourConfigPtr->getAScalar();
   }
 
   NrtResult Nrt_RGBAConfig_destroy(NrtRGBAConfig colourConfig) {
