@@ -25,29 +25,15 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile) {
-    if (targetTexture == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  const char* Nrt_Texture_getTextureFile(NrtTexture targetTexture) {
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
-    *outputFile = texturePtr->getTextureFile().c_str();
-
-    return NRT_SUCCESS;
+    return texturePtr->getTextureFile().c_str();
   }
 
-  NrtResult Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize) {
-    if (targetTexture == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtGeoVector2F Nrt_Texture_getSize(NrtTexture targetTexture) {
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
     auto vec = texturePtr->getSize();
-    *outputSize = *reinterpret_cast<NrtGeoVector2F*>(&vec);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtGeoVector2F*>(&vec);
   }
 
 #ifdef __cplusplus
