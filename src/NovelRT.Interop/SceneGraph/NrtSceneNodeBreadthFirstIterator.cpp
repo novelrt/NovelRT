@@ -24,12 +24,12 @@ NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNode node, int32_t(*f
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-    
+
   auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
   _function = func;
   SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> iterator = SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, Internal_BreadthFirstIteratorFunctionDelegate);
-  *outputIterator = reinterpret_cast<NrtSceneNodeBreadthFirstIterator>(&iterator); 
+  *outputIterator = reinterpret_cast<NrtSceneNodeBreadthFirstIterator>(&iterator);
   return NRT_SUCCESS;
 }
 
@@ -55,53 +55,26 @@ NrtResult Nrt_SceneNodeBreadthFirstIterator_postFixIncrement(NrtSceneNodeBreadth
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult) {
-  if(iterator == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-      
+NrtBool Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIterator iterator) {
   SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
-      
-  *outputResult = cppIterator->isEnd();
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(cppIterator->isEnd());
 }
 
-NrtResult Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult) {
-  if(iterator == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other) {
   auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
   auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(other);
-
-  *outputResult = (*cppIterator == *otherCppIterator);
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(*cppIterator == *otherCppIterator);
 }
 
-NrtResult Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other, int32_t* outputResult) {
-  if(iterator == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIterator iterator, NrtSceneNodeBreadthFirstIterator other) {
   auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
   auto otherCppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(other);
-
-  *outputResult = (*cppIterator != *otherCppIterator);
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(*cppIterator != *otherCppIterator);
 }
 
-NrtResult Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIterator iterator, int32_t* outputResult) {
-  if(iterator == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+int32_t Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIterator iterator) {
   auto cppIterator = reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
-  *outputResult = cppIterator->operator*();
-  return NRT_SUCCESS;
+  return cppIterator->operator*();
 }
 
 #ifdef __cplusplus
