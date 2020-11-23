@@ -41,15 +41,9 @@ NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service) {
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_WindowingService_getWindowTitle(NrtWindowingService service, const char** windowTitle) {
+const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-  if (servicePtr == nullptr || windowTitle == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
-  *windowTitle = servicePtr->getWindowTitle().c_str();
-  return NRT_SUCCESS;
+  return servicePtr->getWindowTitle().c_str();
 }
 
 NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value) {
@@ -74,16 +68,10 @@ NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeo
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_WindowingService_getWindowSize(NrtWindowingService service, NrtGeoVector2F* output) {
+NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingService service) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-  if (servicePtr == nullptr || output == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
   auto vector = servicePtr->getWindowSize();
-  *output = reinterpret_cast<NrtGeoVector2F&>(vector);
-  return NRT_SUCCESS;
+  return reinterpret_cast<NrtGeoVector2F&>(vector);
 }
 
 #ifdef __cplusplus
