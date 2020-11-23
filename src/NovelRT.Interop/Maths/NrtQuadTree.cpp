@@ -17,57 +17,43 @@ extern "C" {
      _treeCollection.push_back(std::make_shared<Maths::QuadTree>(*reinterpret_cast<const Maths::GeoBounds*>(&bounds)));
      return reinterpret_cast<NrtQuadTree>(_treeCollection.back().get());
    }
-  
+
   NrtResult Nrt_QuadTree_getParent(const NrtQuadTree tree, NrtQuadTree* outputParentTree) {
      if(tree == nullptr || outputParentTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_NULLPTR_PROVIDED;
      }
-     
+
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
      auto parentTree = treePointer->getParent();
      *outputParentTree = reinterpret_cast<NrtQuadTree&>(parentTree);
 
      return NRT_SUCCESS;
    }
-  
-  NrtResult Nrt_QuadTree_getBounds(const NrtQuadTree tree, NrtGeoBounds* outputGeoBounds) {
-     if(tree == nullptr || outputGeoBounds == nullptr) {
-       Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_NULLPTR_PROVIDED;
-     }
-     
+
+  NrtGeoBounds Nrt_QuadTree_getBounds(const NrtQuadTree tree) {
      Maths::GeoBounds bounds = Maths::GeoBounds({ 0,0 }, {0,0}, 0);
      bounds = reinterpret_cast<Maths::QuadTree*>(tree)->getBounds();
-     *outputGeoBounds = *reinterpret_cast<NrtGeoBounds*>(&bounds);
-
-     return NRT_SUCCESS;
+     return *reinterpret_cast<NrtGeoBounds*>(&bounds);
    }
-  
+
   NrtResult Nrt_QuadTree_getPoint(const NrtQuadTree tree, size_t index, NrtQuadTreePoint* outputPoint) {
      if(tree == nullptr || outputPoint == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
        return NRT_FAILURE_NULLPTR_PROVIDED;
      }
-     
+
      auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
      auto point = treePointer->getPoint(index).get();
      *outputPoint = reinterpret_cast<NrtQuadTreePoint&>(point);
 
      return NRT_SUCCESS;
    }
-  
-  NrtResult Nrt_QuadTree_getPointCount(const NrtQuadTree tree, size_t* outputSize) {
-     if(tree == nullptr || outputSize == nullptr) {
-       Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_NULLPTR_PROVIDED;
-     }
-     
-     *outputSize = reinterpret_cast<Maths::QuadTree*>(tree)->getPointCount();
 
-     return NRT_SUCCESS;
+  size_t Nrt_QuadTree_getPointCount(const NrtQuadTree tree) {
+     return reinterpret_cast<Maths::QuadTree*>(tree)->getPointCount();
    }
-  
+
   NrtResult Nrt_QuadTree_getTopLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
@@ -91,7 +77,7 @@ extern "C" {
 
      return NRT_SUCCESS;
    }
-   
+
   NrtResult Nrt_QuadTree_getBottomLeft(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
@@ -103,7 +89,7 @@ extern "C" {
 
      return NRT_SUCCESS;
    }
-   
+
   NrtResult Nrt_QuadTree_getBottomRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree) {
      if(tree == nullptr || outputCornerTree == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
@@ -115,31 +101,17 @@ extern "C" {
 
      return NRT_SUCCESS;
    }
-  
-  NrtResult Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point, NrtBool* outputResult) {
-     if(tree == nullptr || outputResult == nullptr) {
-       Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_NULLPTR_PROVIDED;
-     }
 
-    auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-    *outputResult = static_cast<int32_t>(treePointer->tryInsert(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
-
-    return NRT_SUCCESS;
+  NrtBool Nrt_QuadTree_tryInsert(const NrtQuadTree tree, NrtQuadTreePoint point) {
+     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
+    return static_cast<int32_t>(treePointer->tryInsert(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
    }
-  
-  NrtResult Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point, NrtBool* outputResult) {
-     if(tree == nullptr || outputResult == nullptr) {
-       Nrt_setErrMsgIsNullptrInternal();
-       return NRT_FAILURE_NULLPTR_PROVIDED;
-     }
 
-    auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
-    *outputResult = static_cast<int32_t>(treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
-
-    return NRT_SUCCESS;
+  NrtBool Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point) {
+     auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
+    return static_cast<int32_t>(treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
   }
-  
+
   NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds, NrtPointVector* outputResultVector) {
      if(tree == nullptr || outputResultVector == nullptr) {
        Nrt_setErrMsgIsNullptrInternal();
@@ -164,15 +136,8 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_PointVector_getSize(const NrtPointVector vector, size_t* outputSize) {
-    if(vector == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
-    *outputSize = reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
-
-    return NRT_SUCCESS;
+  size_t Nrt_PointVector_getSize(const NrtPointVector vector) {
+    return reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
   }
 
   NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index, NrtQuadTreePoint* outputPoint) {
@@ -180,7 +145,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     *outputPoint = reinterpret_cast<NrtQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
 
     return NRT_SUCCESS;

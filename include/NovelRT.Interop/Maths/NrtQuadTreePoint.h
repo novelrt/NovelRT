@@ -10,10 +10,10 @@ extern "C" {
 #endif
 
   typedef struct QuadtreePoint* NrtQuadTreePoint;
-  
+
   NrtQuadTreePoint Nrt_QuadTreePoint_create(NrtGeoVector2F position);
   NrtQuadTreePoint Nrt_QuadTreePoint_createFromFloat(float x, float y);
-  NrtResult Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point, NrtGeoVector2F* outputPosition);
+  NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point);
   NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point);
 
 #ifdef __cplusplus
