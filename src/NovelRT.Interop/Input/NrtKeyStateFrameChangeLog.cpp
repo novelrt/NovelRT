@@ -9,29 +9,15 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-NrtResult Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog changeLog, NrtKeyState* output) {
+NrtKeyState Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog changeLog) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
-
-    if (output == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
     auto state = log.getCurrentState();
-    *output = reinterpret_cast<NrtKeyState&>(state);
-    return NRT_SUCCESS;
+    return reinterpret_cast<NrtKeyState&>(state);
 }
 
-NrtResult Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog changeLog, uint32_t* output) {
+uint32_t Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog changeLog) {
     Input::KeyStateFrameChangeLog& log = reinterpret_cast<Input::KeyStateFrameChangeLog&>(changeLog);
-    
-    if (output == nullptr) {
-        Nrt_setErrMsgIsNullptrInternal();
-        return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
-    *output = log.getChangeCount();
-    return NRT_SUCCESS;
+    return log.getChangeCount();
 }
 
 NrtBool Nrt_KeyStateFrameChangeLog_compareChangeLog(NrtKeyStateFrameChangeLog lhs, NrtKeyState rhs) {
