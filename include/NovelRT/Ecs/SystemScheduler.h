@@ -5,7 +5,6 @@
 
 #include "EcsUtils.h"
 #include "../Atom.h"
-#include "BaseSystem.h"
 #include "../Timing/Timestamp.h"
 #include <unordered_map>
 #include <memory>
