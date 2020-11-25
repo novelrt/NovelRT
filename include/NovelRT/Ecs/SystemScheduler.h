@@ -38,7 +38,7 @@ namespace NovelRT::Ecs
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
-        std::unordered_map<Atom, SystemRecord> _systems;
+        std::unordered_map<Atom, SystemRecord, AtomHashFunction> _systems;
         uint32_t _maximumThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;

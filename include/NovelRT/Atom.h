@@ -7,6 +7,7 @@
 
 namespace NovelRT {
   class Atom {
+    friend class AtomHashFunction;
   private:
     uintptr_t _value;
 
@@ -66,6 +67,13 @@ namespace NovelRT {
       static std::atomic_uintptr_t _nextComponentTypeId(0);
       auto value = ++_nextComponentTypeId;
       return Atom(value);
+    }
+  };
+
+  class AtomHashFunction {
+    public:
+    size_t operator()(Atom atom) const noexcept {
+      return static_cast<size_t>(atom._value);
     }
   };
 }
