@@ -64,7 +64,7 @@ namespace NovelRT::Ecs
         template <typename TComponent>
         Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemPtr, std::vector<Atom> dependencies = std::vector<Atom>())
         {
-            Atom returnId = GetComponentSystemId<TComponent>();
+            Atom returnId = GetSystemIdForComponent<TComponent>();
             _systems.emplace(returnId, SystemRecord{systemPtr, dependencies});
 
             if (dependencies.size() == 0)
