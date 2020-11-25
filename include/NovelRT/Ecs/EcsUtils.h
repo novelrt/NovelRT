@@ -4,6 +4,7 @@
 #define NOVELRT_ECS_ECSUTILS_H
 
 #include <vector>
+#include <cstdint>
 
 namespace NovelRT::Ecs
 {
