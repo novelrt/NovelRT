@@ -1,11 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
+#include <atomic>
+
 #ifndef NOVELRT_ATOM_H
 #define NOVELRT_ATOM_H
-
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
 
 namespace NovelRT {
   class Atom {
@@ -13,10 +11,10 @@ namespace NovelRT {
     uintptr_t _value;
 
   public:
-    explicit Atom() : Atom(0) {
+    explicit Atom() noexcept : Atom(0) {
     }
 
-    explicit Atom(uintptr_t value) :
+    explicit Atom(uintptr_t value) noexcept :
       _value(value) {
     }
 
@@ -61,6 +59,12 @@ namespace NovelRT {
     static Atom getNextTextureId() {
       static std::atomic_uintptr_t _nextTextureId(0);
       auto value = ++_nextTextureId;
+      return Atom(value);
+    }
+    
+    static Atom getNextComponentTypeId() {
+      static std::atomic_uintptr_t _nextComponentTypeId(0);
+      auto value = ++_nextComponentTypeId;
       return Atom(value);
     }
   };

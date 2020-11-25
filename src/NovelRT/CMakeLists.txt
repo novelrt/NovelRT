@@ -28,6 +28,8 @@ set(ENGINE_SOURCES
 
   DotNet/RuntimeService.cpp
 
+  Ecs/SystemScheduler.cpp
+
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
   Graphics/FontSet.cpp

@@ -3,11 +3,11 @@
 #ifndef NOVELRT_TIMING_DELTATIMESTAMP_H
 #define NOVELRT_TIMING_DELTATIMESTAMP_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <cassert>
 
 namespace NovelRT::Timing {
+  // Windows and some other platforms use 100ns ticks
+  static const uint64_t TicksPerSecond = 10'000'000;
   class Timestamp {
   public:
     uint64_t ticks;

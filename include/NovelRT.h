@@ -152,8 +152,6 @@ namespace NovelRT::SceneGraph {
  * Contains timing features, such as timers.
  */
 namespace NovelRT::Timing {
-  // Windows and some other platforms use 100ns ticks
-  static const uint64_t TicksPerSecond = 10'000'000;
   typedef class StepTimer StepTimer;
 }
 /**
@@ -199,6 +197,9 @@ namespace NovelRT::Windowing {
 //Animation types
 #include "NovelRT/Animation/SpriteAnimatorState.h"
 #include "NovelRT/Animation/SpriteAnimator.h"
+
+//ECS types
+#include "NovelRT/Ecs/SystemScheduler.h"
 
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
