@@ -19,51 +19,51 @@ namespace NovelRT {
       _value(value) {
     }
 
-    bool operator==(Atom other) const {
+    bool operator==(Atom other) const noexcept {
       return _value == other._value;
     }
 
-    bool operator!=(Atom other) const {
+    bool operator!=(Atom other) const noexcept {
       return _value != other._value;
     }
 
-    bool operator<(Atom other) const {
+    bool operator<(Atom other) const noexcept {
       return _value < other._value;
     }
 
-    bool operator<=(Atom other) const {
+    bool operator<=(Atom other) const noexcept {
       return _value <= other._value;
     }
 
-    bool operator>(Atom other) const {
+    bool operator>(Atom other) const noexcept {
       return _value > other._value;
     }
 
-    bool operator>=(Atom other) const {
+    bool operator>=(Atom other) const noexcept {
       return _value >= other._value;
     }
 
     // TODO: These should be internal to NovelRT
 
-    static Atom getNextEventHandlerId() {
+    static Atom getNextEventHandlerId() noexcept {
       static std::atomic_uintptr_t _nextEventHandlerId(0);
       auto value = ++_nextEventHandlerId;
       return Atom(value);
     }
 
-    static Atom getNextFontSetId() {
+    static Atom getNextFontSetId() noexcept {
       static std::atomic_uintptr_t _nextFontSetId(0);
       auto value = ++_nextFontSetId;
       return Atom(value);
     }
 
-    static Atom getNextTextureId() {
+    static Atom getNextTextureId() noexcept {
       static std::atomic_uintptr_t _nextTextureId(0);
       auto value = ++_nextTextureId;
       return Atom(value);
     }
     
-    static Atom getNextComponentTypeId() {
+    static Atom getNextComponentTypeId() noexcept {
       static std::atomic_uintptr_t _nextComponentTypeId(0);
       auto value = ++_nextComponentTypeId;
       return Atom(value);
