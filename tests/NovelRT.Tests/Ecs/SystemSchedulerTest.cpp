@@ -12,9 +12,9 @@ class SystemSchedulerTest : public testing::Test
 {
     public:
     SystemScheduler* scheduler = nullptr;
-    bool sysOneBool;
-    bool sysTwoBool;
-    bool sysThreeBool;
+    bool sysOneBool = true;
+    bool sysTwoBool = true;
+    bool sysThreeBool = true;
     std::function<void(Timestamp)> sysOne;
     std::function<void(Timestamp)> sysTwo;
     std::function<void(Timestamp)> sysThree;
@@ -30,30 +30,30 @@ class SystemSchedulerTest : public testing::Test
         scheduler = new SystemScheduler();
         scheduler->SpinThreads();
 
-        sysOne = [&](Timestamp delta) {sysOneBool = true;};
-        sysTwo = [&](Timestamp delta) {sysTwoBool = true;};
-        sysThree = [&](Timestamp delta) {sysThreeBool = true;};
+        sysOne = [&](Timestamp delta) {sysOneBool = false;};
+        sysTwo = [&](Timestamp delta) {sysTwoBool = false;};
+        sysThree = [&](Timestamp delta) {sysThreeBool = false;};
 
         scheduler->RegisterSystemForComponent<int>(sysOne);
         scheduler->RegisterSystemForComponent<bool>(sysTwo);
         scheduler->RegisterSystemForComponent<char>(sysThree);
     }
 
-    void TearDown() override
-    {
-        if (scheduler != nullptr)
-        {
-            delete scheduler;
-            scheduler = nullptr;
-        }
-    }
+    // void TearDown() override
+    // {
+    //     if (scheduler != nullptr)
+    //     {
+    //         delete scheduler;
+    //         scheduler = nullptr;
+    //     }
+    // }
 };
 
 TEST_F(SystemSchedulerTest, RunsAllIndependentSystems)
 {
     scheduler->ExecuteIteration(Timestamp(0));
 
-    EXPECT_EQ(sysOneBool, true);
-    EXPECT_EQ(sysTwoBool, true);
-    EXPECT_EQ(sysThreeBool, true);
+    EXPECT_FALSE(sysOneBool);
+    EXPECT_FALSE(sysTwoBool);
+    EXPECT_FALSE(sysThreeBool);
 }
