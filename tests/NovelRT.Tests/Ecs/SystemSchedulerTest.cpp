@@ -22,21 +22,26 @@ class SystemSchedulerTest : public testing::Test
     protected:
     void SetUp() override
     {
-        if (scheduler != nullptr)
+        sysOneBool = true;
+        sysTwoBool = true;
+        sysThreeBool = true;
+
+        if (scheduler == nullptr)
         {
             delete scheduler;
-        }
+            scheduler = new SystemScheduler();
         
-        scheduler = new SystemScheduler();
-        scheduler->SpinThreads();
 
-        sysOne = [&](Timestamp delta) {sysOneBool = false;};
-        sysTwo = [&](Timestamp delta) {sysTwoBool = false;};
-        sysThree = [&](Timestamp delta) {sysThreeBool = false;};
+            scheduler->SpinThreads();
 
-        scheduler->RegisterSystemForComponent<int>(sysOne);
-        scheduler->RegisterSystemForComponent<bool>(sysTwo);
-        scheduler->RegisterSystemForComponent<char>(sysThree);
+            sysOne = [&](Timestamp delta) {sysOneBool = false;};
+            sysTwo = [&](Timestamp delta) {sysTwoBool = false;};
+            sysThree = [&](Timestamp delta) {sysThreeBool = false;};
+
+            scheduler->RegisterSystemForComponent<int>(sysOne);
+            scheduler->RegisterSystemForComponent<bool>(sysTwo);
+            scheduler->RegisterSystemForComponent<char>(sysThree);
+        }
     }
 
     // void TearDown() override
@@ -49,10 +54,17 @@ class SystemSchedulerTest : public testing::Test
     // }
 };
 
-TEST_F(SystemSchedulerTest, RunsAllIndependentSystems)
+TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
 {
-    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+}
 
+TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
+{
+    //std::cout << "BEFORE: " << sysOneBool << std::endl;
+    scheduler->ExecuteIteration(Timestamp(0));
+    //std::cout << "AFTER: " << sysOneBool << std::endl;
+    
     EXPECT_FALSE(sysOneBool);
     EXPECT_FALSE(sysTwoBool);
     EXPECT_FALSE(sysThreeBool);

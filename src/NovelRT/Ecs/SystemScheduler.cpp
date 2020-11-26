@@ -43,7 +43,7 @@ namespace NovelRT::Ecs
             _threadAvailabilityMap ^= 1ULL << poolId;
             while (!JobAvailable(poolId))
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1)); //TODO: unsure if this is the best amount of time
+                std::this_thread::yield();
             }
 
             _threadAvailabilityMap ^= 1ULL << poolId; //TODO: o god y
@@ -99,11 +99,6 @@ namespace NovelRT::Ecs
 
         int32_t remainder = _independentSystemIds.size() % sizeOfProcessedWork;
 
-        if (remainder == 0)
-        {
-            return;
-        }
-
         if (remainder < amountOfWork)
         {
             QueueLockPair& pair = _threadWorkQueues[0];
@@ -140,7 +135,8 @@ namespace NovelRT::Ecs
 
         while (_threadAvailabilityMap != 0)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::yield();
         }
+        
     }
 }
