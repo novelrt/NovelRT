@@ -14,7 +14,7 @@ namespace NovelRT::Ecs
             return;
         }
 
-        _maximumThreadCount = std::thread::hardware_concurrency();
+        _maximumThreadCount = std::thread::hardware_concurrency() - 1;
 
         //in case the previous call doesn't work
         if (_maximumThreadCount == 0)
@@ -36,14 +36,17 @@ namespace NovelRT::Ecs
         return false;
     }
 
-    void SystemScheduler::CyleForJob(size_t poolId)
+    void SystemScheduler::CycleForJob(size_t poolId)
     {
         while (true)
         {
+            _threadAvailabilityMap ^= 1ULL << poolId;
             while (!JobAvailable(poolId))
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1)); //TODO: unsure if this is the best amount of time
             }
+
+            _threadAvailabilityMap ^= 1ULL << poolId; //TODO: o god y
 
             QueueLockPair& pair = _threadWorkQueues[poolId];
             Atom workItem = pair.systemIds[0];
@@ -52,6 +55,17 @@ namespace NovelRT::Ecs
             pair.threadLock.unlock();
 
             _systems[workItem].systemPtr(_currentDelta);
+        }
+    }
+
+    void SystemScheduler::SpinThreads() noexcept
+    {
+        std::vector<QueueLockPair> vec2(_maximumThreadCount);
+        _threadWorkQueues.swap(vec2);
+        for (size_t i = 0; i < _maximumThreadCount; i++)
+        {
+            _threadAvailabilityMap ^= 1ULL << i;
+            _threadCache.emplace_back(std::thread([&, i](){CycleForJob(i);}));
         }
     }
 
@@ -122,6 +136,11 @@ namespace NovelRT::Ecs
 
                 pair.threadLock.unlock();
             }
+        }
+
+        while (_threadAvailabilityMap != 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }
 }

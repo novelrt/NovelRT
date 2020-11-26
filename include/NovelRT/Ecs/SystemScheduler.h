@@ -49,7 +49,7 @@ namespace NovelRT::Ecs
         std::atomic_uint64_t _threadAvailabilityMap;
 
         bool JobAvailable(size_t poolId) noexcept;
-        void CyleForJob(size_t poolId);
+        void CycleForJob(size_t poolId);
 
     public:
         SystemScheduler(uint32_t maximumThreadCount = 0);
@@ -74,6 +74,8 @@ namespace NovelRT::Ecs
 
             return returnId;
         }
+
+        void SpinThreads() noexcept;
 
         void ExecuteIteration(Timing::Timestamp delta);
     };
