@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.h"
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/Graphics/NrtTextRect.h"
+#include <NovelRT.h>
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/Graphics/NrtTextRect.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;

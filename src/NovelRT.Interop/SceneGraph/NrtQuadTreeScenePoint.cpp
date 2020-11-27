@@ -2,12 +2,12 @@
 
 #include <stdint.h>
 #include <list>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/Maths/NrtGeoVector2F.h"
-#include "NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
+#include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -36,7 +36,7 @@ NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node
   std::shared_ptr<SceneGraph::SceneNode> cNode = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
   SceneGraph::QuadTreeScenePoint* cppPoint = new SceneGraph::QuadTreeScenePoint(x, y, cNode);
   *outputPoint = reinterpret_cast<NrtQuadTreeScenePoint>(&cppPoint);
-  return NRT_SUCCESS;  
+  return NRT_SUCCESS;
 }
 
 

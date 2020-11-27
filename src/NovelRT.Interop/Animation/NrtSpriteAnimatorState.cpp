@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
 #include <stddef.h>
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h"
-#include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h>
+#include <NovelRT.Interop/Animation/NrtSpriteAnimatorState.h>
 #include <NovelRT.h>
 
 #ifdef __cplusplus

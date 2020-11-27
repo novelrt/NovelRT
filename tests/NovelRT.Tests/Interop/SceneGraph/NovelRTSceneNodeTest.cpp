@@ -4,7 +4,7 @@
 #include <NovelRT.h>
 #include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
 #include "NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
+#include <NovelRT.Interop/NrtInteropUtils.h>
 
 using namespace NovelRT;
 using namespace NovelRT::SceneGraph;

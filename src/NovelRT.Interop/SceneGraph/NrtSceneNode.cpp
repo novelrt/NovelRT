@@ -3,11 +3,11 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <list>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
+#include <NovelRT.h>
 using namespace NovelRT;
 
 std::list<std::shared_ptr<SceneGraph::SceneNode>> _sceneNodeCollection;

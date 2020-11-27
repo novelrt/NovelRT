@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Windowing/NrtWindowingService.h"
-#include "NovelRT.Interop/Input/NrtInteractionService.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Windowing/NrtWindowingService.h>
+#include <NovelRT.Interop/Input/NrtInteractionService.h>
+#include <NovelRT.h>
 #include <list>
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowCollection;
@@ -30,7 +30,7 @@ NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionService servic
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
-  servicePtr->consumePlayerInput();  
+  servicePtr->consumePlayerInput();
   return NRT_SUCCESS;
 }
 

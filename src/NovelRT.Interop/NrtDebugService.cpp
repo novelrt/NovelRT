@@ -2,10 +2,10 @@
 
 #include <stdint.h>
 #include <list>
-#include "NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Utilities/NrtCommonEvents.h"
-#include "NovelRT.Interop/Graphics/NrtRenderingService.h"
-#include "NovelRT.Interop/NrtDebugService.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
+#include <NovelRT.Interop/Graphics/NrtRenderingService.h>
+#include <NovelRT.Interop/NrtDebugService.h>
 #include <NovelRT.h>
 
 std::list<std::shared_ptr<NovelRT::DebugService>> _debugCollection;

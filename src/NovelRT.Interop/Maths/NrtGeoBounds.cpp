@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Maths/NrtGeoVector2F.h"
-#include "NovelRT.Interop/Maths/NrtGeoBounds.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
+#include <NovelRT.Interop/Maths/NrtGeoBounds.h>
 
 
 #ifdef __cplusplus

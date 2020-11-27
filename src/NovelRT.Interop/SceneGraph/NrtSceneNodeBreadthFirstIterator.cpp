@@ -2,11 +2,11 @@
 
 #include <stdint.h>
 #include <list>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 using namespace NovelRT;
 
 int32_t(*_function)(NrtSceneNode) = NULL;

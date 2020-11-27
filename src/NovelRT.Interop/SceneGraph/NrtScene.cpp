@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <stdint.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/SceneGraph/NrtScene.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/SceneGraph/NrtScene.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 using namespace NovelRT;
 
