@@ -6,13 +6,13 @@ namespace NovelRT::Maths {
   void QuadTree::subdivideTree() noexcept {
     assert(getPointCount() == POINT_CAPACITY);
 
-    const GeoVector2<float> TOP_LEFT_SCALE = GeoVector2<float>(-0.5, +0.5);
-    const GeoVector2<float> TOP_RIGHT_SCALE = GeoVector2<float>(+0.5, +0.5);
-    const GeoVector2<float> BOTTOM_LEFT_SCALE = GeoVector2<float>(-0.5, -0.5);
-    const GeoVector2<float> BOTTOM_RIGHT_SCALE = GeoVector2<float>(+0.5, -0.5);
+    const GeoVector2F TOP_LEFT_SCALE = GeoVector2F(-0.5f, +0.5f);
+    const GeoVector2F TOP_RIGHT_SCALE = GeoVector2F(+0.5f, +0.5f);
+    const GeoVector2F BOTTOM_LEFT_SCALE = GeoVector2F(-0.5f, -0.5f);
+    const GeoVector2F BOTTOM_RIGHT_SCALE = GeoVector2F(+0.5f, -0.5f);
 
-    GeoVector2 size = getBounds().size() / 2;
-    GeoVector2 position = getBounds().position();
+    GeoVector2F size = getBounds().size / 2;
+    GeoVector2F position = getBounds().position;
 
     _children[TOP_LEFT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0), weak_from_this());
     _children[TOP_RIGHT] = std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_RIGHT_SCALE), size, 0), weak_from_this());
@@ -31,6 +31,7 @@ namespace NovelRT::Maths {
     _pointCount = 0;
   }
 
+  //TODO: Why is this not returning a bool as a try method?
   void QuadTree::tryMergeTree() noexcept {
     auto parent = getParent().lock();
 

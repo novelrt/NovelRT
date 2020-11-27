@@ -1,4 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-lambda-capture"
+#endif
 
 #include <NovelRT.h>
 
@@ -21,7 +25,7 @@ namespace NovelRT::Ink {
     return _exports.getActual().GetCanContinue(_handle.getActual());
   }
 
-  void Story::ChooseChoiceIndex(int choiceIdx) {
+  void Story::ChooseChoiceIndex(int32_t choiceIdx) {
     _exports.getActual().ChooseChoiceIndex(_handle.getActual(), choiceIdx);
   }
 
@@ -37,3 +41,7 @@ namespace NovelRT::Ink {
     _exports.getActual().ResetState(_handle.getActual());
   }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif

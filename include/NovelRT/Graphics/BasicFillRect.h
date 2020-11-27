@@ -17,17 +17,17 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
+    void drawObject() final;
 
   public:
-    BasicFillRect(const Transform& transform,
-      int layer,
-      std::weak_ptr<Camera> camera,
+    BasicFillRect(Transform transform,
+      int32_t layer,
+      std::shared_ptr<Camera> camera,
       ShaderProgram shaderProgram,
-      const RGBAConfig& fillColour);
+      RGBAConfig fillColour);
 
-    void drawObject() final;
-    const RGBAConfig getColourConfig() const;
-    void setColourConfig(const RGBAConfig& value);
+    RGBAConfig getColourConfig() const;
+    void setColourConfig(RGBAConfig value);
   };
 }
 

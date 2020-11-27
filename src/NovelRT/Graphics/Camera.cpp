@@ -4,14 +4,14 @@
 
 namespace NovelRT::Graphics {
   Camera::Camera() :
-    _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4x4<float>>(std::function<Maths::GeoMatrix4x4<float>()>(std::bind(&Camera::generateUboMatrix, this)))),
+    _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4x4F>(std::function<Maths::GeoMatrix4x4F()>(std::bind(&Camera::generateUboMatrix, this)))),
     _cameraFrameState(CameraFrameState::ModifiedInCurrent) {
   }
 
-  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(const Maths::GeoVector2<float>& windowSize) {  
-    auto callback = [](Camera* camera, const Maths::GeoVector2<float>& windowSize) {
-      camera->setProjectionMatrix(Maths::GeoMatrix4x4<float>(glm::ortho<float>(0, windowSize.getX(), windowSize.getY(), 0, 0, 65535)));
-      camera->setViewMatrix(Maths::GeoMatrix4x4<float>(glm::scale(glm::vec3(windowSize.getX() / 1920.0f, windowSize.getY() / 1080.0f, -1.0f))));
+  std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(Maths::GeoVector2F windowSize) {  
+    auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
+      camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::ortho(0.0f, windowSize.x, windowSize.y, 0.0f, 0.0f, 65535.0f)));
+      camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::scale(glm::vec3(windowSize.x / 1920.0f, windowSize.y / 1080.0f, -1.0f))));
     };
 
     auto returnVal = std::make_unique<Camera>();
@@ -22,13 +22,13 @@ namespace NovelRT::Graphics {
     return returnVal;
   }
 
-  std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(const Maths::GeoVector2<float>& windowSize) {
-    auto callback = [](Camera* camera, const Maths::GeoVector2<float>& windowSize) {
+  std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize) {
+    auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
 
-      auto aspect = windowSize.getY() != 0 ? windowSize.getX() / windowSize.getY() : 0;
+      auto aspect = windowSize.y != 0 ? windowSize.x / windowSize.y : 0;
       
-      camera->setProjectionMatrix(Maths::GeoMatrix4x4<float>(glm::perspective<float>(glm::radians(90.0f), aspect, 0.1f, 100.0f)));
-      camera->setViewMatrix(Maths::GeoMatrix4x4<float>(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))));
+      camera->setProjectionMatrix(Maths::GeoMatrix4x4F(glm::perspective(glm::radians(90.0f), aspect, 0.1f, 100.0f)));
+      camera->setViewMatrix(Maths::GeoMatrix4x4F(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))));
     };
     
     auto returnVal = std::make_unique<Camera>();
@@ -39,7 +39,7 @@ namespace NovelRT::Graphics {
     return returnVal;
   }
 
-  Maths::GeoMatrix4x4<float> Camera::generateUboMatrix() {
+  Maths::GeoMatrix4x4F Camera::generateUboMatrix() {
     return getProjectionMatrix() * getViewMatrix();
   }
 
@@ -56,7 +56,7 @@ namespace NovelRT::Graphics {
     }
   }
 
-  void Camera::forceResize(const Maths::GeoVector2<float>& windowSize) {
+  void Camera::forceResize(Maths::GeoVector2F windowSize) {
     forceResizeCallback()(this, windowSize);
   }
 }

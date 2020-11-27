@@ -23,22 +23,22 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
+    void drawObject() final;
 
   public:
-    TextRect(const Transform& transform,
-      int layer,
+    TextRect(Transform transform,
+      int32_t layer,
       ShaderProgram programId,
-      std::weak_ptr<Camera> camera,
+      std::shared_ptr<Camera> camera,
       std::shared_ptr<FontSet> fontSet,
-      const RGBAConfig& colourConfig);
+      RGBAConfig colourConfig);
 
-    void drawObject() final;
 
     inline RGBAConfig getColourConfig() const noexcept {
       return _colourConfig;
     }
 
-    void setColourConfig(const RGBAConfig& value);
+    void setColourConfig(RGBAConfig value);
 
     std::string getText() const;
     void setText(const std::string& value);

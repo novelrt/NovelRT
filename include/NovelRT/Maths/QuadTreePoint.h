@@ -6,19 +6,19 @@
 #endif
 
 namespace NovelRT::Maths {
-  class QuadTreePoint {
+  class QuadTreePoint : public std::enable_shared_from_this<QuadTreePoint> {
   private:
-    GeoVector2<float> _position;
+    GeoVector2F _position;
 
   public:
-    QuadTreePoint(GeoVector2<float> position) :
+    QuadTreePoint(GeoVector2F position) :
       _position(position) {
     }
 
-    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2<float>(x, y)) {
+    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2F(x, y)) {
     }
 
-    const GeoVector2<float>& getPosition() const noexcept {
+    GeoVector2F getPosition() const noexcept {
       return _position;
     }
   };

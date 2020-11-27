@@ -9,37 +9,30 @@
 
 namespace NovelRT::Maths {
   class GeoBounds {
-  private:
-    GeoVector2<float> _position;
-    float _rotation;
-    GeoVector2<float> _size;
-
   public:
-    GeoBounds(const GeoVector2<float>& position, const GeoVector2<float>& size, float rotation);
-    bool pointIsWithinBounds(const GeoVector2<float>& point) const;
-    bool intersectsWith(const GeoBounds& otherBounds) const;
-    GeoVector2<float> getCornerInLocalSpace(int index) const;
-    GeoVector2<float> getCornerInWorldSpace(int index) const;
-    const GeoVector2<float>& position() const;
-    GeoVector2<float>& position();
-    const GeoVector2<float>& size() const;
-    GeoVector2<float>& size();
-    const float& rotation() const;
-    float& rotation();
-    GeoVector2<float> getExtents() const;
+    GeoVector2F position;
+    GeoVector2F size;
+    float rotation;
 
-    inline bool operator==(const GeoBounds& other) const {
-      return _position == other._position
-          && _size == other._size
-          && _rotation == other._rotation;
+    GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
+    bool pointIsWithinBounds(GeoVector2F point) const;
+    bool intersectsWith(GeoBounds otherBounds) const;
+    GeoVector2F getCornerInLocalSpace(int32_t index) const;
+    GeoVector2F getCornerInWorldSpace(int32_t index) const;
+    GeoVector2F getExtents() const;
+
+    inline bool operator==(GeoBounds other) const {
+      return position == other.position
+          && size == other.size
+          && rotation == other.rotation;
     }
 
-    inline bool operator!=(const GeoBounds& other) const {
-      return _position != other._position
-        || _size != other._size
-        || _rotation != other._rotation;
+    inline bool operator!=(GeoBounds other) const {
+      return position != other.position
+        || size != other.size
+        || rotation != other.rotation;
     }
   };
 }
 
-#endif //NOVELRT_MATHS_GEOBOUNDS_H
+#endif //!NOVELRT_MATHS_GEOBOUNDS_H

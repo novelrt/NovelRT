@@ -3,12 +3,12 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Graphics {
-  ImageRect::ImageRect(const Transform& transform,
-    int layer,
+  ImageRect::ImageRect(Transform transform,
+    int32_t layer,
     ShaderProgram shaderProgram,
-    std::weak_ptr<Camera> camera,
+    std::shared_ptr<Camera> camera,
     std::shared_ptr<Texture> texture,
-    const RGBAConfig& colourTint) :
+    RGBAConfig colourTint) :
     RenderObject(transform,
       layer,
       shaderProgram,
@@ -19,11 +19,11 @@ namespace NovelRT::Graphics {
     _colourTint(colourTint),
     _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
-   ImageRect::ImageRect(const Transform& transform,
-     int layer,
+   ImageRect::ImageRect(Transform transform,
+     int32_t layer,
      ShaderProgram shaderProgram,
-     std::weak_ptr<Camera> camera,
-     const RGBAConfig& colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
+     std::shared_ptr<Camera> camera,
+     RGBAConfig colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {
    }
 
    void ImageRect::drawObject() {
@@ -31,7 +31,7 @@ namespace NovelRT::Graphics {
 
      glUseProgram(_shaderProgram.shaderProgramId);
      glBindBuffer(GL_UNIFORM_BUFFER, _shaderProgram.finalViewMatrixBufferUboId);
-     glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
+     glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4F), &_finalViewMatrixData.getActual(), GL_STATIC_DRAW);
 
      glBindTexture(GL_TEXTURE_2D, _texture->getTextureIdInternal());
      glBindVertexArray(_vertexArrayObject.getActual());

@@ -17,14 +17,14 @@ namespace NovelRT {
   class WorldObject {
   private:
     Transform _transform;
-    int _layer;
+    int32_t _layer;
     bool _active;
 
   protected:
     bool _isDirty;
 
   public:
-    WorldObject(const Transform& transform, int layer);
+    WorldObject(Transform transform, int32_t layer);
     virtual ~WorldObject() { }
 
     inline Transform& transform() {
@@ -36,11 +36,11 @@ namespace NovelRT {
       return _transform;
     }
 
-    inline const int& layer() const {
+    inline const int32_t& layer() const {
       return _layer;
     }
 
-    inline int& layer() {
+    inline int32_t& layer() {
       return _layer;
     }
 

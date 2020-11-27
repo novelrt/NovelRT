@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
 
-  RenderObject::RenderObject(const Transform& transform, int layer, ShaderProgram shaderProgram, std::weak_ptr<Camera> camera) :
+  RenderObject::RenderObject(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera) :
     WorldObject(transform, layer),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
@@ -15,11 +15,11 @@ namespace NovelRT::Graphics {
     _shaderProgram(shaderProgram),
     _bufferInitialised(false),
     _camera(camera),
-    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4x4<float>>(std::function<Maths::GeoMatrix4x4<float>()>(std::bind(&RenderObject::generateViewData, this)))){}
+    _finalViewMatrixData(Utilities::Lazy<Maths::GeoMatrix4x4F>(std::function<Maths::GeoMatrix4x4F()>(std::bind(&RenderObject::generateViewData, this)))){}
 
   void RenderObject::executeObjectBehaviour() {
-    if (_camera.lock()->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
-    
+    if (_camera->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
+
     if (_isDirty) {
       _finalViewMatrixData.reset();
       _bufferInitialised = false;
@@ -34,17 +34,17 @@ namespace NovelRT::Graphics {
   }
 
   void RenderObject::configureObjectBuffers() {
-    auto topLeft = Maths::GeoVector2<GLfloat>(-0.5f, 0.5f);
-    auto bottomRight = Maths::GeoVector2<GLfloat>(0.5f, -0.5f);
-    auto topRight = Maths::GeoVector2<GLfloat>(0.5f, 0.5f);
-    auto bottomLeft = Maths::GeoVector2<GLfloat>(-0.5f, -0.5f);
+    auto topLeft = Maths::GeoVector2F(-0.5f, 0.5f);
+    auto bottomRight = Maths::GeoVector2F(0.5f, -0.5f);
+    auto topRight = Maths::GeoVector2F(0.5f, 0.5f);
+    auto bottomLeft = Maths::GeoVector2F(-0.5f, -0.5f);
     _vertexBufferData = {
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
-        topRight.getX(), topRight.getY(), 0.0f,
-        topLeft.getX(), topLeft.getY(), 0.0f,
-        bottomLeft.getX(), bottomLeft.getY(), 0.0f,
-        bottomRight.getX(), bottomRight.getY(), 0.0f,
+        topLeft.x, topLeft.y, 0.0f,
+        bottomRight.x, bottomRight.y, 0.0f,
+        topRight.x, topRight.y, 0.0f,
+        topLeft.x, topLeft.y, 0.0f,
+        bottomLeft.x, bottomLeft.y, 0.0f,
+        bottomRight.x, bottomRight.y, 0.0f,
     };
 
     _vertexArrayObject.getActual(); //this is just here to force initialisation.
@@ -69,17 +69,18 @@ namespace NovelRT::Graphics {
     return tempBuffer;
   }
 
-  Maths::GeoMatrix4x4<float> RenderObject::generateViewData() {
-    auto position = transform().position().vec2Value();
-    auto resultMatrix = Maths::GeoMatrix4x4<float>::getDefaultIdentity().underlyingMatrix();
+  Maths::GeoMatrix4x4F RenderObject::generateViewData() {
+    auto position = *reinterpret_cast<glm::vec2*>(&(transform().position));
+    auto defaultIdentity = Maths::GeoMatrix4x4F::getDefaultIdentity();
+    auto resultMatrix = *reinterpret_cast<glm::mat4*>(&defaultIdentity);
     resultMatrix = glm::translate(resultMatrix, glm::vec3(position, layer()));
-    resultMatrix = glm::rotate(resultMatrix, glm::radians(transform().rotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-    resultMatrix = glm::scale(resultMatrix, glm::vec3(transform().scale().vec2Value(), 1.0f));
-
-    return Maths::GeoMatrix4x4<float>(glm::transpose(_camera.lock()->getCameraUboMatrix().underlyingMatrix() * resultMatrix));
+    resultMatrix = glm::rotate(resultMatrix, glm::radians(transform().rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+    resultMatrix = glm::scale(resultMatrix, glm::vec3(*reinterpret_cast<glm::vec2*>(&(transform().scale)), 1.0f));
+    auto cameraUboMatrix = _camera->getCameraUboMatrix();
+    return Maths::GeoMatrix4x4F(glm::transpose(*reinterpret_cast<glm::mat4*>(&cameraUboMatrix) * resultMatrix));
   }
 
-  Maths::GeoMatrix4x4<float> RenderObject::generateCameraBlock() {
-    return _camera.lock()->getCameraUboMatrix();
+  Maths::GeoMatrix4x4F RenderObject::generateCameraBlock() {
+    return _camera->getCameraUboMatrix();
   }
 }

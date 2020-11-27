@@ -10,9 +10,9 @@ namespace NovelRT::Graphics {
       GLuint tempHandle;
       glGenBuffers(1, &tempHandle);
       glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
+      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4F), nullptr, GL_STATIC_DRAW);
       glBindBuffer(GL_UNIFORM_BUFFER, 0);
-      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
+      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4F));
       return tempHandle;
     })),
     _camera(nullptr),
@@ -22,13 +22,13 @@ namespace NovelRT::Graphics {
       });
   }
 
-  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
+  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2F* const optionalWindowSize) {
 
     auto windowSize = (optionalWindowSize == nullptr) ? _windowingService->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
-    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
+    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.x));
     infoScreenSize.append("x");
-    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.getY())));
+    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.y)));
     _logger.logInfo("Screen size: {}", infoScreenSize);
 
     if (completeLaunch) {
@@ -64,7 +64,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _camera->forceResize(windowSize);
-      glViewport(0, 0, static_cast<GLsizei>(windowSize.getX()), static_cast<GLsizei>(windowSize.getY()));
+      glViewport(0, 0, static_cast<GLsizei>(windowSize.x), static_cast<GLsizei>(windowSize.y));
     }
 
     return true;
@@ -174,7 +174,7 @@ namespace NovelRT::Graphics {
     return returnProg;
   }
 
-  int RenderingService::initialiseRendering() {
+  int32_t RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
       _logger.logError("Apologies, something went wrong.");
       throw std::runtime_error("Unable to continue! The engine cannot start without GLAD/GLFW3.");
@@ -198,32 +198,32 @@ namespace NovelRT::Graphics {
     glfwSwapBuffers(_windowingService->getWindow());
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
-    int layer,
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
+    int32_t layer,
     const std::string& filePath,
-    const RGBAConfig& colourTint) {
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
-    int layer,
-    const RGBAConfig& colourTint) {
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
+    int32_t layer,
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
-  std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
-    int layer,
-    const RGBAConfig& colourConfig,
+  std::unique_ptr<TextRect> RenderingService::createTextRect(Transform transform,
+    int32_t layer,
+    RGBAConfig colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
-  std::weak_ptr<Camera> RenderingService::getCamera() const {
+  std::shared_ptr<Camera> RenderingService::getCamera() const {
     return _camera;
   }
 
@@ -253,7 +253,7 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
-      return returnValue; 
+      return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn
@@ -280,7 +280,7 @@ namespace NovelRT::Graphics {
     return returnValue;
   }
 
-  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
+  void RenderingService::setBackgroundColour(RGBAConfig colour) {
     _framebufferColour = colour;
   }
 }
