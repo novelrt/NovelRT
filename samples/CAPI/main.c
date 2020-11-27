@@ -3,18 +3,18 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/NrtNovelRunner.h"
-#include "NovelRT.Interop/Input/NrtInteractionService.h"
-#include "NovelRT.Interop/Timing/NrtTimestamp.h"
-#include "NovelRT.Interop/Timing/NrtStepTimer.h"
-#include "NovelRT.Interop/Utilities/NrtCommonEvents.h"
-#include "NovelRT.Interop/NrtLoggingService.h"
-#include "NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h"
-#include "NovelRT.Interop/Utilities/NrtMisc.h"
-#include "NovelRT.Interop/Graphics/NrtImageRect.h"
-#include "NovelRT.Interop/Ink/NrtInkService.h"
-#include "NovelRT.Interop/Ink/NrtStory.h"
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtNovelRunner.h>
+#include <NovelRT.Interop/Input/NrtInteractionService.h>
+#include <NovelRT.Interop/Timing/NrtTimestamp.h>
+#include <NovelRT.Interop/Timing/NrtStepTimer.h>
+#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
+#include <NovelRT.Interop/NrtLoggingService.h>
+#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
+#include <NovelRT.Interop/Utilities/NrtMisc.h>
+#include <NovelRT.Interop/Graphics/NrtImageRect.h>
+#include <NovelRT.Interop/Ink/NrtInkService.h>
+#include <NovelRT.Interop/Ink/NrtStory.h>
 
 //Preset vars
 int32_t res = NRT_SUCCESS;
