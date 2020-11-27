@@ -39,7 +39,7 @@ TEST(InteropSceneNodeTest, createHasZeroParents) {
 TEST(InteropSceneNodeTest, insertNodeCreatesParentChildRelationship) {
   NrtSceneNode parentNode = Nrt_SceneNode_create();
   NrtSceneNode childNode = Nrt_SceneNode_create();
-  ASSERT_EQ(0, Nrt_SceneNode_insert(parentNode, childNode));
+  ASSERT_EQ(1, Nrt_SceneNode_insert(parentNode, childNode));
 
   NrtSceneNodeSet parentNodeParents = NULL;
   NrtSceneNodeSet parentNodeChildren = NULL;
