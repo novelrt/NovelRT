@@ -4,9 +4,9 @@
 #define NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
 
 #include <stdint.h>
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/Maths/NrtGeoVector2F.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneGraphTypedefs.h"
+#include "../NrtInteropUtils.h"
+#include "../Maths/NrtGeoVector2F.h"
+#include "NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 #include "../NrtInteropUtils.h"
-#include "NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h"
+#include "../Graphics/NrtGraphicsTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

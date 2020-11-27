@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "../NrtInteropUtils.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneGraphTypedefs.h"
+#include "NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

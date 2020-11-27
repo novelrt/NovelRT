@@ -7,7 +7,7 @@
 #include "../NrtInteropUtils.h"
 #include "../Timing/NrtTimestamp.h"
 #include "../Graphics/NrtGraphicsTypedefs.h"
-#include "NovelRT.Interop/Animation/NrtAnimationTypedefs.h"
+#include "NrtAnimationTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

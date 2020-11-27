@@ -7,10 +7,10 @@ extern "C" {
 #endif
 
 typedef enum {
-    Idle = -1,
-    KeyUp = 0,
-    KeyDown = 1,
-    KeyDownHeld = 2,
+    NRT_IDLE = -1,
+    NRT_KEYUP = 0,
+    NRT_KEYDOWN = 1,
+    NRT_KEYDOWNHELD = 2,
 }  NrtKeyStateKind;
 
 typedef int32_t NrtKeyState;
