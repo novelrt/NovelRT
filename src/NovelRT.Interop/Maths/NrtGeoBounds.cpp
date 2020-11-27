@@ -15,13 +15,13 @@ extern "C" {
     return NrtGeoBounds{ Nrt_GeoVector2F_zero(),  Nrt_GeoVector2F_zero(), 0.0f };
   }
 
-  NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int index) {
+  NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int32_t index) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F corner = cBounds.getCornerInLocalSpace(index);
     return reinterpret_cast<NrtGeoVector2F&>(corner);
   }
 
-  NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, int index) {
+  NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, int32_t index) {
     Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
     Maths::GeoVector2F corner = cBounds.getCornerInWorldSpace(index);
     return reinterpret_cast<NrtGeoVector2F&>(corner);

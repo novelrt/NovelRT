@@ -20,7 +20,7 @@ const char* Nrt_getExecutableDirPath() {
   return cppPath->c_str();
 }
 
-const char* Nrt_appendFilePath(int numberOfArgs, ...) {
+const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
   if (numberOfArgs <= 1) {
     Nrt_setErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
     return NULL;
@@ -60,7 +60,7 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
   return finalPath;
 }
 
-const char* Nrt_appendText(int numberOfArgs, ...) {
+const char* Nrt_appendText(int32_t numberOfArgs, ...) {
   if (numberOfArgs <= 1) {
     Nrt_setErrMsgCustomInternal("Cannot append text when nothing is being appended!");
     return NULL;

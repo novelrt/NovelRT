@@ -19,7 +19,7 @@ NrtWindowingService Nrt_WindowingService_create() {
   return reinterpret_cast<NrtWindowingService>(_windowingServiceCollection.back().get());
 }
 
-NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled) {
+NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int32_t displayNumber, const char* windowTitle, int32_t transparencyEnabled) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
   if (servicePtr == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();

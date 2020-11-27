@@ -40,18 +40,18 @@ namespace NovelRT::Audio {
 
     bool initializeAudio();
     std::vector<ALuint>::iterator loadMusic(std::string input);
-    
+
     void setSoundVolume(ALuint source, float val);
     void setSoundPosition(ALuint source, float posX, float posY);
     void resumeMusic();
-    void playMusic(std::vector<ALuint>::iterator handle, int loops);
+    void playMusic(std::vector<ALuint>::iterator handle, int32_t loops);
     void pauseMusic();
     void stopMusic();
     void setMusicVolume(float value);
     void checkSources();
     ALuint loadSound(std::string input);
     void unload(ALuint handle);
-    void playSound(ALuint handle, int loops);
+    void playSound(ALuint handle, int32_t loops);
     void stopSound(ALuint handle);
     void tearDown();
 

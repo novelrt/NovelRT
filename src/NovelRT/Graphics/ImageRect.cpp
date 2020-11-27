@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
   ImageRect::ImageRect(Transform transform,
-    int layer,
+    int32_t layer,
     ShaderProgram shaderProgram,
     std::shared_ptr<Camera> camera,
     std::shared_ptr<Texture> texture,
@@ -20,7 +20,7 @@ namespace NovelRT::Graphics {
     _logger(Utilities::Misc::CONSOLE_LOG_GFX) {}
 
    ImageRect::ImageRect(Transform transform,
-     int layer,
+     int32_t layer,
      ShaderProgram shaderProgram,
      std::shared_ptr<Camera> camera,
      RGBAConfig colourTint) : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint) {

@@ -24,14 +24,14 @@ namespace NovelRT::Maths {
 
     auto minA = position - getExtents();
     auto maxA = position + getExtents();
-   
+
     auto minB = otherBounds.position - otherBounds.getExtents();
     auto maxB = otherBounds.position + otherBounds.getExtents();
 
     return !((minA > maxB) || (maxA < minB));
   }
 
-  GeoVector2F GeoBounds::getCornerInLocalSpace(int index) const {
+  GeoVector2F GeoBounds::getCornerInLocalSpace(int32_t index) const {
     GeoVector2F returnValue;
     auto boundsSize = size;
     switch (index) {
@@ -53,7 +53,7 @@ namespace NovelRT::Maths {
     return returnValue;
   }
 
-  GeoVector2F GeoBounds::getCornerInWorldSpace(int index) const {
+  GeoVector2F GeoBounds::getCornerInWorldSpace(int32_t index) const {
     return position + getCornerInLocalSpace(index);
   }
 

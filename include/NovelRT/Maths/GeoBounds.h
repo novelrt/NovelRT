@@ -17,8 +17,8 @@ namespace NovelRT::Maths {
     GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
     bool pointIsWithinBounds(GeoVector2F point) const;
     bool intersectsWith(GeoBounds otherBounds) const;
-    GeoVector2F getCornerInLocalSpace(int index) const;
-    GeoVector2F getCornerInWorldSpace(int index) const;
+    GeoVector2F getCornerInLocalSpace(int32_t index) const;
+    GeoVector2F getCornerInWorldSpace(int32_t index) const;
     GeoVector2F getExtents() const;
 
     inline bool operator==(GeoBounds other) const {

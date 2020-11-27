@@ -12,7 +12,7 @@ namespace NovelRT::Ink {
   private:
     struct Exports {
       intptr_t(*CreateFromJsonString)(const char* jsonString);
-      void(*ChooseChoiceIndex)(intptr_t storyHandle, int choiceIdx);
+      void(*ChooseChoiceIndex)(intptr_t storyHandle, int32_t choiceIdx);
       const char*(*Continue)(intptr_t storyHandle);
       const char*(*ContinueMaximally)(intptr_t storyHandle);
       bool(*GetCanContinue)(intptr_t storyHandle);
@@ -28,7 +28,7 @@ namespace NovelRT::Ink {
 
     bool CanContinue();
 
-    void ChooseChoiceIndex(int choiceIdx);
+    void ChooseChoiceIndex(int32_t choiceIdx);
 
     const char* Continue();
     const char* ContinueMaximally();

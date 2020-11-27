@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT::Input {
-  BasicInteractionRect::BasicInteractionRect(Transform transform, int layer, const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
+  BasicInteractionRect::BasicInteractionRect(Transform transform, int32_t layer, const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
     : InteractionObject(transform, layer, notifyHasBeenDrawnObject) {}
 
   bool BasicInteractionRect::validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const {

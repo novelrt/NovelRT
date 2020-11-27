@@ -17,12 +17,12 @@ std::list<std::shared_ptr<NovelRT::DebugService>> _debugServiceCollection;
 extern "C" {
 #endif
 
-  NrtNovelRunner Nrt_NovelRunner_create(int displayNumber) {
+  NrtNovelRunner Nrt_NovelRunner_create(int32_t displayNumber) {
     NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber);
     return reinterpret_cast<NrtNovelRunner>(runner);
   }
 
-  NrtNovelRunner Nrt_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
+  NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
     NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber, windowTitle, targetFrameRate);
     return reinterpret_cast<NrtNovelRunner>(runner);
   }

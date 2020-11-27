@@ -44,12 +44,12 @@ NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect ob
     return NRT_SUCCESS;
 }
 
-int Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object) {
+int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object) {
   auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
   return obj->layer();
 }
 
-NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int value) {
+NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int32_t value) {
     if (object == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_NULLPTR_PROVIDED;

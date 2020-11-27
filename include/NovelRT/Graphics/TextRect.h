@@ -24,10 +24,10 @@ namespace NovelRT::Graphics {
   protected:
     void configureObjectBuffers() final;
     void drawObject() final;
-    
+
   public:
     TextRect(Transform transform,
-      int layer,
+      int32_t layer,
       ShaderProgram programId,
       std::shared_ptr<Camera> camera,
       std::shared_ptr<FontSet> fontSet,

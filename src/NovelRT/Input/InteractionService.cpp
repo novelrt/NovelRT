@@ -79,7 +79,7 @@ namespace NovelRT::Input {
     }
   }
 
-  void InteractionService::acceptKeyboardInputBindingPush(int key, int action) {
+  void InteractionService::acceptKeyboardInputBindingPush(int32_t key, int32_t action) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(key);
     KeyStateFrameChangeLog log{};
@@ -92,7 +92,7 @@ namespace NovelRT::Input {
     _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, log);
   }
 
-  void InteractionService::acceptMouseButtonClickPush(int button, int action, Maths::GeoVector2F mousePosition) {
+  void InteractionService::acceptMouseButtonClickPush(int32_t button, int32_t action, Maths::GeoVector2F mousePosition) {
     auto keyState = static_cast<KeyState>(action);
     auto keyCode = static_cast<KeyCode>(button);
     auto value = Maths::GeoVector4F(mousePosition).vec4Value() * glm::scale(glm::vec3(1920.0f / _screenSize.x, 1080.0f / _screenSize.y, 0.0f));
@@ -134,7 +134,7 @@ void InteractionService::consumePlayerInput() {
 
 }
 
-  std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(Transform transform, int layer) {
+  std::unique_ptr<BasicInteractionRect> InteractionService::createBasicInteractionRect(Transform transform, int32_t layer) {
     return std::make_unique<BasicInteractionRect>(transform, layer, [this](InteractionObject* x) { HandleInteractionDraw(x); });
   }
   void InteractionService::executeClickedInteractable() {

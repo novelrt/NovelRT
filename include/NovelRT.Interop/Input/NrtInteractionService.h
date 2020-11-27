@@ -19,7 +19,7 @@ typedef struct InteractionServiceHandle* NrtInteractionService;
 
 NrtInteractionService Nrt_InteractionService_create(const NrtWindowingService windowingService);
 NrtResult Nrt_InteractionService_consumePlayerInput(const NrtInteractionService service);
-NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int layer, NrtBasicInteractionRect* outputRect);
+NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int32_t layer, NrtBasicInteractionRect* outputRect);
 NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionService service);
 NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionService service, NrtGeoVector2F value);
 NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service, NrtKeyCode value, NrtKeyStateFrameChangeLog* output);

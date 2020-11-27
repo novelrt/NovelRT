@@ -76,7 +76,7 @@ NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
     return NRT_SUCCESS;
 }
 
-NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int loops) {
+NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int32_t loops) {
     if (service == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_NULLPTR_PROVIDED;

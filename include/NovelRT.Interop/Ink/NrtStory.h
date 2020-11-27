@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
   NrtBool Nrt_Story_canContinue(NrtStory story);
-  void Nrt_Story_chooseChoiceIndex(NrtStory story, int choiceIdx);
+  void Nrt_Story_chooseChoiceIndex(NrtStory story, int32_t choiceIdx);
   const char* Nrt_Story_continue(NrtStory story);
   const char* Nrt_Story_continueMaximally(NrtStory story);
   void Nrt_Story_resetState(NrtStory story);

@@ -22,7 +22,7 @@ namespace NovelRT::Graphics {
     ShaderProgram _basicFillRectProgram;
     ShaderProgram _texturedRectProgram;
     ShaderProgram _fontProgram;
-    
+
     Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
     std::shared_ptr<Camera> _camera;
 
@@ -38,16 +38,16 @@ namespace NovelRT::Graphics {
 
   public:
     RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
-    int initialiseRendering();
+    int32_t initialiseRendering();
     void tearDown() const;
 
-    std::unique_ptr<ImageRect> createImageRect(Transform transform, int layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<ImageRect> createImageRect(Transform transform, int layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+    std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int layer, RGBAConfig colourConfig);
+    std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig);
 
-    std::unique_ptr<TextRect> createTextRect(Transform transform, int layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
+    std::unique_ptr<TextRect> createTextRect(Transform transform, int32_t layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
 
     std::shared_ptr<Camera> getCamera() const;
 

@@ -72,7 +72,7 @@ NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int layer, NrtBasicInteractionRect* outputRect) {
+NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int32_t layer, NrtBasicInteractionRect* outputRect) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {

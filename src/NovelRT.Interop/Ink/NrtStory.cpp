@@ -20,7 +20,7 @@ extern "C" {
     return NRT_FALSE;
   }
 
-  void Nrt_Story_chooseChoiceIndex(NrtStory story, int choiceIdx) {
+  void Nrt_Story_chooseChoiceIndex(NrtStory story, int32_t choiceIdx) {
     Ink::Story* cStory = reinterpret_cast<Ink::Story*>(story);
     cStory->ChooseChoiceIndex(choiceIdx);
   }

@@ -3,7 +3,7 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  NovelRunner::NovelRunner(int displayNumber, const std::string& windowTitle, uint32_t targetFrameRate, bool transparency) :
+  NovelRunner::NovelRunner(int32_t displayNumber, const std::string& windowTitle, uint32_t targetFrameRate, bool transparency) :
     SceneConstructionRequested(Utilities::Event<>()),
     Update(Utilities::Event<Timing::Timestamp>()),
     _exitCode(1),
@@ -26,7 +26,7 @@ namespace NovelRT {
     _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
   }
 
-  int NovelRunner::runNovel() {
+  int32_t NovelRunner::runNovel() {
     while (_exitCode) {
       _stepTimer.getActual()->tick(Update);
       _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());

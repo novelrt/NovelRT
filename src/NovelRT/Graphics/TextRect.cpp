@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
   }
 
   TextRect::TextRect(Transform transform,
-    int layer,
+    int32_t layer,
     ShaderProgram shaderProgram,
     std::shared_ptr<Camera> camera,
     std::shared_ptr<FontSet> fontSet,

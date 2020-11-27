@@ -14,7 +14,7 @@ typedef struct WindowingServiceHandle* NrtWindowingService;
 
 NrtWindowingService Nrt_WindowingService_create();
 
-NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled);
+NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int32_t displayNumber, const char* windowTitle, int32_t transparencyEnabled);
 NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service);
 const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service);
 NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value);
