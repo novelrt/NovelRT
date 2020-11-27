@@ -124,7 +124,8 @@ extern "C" {
 
   const char* Nrt_TextRect_getText(NrtTextRect rect) {
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-    return textRectPtr->getText().c_str(); //TODO: This might break lol. Not sure.
+    std::string* text = new std::string(textRectPtr->getText());
+    return text->c_str();
   }
 
   NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText) {

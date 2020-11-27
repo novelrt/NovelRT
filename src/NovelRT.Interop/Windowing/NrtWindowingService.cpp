@@ -43,7 +43,8 @@ NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service) {
 
 const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service) {
   auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-  return servicePtr->getWindowTitle().c_str();
+  std::string* title = new std::string(servicePtr->getWindowTitle());
+  return title->c_str();
 }
 
 NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value) {
