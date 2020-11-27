@@ -1,3 +1,4 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -53,8 +54,7 @@ void moveNovelChan(NrtTimestamp delta) {
     float moveAmount = 100.0f;
 
     trueDelta = Nrt_Timestamp_getSecondsFloat(delta);
-    NrtTransform transform = {{0, 0}, {0, 0}, 0};
-    Nrt_ImageRect_getTransform(nChanRect, &transform);
+    NrtTransform transform = Nrt_ImageRect_getTransform(nChanRect);
 
 
     float xOrigin = transform.position.x;
@@ -120,8 +120,7 @@ void interactWithNovelChan() {
     Nrt_Story_resetState(story);
   }
 
-  const char* cSharpResult = "";
-  Nrt_Story_continue(story, &cSharpResult);
+  const char* cSharpResult = Nrt_Story_continue(story);
   Nrt_LoggingService_logDebugLine(console, cSharpResult);
   Nrt_RuntimeService_freeString(dotnet, cSharpResult);
 }
@@ -153,8 +152,8 @@ int main() {
     return -1;
   }
   else {
-    res = Nrt_AudioService_initialiseAudio(audio, &booleanResult);
-    if (res != NRT_SUCCESS || booleanResult != NRT_TRUE) {
+    booleanResult = Nrt_AudioService_initialiseAudio(audio);
+    if (booleanResult != NRT_TRUE) {
       const char* errMsg = Nrt_appendText(2,"Error initialising AudioService: ",Nrt_getLastError());
       Nrt_LoggingService_logErrorLine(console, errMsg);
       return -1;
