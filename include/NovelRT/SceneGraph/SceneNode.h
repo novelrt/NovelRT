@@ -169,7 +169,7 @@ namespace NovelRT::SceneGraph {
         return *this;
       }
 
-      breadth_first_traversal_result_iterator operator++(int) {
+      breadth_first_traversal_result_iterator operator++(int32_t) {
         auto tmp = *this;
         ++*this;
         return tmp;
@@ -236,7 +236,7 @@ namespace NovelRT::SceneGraph {
         return *this;
       }
 
-      depth_first_traversal_result_iterator operator++(int) {
+      depth_first_traversal_result_iterator operator++(int32_t) {
         auto tmp = *this;
         ++*this;
         return tmp;

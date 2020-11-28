@@ -5,15 +5,13 @@
 
 #include <stdint.h>
 #include "../NrtInteropUtils.h"
+#include "../Graphics/NrtGraphicsTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct RenderObjectNodeHandle* NovelRTRenderObjectNode;
-#ifndef NOVELRT_INTEROP_GRAPHICS_GRAPHICSTYPEDEFS_H
-typedef struct RenderObjectHandle* NrtRenderObject;
-#endif
 
 NrtResult Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectNode* outputNode);
 NrtResult Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRenderObject* outputObject);

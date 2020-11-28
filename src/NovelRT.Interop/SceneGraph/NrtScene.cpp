@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <stdint.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/SceneGraph/NrtScene.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/SceneGraph/NrtScene.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 using namespace NovelRT;
 
@@ -31,31 +31,16 @@ NrtResult Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet) {
   return NRT_SUCCESS;
 }
 
-
-NrtResult Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert, int32_t* outputResult) {
-  if (scene == nullptr || nodeToInsert == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert) {
   auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
   auto cppNode = reinterpret_cast<SceneGraph::SceneNode*>(nodeToInsert)->shared_from_this();
-
-  *outputResult = cppScene->insert(cppNode);
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(cppScene->insert(cppNode));
 }
 
-NrtResult Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove, int32_t* outputResult) {
-  if (scene == nullptr || nodeToRemove == nullptr || outputResult == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove) {
   auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
   auto cppNode = reinterpret_cast<SceneGraph::SceneNode*>(nodeToRemove)->shared_from_this();
-
-  *outputResult = cppScene->remove(cppNode);
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(cppScene->remove(cppNode));
 }
 
 NrtResult Nrt_Scene_delete(NrtScene scene) {

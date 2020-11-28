@@ -14,14 +14,14 @@ extern "C" {
 
   NrtResult Nrt_TextRect_getTransform(NrtTextRect rect, NrtTransform* outputTransform);
   NrtResult Nrt_TextRect_setTransform(NrtTextRect rect, NrtTransform inputTransform);
-  NrtResult Nrt_TextRect_getLayer(NrtTextRect rect, int32_t* outputLayer);
+  int32_t Nrt_TextRect_getLayer(NrtTextRect rect);
   NrtResult Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer);
-  NrtResult Nrt_TextRect_getActive(NrtTextRect rect, NrtBool* outputBool);
+  NrtBool Nrt_TextRect_getActive(NrtTextRect rect);
   NrtResult Nrt_TextRect_setActive(NrtTextRect rect, NrtBool inputBool);
   NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRect rect);
   NrtResult Nrt_TextRect_getColourConfig(NrtTextRect rect, NrtRGBAConfig* outputColourConfig);
   NrtResult Nrt_TextRect_setColourConfig(NrtTextRect rect, NrtRGBAConfig inputColourConfig);
-  NrtResult Nrt_TextRect_getText(NrtTextRect rect, const char** outputText);
+  const char* Nrt_TextRect_getText(NrtTextRect rect);
   NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText);
   NrtResult Nrt_TextRect_getFontSet(NrtTextRect rect, NrtFontSet* outputFontSet);
   NrtResult Nrt_TextRect_setFontSet(NrtTextRect rect, NrtFontSet inputFontSet);

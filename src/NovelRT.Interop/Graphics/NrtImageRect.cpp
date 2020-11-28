@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.h"
+#include <NovelRT.h>
 #include <list>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/NrtTransform.h"
-#include "NovelRT.Interop/Graphics/NrtImageRect.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtTransform.h>
+#include <NovelRT.Interop/Graphics/NrtImageRect.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
@@ -15,17 +15,10 @@ using namespace NovelRT;
 extern "C" {
 #endif
 
-  NrtResult Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform *outputTransform) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtTransform Nrt_ImageRect_getTransform(NrtImageRect rect) {
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
     Transform cppTransform = imageRectPtr->transform();
-    *outputTransform = *reinterpret_cast<NrtTransform*>(&cppTransform);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtTransform*>(&cppTransform);
   }
 
   NrtResult Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform) {
@@ -40,16 +33,9 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t *outputLayer) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  int32_t Nrt_ImageRect_getLayer(NrtImageRect rect) {
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
-    *outputLayer = imageRectPtr->layer();
-
-    return NRT_SUCCESS;
+    return imageRectPtr->layer();
   }
 
   NrtResult Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer) {
@@ -64,22 +50,13 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_ImageRect_getActive(NrtImageRect rect, NrtBool* outputBool) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtBool Nrt_ImageRect_getActive(NrtImageRect rect) {
     ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
 
     if(imageRectPtr->getActive()) {
-      *outputBool = NRT_TRUE;
+      return NRT_TRUE;
     }
-    else {
-      *outputBool = NRT_FALSE;
-    }
-
-    return NRT_SUCCESS;
+    return NRT_FALSE;
   }
 
   NrtResult Nrt_ImageRect_setActive(NrtImageRect rect, NrtBool inputBool) {
@@ -124,7 +101,7 @@ extern "C" {
 
     auto texture = imageRectPtr->texture();
     *outputTexture = reinterpret_cast<NrtTexture>(texture.get());
-    
+
     return NRT_SUCCESS;
   }
 

@@ -174,7 +174,7 @@ namespace NovelRT::Graphics {
     return returnProg;
   }
 
-  int RenderingService::initialiseRendering() {
+  int32_t RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
       _logger.logError("Apologies, something went wrong.");
       throw std::runtime_error("Unable to continue! The engine cannot start without GLAD/GLFW3.");
@@ -199,27 +199,27 @@ namespace NovelRT::Graphics {
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
-    int layer,
+    int32_t layer,
     const std::string& filePath,
     RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
   std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
-    int layer,
+    int32_t layer,
     RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
   std::unique_ptr<TextRect> RenderingService::createTextRect(Transform transform,
-    int layer,
+    int32_t layer,
     RGBAConfig colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform, int layer, RGBAConfig colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
@@ -253,7 +253,7 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
-      return returnValue; 
+      return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn

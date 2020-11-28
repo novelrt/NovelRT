@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Graphics/NrtCamera.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Graphics/NrtCamera.h>
+#include <NovelRT.h>
 #include <list>
 
 using namespace NovelRT::Graphics;
@@ -18,18 +18,11 @@ extern "C" {
     _cameraCollection.push_back(std::make_unique<Camera>());
     return reinterpret_cast<NrtCamera>(_cameraCollection.back().get());
   }
-  
-  NrtResult Nrt_Camera_getViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
-    if(camera == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
 
+  NrtGeoMatrix4x4F Nrt_Camera_getViewMatrix(NrtCamera camera) {
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
     auto mat4 = cameraPtr->getViewMatrix();
-    *outputMatrix = *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
   }
 
   NrtResult Nrt_Camera_setViewMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
@@ -44,17 +37,10 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_Camera_getProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
-    if(camera == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtGeoMatrix4x4F Nrt_Camera_getProjectionMatrix(NrtCamera camera) {
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
     auto mat4 = cameraPtr->getProjectionMatrix();
-    *outputMatrix = *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
   }
 
   NrtResult Nrt_Camera_setProjectionMatrix(NrtCamera camera, NrtGeoMatrix4x4F inputMatrix) {
@@ -70,30 +56,16 @@ extern "C" {
 
   }
 
-  NrtResult Nrt_Camera_getCameraUboMatrix(NrtCamera camera, NrtGeoMatrix4x4F* outputMatrix) {
-    if(camera == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtGeoMatrix4x4F Nrt_Camera_getCameraUboMatrix(NrtCamera camera) {
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
     auto mat4 = cameraPtr->getCameraUboMatrix();
-    *outputMatrix = *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtGeoMatrix4x4F*>(&mat4);
   }
 
-  NrtResult Nrt_Camera_getFrameState(NrtCamera camera, NrtCameraFrameState* outputFrameState) {
-    if(camera == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtCameraFrameState Nrt_Camera_getFrameState(NrtCamera camera) {
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
     auto frameState = cameraPtr->getFrameState();
-    *outputFrameState = *reinterpret_cast<NrtCameraFrameState*>(&frameState);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtCameraFrameState*>(&frameState);
   }
 
   NrtResult Nrt_Camera_setForceResizeCallback(NrtCamera camera, void(*callback)(NrtCamera, NrtGeoVector2F)) {
@@ -125,7 +97,7 @@ extern "C" {
     }
 
     Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-    
+
     for (auto& cppCamera : _cameraCollection) {
       if (cppCamera.get() != cameraPtr) {
         continue;

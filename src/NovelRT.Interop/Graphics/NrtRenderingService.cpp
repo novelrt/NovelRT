@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Windowing/NrtWindowingService.h"
-#include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Windowing/NrtWindowingService.h>
+#include <NovelRT.Interop/Graphics/NrtBasicFillRect.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 #include <list>
 
 using namespace NovelRT;
@@ -42,7 +42,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     renderingServicePtr->initialiseRendering();
 
@@ -54,7 +54,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     renderingServicePtr->tearDown();
 
@@ -66,7 +66,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
     _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, std::string(filePath), *reinterpret_cast<RGBAConfig*>(colourTint)));
@@ -80,7 +80,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
     _imageRectCollection.push_back(renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourTint)));
@@ -94,7 +94,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
     _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig)));
@@ -108,9 +108,9 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    
+
     //DEFINITELY DO NOT DO THIS I AM AWFUL
     _textRectCollection.push_back(renderingServicePtr->createTextRect(*reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig), fontSize, std::string(fontFilePath)));
     *outputTextRect = reinterpret_cast<NrtTextRect>(_textRectCollection.back().get());
@@ -123,7 +123,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     *outputCamera = reinterpret_cast<NrtCamera>(renderingServicePtr->getCamera().get());
 
@@ -135,7 +135,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     renderingServicePtr->beginFrame();
 
@@ -147,7 +147,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     renderingServicePtr->endFrame();
 
@@ -159,7 +159,7 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
     renderingServicePtr->setBackgroundColour(*reinterpret_cast<RGBAConfig*>(colour));
 
@@ -171,9 +171,9 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    _textureCollection.push_back(renderingServicePtr->getTexture("")); 
+    _textureCollection.push_back(renderingServicePtr->getTexture(""));
     *outputTexture = reinterpret_cast<NrtTexture>(_textureCollection.back().get());
 
     return NRT_SUCCESS;
@@ -184,9 +184,9 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    
+
     _textureCollection.push_back(renderingServicePtr->getTexture(std::string(fileTarget)));
     *outputTexture = reinterpret_cast<NrtTexture>(_textureCollection.back().get());
 
@@ -198,9 +198,9 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    
+
     _fontSetCollection.push_back(renderingServicePtr->getFontSet(std::string(fileTarget), fontSize));
     *outputFontSet = reinterpret_cast<NrtFontSet>(_fontSetCollection.back().get());
 
@@ -212,17 +212,17 @@ extern "C" {
       Nrt_setErrMsgIsNullptrInternal();
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    
-    
+
+
     for (auto& service : _renderingServiceCollection) {
       if(service.get() != renderingServicePtr) {
         continue;
       }
 
       _renderingServiceCollection.remove(service);
-        
+
       return NRT_SUCCESS;
     }
 

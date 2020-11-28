@@ -16,13 +16,13 @@ typedef struct IteratorHandle* NrtAudioServiceIterator;
 NrtAudioService Nrt_AudioService_create();
 NrtResult Nrt_AudioService_destroy(NrtAudioService service);
 
-NrtResult Nrt_AudioService_initialiseAudio(NrtAudioService service, int32_t* output);
-int32_t loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output);
-    
+NrtBool Nrt_AudioService_initialiseAudio(NrtAudioService service);
+NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output);
+
 NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int source, float val);
 NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned int source, float posX, float posY);
 NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service);
-NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int loops);
+NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int32_t loops);
 NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service);
 NrtResult Nrt_AudioService_stopMusic(NrtAudioService service);
 NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value);

@@ -1,19 +1,20 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/NrtNovelRunner.h"
-#include "NovelRT.Interop/Input/NrtInteractionService.h"
-#include "NovelRT.Interop/Timing/NrtTimestamp.h"
-#include "NovelRT.Interop/Timing/NrtStepTimer.h"
-#include "NovelRT.Interop/Utilities/NrtCommonEvents.h"
-#include "NovelRT.Interop/NrtLoggingService.h"
-#include "NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h"
-#include "NovelRT.Interop/Utilities/NrtMisc.h"
-#include "NovelRT.Interop/Graphics/NrtImageRect.h"
-#include "NovelRT.Interop/Ink/NrtInkService.h"
-#include "NovelRT.Interop/Ink/NrtStory.h"
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtNovelRunner.h>
+#include <NovelRT.Interop/Input/NrtInteractionService.h>
+#include <NovelRT.Interop/Timing/NrtTimestamp.h>
+#include <NovelRT.Interop/Timing/NrtStepTimer.h>
+#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
+#include <NovelRT.Interop/NrtLoggingService.h>
+#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
+#include <NovelRT.Interop/Utilities/NrtMisc.h>
+#include <NovelRT.Interop/Graphics/NrtImageRect.h>
+#include <NovelRT.Interop/Ink/NrtInkService.h>
+#include <NovelRT.Interop/Ink/NrtStory.h>
 
 //Preset vars
 int32_t res = NRT_SUCCESS;
@@ -53,8 +54,7 @@ void moveNovelChan(NrtTimestamp delta) {
     float moveAmount = 100.0f;
 
     trueDelta = Nrt_Timestamp_getSecondsFloat(delta);
-    NrtTransform transform = {{0, 0}, {0, 0}, 0};
-    Nrt_ImageRect_getTransform(nChanRect, &transform);
+    NrtTransform transform = Nrt_ImageRect_getTransform(nChanRect);
 
 
     float xOrigin = transform.position.x;
@@ -120,8 +120,7 @@ void interactWithNovelChan() {
     Nrt_Story_resetState(story);
   }
 
-  const char* cSharpResult = "";
-  Nrt_Story_continue(story, &cSharpResult);
+  const char* cSharpResult = Nrt_Story_continue(story);
   Nrt_LoggingService_logDebugLine(console, cSharpResult);
   Nrt_RuntimeService_freeString(dotnet, cSharpResult);
 }
@@ -137,7 +136,13 @@ int main() {
   console = Nrt_LoggingService_createCustomTitle("Interop");
 
   //Getting a constant to the Resources folder
-  const char* path = Nrt_appendFilePath(2, Nrt_getExecutableDirPath(), "Resources");
+  const char* execPath = Nrt_getExecutableDirPath();
+  const char* error = Nrt_getLastError();
+  if (error != NULL) {
+    Nrt_LoggingService_logErrorLine(console, error);
+    return -1;
+  }
+  const char* path = Nrt_appendFilePath(2, execPath, "Resources");
 
   //Getting & Initialising AudioService
   res = Nrt_NovelRunner_getAudioService(runner, &audio);
@@ -147,8 +152,8 @@ int main() {
     return -1;
   }
   else {
-    res = Nrt_AudioService_initialiseAudio(audio, &booleanResult);
-    if (res != NRT_SUCCESS || booleanResult != NRT_TRUE) {
+    booleanResult = Nrt_AudioService_initialiseAudio(audio);
+    if (booleanResult != NRT_TRUE) {
       const char* errMsg = Nrt_appendText(2,"Error initialising AudioService: ",Nrt_getLastError());
       Nrt_LoggingService_logErrorLine(console, errMsg);
       return -1;

@@ -11,11 +11,11 @@
 extern "C" {
 #endif
 
-  NrtResult Nrt_ImageRect_getTransform(NrtImageRect rect, NrtTransform* outputTransform);
+  NrtTransform Nrt_ImageRect_getTransform(NrtImageRect rect);
   NrtResult Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform);
-  NrtResult Nrt_ImageRect_getLayer(NrtImageRect rect, int32_t* outputLayer);
+  int32_t Nrt_ImageRect_getLayer(NrtImageRect rect);
   NrtResult Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer);
-  NrtResult Nrt_ImageRect_getActive(NrtImageRect rect, NrtBool* outputBool);
+  NrtBool Nrt_ImageRect_getActive(NrtImageRect rect);
   NrtResult Nrt_ImageRect_setActive(NrtImageRect rect, NrtBool inputBool);
   NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect);
   NrtResult Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture* outputTexture);

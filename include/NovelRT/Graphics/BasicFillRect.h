@@ -18,10 +18,10 @@ namespace NovelRT::Graphics {
   protected:
     void configureObjectBuffers() final;
     void drawObject() final;
-    
+
   public:
     BasicFillRect(Transform transform,
-      int layer,
+      int32_t layer,
       std::shared_ptr<Camera> camera,
       ShaderProgram shaderProgram,
       RGBAConfig fillColour);

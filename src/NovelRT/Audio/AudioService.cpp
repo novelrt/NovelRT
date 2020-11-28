@@ -138,7 +138,7 @@ void AudioService::resumeMusic() {
   alSourcePlay(_musicSource);
 }
 
-void AudioService::playMusic(std::vector<ALuint>::iterator handle, int loops) {
+void AudioService::playMusic(std::vector<ALuint>::iterator handle, int32_t loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");
@@ -204,8 +204,8 @@ void AudioService::checkSources() {
   //Changing the init check as I don't want this to kill the Runner.
   if (isInitialised) {
 
-    int musicLoop = 0;
-    int soundLoop = 0;
+    int32_t musicLoop = 0;
+    int32_t soundLoop = 0;
     for (auto sound : _soundStorage) {
       alGetSourcei(sound, AL_LOOPING, &soundLoop);
       if (soundLoop == AL_TRUE) {
@@ -290,7 +290,7 @@ void AudioService::unload(ALuint source) {
   alSourcei(source, AL_BUFFER, 0);
 }
 
-void AudioService::playSound(ALuint handle, int loops) {
+void AudioService::playSound(ALuint handle, int32_t loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
     throw std::runtime_error("Unable to continue! Dangerous call being made to AudioService::playMusic. You cannot play a sound when the AudioService is not initialised.");

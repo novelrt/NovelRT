@@ -11,9 +11,9 @@ extern "C" {
 #endif
 
 typedef enum {
-  Unmodified = 0,
-  ModifiedInCurrent = 1,
-  ModifiedInLast = 2
+  NRT_UNMODIFIED = 0,
+  NRT_MODIFIEDINCURRENT = 1,
+  NRT_MODIFIEDINLAST = 2
 } NrtCameraFrameState;
 
 #ifdef __cplusplus

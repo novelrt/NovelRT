@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Graphics/NrtBasicFillRect.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 using namespace NovelRT;
 using namespace NovelRT::Graphics;
@@ -18,7 +18,7 @@ NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRect rect, NrtTransform* ou
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-  
+
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
   *outputTransform = *reinterpret_cast<NrtTransform*>(&cppRect->transform());
 
@@ -30,23 +30,16 @@ NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRect rect, NrtTransform inp
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-  
+
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
   cppRect->transform() = *reinterpret_cast<Transform*>(&inputTransform);
 
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect, int32_t* outputLayer) {
-  if(rect == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-  
+int32_t Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect) {
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-  *outputLayer = cppRect->layer();
-
-  return NRT_SUCCESS;
+  return cppRect->layer();
 }
 
 NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer) {
@@ -54,28 +47,19 @@ NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer) 
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-  
+
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
   cppRect->layer() = inputLayer;
 
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_BasicFillRect_getActive(NrtBasicFillRect rect, NrtBool* outputBool) {
-  if(rect == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_BasicFillRect_getActive(NrtBasicFillRect rect) {
   BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
   if(cppRect->getActive()) {
-    *outputBool = NRT_TRUE;
+    return NRT_TRUE;
   }
-  else {
-    *outputBool = NRT_FALSE;
-  }
-
-  return NRT_SUCCESS;
+  return NRT_FALSE;
 }
 
 NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool) {
@@ -95,7 +79,6 @@ NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool) 
 
   return NRT_SUCCESS;
 }
-
 
 NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRect rect) {
   if(rect == nullptr) {

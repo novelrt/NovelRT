@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Maths/NrtGeoVector4F.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector4F.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ extern "C" {
   NrtBool Nrt_GeoVector4F_epsilonEquals(NrtGeoVector4F vector, NrtGeoVector4F other, NrtGeoVector4F epsilonValue) {
     Maths::GeoVector4F cVector = *reinterpret_cast<const Maths::GeoVector4F*>(&vector); Maths::GeoVector4F cOther = *reinterpret_cast<const Maths::GeoVector4F*>(&other);
     Maths::GeoVector4F cEpsilonValue = *reinterpret_cast<const Maths::GeoVector4F*>(&epsilonValue);
-    
+
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
       return NRT_TRUE;
     }

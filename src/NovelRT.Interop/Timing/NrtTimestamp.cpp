@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Timing/NrtTimestamp.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Timing/NrtTimestamp.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -49,7 +49,7 @@ NrtTimestamp Nrt_Timestamp_addTimestamp(NrtTimestamp first, NrtTimestamp other) 
   Timing::Timestamp cFirst = Timing::Timestamp(first);
   Timing::Timestamp cOther = Timing::Timestamp(other);
 
-  Timing::Timestamp* result = new Timing::Timestamp(0); 
+  Timing::Timestamp* result = new Timing::Timestamp(0);
   *result = cFirst + cOther;
   return reinterpret_cast<NrtTimestamp&>(*result);
 }
@@ -58,7 +58,7 @@ NrtTimestamp Nrt_Timestamp_subtractTimestamp(NrtTimestamp first, NrtTimestamp ot
   Timing::Timestamp cFirst = Timing::Timestamp(first);
   Timing::Timestamp cOther = Timing::Timestamp(other);
 
-  Timing::Timestamp* result = new Timing::Timestamp(0); 
+  Timing::Timestamp* result = new Timing::Timestamp(0);
   *result = cFirst - cOther;
   return reinterpret_cast<NrtTimestamp&>(*result);
 }
@@ -67,7 +67,7 @@ NrtTimestamp Nrt_Timestamp_multiplyTimestamp(NrtTimestamp first, NrtTimestamp ot
   Timing::Timestamp cFirst = Timing::Timestamp(first);
   Timing::Timestamp cOther = Timing::Timestamp(other);
 
-  Timing::Timestamp* result = new Timing::Timestamp(0); 
+  Timing::Timestamp* result = new Timing::Timestamp(0);
   *result = cFirst * cOther;
   return reinterpret_cast<NrtTimestamp&>(*result);
 }
@@ -76,7 +76,7 @@ NrtTimestamp Nrt_Timestamp_divideTimestamp(NrtTimestamp first, NrtTimestamp othe
   Timing::Timestamp cFirst = Timing::Timestamp(first);
   Timing::Timestamp cOther = Timing::Timestamp(other);
 
-  Timing::Timestamp* result = new Timing::Timestamp(0); 
+  Timing::Timestamp* result = new Timing::Timestamp(0);
   *result = cFirst / cOther;
   return reinterpret_cast<NrtTimestamp&>(*result);
 }

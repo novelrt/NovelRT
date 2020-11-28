@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/NrtNovelRunner.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtNovelRunner.h>
 #include <NovelRT.h>
 #include <stdint.h>
 #include <list>
@@ -17,12 +17,12 @@ std::list<std::shared_ptr<NovelRT::DebugService>> _debugServiceCollection;
 extern "C" {
 #endif
 
-  NrtNovelRunner Nrt_NovelRunner_create(int displayNumber) {
+  NrtNovelRunner Nrt_NovelRunner_create(int32_t displayNumber) {
     NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber);
     return reinterpret_cast<NrtNovelRunner>(runner);
   }
 
-  NrtNovelRunner Nrt_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
+  NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber, const char* windowTitle, uint32_t targetFrameRate) {
     NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber, windowTitle, targetFrameRate);
     return reinterpret_cast<NrtNovelRunner>(runner);
   }
@@ -43,9 +43,9 @@ extern "C" {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
-    
+
     cRunner->~NovelRunner();
     return NRT_SUCCESS;
   }
@@ -65,7 +65,7 @@ extern "C" {
     }
 
     *outputService = reinterpret_cast<NrtAudioService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -74,7 +74,7 @@ extern "C" {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _interactionCollection.push_back(cRunner->getInteractionService());
 
@@ -85,7 +85,7 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     *outputService = reinterpret_cast<NrtInteractionService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -94,7 +94,7 @@ extern "C" {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _windowingCollection.push_back(cRunner->getWindowingService());
 
@@ -105,7 +105,7 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     *outputService = reinterpret_cast<NrtWindowingService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -125,7 +125,7 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     *outputService = reinterpret_cast<NrtRuntimeService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -145,7 +145,7 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     *outputService = reinterpret_cast<NrtRenderingService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -154,7 +154,7 @@ extern "C" {
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
     }
-    
+
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
     _debugServiceCollection.push_back(cRunner->getDebugService());
 
@@ -165,7 +165,7 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
     *outputService = reinterpret_cast<NrtDebugService>(ptr);
-    
+
     return NRT_SUCCESS;
   }
 
@@ -178,7 +178,7 @@ extern "C" {
     NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
 
     cRunner->Update += [func](NovelRT::Timing::Timestamp delta){
-      func(reinterpret_cast<NrtTimestamp&>(delta)); 
+      func(reinterpret_cast<NrtTimestamp&>(delta));
     };
 
     return NRT_SUCCESS;

@@ -18,7 +18,7 @@ namespace NovelRT::Utilities {
       {
         auto lpCmdLine = GetCommandLineW();
 
-        int argc;
+        int32_t argc;
         auto argv = CommandLineToArgvW(lpCmdLine, &argc);
 
         return (argc > 0) ? argv[0] : std::filesystem::current_path();

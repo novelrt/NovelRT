@@ -46,7 +46,6 @@ namespace NovelRT::Maths {
       return _points[index];
     }
 
-    //TODO: Im fairly certain this can't exist in the C API? Figure this out
     template <typename TQuadTreePoint>
     const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const {
       return static_cast<std::shared_ptr<TQuadTreePoint>>(getPoint(index));
@@ -94,7 +93,6 @@ namespace NovelRT::Maths {
       return result;
     }
 
-    //TODO: This doesn't seem right at all lol
     template <typename TQuadTreePoint, typename... TArgs>
     bool tryInsert(GeoBounds bounds, TArgs... args) {
       return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0), std::forward<TArgs>(args)...)) ||

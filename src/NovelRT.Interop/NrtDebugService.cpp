@@ -2,10 +2,10 @@
 
 #include <stdint.h>
 #include <list>
-#include "NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Utilities/NrtCommonEvents.h"
-#include "NovelRT.Interop/Graphics/NrtRenderingService.h"
-#include "NovelRT.Interop/NrtDebugService.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
+#include <NovelRT.Interop/Graphics/NrtRenderingService.h>
+#include <NovelRT.Interop/NrtDebugService.h>
 #include <NovelRT.h>
 
 std::list<std::shared_ptr<NovelRT::DebugService>> _debugCollection;
@@ -21,7 +21,7 @@ NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtR
     Nrt_setErrMsgIsNullptrInternal();
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
-    
+
   Utilities::Event<> constructionEvent = *reinterpret_cast<Utilities::Event<>*>(sceneConstructionEvent);
   _debugRendererCollection.push_back(reinterpret_cast<Graphics::RenderingService*>(renderingService)->shared_from_this());
 
@@ -30,15 +30,9 @@ NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtR
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service, int32_t* result) {
-  if (service == nullptr || result == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service) {
   DebugService* cppService = reinterpret_cast<DebugService*>(service);
-  *result = static_cast<int32_t>(cppService->getIsFpsCounterVisible());
-  return NRT_SUCCESS;
+  return static_cast<int32_t>(cppService->getIsFpsCounterVisible());
 }
 
 NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value) {
@@ -52,15 +46,9 @@ NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_DebugService_getFramesPerSecond(NrtDebugService service, uint32_t* outputValue) {
-  if (service == nullptr || outputValue == nullptr) {
-    Nrt_setErrMsgIsNullptrInternal();
-    return NRT_FAILURE_NULLPTR_PROVIDED;
-  }
-
+uint32_t Nrt_DebugService_getFramesPerSecond(NrtDebugService service) {
   DebugService* cppService = reinterpret_cast<DebugService*>(service);
-  *outputValue = cppService->getFramesPerSecond();
-  return NRT_SUCCESS;
+  return cppService->getFramesPerSecond();
 }
 
 NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value) {

@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Maths/NrtQuadTreePoint.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
+#include <NovelRT.h>
 #include <list>
 #include <algorithm>
 
@@ -23,17 +23,10 @@ extern "C" {
     return reinterpret_cast<NrtQuadTreePoint>(_pointCollection.back().get());
   }
 
-  NrtResult Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point, NrtGeoVector2F* outputPosition) {
-    if(point == nullptr || outputPosition == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point) {
     Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
     NrtGeoVector2F returnValue = reinterpret_cast<const NrtGeoVector2F&>(pos);
-    *outputPosition = returnValue;
-
-    return NRT_SUCCESS;
+    return returnValue;
   }
 
   NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point) {

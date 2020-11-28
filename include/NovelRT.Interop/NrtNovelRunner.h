@@ -19,8 +19,8 @@ extern "C" {
 
   typedef struct NovelRunnerHandle* NrtNovelRunner;
 
-  NrtNovelRunner Nrt_NovelRunner_create(int displayNumber);
-  NrtNovelRunner Nrt_NovelRunner_createCustom(int displayNumber, const char* windowTitle, uint32_t targetFrameRate);
+  NrtNovelRunner Nrt_NovelRunner_create(int32_t displayNumber);
+  NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber, const char* windowTitle, uint32_t targetFrameRate);
   NrtResult Nrt_NovelRunner_runNovel(NrtNovelRunner runner);
   NrtResult Nrt_NovelRunner_destroy(NrtNovelRunner runner);
 

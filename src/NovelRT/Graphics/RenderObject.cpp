@@ -4,7 +4,7 @@
 
 namespace NovelRT::Graphics {
 
-  RenderObject::RenderObject(Transform transform, int layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera) :
+  RenderObject::RenderObject(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera) :
     WorldObject(transform, layer),
     _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),
     _vertexArrayObject(Utilities::Lazy<GLuint>(std::function<GLuint()>([] {
@@ -19,7 +19,7 @@ namespace NovelRT::Graphics {
 
   void RenderObject::executeObjectBehaviour() {
     if (_camera->getFrameState() != CameraFrameState::Unmodified) _isDirty = true;
-    
+
     if (_isDirty) {
       _finalViewMatrixData.reset();
       _bufferInitialised = false;

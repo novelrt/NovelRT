@@ -16,11 +16,11 @@ namespace NovelRT::Windowing {
     _isTornDown(false) {
   }
 
-  void WindowingService::errorCallback(int, const char* error) {
+  void WindowingService::errorCallback(int32_t, const char* error) {
     _logger.logError("Could not initialize GLFW: {}", error);
   }
 
-  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
+  void WindowingService::initialiseWindow(int32_t /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -151,7 +151,7 @@ namespace NovelRT::Windowing {
 #endif
 
     _isTornDown = true;
-    
+
     glfwDestroyWindow(getWindow());
   }
 }

@@ -14,12 +14,12 @@ typedef struct WindowingServiceHandle* NrtWindowingService;
 
 NrtWindowingService Nrt_WindowingService_create();
 
-NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int displayNumber, const char* windowTitle, int32_t transparencyEnabled);
+NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service, int32_t displayNumber, const char* windowTitle, int32_t transparencyEnabled);
 NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service);
-NrtResult Nrt_WindowingService_getWindowTitle(NrtWindowingService service, const char** windowTitle);
+const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service);
 NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value);
 NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVector2F value);
-NrtResult Nrt_WindowingService_getWindowSize(NrtWindowingService service, NrtGeoVector2F* output);
+NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingService service);
 
 #ifdef __cplusplus
 }

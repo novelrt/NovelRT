@@ -1,14 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Maths/NrtGeoVector3F.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector3F.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
 extern "C" {
 #endif
-  
+
   NrtGeoVector3F Nrt_GeoVector3F_createFromGeoVector2F(NrtGeoVector2F vector) {
   	Maths::GeoVector2F cVector2 = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
   	return NrtGeoVector3F{ cVector2.x, cVector2.y, 0.0f };
@@ -46,7 +46,7 @@ extern "C" {
   NrtBool Nrt_GeoVector3F_epsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue) {
     Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector); Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&other);
     Maths::GeoVector3F cEpsilonValue = *reinterpret_cast<const Maths::GeoVector3F*>(&epsilonValue);
-    
+
     if(cVector.epsilonEquals(cOther, cEpsilonValue)) {
       return NRT_TRUE;
     }
@@ -155,7 +155,7 @@ extern "C" {
     Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
     Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     Maths::GeoVector3F result = cFirst / cOther;
-    return *reinterpret_cast<NrtGeoVector3F*>(&result);  
+    return *reinterpret_cast<NrtGeoVector3F*>(&result);
   }
 
   NrtGeoVector3F Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs) {

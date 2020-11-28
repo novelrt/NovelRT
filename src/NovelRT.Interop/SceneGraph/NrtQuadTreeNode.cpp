@@ -1,12 +1,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <stdint.h>
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h"
-#include "NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>
+#include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -78,8 +78,8 @@ NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScene
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo, 
-  NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour, 
+NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo,
+  NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour,
   NrtQuadTreeScenePointArray* outputArray) { //TODO: can we not make this read nicer?
   if(pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr || outputArray == nullptr) {
     Nrt_setErrMsgIsNullptrInternal();

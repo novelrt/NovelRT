@@ -14,9 +14,9 @@ extern "C" {
 //base type
 NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRect rect, NrtTransform* outputTransform);
 NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRect rect, NrtTransform inputTransform);
-NrtResult Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect, int32_t* outputLayer);
+int32_t Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect);
 NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer);
-NrtResult Nrt_BasicFillRect_getActive(NrtBasicFillRect rect, NrtBool* outputBool);
+NrtBool Nrt_BasicFillRect_getActive(NrtBasicFillRect rect);
 NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool);
 NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRect rect);
 

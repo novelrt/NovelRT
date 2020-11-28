@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.h"
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/Graphics/NrtTextRect.h"
+#include <NovelRT.h>
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/Graphics/NrtTextRect.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
@@ -39,16 +39,9 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_TextRect_getLayer(NrtTextRect rect, int32_t *outputLayer) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  int32_t Nrt_TextRect_getLayer(NrtTextRect rect) {
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-    *outputLayer = textRectPtr->layer();
-
-    return NRT_SUCCESS;
+    return textRectPtr->layer();
   }
 
   NrtResult Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer) {
@@ -63,22 +56,13 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_TextRect_getActive(NrtTextRect rect, NrtBool* outputBool) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtBool Nrt_TextRect_getActive(NrtTextRect rect) {
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
 
     if(textRectPtr->getActive()) {
-      *outputBool = NRT_TRUE;
+      return NRT_TRUE;
     }
-    else {
-      *outputBool = NRT_FALSE;
-    }
-
-    return NRT_SUCCESS;
+    return NRT_FALSE;
   }
 
   NrtResult Nrt_TextRect_setActive(NrtTextRect rect, NrtBool inputBool) {
@@ -138,16 +122,10 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_TextRect_getText(NrtTextRect rect, const char** outputText) {
-    if(rect == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  const char* Nrt_TextRect_getText(NrtTextRect rect) {
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-    *outputText = textRectPtr->getText().c_str(); //TODO: This might break lol. Not sure.
-
-    return NRT_SUCCESS;
+    std::string* text = new std::string(textRectPtr->getText());
+    return text->c_str();
   }
 
   NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText) {

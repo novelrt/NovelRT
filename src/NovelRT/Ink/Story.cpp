@@ -25,7 +25,7 @@ namespace NovelRT::Ink {
     return _exports.getActual().GetCanContinue(_handle.getActual());
   }
 
-  void Story::ChooseChoiceIndex(int choiceIdx) {
+  void Story::ChooseChoiceIndex(int32_t choiceIdx) {
     _exports.getActual().ChooseChoiceIndex(_handle.getActual(), choiceIdx);
   }
 

@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Utilities/NrtMisc.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Utilities/NrtMisc.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
 #include <NovelRT.h>
 #include <stdarg.h>
 #include <string.h>
@@ -11,38 +11,16 @@ extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath() {
-  std::string cppPath = NovelRT::Utilities::Misc::getExecutablePath().string();
-  char* path = new char[cppPath.length() + 1];
-  if (strlen(path) < cppPath.length() + 1) {
-    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
-    return NULL;
-  }
-
-#if defined(WIN32)
-  strcpy_s(path, cppPath.length()+1, cppPath.c_str());
-#else
-  path = strdup(cppPath.c_str());
-#endif
-  return path;
+  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
+  return cppPath->c_str();
 }
 
 const char* Nrt_getExecutableDirPath() {
-  std::string cppPath = NovelRT::Utilities::Misc::getExecutableDirPath().string();
-  char* path = new char[cppPath.length() + 1];
-  if(strlen(path) < (cppPath.length() + 1)) {
-    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
-    return NULL;
-  }
-
-#if defined(WIN32)
-  strcpy_s(path, cppPath.length()+1, cppPath.c_str());
-#else
-  path = strdup(cppPath.c_str());
-#endif
-  return path;
+  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
+  return cppPath->c_str();
 }
 
-const char* Nrt_appendFilePath(int numberOfArgs, ...) {
+const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
   if (numberOfArgs <= 1) {
     Nrt_setErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
     return NULL;
@@ -58,7 +36,9 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
   va_start(args, numberOfArgs);
 
   for(int i = 0; i < numberOfArgs; i++) {
-    finalString.append(va_arg(args, const char*));
+    const char* arg = va_arg(args, const char*);
+    std::cout << arg << std::endl;
+    finalString.append(arg);
     if (i < numberOfArgs-1) {
       finalString.append(dirMarker);
     }
@@ -80,7 +60,7 @@ const char* Nrt_appendFilePath(int numberOfArgs, ...) {
   return finalPath;
 }
 
-const char* Nrt_appendText(int numberOfArgs, ...) {
+const char* Nrt_appendText(int32_t numberOfArgs, ...) {
   if (numberOfArgs <= 1) {
     Nrt_setErrMsgCustomInternal("Cannot append text when nothing is being appended!");
     return NULL;

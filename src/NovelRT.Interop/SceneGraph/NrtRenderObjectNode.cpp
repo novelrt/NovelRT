@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 #include <stdint.h>
 #include <list>
-#include "NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h"
-#include "NovelRT.Interop/SceneGraph/NrtRenderObjectNode.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
+#include <NovelRT.Interop/SceneGraph/NrtRenderObjectNode.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.h>
 using namespace NovelRT;
 
 std::list<std::shared_ptr<Graphics::RenderObject>> _renderObjectNodeCollection;

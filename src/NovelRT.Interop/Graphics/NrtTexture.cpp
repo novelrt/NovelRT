@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NovelRT.h"
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/NrtInteropUtils.h"
-#include "NovelRT.Interop/Graphics/NrtTexture.h"
+#include <NovelRT.h>
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/Graphics/NrtTexture.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
@@ -25,29 +25,15 @@ extern "C" {
     return NRT_SUCCESS;
   }
 
-  NrtResult Nrt_Texture_getTextureFile(NrtTexture targetTexture, const char** outputFile) {
-    if (targetTexture == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  const char* Nrt_Texture_getTextureFile(NrtTexture targetTexture) {
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
-    *outputFile = texturePtr->getTextureFile().c_str();
-
-    return NRT_SUCCESS;
+    return texturePtr->getTextureFile().c_str();
   }
 
-  NrtResult Nrt_Texture_getSize(NrtTexture targetTexture, NrtGeoVector2F* outputSize) {
-    if (targetTexture == nullptr) {
-      Nrt_setErrMsgIsNullptrInternal();
-      return NRT_FAILURE_NULLPTR_PROVIDED;
-    }
-
+  NrtGeoVector2F Nrt_Texture_getSize(NrtTexture targetTexture) {
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
     auto vec = texturePtr->getSize();
-    *outputSize = *reinterpret_cast<NrtGeoVector2F*>(&vec);
-
-    return NRT_SUCCESS;
+    return *reinterpret_cast<NrtGeoVector2F*>(&vec);
   }
 
 #ifdef __cplusplus

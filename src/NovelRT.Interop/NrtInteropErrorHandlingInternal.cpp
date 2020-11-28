@@ -1,6 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "NrtInteropErrorHandlingInternal.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
 #include <stddef.h>
 
 const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";

@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#include "../NrtInteropErrorHandlingInternal.h"
-#include "NovelRT.Interop/Windowing/NrtWindowingService.h"
-#include "NovelRT.Interop/Input/NrtInteractionService.h"
-#include "NovelRT.h"
+#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/Windowing/NrtWindowingService.h>
+#include <NovelRT.Interop/Input/NrtInteractionService.h>
+#include <NovelRT.h>
 #include <list>
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowCollection;
@@ -30,7 +30,7 @@ NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionService servic
     return NRT_FAILURE_NULLPTR_PROVIDED;
   }
 
-  servicePtr->consumePlayerInput();  
+  servicePtr->consumePlayerInput();
   return NRT_SUCCESS;
 }
 
@@ -72,7 +72,7 @@ NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service
   return NRT_SUCCESS;
 }
 
-NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int layer, NrtBasicInteractionRect* outputRect) {
+NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service, const NrtTransform transform, int32_t layer, NrtBasicInteractionRect* outputRect) {
   auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
   if (servicePtr == nullptr) {

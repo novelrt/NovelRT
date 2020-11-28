@@ -5,22 +5,16 @@
 
 #include <stdint.h>
 #include "../NrtInteropUtils.h"
+#include "NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct SceneHandle* NrtScene;
-
-#ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
-typedef struct SceneNodeHandle* NrtSceneNode;   //this worked? oh my gosssshhhhh //I CRI - Matt
-typedef struct StdSet_SceneNode* NrtSceneNodeSet;
-#endif
-
 NrtScene Nrt_Scene_create();
 NrtResult Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet);
-NrtResult Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert, int32_t* outputResult);
-NrtResult Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove, int32_t* outputResult);
+NrtBool Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert);
+NrtBool Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove);
 NrtResult Nrt_Scene_delete(NrtScene scene);
 
 #ifdef __cplusplus

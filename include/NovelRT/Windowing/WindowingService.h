@@ -15,14 +15,14 @@ namespace NovelRT::Windowing {
 
   public:
     struct MouseClickEventArgs {
-      int button = 0;
-      int action = 0;
+      int32_t button = 0;
+      int32_t action = 0;
       Maths::GeoVector2F mousePosition = Maths::GeoVector2F::zero();
     };
 
     struct KeyboardButtonChangeEventArgs {
-      int key = 0;
-      int action = 0;
+      int32_t key = 0;
+      int32_t action = 0;
     };
 
 
@@ -31,7 +31,7 @@ namespace NovelRT::Windowing {
     Utilities::Event<MouseClickEventArgs> MouseButtonClicked;
     Utilities::Event<KeyboardButtonChangeEventArgs> KeyboardButtonChanged;
 
-  private:   
+  private:
     Maths::GeoVector2F _windowSize;
     std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
     LoggingService _logger;
@@ -43,12 +43,12 @@ namespace NovelRT::Windowing {
     void checkForOptimus(const char* library);
 #endif
 
-    void errorCallback(int, const char* error);
+    void errorCallback(int32_t, const char* error);
 
   public:
     explicit WindowingService() noexcept;
 
-    void initialiseWindow(int displayNumber, const std::string& windowTitle, bool transparencyEnabled);
+    void initialiseWindow(int32_t displayNumber, const std::string& windowTitle, bool transparencyEnabled);
     void tearDown();
 
     inline GLFWwindow* getWindow() const {
