@@ -44,14 +44,14 @@ class SystemSchedulerTest : public testing::Test
         }
     }
 
-    // void TearDown() override
-    // {
-    //     if (scheduler != nullptr)
-    //     {
-    //         delete scheduler;
-    //         scheduler = nullptr;
-    //     }
-    // }
+    void TearDown() override
+    {
+        if (scheduler != nullptr)
+        {
+            delete scheduler;
+            scheduler = nullptr;
+        }
+    }
 };
 
 TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
@@ -61,9 +61,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
 
 TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
 {
-    //std::cout << "BEFORE: " << sysOneBool << std::endl;
     scheduler->ExecuteIteration(Timestamp(0));
-    //std::cout << "AFTER: " << sysOneBool << std::endl;
     
     EXPECT_FALSE(sysOneBool);
     EXPECT_FALSE(sysTwoBool);

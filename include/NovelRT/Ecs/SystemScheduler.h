@@ -47,6 +47,8 @@ namespace NovelRT::Ecs
         Timing::Timestamp _currentDelta;
 
         std::atomic_uint64_t _threadAvailabilityMap;
+        std::atomic_uint64_t _threadShutDownStatus;
+        std::atomic_bool _shouldShutDown;
 
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
@@ -78,6 +80,8 @@ namespace NovelRT::Ecs
         void SpinThreads() noexcept;
 
         void ExecuteIteration(Timing::Timestamp delta);
+
+        ~SystemScheduler() noexcept;
     };
 } 
 
