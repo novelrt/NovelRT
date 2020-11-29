@@ -111,6 +111,9 @@ namespace NovelRT::Audio {
 namespace NovelRT::DotNet {
   typedef class RuntimeService RuntimeService;
 }
+namespace NovelRT::Exceptions {
+  typedef class ServiceNotInitializedException ServiceNotInitializedException;
+}
 /**
  * Contains graphics features, such as rendering, textures, cameras, etc.
  */
@@ -233,5 +236,8 @@ namespace NovelRT::Windowing {
 #include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
 #include "NovelRT/SceneGraph/QuadTreeNode.h"
 #include "NovelRT/SceneGraph/Scene.h"
+
+// Exception types
+#include "NovelRT/Exceptions/ServiceNotInitializedException.h"
 
 #endif //!NOVELRT_H
