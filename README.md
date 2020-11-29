@@ -79,7 +79,7 @@ Next, use vcpkg and Python 3 to install the dependencies:
 ```
 python -m pip install setuptools
 python -m pip install glad
-vcpkg.exe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
+vcpkg install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
 vcpkg integrate install
 ```
 Then, clone and build NovelRT:
