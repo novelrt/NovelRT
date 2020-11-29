@@ -4,7 +4,7 @@
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) : 
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) :
     _maximumThreadCount(maximumThreadCount),
     _currentDelta(0),
     _threadAvailabilityMap(0),
@@ -50,7 +50,7 @@ namespace NovelRT::Ecs
                     _threadShutDownStatus ^= 1ULL << poolId;
                     return;
                 }
-                
+
                 std::this_thread::yield();
             }
 
@@ -146,25 +146,17 @@ namespace NovelRT::Ecs
         {
             std::this_thread::yield();
         }
-        
+
     }
 
     SystemScheduler::~SystemScheduler() noexcept
     {
         _shouldShutDown = true;
-        bool anyJoinable = true;
-        while (anyJoinable)
-        {
-            for (size_t i = 0; i < _threadCache.size(); i++)
-            {
-                if (_threadCache[i].joinable())
-                {
-                    anyJoinable = true;
-                    break;
-                }
 
-                anyJoinable = false;
-            }
-        }
+      for (size_t i = 0; i < _threadCache.size(); i++) {
+        if (_threadCache[i].joinable()) {
+          _threadCache[i].join();
+          }
+      }
     }
 }
