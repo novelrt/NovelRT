@@ -7,7 +7,9 @@ namespace NovelRT::Ecs
     SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) : 
     _maximumThreadCount(maximumThreadCount),
     _currentDelta(0),
-    _threadAvailabilityMap(0)
+    _threadAvailabilityMap(0),
+    _threadShutDownStatus(0),
+    _shouldShutDown(false)
     {
         if (_maximumThreadCount != 0)
         {
@@ -43,6 +45,12 @@ namespace NovelRT::Ecs
             _threadAvailabilityMap ^= 1ULL << poolId;
             while (!JobAvailable(poolId))
             {
+                if (_shouldShutDown)
+                {
+                    _threadShutDownStatus ^= 1ULL << poolId;
+                    return;
+                }
+                
                 std::this_thread::yield();
             }
 
@@ -64,6 +72,7 @@ namespace NovelRT::Ecs
         _threadWorkQueues.swap(vec2);
         for (size_t i = 0; i < _maximumThreadCount; i++)
         {
+            _threadShutDownStatus ^= 1ULL << i;
             _threadAvailabilityMap ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i](){CycleForJob(i);}));
         }
@@ -138,5 +147,24 @@ namespace NovelRT::Ecs
             std::this_thread::yield();
         }
         
+    }
+
+    SystemScheduler::~SystemScheduler() noexcept
+    {
+        _shouldShutDown = true;
+        bool anyJoinable = true;
+        while (anyJoinable)
+        {
+            for (size_t i = 0; i < _threadCache.size(); i++)
+            {
+                if (_threadCache[i].joinable())
+                {
+                    anyJoinable = true;
+                    break;
+                }
+
+                anyJoinable = false;
+            }
+        }
     }
 }
