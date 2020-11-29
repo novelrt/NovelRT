@@ -69,13 +69,16 @@ make -j
 ```
 
 #### Windows
-First, you must set up (our version of*) vcpkg and Python 3 to install the dependencies:
+First, you must set up [(our fork of*) vcpkg](https://github.com/capnkenny/vcpkg) as shown below:
 ```
-python -m pip install setuptools
-python -m pip install glad
 git clone https://github.com/capnkenny/vcpkg
 cd vcpkg
 ./bootstrap-vcpkg.bat
+```
+Next, use vcpkg and Python 3 to install the dependencies:
+```
+python -m pip install setuptools
+python -m pip install glad
 vcpkg.exe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
 vcpkg integrate install
 ```
