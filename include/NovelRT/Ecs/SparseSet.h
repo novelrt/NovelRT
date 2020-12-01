@@ -25,8 +25,18 @@ namespace NovelRT::Ecs
 
         void Remove(TKey key)
         {
-            _denseBlock.erase(_denseBlock.begin() + _sparseMap.at(key));
-            _sparseMap.erase(key);
+            size_t arrayIndex = _sparseMap[key];
+            _denseBlock.erase(_denseBlock.begin() + arrayIndex);
+
+            for (auto& i : _sparseMap)
+            {
+                if (i.second < arrayIndex)
+                {
+                    continue;
+                }
+
+                i.second -= 1;
+            }
         }
 
         bool HasValue(TKey key) const noexcept
