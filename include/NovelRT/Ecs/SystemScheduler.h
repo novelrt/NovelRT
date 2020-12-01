@@ -14,6 +14,7 @@
 #include <queue>
 #include <atomic>
 #include <vector>
+#include "SparseSet.h"
 
 namespace NovelRT::Ecs
 {
@@ -23,7 +24,6 @@ namespace NovelRT::Ecs
         struct SystemRecord
         {
             std::function<void(Timing::Timestamp)> systemPtr;
-            std::vector<Atom> dependencies;
         };
 
         struct QueueLockPair
@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
 
         //volatile, atomic operations, std atomic uint64_t
 
-        std::vector<Atom> _independentSystemIds;
+        std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
@@ -64,15 +64,11 @@ namespace NovelRT::Ecs
         }
 
         template <typename TComponent>
-        Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemPtr, std::vector<Atom> dependencies = std::vector<Atom>())
+        Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemPtr)
         {
             Atom returnId = GetSystemIdForComponent<TComponent>();
-            _systems.emplace(returnId, SystemRecord{systemPtr, dependencies});
-
-            if (dependencies.size() == 0)
-            {
-                _independentSystemIds.emplace_back(returnId);
-            }
+            _systems.emplace(returnId, SystemRecord{systemPtr});
+            _systemIds.emplace_back(returnId);
 
             return returnId;
         }

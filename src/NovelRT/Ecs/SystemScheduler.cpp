@@ -82,9 +82,9 @@ namespace NovelRT::Ecs
     {
         _currentDelta = delta;
 
-        size_t independentSystemChunkSize = _independentSystemIds.size() / _maximumThreadCount;
+        size_t independentSystemChunkSize = _systemIds.size() / _maximumThreadCount;
 
-        size_t workersToAssign = _maximumThreadCount > _independentSystemIds.size() ? _independentSystemIds.size() : _maximumThreadCount;
+        size_t workersToAssign = _maximumThreadCount > _systemIds.size() ? _systemIds.size() : _maximumThreadCount;
         size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
 
         int32_t sizeOfProcessedWork = 0;
@@ -99,30 +99,30 @@ namespace NovelRT::Ecs
             for (size_t j = 0; j < amountOfWork; j++)
             {
                 size_t currentWorkIndex = offset + j;
-                pair.systemIds.push_back(_independentSystemIds[currentWorkIndex]);
+                pair.systemIds.push_back(_systemIds[currentWorkIndex]);
                 ++sizeOfProcessedWork;
             }
 
             pair.threadLock.unlock();
         }
 
-        int32_t remainder = _independentSystemIds.size() % sizeOfProcessedWork;
+        int32_t remainder = _systemIds.size() % sizeOfProcessedWork;
 
         if (remainder < amountOfWork)
         {
             QueueLockPair& pair = _threadWorkQueues[0];
-            size_t startIndex = (_independentSystemIds.size() - 1) - remainder;
+            size_t startIndex = (_systemIds.size() - 1) - remainder;
 
             pair.threadLock.lock();
-            for (size_t i = startIndex; i < _independentSystemIds.size(); i++)
+            for (size_t i = startIndex; i < _systemIds.size(); i++)
             {
-                pair.systemIds.push_back(_independentSystemIds[i]);
+                pair.systemIds.push_back(_systemIds[i]);
             }
             pair.threadLock.unlock();
         }
         else if (remainder > amountOfWork)
         {
-            size_t startIndex = (_independentSystemIds.size() - 1) - remainder;
+            size_t startIndex = (_systemIds.size() - 1) - remainder;
 
             for (size_t i = 0; i < remainder / amountOfWork; i++)
             {
@@ -134,7 +134,7 @@ namespace NovelRT::Ecs
                 for (size_t j = 0; j < amountOfWork; j++)
                 {
                     size_t currentWorkIndex = offset + j;
-                    pair.systemIds.push_back(_independentSystemIds[currentWorkIndex]);
+                    pair.systemIds.push_back(_systemIds[currentWorkIndex]);
                     ++sizeOfProcessedWork;
                 }
 

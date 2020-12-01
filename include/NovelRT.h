@@ -199,6 +199,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Animation/SpriteAnimator.h"
 
 //ECS types
+#include "NovelRT/Ecs/SparseSet.h"
 #include "NovelRT/Ecs/SystemScheduler.h"
 
 //Graphics types
