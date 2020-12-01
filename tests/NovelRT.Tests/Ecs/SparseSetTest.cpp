@@ -13,11 +13,26 @@ TEST(SparseSetTest, InsertDoesNotThrowWhenAddingValidItemToCollection)
     EXPECT_NO_THROW(testSet.Insert(Atom(0), 1));
 }
 
+TEST(SparseSetTest, InsertThrowsWhenDuplicateKeyIsAddedToCollection)
+{
+    SparseSet<Atom, int32_t, AtomHashFunction> testSet;
+    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+    EXPECT_THROW(testSet.Insert(Atom(0), 1), std::exception);
+}
+
 TEST(SparseSetTest, RemoveDoesNotThrowWhenRemovingValidItemFromCollection)
 {
     SparseSet<Atom, int32_t, AtomHashFunction> testSet;
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
     EXPECT_NO_THROW(testSet.Remove(Atom(0)));
+}
+
+TEST(SparseSetTest, RemoveDoesThrowWhenRemovingNonexistentKeyFromCollection)
+{
+    SparseSet<Atom, int32_t, AtomHashFunction> testSet;
+    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+    ASSERT_NO_THROW(testSet.Remove(Atom(0)));
+    EXPECT_THROW(testSet.Remove(Atom(0)), std::exception);
 }
 
 TEST(SparseSetTest, InsertInsertsValidItemCorrectly)
@@ -32,7 +47,7 @@ TEST(SparseSetTest, RemoveUpdatesSetCorrectlyAfterRemovingElement)
     SparseSet<Atom, int32_t, AtomHashFunction> testSet;
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
     ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
-    ASSERT_NO_THROW(testSet.Remove(Atom(1)));
+    ASSERT_NO_THROW(testSet.Remove(Atom(0)));
     EXPECT_EQ(testSet[Atom(1)], 1);
 }
 

@@ -19,14 +19,20 @@ namespace NovelRT::Ecs
         public:
         void Insert(TKey key, TValue value)
         {
+            if (_sparseMap.find(key) != _sparseMap.end())
+            {
+                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!");
+            }
+            
             _denseBlock.push_back(value);
             _sparseMap.emplace(key, _denseBlock.size() - 1);
         }
 
         void Remove(TKey key)
         {
-            size_t arrayIndex = _sparseMap[key];
+            size_t arrayIndex = _sparseMap.at(key);
             _denseBlock.erase(_denseBlock.begin() + arrayIndex);
+            _sparseMap.erase(key);
 
             for (auto& i : _sparseMap)
             {
@@ -46,7 +52,7 @@ namespace NovelRT::Ecs
 
         TValue& operator[](TKey key)
         {
-            return _denseBlock[_sparseMap[key]];
+            return _denseBlock.at(_sparseMap.at(key));
         }
 
         const std::vector<TValue>& GetDenseData() const noexcept
