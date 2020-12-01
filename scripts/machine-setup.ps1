@@ -54,6 +54,8 @@ if ($LastExitCode -ne 0) {
 $vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
 $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
+echo "Foo" >> path.txt
+
 $pathZip = Join-Path -Path $VcpkgInstallDirectory -ChildPath $(Split-Path -Path $depsUri -Leaf)
 New-Item -Path $VcpkgInstallDirectory -Force -ItemType "Directory" | Out-Null
 
