@@ -17,11 +17,16 @@ namespace NovelRT::Ecs
         std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
         public:
+        bool HasValue(TKey key) const noexcept
+        {
+            return _sparseMap.find(key) != _sparseMap.end();
+        }
+
         void Insert(TKey key, TValue value)
         {
-            if (_sparseMap.find(key) != _sparseMap.end())
+            if (HasValue(key))
             {
-                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!");
+                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); //TODO: Make this a well defined exception in the future
             }
             
             _denseBlock.push_back(value);
@@ -43,11 +48,6 @@ namespace NovelRT::Ecs
 
                 i.second -= 1;
             }
-        }
-
-        bool HasValue(TKey key) const noexcept
-        {
-            return _sparseMap.find(key) != _sparseMap.end();
         }
 
         TValue& operator[](TKey key)
