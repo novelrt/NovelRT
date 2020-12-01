@@ -56,7 +56,7 @@ $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object
 
 $pathZip = Join-Path -Path "./" -ChildPath $(Split-Path -Path $depsUri -Leaf)
 
-Invoke-WebRequest -Uri $depsUri -Out "./"
+Invoke-WebRequest -Uri $depsUri -Out $HOME
 if ($LastExitCode -ne 0) {
   throw "Downloading dependencies failed"
 }
