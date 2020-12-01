@@ -6,7 +6,7 @@ $DotNetInstallDirectory = Join-Path -Path $HOME -ChildPath "dotnet"
 
 if (!(Get-Command python -ErrorAction SilentlyContinue ))
 {
-  $PythonInstaller = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".exe" } - PassThru
+  $PythonInstaller = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".exe" } -PassThru
   Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.8.3/python-3.8.3.exe" -OutFile $PythonInstaller
 
   & $PythonInstaller /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
@@ -53,26 +53,29 @@ if ($LastExitCode -ne 0) {
 
 $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
 $DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
+
 try {
 New-Item -Path $RepoRoot -Name "deps" -ItemType "directory"
 }
 catch {
   throw "Creating directory failed"
 }
+
 $vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
 $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
-$pathZip = Join-Path -Path $DepsDir -ChildPath $(Split-Path -Path $depsUri -Leaf)
+$depZip = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".zip" } -PassThru
 
 try {
-Invoke-WebRequest -Uri $depsUri -Out $DepsDir
+Invoke-WebRequest -Uri $depsUri -Out $depZip
 }
 catch {
-  throw "Downloading dependencies failed"
+  throw "Downloading dependencies failed: " + $_.Exception.Message
 }
+
 try {
-Expand-Archive -Path $pathZip -DestinationPath $DepsDir -Force
+Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force
 }
 catch {
-  throw "Extracting dependencies failed"
+  throw "Extracting dependencies failed " + + $_.Exception.Message
 }
