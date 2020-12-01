@@ -7,7 +7,6 @@ Param(
   [switch] $help,
   [switch] $install,
   [switch] $test,
-  [string] $vcpkgInstallDirectory = "$HOME/vcpkg",
   [string] $dotnetInstallDirectory = "$HOME/dotnet",
   [Parameter(ValueFromRemainingArguments=$true)][String[]] $remaining
 )
@@ -95,7 +94,8 @@ try {
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
-
+  $vcpkgInstallDirectory = Join-Path -Path $RepoRoot -ChildPath "deps/vcpkg"
+  
   $ArtifactsDir = Join-Path -Path $RepoRoot -ChildPath "artifacts"
   Create-Directory -Path $ArtifactsDir
 

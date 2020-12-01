@@ -51,21 +51,24 @@ if ($LastExitCode -ne 0) {
   throw "'cmake' failed"
 }
 
+$RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
+$DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
+Create-Directory -Path $DepsDir
+
 $vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
 $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
-echo "Foo" >> path.txt
+$pathZip = Join-Path -Path $DepsDir -ChildPath $(Split-Path -Path $depsUri -Leaf)
 
-$pathZip = Join-Path -Path $VcpkgInstallDirectory -ChildPath $(Split-Path -Path $depsUri -Leaf)
-New-Item -Path $VcpkgInstallDirectory -Force -ItemType "Directory" | Out-Null
-
-
-Invoke-WebRequest -Uri $depsUri -Out $VcpkgInstallDirectory
-if ($LastExitCode -ne 0) {
+try {
+Invoke-WebRequest -Uri $depsUri -Out $DepsDir
+}
+catch {
   throw "Downloading dependencies failed"
 }
-
-Expand-Archive -Path $pathZip -DestinationPath $HOME -Force
-if ($LastExitCode -ne 0) {
+try {
+Expand-Archive -Path $pathZip -DestinationPath $DepsDir -Force
+}
+catch {
   throw "Extracting dependencies failed"
 }
