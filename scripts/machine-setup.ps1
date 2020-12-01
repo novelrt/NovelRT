@@ -24,26 +24,6 @@ if ($LastExitCode -ne 0) {
   throw "'pip install' failed"
 }
 
-if (!(Test-Path -Path $VcpkgInstallDirectory)) {
-  & git clone https://github.com/capnkenny/vcpkg $VcpkgInstallDirectory
-}
-
-$VcpkgExe = Join-Path -Path $VcpkgInstallDirectory -ChildPath "vcpkg.exe"
-
-if (!(Test-Path -Path $VcpkgExe)) {
-  & $VcpkgInstallDirectory/bootstrap-vcpkg.bat
-
-  if ($LastExitCode -ne 0) {
-    throw "'bootstrap-vcpkg' failed"
-  }
-}
-
-& $VcpkgExe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
-
-if ($LastExitCode -ne 0) {
-    throw "'vcpkg install' failed"
-}
-
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_MULTILEVEL_LOOKUP = 0
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
@@ -69,4 +49,19 @@ if ($LastExitCode -ne 0) {
 
 if ($LastExitCode -ne 0) {
   throw "'cmake' failed"
+}
+
+$vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
+$depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
+
+$pathZip = Join-Path -Path "./" -ChildPath $(Split-Path -Path $depsUri -Leaf)
+
+Invoke-WebRequest -Uri $depsUri -Out "./"
+if ($LastExitCode -ne 0) {
+  throw "Downloading dependencies failed"
+}
+
+Expand-Archive -Path $pathZip -DestinationPath $HOME -Force
+if ($LastExitCode -ne 0) {
+  throw "Extracting dependencies failed"
 }
