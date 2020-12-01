@@ -69,11 +69,18 @@ make -j
 ```
 
 #### Windows
-First, you must [setup vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019#installation) and Python 3 to install the dependencies:
+First, you must set up [(our fork of*) vcpkg](https://github.com/capnkenny/vcpkg) as shown below:
+```
+git clone https://github.com/capnkenny/vcpkg
+cd vcpkg
+./bootstrap-vcpkg.bat
+```
+Next, use vcpkg and Python 3 to install the dependencies:
 ```
 python -m pip install setuptools
 python -m pip install glad
-vcpkg.exe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
+vcpkg install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
+vcpkg integrate install
 ```
 Then, clone and build NovelRT:
 ```
@@ -89,6 +96,8 @@ Alternatively, you can also specify a single target to build like so:
 ```
 cmake --build . -j -t TargetNameGoesHere
 ```
+
+*Note: You are more than welcome to try using Microsoft's version of vcpkg - in this case, look up how to [setup vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019#installation) here. Please heed our warning however that this will not be supported by the NovelRT team due to versioning and compatibility differences.
 
 ## Example
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
