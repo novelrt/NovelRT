@@ -54,9 +54,11 @@ if ($LastExitCode -ne 0) {
 $vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
 $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
-$pathZip = Join-Path -Path "./" -ChildPath $(Split-Path -Path $depsUri -Leaf)
+$pathZip = Join-Path -Path $VcpkgInstallDirectory -ChildPath $(Split-Path -Path $depsUri -Leaf)
+New-Item -Path $VcpkgInstallDirectory -Force -ItemType "Directory" | Out-Null
 
-Invoke-WebRequest -Uri $depsUri -Out $HOME
+
+Invoke-WebRequest -Uri $depsUri -Out $VcpkgInstallDirectory
 if ($LastExitCode -ne 0) {
   throw "Downloading dependencies failed"
 }
