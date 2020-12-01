@@ -53,8 +53,12 @@ if ($LastExitCode -ne 0) {
 
 $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
 $DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
-Create-Directory -Path $DepsDir
-
+try {
+New-Item -Path $RepoRoot -Name "deps" -ItemType "directory"
+}
+catch {
+  throw "Creating directory failed"
+}
 $vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
 $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
