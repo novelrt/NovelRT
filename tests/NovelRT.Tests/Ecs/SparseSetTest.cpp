@@ -51,3 +51,22 @@ TEST(SparseSetTest, RemoveUpdatesSetCorrectlyAfterRemovingElement)
     EXPECT_EQ(testSet[Atom(1)], 1);
 }
 
+TEST(SparseSetTest, CanIterateAndModifyDenseData)
+{
+    SparseSet<Atom, int32_t, AtomHashFunction> testSet;
+    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+    ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
+    ASSERT_NO_THROW(testSet.Insert(Atom(2), 1));
+    ASSERT_NO_THROW(testSet.Insert(Atom(3), 1));
+
+    for (auto &&i : testSet)
+    {
+        i = 10;
+    }
+    
+    for (auto &&i : testSet)
+    {
+        EXPECT_EQ(i, 10);
+    }
+}
+

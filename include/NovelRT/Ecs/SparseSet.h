@@ -55,9 +55,15 @@ namespace NovelRT::Ecs
             return _denseBlock.at(_sparseMap.at(key));
         }
 
-        const std::vector<TValue>& GetDenseData() const noexcept
+        //These functions have to be named this way for a range based for loop to work
+        auto begin()
         {
-            return _denseBlock;
+            return _denseBlock.begin();
+        }
+
+        auto end()
+        {
+            return _denseBlock.end();
         }
     };
 }
