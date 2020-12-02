@@ -26,7 +26,7 @@ namespace NovelRT::Ecs
         {
             if (HasValue(key))
             {
-                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); //TODO: Make this a well defined exception in the future
+                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
             }
             
             _denseBlock.push_back(value);
@@ -55,7 +55,8 @@ namespace NovelRT::Ecs
             return _denseBlock.at(_sparseMap.at(key));
         }
 
-        //These functions have to be named this way for a range based for loop to work
+        // clang-format off
+        // These functions have to be named this way for a range based for loop to work
         auto begin()
         {
             return _denseBlock.begin();
@@ -65,6 +66,7 @@ namespace NovelRT::Ecs
         {
             return _denseBlock.end();
         }
+        // clang-format on
     };
 }
 
