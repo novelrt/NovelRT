@@ -69,35 +69,35 @@ make -j
 ```
 
 #### Windows
-First, you must set up [(our fork of*) vcpkg](https://github.com/capnkenny/vcpkg) as shown below:
-```
-git clone https://github.com/capnkenny/vcpkg
-cd vcpkg
-./bootstrap-vcpkg.bat
-```
-Next, use vcpkg and Python 3 to install the dependencies:
+1) You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).
+*Note, if you have a 64-bit machine, you'll want to install the x64 version of these tools.
+
+2) Use Python 3 to install the GLAD dependencies:
 ```
 python -m pip install setuptools
 python -m pip install glad
-vcpkg install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
-vcpkg integrate install
 ```
-Then, clone and build NovelRT:
+
+3) Grab a copy of the Windows 64-bit dependencies [here](), as we have already compiled them for you :D
+(A walkthrough on installing manually via vcpkg will be included in the future.)
+
+4) Now extract the dependencies zipfile from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
+You should be left with a folder called "vcpkg" at this point.
+
+5) Clone and build NovelRT:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
 mkdir build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=path/to/vcpkg/toolchain.cmake ..
+cmake -DCMAKE_TOOLCHAIN_FILE=[path-from-step-4]/vcpkg/scripts/buildsystems/toolchain.cmake ..
 cmake --build . -j
 ```
 
-Alternatively, you can also specify a single target to build like so:
+5b) Alternatively, you can also specify a single target to build like so:
 ```
 cmake --build . -j -t TargetNameGoesHere
 ```
-
-*Note: You are more than welcome to try using Microsoft's version of vcpkg - in this case, look up how to [setup vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019#installation) here. Please heed our warning however that this will not be supported by the NovelRT team due to versioning and compatibility differences.
 
 ## Example
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
