@@ -12,9 +12,9 @@ class SystemSchedulerTest : public testing::Test
 {
     public:
     SystemScheduler* scheduler = nullptr;
-    bool sysOneBool = true;
-    bool sysTwoBool = true;
-    bool sysThreeBool = true;
+    std::atomic_bool sysOneBool = true;
+    std::atomic_bool sysTwoBool = true;
+    std::atomic_bool sysThreeBool = true;
     std::function<void(Timestamp)> sysOne;
     std::function<void(Timestamp)> sysTwo;
     std::function<void(Timestamp)> sysThree;
