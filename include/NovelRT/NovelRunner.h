@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_NOVELRUNNER_H
 #define NOVELRT_NOVELRUNNER_H
@@ -7,11 +8,13 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT {
+namespace NovelRT
+{
 /**
  * The base class for creating a visual novel.
  */
-  class NovelRunner {
+class NovelRunner
+{
 
   public:
     /**
@@ -19,10 +22,11 @@ namespace NovelRT {
      */
     Utilities::Event<> SceneConstructionRequested;
     /**
-     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one. <br/>
-     * Use this to define game behaviour that is required to be done per-frame.
+     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one.
+     * <br/> Use this to define game behaviour that is required to be done per-frame.
      */
     Utilities::Event<Timing::Timestamp> Update;
+
   private:
     int32_t _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
@@ -42,7 +46,8 @@ namespace NovelRT {
      * @param windowTitle The title of the window created for NovelRunner.
      * @param targetFrameRate The framerate that should be targeted and capped.
      */
-    explicit NovelRunner(int32_t displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0, bool transparency = false);
+    explicit NovelRunner(int32_t displayNumber, const std::string &windowTitle = "NovelRTTest",
+                         uint32_t targetFrameRate = 0, bool transparency = false);
     /**
      * Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
@@ -66,7 +71,7 @@ namespace NovelRT {
      * Terminates the game.
      */
     ~NovelRunner();
-  };
-}
+};
+} // namespace NovelRT
 
-#endif //NOVELRT_NOVELRUNNER_H
+#endif // NOVELRT_NOVELRUNNER_H
