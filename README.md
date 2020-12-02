@@ -78,7 +78,7 @@ python -m pip install setuptools
 python -m pip install glad
 ```
 
-2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D
+2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D  
 (A walkthrough on installing manually via vcpkg will be included in the future.)
 
 3) Extract "NovelRTDeps_vcpkg.zip" from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
