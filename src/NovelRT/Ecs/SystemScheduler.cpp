@@ -106,7 +106,7 @@ namespace NovelRT::Ecs
             pair.threadLock.unlock();
         }
 
-        int32_t remainder = _systemIds.size() % sizeOfProcessedWork;
+        size_t remainder = _systemIds.size() % sizeOfProcessedWork;
 
         if (remainder < amountOfWork)
         {
