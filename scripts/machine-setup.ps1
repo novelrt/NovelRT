@@ -78,7 +78,7 @@ catch {
 
 echo "Extracting archive..."
 try {
-Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force
+Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force -PassThru
 }
 catch {
   throw "Extracting dependencies failed " + + $_.Exception.Message
