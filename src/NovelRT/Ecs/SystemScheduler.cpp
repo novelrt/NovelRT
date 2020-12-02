@@ -147,11 +147,12 @@ namespace NovelRT::Ecs
             }
         }
 
-        while (_threadAvailabilityMap != 0)
+        do
         {
             std::cerr << "YIELD LOG: HELLO" << std::endl;
             std::this_thread::yield();
         }
+        while (_threadAvailabilityMap != 0);
 
         std::cerr << "ITERATION EXITING" << std::endl;
     }
