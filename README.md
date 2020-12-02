@@ -69,22 +69,22 @@ make -j
 ```
 
 #### Windows
-1) You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).
+_Prerequisites:_ You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).  
 *Note, if you have a 64-bit machine, you'll want to install the x64 version of these tools.
 
-2) Use Python 3 to install the GLAD dependencies:
+1) Use Python 3 to install the GLAD dependencies:
 ```
 python -m pip install setuptools
 python -m pip install glad
 ```
 
-3) Grab a copy of the Windows 64-bit dependencies [here](), as we have already compiled them for you :D
+2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D
 (A walkthrough on installing manually via vcpkg will be included in the future.)
 
-4) Now extract the dependencies zipfile from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
+3) Extract "NovelRTDeps_vcpkg.zip" from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
 You should be left with a folder called "vcpkg" at this point.
 
-5) Clone and build NovelRT:
+4) Clone and build NovelRT:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
@@ -93,8 +93,7 @@ cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=[path-from-step-4]/vcpkg/scripts/buildsystems/toolchain.cmake ..
 cmake --build . -j
 ```
-
-5b) Alternatively, you can also specify a single target to build like so:
+Alternatively, you can also specify a single target to build like so:
 ```
 cmake --build . -j -t TargetNameGoesHere
 ```
