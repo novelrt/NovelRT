@@ -44,19 +44,19 @@ namespace NovelRT::Ecs
     {
         while (true)
         {
-            _threadAvailabilityMap.fetch_xor(1ULL << poolId);
+            _threadAvailabilityMap ^= 1ULL << poolId;
             while (!JobAvailable(poolId))
             {
                 if (_shouldShutDown)
                 {
-                    _threadShutDownStatus.fetch_xor(1ULL << poolId);
+                    _threadShutDownStatus ^= 1ULL << poolId;
                     return;
                 }
 
                 std::this_thread::yield();
             }
 
-            _threadAvailabilityMap.fetch_xor(1ULL << poolId); //this runs AFTER the while check in the main thread
+            _threadAvailabilityMap ^= 1ULL << poolId; //this runs AFTER the while check in the main
 
             QueueLockPair& pair = _threadWorkQueues[poolId];
             Atom workItem = pair.systemIds[0];
@@ -74,8 +74,8 @@ namespace NovelRT::Ecs
         _threadWorkQueues.swap(vec2);
         for (size_t i = 0; i < _maximumThreadCount; i++)
         {
-            _threadShutDownStatus.fetch_xor(1ULL << i);
-            _threadAvailabilityMap.fetch_xor(1ULL << i);
+            _threadShutDownStatus ^= 1ULL << i;
+            _threadAvailabilityMap ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i](){CycleForJob(i);}));
         }
     }
@@ -147,11 +147,13 @@ namespace NovelRT::Ecs
             }
         }
 
-        while (_threadAvailabilityMap.load() != 0)
+        while (_threadAvailabilityMap != 0)
         {
+            std::cerr << "YIELD LOG: HELLO" << std::endl;
             std::this_thread::yield();
         }
 
+        std::cerr << "ITERATION EXITING" << std::endl;
     }
 
     SystemScheduler::~SystemScheduler() noexcept
