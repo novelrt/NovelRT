@@ -3,6 +3,7 @@
 
 $VcpkgInstallDirectory = Join-Path -Path $HOME -ChildPath "vcpkg"
 $DotNetInstallDirectory = Join-Path -Path $HOME -ChildPath "dotnet"
+$ProgressPreference = 'SilentlyContinue'
 
 if (!(Get-Command python -ErrorAction SilentlyContinue ))
 {
@@ -54,8 +55,9 @@ if ($LastExitCode -ne 0) {
 $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
 $DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
 
+echo "Creating directory..."
 try {
-New-Item -Path $RepoRoot -Name "deps" -ItemType "directory"
+New-Item -Path $RepoRoot -Name "deps" -ItemType "directory" | Out-Null
 }
 catch {
   throw "Creating directory failed"
@@ -67,15 +69,19 @@ $depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object
 $depZip = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".zip" } -PassThru
 
 try {
+echo "Downloading dependencies..."
 Invoke-WebRequest -Uri $depsUri -Out $depZip
 }
 catch {
   throw "Downloading dependencies failed: " + $_.Exception.Message
 }
 
+echo "Extracting archive..."
 try {
 Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force
 }
 catch {
   throw "Extracting dependencies failed " + + $_.Exception.Message
 }
+
+echo "Machine setup completed."
