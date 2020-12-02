@@ -68,9 +68,11 @@ cmake ..
 make -j
 ```
 
-#### Windows
-_Prerequisites:_ You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).  
-*Note, if you have a 64-bit machine, you'll want to install the x64 version of these tools.
+#### Windows (x64 only)
+_Prerequisites:_  
+- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).  
+- Windows 10 x64  
+(32-bit installation _may_ be covered in the future.)
 
 1) Use Python 3 to install the GLAD dependencies:
 ```
