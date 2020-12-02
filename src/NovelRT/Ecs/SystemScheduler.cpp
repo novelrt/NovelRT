@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT/Ecs/SystemScheduler.h>
+#include <iostream>
 
 namespace NovelRT::Ecs
 {
@@ -17,12 +18,13 @@ namespace NovelRT::Ecs
         }
 
         _maximumThreadCount = std::thread::hardware_concurrency() - 1;
-
         //in case the previous call doesn't work
         if (_maximumThreadCount == 0)
         {
             _maximumThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
+
+        std::cerr << "THREAD COUNT LOG: " << _maximumThreadCount << std::endl;
     }
 
     bool SystemScheduler::JobAvailable(size_t poolId) noexcept
