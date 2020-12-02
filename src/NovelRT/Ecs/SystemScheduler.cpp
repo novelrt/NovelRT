@@ -110,37 +110,40 @@ namespace NovelRT::Ecs
 
         size_t remainder = _systemIds.size() % sizeOfProcessedWork;
 
-        if (remainder < amountOfWork)
+        if(remainder != 0)
         {
-            QueueLockPair& pair = _threadWorkQueues[0];
-            size_t startIndex = (_systemIds.size() - 1) - remainder;
-
-            pair.threadLock.lock();
-            for (size_t i = startIndex; i < _systemIds.size(); i++)
+            if (remainder < amountOfWork)
             {
-                pair.systemIds.push_back(_systemIds[i]);
-            }
-            pair.threadLock.unlock();
-        }
-        else if (remainder > amountOfWork)
-        {
-            size_t startIndex = (_systemIds.size() - 1) - remainder;
-
-            for (size_t i = 0; i < remainder / amountOfWork; i++)
-            {
-                size_t offset = startIndex + (i * amountOfWork);
-                QueueLockPair& pair = _threadWorkQueues[i];
+                QueueLockPair& pair = _threadWorkQueues[0];
+                size_t startIndex = (_systemIds.size() - 1) - remainder;
 
                 pair.threadLock.lock();
-
-                for (size_t j = 0; j < amountOfWork; j++)
+                for (size_t i = startIndex; i < _systemIds.size(); i++)
                 {
-                    size_t currentWorkIndex = offset + j;
-                    pair.systemIds.push_back(_systemIds[currentWorkIndex]);
-                    ++sizeOfProcessedWork;
+                    pair.systemIds.push_back(_systemIds[i]);
                 }
-
                 pair.threadLock.unlock();
+            }
+            else if (remainder > amountOfWork)
+            {
+                size_t startIndex = (_systemIds.size() - 1) - remainder;
+
+                for (size_t i = 0; i < remainder / amountOfWork; i++)
+                {
+                    size_t offset = startIndex + (i * amountOfWork);
+                    QueueLockPair& pair = _threadWorkQueues[i];
+
+                    pair.threadLock.lock();
+
+                    for (size_t j = 0; j < amountOfWork; j++)
+                    {
+                        size_t currentWorkIndex = offset + j;
+                        pair.systemIds.push_back(_systemIds[currentWorkIndex]);
+                        ++sizeOfProcessedWork;
+                    }
+
+                    pair.threadLock.unlock();
+                }
             }
         }
 
