@@ -57,12 +57,12 @@ namespace NovelRT::Ecs
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
-        auto begin()
+        auto begin() noexcept
         {
             return _denseBlock.begin();
         }
 
-        auto end()
+        auto end() noexcept
         {
             return _denseBlock.end();
         }
