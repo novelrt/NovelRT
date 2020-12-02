@@ -34,9 +34,9 @@ class SystemSchedulerTest : public testing::Test
 
             scheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta) {sysOneBool = false;};
-            sysTwo = [&](Timestamp delta) {sysTwoBool = false;};
-            sysThree = [&](Timestamp delta) {sysThreeBool = false;};
+            sysOne = [&](Timestamp delta) {sysOneBool = false; std::cout << "SYSTEM ONE LOG: HELLO" << std::endl;};
+            sysTwo = [&](Timestamp delta) {sysTwoBool = false;std::cout << "SYSTEM TWO LOG: HELLO" << std::endl;};
+            sysThree = [&](Timestamp delta) {sysThreeBool = false;std::cout << "SYSTEM THREE LOG: HELLO" << std::endl;};
 
             scheduler->RegisterSystemForComponent<int>(sysOne);
             scheduler->RegisterSystemForComponent<bool>(sysTwo);
