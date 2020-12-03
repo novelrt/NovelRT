@@ -1,7 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT/Ecs/SystemScheduler.h>
-#include <iostream>
 
 namespace NovelRT::Ecs
 {
@@ -18,13 +17,12 @@ namespace NovelRT::Ecs
         }
 
         _maximumThreadCount = std::thread::hardware_concurrency() - 1;
+        
         //in case the previous call doesn't work
         if (_maximumThreadCount == 0)
         {
             _maximumThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
-
-        std::cerr << "THREAD COUNT LOG: " << _maximumThreadCount << std::endl;
     }
 
     bool SystemScheduler::JobAvailable(size_t poolId) noexcept
@@ -44,7 +42,6 @@ namespace NovelRT::Ecs
     {
         while (true)
         {
-            _threadAvailabilityMap ^= 1ULL << poolId;
             while (!JobAvailable(poolId))
             {
                 if (_shouldShutDown)
@@ -56,15 +53,36 @@ namespace NovelRT::Ecs
                 std::this_thread::yield();
             }
 
-            _threadAvailabilityMap ^= 1ULL << poolId; //this runs AFTER the while check in the main
+            bool firstIteration = true;
 
-            QueueLockPair& pair = _threadWorkQueues[poolId];
-            Atom workItem = pair.systemIds[0];
-            pair.systemIds.erase(pair.systemIds.begin());
+            while (true)
+            {
+                QueueLockPair& pair = _threadWorkQueues[poolId];
+                if (!firstIteration)
+                {
+                   pair.threadLock.lock(); 
+                }
+                else
+                {
+                   firstIteration = false;
+                }
+                
+                if (pair.systemIds.size() == 0)
+                {
+                    pair.threadLock.unlock();
+                    break;
+                }
+                
+                
+                Atom workItem = pair.systemIds[0];
+                pair.systemIds.erase(pair.systemIds.begin());
 
-            pair.threadLock.unlock();
+                pair.threadLock.unlock();
 
-            _systems[workItem].systemPtr(_currentDelta);
+                _systems[workItem].systemPtr(_currentDelta);
+            }
+            
+            _threadAvailabilityMap ^= 1ULL << poolId; 
         }
     }
 
@@ -75,7 +93,6 @@ namespace NovelRT::Ecs
         for (size_t i = 0; i < _maximumThreadCount; i++)
         {
             _threadShutDownStatus ^= 1ULL << i;
-            _threadAvailabilityMap ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i](){CycleForJob(i);}));
         }
     }
@@ -95,6 +112,8 @@ namespace NovelRT::Ecs
         {
             size_t offset = i * amountOfWork;
             QueueLockPair& pair = _threadWorkQueues[i];
+
+            _threadAvailabilityMap ^= 1ULL << i; 
 
             pair.threadLock.lock();
 
@@ -149,11 +168,8 @@ namespace NovelRT::Ecs
 
         while (_threadAvailabilityMap != 0)
         {
-            std::cerr << "YIELD LOG: HELLO" << std::endl;
             std::this_thread::yield();
         }
-
-        std::cerr << "ITERATION EXITING" << std::endl;
     }
 
     SystemScheduler::~SystemScheduler() noexcept
