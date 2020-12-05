@@ -13,30 +13,41 @@ namespace NovelRT::Ecs
     class SparseSetView
     {
     private:
-        const std::vector<TValue>* _denseBlock;
-        const std::unordered_map<TKey, size_t, THashFunction>* _sparseMap;
+        std::weak_ptr<const std::vector<TValue>> _denseBlock;
+        std::weak_ptr<const std::unordered_map<TKey, size_t, THashFunction>> _sparseMap;
+        
+        void VerifyViewIsValid() const
+        {
+            if (_denseBlock.expired() || _sparseMap.expired())
+            {
+                throw std::runtime_error("Immutable view outlived object it is viewing!");
+            }
+        }
 
     public:
-        SparseSetView(const std::vector<TValue>* denseBlock, const std::unordered_map<TKey, size_t, THashFunction>* sparseMap) : _denseBlock(denseBlock),
+        SparseSetView(std::weak_ptr<const std::vector<TValue>> denseBlock, std::weak_ptr<const std::unordered_map<TKey, size_t, THashFunction>> sparseMap) noexcept : _denseBlock(denseBlock),
                                                                                                                                  _sparseMap(sparseMap)
         {
         }
 
         TValue operator[](TKey key) const
         {
-            return _denseBlock->at(_sparseMap->at(key));
+            VerifyViewIsValid();
+            return _denseBlock.lock()->at(_sparseMap.lock()->at(key));
         }
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
-        auto begin() const noexcept
+        auto begin() const
         {
-            return _denseBlock->begin();
+            VerifyViewIsValid();
+            return _denseBlock.lock()->begin();
         }
 
-        auto end() const noexcept
+        auto end() const
         {
-            return _denseBlock->end();
+            VerifyViewIsValid();
+            return _denseBlock.lock()->end();
         }
         // clang-format on
     };

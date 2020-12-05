@@ -8,23 +8,41 @@
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
 
-TEST(SparseSetViewTest, CanIterateCorrectly)
+class SparseSetViewTest : public testing::Test
 {
-    
-    auto vec = std::vector<int32_t>{1, 1, 1};
-    auto map = std::unordered_map<Atom, size_t, AtomHashFunction>{{Atom(0), 0}, {Atom(1), 1}, {Atom(2), 2}};
-    auto testView = SparseSetView<Atom, int32_t, AtomHashFunction>(&vec, &map);
+    public:
+    std::unique_ptr<SparseSetView<Atom, int32_t, AtomHashFunction>> testView = nullptr;
+    std::shared_ptr<std::vector<int32_t>> testVector;
+    std::shared_ptr<std::unordered_map<Atom, size_t, AtomHashFunction>> testMap;
 
-    for (auto &&i : testView)
+    protected:
+    void SetUp() override
+    {
+        testVector = std::make_shared<std::vector<int32_t>>();
+        testVector->emplace_back(1);
+        testVector->emplace_back(1);
+        testVector->emplace_back(1);
+
+        testMap = std::make_shared<std::unordered_map<Atom, size_t, AtomHashFunction>>();
+        testMap->emplace(Atom(0), 0);
+        testMap->emplace(Atom(1), 1);
+        testMap->emplace(Atom(2), 2);
+        auto vecWeakPtr = std::weak_ptr<const std::vector<int32_t>>(testVector);
+        auto mapWeakPtr = std::weak_ptr<const std::unordered_map<Atom, size_t, AtomHashFunction>>(testMap);
+
+        testView = std::make_unique<SparseSetView<Atom, int32_t, AtomHashFunction>>(vecWeakPtr, mapWeakPtr);
+    }
+};
+
+TEST_F(SparseSetViewTest, CanIterateCorrectly)
+{
+    for (auto &&i : *testView)
     {
         EXPECT_EQ(i, 1);
     }
 }
 
-TEST(SparseViewTest, CanReturnByIndex)
+TEST_F(SparseSetViewTest, CanReturnByIndex)
 {
-    auto vec = std::vector<int32_t>{1, 1, 1};
-    auto map = std::unordered_map<Atom, size_t, AtomHashFunction>{{Atom(0), 0}, {Atom(1), 1}, {Atom(2), 2}};
-    auto testView = SparseSetView<Atom, int32_t, AtomHashFunction>(&vec, &map);
-    EXPECT_EQ(testView[Atom(0)], 1);
+    EXPECT_EQ((*testView)[Atom(0)], 1);
 }

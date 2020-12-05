@@ -7,6 +7,7 @@
 #include "../Atom.h"
 #include <unordered_map>
 #include "SparseSetView.h"
+#include <memory>
 
 namespace NovelRT::Ecs
 {
@@ -14,13 +15,17 @@ namespace NovelRT::Ecs
     class SparseSet
     {
     private:
-        std::vector<TValue> _denseBlock;
-        std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
+        std::shared_ptr<std::vector<TValue>> _denseBlock;
+        std::shared_ptr<std::unordered_map<TKey, size_t, THashFunction>> _sparseMap;
 
     public:
+        SparseSet() : _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
+        {
+        }
+
         bool HasValue(TKey key) const noexcept
         {
-            return _sparseMap.find(key) != _sparseMap.end();
+            return _sparseMap->find(key) != _sparseMap->end();
         }
 
         void Insert(TKey key, TValue value)
@@ -30,17 +35,17 @@ namespace NovelRT::Ecs
                 throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
             }
 
-            _denseBlock.push_back(value);
-            _sparseMap.emplace(key, _denseBlock.size() - 1);
+            _denseBlock->push_back(value);
+            _sparseMap->emplace(key, _denseBlock->size() - 1);
         }
 
         void Remove(TKey key)
         {
-            size_t arrayIndex = _sparseMap.at(key);
-            _denseBlock.erase(_denseBlock.begin() + arrayIndex);
-            _sparseMap.erase(key);
+            size_t arrayIndex = _sparseMap->at(key);
+            _denseBlock->erase(_denseBlock->begin() + arrayIndex);
+            _sparseMap->erase(key);
 
-            for (auto &i : _sparseMap)
+            for (auto &i : *_sparseMap)
             {
                 if (i.second < arrayIndex)
                 {
@@ -53,24 +58,24 @@ namespace NovelRT::Ecs
 
         SparseSetView<TKey, TValue, THashFunction> GetImmutableView() const noexcept
         {
-            return SparseSetView<TKey, TValue, THashFunction>(&_denseBlock, &_sparseMap);
+            return SparseSetView<TKey, TValue, THashFunction>(std::weak_ptr<const std::vector<TValue>>(_denseBlock), std::weak_ptr<const std::unordered_map<TKey, size_t, THashFunction>>(_sparseMap));
         }
 
         TValue& operator[](TKey key)
         {
-            return _denseBlock.at(_sparseMap.at(key));
+            return _denseBlock->at(_sparseMap->at(key));
         }
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
         auto begin() noexcept
         {
-            return _denseBlock.begin();
+            return _denseBlock->begin();
         }
 
         auto end() noexcept
         {
-            return _denseBlock.end();
+            return _denseBlock->end();
         }
         // clang-format on
     };
