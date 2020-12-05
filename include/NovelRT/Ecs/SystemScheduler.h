@@ -21,29 +21,22 @@ namespace NovelRT::Ecs
     class SystemScheduler
     {
     private:
-        struct SystemRecord
-        {
-            std::function<void(Timing::Timestamp)> systemPtr;
-        };
-
         struct QueueLockPair
         {
             std::vector<Atom> systemIds;
             std::mutex threadLock;
         };
 
-        //volatile, atomic operations, std atomic uint64_t
-
         std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
-        std::unordered_map<Atom, SystemRecord, AtomHashFunction> _systems;
+        std::unordered_map<Atom, std::function<void(Timing::Timestamp)>, AtomHashFunction> _systems;
         uint32_t _maximumThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;
-        std::vector<std::thread> _threadCache; //TODO: is this needed?
-        
+        std::vector<std::thread> _threadCache;
+
         Timing::Timestamp _currentDelta;
 
         std::atomic_uint64_t _threadAvailabilityMap;
@@ -67,7 +60,7 @@ namespace NovelRT::Ecs
         Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemPtr)
         {
             Atom returnId = GetSystemIdForComponent<TComponent>();
-            _systems.emplace(returnId, SystemRecord{systemPtr});
+            _systems.emplace(returnId, systemPtr);
             _systemIds.emplace_back(returnId);
 
             return returnId;
@@ -79,6 +72,6 @@ namespace NovelRT::Ecs
 
         ~SystemScheduler() noexcept;
     };
-} 
+} // namespace NovelRT::Ecs
 
 #endif //!NOVELRT_ECS_SYSTEMSCHEDULER_H

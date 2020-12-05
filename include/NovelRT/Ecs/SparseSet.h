@@ -6,17 +6,18 @@
 #include "EcsUtils.h"
 #include "../Atom.h"
 #include <unordered_map>
+#include "SparseSetView.h"
 
 namespace NovelRT::Ecs
 {
-    template<typename TKey, typename TValue, typename THashFunction = std::hash<TKey>>
+    template <typename TKey, typename TValue, typename THashFunction = std::hash<TKey>>
     class SparseSet
     {
-        private:
+    private:
         std::vector<TValue> _denseBlock;
         std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
-        public:
+    public:
         bool HasValue(TKey key) const noexcept
         {
             return _sparseMap.find(key) != _sparseMap.end();
@@ -28,7 +29,7 @@ namespace NovelRT::Ecs
             {
                 throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
             }
-            
+
             _denseBlock.push_back(value);
             _sparseMap.emplace(key, _denseBlock.size() - 1);
         }
@@ -39,7 +40,7 @@ namespace NovelRT::Ecs
             _denseBlock.erase(_denseBlock.begin() + arrayIndex);
             _sparseMap.erase(key);
 
-            for (auto& i : _sparseMap)
+            for (auto &i : _sparseMap)
             {
                 if (i.second < arrayIndex)
                 {
@@ -48,6 +49,11 @@ namespace NovelRT::Ecs
 
                 i.second -= 1;
             }
+        }
+
+        SparseSetView<TKey, TValue, THashFunction> GetImmutableView() const noexcept
+        {
+            return SparseSetView<TKey, TValue, THashFunction>(_denseBlock, _sparseMap);
         }
 
         TValue& operator[](TKey key)
@@ -68,6 +74,6 @@ namespace NovelRT::Ecs
         }
         // clang-format on
     };
-}
+} // namespace NovelRT::Ecs
 
 #endif //!NOVELRT_ECS_SPARSESET_H

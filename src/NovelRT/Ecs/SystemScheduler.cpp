@@ -4,12 +4,11 @@
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) :
-    _maximumThreadCount(maximumThreadCount),
-    _currentDelta(0),
-    _threadAvailabilityMap(0),
-    _threadShutDownStatus(0),
-    _shouldShutDown(false)
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) : _maximumThreadCount(maximumThreadCount),
+                                                                    _currentDelta(0),
+                                                                    _threadAvailabilityMap(0),
+                                                                    _threadShutDownStatus(0),
+                                                                    _shouldShutDown(false)
     {
         if (_maximumThreadCount != 0)
         {
@@ -17,7 +16,7 @@ namespace NovelRT::Ecs
         }
 
         _maximumThreadCount = std::thread::hardware_concurrency() - 1;
-        
+
         //in case the previous call doesn't work
         if (_maximumThreadCount == 0)
         {
@@ -27,7 +26,7 @@ namespace NovelRT::Ecs
 
     bool SystemScheduler::JobAvailable(size_t poolId) noexcept
     {
-        QueueLockPair& pair = _threadWorkQueues[poolId];
+        QueueLockPair &pair = _threadWorkQueues[poolId];
         pair.threadLock.lock();
         if (pair.systemIds.size() > 0)
         {
@@ -57,32 +56,31 @@ namespace NovelRT::Ecs
 
             while (true)
             {
-                QueueLockPair& pair = _threadWorkQueues[poolId];
+                QueueLockPair &pair = _threadWorkQueues[poolId];
                 if (!firstIteration)
                 {
-                   pair.threadLock.lock(); 
+                    pair.threadLock.lock();
                 }
                 else
                 {
-                   firstIteration = false;
+                    firstIteration = false;
                 }
-                
+
                 if (pair.systemIds.size() == 0)
                 {
                     pair.threadLock.unlock();
                     break;
                 }
-                
-                
+
                 Atom workItem = pair.systemIds[0];
                 pair.systemIds.erase(pair.systemIds.begin());
 
                 pair.threadLock.unlock();
 
-                _systems[workItem].systemPtr(_currentDelta);
+                _systems[workItem](_currentDelta);
             }
-            
-            _threadAvailabilityMap ^= 1ULL << poolId; 
+
+            _threadAvailabilityMap ^= 1ULL << poolId;
         }
     }
 
@@ -93,7 +91,7 @@ namespace NovelRT::Ecs
         for (size_t i = 0; i < _maximumThreadCount; i++)
         {
             _threadShutDownStatus ^= 1ULL << i;
-            _threadCache.emplace_back(std::thread([&, i](){CycleForJob(i);}));
+            _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
         }
     }
 
@@ -111,9 +109,9 @@ namespace NovelRT::Ecs
         for (size_t i = 0; i < workersToAssign; i++)
         {
             size_t offset = i * amountOfWork;
-            QueueLockPair& pair = _threadWorkQueues[i];
+            QueueLockPair &pair = _threadWorkQueues[i];
 
-            _threadAvailabilityMap ^= 1ULL << i; 
+            _threadAvailabilityMap ^= 1ULL << i;
 
             pair.threadLock.lock();
 
@@ -129,11 +127,11 @@ namespace NovelRT::Ecs
 
         size_t remainder = _systemIds.size() % sizeOfProcessedWork;
 
-        if(remainder != 0)
+        if (remainder != 0)
         {
             if (remainder < amountOfWork)
             {
-                QueueLockPair& pair = _threadWorkQueues[0];
+                QueueLockPair &pair = _threadWorkQueues[0];
                 size_t startIndex = (_systemIds.size() - 1) - remainder;
 
                 pair.threadLock.lock();
@@ -150,7 +148,7 @@ namespace NovelRT::Ecs
                 for (size_t i = 0; i < remainder / amountOfWork; i++)
                 {
                     size_t offset = startIndex + (i * amountOfWork);
-                    QueueLockPair& pair = _threadWorkQueues[i];
+                    QueueLockPair &pair = _threadWorkQueues[i];
 
                     pair.threadLock.lock();
 
@@ -176,10 +174,12 @@ namespace NovelRT::Ecs
     {
         _shouldShutDown = true;
 
-      for (size_t i = 0; i < _threadCache.size(); i++) {
-        if (_threadCache[i].joinable()) {
-          _threadCache[i].join();
-          }
-      }
+        for (size_t i = 0; i < _threadCache.size(); i++)
+        {
+            if (_threadCache[i].joinable())
+            {
+                _threadCache[i].join();
+            }
+        }
     }
-}
+} // namespace NovelRT::Ecs
