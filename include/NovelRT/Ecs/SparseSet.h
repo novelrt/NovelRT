@@ -53,7 +53,7 @@ namespace NovelRT::Ecs
 
         SparseSetView<TKey, TValue, THashFunction> GetImmutableView() const noexcept
         {
-            return SparseSetView<TKey, TValue, THashFunction>(_denseBlock, _sparseMap);
+            return SparseSetView<TKey, TValue, THashFunction>(&_denseBlock, &_sparseMap);
         }
 
         TValue& operator[](TKey key)

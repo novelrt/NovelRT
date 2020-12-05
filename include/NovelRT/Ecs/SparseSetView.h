@@ -13,30 +13,30 @@ namespace NovelRT::Ecs
     class SparseSetView
     {
     private:
-        const std::vector<TValue> &_denseBlock;
-        const std::unordered_map<TKey, size_t, THashFunction> &_sparseMap;
+        const std::vector<TValue>* _denseBlock;
+        const std::unordered_map<TKey, size_t, THashFunction>* _sparseMap;
 
     public:
-        SparseSetView(const std::vector<TValue> &denseBlock, const std::unordered_map<TKey, size_t, THashFunction> &sparseMap) : _denseBlock(denseBlock),
+        SparseSetView(const std::vector<TValue>* denseBlock, const std::unordered_map<TKey, size_t, THashFunction>* sparseMap) : _denseBlock(denseBlock),
                                                                                                                                  _sparseMap(sparseMap)
         {
         }
 
         TValue operator[](TKey key) const
         {
-            return _denseBlock.at(_sparseMap.at(key));
+            return _denseBlock->at(_sparseMap->at(key));
         }
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
         auto begin() const noexcept
         {
-            return _denseBlock.begin();
+            return _denseBlock->begin();
         }
 
         auto end() const noexcept
         {
-            return _denseBlock.end();
+            return _denseBlock->end();
         }
         // clang-format on
     };
