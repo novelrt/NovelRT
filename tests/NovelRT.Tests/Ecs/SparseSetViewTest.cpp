@@ -46,3 +46,9 @@ TEST_F(SparseSetViewTest, CanReturnByIndex)
 {
     EXPECT_EQ((*testView)[Atom(0)], 1);
 }
+
+TEST_F(SparseSetViewTest, ViewReflectsChangesInUnderlyingSet)
+{
+    testVector->at(0) = 5;
+    EXPECT_EQ((*testView)[Atom(0)], 5);
+}
