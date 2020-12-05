@@ -1,0 +1,21 @@
+name: Ubuntu x64 - Release
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  CI_Ubuntu:
+    name: Ubuntu_${{ matrix.configuration }}_x64
+    runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
+    strategy:
+      matrix:
+        configuration: [Release]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Ubuntu - Run CI Build Script
+        run: scripts/cibuild.sh --configuration ${{ matrix.configuration }}

@@ -1,0 +1,28 @@
+name: Windows x64 - Release
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  CI_Windows:
+    name: Windows_${{ matrix.configuration }}_x64
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: cmd
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run Windows Setup
+        run: scripts/machine-setup.cmd
+
+      - name: Run CI Build Script
+        run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
