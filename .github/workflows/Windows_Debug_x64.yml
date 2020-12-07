@@ -6,16 +6,12 @@ on:
 
 jobs:
   CI_Windows:
-    name: Windows_${{ matrix.configuration }}_x64
+    name: windows_debug_x64
     runs-on: windows-latest
 
     defaults:
       run:
         shell: cmd
-
-    strategy:
-      matrix:
-        configuration: [Debug]
 
     steps:
       - name: Checkout Code
@@ -25,4 +21,4 @@ jobs:
         run: scripts/machine-setup.cmd
 
       - name: Run CI Build Script
-        run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
+        run: scripts/cibuild.cmd -configuration Debug
