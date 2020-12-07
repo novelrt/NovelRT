@@ -218,6 +218,21 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Animation/SpriteAnimatorState.h"
 #include "NovelRT/Animation/SpriteAnimator.h"
 
+// Exception types
+#include "NovelRT/Exceptions/CharacterNotFoundException.h"
+#include "NovelRT/Exceptions/CompilationErrorException.h"
+#include "NovelRT/Exceptions/FileNotFoundException.h"
+#include "NovelRT/Exceptions/FunctionNotFoundException.h"
+#include "NovelRT/Exceptions/InitialisationFailureException.h"
+#include "NovelRT/Exceptions/InvalidOperationException.h"
+#include "NovelRT/Exceptions/IOException.h"
+#include "NovelRT/Exceptions/NotInitialisedException.h"
+#include "NovelRT/Exceptions/NotSupportedException.h"
+#include "NovelRT/Exceptions/NullPointerException.h"
+#include "NovelRT/Exceptions/OpenGLLinkageFailure.h"
+#include "NovelRT/Exceptions/OutOfMemoryException.h"
+#include "NovelRT/Exceptions/RuntimeNotFoundException.h"
+
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/Texture.h"
@@ -251,20 +266,5 @@ namespace NovelRT::Windowing {
 #include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
 #include "NovelRT/SceneGraph/QuadTreeNode.h"
 #include "NovelRT/SceneGraph/Scene.h"
-
-// Exception types
-#include "NovelRT/Exceptions/CharacterNotFoundException.h"
-#include "NovelRT/Exceptions/CompilationErrorException.h"
-#include "NovelRT/Exceptions/FileNotFoundException.h"
-#include "NovelRT/Exceptions/FunctionNotFoundException.h"
-#include "NovelRT/Exceptions/InitialisationFailureException.h"
-#include "NovelRT/Exceptions/InvalidOperationException.h"
-#include "NovelRT/Exceptions/IOException.h"
-#include "NovelRT/Exceptions/NotInitialisedException.h"
-#include "NovelRT/Exceptions/NotSupportedException.h"
-#include "NovelRT/Exceptions/NullPointerException.h"
-#include "NovelRT/Exceptions/OpenGLLinkageFailure.h"
-#include "NovelRT/Exceptions/OutOfMemoryException.h"
-#include "NovelRT/Exceptions/RuntimeNotFoundException.h"
 
 #endif //!NOVELRT_H
