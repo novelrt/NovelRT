@@ -7,8 +7,7 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Exceptions
-{
+namespace NovelRT::Exceptions {
   class NotSupportedException final : public std::runtime_error {
   public:
     NotSupportedException() 
@@ -18,7 +17,7 @@ namespace NovelRT::Exceptions
     : std::runtime_error(message)
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 
 #endif //NOVELRT_NOT_SUPPORTED_EXCEPTION_H

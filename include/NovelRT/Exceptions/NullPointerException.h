@@ -14,6 +14,6 @@ namespace NovelRT::Exceptions {
     : std::runtime_error(message)
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 #endif //NOVELRT_NULL_POINTER_EXCEPTION_EXCEPTION_H

@@ -7,8 +7,7 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Exceptions
-{
+namespace NovelRT::Exceptions {
   class IOException final : public std::runtime_error {
   public:
     IOException(const std::string &fileName) 
@@ -18,7 +17,7 @@ namespace NovelRT::Exceptions
     : std::runtime_error(message + " File: \"" + fileName + "\".")
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 
 #endif //NOVELRT_IO_EXCEPTION_H

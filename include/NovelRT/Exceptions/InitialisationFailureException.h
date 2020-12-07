@@ -20,6 +20,6 @@ namespace NovelRT::Exceptions {
     : InitialisationFailureException(message, std::to_string(argument))
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 #endif //NOVELRT_INITIALIZATION_FAILURE_EXCEPTION_H

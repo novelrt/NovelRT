@@ -7,15 +7,14 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Exceptions
-{
+namespace NovelRT::Exceptions {
   class CompilationErrorException final : public std::runtime_error {
   public:
     CompilationErrorException(const std::string &fileName, const std::string &errorMessage) 
     : std::runtime_error("Failed to compile \"" + fileName + "\". Error: " + errorMessage)
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 
 #endif //NOVELRT_COMPILATION_ERROR_EXCEPTION_H

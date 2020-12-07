@@ -17,6 +17,6 @@ namespace NovelRT::Exceptions {
     : std::runtime_error(message + " File path: " + file)
     {}
   };
-} // namespace NovelRT::Exceptions
+}
 
 #endif //NOVELRT_FILE_NOT_FOUND_EXCEPTION_H

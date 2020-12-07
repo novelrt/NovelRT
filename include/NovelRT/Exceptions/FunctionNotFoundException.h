@@ -8,8 +8,8 @@
 #endif
 
 namespace NovelRT::Exceptions {
-  class FunctionNotFoundException final : public std::runtime_error{
-    public:
+  class FunctionNotFoundException final : public std::runtime_error {
+  public:
     FunctionNotFoundException(const std::string &message)
     : std::runtime_error(message)
     {}
