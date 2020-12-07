@@ -73,7 +73,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to initialize the runtime: {}", result);
-        throw std::runtime_error("Failed to initialize the runtime");
+        throw Exceptions::InitialisationFailureException("Failed to initialize the runtime",result);
       }
 
       return hostContextHandle;
@@ -85,7 +85,7 @@ namespace NovelRT::DotNet {
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw std::runtime_error("Failed to locate hostfxr");
+        throw Exceptions::OutOfMemoryException("Failed to locate hostfxr");
       }
 
       auto buffer = std::vector<char_t>(buffer_size);
@@ -94,7 +94,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw std::runtime_error("Failed to locate hostfxr");
+        throw Exceptions::FileNotFoundException("Failed to locate hostfxr");
       }
 
       return loadNativeLibrary(buffer.data());
@@ -115,7 +115,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to initialize the runtime: {}", result);
-        throw std::runtime_error("Failed to initialize the runtime");
+        throw Exceptions::InitialisationFailureException("Failed to initialize the runtime");
       }
 
       return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
@@ -132,7 +132,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate the specified managed function: {}", result);
-        throw std::runtime_error("Failed to locate the specified managed function");
+        throw Exceptions::FunctionNotFoundException("Failed to locate the specified managed function", result);
       }
 
       auto getExports = reinterpret_cast<void(*)(Exports*)>(delegate);

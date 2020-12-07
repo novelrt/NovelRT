@@ -5,6 +5,8 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
+#include "NovelRT/Exceptions/CharacterNotFoundException.h"
+
 namespace NovelRT::Graphics {
   class FontSet : public std::enable_shared_from_this<FontSet> {
     friend class ImageRect;
@@ -36,7 +38,7 @@ namespace NovelRT::Graphics {
       }
 
       if (match == _fontCharacters.end()) {
-        throw std::runtime_error("Unable to continue! Unable to return specified character.");
+        throw Exceptions::CharacterNotFoundException("Unable to continue! Unable to return specified character.", c);
       }
 
       return match->second;

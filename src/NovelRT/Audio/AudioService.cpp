@@ -7,8 +7,9 @@ AudioService::AudioService() :
   _device(Utilities::Lazy<std::unique_ptr<ALCdevice, void(*)(ALCdevice*)>> (std::function<ALCdevice*()>([this] {
     auto device = alcOpenDevice((_deviceName.empty())? nullptr : _deviceName.c_str());
     if (!device) {
-      _logger.logError("OpenAL device creation failed! {}", getALError());
-      throw std::runtime_error("OpenAL failed to create an audio device! Aborting...");
+      std::string error = getALError();
+      _logger.logError("OpenAL device creation failed! {}", error);
+      throw Exceptions::InitialisationFailureException("OpenAL failed to create an audio device! Aborting...", error);
     }
     return device;
   }), [](auto x) { alcCloseDevice(x); })),
@@ -79,7 +80,7 @@ ALuint AudioService::readFile(std::string input) {
 std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
   if (!isInitialised) {
     _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::load", "You cannot load new audio when the service is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::load", "You cannot load new audio when the service is not initialised.");
   }
   auto newBuffer = readFile(input);
 
@@ -105,7 +106,7 @@ std::vector<ALuint>::iterator AudioService::loadMusic(std::string input) {
 void AudioService::setSoundVolume(ALuint source, float value) {
   if (!isInitialised) {
     _logger.logError("Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::setSoundVolume", "You cannot modify a sound source when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::setSoundVolume", "You cannot modify a sound source when the AudioService is not initialised.");
   }
 
   if (value > 1.0f) {
@@ -123,7 +124,7 @@ void AudioService::setSoundPosition(ALuint source, float posX, float posY)
 {
   if (!isInitialised) {
     _logger.logError("Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::stopSound", "You cannot stop a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::stopSound", "You cannot stop a sound when the AudioService is not initialised.");
   }
 
   alSource3f(source, AL_POSITION, posX, posY, 0.0f);
@@ -132,7 +133,7 @@ void AudioService::setSoundPosition(ALuint source, float posX, float posY)
 void AudioService::resumeMusic() {
   if (!isInitialised) {
     _logger.logError("Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::setSoundVolume", "You cannot modify a sound source when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::setSoundVolume", "You cannot modify a sound source when the AudioService is not initialised.");
   }
 
   alSourcePlay(_musicSource);
@@ -141,7 +142,7 @@ void AudioService::resumeMusic() {
 void AudioService::playMusic(std::vector<ALuint>::iterator handle, int32_t loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
   }
 
   if (handle == _music.end()) {
@@ -168,7 +169,7 @@ void AudioService::playMusic(std::vector<ALuint>::iterator handle, int32_t loops
 void AudioService::pauseMusic() {
   if (!isInitialised) {
     _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::pauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::pauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
   }
 
   alSourcePause(_musicSource);
@@ -177,7 +178,7 @@ void AudioService::pauseMusic() {
 void AudioService::stopMusic() {
   if (!isInitialised) {
     _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::stopMusic", "You cannot stop a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::stopMusic", "You cannot stop a sound when the AudioService is not initialised.");
   }
 
   alSourceStop(_musicSource);
@@ -186,7 +187,7 @@ void AudioService::stopMusic() {
 void AudioService::setMusicVolume(float value) {
   if (!isInitialised) {
     _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::setMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::setMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
   }
 
   if (value > 1.0f) {
@@ -264,7 +265,7 @@ std::string AudioService::getALError() {
 ALuint AudioService::loadSound(std::string input) {
   if (!isInitialised) {
     _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::load", "You cannot load new audio when the service is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::load", "You cannot load new audio when the service is not initialised.");
   }
   auto newBuffer = readFile(input);
 
@@ -293,7 +294,7 @@ void AudioService::unload(ALuint source) {
 void AudioService::playSound(ALuint handle, int32_t loops) {
   if (!isInitialised) {
     _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
-    throw NovelRT::Exceptions::ServiceNotInitializedException("AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
+    throw NovelRT::Exceptions::NotInitialisedException("AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
   }
 
   if (handle == _noBuffer) {
