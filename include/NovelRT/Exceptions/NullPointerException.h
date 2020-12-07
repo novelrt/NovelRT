@@ -3,9 +3,8 @@
 #ifndef NOVELRT_NULL_POINTER_EXCEPTION_EXCEPTION_H
 #define NOVELRT_NULL_POINTER_EXCEPTION_EXCEPTION_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <stdexcept>
+#include <string>
 
 namespace NovelRT::Exceptions {
   class NullPointerException final : public std::runtime_error {

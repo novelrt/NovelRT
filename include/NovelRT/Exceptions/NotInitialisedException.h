@@ -3,9 +3,8 @@
 #ifndef NOVELRT_SERVICE_NOT_INITIALISED_EXCEPTION_H
 #define NOVELRT_SERVICE_NOT_INITIALISED_EXCEPTION_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <stdexcept>
+#include <string>
 
 namespace NovelRT::Exceptions {
   class NotInitialisedException final : public std::runtime_error {
