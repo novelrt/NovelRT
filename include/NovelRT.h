@@ -250,7 +250,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/SceneGraph/Scene.h"
 
 // Exception types
-#include "NovelRT/Exceptions/NotInitializedException.h"
+#include "NovelRT/Exceptions/NotInitialisedException.h"
 #include "NovelRT/Exceptions/InitialisationFailureException.h"
 #include "NovelRT/Exceptions/RuntimeNotFoundException.h"
 #include "NovelRT/Exceptions/FileNotFoundException.h"
