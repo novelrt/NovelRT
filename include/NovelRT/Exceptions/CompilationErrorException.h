@@ -9,8 +9,8 @@
 namespace NovelRT::Exceptions {
   class CompilationErrorException final : public std::runtime_error {
   public:
-    CompilationErrorException(const std::string &fileName, const std::string &errorMessage) 
-    : std::runtime_error("Failed to compile \"" + fileName + "\". Error: " + errorMessage)
+    CompilationErrorException(const std::string &fileName, const std::string &errorMessage) :
+      std::runtime_error("Failed to compile \"" + fileName + "\". Error: " + errorMessage)
     {}
   };
 }

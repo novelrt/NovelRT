@@ -9,8 +9,8 @@
 namespace NovelRT::Exceptions {
   class OutOfMemoryException final : public std::runtime_error {
     public:
-    OutOfMemoryException(const std::string &message)
-    : std::runtime_error(message)
+    OutOfMemoryException(const std::string &message) :
+      std::runtime_error(message)
     {}
   };
 }

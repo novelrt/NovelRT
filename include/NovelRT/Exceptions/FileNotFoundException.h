@@ -9,11 +9,11 @@
 namespace NovelRT::Exceptions {
   class FileNotFoundException final : public std::runtime_error {
   public:
-    FileNotFoundException(const std::string &file)
-    : std::runtime_error("File failed to load. File path: " + file)
+    FileNotFoundException(const std::string &file) :
+      std::runtime_error("File failed to load. File path: " + file)
     {}
-    FileNotFoundException(const std::string &file, const std::string &message)
-    : std::runtime_error(message + " File path: " + file)
+    FileNotFoundException(const std::string &file, const std::string &message) :
+      std::runtime_error(message + " File path: " + file)
     {}
   };
 }

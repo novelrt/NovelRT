@@ -9,11 +9,11 @@
 namespace NovelRT::Exceptions {
   class NotSupportedException final : public std::runtime_error {
   public:
-    NotSupportedException() 
-    : std::runtime_error("The current operation is not supported.")
+    NotSupportedException() :
+      std::runtime_error("The current operation is not supported.")
     {}
-    NotSupportedException(const std::string &message) 
-    : std::runtime_error(message)
+    NotSupportedException(const std::string &message) :
+      std::runtime_error(message)
     {}
   };
 }

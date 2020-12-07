@@ -9,8 +9,8 @@
 namespace NovelRT::Exceptions {
   class NullPointerException final : public std::runtime_error {
   public:
-    NullPointerException(const std::string &message)
-    : std::runtime_error(message)
+    NullPointerException(const std::string &message) :
+      std::runtime_error(message)
     {}
   };
 }
