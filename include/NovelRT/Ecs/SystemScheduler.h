@@ -15,6 +15,7 @@
 #include <atomic>
 #include <vector>
 #include "SparseSet.h"
+#include "BaseSystem.h"
 
 namespace NovelRT::Ecs
 {
@@ -43,11 +44,13 @@ namespace NovelRT::Ecs
         std::atomic_uint64_t _threadShutDownStatus;
         std::atomic_bool _shouldShutDown;
 
+        std::atomic_size_t _ecsDataBufferIndex;
+
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
 
     public:
-        SystemScheduler(uint32_t maximumThreadCount = 0);
+        SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
         template <typename TComponent>
         Atom GetSystemIdForComponent()
@@ -62,8 +65,16 @@ namespace NovelRT::Ecs
             Atom returnId = GetSystemIdForComponent<TComponent>();
             _systems.emplace(returnId, systemPtr);
             _systemIds.emplace_back(returnId);
-
             return returnId;
+        }
+
+        template<typename TSystem, typename TComponent>
+        std::shared_ptr<TSystem> CreateSystemForComponent() noexcept
+        {
+            static_assert(std::is_base_of<BaseSystem<TComponent>, TSystem>::value, "Created system must inherit BaseSystem<TComponent>!");
+            auto system = std::make_shared<TSystem>();
+            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);});
+            return system;
         }
 
         void SpinThreads() noexcept;

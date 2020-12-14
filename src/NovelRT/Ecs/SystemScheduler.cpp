@@ -4,11 +4,12 @@
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) : _maximumThreadCount(maximumThreadCount),
-                                                                    _currentDelta(0),
-                                                                    _threadAvailabilityMap(0),
-                                                                    _threadShutDownStatus(0),
-                                                                    _shouldShutDown(false)
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _maximumThreadCount(maximumThreadCount),
+                                                                             _currentDelta(0),
+                                                                             _threadAvailabilityMap(0),
+                                                                             _threadShutDownStatus(0),
+                                                                             _shouldShutDown(false),
+                                                                             _ecsDataBufferIndex(0)
     {
         if (_maximumThreadCount != 0)
         {

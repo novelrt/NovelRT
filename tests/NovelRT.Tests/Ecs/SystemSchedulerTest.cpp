@@ -54,6 +54,18 @@ class SystemSchedulerTest : public testing::Test
     }
 };
 
+class TestSystem : public BaseSystem<size_t>
+{
+    protected:
+    void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, size_t>& componentData) override
+    {
+        hasRun = true;
+    }
+
+    public:
+    std::atomic_bool hasRun = false;
+};
+
 TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
 {
     EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
@@ -66,4 +78,18 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
     EXPECT_FALSE(sysOneBool);
     EXPECT_FALSE(sysTwoBool);
     EXPECT_FALSE(sysThreeBool);
+}
+
+TEST_F(SystemSchedulerTest, CreateSystemForComponentDoesNotThrow)
+{
+    EXPECT_NO_THROW((scheduler->CreateSystemForComponent<TestSystem, size_t>()));
+}
+
+TEST_F(SystemSchedulerTest, CreateSystemForComponentExecutesIterationCorrectly)
+{
+    std::shared_ptr<TestSystem> system = nullptr;
+    ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
+    ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+
+    EXPECT_EQ(system->hasRun, true);
 }
