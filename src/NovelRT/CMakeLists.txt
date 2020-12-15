@@ -38,6 +38,9 @@ set(ENGINE_SOURCES
   Graphics/TextRect.cpp
   Graphics/Texture.cpp
 
+  Ink/InkService.cpp
+  Ink/Story.cpp
+
   Input/BasicInteractionRect.cpp
   Input/InteractionObject.cpp
   Input/InteractionService.cpp
@@ -62,7 +65,7 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine ${ENGINE_SOURCES})
+add_library(Engine SHARED ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
@@ -77,6 +80,7 @@ if(MSVC)
       /W4
       /WX
       /wd4611
+      /MP
   )
   get_target_property(opts Engine COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

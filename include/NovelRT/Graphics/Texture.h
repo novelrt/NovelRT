@@ -6,7 +6,7 @@
 #endif
 
 namespace NovelRT::Graphics {
-  class Texture {
+  class Texture : public std::enable_shared_from_this<Texture> {
     friend class ImageRect;
     friend class TextRect;
     friend class RenderingService;
@@ -17,7 +17,7 @@ namespace NovelRT::Graphics {
     Utilities::Lazy<GLuint> _textureId;
     LoggingService _logger; //not proud of this
     std::string _textureFile;
-    Maths::GeoVector2<float> _size;
+    Maths::GeoVector2F _size;
 
     inline GLuint getTextureIdInternal() noexcept {
       return _textureId.getActual();
@@ -39,7 +39,7 @@ namespace NovelRT::Graphics {
       return _textureFile;
     }
 
-    inline const Maths::GeoVector2<float>& getSize() const noexcept {
+    inline Maths::GeoVector2F getSize() const noexcept {
       return _size;
     }
 

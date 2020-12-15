@@ -27,6 +27,8 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ci)
       ci=true
+      export CC=clang-10
+      export CXX=clang++-10
       shift 1
       ;;
     --configuration)

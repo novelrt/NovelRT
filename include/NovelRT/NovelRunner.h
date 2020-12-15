@@ -24,7 +24,7 @@ namespace NovelRT {
      */
     Utilities::Event<Timing::Timestamp> Update;
   private:
-    int _exitCode;
+    int32_t _exitCode;
     Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
     std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
     std::shared_ptr<Input::InteractionService> _novelInteractionService;
@@ -42,12 +42,12 @@ namespace NovelRT {
      * @param windowTitle The title of the window created for NovelRunner.
      * @param targetFrameRate The framerate that should be targeted and capped.
      */
-    explicit NovelRunner(int displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0, bool transparency = false);
+    explicit NovelRunner(int32_t displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0, bool transparency = false);
     /**
      * Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
      */
-    int runNovel();
+    int32_t runNovel();
 
     /// Gets the Rendering Service associated with this Runner.
     std::shared_ptr<Graphics::RenderingService> getRenderer() const;

@@ -21,20 +21,21 @@ namespace NovelRT::Graphics {
 
   protected:
     void configureObjectBuffers() final;
+    void drawObject() final;
 
   public:
-    ImageRect(const Transform& transform,
-      int layer,
+    ImageRect(Transform transform,
+      int32_t layer,
       ShaderProgram shaderProgram,
-      std::weak_ptr<Camera> camera,
+      std::shared_ptr<Camera> camera,
       std::shared_ptr<Texture> texture,
-      const RGBAConfig& colourTint);
+      RGBAConfig colourTint);
 
-    ImageRect(const Transform& transform,
-      int layer,
+    ImageRect(Transform transform,
+      int32_t layer,
       ShaderProgram shaderProgram,
-      std::weak_ptr<Camera> camera,
-      const RGBAConfig& colourTint);
+      std::shared_ptr<Camera> camera,
+      RGBAConfig colourTint);
 
     const std::shared_ptr<Texture>& texture() const noexcept {
       return _texture;
@@ -44,9 +45,7 @@ namespace NovelRT::Graphics {
       return _texture;
     }
 
-    void drawObject() final;
-
-    inline const RGBAConfig& colourTint() const {
+    inline RGBAConfig colourTint() const {
       return _colourTint;
     }
 

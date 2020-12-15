@@ -5,18 +5,18 @@
 #include <nethost.h>
 
 #if defined(WIN32)
-#include <Windows.h>
+  #include <Windows.h>
 #else
-#include <dlfcn.h>
+  #include <dlfcn.h>
 #endif
-
-using namespace NovelRT::Utilities;
 
 #if defined(WIN32)
   #define STR(s) L ## s
 #else
   #define STR(s) s
 #endif
+
+using namespace NovelRT::Utilities;
 
 const auto HostApiBufferTooSmall = 0x80008098;
 
@@ -66,13 +66,13 @@ namespace NovelRT::DotNet {
 
       const char_t* runtime_config_path = runtimeConfigJsonPath.c_str();
 
-      _logger.logInfo("Initializing the runtime using: " + runtimeConfigJsonPath.string());
+      _logger.logInfo("Initializing the runtime using: {}" + runtimeConfigJsonPath.string());
 
       int result = _hostfxr_initialize_for_runtime_config.getActual()(runtime_config_path, nullptr, &hostContextHandle);
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 
@@ -84,7 +84,7 @@ namespace NovelRT::DotNet {
 
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -93,7 +93,7 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to locate hostfxr: ", result);
+        _logger.logError("Failed to locate hostfxr: {}", result);
         throw std::runtime_error("Failed to locate hostfxr");
       }
 
@@ -114,26 +114,34 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: ", result);
+        _logger.logError("Failed to initialize the runtime: {}", result);
         throw std::runtime_error("Failed to initialize the runtime");
       }
 
       return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
     })),
+    _exports(Lazy<Exports>([&, this] {
+      std::filesystem::path executableDirPath = Utilities::Misc::getExecutableDirPath();
+      std::filesystem::path assemblyPath = executableDirPath / "dotnet" / "NovelRT.DotNet.dll";
+
+      const char_t* assembly_path = assemblyPath.c_str();
+
+      void* delegate;
+      int result = _load_assembly_and_get_function_pointer.getActual()(assembly_path, STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("GetExports"), UNMANAGEDCALLERSONLY_METHOD, nullptr, &delegate);
+
+      if (result != 0)
+      {
+        _logger.logError("Failed to locate the specified managed function: {}", result);
+        throw std::runtime_error("Failed to locate the specified managed function");
+      }
+
+      auto getExports = reinterpret_cast<void(*)(Exports*)>(delegate);
+
+      Exports exports;
+      getExports(&exports);
+      return exports;
+    })),
     _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_DOTNET)) {
-  }
-
-  void RuntimeService::tearDown() {
-    if (_hostContextHandle.isCreated())
-    {
-      int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
-      assert(result == 0); unused(result);
-    }
-
-    if (_hostfxr.isCreated())
-    {
-        closeNativeLibrary(_hostfxr.getActual());
-    }
   }
 
   RuntimeService::~RuntimeService() {
@@ -141,7 +149,36 @@ namespace NovelRT::DotNet {
   }
 
   void RuntimeService::initialise() {
-    auto initializeFunction = getFunction<void()>(STR("NovelRT.DotNet.dll"), STR("NovelRT.DotNet.RuntimeService, NovelRT.DotNet"), STR("Initialize"), STR("System.Action, System.Private.Corelib"));
-    initializeFunction();
+    _exports.getActual().Initialise();
+  }
+
+  void RuntimeService::tearDown() {
+    if (_exports.isCreated()) {
+      _exports.getActual().Teardown();
+    }
+
+    if (_hostContextHandle.isCreated()) {
+      int result = _hostfxr_close.getActual()(_hostContextHandle.getActual());
+      assert(result == 0); unused(result);
+    }
+
+    if (_hostfxr.isCreated()) {
+        closeNativeLibrary(_hostfxr.getActual());
+    }
+  }
+
+  void RuntimeService::freeObject(intptr_t obj)
+  {
+    _exports.getActual().FreeObject(obj);
+  }
+
+  void RuntimeService::freeString(const char* str)
+  {
+    _exports.getActual().FreeString(str);
+  }
+
+  std::shared_ptr<Ink::InkService> RuntimeService::getInkService()
+  {
+    return std::make_shared<Ink::InkService>(shared_from_this(), _exports.getActual().GetInkServiceExports);
   }
 }

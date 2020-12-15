@@ -13,7 +13,7 @@ namespace NovelRT::Graphics {
 
   void FontSet::loadFontAsTextureSet(const std::string& file, float fontSize) {
     if (!_fontFile.empty()) {
-      _logger.logErrorLine("This FontSet has already been initialised with data. Please make a new FontSet!");
+      _logger.logError("This FontSet has already been initialised with data. Please make a new FontSet!");
       throw std::runtime_error("Unable to continue! Cannot overwrite FontSet!");
     }
 
@@ -23,13 +23,13 @@ namespace NovelRT::Graphics {
 
     FT_Library freeTypeLoader;
     if (FT_Init_FreeType(&freeTypeLoader)) {
-      _logger.logErrorLine("Failed to initialise Freetype.");
+      _logger.logError("Failed to initialise Freetype.");
     }
 
     FT_Face face;
 
     if (FT_New_Face(freeTypeLoader, file.c_str(), 0, &face)) {
-      _logger.logError("FREETYPE - Failed to load font: ", file);
+      _logger.logError("FREETYPE - Failed to load font: {}", file);
     }
 
     FT_Set_Pixel_Sizes(face, 0, static_cast<FT_UInt>(fontSize));
@@ -40,7 +40,7 @@ namespace NovelRT::Graphics {
     for (GLubyte c = 0; c < 128; c++) {
       // Load character glyph
       if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-        _logger.logErrorLine("FREETYTPE: Failed to load Glyph");
+        _logger.logError("FREETYTPE: Failed to load Glyph");
         continue;
       }
       // Generate texture
@@ -67,8 +67,10 @@ namespace NovelRT::Graphics {
       // Now store character for later use
       GraphicsCharacterRenderData character = {
           _renderer->getTexture(),
-          Maths::GeoVector2<uint32_t>(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-          Maths::GeoVector2<int32_t>(face->glyph->bitmap_left, face->glyph->bitmap_top),
+          static_cast<uint32_t>(face->glyph->bitmap.width),
+          static_cast<uint32_t>(face->glyph->bitmap.rows),
+          face->glyph->bitmap_left,
+          face->glyph->bitmap_top,
           GraphicsCharacterRenderDataHelper::getAdvanceDistance(face->glyph->advance.x)
       };
       character.texture->setTextureIdInternal(textureId);

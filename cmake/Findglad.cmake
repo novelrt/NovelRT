@@ -53,7 +53,8 @@ if(glad_FOUND)
     COMMENT "Generating GLAD"
   )
 
-  add_library(glad "${glad_SOURCES}")
+  add_library(glad STATIC "${glad_SOURCES}")
+  set_target_properties(glad PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
   target_include_directories(glad PUBLIC "${glad_OUT_DIR}/include")
   target_compile_definitions(glad
     PUBLIC

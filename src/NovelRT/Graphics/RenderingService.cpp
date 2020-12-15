@@ -10,9 +10,9 @@ namespace NovelRT::Graphics {
       GLuint tempHandle;
       glGenBuffers(1, &tempHandle);
       glBindBuffer(GL_UNIFORM_BUFFER, tempHandle);
-      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4<float>), nullptr, GL_STATIC_DRAW);
+      glBufferData(GL_UNIFORM_BUFFER, sizeof(Maths::GeoMatrix4x4F), nullptr, GL_STATIC_DRAW);
       glBindBuffer(GL_UNIFORM_BUFFER, 0);
-      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4<float>));
+      glBindBufferRange(GL_UNIFORM_BUFFER, 0, tempHandle, 0, sizeof(Maths::GeoMatrix4x4F));
       return tempHandle;
     })),
     _camera(nullptr),
@@ -22,35 +22,35 @@ namespace NovelRT::Graphics {
       });
   }
 
-  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2<float>* const optionalWindowSize) {
+  bool RenderingService::initialiseRenderPipeline(bool completeLaunch, Maths::GeoVector2F* const optionalWindowSize) {
 
     auto windowSize = (optionalWindowSize == nullptr) ? _windowingService->getWindowSize() : *optionalWindowSize; //lol this is not safe
 
-    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.getX()));
+    std::string infoScreenSize = std::to_string(static_cast<int>(windowSize.x));
     infoScreenSize.append("x");
-    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.getY())));
-    _logger.logInfo("Screen size:", infoScreenSize);
+    infoScreenSize.append(std::to_string(static_cast<int>(windowSize.y)));
+    _logger.logInfo("Screen size: {}", infoScreenSize);
 
     if (completeLaunch) {
       _camera = Camera::createDefaultOrthographicProjection(windowSize);
       glfwMakeContextCurrent(_windowingService->getWindow()); //lmao
 
-      if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-        _logger.logErrorLine("Failed to initialise glad.");
+      if (!gladLoadGLES2Loader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+        _logger.logError("Failed to initialise glad.");
         throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
       }
 
       std::string glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-      _logger.logInfoLine("GL_VENDOR: " + glVendor);
+      _logger.logInfo("GL_VENDOR: {}", glVendor);
 
       std::string glRenderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-      _logger.logInfoLine("GL_RENDERER: " + glRenderer);
+      _logger.logInfo("GL_RENDERER: {}", glRenderer);
 
       std::string glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-      _logger.logInfoLine("GL_VERSION: " + glVersion);
+      _logger.logInfo("GL_VERSION: {}", glVersion);
 
       std::string glShading = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-      _logger.logInfoLine("GL_SHADING_LANGUAGE_VERSION: " + glShading);
+      _logger.logInfo("GL_SHADING_LANGUAGE_VERSION: {}", glShading);
 
       glEnable(GL_DEPTH_TEST);
       glDepthFunc(GL_LESS);
@@ -64,7 +64,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _camera->forceResize(windowSize);
-      glViewport(0, 0, static_cast<GLsizei>(windowSize.getX()), static_cast<GLsizei>(windowSize.getY()));
+      glViewport(0, 0, static_cast<GLsizei>(windowSize.x), static_cast<GLsizei>(windowSize.y));
     }
 
     return true;
@@ -90,7 +90,7 @@ namespace NovelRT::Graphics {
       VertexShaderStream.close();
     }
     else {
-      _logger.logErrorLine("Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+      _logger.logError("Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
       throw EXIT_FAILURE;
     }
 
@@ -104,7 +104,7 @@ namespace NovelRT::Graphics {
       fragmentShaderStream.close();
     }
     else {
-      _logger.logErrorLine("Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+      _logger.logError("Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
       throw EXIT_FAILURE;
     }
 
@@ -112,7 +112,7 @@ namespace NovelRT::Graphics {
     int infoLogLength;
 
     // Compile Vertex Shader
-    _logger.logInfoLine("Compiling shader: " + vertexFileName + "...");
+    _logger.logInfo("Compiling shader: {}...", vertexFileName);
     char const* vertexSourcePointer = vertexShaderCode.c_str();
     glShaderSource(vertexShaderId, 1, &vertexSourcePointer, nullptr);
     glCompileShader(vertexShaderId);
@@ -123,12 +123,12 @@ namespace NovelRT::Graphics {
     if (infoLogLength > 0) {
       std::vector<char> vertexShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
-      _logger.logErrorLine(std::string(&vertexShaderErrorMessage[0]));
+      _logger.logError(std::string(&vertexShaderErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
     }
 
     // Compile Fragment Shader
-    _logger.logInfoLine("Compiling shader: " + fragmentFileName + "...");
+    _logger.logInfo("Compiling shader: {}...", fragmentFileName);
     const char* FragmentSourcePointer = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderId, 1, &FragmentSourcePointer, nullptr);
     glCompileShader(fragmentShaderId);
@@ -139,12 +139,12 @@ namespace NovelRT::Graphics {
       glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> fragmentShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
-      _logger.logErrorLine(std::string(&fragmentShaderErrorMessage[0]));
+      _logger.logError(std::string(&fragmentShaderErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
     }
 
     // Link the program
-    _logger.logInfoLine("Linking program...");
+    _logger.logInfo("Linking program...");
     GLuint programId = glCreateProgram();
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
@@ -156,7 +156,7 @@ namespace NovelRT::Graphics {
       glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
       std::vector<char> ProgramErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
-      _logger.logErrorLine(std::string(&ProgramErrorMessage[0]));
+      _logger.logError(std::string(&ProgramErrorMessage[0]));
       throw std::runtime_error("Unable to continue! Please fix the specified error in the shader program.");
     }
 
@@ -174,9 +174,9 @@ namespace NovelRT::Graphics {
     return returnProg;
   }
 
-  int RenderingService::initialiseRendering() {
+  int32_t RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
-      _logger.logErrorLine("Apologies, something went wrong.");
+      _logger.logError("Apologies, something went wrong.");
       throw std::runtime_error("Unable to continue! The engine cannot start without GLAD/GLFW3.");
     }
 
@@ -198,32 +198,32 @@ namespace NovelRT::Graphics {
     glfwSwapBuffers(_windowingService->getWindow());
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
-    int layer,
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
+    int32_t layer,
     const std::string& filePath,
-    const RGBAConfig& colourTint) {
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath), colourTint);
   }
 
-  std::unique_ptr<ImageRect> RenderingService::createImageRect(const Transform& transform,
-    int layer,
-    const RGBAConfig& colourTint) {
+  std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
+    int32_t layer,
+    RGBAConfig colourTint) {
     return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
   }
 
-  std::unique_ptr<TextRect> RenderingService::createTextRect(const Transform& transform,
-    int layer,
-    const RGBAConfig& colourConfig,
+  std::unique_ptr<TextRect> RenderingService::createTextRect(Transform transform,
+    int32_t layer,
+    RGBAConfig colourConfig,
     float fontSize,
     const std::string& fontFilePath) {
     return std::make_unique<TextRect>(transform, layer, _fontProgram, getCamera(), getFontSet(fontFilePath, fontSize), colourConfig);
   }
 
-  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(const Transform& transform, int layer, const RGBAConfig& colourConfig) {
+  std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig) {
     return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
   }
 
-  std::weak_ptr<Camera> RenderingService::getCamera() const {
+  std::shared_ptr<Camera> RenderingService::getCamera() const {
     return _camera;
   }
 
@@ -253,7 +253,7 @@ namespace NovelRT::Graphics {
       std::weak_ptr<Texture> valueForMap = returnValue;
       _textureCache.emplace(returnValue->getId(), valueForMap);
       returnValue->loadPngAsTexture(fileTarget);
-      return returnValue; 
+      return returnValue;
     }
 
     //DRY, I know, but Im really not fussed rn
@@ -280,7 +280,7 @@ namespace NovelRT::Graphics {
     return returnValue;
   }
 
-  void RenderingService::setBackgroundColour(const RGBAConfig& colour) {
+  void RenderingService::setBackgroundColour(RGBAConfig colour) {
     _framebufferColour = colour;
   }
 }

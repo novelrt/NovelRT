@@ -13,38 +13,42 @@ namespace NovelRT::Input {
     friend class Windowing::WindowingService; //I get this looks weird but its because GLFW treats the window as this system as well as the window.
 
   private:
+    static inline const uint32_t INPUT_BUFFER_COUNT = 2;
+
+    uint32_t _previousBufferIndex;
+    uint32_t _currentBufferIndex;
     void HandleInteractionDraw(InteractionObject* target);
     InteractionObject* _clickTarget;
-    std::map<KeyCode, KeyState> _keyStates;
-    std::map<KeyCode, Maths::GeoVector2<float>> _mousePositionsOnScreenPerButton;
-    Maths::GeoVector2<float> _screenSize;
+    std::array<std::map<KeyCode, KeyStateFrameChangeLog>, INPUT_BUFFER_COUNT> _keyStates;
+    Maths::GeoVector2F _screenSize;
+    Maths::GeoVector2F _cursorPosition;
     LoggingService _logger;
-    void validateIfKeyCached(KeyCode code);
     void processKeyState(KeyCode code, KeyState state);
-    void processMouseStates();
-    void acceptMouseButtonClickPush(int button, int action, const Maths::GeoVector2<float>& mousePosition);
-    void acceptKeyboardInputBindingPush(int key, int action);
+    void processKeyStates();
+    void acceptMouseButtonClickPush(int32_t button, int32_t action, Maths::GeoVector2F mousePosition);
+    void acceptKeyboardInputBindingPush(int32_t key, int32_t action);
 
   public:
     InteractionService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
 
     void consumePlayerInput();
 
-    std::unique_ptr<BasicInteractionRect> createBasicInteractionRect(const Transform& transform, int layer);
+    std::unique_ptr<BasicInteractionRect> createBasicInteractionRect(Transform transform, int32_t layer);
 
     void executeClickedInteractable();
 
-    inline void setScreenSize(const Maths::GeoVector2<float>& value) noexcept {
+    inline void setScreenSize(Maths::GeoVector2F value) noexcept {
       _screenSize = value;
     }
 
-    inline KeyState getKeyState(KeyCode value) const noexcept {
-      auto it = _keyStates.find(value);
-      if (it != _keyStates.end()) {
+    inline KeyStateFrameChangeLog getKeyState(KeyCode value) const noexcept {
+      auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+      auto it = currentBuffer.find(value);
+      if (it != currentBuffer.end()) {
         return it->second;
       }
 
-      return KeyState::Idle;
+      return KeyStateFrameChangeLog{};
     }
   };
 }

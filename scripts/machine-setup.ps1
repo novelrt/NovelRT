@@ -3,10 +3,11 @@
 
 $VcpkgInstallDirectory = Join-Path -Path $HOME -ChildPath "vcpkg"
 $DotNetInstallDirectory = Join-Path -Path $HOME -ChildPath "dotnet"
+$ProgressPreference = 'SilentlyContinue'
 
 if (!(Get-Command python -ErrorAction SilentlyContinue ))
 {
-  $PythonInstaller = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".exe" } - PassThru
+  $PythonInstaller = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".exe" } -PassThru
   Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.8.3/python-3.8.3.exe" -OutFile $PythonInstaller
 
   & $PythonInstaller /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
@@ -24,26 +25,6 @@ if ($LastExitCode -ne 0) {
   throw "'pip install' failed"
 }
 
-if (!(Test-Path -Path $VcpkgInstallDirectory)) {
-  & git clone https://github.com/capnkenny/vcpkg $VcpkgInstallDirectory
-}
-
-$VcpkgExe = Join-Path -Path $VcpkgInstallDirectory -ChildPath "vcpkg.exe"
-
-if (!(Test-Path -Path $VcpkgExe)) {
-  & $VcpkgInstallDirectory/bootstrap-vcpkg.bat
-
-  if ($LastExitCode -ne 0) {
-    throw "'bootstrap-vcpkg' failed"
-  }
-}
-
-& $VcpkgExe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
-
-if ($LastExitCode -ne 0) {
-    throw "'vcpkg install' failed"
-}
-
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_MULTILEVEL_LOOKUP = 0
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
@@ -53,8 +34,7 @@ $DotNetExe = Join-Path -Path $DotNetInstallDirectory -ChildPath "dotnet.exe"
 Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile $DotNetInstallScript -UseBasicParsing
 New-Item -Path $DotNetInstallDirectory -Force -ItemType "Directory" | Out-Null
 
-& $DotNetInstallScript -Channel 3.1 -Version latest -InstallDir $DotNetInstallDirectory
-& $DotNetInstallScript -Channel 2.1 -Version latest -InstallDir $DotNetInstallDirectory -Runtime dotnet
+& $DotNetInstallScript -Channel master -Version 5.0.100 -InstallDir $DotNetInstallDirectory
 
 if ($LastExitCode -ne 0) {
   throw "'dotnet-install' failed"
@@ -71,3 +51,37 @@ if ($LastExitCode -ne 0) {
 if ($LastExitCode -ne 0) {
   throw "'cmake' failed"
 }
+
+$RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
+$DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
+
+echo "Creating directory..."
+try {
+New-Item -Path $RepoRoot -Name "deps" -ItemType "directory" | Out-Null
+}
+catch {
+  throw "Creating directory failed"
+}
+
+$vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
+$depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
+
+$depZip = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".zip" } -PassThru
+
+try {
+echo "Downloading dependencies..."
+Invoke-WebRequest -Uri $depsUri -Out $depZip
+}
+catch {
+  throw "Downloading dependencies failed: " + $_.Exception.Message
+}
+
+echo "Extracting archive..."
+try {
+Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force
+}
+catch {
+  throw "Extracting dependencies failed " + + $_.Exception.Message
+}
+
+echo "Machine setup completed."

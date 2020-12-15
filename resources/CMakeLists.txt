@@ -5,6 +5,8 @@ set(RESOURCES_FILES
   Images/novel-chan.png
 
   Scripts/main.lua
+  Scripts/story.ink
+  Scripts/story.json
 
   Shaders/BasicFragmentShader.glsl
   Shaders/BasicVertexShader.glsl

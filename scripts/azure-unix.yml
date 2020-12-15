@@ -14,7 +14,7 @@ jobs:
     displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: JUnit
-      testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/test_detail.xml
+      testResultsFiles: artifacts/build/${{parameters.configuration}}/tests/results/*.xml
       mergeTestResults: true
       failTaskOnFailedTests: true
       testRunTitle: '${{parameters.name}}'

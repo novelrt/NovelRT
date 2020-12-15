@@ -4,7 +4,7 @@
 
 namespace NovelRT::Windowing {
   WindowingService::WindowingService() noexcept :
-    WindowResized(Utilities::Event<Maths::GeoVector2<float>>()),
+    WindowResized(Utilities::Event<Maths::GeoVector2F>()),
     WindowTornDown(Utilities::Event<>()),
     MouseButtonClicked(Utilities::Event<MouseClickEventArgs>()),
     KeyboardButtonChanged(Utilities::Event<KeyboardButtonChangeEventArgs>()),
@@ -16,11 +16,11 @@ namespace NovelRT::Windowing {
     _isTornDown(false) {
   }
 
-  void WindowingService::errorCallback(int, const char* error) {
-    _logger.logError("Could not initialize GLFW: ", error);
+  void WindowingService::errorCallback(int32_t, const char* error) {
+    _logger.logError("Could not initialize GLFW: {}", error);
   }
 
-  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
+  void WindowingService::initialiseWindow(int32_t /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -41,7 +41,7 @@ namespace NovelRT::Windowing {
    if (transparencyEnabled) {
      glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
    }
-    _logger.logInfoLine("Attempting to create OpenGL ES v3.0 context using EGL API");
+    _logger.logInfo("Attempting to create OpenGL ES v3.0 context using EGL API");
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -106,10 +106,10 @@ namespace NovelRT::Windowing {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
       thisPtr->_logger.throwIfNullPtr(thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
 
-      thisPtr->_windowSize = Maths::GeoVector2<float>(static_cast<float>(w), static_cast<float>(h));
+      thisPtr->_windowSize = Maths::GeoVector2F(static_cast<float>(w), static_cast<float>(h));
       thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
       thisPtr->WindowResized(thisPtr->_windowSize); });
-    _windowSize = Maths::GeoVector2<float>(static_cast<float>(wData), static_cast<float>(hData));
+    _windowSize = Maths::GeoVector2F(static_cast<float>(wData), static_cast<float>(hData));
 
     glfwSetMouseButtonCallback(_window.get(), [](auto targetWindow, auto mouseButton, auto action, auto /*mods*/) {
       auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
@@ -117,7 +117,7 @@ namespace NovelRT::Windowing {
 
       double x = 0, y = 0;
       glfwGetCursorPos(targetWindow, &x, &y);
-      thisPtr->MouseButtonClicked(MouseClickEventArgs{ mouseButton, action, Maths::GeoVector2<float>((float)x, (float)y) });
+      thisPtr->MouseButtonClicked(MouseClickEventArgs{ mouseButton, action, Maths::GeoVector2F((float)x, (float)y) });
       });
 
 
@@ -135,9 +135,9 @@ namespace NovelRT::Windowing {
   void WindowingService::checkForOptimus(const char* library) {
     _optimus = LoadLibrary(reinterpret_cast<LPCSTR>(library));
     if (_optimus != nullptr) {
-      _logger.logInfoLine("NVIDIA GPU detected. Enabling...");
+      _logger.logInfo("NVIDIA GPU detected. Enabling...");
     } else {
-      _logger.logInfoLine("NVIDIA GPU not detected. Continuing w/o Optimus support.");
+      _logger.logInfo("NVIDIA GPU not detected. Continuing without Optimus support.");
     }
   }
 #endif
@@ -151,7 +151,7 @@ namespace NovelRT::Windowing {
 #endif
 
     _isTornDown = true;
-    
+
     glfwDestroyWindow(getWindow());
   }
 }

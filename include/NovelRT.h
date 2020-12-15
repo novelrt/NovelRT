@@ -127,6 +127,13 @@ namespace NovelRT::Graphics {
   typedef class TextRect TextRect;
 }
 /**
+ * Contains bindings for Ink.
+ */
+namespace NovelRT::Ink {
+  typedef class InkService InkService;
+  typedef class Story Story;
+}
+/**
  * Contains input features, such as keyboard and mouse interactivity.
  */
 namespace NovelRT::Input {
@@ -179,10 +186,10 @@ namespace NovelRT::Windowing {
 
 #include "NovelRT/Animation/AnimatorPlayState.h"
 #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-#include "NovelRT/Maths/GeoVector2.h"
-#include "NovelRT/Maths/GeoVector3.h"
-#include "NovelRT/Maths/GeoVector4.h"
-#include "NovelRT/Maths/GeoMatrix4x4.h"
+#include "NovelRT/Maths/GeoVector2F.h"
+#include "NovelRT/Maths/GeoVector3F.h"
+#include "NovelRT/Maths/GeoVector4F.h"
+#include "NovelRT/Maths/GeoMatrix4x4F.h"
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Maths/QuadTreePoint.h"
 #include "NovelRT/Maths/QuadTree.h"
@@ -212,9 +219,14 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
 
+//Ink types
+#include "NovelRT/Ink/Story.h"
+#include "NovelRT/Ink/InkService.h"
+
 //Input types
 #include "NovelRT/Input/InteractionObject.h"
 #include "NovelRT/Input/BasicInteractionRect.h"
+#include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
 //LuaSamples types
 #include "NovelRT/Lua/LuaRunner.h"

@@ -1,0 +1,42 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+
+jobs:
+  CI_Ubuntu:
+    name: Ubuntu_${{ matrix.configuration }}_x64
+    runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run CI Build Script
+        run: scripts/cibuild.sh --configuration ${{ matrix.configuration }}
+
+  CI_Windows:
+    name: Windows_${{ matrix.configuration }}_x64
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: cmd
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run Windows Setup
+        run: scripts/machine-setup.cmd
+
+      - name: Run CI Build Script
+        run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}

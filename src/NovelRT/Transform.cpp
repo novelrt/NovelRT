@@ -3,13 +3,13 @@
 #include <NovelRT.h>
 
 namespace NovelRT {
-  Transform::Transform(const Maths::GeoVector2<float>& position, float rotation, const Maths::GeoVector2<float>& scale) noexcept :
-    _position(position),
-    _scale(scale),
-    _rotation(rotation){}
+  Transform::Transform(Maths::GeoVector2F position, float rotation, Maths::GeoVector2F scale) noexcept :
+    position(position),
+    scale(scale),
+    rotation(rotation){}
 
   Transform::Transform() noexcept :
-    _position(Maths::GeoVector2<float>::zero()),
-    _scale(Maths::GeoVector2<float>::zero()),
-    _rotation(0.0f){}
+    position(Maths::GeoVector2F::zero()),
+    scale(Maths::GeoVector2F::zero()),
+    rotation(0.0f){}
 }

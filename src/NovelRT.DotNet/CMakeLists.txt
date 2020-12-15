@@ -1,4 +1,4 @@
-find_package(Dotnet 3.1.100 REQUIRED)
+find_package(Dotnet 5.0.100 REQUIRED)
 
 set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
 
