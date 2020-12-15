@@ -55,6 +55,11 @@ namespace NovelRT::Ecs
         virtual void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, T>& componentData) = 0;
 
         public:
+        BaseSystem() : _ecsDataBuffers(std::vector<SparseSet<EntityId, T>>{SparseSet<EntityId, T>{}, SparseSet<EntityId, T>{}})
+        {
+            
+        }
+
         void AddComponent(T component, EntityId entity) noexcept
         {
             ValidateCacheForThread();
