@@ -60,11 +60,12 @@ sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
     libspdlog-dev python3-glad
 ```
 Then, clone and build NovelRT:
+> **WARNING:** we currently do not support GCC as a compiler option. Expect errors/bugs if you try to use it - consider clang instead.
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
 cd NovelRT/build
-CC=clang CXX=clang cmake ..
+cmake ..
 make -j
 ```
 
