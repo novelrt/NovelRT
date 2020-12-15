@@ -85,26 +85,8 @@ namespace NovelRT::Ecs
         }
     }
 
-    void SystemScheduler::SpinThreads() noexcept
+    void SystemScheduler::SchedulePrimerWork(size_t workersToAssign, size_t amountOfWork)
     {
-        std::vector<QueueLockPair> vec2(_maximumThreadCount);
-        _threadWorkQueues.swap(vec2);
-        for (size_t i = 0; i < _maximumThreadCount; i++)
-        {
-            _threadShutDownStatus ^= 1ULL << i;
-            _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
-        }
-    }
-
-    void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
-    {
-        _currentDelta = delta;
-
-        size_t independentSystemChunkSize = _systemIds.size() / _maximumThreadCount;
-
-        size_t workersToAssign = _maximumThreadCount > _systemIds.size() ? _systemIds.size() : _maximumThreadCount;
-        size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
-
         int32_t sizeOfProcessedWork = 0;
 
         for (size_t i = 0; i < workersToAssign; i++)
@@ -169,6 +151,30 @@ namespace NovelRT::Ecs
         {
             std::this_thread::yield();
         }
+    }
+
+    void SystemScheduler::SpinThreads() noexcept
+    {
+        std::vector<QueueLockPair> vec2(_maximumThreadCount);
+        _threadWorkQueues.swap(vec2);
+        for (size_t i = 0; i < _maximumThreadCount; i++)
+        {
+            _threadShutDownStatus ^= 1ULL << i;
+            _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
+        }
+    }
+
+    void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
+    {
+        _currentDelta = delta;
+
+        size_t independentSystemChunkSize = _systemIds.size() / _maximumThreadCount;
+
+        size_t workersToAssign = _maximumThreadCount > _systemIds.size() ? _systemIds.size() : _maximumThreadCount;
+        size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
+
+        SchedulePrimerWork(workersToAssign, amountOfWork);
+
     }
 
     SystemScheduler::~SystemScheduler() noexcept
