@@ -1,3 +1,5 @@
 add_subdirectory(NovelRT.DotNet)
 add_subdirectory(NovelRT)
-target_compile_options(Engine PRIVATE /bigobj)
+if(MSVC)
+  target_compile_options(Engine PRIVATE /bigobj)
+endif()
