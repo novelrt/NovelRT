@@ -85,7 +85,7 @@ namespace NovelRT::Ecs
         }
     }
 
-    void SystemScheduler::SchedulePrimerWork(size_t workersToAssign, size_t amountOfWork)
+    void SystemScheduler::ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork)
     {
         int32_t sizeOfProcessedWork = 0;
 
@@ -173,7 +173,7 @@ namespace NovelRT::Ecs
         size_t workersToAssign = _maximumThreadCount > _systemIds.size() ? _systemIds.size() : _maximumThreadCount;
         size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
 
-        SchedulePrimerWork(workersToAssign, amountOfWork);
+        ScheduleUpdateWork(workersToAssign, amountOfWork);
 
     }
 
