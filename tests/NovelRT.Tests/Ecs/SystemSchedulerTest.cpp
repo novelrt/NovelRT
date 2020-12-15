@@ -60,6 +60,11 @@ class TestSystem : public BaseSystem<size_t>
     void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, size_t>& componentData) override
     {
         hasRun = true;
+
+        for (auto &&i : componentData)
+        {
+            i = 10;
+        }
     }
 
     public:
@@ -85,11 +90,23 @@ TEST_F(SystemSchedulerTest, CreateSystemForComponentDoesNotThrow)
     EXPECT_NO_THROW((scheduler->CreateSystemForComponent<TestSystem, size_t>()));
 }
 
-TEST_F(SystemSchedulerTest, CreateSystemForComponentExecutesIterationCorrectly)
+TEST_F(SystemSchedulerTest, CreateSystemForComponentRegistersSystemCorrectly)
 {
     std::shared_ptr<TestSystem> system = nullptr;
     ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
     ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
 
     EXPECT_EQ(system->hasRun, true);
+}
+
+TEST_F(SystemSchedulerTest, CreateSystemForComponentPropagatesChangesToImmutableViewCorrectly)
+{
+    EntityId entity = 0;
+    std::shared_ptr<TestSystem> system = nullptr;
+    ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
+    ASSERT_NO_THROW(system->AddComponent(5, entity));
+    ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+    ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+
+    EXPECT_EQ(system->GetComponent(entity), 10);
 }

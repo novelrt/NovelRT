@@ -10,12 +10,12 @@
 #include <vector>
 #include <thread>
 #include <map>
+#include <queue>
 
 namespace NovelRT::Ecs
 {
     enum class ComponentUpdateType : int32_t
     {
-        Invalid = -1,
         Add = 0,
         Remove = 1
     };
@@ -54,7 +54,28 @@ namespace NovelRT::Ecs
 
         void PrepComponentBuffers()
         {
-            
+            for (auto &&pair : _componentUpdateInstructions)
+            {
+                for (auto &&instruction : pair.second)
+                {
+                    switch (instruction.updateType)
+                    {
+                    case ComponentUpdateType::Add:
+                        _ecsDataBuffers.at(MutableBufferId).Insert(instruction.id, instruction.componentData);
+                        break;
+                    
+                    case ComponentUpdateType::Remove:
+                        _ecsDataBuffers.at(MutableBufferId).Remove(instruction.id);
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+                pair.second.clear();
+            }
+
+            _ecsDataBuffers.at(ImmutableBufferId) = SparseSet<EntityId, T>(_ecsDataBuffers.at(MutableBufferId));
         }
 
         protected:
@@ -80,10 +101,17 @@ namespace NovelRT::Ecs
             _componentUpdateInstructions[std::this_thread::get_id()].emplace_back(objectToPass);
         }
 
+        T GetComponent(EntityId entity) const
+        {
+            return _ecsDataBuffers.at(ImmutableBufferId).GetImmutableView()[entity];
+        }
+
         bool HasComponent(EntityId entity) const noexcept
         {
 
         }
+
+
     };
 }
 

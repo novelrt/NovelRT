@@ -19,8 +19,15 @@ namespace NovelRT::Ecs
         std::shared_ptr<std::unordered_map<TKey, size_t, THashFunction>> _sparseMap;
 
     public:
-        SparseSet() : _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
+        SparseSet() noexcept : _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
         {
+        }
+
+        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
+        {
+            _denseBlock->resize(rhs._denseBlock->size());
+            std::copy(rhs._denseBlock->begin(), rhs._denseBlock->end(), _denseBlock->begin());
+            *_sparseMap = *(rhs._sparseMap);
         }
 
         bool HasValue(TKey key) const noexcept
@@ -78,6 +85,8 @@ namespace NovelRT::Ecs
             return _denseBlock->end();
         }
         // clang-format on
+
+
     };
 } // namespace NovelRT::Ecs
 
