@@ -29,7 +29,7 @@ namespace NovelRT::Ecs
     {
         QueueLockPair &pair = _threadWorkQueues[poolId];
         pair.threadLock.lock();
-        if (pair.systemIds.size() > 0)
+        if (pair.systemUpdateIds.size() > 0)
         {
             return true;
         }
@@ -67,18 +67,18 @@ namespace NovelRT::Ecs
                     firstIteration = false;
                 }
 
-                if (pair.systemIds.size() == 0)
+                if (pair.systemUpdateIds.size() == 0)
                 {
                     pair.threadLock.unlock();
                     break;
                 }
 
-                Atom workItem = pair.systemIds[0];
-                pair.systemIds.erase(pair.systemIds.begin());
+                Atom workItem = pair.systemUpdateIds[0];
+                pair.systemUpdateIds.erase(pair.systemUpdateIds.begin());
 
                 pair.threadLock.unlock();
 
-                _systems[workItem](_currentDelta);
+                _systems[workItem].componentUpdate(_currentDelta);
             }
 
             _threadAvailabilityMap ^= 1ULL << poolId;
@@ -119,7 +119,7 @@ namespace NovelRT::Ecs
             for (size_t j = 0; j < amountOfWork; j++)
             {
                 size_t currentWorkIndex = offset + j;
-                pair.systemIds.push_back(_systemIds[currentWorkIndex]);
+                pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
                 ++sizeOfProcessedWork;
             }
 
@@ -138,7 +138,7 @@ namespace NovelRT::Ecs
                 pair.threadLock.lock();
                 for (size_t i = startIndex; i < _systemIds.size(); i++)
                 {
-                    pair.systemIds.push_back(_systemIds[i]);
+                    pair.systemUpdateIds.push_back(_systemIds[i]);
                 }
                 pair.threadLock.unlock();
             }
@@ -156,7 +156,7 @@ namespace NovelRT::Ecs
                     for (size_t j = 0; j < amountOfWork; j++)
                     {
                         size_t currentWorkIndex = offset + j;
-                        pair.systemIds.push_back(_systemIds[currentWorkIndex]);
+                        pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
                         ++sizeOfProcessedWork;
                     }
 

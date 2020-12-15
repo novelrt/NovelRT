@@ -38,9 +38,9 @@ class SystemSchedulerTest : public testing::Test
             sysTwo = [&](Timestamp delta) {sysTwoBool = false;std::cout << "SYSTEM TWO LOG: HELLO" << std::endl;};
             sysThree = [&](Timestamp delta) {sysThreeBool = false;std::cout << "SYSTEM THREE LOG: HELLO" << std::endl;};
 
-            scheduler->RegisterSystemForComponent<int>(sysOne);
-            scheduler->RegisterSystemForComponent<bool>(sysTwo);
-            scheduler->RegisterSystemForComponent<char>(sysThree);
+            scheduler->RegisterSystemForComponent<int>(sysOne, [](){});
+            scheduler->RegisterSystemForComponent<bool>(sysTwo, [](){});
+            scheduler->RegisterSystemForComponent<char>(sysThree, [](){});
         }
     }
 

@@ -36,11 +36,12 @@ namespace NovelRT::Ecs
         std::vector<SparseSet<EntityId, T>> _ecsDataBuffers;
         std::map<std::thread::id, std::vector<EntityComponentUpdateObject>> _componentUpdateInstructions;
 
-        size_t _mutableBufferId = 0; // TODO: Move to ctor
+        static inline const size_t MutableBufferId = 0;
+        static inline const size_t ImmutableBufferId = 1;
 
         void UpdateComponentBuffer(Timing::Timestamp deltaTime)
         {
-            UpdateComponents(deltaTime, _ecsDataBuffers.at(_mutableBufferId));
+            UpdateComponents(deltaTime, _ecsDataBuffers.at(MutableBufferId));
         }
 
         void ValidateCacheForThread() noexcept
@@ -51,13 +52,18 @@ namespace NovelRT::Ecs
             }
         }
 
+        void PrepComponentBuffers()
+        {
+            
+        }
+
         protected:
         virtual void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, T>& componentData) = 0;
 
         public:
         BaseSystem() : _ecsDataBuffers(std::vector<SparseSet<EntityId, T>>{SparseSet<EntityId, T>{}, SparseSet<EntityId, T>{}})
         {
-            
+
         }
 
         void AddComponent(T component, EntityId entity) noexcept

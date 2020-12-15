@@ -24,15 +24,22 @@ namespace NovelRT::Ecs
     private:
         struct QueueLockPair
         {
-            std::vector<Atom> systemIds;
+            std::vector<Atom> systemPrimerIds;
+            std::vector<Atom> systemUpdateIds;
             std::mutex threadLock;
+        };
+
+        struct SystemFnPtrPair
+        {
+            std::function<void(Timing::Timestamp)> componentUpdate;
+            std::function<void()> systemPrimer;
         };
 
         std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
-        std::unordered_map<Atom, std::function<void(Timing::Timestamp)>, AtomHashFunction> _systems;
+        std::unordered_map<Atom, SystemFnPtrPair, AtomHashFunction> _systems;
         uint32_t _maximumThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;
@@ -48,6 +55,8 @@ namespace NovelRT::Ecs
 
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
+        void SchedulePrimerWork(size_t workersToAssign, size_t amountOfWork);
+        void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
 
     public:
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
@@ -60,10 +69,10 @@ namespace NovelRT::Ecs
         }
 
         template <typename TComponent>
-        Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemPtr)
+        Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemUpdatePtr, std::function<void()> systemPrimerPtr)
         {
             Atom returnId = GetSystemIdForComponent<TComponent>();
-            _systems.emplace(returnId, systemPtr);
+            _systems.emplace(returnId, SystemFnPtrPair{ systemUpdatePtr, systemPrimerPtr });
             _systemIds.emplace_back(returnId);
             return returnId;
         }
@@ -73,7 +82,7 @@ namespace NovelRT::Ecs
         {
             static_assert(std::is_base_of<BaseSystem<TComponent>, TSystem>::value, "Created system must inherit BaseSystem<TComponent>!");
             auto system = std::make_shared<TSystem>();
-            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);});
+            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);}, [system](){system->PrepComponentBuffers();});
             return system;
         }
 
