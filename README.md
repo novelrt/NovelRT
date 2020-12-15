@@ -64,7 +64,7 @@ Then, clone and build NovelRT:
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
 cd NovelRT/build
-cmake ..
+CC=clang CXX=clang cmake ..
 make -j
 ```
 
