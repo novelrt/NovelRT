@@ -47,6 +47,8 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OpenAL 1.19.1
 - spdlog 1.4.2
 
+> if you are compiling on Linux, please note - we do not support GCC at this time.
+
 ### Build instructions
 
 We provide build scripts in the root of the repository which may work for you.
@@ -60,7 +62,6 @@ sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
     libspdlog-dev python3-glad
 ```
 Then, clone and build NovelRT:
-> **WARNING:** we currently do not support GCC as a compiler option. Expect errors/bugs if you try to use it - consider clang instead.
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
