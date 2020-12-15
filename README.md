@@ -47,7 +47,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OpenAL 1.19.1
 - spdlog 1.4.2
 
-**if you are compiling on Linux, please note - we do not support GCC at this time.**
+**if you are compiling on Linux, please note - we do not support GCC at this time. Please use clang instead.**
 
 ### Build instructions
 
