@@ -96,6 +96,11 @@ namespace NovelRT::Ecs
 
         void RemoveComponent(EntityId entity)
         {
+            if (!_ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity))
+            {
+                throw std::runtime_error("Component not found for entity " + entity);
+            }
+            
             ValidateCacheForThread();
             EntityComponentUpdateObject objectToPass { ComponentUpdateType::Remove, entity, T{} };
             _componentUpdateInstructions[std::this_thread::get_id()].emplace_back(objectToPass);

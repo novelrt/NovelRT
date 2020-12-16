@@ -73,6 +73,19 @@ namespace NovelRT::Ecs
             return _sparseMap->find(key) != _sparseMap->end();
         }
 
+        TKey GetKeyBasedOnDenseIndex(size_t denseIndex)
+        {
+            for (auto &&i : _sparseMap)
+            {
+                if (i.second == denseIndex)
+                {
+                    return TKey;
+                }
+            }
+            
+            throw std::runtime_error("Dense index not found!");
+        }
+
         TValue& operator[](TKey key)
         {
             return _denseBlock->at(_sparseMap->at(key));
