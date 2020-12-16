@@ -110,8 +110,6 @@ namespace NovelRT::Ecs
         {
             return _ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity);
         }
-
-
     };
 }
 
