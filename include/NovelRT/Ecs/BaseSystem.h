@@ -108,7 +108,7 @@ namespace NovelRT::Ecs
 
         bool HasComponent(EntityId entity) const noexcept
         {
-
+            return _ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity);
         }
 
 

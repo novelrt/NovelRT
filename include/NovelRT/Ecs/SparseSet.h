@@ -68,6 +68,11 @@ namespace NovelRT::Ecs
             return SparseSetView<TKey, TValue, THashFunction>(std::weak_ptr<const std::vector<TValue>>(_denseBlock), std::weak_ptr<const std::unordered_map<TKey, size_t, THashFunction>>(_sparseMap));
         }
 
+        bool ContainsKey(TKey key) const noexcept
+        {
+            return _sparseMap->find(key) != _sparseMap->end();
+        }
+
         TValue& operator[](TKey key)
         {
             return _denseBlock->at(_sparseMap->at(key));

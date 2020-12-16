@@ -106,7 +106,29 @@ TEST_F(SystemSchedulerTest, CreateSystemForComponentPropagatesChangesToImmutable
     ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
     ASSERT_NO_THROW(system->AddComponent(5, entity));
     ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+    ASSERT_EQ(system->GetComponent(entity), 5);
     ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
 
     EXPECT_EQ(system->GetComponent(entity), 10);
+}
+
+TEST_F(SystemSchedulerTest, HasComponentInBaseSystemReturnsFalseWhenNotProcessedByIteration)
+{
+    EntityId entity = 0;
+    std::shared_ptr<TestSystem> system = nullptr;
+    ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
+    ASSERT_NO_THROW(system->AddComponent(5, entity));
+    ASSERT_FALSE(system->hasRun);
+    EXPECT_FALSE(system->HasComponent(entity));
+}
+
+TEST_F(SystemSchedulerTest, HasComponentInBaseSystemReturnsTrueWhenProcessedByIteration)
+{
+    EntityId entity = 0;
+    std::shared_ptr<TestSystem> system = nullptr;
+    ASSERT_NO_THROW((system = scheduler->CreateSystemForComponent<TestSystem, size_t>()));
+    ASSERT_NO_THROW(system->AddComponent(5, entity));
+    ASSERT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+    ASSERT_TRUE(system->hasRun);
+    EXPECT_TRUE(system->HasComponent(entity));
 }
