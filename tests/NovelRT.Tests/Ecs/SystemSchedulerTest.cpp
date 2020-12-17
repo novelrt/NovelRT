@@ -61,9 +61,9 @@ class TestSystem : public BaseSystem<size_t>
     {
         hasRun = true;
 
-        for (auto &&i : componentData)
+        for (auto && [i, j] : componentData)
         {
-            i = 10;
+            j = 10;
         }
     }
 
