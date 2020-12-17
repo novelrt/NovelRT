@@ -11,7 +11,6 @@
 #include <iterator>
 #include <cstddef>
 #include <algorithm>
-#include "../../NovelRT.h"
 
 namespace NovelRT::Ecs
 {
