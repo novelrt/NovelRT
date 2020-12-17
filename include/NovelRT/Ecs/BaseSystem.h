@@ -98,7 +98,7 @@ namespace NovelRT::Ecs
         {
             if (!_ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity))
             {
-                throw std::runtime_error("Component not found for entity " + entity);
+                throw std::runtime_error("Component not found for entity " + std::to_string(entity));
             }
             
             ValidateCacheForThread();
