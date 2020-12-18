@@ -60,12 +60,14 @@ namespace NovelRT::Ecs
         void AddComponent(EntityId entity, T component) noexcept
         {
             (void)entity;
+            (void)component;
             ValidateCacheForThread();
         }
 
         void RemoveComponent(EntityId entity)
         {
             (void)entity;
+            (void)component;
             ValidateCacheForThread();
         }
 
