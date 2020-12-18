@@ -67,7 +67,6 @@ namespace NovelRT::Ecs
         void RemoveComponent(EntityId entity)
         {
             (void)entity;
-            (void)component;
             ValidateCacheForThread();
         }
 
