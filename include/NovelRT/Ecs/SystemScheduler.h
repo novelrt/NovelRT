@@ -77,15 +77,6 @@ namespace NovelRT::Ecs
             return returnId;
         }
 
-        template<typename TSystem, typename TComponent>
-        std::shared_ptr<TSystem> CreateSystemForComponent() noexcept
-        {
-            static_assert(std::is_base_of<BaseSystem<TComponent>, TSystem>::value, "Created system must inherit BaseSystem<TComponent>!");
-            auto system = std::make_shared<TSystem>();
-            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);}, [system](){system->PrepComponentBuffersForFrame();});
-            return system;
-        }
-
         void SpinThreads() noexcept;
 
         void ExecuteIteration(Timing::Timestamp delta);
