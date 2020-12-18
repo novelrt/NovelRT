@@ -4,11 +4,41 @@
 #define NOVELRT_ECS_CATALOGUE_H
 
 #include "ComponentCache.h"
-#include "Entity.h"
 #include "EcsUtils.h"
 
 namespace NovelRT::Ecs
 {
+    class Catalogue;
+    class Entity
+    {
+        private:
+        EntityId _entityId;
+        Catalogue* _catalogue;
+
+        public:
+        Entity(EntityId id, Catalogue* catalogue) : _entityId(id), _catalogue(catalogue) {}
+
+        template<typename T>
+        void AddComponent(T initialValue = T{}); //TODO: Should this be noexcept?
+
+        template<typename T>
+        bool TryAddComponent(T initialValue = T{}) noexcept;
+
+        template<typename T>
+        void RemoveComponent();
+
+        template<typename T>
+        bool TryRemoveComponent() noexcept;
+        
+        template<typename T>
+        bool HasComponent() const noexcept;
+
+        inline EntityId getEntityId() const noexcept
+        {
+            return _entityId;
+        }
+    };
+
     class Catalogue
     {
         private:
@@ -75,6 +105,35 @@ namespace NovelRT::Ecs
             return ComponentCache::GetComponentBuffer<T>(_catalogueId).HasComponent(entity);
         }
     };
-}
 
+    template<typename T>
+    void Entity::AddComponent(T initialValue)
+    {
+        _catalogue->AddComponent<T>(_entityId, initialValue);
+    }
+
+    template<typename T>
+    bool Entity::TryAddComponent(T initialValue) noexcept
+    {
+        return _catalogue->TryAddComponent<T>(_entityId, initialValue);
+    }
+
+    template<typename T>
+    void Entity::RemoveComponent()
+    {
+        _catalogue->RemoveComponent<T>(_entityId);
+    }
+
+    template<typename T>
+    bool Entity::TryRemoveComponent() noexcept
+    {
+        return _catalogue->TryRemoveComponent<T>(_entityId);
+    }
+
+    template<typename T>
+    bool Entity::HasComponent() const noexcept
+    {
+        return _catalogue->HasComponent<T>(_entityId);
+    }
+}
 #endif //!NOVELRT_ECS_CATALOGUE_H

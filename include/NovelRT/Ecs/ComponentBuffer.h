@@ -49,28 +49,6 @@ namespace NovelRT::Ecs
 
         void PrepComponentBuffersForFrame()
         {
-            for (auto &&pair : _componentUpdateInstructions)
-            {
-                for (auto &&instruction : pair.second)
-                {
-                    switch (instruction.updateType)
-                    {
-                    case ComponentUpdateType::Add:
-                        _ecsDataBuffers.at(MutableBufferId).Insert(instruction.id, instruction.componentData);
-                        break;
-                    
-                    case ComponentUpdateType::Remove:
-                        _ecsDataBuffers.at(MutableBufferId).Remove(instruction.id);
-                        break;
-
-                    default:
-                        break;
-                    }
-                }
-                pair.second.clear();
-            }
-
-            _ecsDataBuffers.at(ImmutableBufferId) = SparseSet<EntityId, T>(_ecsDataBuffers.at(MutableBufferId));
         }
 
         public:
@@ -82,20 +60,11 @@ namespace NovelRT::Ecs
         void AddComponent(EntityId entity, T component) noexcept
         {
             ValidateCacheForThread();
-            EntityComponentUpdateObject objectToPass { ComponentUpdateType::Add, entity, component };
-            _componentUpdateInstructions[std::this_thread::get_id()].emplace_back(objectToPass);
         }
 
         void RemoveComponent(EntityId entity)
         {
-            if (!_ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity))
-            {
-                throw std::runtime_error("Component not found for entity " + std::to_string(entity));
-            }
-            
             ValidateCacheForThread();
-            EntityComponentUpdateObject objectToPass { ComponentUpdateType::Remove, entity, T{} };
-            _componentUpdateInstructions[std::this_thread::get_id()].emplace_back(objectToPass);
         }
 
         T GetComponent(EntityId entity) const
