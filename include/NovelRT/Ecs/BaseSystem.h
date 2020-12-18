@@ -108,7 +108,7 @@ namespace NovelRT::Ecs
 
         T GetComponent(EntityId entity) const
         {
-            return _ecsDataBuffers.at(ImmutableBufferId).GetImmutableView()[entity];
+            return _ecsDataBuffers.at(ImmutableBufferId)[entity];
         }
 
         bool HasComponent(EntityId entity) const noexcept

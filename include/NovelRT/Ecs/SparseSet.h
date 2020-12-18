@@ -6,7 +6,6 @@
 #include "EcsUtils.h"
 #include "../Atom.h"
 #include <unordered_map>
-#include "SparseSetView.h"
 #include <memory>
 #include <iterator>
 #include <cstddef>
@@ -121,11 +120,6 @@ namespace NovelRT::Ecs
             }
         }
 
-        SparseSetView<TKey, TValue, THashFunction> GetImmutableView() const noexcept
-        {
-            return SparseSetView<TKey, TValue, THashFunction>(std::weak_ptr<const std::vector<TValue>>(_denseBlock), std::weak_ptr<const std::unordered_map<TKey, size_t, THashFunction>>(_sparseMap));
-        }
-
         bool ContainsKey(TKey key) const noexcept
         {
             return std::find(_sparseBlock->begin(), _sparseBlock->end(), key) != _sparseBlock->end();
@@ -137,6 +131,11 @@ namespace NovelRT::Ecs
         }
 
         TValue& operator[](TKey key)
+        {
+            return _denseBlock->at(_sparseMap->at(key));
+        }
+
+        const TValue& operator[](TKey key) const
         {
             return _denseBlock->at(_sparseMap->at(key));
         }

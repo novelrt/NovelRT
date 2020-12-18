@@ -69,20 +69,3 @@ TEST(SparseSetTest, CanIterateAndModifyDenseData)
         EXPECT_EQ(j, 10);
     }
 }
-
-//TEST(SparseSetTest, ReturnsSparseSetViewWithCorrectData)
-//{
-//    SparseSet<Atom, int32_t, AtomHashFunction> testSet;
-//    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-//    ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
-//    ASSERT_NO_THROW(testSet.Insert(Atom(2), 1));
-//    ASSERT_NO_THROW(testSet.Insert(Atom(3), 1));
-//
-//    auto view = testSet.GetImmutableView();
-//
-//    for (auto&& [i, j] : view)
-//    {
-//        EXPECT_EQ(j, 1);
-//    }
-//}
-
