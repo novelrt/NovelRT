@@ -68,7 +68,7 @@ int main(int /*argc*/, char* /*argv*/[])
   luaL_dofile(L, (scriptsDirPath / "avg.lua").string().c_str());
   lua_close(L);
 
-  auto runner = NovelRT::NovelRunner(0, "NovelRTTest");
+  auto runner = NovelRT::NovelRunner(0, "NovelRTTest", 60, false, NovelRT::Windowing::WindowMode::Windowed);
   auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
   auto audio = runner.getAudioService();
   audio->initializeAudio();

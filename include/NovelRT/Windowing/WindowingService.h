@@ -48,7 +48,7 @@ namespace NovelRT::Windowing {
   public:
     explicit WindowingService() noexcept;
 
-    void initialiseWindow(int displayNumber, const std::string& windowTitle, bool transparencyEnabled);
+    void initialiseWindow(int displayNumber, const std::string& windowTitle, bool transparencyEnabled, WindowMode initialWindowMode);
     void tearDown();
 
     inline GLFWwindow* getWindow() const {

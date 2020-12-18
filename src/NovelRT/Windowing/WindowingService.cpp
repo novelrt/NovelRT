@@ -20,7 +20,7 @@ namespace NovelRT::Windowing {
     _logger.logError("Could not initialize GLFW: {}", error);
   }
 
-  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled) {
+  void WindowingService::initialiseWindow(int /*displayNumber*/, const std::string& windowTitle, bool transparencyEnabled, WindowMode initialWindowMode) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
 
@@ -47,6 +47,17 @@ namespace NovelRT::Windowing {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+
+    switch (initialWindowMode) {
+      case WindowMode::Borderless:
+        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        break;
+      case WindowMode::Fullscreen:
+        _logger.logWarning("WindowMode::Fullscreen is not yet supported. Falling back to WindowMode::Windowed");
+      default:
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+        break;
+    }
 
     auto window = glfwCreateWindow(wData, hData, windowTitle.c_str(), nullptr, nullptr);
 

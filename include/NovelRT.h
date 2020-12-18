@@ -167,6 +167,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Input/KeyCode.h"
 #include "NovelRT/Input/KeyState.h"
 #include "NovelRT/Graphics/CameraFrameState.h"
+#include "NovelRT/Windowing/WindowMode.h"
 
 //value types
 #include "NovelRT/Atom.h"
