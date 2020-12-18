@@ -15,7 +15,7 @@
 #include <atomic>
 #include <vector>
 #include "SparseSet.h"
-#include "BaseSystem.h"
+#include "ComponentBuffer.h"
 
 namespace NovelRT::Ecs
 {
@@ -82,7 +82,7 @@ namespace NovelRT::Ecs
         {
             static_assert(std::is_base_of<BaseSystem<TComponent>, TSystem>::value, "Created system must inherit BaseSystem<TComponent>!");
             auto system = std::make_shared<TSystem>();
-            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);}, [system](){system->PrepComponentBuffers();});
+            RegisterSystemForComponent<TComponent>([system](Timing::Timestamp delta){system->UpdateComponentBuffer(delta);}, [system](){system->PrepComponentBuffersForFrame();});
             return system;
         }
 

@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_ECS_BASESYSTEM_H
-#define NOVELRT_ECS_BASESYSTEM_H
+#ifndef NOVELRT_ECS_COMPONENTBUFFER_H
+#define NOVELRT_ECS_COMPONENTBUFFER_H
 
 #include "EcsUtils.h"
 #include "../Atom.h"
@@ -21,7 +21,7 @@ namespace NovelRT::Ecs
     };
 
     template<typename T>
-    class BaseSystem
+    class ComponentBuffer 
     {
         friend class SystemScheduler;
 
@@ -33,16 +33,11 @@ namespace NovelRT::Ecs
             T componentData;
         };
 
-        std::vector<SparseSet<EntityId, T>> _ecsDataBuffers;
+        std::vector<SparseSet<EntityId, T, AtomHashFunction>> _ecsDataBuffers;
         std::map<std::thread::id, std::vector<EntityComponentUpdateObject>> _componentUpdateInstructions;
 
         static inline const size_t MutableBufferId = 0;
         static inline const size_t ImmutableBufferId = 1;
-
-        void UpdateComponentBuffer(Timing::Timestamp deltaTime)
-        {
-            UpdateComponents(deltaTime, _ecsDataBuffers.at(MutableBufferId));
-        }
 
         void ValidateCacheForThread() noexcept
         {
@@ -52,7 +47,7 @@ namespace NovelRT::Ecs
             }
         }
 
-        void PrepComponentBuffers()
+        void PrepComponentBuffersForFrame()
         {
             for (auto &&pair : _componentUpdateInstructions)
             {
@@ -78,16 +73,13 @@ namespace NovelRT::Ecs
             _ecsDataBuffers.at(ImmutableBufferId) = SparseSet<EntityId, T>(_ecsDataBuffers.at(MutableBufferId));
         }
 
-        protected:
-        virtual void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, T>& componentData) = 0;
-
         public:
-        BaseSystem() : _ecsDataBuffers(std::vector<SparseSet<EntityId, T>>{SparseSet<EntityId, T>{}, SparseSet<EntityId, T>{}})
+        ComponentBuffer() : _ecsDataBuffers(std::vector<SparseSet<EntityId, T, AtomHashFunction>>{SparseSet<EntityId, T, AtomHashFunction>{}, SparseSet<EntityId, T, AtomHashFunction>{}})
         {
 
         }
 
-        void AddComponent(T component, EntityId entity) noexcept
+        void AddComponent(EntityId entity, T component) noexcept
         {
             ValidateCacheForThread();
             EntityComponentUpdateObject objectToPass { ComponentUpdateType::Add, entity, component };
@@ -118,4 +110,4 @@ namespace NovelRT::Ecs
     };
 }
 
-#endif //!NOVELRT_ECS_BASESYSTEM_H
+#endif //!NOVELRT_ECS_COMPONENTBUFFER_H

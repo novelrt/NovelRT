@@ -15,7 +15,7 @@ namespace NovelRT {
     explicit Atom() noexcept : Atom(0) {
     }
 
-    explicit Atom(uintptr_t value) noexcept :
+    Atom(uintptr_t value) noexcept :
       _value(value) {
     }
 

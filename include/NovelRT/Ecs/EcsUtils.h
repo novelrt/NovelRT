@@ -5,12 +5,11 @@
 
 #include <vector>
 #include <cstdint>
+#include "../Atom.h"
 
 namespace NovelRT::Ecs
 {
-    using EntityId = uint64_t;
-    using ComponentTypeId = uint64_t;
-    using ComponentComposition = std::vector<ComponentTypeId>;
+    using EntityId = Atom;
 }
 
 #endif //!NOVELRT_ECS_ECSUTILS_H

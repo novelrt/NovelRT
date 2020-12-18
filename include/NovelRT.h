@@ -201,6 +201,7 @@ namespace NovelRT::Windowing {
 //ECS types
 #include "NovelRT/Ecs/SparseSet.h"
 #include "NovelRT/Ecs/SystemScheduler.h"
+#include "NovelRT/Ecs/Catalogue.h"
 
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
