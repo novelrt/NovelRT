@@ -43,6 +43,10 @@ namespace NovelRT {
       return _value >= other._value;
     }
 
+    operator uintptr_t() noexcept {
+      return _value;
+    }
+
     // TODO: These should be internal to NovelRT
 
     static Atom getNextEventHandlerId() noexcept {
