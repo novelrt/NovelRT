@@ -1,0 +1,52 @@
+# Finds the VORBIS library
+
+# This file can be configured with the following CMake variables:
+# - VORBIS_ROOT_DIR
+# - VORBIS_INCLUDE_DIR
+# - VORBIS_LIBRARY
+
+# Or, alternatively, the following environment variables:
+# - VORBIS_INSTALL_DIR
+# - LIBRARY_PATH
+
+include(FindPackageHandleStandardArgs)
+find_package(PkgConfig QUIET)
+
+pkg_check_modules(PC_VORBIS QUIET VORBIS)
+
+set(VORBIS_DEFINITIONS ${PC_VORBIS_CFLAGS_OTHER})
+set(VORBIS_SEARCH_DIR ${VORBIS_ROOT_DIR} $ENV{VORBIS_INSTALL_DIR})
+
+find_path(VORBIS_INCLUDE_DIR
+  vorbis/vorbisfile.h
+  HINTS ${VORBIS_SEARCH_DIR} ${PC_VORBIS_INCLUDEDIR} ${PC_VORBIS_INCLUDE_DIRS}
+  PATH_SUFFIXES include
+)
+
+find_library(VORBIS_LIBRARY
+  NAMES VORBIS
+  HINTS ${VORBIS_SEARCH_DIR} ${PC_VORBIS_LIBDIR} ${PC_VORBIS_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
+)
+
+set(VORBIS_LIBRARIES ${VORBIS_LIBRARY})
+set(VORBIS_INCLUDE_DIRS ${VORBIS_INCLUDE_DIR})
+set(VORBIS_VERSION ${PC_VORBIS_VERSION})
+
+find_package_handle_standard_args(Vorbis
+  REQUIRED_VARS VORBIS_LIBRARIES VORBIS_INCLUDE_DIR
+  VERSION_VAR VORBIS_VERSION
+  HANDLE_COMPONENTS
+)
+
+if(VORBIS_FOUND)
+  add_library(Vorbis::Vorbis UNKNOWN IMPORTED)
+  set_target_properties(Vorbis::Vorbis PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${VORBIS_INCLUDE_DIRS}"
+    IMPORTED_LOCATION "${VORBIS_LIBRARY}"
+    INTERFACE_COMPILE_OPTIONS "${VORBIS_DEFINITIONS}"
+  )
+endif()
+
+mark_as_advanced(VORBIS_INCLUDE_DIRS VORBIS_LIBRARIES)

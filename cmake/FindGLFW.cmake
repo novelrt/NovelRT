@@ -10,29 +10,29 @@
 # - LIBRARY_PATH
 
 include(FindPackageHandleStandardArgs)
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 
-pkg_check_modules(pc_glfw QUIET glfw3)
+pkg_check_modules(PC_GLFW QUIET glfw3)
 
-set(GTest_DEFINITIONS ${pc_glfw_CFLAGS_OTHER})
-set(glfw_search_dir ${glfw_ROOT_DIR} $ENV{glfw_INSTALL_DIR})
+set(GLFW_DEFINITIONS ${PC_GLFW_CFLAGS_OTHER})
+set(GLFW_SEARCH_DIR ${GLFW_ROOT_DIR} $ENV{GLFW_INSTALL_DIR})
 
 find_path(GLFW_INCLUDE_DIR
   GLFW/glfw3.h
-  HINTS ${glfw_search_dir} ${pc_glfw_INCLUDEDIR} ${pc_glfw_INCLUDE_DIRS}
+  HINTS ${GLFW_SEARCH_DIR} ${PC_GLFW_INCLUDEDIR} ${PC_GLFW_INCLUDE_DIRS}
   PATH_SUFFIXES include
 )
 
 find_library(GLFW_LIBRARY
   NAMES glfw glfw3 glfw3dll
-  HINTS ${glfw_search_dir} ${pc_glfw_LIBDIR} ${pc_glfw_LIBRARY_DIRS}
+  HINTS ${GLFW_SEARCH_DIR} ${PC_GLFW_LIBDIR} ${PC_GLFW_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
 
 set(GLFW_LIBRARIES ${GLFW_LIBRARY})
 set(GLFW_INCLUDE_DIRS ${GLFW_INCLUDE_DIR})
-set(GLFW_VERSION ${pc_glfw_VERSION})
+set(GLFW_VERSION ${PC_GLFW_VERSION})
 
 find_package_handle_standard_args(GLFW
   REQUIRED_VARS GLFW_LIBRARIES GLFW_INCLUDE_DIR

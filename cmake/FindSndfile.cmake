@@ -1,58 +1,58 @@
 # Finds the libsndfile library
 
 # This file can be configured with the following CMake variables:
-# - Sndfile_ROOT_DIR
-# - Sndfile_INCLUDE_DIR
-# - Sndfile_LIBRARY
+# - SNDFILE_ROOT_DIR
+# - SNDFILE_INCLUDE_DIR
+# - SNDFILE_LIBRARY
 
 # Or, alternatively, the following environment variables:
-# - sndfile_INSTALL_DIR
+# - SNDFILE_INSTALL_DIR
 # - LIBRARY_PATH
 
 include(FindPackageHandleStandardArgs)
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 
-pkg_check_modules(pc_sndfile QUIET sndfile)
+pkg_check_modules(PC_SNDFILE QUIET sndfile)
 
-set(GTest_DEFINITIONS ${pc_sndfile_CFLAGS_OTHER})
-set(sndfile_search_dir ${sndfile_ROOT_DIR} $ENV{sndfile_INSTALL_DIR})
+set(SNDFILE_DEFINITIONS ${PC_SNDFILE_CFLAGS_OTHER})
+set(SNDFILE_SEARCH_DIR ${SNDFILE_ROOT_DIR} $ENV{SNDFILE_INSTALL_DIR})
 
-find_path(Sndfile_INCLUDE_DIR sndfile.h
-  HINTS ${sndfile_search_dir} ${pc_sndfile_INCLUDEDIR} ${pc_sndfile_INCLUDE_DIRS}
+find_path(SNDFILE_INCLUDE_DIR
+  sndfile.h
+  HINTS ${SNDFILE_SEARCH_DIR} ${PC_SNDFILE_INCLUDEDIR} ${PC_SNDFILE_INCLUDE_DIRS}
   PATH_SUFFIXES include
 )
 
-if(Sndfile_INCLUDE_DIR)
-  file(READ "${Sndfile_INCLUDE_DIR}/sndfile.h" _sndfile_version_file)
+if(SNDFILE_INCLUDE_DIR)
+  file(READ "${SNDFILE_INCLUDE_DIR}/sndfile.h" _sndfile_version_file)
   string(REGEX REPLACE ".*#define.*SNDFILE_([0-9]+).*" "\\1" _sndfile_suffix_version "${_sndfile_version_file}")
   set(_sndfile_extra_names "sndfile-${_sndfile_suffix_version}" "libsndfile-${_sndfile_suffix_version}")
 endif()
 
-find_library(
-  Sndfile_LIBRARY
+find_library(SNDFILE_LIBRARY
   NAMES sndfile libsndfile ${_sndfile_extra_names}
-  HINTS ${sndfile_search_dir} ${pc_sndfile_LIBDIR} ${pc_sndfile_LIBRARY_DIRS}
+  HINTS ${SNDFILE_SEARCH_DIR} ${PC_SNDFILE_LIBDIR} ${PC_SNDFILE_LIBRARY_DIRS}
   PATH_SUFFIXES lib bin
   ENV LIBRARY_PATH
 )
 
-set(Sndfile_LIBRARIES ${Sndfile_LIBRARY})
-set(Sndfile_INCLUDE_DIRS ${Sndfile_INCLUDE_DIR})
-set(Sndfile_VERSION ${pc_sndfile_VERSION})
+set(SNDFILE_LIBRARIES ${SNDFILE_LIBRARY})
+set(SNDFILE_INCLUDE_DIRS ${SNDFILE_INCLUDE_DIR})
+set(SNDFILE_VERSION ${PC_SNDFILE_VERSION})
 
 find_package_handle_standard_args(Sndfile
-  REQUIRED_VARS Sndfile_LIBRARIES Sndfile_INCLUDE_DIR
-  VERSION_VAR Sndfile_VERSION
+  REQUIRED_VARS SNDFILE_LIBRARIES SNDFILE_INCLUDE_DIR
+  VERSION_VAR SNDFILE_VERSION
   HANDLE_COMPONENTS
 )
 
-if(Sndfile_FOUND)
-  add_library(Sndfile::sndfile UNKNOWN IMPORTED)
-  set_target_properties(Sndfile::sndfile PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${Sndfile_INCLUDE_DIRS}"
-    IMPORTED_LOCATION "${Sndfile_LIBRARY}"
-    INTERFACE_COMPILE_OPTIONS "${Sndfile_DEFINITIONS}"
+if(SNDFILE_FOUND)
+  add_library(Sndfile::Sndfile UNKNOWN IMPORTED)
+  set_target_properties(Sndfile::Sndfile PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${SNDFILE_INCLUDE_DIRS}"
+    IMPORTED_LOCATION "${SNDFILE_LIBRARY}"
+    INTERFACE_COMPILE_OPTIONS "${SNDFILE_DEFINITIONS}"
   )
 endif()
 
-mark_as_advanced(Sndfile_INCLUDE_DIRS Sndfile_LIBRARIES)
+mark_as_advanced(SNDFILE_INCLUDE_DIRS SNDFILE_LIBRARIES)

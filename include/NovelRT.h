@@ -54,8 +54,9 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 //OpenAL
-#include <AL/al.h>
-#include <AL/alc.h>
+#define AL_LIBTYPE_STATIC
+#include "al.h"
+#include "alc.h"
 
 //LibSndfile
 #include <sndfile.h>

@@ -1,20 +1,26 @@
-find_package(Freetype 2.8.1 REQUIRED)
-find_package(glad 0.1.30 REQUIRED
+find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
+find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
+find_package(FLAC ${NOVELRT_FLAC_VERSION} REQUIRED)
+find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
+find_package(GLAD ${NOVELRT_GLAD_VERSION} REQUIRED
   COMPONENTS
     REPRODUCIBLE
-    SPEC gl
     PROFILE core
+    SPEC gl
     API gl=4.0,gles2=3.0
 )
-find_package(GLFW 3.2.1 REQUIRED)
-find_package(OpenAL 1.19.1 REQUIRED)
-find_package(PNG 1.6.34 REQUIRED)
-find_package(Sndfile 1.0.28 REQUIRED)
-find_package(spdlog 1.4.2 REQUIRED)
+find_package(GLFW ${NOVELRT_GLFW_VERSION} REQUIRED)
+find_package(GLM ${NOVELRT_GLM_VERSION} REQUIRED)
+find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
+find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
+find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
+find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
+find_package(Sndfile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
+find_package(Spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
+find_package(Vorbis ${NOVELRT_Vorbis_VERSION} REQUIRED)
 
 add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
-set_target_properties(OpenAL::OpenAL
-  PROPERTIES
+set_target_properties(OpenAL::OpenAL PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${OPENAL_INCLUDE_DIR}"
     IMPORTED_LOCATION "${OPENAL_LIBRARY}"
 )
@@ -110,12 +116,25 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    CoreCLR::nethost
+    BZip2::BZip2
+    Dotnet::Host
+    FLAC::FLAC
     Freetype::Freetype
-    Glad::GLAD
+    Glad::Glad
     GLFW::GLFW3
+    GLM::GLM
+    Ogg::Ogg
     OpenAL::OpenAL
+    Opus::Opus
     PNG::PNG
-    Sndfile::sndfile
-    spdlog::spdlog
+    Sndfile::Sndfile
+    Spdlog::Spdlog
+    Vorbis::Vorbis
 )
+
+if(WIN32)
+  target_link_libraries(Engine
+    PUBLIC
+      Winmm
+  )
+endif()

@@ -1,0 +1,52 @@
+# Finds the OPUS library
+
+# This file can be configured with the following CMake variables:
+# - OPUS_ROOT_DIR
+# - OPUS_INCLUDE_DIR
+# - OPUS_LIBRARY
+
+# Or, alternatively, the following environment variables:
+# - OPUS_INSTALL_DIR
+# - LIBRARY_PATH
+
+include(FindPackageHandleStandardArgs)
+find_package(PkgConfig QUIET)
+
+pkg_check_modules(PC_OPUS QUIET OPUS)
+
+set(OPUS_DEFINITIONS ${PC_OPUS_CFLAGS_OTHER})
+set(OPUS_SEARCH_DIR ${OPUS_ROOT_DIR} $ENV{OPUS_INSTALL_DIR})
+
+find_path(OPUS_INCLUDE_DIR
+  opus/opus.h
+  HINTS ${OPUS_SEARCH_DIR} ${PC_OPUS_INCLUDEDIR} ${PC_OPUS_INCLUDE_DIRS}
+  PATH_SUFFIXES include
+)
+
+find_library(OPUS_LIBRARY
+  NAMES OPUS
+  HINTS ${OPUS_SEARCH_DIR} ${PC_OPUS_LIBDIR} ${PC_OPUS_LIBRARY_DIRS}
+  PATH_SUFFIXES lib bin
+  ENV LIBRARY_PATH
+)
+
+set(OPUS_LIBRARIES ${OPUS_LIBRARY})
+set(OPUS_INCLUDE_DIRS ${OPUS_INCLUDE_DIR})
+set(OPUS_VERSION ${PC_OPUS_VERSION})
+
+find_package_handle_standard_args(Opus
+  REQUIRED_VARS OPUS_LIBRARIES OPUS_INCLUDE_DIR
+  VERSION_VAR OPUS_VERSION
+  HANDLE_COMPONENTS
+)
+
+if(OPUS_FOUND)
+  add_library(Opus::Opus UNKNOWN IMPORTED)
+  set_target_properties(Opus::Opus PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${OPUS_INCLUDE_DIRS}"
+    IMPORTED_LOCATION "${OPUS_LIBRARY}"
+    INTERFACE_COMPILE_OPTIONS "${OPUS_DEFINITIONS}"
+  )
+endif()
+
+mark_as_advanced(OPUS_INCLUDE_DIRS OPUS_LIBRARIES)
