@@ -12,7 +12,7 @@ namespace NovelRT::Exceptions {
     NotSupportedException() :
       std::runtime_error("The current operation is not supported.")
     {}
-    NotSupportedException(const std::string &message) :
+    NotSupportedException(const std::string& message) :
       std::runtime_error(message)
     {}
   };

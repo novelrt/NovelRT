@@ -9,10 +9,10 @@
 namespace NovelRT::Exceptions {
   class IOException final : public std::runtime_error {
   public:
-    IOException(const std::string &fileName) :
-      std::runtime_error("Cannot complete IO operation on file \"" + fileName + "\"")
+    IOException(const std::string& fileName) :
+      std::runtime_error("Cannot complete IO operation on file \"" + fileName + "\".")
     {}
-    IOException(const std::string &fileName, const std::string &message) :
+    IOException(const std::string& fileName, const std::string& message) :
       std::runtime_error(message + " File: \"" + fileName + "\".")
     {}
   };

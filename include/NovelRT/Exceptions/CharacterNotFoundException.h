@@ -9,7 +9,7 @@
 namespace NovelRT::Exceptions {
   class CharacterNotFoundException final : public std::runtime_error {
   public:
-    CharacterNotFoundException(const char c) :
+    CharacterNotFoundException(char c) :
       std::runtime_error(std::string("Unable to return specified character: ") + c)
     {}
   };

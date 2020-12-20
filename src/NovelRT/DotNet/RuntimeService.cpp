@@ -188,7 +188,7 @@ namespace NovelRT::DotNet {
       if (buffer.empty()) return std::string();
       int size_needed = WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), nullptr, 0, nullptr, nullptr);
       std::string result(size_needed, 0);
-      WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), &result[0], size_needed, nullptr, nullptr);
+      WideCharToMultiByte(CP_UTF8, 0, buffer.data(), (int)buffer.size(), &result[0], size_needed, nullptr, nullptr);
       return result;
   }
   #else

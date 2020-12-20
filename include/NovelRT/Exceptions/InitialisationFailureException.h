@@ -10,16 +10,16 @@ namespace NovelRT::Exceptions {
   class InitialisationFailureException final : public std::runtime_error {
   public:
     InitialisationFailureException() :
-      std::runtime_error("Servic could not be initialised.")
+      std::runtime_error("Service could not be initialised.")
     {}
-    InitialisationFailureException(const std::string &message) :
-      std::runtime_error("Servic could not be initialised. " + message)
+    InitialisationFailureException(const std::string& message) :
+      std::runtime_error("Service could not be initialised. " + message)
     {}
-    InitialisationFailureException(const std::string &message, const std::string &arguments) :
-      std::runtime_error("Servic could not be initialised. " + message + " error: " + arguments)
+    InitialisationFailureException(const std::string& message, const std::string& arguments) :
+      std::runtime_error("Service could not be initialised. " + message + " error: " + arguments)
     {}
-    InitialisationFailureException(const std::string &message, const int argument) :
-      InitialisationFailureException("Servic could not be initialised. " + message, std::to_string(argument))
+    InitialisationFailureException(const std::string& message, const int32_t argument) :
+      InitialisationFailureException("Service could not be initialised. " + message, std::to_string(argument))
     {}
   };
 }

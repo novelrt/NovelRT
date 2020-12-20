@@ -9,7 +9,7 @@
 namespace NovelRT::Exceptions {
   class RuntimeNotFoundException final : public std::runtime_error {
     public:
-    RuntimeNotFoundException(const std::string &message) :
+    RuntimeNotFoundException(const std::string& message) :
       std::runtime_error(message)
     {}
   };
