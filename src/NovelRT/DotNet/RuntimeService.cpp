@@ -183,7 +183,7 @@ namespace NovelRT::DotNet {
   }
 
   #if defined(_WIN32)
-  std::string get_hostfxr_string(std::vector<char_t> buffer)
+  std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer)
   {
       if (buffer.empty()) return std::string();
       int size_needed = WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), nullptr, 0, nullptr, nullptr);

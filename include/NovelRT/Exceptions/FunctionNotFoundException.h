@@ -19,7 +19,7 @@ namespace NovelRT::Exceptions {
       std::runtime_error(std::string("Failed to locate the specified managed function. Function \"")+ functionName +"\".")
     {}
     FunctionNotFoundException(const std::string &message, const std::string &functionName, int errorCode) :
-      std::runtime_error(std::string("Failed to locate the specified managed function. Function \""+ functionName +"\". Error code: ") + std::to_string(errorCode) + ".")
+      std::runtime_error(std::string("Failed to locate the specified managed function. Function \""+ functionName +"\". Error code: ") + std::to_string(errorCode) + ". "+ message)
     {}
   };
 }
