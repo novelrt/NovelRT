@@ -85,7 +85,7 @@ namespace NovelRT::DotNet {
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw Exceptions::OutOfMemoryException("Failed to locate hostfxr");
+        throw Exceptions::OutOfMemoryException("The host API's buffer is too small");
       }
 
       auto buffer = std::vector<char_t>(buffer_size);
@@ -94,7 +94,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw Exceptions::FileNotFoundException("Failed to locate hostfxr");
+        throw Exceptions::FileNotFoundException(get_hostfxr_string(buffer),"Failed to locate hostfxr");
       }
 
       return loadNativeLibrary(buffer.data());
@@ -132,7 +132,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate the specified managed function: {}", result);
-        throw Exceptions::FunctionNotFoundException("Failed to locate the specified managed function", result);
+        throw Exceptions::FunctionNotFoundException(result);
       }
 
       auto getExports = reinterpret_cast<void(*)(Exports*)>(delegate);
