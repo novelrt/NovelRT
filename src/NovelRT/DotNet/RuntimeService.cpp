@@ -72,8 +72,8 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: {}", result);
-        throw Exceptions::InitialisationFailureException("Failed to initialize the runtime",result);
+        _logger.logError("Failed to initialise the runtime: {}", result);
+        throw Exceptions::InitialisationFailureException("Failed to initialise the runtime",result);
       }
 
       return hostContextHandle;
@@ -115,7 +115,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to initialize the runtime: {}", result);
-        throw Exceptions::InitialisationFailureException("Failed to initialize the runtime");
+        throw Exceptions::InitialisationFailureException("Failed to initialise the runtime");
       }
 
       return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
