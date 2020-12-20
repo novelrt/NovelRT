@@ -9,14 +9,17 @@
 namespace NovelRT::Exceptions {
   class InitialisationFailureException final : public std::runtime_error {
   public:
+    InitialisationFailureException() :
+      std::runtime_error("Servic could not be initialised.")
+    {}
     InitialisationFailureException(const std::string &message) :
-      std::runtime_error(message)
+      std::runtime_error("Servic could not be initialised. " + message)
     {}
     InitialisationFailureException(const std::string &message, const std::string &arguments) :
-      std::runtime_error(message + " error: " + arguments)
+      std::runtime_error("Servic could not be initialised. " + message + " error: " + arguments)
     {}
     InitialisationFailureException(const std::string &message, const int argument) :
-      InitialisationFailureException(message, std::to_string(argument))
+      InitialisationFailureException("Servic could not be initialised. " + message, std::to_string(argument))
     {}
   };
 }

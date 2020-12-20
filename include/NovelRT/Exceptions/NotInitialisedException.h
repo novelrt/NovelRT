@@ -9,11 +9,11 @@
 namespace NovelRT::Exceptions {
   class NotInitialisedException final : public std::runtime_error {
   public:
-    NotInitialisedException(const std::string &functionName, const std::string &message) :
-      std::runtime_error("Unable to continue! Dangerous call being made to " + functionName + ". " + message)
+    NotInitialisedException(const std::string &functionName) :
+      std::runtime_error("Service has not been initialized before attempting operation: " + functionName +".")
     {}
-    NotInitialisedException(const std::string &message) :
-      std::runtime_error("Unable to continue! " + message)
+    NotInitialisedException(const std::string &functionName, const std::string &message) :
+      std::runtime_error("Service has not been initialized before attempting operation: " + functionName + ". " + message)
     {}
   };
 }
