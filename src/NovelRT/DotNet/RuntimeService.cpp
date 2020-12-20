@@ -181,4 +181,22 @@ namespace NovelRT::DotNet {
   {
     return std::make_shared<Ink::InkService>(shared_from_this(), _exports.getActual().GetInkServiceExports);
   }
+
+  #if defined(_WIN32)
+  std::string get_hostfxr_string(std::vector<char_t> buffer)
+  {
+      if (buffer.empty()) return std::string();
+      int size_needed = WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), nullptr, 0, nullptr, nullptr);
+      std::string result(size_needed, 0);
+      WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), &result[0], size_needed, nullptr, nullptr);
+      return result;
+  }
+  #else
+  std::string get_hostfxr_string(std::vector<char_t> buffer)
+  {
+      if (buffer.empty()) return std::string();
+      std::string result(buffer.begin(), buffer.end());
+      return result;
+  }
+  #endif
 }
