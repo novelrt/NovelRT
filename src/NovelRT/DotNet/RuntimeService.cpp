@@ -192,7 +192,7 @@ namespace NovelRT::DotNet {
       return result;
   }
   #else
-  std::string get_hostfxr_string(std::vector<char_t> buffer)
+  std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer)
   {
       if (buffer.empty()) return std::string();
       std::string result(buffer.begin(), buffer.end());
