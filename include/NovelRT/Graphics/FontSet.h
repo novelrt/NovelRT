@@ -38,7 +38,7 @@ namespace NovelRT::Graphics {
       }
 
       if (match == _fontCharacters.end()) {
-        throw Exceptions::CharacterNotFoundException("Unable to continue! Unable to return specified character.", c);
+        throw Exceptions::CharacterNotFoundException(c);
       }
 
       return match->second;
