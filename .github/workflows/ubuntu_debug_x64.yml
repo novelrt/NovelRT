@@ -1,0 +1,18 @@
+name: Ubuntu x64 - Debug
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  CI_Ubuntu:
+    name: ubuntu_debug_x64
+    runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run CI Build Script
+        run: scripts/cibuild.sh --configuration Debug
