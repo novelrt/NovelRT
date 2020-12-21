@@ -14,60 +14,40 @@
 
 namespace NovelRT::Ecs
 {
-    enum class ComponentUpdateType : int32_t
-    {
-        Add = 0,
-        Remove = 1
-    };
-
     template<typename T>
     class ComponentBuffer 
     {
         friend class SystemScheduler;
 
         private:
-        struct EntityComponentUpdateObject
-        {
-            ComponentUpdateType updateType;
-            EntityId id;
-            T componentData;
-        };
-
-        std::vector<SparseSet<EntityId, T, AtomHashFunction>> _ecsDataBuffers;
-        std::map<std::thread::id, std::vector<EntityComponentUpdateObject>> _componentUpdateInstructions;
-
-        static inline const size_t MutableBufferId = 0;
-        static inline const size_t ImmutableBufferId = 1;
-
-        void ValidateCacheForThread() noexcept
-        {
-            if (_componentUpdateInstructions.find(std::this_thread::get_id()) == _componentUpdateInstructions.end())
-            {
-                _componentUpdateInstructions.emplace(std::this_thread::get_id(), std::vector<EntityComponentUpdateObject>{});
-            }
-        }
+        SparseSet<EntityId, T, AtomHashFunction> _rootSet;
+        SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
 
         void PrepComponentBuffersForFrame()
         {
+            for (auto [index, sparseSet] : _updateSets)
+            {
+                sparseSet.Clear();
+            }
         }
 
         public:
-        ComponentBuffer() : _ecsDataBuffers(std::vector<SparseSet<EntityId, T, AtomHashFunction>>{SparseSet<EntityId, T, AtomHashFunction>{}, SparseSet<EntityId, T, AtomHashFunction>{}})
+        ComponentBuffer(size_t poolSize) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<std::thread::id, SparseSet<EntityId, T, AtomHashFunction>>{})
         {
-
+            for (size_t i = 0; i < poolSize; i++)
+            {
+                _updateSets.Insert(i, SparseSet<EntityId, T, AtomHashFunction>{});
+            }
         }
 
-        void AddComponent(EntityId entity, T component) noexcept
+        void AddComponent(size_t poolId, EntityId entity, T component)
         {
-            (void)entity;
-            (void)component;
-            ValidateCacheForThread();
+            _updateSets[poolId].Insert(entity, component);
         }
 
-        void RemoveComponent(EntityId entity)
+        void RemoveComponent(size_t poolId, EntityId entity)
         {
-            (void)entity;
-            ValidateCacheForThread();
+            _updateSets[poolId].Remove(entity);
         }
 
         T GetComponent(EntityId entity) const

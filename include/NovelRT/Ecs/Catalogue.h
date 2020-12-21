@@ -5,7 +5,7 @@
 
 #include "ComponentCache.h"
 #include "EcsUtils.h"
-
+#include "SystemScheduler.h"
 namespace NovelRT::Ecs
 {
     class Catalogue;
@@ -42,11 +42,11 @@ namespace NovelRT::Ecs
     class Catalogue
     {
         private:
-        inline static size_t TotalCatalogueCount = 0;
-        size_t _catalogueId;
+        ComponentCache _cache;
+        std::unordered_map<std::thread::id, size_t> _threadPoolMap;
 
         public:
-        Catalogue() noexcept : _catalogueId(TotalCatalogueCount++)
+        Catalogue(uint32_t workerThreadCount) noexcept : _cache(ComponentCache(workerThreadCount))
         {
 
         }
@@ -64,13 +64,13 @@ namespace NovelRT::Ecs
         template<typename T>
         void AddComponent(EntityId entity, T componentData)
         {
-            ComponentCache::GetComponentBuffer<T>(_catalogueId).AddComponent(entity, componentData);
+            _cache.GetComponentBuffer<T>().AddComponent(entity, componentData);
         }
 
         template<typename T>
         bool TryAddComponent(EntityId entity, T componentData) noexcept
         {
-            ComponentBuffer<T>& buffer = ComponentCache::GetComponentBuffer<T>(_catalogueId);
+            ComponentBuffer<T>& buffer = _cache.GetComponentBuffer<T>();
             if (buffer.HasComponent(entity))
             {
                 return false;
@@ -83,7 +83,7 @@ namespace NovelRT::Ecs
         template<typename T>
         void RemoveComponent(EntityId entity)
         {
-            ComponentCache::GetComponentBuffer<T>(_catalogueId).RemoveComponent(entity);
+            _cache.GetComponentBuffer<T>().RemoveComponent(entity);
         }
 
         template<typename T>
@@ -136,4 +136,5 @@ namespace NovelRT::Ecs
         return _catalogue->HasComponent<T>(_entityId);
     }
 }
+
 #endif //!NOVELRT_ECS_CATALOGUE_H

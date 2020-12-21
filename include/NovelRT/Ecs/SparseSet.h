@@ -17,9 +17,9 @@ namespace NovelRT::Ecs
     class SparseSet
     {
     private:
-        std::shared_ptr<std::vector<TKey>> _sparseBlock;
-        std::shared_ptr<std::vector<TValue>> _denseBlock;
-        std::shared_ptr<std::unordered_map<TKey, size_t, THashFunction>> _sparseMap;
+        std::vector<TKey> _sparseBlock;
+        std::vector<TValue> _denseBlock;
+        std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
     public:
         class Iterator
@@ -72,22 +72,17 @@ namespace NovelRT::Ecs
             }
         };
 
-        SparseSet() noexcept : _sparseBlock(std::make_shared<std::vector<TKey>>()), _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
+        SparseSet() noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, TValue, THashFunction>())
         {
         }
 
-        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _sparseBlock(std::make_shared<std::vector<TKey>>()), _denseBlock(std::make_shared<std::vector<TValue>>()), _sparseMap(std::make_shared<std::unordered_map<TKey, size_t, THashFunction>>())
+        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, TValue, THashFunction>())
         {
-            _denseBlock->resize(rhs._denseBlock->size());
-            std::copy(rhs._denseBlock->begin(), rhs._denseBlock->end(), _denseBlock->begin());
-            _sparseBlock->resize(rhs._denseBlock->size());
-            std::copy(rhs._sparseBlock->begin(), rhs._sparseBlock->end(), _sparseBlock->begin());
-            *_sparseMap = *(rhs._sparseMap);
-        }
-
-        bool HasValue(TKey key) const noexcept
-        {
-            return _sparseMap->find(key) != _sparseMap->end();
+            _denseBlock.resize(rhs._denseBlock.size());
+            std::copy(rhs._denseBlock.begin(), rhs._denseBlock.end(), _denseBlock.begin());
+            _sparseBlock.resize(rhs._denseBlock.size());
+            std::copy(rhs._sparseBlock.begin(), rhs._sparseBlock.end(), _sparseBlock.begin());
+            _sparseMap = rhs._sparseMap;
         }
 
         void Insert(TKey key, TValue value)
@@ -97,19 +92,19 @@ namespace NovelRT::Ecs
                 throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
             }
 
-            _denseBlock->push_back(value);
-            _sparseBlock->push_back(key);
-            _sparseMap->emplace(key, _denseBlock->size() - 1);
+            _denseBlock.push_back(value);
+            _sparseBlock.push_back(key);
+            _sparseMap.emplace(key, _denseBlock.size() - 1);
         }
 
         void Remove(TKey key)
         {
-            size_t arrayIndex = _sparseMap->at(key);
-            _denseBlock->erase(_denseBlock->begin() + arrayIndex);
-            _sparseBlock->erase(_sparseBlock->begin() + arrayIndex);
-            _sparseMap->erase(key);
+            size_t arrayIndex = _sparseMap.at(key);
+            _denseBlock.erase(_denseBlock.begin() + arrayIndex);
+            _sparseBlock.erase(_sparseBlock.begin() + arrayIndex);
+            _sparseMap.erase(key);
 
-            for (auto &i : *_sparseMap)
+            for (auto &i : _sparseMap)
             {
                 if (i.second < arrayIndex)
                 {
@@ -120,36 +115,48 @@ namespace NovelRT::Ecs
             }
         }
 
-        bool ContainsKey(TKey key) const noexcept
+        void Clear() noexcept
         {
-            return std::find(_sparseBlock->begin(), _sparseBlock->end(), key) != _sparseBlock->end();
+            _sparseBlock.clear();
+            _denseBlock.clear();
+            _sparseMap.clear();
         }
 
-        TKey GetKeyBasedOnDenseIndex(size_t denseIndex) const
+        bool ContainsKey(TKey key) const noexcept
+        {
+            return std::find(_sparseBlock.begin(), _sparseBlock.end(), key) != _sparseBlock.end();
+        }
+
+        TKey CopyKeyBasedOnDenseIndex(size_t denseIndex) const
         {
             return _sparseBlock.at(denseIndex);
         }
 
+        TValue CopyValueBasedOnDenseIndex(size_t denseIndex) const
+        {
+            return _denseBlock.at(denseIndex);
+        }
+
         TValue& operator[](TKey key)
         {
-            return _denseBlock->at(_sparseMap->at(key));
+            return _denseBlock.at(_sparseMap.at(key));
         }
 
         const TValue& operator[](TKey key) const
         {
-            return _denseBlock->at(_sparseMap->at(key));
+            return _denseBlock.at(_sparseMap.at(key));
         }
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
         auto begin() noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock->begin(), _denseBlock->begin()));
+            return Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
         }
 
         auto end() noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock->end(), _denseBlock->end()));
+            return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
         }
         // clang-format on
 

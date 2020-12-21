@@ -10,6 +10,14 @@
 namespace NovelRT::Ecs
 {
     using EntityId = Atom;
+    using ComponentTypeId = Atom;
+   
+    template <typename TComponent>
+    ComponentTypeId GetComponentTypeId()
+    {
+        static const Atom id = Atom::getNextComponentTypeId();
+        return id;
+    }
 }
 
 #endif //!NOVELRT_ECS_ECSUTILS_H

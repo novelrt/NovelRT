@@ -40,7 +40,7 @@ namespace NovelRT::Ecs
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
         std::unordered_map<Atom, SystemFnPtrPair, AtomHashFunction> _systems;
-        uint32_t _maximumThreadCount;
+        uint32_t _workerThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;
         std::vector<std::thread> _threadCache;
@@ -62,21 +62,19 @@ namespace NovelRT::Ecs
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
         template <typename TComponent>
-        Atom GetSystemIdForComponent()
-        {
-            static const Atom id = Atom::getNextComponentTypeId();
-            return id;
-        }
-
-        template <typename TComponent>
         Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemUpdatePtr, std::function<void()> systemPrimerPtr)
         {
-            Atom returnId = GetSystemIdForComponent<TComponent>();
+            Atom returnId = GetComponentTypeId<TComponent>();
             _systems.emplace(returnId, SystemFnPtrPair{ systemUpdatePtr, systemPrimerPtr });
             _systemIds.emplace_back(returnId);
             return returnId;
         }
 
+        inline uint32_t GetWorkerThreadCount() const noexcept
+        {
+            return _workerThreadCount;
+        }
+        
         void SpinThreads() noexcept;
 
         void ExecuteIteration(Timing::Timestamp delta);

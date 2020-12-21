@@ -5,22 +5,49 @@
 
 #include "EcsUtils.h"
 #include "ComponentBuffer.h"
+#include <unordered_map>
 
 namespace NovelRT::Ecs
 {
     class ComponentCache
     {
+        private:
+        std::unordered_map<ComponentTypeId, void*, AtomHashFunction> _componentMap;
+
+        size_t _poolSize;
+
         public:
-        template<typename T>
-        static ComponentBuffer<T>& GetComponentBuffer(size_t catalogueId) noexcept
+        ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize)
         {
-            static std::vector<ComponentBuffer<T>> buffer = std::vector<ComponentBuffer<T>>();
-            while (buffer.size() <= catalogueId)
+
+        }
+
+        template<typename T>
+        void RegisterComponentType()
+        {
+            auto ptr = malloc(sizeof(ComponentBuffer<T>));
+            
+            if (ptr == nullptr)
             {
-                buffer.push_back(ComponentBuffer<T>());
+                throw std::runtime_error("Out of memory");
             }
 
-            return buffer.at(catalogueId);
+            *reinterpret_cast<ComponentBuffer<T>*>(ptr) = ComponentBuffer<T>(_poolSize);
+            _componentMap.emplace(newRecord.componentTypeId, ptr);
+        }
+
+        template<typename T>
+        ComponentBuffer<T>& GetComponentBuffer() noexcept
+        {
+            return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
+        }
+
+        ~ComponentCache() noexcept
+        {
+            for (auto&& pair : _componentMap)
+            {
+                free(pair.second);
+            }
         }
     };
 }
