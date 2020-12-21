@@ -37,7 +37,7 @@ namespace NovelRT::Graphics {
 
       if (!gladLoadGLES2Loader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         _logger.logError("Failed to initialise glad.");
-        throw std::runtime_error("Unable to continue! The engine cannot start without glad.");
+        throw Exceptions::InitialisationFailureException("Unable to continue! The engine cannot start without glad.");
       }
 
       std::string glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
@@ -91,7 +91,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _logger.logError("Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-      throw EXIT_FAILURE;
+      throw Exceptions::FileNotFoundException("Target Vertex Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.", vertexFileName);
     }
 
     // Read the Fragment Shader code from the file
@@ -105,7 +105,7 @@ namespace NovelRT::Graphics {
     }
     else {
       _logger.logError("Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-      throw EXIT_FAILURE;
+      throw Exceptions::FileNotFoundException("Target Fragment Shader file cannot be opened! Please ensure the path is correct and that the file is not locked.", fragmentFileName);
     }
 
     GLint Result = GL_FALSE;
@@ -124,7 +124,7 @@ namespace NovelRT::Graphics {
       std::vector<char> vertexShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(vertexShaderId, infoLogLength, nullptr, &vertexShaderErrorMessage[0]);
       _logger.logError(std::string(&vertexShaderErrorMessage[0]));
-      throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
+      throw Exceptions::CompilationErrorException(vertexFileName, std::string(&vertexShaderErrorMessage[0]));
     }
 
     // Compile Fragment Shader
@@ -140,7 +140,7 @@ namespace NovelRT::Graphics {
       std::vector<char> fragmentShaderErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
       _logger.logError(std::string(&fragmentShaderErrorMessage[0]));
-      throw std::runtime_error("Unable to continue! Please fix the compile time error in the specified shader.");
+      throw Exceptions::CompilationErrorException(fragmentFileName, std::string(&fragmentShaderErrorMessage[0]));
     }
 
     // Link the program
@@ -157,7 +157,7 @@ namespace NovelRT::Graphics {
       std::vector<char> ProgramErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logError(std::string(&ProgramErrorMessage[0]));
-      throw std::runtime_error("Unable to continue! Please fix the specified error in the shader program.");
+      throw Exceptions::OpenGLLinkageFailure(programId, std::string(&ProgramErrorMessage[0]));
     }
 
     glDetachShader(programId, vertexShaderId);
@@ -177,7 +177,7 @@ namespace NovelRT::Graphics {
   int32_t RenderingService::initialiseRendering() {
     if (!initialiseRenderPipeline()) {
       _logger.logError("Apologies, something went wrong.");
-      throw std::runtime_error("Unable to continue! The engine cannot start without GLAD/GLFW3.");
+      throw Exceptions::InitialisationFailureException("Unable to continue! The engine cannot start without GLAD/GLFW3.");
     }
 
     return 0;

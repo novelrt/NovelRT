@@ -18,7 +18,7 @@ namespace NovelRT {
       const char* err = "";
       glfwGetError(&err);
        _loggingService.logError("GLFW ERROR: {}", err);
-      throw std::runtime_error("Unable to continue! Cannot start without a glfw window.");
+      throw Exceptions::InitialisationFailureException("Unable to continue! Cannot start without a glfw window.", err);
     }
     _novelWindowingService->initialiseWindow(displayNumber, windowTitle, transparency);
     _novelRenderer->initialiseRendering();
