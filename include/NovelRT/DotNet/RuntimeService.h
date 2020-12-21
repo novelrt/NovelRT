@@ -26,6 +26,7 @@ namespace NovelRT::DotNet {
     Utilities::Lazy<load_assembly_and_get_function_pointer_fn> _load_assembly_and_get_function_pointer;
     Utilities::Lazy<Exports> _exports;
     LoggingService _logger;
+    std::string get_hostfxr_string(std::vector<char_t> buffer);
 
   public:
     RuntimeService();
