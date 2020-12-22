@@ -165,7 +165,6 @@ namespace NovelRT::Ecs
         }
         // clang-format on
 
-
     };
 } // namespace NovelRT::Ecs
 

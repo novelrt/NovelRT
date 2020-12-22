@@ -59,6 +59,18 @@ namespace NovelRT::Ecs
         {
             return _ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity);
         }
+
+        // clang-format off
+        auto begin() const noexcept
+        {
+            return _rootSet.begin();
+        }
+
+        auto end() const noexcept
+        {
+            return _rootSet.end();
+        }
+        // clang-format on
     };
 }
 

@@ -69,6 +69,70 @@ namespace NovelRT::Ecs
         {
             return GetHelper<idx, ComponentView<TComponent, TComponents...>>::Get(*this);
         }
+
+        class Iterator
+        {
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type = std::ptrdiff_t;
+            using value_type = std::tuple<EntityId, TComponent, TComponents ...>;
+            using pointer = typename SparseSet<EntityId, TComponent>::Iterator;
+            using reference = std::tuple<EntityId&, TComponent&, TComponents& ...>;
+
+            private:
+            pointer _ptr;
+
+            public:
+            Iterator(pointer ptr) noexcept : _ptr(ptr) {}
+
+            reference operator*() const
+            {
+                size_t i = 1;
+                EntityId& entity = std::get<0>(*(_ptr));
+                TComponent& component = std::get<1>(*(_ptr));
+                return std::tie(entity, component, Get<i++>().first.GetComponent(entity)...);
+            }
+
+            pointer operator->()
+            {
+                return _ptr;
+            }
+
+            Iterator& operator++()
+            {
+                _ptr++;
+                return *this;
+            }
+
+            Iterator operator++(int)
+            {
+                Iterator tmp = *this;
+                ++(*this);
+                return tmp;
+            }
+
+            friend bool operator==(const Iterator& lhs, const Iterator& rhs)
+            {
+                return lhs._ptr == rhs._ptr;
+            }
+
+            friend bool operator!=(const Iterator& lhs, const Iterator& rhs)
+            {
+                return lhs._ptr != rhs._ptr;
+            }
+        };
+
+        // clang-format off
+        // range based for support
+        auto begin() const noexcept
+        {
+            
+        }
+
+        auto end() const noexcept
+        {
+
+        }
+        //clang-format on
     };
     
     template<typename T, typename... Rest>
