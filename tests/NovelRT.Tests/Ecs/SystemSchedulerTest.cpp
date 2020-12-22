@@ -22,8 +22,6 @@ class SystemSchedulerTest : public testing::Test
     protected:
     void SetUp() override
     {
-        //Catalogue catalogue()
-        //catalogue.CreateEntity().TryAddComponent<int>();
         sysOneBool = true;
         sysTwoBool = true;
         sysThreeBool = true;

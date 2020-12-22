@@ -45,16 +45,24 @@ namespace NovelRT::Ecs
     class GetHelper;
 
     template <typename ... TComponent>
-    class ComponentView {};
+    class ComponentView
+    {
+        public:
+        size_t poolId;
+
+        ComponentView(size_t poolId) noexcept : poolId(poolId)
+        {}
+    };
 
     template <typename TComponent, typename... TComponents>
     class ComponentView<TComponent, TComponents ...>
     {
         public:
-        SparseSet<EntityId, TComponent>& first;
+        size_t poolId;
+        ComponentBuffer<TComponent>& first;
         ComponentView<TComponents ...> rest;
         
-        ComponentView(const SparseSet<EntityId, TComponent>& first, const SparseSet<EntityId, TComponents>&... rest) noexcept : first(first), rest(rest...) {}
+        ComponentView(size_t poolId, ComponentBuffer<TComponent>& first, ComponentBuffer<TComponents>&... rest) noexcept : poolId(poolId), first(first), rest(poolId, rest...) {}
 
         template<size_t idx>
         auto Get()
@@ -102,6 +110,12 @@ namespace NovelRT::Ecs
         inline Entity GetEntityAsObject(EntityId entityId)
         {
             return Entity(entityId, this);
+        }
+
+        template<typename... TComponents>
+        auto GetComponentView()
+        {
+            return ComponentView<TComponents...>(_poolId, _cache.GetComponentBuffer<TComponents>()...);
         }
 
         template<typename T>
