@@ -6,6 +6,8 @@
 #include "ComponentCache.h"
 #include "EcsUtils.h"
 #include "SystemScheduler.h"
+#include "SparseSet.h"
+
 namespace NovelRT::Ecs
 {
     class Catalogue;
@@ -39,14 +41,55 @@ namespace NovelRT::Ecs
         }
     };
 
+    template<size_t idx, typename T>
+    class GetHelper;
+
+    template <typename ... TComponent>
+    class ComponentView {};
+
+    template <typename TComponent, typename... TComponents>
+    class ComponentView<TComponent, TComponents ...>
+    {
+        public:
+        SparseSet<EntityId, TComponent>& first;
+        ComponentView<TComponents ...> rest;
+        
+        ComponentView(const SparseSet<EntityId, TComponent>& first, const SparseSet<EntityId, TComponents>&... rest) noexcept : first(first), rest(rest...) {}
+
+        template<size_t idx>
+        auto Get()
+        {
+            return GetHelper<idx, ComponentView<TComponent, TComponents...>>::Get(*this);
+        }
+    };
+    
+    template<typename T, typename... Rest>
+    class GetHelper<0, ComponentView<T, Rest ...>>
+    {
+        public:
+        static T Get(ComponentView<T, Rest...>& data)
+        {
+            return data.first;
+        }
+    };
+
+    template<size_t idx, typename T, typename... Rest>
+    class GetHelper<idx, ComponentView<T, Rest ...>>
+    {
+        static auto Get(ComponentView<T, Rest ...>& data)
+        {
+            return GetHelper<idx-1, ComponentView<Rest ...>::Get(data.first);
+        }
+    };
+
     class Catalogue
     {
         private:
-        ComponentCache _cache;
-        std::unordered_map<std::thread::id, size_t> _threadPoolMap;
+        size_t _poolId;
+        ComponentCache& _cache;
 
         public:
-        Catalogue(uint32_t workerThreadCount) noexcept : _cache(ComponentCache(workerThreadCount))
+        Catalogue(size_t poolId, ComponentCache& componentCache) noexcept : _poolId(poolId), _cache(componentCache)
         {
 
         }
@@ -87,7 +130,7 @@ namespace NovelRT::Ecs
         }
 
         template<typename T>
-        bool TryRemoveComponent(EntityId entity)
+        bool TryRemoveComponent(EntityId entity) noexcept
         {
             ComponentBuffer<T>& buffer = ComponentCache::GetComponentBuffer<T>(_catalogueId);
             if (!buffer.HasComponent(entity))
@@ -102,7 +145,7 @@ namespace NovelRT::Ecs
         template<typename T>
         bool HasComponent(EntityId entity) const noexcept
         {
-            return ComponentCache::GetComponentBuffer<T>(_catalogueId).HasComponent(entity);
+            return _cache.GetComponentBuffer<T>().HasComponent(entity);
         }
     };
 

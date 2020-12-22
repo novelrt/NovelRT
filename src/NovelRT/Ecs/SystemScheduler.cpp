@@ -4,24 +4,24 @@
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _maximumThreadCount(maximumThreadCount),
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _workerThreadCount(maximumThreadCount),
                                                                              _currentDelta(0),
                                                                              _threadAvailabilityMap(0),
                                                                              _threadShutDownStatus(0),
                                                                              _shouldShutDown(false),
                                                                              _ecsDataBufferIndex(0)
     {
-        if (_maximumThreadCount != 0)
+        if (_workerThreadCount != 0)
         {
             return;
         }
 
-        _maximumThreadCount = std::thread::hardware_concurrency() - 1;
+        _workerThreadCount = std::thread::hardware_concurrency() - 1;
 
         //in case the previous call doesn't work
-        if (_maximumThreadCount == 0)
+        if (_workerThreadCount == 0)
         {
-            _maximumThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
+            _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
     }
 
@@ -237,9 +237,9 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::SpinThreads() noexcept
     {
-        std::vector<QueueLockPair> vec2(_maximumThreadCount);
+        std::vector<QueueLockPair> vec2(_workerThreadCount);
         _threadWorkQueues.swap(vec2);
-        for (size_t i = 0; i < _maximumThreadCount; i++)
+        for (size_t i = 0; i < _workerThreadCount; i++)
         {
             _threadShutDownStatus ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
@@ -250,9 +250,9 @@ namespace NovelRT::Ecs
     {
         _currentDelta = delta;
 
-        size_t independentSystemChunkSize = _systemIds.size() / _maximumThreadCount;
+        size_t independentSystemChunkSize = _systemIds.size() / _workerThreadCount;
 
-        size_t workersToAssign = _maximumThreadCount > _systemIds.size() ? _systemIds.size() : _maximumThreadCount;
+        size_t workersToAssign = _workerThreadCount > _systemIds.size() ? _systemIds.size() : _workerThreadCount;
         size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;    
 
         SchedulePrimerWork(workersToAssign, amountOfWork);

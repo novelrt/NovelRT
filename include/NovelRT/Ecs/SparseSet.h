@@ -72,11 +72,11 @@ namespace NovelRT::Ecs
             }
         };
 
-        SparseSet() noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, TValue, THashFunction>())
+        SparseSet() noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
         {
         }
 
-        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, TValue, THashFunction>())
+        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
         {
             _denseBlock.resize(rhs._denseBlock.size());
             std::copy(rhs._denseBlock.begin(), rhs._denseBlock.end(), _denseBlock.begin());
@@ -87,7 +87,7 @@ namespace NovelRT::Ecs
 
         void Insert(TKey key, TValue value)
         {
-            if (HasValue(key))
+            if (ContainsKey(key))
             {
                 throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
             }
@@ -135,6 +135,11 @@ namespace NovelRT::Ecs
         TValue CopyValueBasedOnDenseIndex(size_t denseIndex) const
         {
             return _denseBlock.at(denseIndex);
+        }
+
+        size_t Length() const noexcept
+        {
+            return _sparseBlock.size();
         }
 
         TValue& operator[](TKey key)
