@@ -33,7 +33,7 @@ namespace NovelRT::Ecs
             }
 
             *reinterpret_cast<ComponentBuffer<T>*>(ptr) = ComponentBuffer<T>(_poolSize);
-            _componentMap.emplace(newRecord.componentTypeId, ptr);
+            _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
         template<typename T>
