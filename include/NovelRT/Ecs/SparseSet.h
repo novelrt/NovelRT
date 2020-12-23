@@ -72,6 +72,51 @@ namespace NovelRT::Ecs
             }
         };
 
+        class ConstIterator
+        {
+            public:
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type = std::ptrdiff_t;
+            using value_type = std::tuple<TKey, TValue>;
+            using pointer = std::tuple<typename std::vector<TKey>::const_iterator, typename std::vector<TValue>::const_iterator>;
+            using reference = std::tuple<const TKey&, const TValue&>;
+        
+            private:
+            pointer _ptr;
+        
+            public:
+            ConstIterator(pointer ptr) : _ptr(ptr) {}
+        
+            reference operator*() const
+            {
+                return std::tie(*std::get<0>(_ptr), *std::get<1>(_ptr));
+            }
+        
+            const ConstIterator& operator++()
+            {
+                std::get<0>(_ptr)++;
+                std::get<1>(_ptr)++;
+                return *this;
+            }
+        
+            ConstIterator operator++(int)
+            {
+                Iterator tmp = *this;
+                ++(*this);
+                return tmp;
+            }
+        
+            friend bool operator==(const ConstIterator& lhs, const ConstIterator& rhs)
+            {
+                return lhs._ptr == rhs._ptr;
+            }
+        
+            friend bool operator!=(const ConstIterator& lhs, const ConstIterator& rhs)
+            {
+                return lhs._ptr != rhs._ptr;
+            }
+        };
+
         SparseSet() noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
         {
         }
@@ -162,6 +207,16 @@ namespace NovelRT::Ecs
         auto end() noexcept
         {
             return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
+        }
+
+        auto cbegin() const noexcept
+        {
+            return ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
+        }
+
+        auto cend() const noexcept
+        {
+            return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
         }
         // clang-format on
 

@@ -16,6 +16,12 @@ class CatalogueTest : public testing::Test
     void SetUp() override
     {
         Catalogue catalogue(2, _cache);
-        auto aaa = catalogue.GetComponentView<int, size_t, bool>();
+        auto [theInt, theSizeT, theBool] = catalogue.GetComponentView<int, size_t, bool>();
+
+        for (auto&& [entity, component] : theInt)
+        {
+            std::cout << "meme" << std::endl;
+        }
+        
     }
 };

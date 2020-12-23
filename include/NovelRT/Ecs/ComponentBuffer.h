@@ -63,12 +63,12 @@ namespace NovelRT::Ecs
         // clang-format off
         auto begin() const noexcept
         {
-            return _rootSet.begin();
+            return _rootSet.cbegin();
         }
 
         auto end() const noexcept
         {
-            return _rootSet.end();
+            return _rootSet.cend();
         }
         // clang-format on
     };

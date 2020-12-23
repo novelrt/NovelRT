@@ -41,116 +41,25 @@ namespace NovelRT::Ecs
         }
     };
 
-    template<size_t idx, typename T>
-    class GetHelper;
-
-    template <typename ... TComponent>
+    template <typename TComponent>
     class ComponentView
     {
-        public:
-        size_t poolId;
-
-        ComponentView(size_t poolId) noexcept : poolId(poolId)
-        {}
-    };
-
-    template <typename TComponent, typename... TComponents>
-    class ComponentView<TComponent, TComponents ...>
-    {
-        public:
-        size_t poolId;
-        ComponentBuffer<TComponent>& first;
-        ComponentView<TComponents ...> rest;
+        private:
+        size_t _poolId;
+        ComponentBuffer<TComponent>& _componentBuffer;
         
-        ComponentView(size_t poolId, ComponentBuffer<TComponent>& first, ComponentBuffer<TComponents>&... rest) noexcept : poolId(poolId), first(first), rest(poolId, rest...) {}
-
-        template<size_t idx>
-        auto Get()
-        {
-            return GetHelper<idx, ComponentView<TComponent, TComponents...>>::Get(*this);
-        }
-
-        class Iterator
-        {
-            using iterator_category = std::forward_iterator_tag;
-            using difference_type = std::ptrdiff_t;
-            using value_type = std::tuple<EntityId, TComponent, TComponents ...>;
-            using pointer = typename SparseSet<EntityId, TComponent>::Iterator;
-            using reference = std::tuple<EntityId&, TComponent&, TComponents& ...>;
-
-            private:
-            pointer _ptr;
-
-            public:
-            Iterator(pointer ptr) noexcept : _ptr(ptr) {}
-
-            reference operator*() const
-            {
-                size_t i = 1;
-                EntityId& entity = std::get<0>(*(_ptr));
-                TComponent& component = std::get<1>(*(_ptr));
-                return std::tie(entity, component, Get<i++>().first.GetComponent(entity)...);
-            }
-
-            pointer operator->()
-            {
-                return _ptr;
-            }
-
-            Iterator& operator++()
-            {
-                _ptr++;
-                return *this;
-            }
-
-            Iterator operator++(int)
-            {
-                Iterator tmp = *this;
-                ++(*this);
-                return tmp;
-            }
-
-            friend bool operator==(const Iterator& lhs, const Iterator& rhs)
-            {
-                return lhs._ptr == rhs._ptr;
-            }
-
-            friend bool operator!=(const Iterator& lhs, const Iterator& rhs)
-            {
-                return lhs._ptr != rhs._ptr;
-            }
-        };
+        public:
+        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId), _componentBuffer(targetBuffer) {}
 
         // clang-format off
-        // range based for support
         auto begin() const noexcept
         {
-            
+            return _componentBuffer.begin();
         }
 
         auto end() const noexcept
         {
-
-        }
-        //clang-format on
-    };
-    
-    template<typename T, typename... Rest>
-    class GetHelper<0, ComponentView<T, Rest ...>>
-    {
-        public:
-        static T Get(ComponentView<T, Rest...>& data)
-        {
-            return data.first;
-        }
-    };
-
-    template<size_t idx, typename T, typename... Rest>
-    class GetHelper<idx, ComponentView<T, Rest ...>>
-    {
-        static auto Get(ComponentView<T, Rest ...>& data)
-        {
-            return GetHelper<idx-1, ComponentView<Rest ...>::Get(data.first);
+            return _componentBuffer.end();
         }
     };
 
@@ -179,7 +88,7 @@ namespace NovelRT::Ecs
         template<typename... TComponents>
         auto GetComponentView()
         {
-            return ComponentView<TComponents...>(_poolId, _cache.GetComponentBuffer<TComponents>()...);
+            return std::tie(ComponentView<TComponents>(_poolId, _cache.GetComponentBuffer<TComponents>())...);
         }
 
         template<typename T>
