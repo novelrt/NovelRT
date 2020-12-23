@@ -88,7 +88,7 @@ namespace NovelRT::Ecs
         template<typename... TComponents>
         auto GetComponentView()
         {
-            return std::tie(ComponentView<TComponents>(_poolId, _cache.GetComponentBuffer<TComponents>())...);
+            return std::make_tuple(ComponentView<TComponents>(_poolId, _cache.GetComponentBuffer<TComponents>())...);
         }
 
         template<typename T>
