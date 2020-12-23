@@ -119,7 +119,7 @@ namespace NovelRT::Ecs
         template<typename T>
         bool TryRemoveComponent(EntityId entity) noexcept
         {
-            ComponentBuffer<T>& buffer = ComponentCache::GetComponentBuffer<T>(_catalogueId);
+            ComponentBuffer<T>& buffer = _cache.GetComponentBuffer<T>();
             if (!buffer.HasComponent(entity))
             {
                 return false;

@@ -52,12 +52,12 @@ namespace NovelRT::Ecs
 
         T GetComponent(EntityId entity) const
         {
-            return _ecsDataBuffers.at(ImmutableBufferId)[entity];
+            return _rootSet[entity];
         }
 
         bool HasComponent(EntityId entity) const noexcept
         {
-            return _ecsDataBuffers.at(ImmutableBufferId).ContainsKey(entity);
+            return _rootSet.ContainsKey(entity);
         }
 
         // clang-format off
