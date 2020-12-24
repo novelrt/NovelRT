@@ -59,16 +59,16 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
 {
     EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
 }
-//
-//TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
-//{
-//    scheduler->ExecuteIteration(Timestamp(0));
-//    
-//    EXPECT_FALSE(sysOneBool);
-//    EXPECT_FALSE(sysTwoBool);
-//    EXPECT_FALSE(sysThreeBool);
-//}
-//
+
+TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
+{
+    scheduler->ExecuteIteration(Timestamp(0));
+    
+    EXPECT_FALSE(sysOneBool);
+    EXPECT_FALSE(sysTwoBool);
+    EXPECT_FALSE(sysThreeBool);
+}
+
 //TEST_F(SystemSchedulerTest, CreateSystemForComponentDoesNotThrow)
 //{
 //    EXPECT_NO_THROW((scheduler->CreateSystemForComponent<TestSystem, size_t>()));
