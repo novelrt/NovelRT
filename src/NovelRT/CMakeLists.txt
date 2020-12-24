@@ -28,6 +28,9 @@ set(ENGINE_SOURCES
 
   DotNet/RuntimeService.cpp
 
+  Ecs/Catalogue.cpp
+  Ecs/ComponentCache.cpp
+  Ecs/EntityCache.cpp
   Ecs/SystemScheduler.cpp
 
   Graphics/BasicFillRect.cpp

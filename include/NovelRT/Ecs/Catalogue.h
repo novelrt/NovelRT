@@ -19,10 +19,7 @@ namespace NovelRT::Ecs
         std::vector<EntityId> _createdEntitiesThisFrame;
 
         public:
-        Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept : _poolId(poolId), _componentCache(componentCache), _entityCache(entityCache), _createdEntitiesThisFrame(std::vector<EntityId>{})
-        {
-
-        }
+        Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept;
 
         template<typename TComponent>
         [[nodiscard]] auto GetComponentView()
@@ -36,22 +33,9 @@ namespace NovelRT::Ecs
             return std::make_tuple(ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
 
-        [[nodiscard]] EntityId CreateEntity() noexcept
-        {
-            EntityId returnId = Atom::getNextEntityId();
-            _createdEntitiesThisFrame.push_back(returnId);
-            return returnId;
-        }
+        [[nodiscard]] EntityId CreateEntity() noexcept;
 
-        void DeleteEntity(EntityId entity) noexcept
-        {
-            if (std::find(_createdEntitiesThisFrame.begin(), _createdEntitiesThisFrame.end(), entity) != _createdEntitiesThisFrame.end())
-            {
-                return;
-            }
-            
-            _entityCache.RemoveEntity(_poolId, entity);
-        }
+        void DeleteEntity(EntityId entity) noexcept;
     };
 }
 

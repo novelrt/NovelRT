@@ -3,7 +3,6 @@
 #ifndef NOVELRT_ECS_ECSUTILS_H
 #define NOVELRT_ECS_ECSUTILS_H
 
-#include <vector>
 #include <cstdint>
 #include "../Atom.h"
 

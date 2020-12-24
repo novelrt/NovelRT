@@ -6,6 +6,7 @@
 #include "EcsUtils.h"
 #include "../Timing/Timestamp.h"
 #include <unordered_map>
+#include <vector>
 #include <memory>
 #include <functional>
 #include <thread>
@@ -55,12 +56,7 @@ namespace NovelRT::Ecs
         public:
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
-        inline void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
-        {
-            Atom id = Atom::getNextSystemId();
-            _systems.emplace(id, systemUpdatePtr);
-            _systemIds.emplace_back(id);
-        }
+        void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept;
 
         [[nodiscard]] inline uint32_t GetWorkerThreadCount() const noexcept
         {

@@ -4,6 +4,8 @@
 #define NOVELRT_ECS_COMPONENTCACHE_H
 
 #include <unordered_map>
+#include <functional>
+#include <vector>
 #include "ComponentBuffer.h"
 #include "EcsUtils.h"
 #include "../Utilities/Event.h"
@@ -21,10 +23,7 @@ namespace NovelRT::Ecs
         
 
         public:
-        ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize), _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
-        {
-
-        }
+        ComponentCache(size_t poolSize) noexcept;
 
         template<typename T>
         void RegisterComponentType(T deleteInstructionState)
@@ -47,23 +46,10 @@ namespace NovelRT::Ecs
             return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
         }
 
-        void PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept
-        {
-            _bufferPrepEvent(entitiesToDelete);
-        }
+        void PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept;
 
-        ~ComponentCache() noexcept
-        {
-            for (auto&& destructor : _destructorFunctions)
-            {
-                destructor();
-            }
-            
-            for (auto&& pair : _componentMap)
-            {
-                free(pair.second);
-            }
-        }
+        ~ComponentCache() noexcept;
+
     };
 }
 

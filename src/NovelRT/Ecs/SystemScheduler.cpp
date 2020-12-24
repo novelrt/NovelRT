@@ -30,6 +30,13 @@ namespace NovelRT::Ecs
         _componentCache = ComponentCache(_workerThreadCount);
     }
 
+    void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
+    {
+        Atom id = Atom::getNextSystemId();
+        _systems.emplace(id, systemUpdatePtr);
+        _systemIds.emplace_back(id);
+    }
+
     bool SystemScheduler::JobAvailable(size_t poolId) noexcept
     {
         QueueLockPair& pair = _threadWorkQueues[poolId];
