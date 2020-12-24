@@ -15,6 +15,7 @@ namespace NovelRT::Ecs
     {
         private:
         std::unordered_map<ComponentTypeId, void*, AtomHashFunction> _componentMap;
+        std::vector<std::function<void()>> _destructorFunctions;
         size_t _poolSize;
         Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
         
@@ -34,8 +35,8 @@ namespace NovelRT::Ecs
             {
                 throw Exceptions::OutOfMemoryException("Could not allocate component buffer for new component registration!");
             }
-            auto bufferPtr = reinterpret_cast<ComponentBuffer<T>*>(ptr);
-            *bufferPtr = ComponentBuffer<T>(_poolSize, deleteInstructionState);
+            auto bufferPtr = new(ptr)ComponentBuffer<T>(_poolSize, deleteInstructionState);
+            _destructorFunctions.push_back([bufferPtr](){bufferPtr->~ComponentBuffer<T>();});
             _bufferPrepEvent += [bufferPtr] (auto arg) { bufferPtr->PrepComponentBuffersForFrame(arg); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
@@ -53,6 +54,11 @@ namespace NovelRT::Ecs
 
         ~ComponentCache() noexcept
         {
+            for (auto &&destructor : _destructorFunctions)
+            {
+                destructor();
+            }
+            
             for (auto&& pair : _componentMap)
             {
                 free(pair.second);

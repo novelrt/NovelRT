@@ -67,6 +67,26 @@ namespace NovelRT::Ecs
         {
             return _workerThreadCount;
         }
+
+        inline EntityCache& GetEntityCache() noexcept
+        {
+            return _entityCache;
+        }
+
+        inline const EntityCache& GetEntityCache() const noexcept
+        {
+            return _entityCache;
+        }
+
+        inline ComponentCache& GetComponentCache() noexcept
+        {
+            return _componentCache;
+        }
+
+        inline const ComponentCache& GetComponentCache() const noexcept
+        {
+            return _componentCache;
+        }
         
         void SpinThreads() noexcept;
 

@@ -17,7 +17,7 @@ class CatalogueTest : public testing::Test
     void SetUp() override
     {
         Catalogue catalogue(2, _cache, _entityCache);
-        auto [theInt, theSizeT, theBool] = catalogue.GetComponentView<int, size_t, bool>();
+        auto [theInt, theSizeT, theBool] = catalogue.GetComponentViews<int, size_t, bool>();
 
         for (auto&& [entity, component] : theInt)
         {

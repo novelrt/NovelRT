@@ -18,25 +18,41 @@ namespace NovelRT::Ecs
         SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
         T _deleteInstructionState;
 
-        void PrepComponentBuffersForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
-        {
-            for (auto &&i : destroyedEntities)
-            {
-                static_cast<void>(_updateSets.TryRemove(i)); //Intentional discard of return value
-            }
-            
-            for (auto [index, sparseSet] : _updateSets)
-            {
-                sparseSet.Clear();
-            }
-        }
 
         public:
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<std::thread::id, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)
         {
             for (size_t i = 0; i < poolSize; i++)
             {
                 _updateSets.Insert(i, SparseSet<EntityId, T, AtomHashFunction>{});
+            }
+        }
+
+        void PrepComponentBuffersForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
+        {
+            for (EntityId i : destroyedEntities)
+            {
+                static_cast<void>(_rootSet.TryRemove(i)); //Intentional discard of return value
+            }
+            
+            for (auto [index, sparseSet] : _updateSets)
+            {
+                for (auto [entity, component] : sparseSet)
+                {
+                    if (component == _deleteInstructionState)
+                    {
+                        static_cast<void>(_rootSet.TryRemove(entity)); // intentional discard again.
+                    }
+                    else if(!_rootSet.ContainsKey(entity))
+                    {
+                        _rootSet.Insert(entity, component);
+                    }
+                    else
+                    {
+                        _rootSet[entity] += component;
+                    }
+                }
+                sparseSet.Clear();
             }
         }
 
