@@ -11,7 +11,6 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
-#include "ComponentBuffer.h"
 #include "Catalogue.h"
 #include "EntityCache.h"
 #include "ComponentCache.h"
@@ -20,7 +19,7 @@ namespace NovelRT::Ecs
 {
     class SystemScheduler
     {
-    private:
+        private:
         struct QueueLockPair
         {
             std::vector<Atom> systemUpdateIds;
@@ -53,7 +52,7 @@ namespace NovelRT::Ecs
         void CycleForJob(size_t poolId);
         void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
 
-    public:
+        public:
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
         inline void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept

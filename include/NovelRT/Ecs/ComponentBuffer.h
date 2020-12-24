@@ -11,13 +11,10 @@ namespace NovelRT::Ecs
     template<typename T>
     class ComponentBuffer 
     {
-        friend class SystemScheduler;
-
         private:
         SparseSet<EntityId, T, AtomHashFunction> _rootSet;
         SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
         T _deleteInstructionState;
-
 
         public:
         ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)

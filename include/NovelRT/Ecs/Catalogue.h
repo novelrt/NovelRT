@@ -4,87 +4,12 @@
 #define NOVELRT_ECS_CATALOGUE_H
 
 #include "ComponentCache.h"
+#include "ComponentView.h"
 #include "EcsUtils.h"
-#include "SystemScheduler.h"
-#include "SparseSet.h"
 #include "EntityCache.h"
 
 namespace NovelRT::Ecs
 {
-    template <typename TComponent>
-    class ComponentView
-    {
-        private:
-        size_t _poolId;
-        ComponentBuffer<TComponent>& _componentBuffer;
-        
-        public:
-        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId),
-                                                                                           _componentBuffer(targetBuffer)
-        {
-
-        }
-
-        void PushComponentUpdateInstruction(EntityId entity, TComponent instructionState) noexcept
-        {
-            _componentBuffer.PushComponentUpdateInstruction(_poolId, entity, instructionState);
-        }
-
-        void AddComponent(EntityId entity, TComponent initialValue = TComponent{}) noexcept
-        {
-            PushComponentUpdateInstruction(entity, initialValue);
-        }
-
-        void RemoveComponent(EntityId entity) noexcept
-        {
-            PushComponentUpdateInstruction(entity, _componentBuffer.GetDeleteInstructionState());
-        }
-
-        bool TryAddComponent(EntityId entity, TComponent initialValue = TComponent{}) noexcept
-        {
-            if (_componentBuffer.HasComponent(entity))
-            {
-                return false;
-            }
-
-            AddComponent(entity, initialValue);
-            return true;
-        }
-
-        bool TryRemoveComponent(EntityId entity)
-        {
-            if (!_componentBuffer.HasComponent(entity))
-            {
-                return false;
-            }
-
-            RemoveComponent(entity);
-            return true;
-        }
-
-        [[nodiscard]] TComponent GetComponent(EntityId entity) const
-        {
-            return _componentBuffer.GetComponent(entity);
-        }
-
-        [[nodiscard]] size_t GetImmutableDataLength() const noexcept
-        {
-            return _componentBuffer.GetImmutableDataLength();
-        }
-
-        // clang-format off
-        [[nodiscard]] auto begin() const noexcept
-        {
-            return _componentBuffer.begin();
-        }
-
-        [[nodiscard]] auto end() const noexcept
-        {
-            return _componentBuffer.end();
-        }
-        // clang-format on
-    };
-
     class Catalogue
     {
         private:

@@ -3,11 +3,11 @@
 #ifndef NOVELRT_ECS_COMPONENTCACHE_H
 #define NOVELRT_ECS_COMPONENTCACHE_H
 
-#include "EcsUtils.h"
-#include "ComponentBuffer.h"
-#include "../Exceptions/OutOfMemoryException.h"
 #include <unordered_map>
+#include "ComponentBuffer.h"
+#include "EcsUtils.h"
 #include "../Utilities/Event.h"
+#include "../Exceptions/OutOfMemoryException.h"
 
 namespace NovelRT::Ecs
 {

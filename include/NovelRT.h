@@ -217,9 +217,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Animation/SpriteAnimator.h"
 
 //ECS types
-#include "NovelRT/Ecs/SparseSet.h"
-#include "NovelRT/Ecs/SystemScheduler.h"
-#include "NovelRT/Ecs/Catalogue.h"
+#include "NovelRT/Ecs/Ecs.h"
 
 // Exception types
 #include "NovelRT/Exceptions/CharacterNotFoundException.h"

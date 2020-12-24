@@ -16,12 +16,12 @@ namespace NovelRT::Ecs
     template <typename TKey, typename TValue, typename THashFunction = std::hash<TKey>>
     class SparseSet
     {
-    private:
+        private:
         std::vector<TKey> _sparseBlock;
         std::vector<TValue> _denseBlock;
         std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
-    public:
+        public:
         class Iterator
         {
             public:
