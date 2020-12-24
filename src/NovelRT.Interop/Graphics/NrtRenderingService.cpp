@@ -47,7 +47,8 @@ extern "C" {
 
     try {
       renderingServicePtr->initialiseRendering();
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    } catch (const Exceptions::InitialisationFailureException) {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
     }
 

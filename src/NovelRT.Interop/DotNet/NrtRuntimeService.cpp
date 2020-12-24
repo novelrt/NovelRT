@@ -39,9 +39,11 @@ NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
 
     try {
       cService->initialise();
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    } catch (const Exceptions::InitialisationFailureException) {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) { // todo: handle error message
+    } catch (const Exceptions::FunctionNotFoundException) {
+      Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 
@@ -69,9 +71,11 @@ NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeService service, intptr_t obj)
 
     try{
       cService->freeObject(obj);
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    } catch (const Exceptions::InitialisationFailureException) {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) { // todo: handle error message
+    } catch (const Exceptions::FunctionNotFoundException) {
+      Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 
@@ -88,9 +92,11 @@ NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* s
 
     try {
       cService->freeString(str);
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    } catch (const Exceptions::InitialisationFailureException) {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) { // todo: handle error message
+    } catch (const Exceptions::FunctionNotFoundException) {
+      Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
     
@@ -108,9 +114,11 @@ NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkServ
     std::shared_ptr<Ink::InkService> inkServicePtr;
     try{
       inkServicePtr = cService->getInkService();
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    } catch (const Exceptions::InitialisationFailureException) {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) { // todo: handle error message
+    } catch (const Exceptions::FunctionNotFoundException) {
+      Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
     

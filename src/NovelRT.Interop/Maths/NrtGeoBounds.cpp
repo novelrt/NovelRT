@@ -62,7 +62,8 @@ extern "C" {
       }
 
       return NRT_SUCCESS;
-    } catch (const Exceptions::NotSupportedException) { // todo: handle error message
+    } catch (const Exceptions::NotSupportedException) {
+      Nrt_setErrMsgIsNotSupportedInternal();
       return NRT_FAILURE_NOT_SUPPORTED;
     }
   }
