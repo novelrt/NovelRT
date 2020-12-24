@@ -121,15 +121,6 @@ namespace NovelRT::Ecs
         {
         }
 
-        SparseSet(const SparseSet<TKey, TValue, THashFunction>& rhs) noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
-        {
-            _denseBlock.resize(rhs._denseBlock.size());
-            std::copy(rhs._denseBlock.begin(), rhs._denseBlock.end(), _denseBlock.begin());
-            _sparseBlock.resize(rhs._denseBlock.size());
-            std::copy(rhs._sparseBlock.begin(), rhs._sparseBlock.end(), _sparseBlock.begin());
-            _sparseMap = rhs._sparseMap;
-        }
-
         void Insert(TKey key, TValue value)
         {
             if (ContainsKey(key))
