@@ -10,6 +10,7 @@
 #include <iterator>
 #include <cstddef>
 #include <algorithm>
+#include <stdexcept>
 
 namespace NovelRT::Ecs
 {
