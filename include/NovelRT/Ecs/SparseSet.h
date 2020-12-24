@@ -169,54 +169,54 @@ namespace NovelRT::Ecs
             _sparseMap.clear();
         }
 
-        bool ContainsKey(TKey key) const noexcept
+        [[nodiscard]] bool ContainsKey(TKey key) const noexcept
         {
             return std::find(_sparseBlock.begin(), _sparseBlock.end(), key) != _sparseBlock.end();
         }
 
-        TKey CopyKeyBasedOnDenseIndex(size_t denseIndex) const
+        [[nodiscard]] TKey CopyKeyBasedOnDenseIndex(size_t denseIndex) const
         {
             return _sparseBlock.at(denseIndex);
         }
 
-        TValue CopyValueBasedOnDenseIndex(size_t denseIndex) const
+        [[nodiscard]] TValue CopyValueBasedOnDenseIndex(size_t denseIndex) const
         {
             return _denseBlock.at(denseIndex);
         }
 
-        size_t Length() const noexcept
+        [[nodiscard]] size_t Length() const noexcept
         {
             return _sparseBlock.size();
         }
 
-        TValue& operator[](TKey key)
+        [[nodiscard]] TValue& operator[](TKey key)
         {
             return _denseBlock.at(_sparseMap.at(key));
         }
 
-        const TValue& operator[](TKey key) const
+        [[nodiscard]] const TValue& operator[](TKey key) const
         {
             return _denseBlock.at(_sparseMap.at(key));
         }
 
         // clang-format off
         // These functions have to be named this way for a range based for loop to work
-        auto begin() noexcept
+        [[nodiscard]] auto begin() noexcept
         {
             return Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
         }
 
-        auto end() noexcept
+        [[nodiscard]] auto end() noexcept
         {
             return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
         }
 
-        auto cbegin() const noexcept
+        [[nodiscard]] auto cbegin() const noexcept
         {
             return ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
         }
 
-        auto cend() const noexcept
+        [[nodiscard]] auto cend() const noexcept
         {
             return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
         }

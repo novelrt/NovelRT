@@ -32,7 +32,7 @@ namespace NovelRT::Ecs
         {
             for (EntityId i : destroyedEntities)
             {
-                static_cast<void>(_rootSet.TryRemove(i)); //Intentional discard of return value
+                _rootSet.TryRemove(i);
             }
             
             for (auto [index, sparseSet] : _updateSets)
@@ -41,7 +41,7 @@ namespace NovelRT::Ecs
                 {
                     if (component == _deleteInstructionState)
                     {
-                        static_cast<void>(_rootSet.TryRemove(entity)); // intentional discard again.
+                        _rootSet.TryRemove(entity); 
                     }
                     else if(!_rootSet.ContainsKey(entity))
                     {
@@ -56,7 +56,7 @@ namespace NovelRT::Ecs
             }
         }
 
-        T GetDeleteInstructionState() const noexcept
+        [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
             return _deleteInstructionState;
         } 
@@ -66,23 +66,23 @@ namespace NovelRT::Ecs
             _updateSets[poolId].Insert(entity, component);
         }
 
-        T GetComponent(EntityId entity) const
+        [[nodiscard]] T GetComponent(EntityId entity) const
         {
             return _rootSet[entity];
         }
 
-        bool HasComponent(EntityId entity) const noexcept
+        [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
             return _rootSet.ContainsKey(entity);
         }
 
         // clang-format off
-        auto begin() const noexcept
+        [[nodiscard]] auto begin() const noexcept
         {
             return _rootSet.cbegin();
         }
 
-        auto end() const noexcept
+        [[nodiscard]] auto end() const noexcept
         {
             return _rootSet.cend();
         }

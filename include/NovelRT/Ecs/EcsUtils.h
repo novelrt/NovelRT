@@ -13,7 +13,7 @@ namespace NovelRT::Ecs
     using ComponentTypeId = Atom;
    
     template <typename TComponent>
-    ComponentTypeId GetComponentTypeId()
+    [[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
         static const Atom id = Atom::getNextComponentTypeId();
         return id;

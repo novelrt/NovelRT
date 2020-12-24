@@ -42,7 +42,7 @@ namespace NovelRT::Ecs
         }
 
         template<typename T>
-        ComponentBuffer<T>& GetComponentBuffer() noexcept
+        [[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
         {
             return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
         }
@@ -54,7 +54,7 @@ namespace NovelRT::Ecs
 
         ~ComponentCache() noexcept
         {
-            for (auto &&destructor : _destructorFunctions)
+            for (auto&& destructor : _destructorFunctions)
             {
                 destructor();
             }

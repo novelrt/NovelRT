@@ -63,27 +63,27 @@ namespace NovelRT::Ecs
             _systemIds.emplace_back(id);
         }
 
-        inline uint32_t GetWorkerThreadCount() const noexcept
+        [[nodiscard]] inline uint32_t GetWorkerThreadCount() const noexcept
         {
             return _workerThreadCount;
         }
 
-        inline EntityCache& GetEntityCache() noexcept
+        [[nodiscard]] inline EntityCache& GetEntityCache() noexcept
         {
             return _entityCache;
         }
 
-        inline const EntityCache& GetEntityCache() const noexcept
+        [[nodiscard]] inline const EntityCache& GetEntityCache() const noexcept
         {
             return _entityCache;
         }
 
-        inline ComponentCache& GetComponentCache() noexcept
+        [[nodiscard]] inline ComponentCache& GetComponentCache() noexcept
         {
             return _componentCache;
         }
 
-        inline const ComponentCache& GetComponentCache() const noexcept
+        [[nodiscard]] inline const ComponentCache& GetComponentCache() const noexcept
         {
             return _componentCache;
         }
