@@ -9,7 +9,7 @@ const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was
 const char* const errMsgIsNotSupportedInternal = "The current operation is not supported.";
 const char* const errMsgIsAlreadyDeletedOrRemoved = "Unable to continue! The specific item has already been deleted or removed.";
 const char* const errMsgIsInitialisationFailure = "Service could not be initialised.";
-const char* const errMsgIsFunctionNotFound= "Failed to locate the specified managed function.";
+const char* const errMsgIsFunctionNotFound = "Failed to locate the specified managed function.";
 const char* currentErrorMessage = nullptr;
 bool customMessageSet = false;
 
