@@ -135,8 +135,12 @@ extern "C" {
     }
 
     TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-    textRectPtr->setText(std::string(inputText));
-
+    try {
+      textRectPtr->setText(std::string(inputText));
+    } catch (const Exceptions::CharacterNotFoundException) { // todo: handle error message
+      return NRT_FAILURE_CHARACTER_NOT_FOUND;
+    }
+    
     return NRT_SUCCESS;
   }
 

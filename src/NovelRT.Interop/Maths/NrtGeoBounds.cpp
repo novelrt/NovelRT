@@ -50,10 +50,11 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
-    try {
+    
       Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
       Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
 
+    try {
       if (cFirst.intersectsWith(cOther)) {
         *outputResult = NRT_TRUE;
       } else {
@@ -61,18 +62,8 @@ extern "C" {
       }
 
       return NRT_SUCCESS;
-
-    } catch (const std::exception& ex) {
-      const char* message = ex.what();
-      char* destination = new char[strlen(message) + 1];
-#if defined(WIN32)
-      strcpy_s(destination, strlen(message) + 1, message);
-#else
-      destination = strdup(message);
-#endif
-
-      Nrt_setErrMsgCustomInternal(destination);
-      return NRT_FAILURE_UNKNOWN;
+    } catch (const Exceptions::NotSupportedException) { // todo: handle error message
+      return NRT_FAILURE_NOT_SUPPORTED;
     }
   }
 

@@ -44,7 +44,12 @@ extern "C" {
     }
 
     RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-    renderingServicePtr->initialiseRendering();
+
+    try {
+      renderingServicePtr->initialiseRendering();
+    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+      return NRT_FAILURE_INITIALISATION_FAILURE;
+    }
 
     return NRT_SUCCESS;
   }
