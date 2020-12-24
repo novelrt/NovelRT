@@ -160,6 +160,17 @@ namespace NovelRT::Ecs
             }
         }
 
+        bool TryRemove(TKey key) noexcept
+        {
+            if (ContainsKey(key))
+            {
+                Remove(key);
+                return true;
+            }
+            
+            return false;
+        }
+
         void Clear() noexcept
         {
             _sparseBlock.clear();

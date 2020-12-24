@@ -11,11 +11,12 @@ class CatalogueTest : public testing::Test
 {
     private:
     ComponentCache _cache = ComponentCache(8);
+    EntityCache _entityCache = EntityCache(8);
 
     protected:
     void SetUp() override
     {
-        Catalogue catalogue(2, _cache);
+        Catalogue catalogue(2, _cache, _entityCache);
         auto [theInt, theSizeT, theBool] = catalogue.GetComponentView<int, size_t, bool>();
 
         for (auto&& [entity, component] : theInt)

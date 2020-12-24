@@ -12,12 +12,14 @@ class SystemSchedulerTest : public testing::Test
 {
     public:
     SystemScheduler* scheduler = nullptr;
+    EntityCache* entityCache = nullptr;
+    ComponentCache* componentCache = nullptr;
     std::atomic_bool sysOneBool = true;
     std::atomic_bool sysTwoBool = true;
     std::atomic_bool sysThreeBool = true;
-    std::function<void(Timestamp)> sysOne;
-    std::function<void(Timestamp)> sysTwo;
-    std::function<void(Timestamp)> sysThree;
+    std::function<void(Timestamp, Catalogue)> sysOne;
+    std::function<void(Timestamp, Catalogue)> sysTwo;
+    std::function<void(Timestamp, Catalogue)> sysThree;
     
     protected:
     void SetUp() override
@@ -28,19 +30,17 @@ class SystemSchedulerTest : public testing::Test
 
         if (scheduler == nullptr)
         {
-            delete scheduler;
             scheduler = new SystemScheduler();
-        
 
             scheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta) {sysOneBool = false; std::cout << "SYSTEM ONE LOG: HELLO" << std::endl;};
-            sysTwo = [&](Timestamp delta) {sysTwoBool = false;std::cout << "SYSTEM TWO LOG: HELLO" << std::endl;};
-            sysThree = [&](Timestamp delta) {sysThreeBool = false;std::cout << "SYSTEM THREE LOG: HELLO" << std::endl;};
+            sysOne = [&](Timestamp delta, Catalogue catalogue) {sysOneBool = false; std::cout << "SYSTEM ONE LOG: HELLO" << std::endl;};
+            sysTwo = [&](Timestamp delta, Catalogue catalogue) {sysTwoBool = false;std::cout << "SYSTEM TWO LOG: HELLO" << std::endl;};
+            sysThree = [&](Timestamp delta, Catalogue catalogue) {sysThreeBool = false;std::cout << "SYSTEM THREE LOG: HELLO" << std::endl;};
 
-            scheduler->RegisterSystemForComponent<int>(sysOne, [](){});
-            scheduler->RegisterSystemForComponent<bool>(sysTwo, [](){});
-            scheduler->RegisterSystemForComponent<char>(sysThree, [](){});
+            scheduler->RegisterSystem(sysOne);
+            scheduler->RegisterSystem(sysTwo);
+            scheduler->RegisterSystem(sysThree);
         }
     }
 
@@ -53,28 +53,12 @@ class SystemSchedulerTest : public testing::Test
         }
     }
 };
-//
-//class TestSystem : public BaseSystem<size_t>
-//{
-//    protected:
-//    void UpdateComponents(Timing::Timestamp deltaTime, SparseSet<EntityId, size_t>& componentData) override
-//    {
-//        hasRun = true;
-//
-//        for (auto && [i, j] : componentData)
-//        {
-//            j = 10;
-//        }
-//    }
-//
-//    public:
-//    std::atomic_bool hasRun = false;
-//};
-//
-//TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
-//{
-//    EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
-//}
+
+
+TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
+{
+    EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(0)));
+}
 //
 //TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
 //{

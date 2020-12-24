@@ -4,18 +4,17 @@
 #define NOVELRT_ECS_SYSTEMSCHEDULER_H
 
 #include "EcsUtils.h"
-#include "../Atom.h"
 #include "../Timing/Timestamp.h"
 #include <unordered_map>
 #include <memory>
 #include <functional>
 #include <thread>
 #include <mutex>
-#include <queue>
 #include <atomic>
-#include <vector>
-#include "SparseSet.h"
 #include "ComponentBuffer.h"
+#include "Catalogue.h"
+#include "EntityCache.h"
+#include "ComponentCache.h"
 
 namespace NovelRT::Ecs
 {
@@ -24,22 +23,19 @@ namespace NovelRT::Ecs
     private:
         struct QueueLockPair
         {
-            std::vector<Atom> systemPrimerIds;
             std::vector<Atom> systemUpdateIds;
             std::mutex threadLock;
-        };
-
-        struct SystemFnPtrPair
-        {
-            std::function<void(Timing::Timestamp)> componentUpdate;
-            std::function<void()> systemPrimer;
         };
 
         std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
-        std::unordered_map<Atom, SystemFnPtrPair, AtomHashFunction> _systems;
+        std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>, AtomHashFunction> _systems;
+        
+        EntityCache _entityCache;
+        ComponentCache _componentCache;
+        
         uint32_t _workerThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;
@@ -55,19 +51,16 @@ namespace NovelRT::Ecs
 
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
-        void SchedulePrimerWork(size_t workersToAssign, size_t amountOfWork);
         void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
 
     public:
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
-        template <typename TComponent>
-        Atom RegisterSystemForComponent(std::function<void(Timing::Timestamp)> systemUpdatePtr, std::function<void()> systemPrimerPtr)
+        inline void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
         {
-            Atom returnId = GetComponentTypeId<TComponent>();
-            _systems.emplace(returnId, SystemFnPtrPair{ systemUpdatePtr, systemPrimerPtr });
-            _systemIds.emplace_back(returnId);
-            return returnId;
+            Atom id = Atom::getNextSystemId();
+            _systems.emplace(id, systemUpdatePtr);
+            _systemIds.emplace_back(id);
         }
 
         inline uint32_t GetWorkerThreadCount() const noexcept

@@ -78,6 +78,12 @@ namespace NovelRT {
       auto value = ++ _nextEntityId;
       return Atom(value);
     }
+
+    static Atom getNextSystemId() noexcept {
+      static std::atomic_uintptr_t _nextSystemId(0);
+      auto value = ++ _nextSystemId;
+      return Atom(value);
+    }
   };
 
   class AtomHashFunction {

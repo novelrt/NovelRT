@@ -4,13 +4,7 @@
 #define NOVELRT_ECS_COMPONENTBUFFER_H
 
 #include "EcsUtils.h"
-#include "../Atom.h"
-#include "../Timing/Timestamp.h"
 #include "SparseSet.h"
-#include <vector>
-#include <thread>
-#include <map>
-#include <queue>
 
 namespace NovelRT::Ecs
 {
@@ -22,9 +16,15 @@ namespace NovelRT::Ecs
         private:
         SparseSet<EntityId, T, AtomHashFunction> _rootSet;
         SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
+        T _deleteInstructionState;
 
-        void PrepComponentBuffersForFrame()
+        void PrepComponentBuffersForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
+            for (auto &&i : destroyedEntities)
+            {
+                static_cast<void>(_updateSets.TryRemove(i)); //Intentional discard of return value
+            }
+            
             for (auto [index, sparseSet] : _updateSets)
             {
                 sparseSet.Clear();
@@ -32,7 +32,7 @@ namespace NovelRT::Ecs
         }
 
         public:
-        ComponentBuffer(size_t poolSize) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<std::thread::id, SparseSet<EntityId, T, AtomHashFunction>>{})
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<std::thread::id, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)
         {
             for (size_t i = 0; i < poolSize; i++)
             {
@@ -40,14 +40,14 @@ namespace NovelRT::Ecs
             }
         }
 
-        void AddComponent(size_t poolId, EntityId entity, T component)
+        T GetDeleteInstructionState() const noexcept
+        {
+            return _deleteInstructionState;
+        } 
+
+        void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
             _updateSets[poolId].Insert(entity, component);
-        }
-
-        void RemoveComponent(size_t poolId, EntityId entity)
-        {
-            _updateSets[poolId].Remove(entity);
         }
 
         T GetComponent(EntityId entity) const

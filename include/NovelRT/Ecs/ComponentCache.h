@@ -5,7 +5,9 @@
 
 #include "EcsUtils.h"
 #include "ComponentBuffer.h"
+#include "../Exceptions/OutOfMemoryException.h"
 #include <unordered_map>
+#include "../Utilities/Event.h"
 
 namespace NovelRT::Ecs
 {
@@ -13,26 +15,28 @@ namespace NovelRT::Ecs
     {
         private:
         std::unordered_map<ComponentTypeId, void*, AtomHashFunction> _componentMap;
-
         size_t _poolSize;
+        Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
+        
 
         public:
-        ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize)
+        ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize), _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
         {
 
         }
 
         template<typename T>
-        void RegisterComponentType()
+        void RegisterComponentType(T deleteInstructionState)
         {
             auto ptr = malloc(sizeof(ComponentBuffer<T>));
             
             if (ptr == nullptr)
             {
-                throw std::runtime_error("Out of memory");
+                throw Exceptions::OutOfMemoryException("Could not allocate component buffer for new component registration!");
             }
-
-            *reinterpret_cast<ComponentBuffer<T>*>(ptr) = ComponentBuffer<T>(_poolSize);
+            auto bufferPtr = reinterpret_cast<ComponentBuffer<T>*>(ptr);
+            *bufferPtr = ComponentBuffer<T>(_poolSize, deleteInstructionState);
+            _bufferPrepEvent += [bufferPtr] (auto arg) { bufferPtr->PrepComponentBuffersForFrame(arg); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
@@ -40,6 +44,11 @@ namespace NovelRT::Ecs
         ComponentBuffer<T>& GetComponentBuffer() noexcept
         {
             return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
+        }
+
+        void PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept
+        {
+            _bufferPrepEvent(entitiesToDelete);
         }
 
         ~ComponentCache() noexcept
