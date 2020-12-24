@@ -181,7 +181,7 @@ namespace NovelRT::Ecs
 
         ScheduleUpdateWork(workersToAssign, amountOfWork);
 
-        _entityCache.processEntityDeletionRequestsFromThreads();
+        _entityCache.ProcessEntityDeletionRequestsFromThreads();
     }
 
     SystemScheduler::~SystemScheduler() noexcept

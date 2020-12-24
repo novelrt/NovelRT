@@ -35,7 +35,7 @@ namespace NovelRT::Ecs
             _updateVectors[poolId].push_back(entityToRemove);
         }
 
-        void processEntityDeletionRequestsFromThreads() noexcept
+        void ProcessEntityDeletionRequestsFromThreads() noexcept
         {
             _entitiesToRemoveThisFrame.clear();
             size_t currentSize = 0;

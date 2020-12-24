@@ -76,6 +76,11 @@ namespace NovelRT::Ecs
             return _rootSet.ContainsKey(entity);
         }
 
+        [[nodiscard]] size_t GetImmutableDataLength() const noexcept
+        {
+            return _rootSet.Length();
+        }
+
         // clang-format off
         [[nodiscard]] auto begin() const noexcept
         {

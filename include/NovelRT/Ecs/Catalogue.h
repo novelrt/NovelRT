@@ -58,13 +58,23 @@ namespace NovelRT::Ecs
             return true;
         }
 
+        [[nodiscard]] TComponent GetComponent(EntityId entity) const
+        {
+            return _componentBuffer.GetComponent(entity);
+        }
+
+        [[nodiscard]] size_t GetImmutableDataLength() const noexcept
+        {
+            return _componentBuffer.GetImmutableDataLength();
+        }
+
         // clang-format off
-        auto begin() const noexcept
+        [[nodiscard]] auto begin() const noexcept
         {
             return _componentBuffer.begin();
         }
 
-        auto end() const noexcept
+        [[nodiscard]] auto end() const noexcept
         {
             return _componentBuffer.end();
         }
@@ -86,18 +96,18 @@ namespace NovelRT::Ecs
         }
 
         template<typename TComponent>
-        auto GetComponentView()
+        [[nodiscard]] auto GetComponentView()
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }
 
         template<typename... TComponents>
-        auto GetComponentViews()
+        [[nodiscard]] auto GetComponentViews()
         {
             return std::make_tuple(ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
 
-        EntityId CreateEntity() noexcept
+        [[nodiscard]] EntityId CreateEntity() noexcept
         {
             EntityId returnId = Atom::getNextEntityId();
             _createdEntitiesThisFrame.push_back(returnId);
