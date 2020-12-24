@@ -44,12 +44,12 @@ NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState stat
     return NRT_SUCCESS;
 }
 
-int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state) {
+NrtBool Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state) {
     Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-    return static_cast<int32_t>(cppState->shouldLoop());
+    return static_cast<NrtBool>(cppState->shouldLoop());
 }
 
-NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop) {
+NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, NrtBool loop) {
     if (state == nullptr) {
         Nrt_setErrMsgIsNullptrInternal();
         return NRT_FAILURE_NULLPTR_PROVIDED;
