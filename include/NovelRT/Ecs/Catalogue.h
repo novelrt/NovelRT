@@ -49,7 +49,7 @@ namespace NovelRT::Ecs
 
         bool TryRemoveComponent(EntityId entity)
         {
-            if (!_componentbuffer.HasComponent(entity))
+            if (!_componentBuffer.HasComponent(entity))
             {
                 return false;
             }
