@@ -118,7 +118,7 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsErrorCodeWhenBoundsAreRotated) {
   NrtGeoBounds bounds1 { Nrt_GeoVector2F_uniform(1.0f), Nrt_GeoVector2F_uniform(5.0f), 0.0f };
   int32_t output = NRT_FALSE;
 
-  EXPECT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_INVALID_OPERATION);
+  EXPECT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_NOT_SUPPORTED);
 }
 
 TEST(InteropGeoBoundsTest, intersectsWithReturnsNullptrFailureWhenGivenNullptr) {
