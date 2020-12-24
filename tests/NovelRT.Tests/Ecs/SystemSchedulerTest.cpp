@@ -82,10 +82,14 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
         for (auto [entity, component] : intSystem)
         {
             isEqual = component == 10;
+            intSystem.PushComponentUpdateInstruction(entity, 10);
         }
 
     });
 
     scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_TRUE(isEqual);
+    ASSERT_TRUE(isEqual);
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
 }

@@ -14,6 +14,7 @@ set(TEST_SOURCES
 
   Ecs/CatalogueTest.cpp
   Ecs/ComponentBufferTest.cpp
+  Ecs/ComponentViewTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp
 
