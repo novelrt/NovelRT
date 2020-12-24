@@ -19,7 +19,11 @@ namespace NovelRT::Ecs
         ComponentBuffer<TComponent>& _componentBuffer;
         
         public:
-        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId), _componentBuffer(targetBuffer) {}
+        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId),
+                                                                                           _componentBuffer(targetBuffer)
+        {
+
+        }
 
         void PushComponentUpdateInstruction(EntityId entity, TComponent instructionState) noexcept
         {
