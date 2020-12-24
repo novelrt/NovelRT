@@ -6,7 +6,10 @@
 const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
 const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
 const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
+const char* const errMsgIsNotSUpportedInternal = "The current operation is not supported.";
 const char* const errMsgIsAlreadyDeletedOrRemoved = "Unable to continue! The specific item has already been deleted or removed.";
+const char* const errMsgIsInitialisationFailure = "Service could not be initialised.";
+const char* const errMsgIsFunctionNotFound= "Failed to locate the specified managed function.";
 const char* currentErrorMessage = nullptr;
 bool customMessageSet = false;
 
@@ -49,6 +52,21 @@ void Nrt_setErrMsgIsDivideByZeroInternal() {
 void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal() {
   validateCustomMessageInternal();
   currentErrorMessage = errMsgIsAlreadyDeletedOrRemoved;
+}
+
+void Nrt_setErrMsgIsInitialisationFailureInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsInitialisationFailure;
+}
+
+void Nrt_setErrMsgIsNotSupportedInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsNotSUpportedInternal;
+}
+
+void Nrt_setErrMsgIsFunctionNotFound() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsFunctionNotFound;
 }
 
 void Nrt_setErrMsgCustomInternal(const char* message) {
