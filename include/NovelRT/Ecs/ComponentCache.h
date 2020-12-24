@@ -37,7 +37,7 @@ namespace NovelRT::Ecs
             }
             auto bufferPtr = new(ptr)ComponentBuffer<T>(_poolSize, deleteInstructionState);
             _destructorFunctions.push_back([bufferPtr](){bufferPtr->~ComponentBuffer<T>();});
-            _bufferPrepEvent += [bufferPtr] (auto arg) { bufferPtr->PrepComponentBuffersForFrame(arg); };
+            _bufferPrepEvent += [bufferPtr] (auto arg) { bufferPtr->PrepComponentBufferForFrame(arg); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 

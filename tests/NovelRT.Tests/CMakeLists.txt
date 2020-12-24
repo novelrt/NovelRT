@@ -13,6 +13,7 @@ set(TEST_SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
   Ecs/CatalogueTest.cpp
+  Ecs/ComponentBufferTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp
 

@@ -28,7 +28,7 @@ namespace NovelRT::Ecs
             }
         }
 
-        void PrepComponentBuffersForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
+        void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
             for (EntityId i : destroyedEntities)
             {
