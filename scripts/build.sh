@@ -139,9 +139,9 @@ function Test {
   pushd "$TestDir"
 
   if [ -z "$remaining" ]; then
-    ctest --build-config "$configuration" --output-on-failure --VV
+    ctest --build-config "$configuration" --output-on-failure
   else
-    ctest --build-config "$configuration" --output-on-failure --VV "${remaining[@]}"
+    ctest --build-config "$configuration" --output-on-failure "${remaining[@]}"
   fi
 
   LASTEXITCODE=$?

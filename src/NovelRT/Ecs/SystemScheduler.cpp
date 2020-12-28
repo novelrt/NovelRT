@@ -4,14 +4,7 @@
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _entityCache(1),
-                                                                             _componentCache(1),
-                                                                             _workerThreadCount(maximumThreadCount),
-                                                                             _currentDelta(0),
-                                                                             _threadAvailabilityMap(0),
-                                                                             _threadShutDownStatus(0),
-                                                                             _shouldShutDown(false),
-                                                                             _ecsDataBufferIndex(0)
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _entityCache(1), _componentCache(1), _workerThreadCount(maximumThreadCount), _currentDelta(0), _threadAvailabilityMap(0), _threadShutDownStatus(0), _shouldShutDown(false), _ecsDataBufferIndex(0)
     {
         if (_workerThreadCount != 0)
         {
@@ -203,4 +196,4 @@ namespace NovelRT::Ecs
             }
         }
     }
-} // namespace NovelRT::Ecs
+} 

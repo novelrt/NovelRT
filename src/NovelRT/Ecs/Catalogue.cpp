@@ -6,7 +6,6 @@ namespace NovelRT::Ecs
 {
     Catalogue::Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept : _poolId(poolId), _componentCache(componentCache), _entityCache(entityCache), _createdEntitiesThisFrame(std::vector<EntityId>{})
     {
-
     }
 
     EntityId Catalogue::CreateEntity() noexcept
