@@ -170,7 +170,7 @@ NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) 
     try { 
       serv->setMusicVolume(value);
     } catch( const Exceptions::NotInitialisedException){ // todo: handle error message
-
+      return NRT_FAILURE_NOT_INITIALISED;
     }
     
     return NRT_SUCCESS;
