@@ -26,7 +26,7 @@ extern "C" {
     {
       fontSetPtr->loadFontAsTextureSet(std::string(file), fontSize);
     }
-    catch (const Exceptions::InitialisationFailureException)
+    catch (const Exceptions::InvalidOperationException)
     { // todo: handle error message
       return NRT_FAILURE_INVALID_OPERATION;
     }
