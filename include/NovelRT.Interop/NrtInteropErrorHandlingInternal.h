@@ -13,7 +13,7 @@ void Nrt_setErrMsgIsDivideByZeroInternal();
 void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
 void Nrt_setErrMsgIsNotSupportedInternal();
 void Nrt_setErrMsgIsInitialisationFailureInternal();
-void Nrt_setErrMsgIsFunctionNotFound();
+void Nrt_setErrMsgIsFunctionNotFoundInternal();
 void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus

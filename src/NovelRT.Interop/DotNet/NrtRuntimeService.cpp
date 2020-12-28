@@ -48,7 +48,7 @@ NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
     }
     catch (const Exceptions::FunctionNotFoundException)
     {
-      Nrt_setErrMsgIsFunctionNotFound();
+      Nrt_setErrMsgIsFunctionNotFoundInternal();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 
@@ -80,7 +80,7 @@ NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeService service, intptr_t obj)
       Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
     } catch (const Exceptions::FunctionNotFoundException) {
-      Nrt_setErrMsgIsFunctionNotFound();
+      Nrt_setErrMsgIsFunctionNotFoundInternal();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 
@@ -106,7 +106,7 @@ NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* s
     }
     catch (const Exceptions::FunctionNotFoundException)
     {
-      Nrt_setErrMsgIsFunctionNotFound();
+      Nrt_setErrMsgIsFunctionNotFoundInternal();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 
@@ -128,7 +128,7 @@ NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkServ
       Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
     } catch (const Exceptions::FunctionNotFoundException) {
-      Nrt_setErrMsgIsFunctionNotFound();
+      Nrt_setErrMsgIsFunctionNotFoundInternal();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
 

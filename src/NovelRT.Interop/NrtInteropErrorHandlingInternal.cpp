@@ -64,7 +64,7 @@ void Nrt_setErrMsgIsNotSupportedInternal() {
   currentErrorMessage = errMsgIsNotSupportedInternal;
 }
 
-void Nrt_setErrMsgIsFunctionNotFound() {
+void Nrt_setErrMsgIsFunctionNotFoundInternal() {
   validateCustomMessageInternal();
   currentErrorMessage = errMsgIsFunctionNotFound;
 }
