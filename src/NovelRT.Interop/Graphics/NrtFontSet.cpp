@@ -22,9 +22,12 @@ extern "C" {
 
     FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
 
-    try { 
+    try
+    {
       fontSetPtr->loadFontAsTextureSet(std::string(file), fontSize);
-    } catch (const Exceptions::InitialisationFailureException) { // todo: handle error message
+    }
+    catch (const Exceptions::InitialisationFailureException)
+    { // todo: handle error message
       return NRT_FAILURE_INVALID_OPERATION;
     }
 

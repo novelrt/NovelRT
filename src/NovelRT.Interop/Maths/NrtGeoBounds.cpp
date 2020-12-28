@@ -53,7 +53,8 @@ extern "C" {
       Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
       Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
 
-    try {
+    try
+    {
       if (cFirst.intersectsWith(cOther)) {
         *outputResult = NRT_TRUE;
       } else {
@@ -61,7 +62,8 @@ extern "C" {
       }
 
       return NRT_SUCCESS;
-    } catch (const Exceptions::NotSupportedException) {
+    }
+    catch (const Exceptions::NotSupportedException) {
       Nrt_setErrMsgIsNotSupportedInternal();
       return NRT_FAILURE_NOT_SUPPORTED;
     }

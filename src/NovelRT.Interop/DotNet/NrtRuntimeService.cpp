@@ -37,12 +37,17 @@ NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service) {
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
 
-    try {
+    try
+    {
       cService->initialise();
-    } catch (const Exceptions::InitialisationFailureException) {
+    }
+    catch (const Exceptions::InitialisationFailureException)
+    {
       Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) {
+    }
+    catch (const Exceptions::FunctionNotFoundException)
+    {
       Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
@@ -90,16 +95,21 @@ NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* s
 
     NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
 
-    try {
+    try
+    {
       cService->freeString(str);
-    } catch (const Exceptions::InitialisationFailureException) {
+    }
+    catch (const Exceptions::InitialisationFailureException)
+    {
       Nrt_setErrMsgIsInitialisationFailureInternal();
       return NRT_FAILURE_INITIALISATION_FAILURE;
-    } catch (const Exceptions::FunctionNotFoundException) {
+    }
+    catch (const Exceptions::FunctionNotFoundException)
+    {
       Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
-    
+
     return NRT_SUCCESS;
 }
 
@@ -121,7 +131,7 @@ NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkServ
       Nrt_setErrMsgIsFunctionNotFound();
       return NRT_FAILURE_FUNCTION_NOT_FOUND;
     }
-    
+
     _inkServiceCollection.push_back(inkServicePtr);
     *outputInkService = reinterpret_cast<NrtInkService>(inkServicePtr.get());
     return NRT_SUCCESS;
