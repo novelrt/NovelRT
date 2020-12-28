@@ -125,7 +125,6 @@ NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVe
     std::vector<Animation::SpriteAnimatorFrame> cppVector = *reinterpret_cast<std::vector<Animation::SpriteAnimatorFrame>*>(vector);
     Animation::SpriteAnimatorFrame* cppFrame = new Animation::SpriteAnimatorFrame();
     
-    
     try {
       *cppFrame = cppVector.at(index);
     } catch (const std::out_of_range) { // todo: handle error messag

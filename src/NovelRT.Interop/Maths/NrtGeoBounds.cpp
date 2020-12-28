@@ -50,7 +50,6 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
-    
       Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
       Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&other);
 
