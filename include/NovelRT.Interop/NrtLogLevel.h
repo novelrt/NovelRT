@@ -13,7 +13,7 @@ typedef enum {
     NOVELRT_LOGLEVEL_INFO = 2,
     NOVELRT_LOGLEVEL_WARN = 3,
     NOVELRT_LOGLEVEL_ERR  = 4,
-    NOVELRT_LOGLEVE_OFF = 6
+    NOVELRT_LOGLEVEL_OFF = 6
 } NrtLogLevel;
 
 #ifdef __cplusplus
