@@ -28,7 +28,16 @@ NrtResult Nrt_AudioService_destroy(NrtAudioService service) {
 
 NrtBool Nrt_AudioService_initialiseAudio(NrtAudioService service) {
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    return serv->initializeAudio()? NRT_TRUE : NRT_FALSE;
+
+    try
+    {
+      return serv->initializeAudio()? NRT_TRUE : NRT_FALSE;
+    }
+    catch (const Exceptions::InitialisationFailureException)
+    {
+      Nrt_setErrMsgIsInitialisationFailureInternal();
+      return NRT_FAILURE_INITIALISATION_FAILURE;
+    }
 }
 
 NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output) {
@@ -38,7 +47,17 @@ NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAu
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    auto out = serv->loadMusic(input);
+
+    NovelRT::Audio::SoundBank::iterator out;
+    try
+    {
+      out = serv->loadMusic(input);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     *output = reinterpret_cast<NrtAudioServiceIterator&>(out);
     return NRT_SUCCESS;
 }
@@ -50,7 +69,16 @@ NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int 
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->setSoundVolume(source, val);
+
+    try
+    {
+      serv->setSoundVolume(source, val);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -61,7 +89,16 @@ NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned in
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->setSoundPosition(source, posX, posY);
+
+    try
+    {
+      serv->setSoundPosition(source, posX, posY);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -72,7 +109,16 @@ NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->resumeMusic();
+
+    try
+    {
+      serv->resumeMusic();
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -83,7 +129,16 @@ NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIte
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->playMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
+
+    try
+    {
+      serv->playMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -94,7 +149,16 @@ NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service) {
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->pauseMusic();
+
+    try
+    {
+      serv->pauseMusic();
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -105,7 +169,16 @@ NrtResult Nrt_AudioService_stopMusic(NrtAudioService service) {
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->stopMusic();
+
+    try
+    {
+      serv->stopMusic();
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -116,7 +189,16 @@ NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) 
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->setMusicVolume(value);
+
+    try
+    {
+      serv->setMusicVolume(value);
+    }
+    catch( const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -128,6 +210,7 @@ NrtResult Nrt_AudioService_checkSources(NrtAudioService service) {
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
     serv->checkSources();
+
     return NRT_SUCCESS;
 }
 
@@ -138,7 +221,16 @@ NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsig
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    *output = serv->loadSound(input);
+
+    try
+    {
+      *output = serv->loadSound(input);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 
@@ -160,7 +252,16 @@ NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handl
     }
 
     auto serv = reinterpret_cast<Audio::AudioService*>(service);
-    serv->playSound(handle, loops);
+
+    try
+    {
+      serv->playSound(handle, loops);
+    }
+    catch (const Exceptions::NotInitialisedException)
+    { // todo: handle error message
+      return NRT_FAILURE_NOT_INITIALISED;
+    }
+
     return NRT_SUCCESS;
 }
 

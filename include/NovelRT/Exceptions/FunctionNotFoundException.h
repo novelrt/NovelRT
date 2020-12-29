@@ -10,7 +10,7 @@ namespace NovelRT::Exceptions {
   class FunctionNotFoundException final : public std::runtime_error {
   public:
     FunctionNotFoundException() :
-      std::runtime_error("Failed to locate the specified managed function")
+      std::runtime_error("Failed to locate the specified managed function.")
     {}
     FunctionNotFoundException(int32_t errorCode) :
       std::runtime_error(std::string("Failed to locate the specified managed function. Error code: ") + std::to_string(errorCode) + ".")
