@@ -10,7 +10,7 @@ const char* const errMsgIsNotSupportedInternal = "The current operation is not s
 const char* const errMsgIsAlreadyDeletedOrRemoved = "Unable to continue! The specific item has already been deleted or removed.";
 const char* const errMsgIsInitialisationFailure = "Unable to continue! Service could not be initialised.";
 const char* const errMsgIsFunctionNotFound = "Unable to continue! Failed to locate the specified managed function.";
-const char* const errMsgIsNotInitialized = "Unable to continue! The service is currently not initialised.";
+const char* const errMsgIsNotInitialised = "Unable to continue! The service is currently not initialised.";
 const char* const errMsgIsArgumentOutOfRange = "Unable to continue! The argument is out of range.";
 const char* const errMsgIsInvalidOperation = "Unable to continue! The current operation is invalid.";
 const char* const errMsgIsCharacterNotFound = "Unable to continue! The character can't be found.";
@@ -73,9 +73,9 @@ void Nrt_setErrMsgIsFunctionNotFoundInternal() {
   currentErrorMessage = errMsgIsFunctionNotFound;
 }
 
-void Nrt_setErrMsgIsNotInitializedInternal() {
+void Nrt_setErrMsgIsNotInitialisedInternal() {
   validateCustomMessageInternal();
-  currentErrorMessage = errMsgIsNotInitialized;
+  currentErrorMessage = errMsgIsNotInitialised;
 }
 
 void Nrt_setErrMsgIsArgumentOutOfRangeInternal() {

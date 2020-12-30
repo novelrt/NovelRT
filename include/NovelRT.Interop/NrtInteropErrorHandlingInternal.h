@@ -14,7 +14,7 @@ void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
 void Nrt_setErrMsgIsNotSupportedInternal();
 void Nrt_setErrMsgIsInitialisationFailureInternal();
 void Nrt_setErrMsgIsFunctionNotFoundInternal();
-void Nrt_setErrMsgIsNotInitializedInternal();
+void Nrt_setErrMsgIsNotInitialisedInternal();
 void Nrt_setErrMsgIsArgumentOutOfRangeInternal();
 void Nrt_setErrMsgIsInvalidOperationInternal();
 void Nrt_setErrMsgIsCharacterNotFoundInternal();

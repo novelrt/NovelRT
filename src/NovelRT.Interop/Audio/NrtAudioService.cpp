@@ -55,7 +55,7 @@ NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAu
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -77,7 +77,7 @@ NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int 
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -98,7 +98,7 @@ NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned in
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -119,7 +119,7 @@ NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -140,7 +140,7 @@ NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIte
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -161,7 +161,7 @@ NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service) {
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -182,7 +182,7 @@ NrtResult Nrt_AudioService_stopMusic(NrtAudioService service) {
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -203,7 +203,7 @@ NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) 
     }
     catch( const Exceptions::NotInitialisedException)
     {
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -236,7 +236,7 @@ NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsig
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -268,7 +268,7 @@ NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handl
     }
     catch (const Exceptions::NotInitialisedException)
     { 
-      Nrt_setErrMsgIsNotInitializedInternal();
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
