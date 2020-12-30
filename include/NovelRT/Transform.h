@@ -9,7 +9,7 @@
 
 namespace NovelRT {
   /**
-   * Represents a 2D position, scale and rotation.
+   * @brief Represents a 2D position, scale and rotation.
    */
   class Transform {
   public:
@@ -18,19 +18,19 @@ namespace NovelRT {
     float rotation;
 
     /**
-     * Creates a new Transform with the specified position, rotation and scale.
+     * @brief Creates a new Transform with the specified position, rotation and scale.
      * @param position The position which represents the position of the transform in a given space such as screen or world space.
      * @param rotation The rotation, in degrees, which represents the rotation of the transform.
      * @param scale The scale which represents the size of the transform.
      */
     Transform(Maths::GeoVector2F position, float rotation, Maths::GeoVector2F scale) noexcept;
     /**
-     * Creates a new Transform with the default values.
+     * @brief Creates a new Transform with the default values.
      */
     Transform() noexcept;
 
     /**
-     * Gets the Axis Aligned Bounding Box based on the position and scale of this transform.
+     * @brief Gets the Axis Aligned Bounding Box based on the position and scale of this transform.
      */
     inline Maths::GeoBounds getAABB() const {
       auto maxFscale = fmaxf(scale.x, scale.y);
@@ -38,7 +38,7 @@ namespace NovelRT {
     }
 
     /**
-     * Gets the bounds based on the position, scale and rotation of this transform.
+     * @brief Gets the bounds based on the position, scale and rotation of this transform.
      */
     inline Maths::GeoBounds getBounds() const {
       return Maths::GeoBounds(position, scale, rotation);

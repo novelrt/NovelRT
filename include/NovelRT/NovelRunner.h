@@ -9,17 +9,17 @@
 
 namespace NovelRT {
 /**
- * The base class for creating a visual novel.
+ * @brief The base class for creating a visual novel.
  */
   class NovelRunner {
 
   public:
     /**
-     * This event is used for constructing the rendered scene. This is called once per frame update.
+     * @brief This event is used for constructing the rendered scene. This is called once per frame update.
      */
     Utilities::Event<> SceneConstructionRequested;
     /**
-     * An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one. <br/>
+     * @brief An event that occurs on a frame update, with the delta Timestamp between the last frame update and the new one. <br/>
      * Use this to define game behaviour that is required to be done per-frame.
      */
     Utilities::Event<Timing::Timestamp> Update;
@@ -36,7 +36,7 @@ namespace NovelRT {
 
   public:
     /**
-     * Instantiates the NovelRunner class with its presets.
+     * @brief Instantiates the NovelRunner class with its presets.
      *
      * @param displayNumber The display on which to start the novel.
      * @param windowTitle The title of the window created for NovelRunner.
@@ -44,7 +44,7 @@ namespace NovelRT {
      */
     explicit NovelRunner(int32_t displayNumber, const std::string& windowTitle = "NovelRTTest", uint32_t targetFrameRate = 0, bool transparency = false);
     /**
-     * Launches the NovelRT game loop. This method will block until the game terminates.
+     * @brief Launches the NovelRT game loop. This method will block until the game terminates.
      * @returns Exit code.
      */
     int32_t runNovel();
@@ -63,7 +63,7 @@ namespace NovelRT {
     std::shared_ptr<Windowing::WindowingService> getWindowingService() const;
 
     /**
-     * Terminates the game.
+     * @brief Terminates the game.
      */
     ~NovelRunner();
   };

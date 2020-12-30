@@ -9,7 +9,7 @@
 
 namespace NovelRT::Input {
   /**
-   * A set of key states.
+   * @brief A set of key states.
    */
   enum class KeyState : int32_t {
     Idle = -1,

@@ -82,7 +82,7 @@
 #include <png.h>
 
 /**
- * NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
+ * @brief NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
  * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
  */
 namespace NovelRT {
@@ -92,13 +92,13 @@ namespace NovelRT {
   typedef class NovelRunner NovelRunner;
 }
 /**
- * Contains animation features.
+ * @brief Contains animation features.
  */
 namespace NovelRT::Animation {
   typedef class SpriteAnimator SpriteAnimator;
 }
 /***
- * Contains audio features, such as playing audio, and managing audio resources.
+ * @brief Contains audio features, such as playing audio, and managing audio resources.
  */
 namespace NovelRT::Audio {
   typedef std::vector<ALuint> SoundBank;
@@ -106,31 +106,13 @@ namespace NovelRT::Audio {
   typedef class AudioService AudioService;
 }
 /**
- * Contains features to interop with the .NET Core runtime.
+ * @brief Contains features to interop with the .NET Core runtime.
  */
 namespace NovelRT::DotNet {
   typedef class RuntimeService RuntimeService;
 }
 /**
- * Contains exceptions used within NovelRT
- */
-namespace NovelRT::Exceptions {
-  typedef class CharacterNotFoundException CharacterNotFoundException;
-  typedef class CompilationErrorException CompilationErrorException;
-  typedef class FileNotFoundException FileNotFoundException;
-  typedef class FunctionNotFoundException FunctionNotFoundException;
-  typedef class InitialisationFailureException InitialisationFailureException;
-  typedef class InvalidOperationException InvalidOperationException;
-  typedef class IOException IOException;
-  typedef class NotInitialisedException NotInitialisedException;
-  typedef class NotSupportedException NotSupportedException;
-  typedef class NullPointerException NullPointerException;
-  typedef class OpenGLLinkageFailure OpenGLLinkageFailure;
-  typedef class OutOfMemoryException OutOfMemoryException;
-  typedef class RuntimeNotFoundException RuntimeNotFoundException;
-}
-/**
- * Contains graphics features, such as rendering, textures, cameras, etc.
+ * @brief Contains graphics features, such as rendering, textures, cameras, etc.
  */
 namespace NovelRT::Graphics {
   typedef class Texture Texture;
@@ -142,14 +124,7 @@ namespace NovelRT::Graphics {
   typedef class TextRect TextRect;
 }
 /**
- * Contains bindings for Ink.
- */
-namespace NovelRT::Ink {
-  typedef class InkService InkService;
-  typedef class Story Story;
-}
-/**
- * Contains input features, such as keyboard and mouse interactivity.
+ * @brief Contains input features, such as keyboard and mouse interactivity.
  */
 namespace NovelRT::Input {
   typedef class BasicInteractionRect BasicInteractionRect;
@@ -157,7 +132,7 @@ namespace NovelRT::Input {
   typedef class InteractionService InteractionService;
 }
 /**
- * Contains scene graph features.
+ * @brief Contains scene graph features.
  */
 namespace NovelRT::SceneGraph {
   typedef class QuadTreeNode QuadTreeNode;
@@ -167,13 +142,15 @@ namespace NovelRT::SceneGraph {
   typedef class SceneNode SceneNode;
 }
 /**
- * Contains timing features, such as timers.
+ * @brief Contains timing features, such as timers.
  */
 namespace NovelRT::Timing {
+  // Windows and some other platforms use 100ns ticks
+  static const uint64_t TicksPerSecond = 10'000'000;
   typedef class StepTimer StepTimer;
 }
 /**
- * Contains windowing features.
+ * @brief Contains windowing features.
  */
 namespace NovelRT::Windowing {
   typedef class WindowingService WindowingService;
@@ -193,10 +170,10 @@ namespace NovelRT::Windowing {
 
 #include "NovelRT/Animation/AnimatorPlayState.h"
 #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-#include "NovelRT/Maths/GeoVector2F.h"
-#include "NovelRT/Maths/GeoVector3F.h"
-#include "NovelRT/Maths/GeoVector4F.h"
-#include "NovelRT/Maths/GeoMatrix4x4F.h"
+#include "NovelRT/Maths/GeoVector2.h"
+#include "NovelRT/Maths/GeoVector3.h"
+#include "NovelRT/Maths/GeoVector4.h"
+#include "NovelRT/Maths/GeoMatrix4x4.h"
 #include "NovelRT/Maths/GeoBounds.h"
 #include "NovelRT/Maths/QuadTreePoint.h"
 #include "NovelRT/Maths/QuadTree.h"
@@ -216,24 +193,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Animation/SpriteAnimatorState.h"
 #include "NovelRT/Animation/SpriteAnimator.h"
 
-//ECS types
-#include "NovelRT/Ecs/Ecs.h"
-
-// Exception types
-#include "NovelRT/Exceptions/CharacterNotFoundException.h"
-#include "NovelRT/Exceptions/CompilationErrorException.h"
-#include "NovelRT/Exceptions/FileNotFoundException.h"
-#include "NovelRT/Exceptions/FunctionNotFoundException.h"
-#include "NovelRT/Exceptions/InitialisationFailureException.h"
-#include "NovelRT/Exceptions/InvalidOperationException.h"
-#include "NovelRT/Exceptions/IOException.h"
-#include "NovelRT/Exceptions/NotInitialisedException.h"
-#include "NovelRT/Exceptions/NotSupportedException.h"
-#include "NovelRT/Exceptions/NullPointerException.h"
-#include "NovelRT/Exceptions/OpenGLLinkageFailure.h"
-#include "NovelRT/Exceptions/OutOfMemoryException.h"
-#include "NovelRT/Exceptions/RuntimeNotFoundException.h"
-
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"
 #include "NovelRT/Graphics/Texture.h"
@@ -243,10 +202,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
 #include "NovelRT/Graphics/ImageRect.h"
 #include "NovelRT/Graphics/TextRect.h"
-
-//Ink types
-#include "NovelRT/Ink/Story.h"
-#include "NovelRT/Ink/InkService.h"
 
 //Input types
 #include "NovelRT/Input/InteractionObject.h"
