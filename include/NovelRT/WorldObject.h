@@ -9,7 +9,7 @@
 
 namespace NovelRT {
   /**
-   * Represents an object in the game world.
+   * @brief Represents an object in the game world.
    *
    * WorldObjects have a transform, and can be active or not.
    * They are also rendered in the world in order of their layer.
