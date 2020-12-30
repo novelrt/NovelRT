@@ -7,6 +7,9 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
+# Added Clang-format custom target so that we can run it locally if needed.
+include(cmake/clang-format.cmake)
+
 if(MSVC)
   # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
