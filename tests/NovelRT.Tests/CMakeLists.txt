@@ -12,6 +12,14 @@ include(GoogleTest)
 set(TEST_SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
+  Ecs/CatalogueTest.cpp
+  Ecs/ComponentBufferTest.cpp
+  Ecs/ComponentCacheTest.cpp
+  Ecs/ComponentViewTest.cpp
+  Ecs/EntityCacheTest.cpp
+  Ecs/SparseSetTest.cpp
+  Ecs/SystemSchedulerTest.cpp
+
   Interop/NovelRTInteropUtilsTest.cpp
   Interop/Animation/SpriteAnimatorStateTest.cpp
   Interop/Maths/GeoBoundsTest.cpp
