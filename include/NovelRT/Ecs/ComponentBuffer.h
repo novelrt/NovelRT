@@ -9,7 +9,7 @@
 namespace NovelRT::Ecs
 {
     /**
-     * @brief A thread-aware storage type that manages the storage and modification of the given type. You should not be instantiating this yourself in a regular setup.
+     * @brief A storage type that manages the storage and modification of the given type concurrently. You should not be instantiating this yourself in a regular setup.
      * 
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * You should not have component types that are massively complex as there may be many copy instructions that are not SIMDifiable if the type is too complicated.
@@ -85,7 +85,7 @@ namespace NovelRT::Ecs
          * If this state is pushed in as an update instruction, the entity in question will no longer have this component attached and the component will be deleted.
          * Please note this is a pure method. Calling this and then discarding the value has no benefit.
          * 
-         * @return T 
+         * @return T in the specified state that represents deletion.
          */
         [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
@@ -109,7 +109,7 @@ namespace NovelRT::Ecs
         /**
          * @brief Gets a copy of the component instance attached to this entity.
          * 
-         * Please note this is a pure function and only introduces overhead with no benefit if the returned object of type T is discarded.
+         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @param entity 
          * @return T A copy of the current state of the component attached to the given entity.
@@ -119,7 +119,6 @@ namespace NovelRT::Ecs
         {
             return _rootSet[entity];
         }
-
 
         /**
          * @brief Verifies if a given entity has a component.
@@ -153,6 +152,7 @@ namespace NovelRT::Ecs
          * @brief Gets the beginning forward iterator state for the immutable data in this ComponentBuffer.
          * 
          * This function is under special formatting so that range-based for loops are supported.
+         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return SparseSet::ConstIterator starting at the beginning.
          */
@@ -165,6 +165,7 @@ namespace NovelRT::Ecs
          * @brief Gets the end forward iterator state for the immutable data in this ComponentBuffer.
          * 
          * This function is under special formatting so that range-based for loops are supported.
+         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return SparseSet::ConstIterator starting at the end.
          */

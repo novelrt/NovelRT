@@ -127,7 +127,7 @@ namespace NovelRT::Ecs
         {
             if (ContainsKey(key))
             {
-                throw DuplicateKeyException();
+                throw Exceptions::DuplicateKeyException();
             }
 
             _denseBlock.push_back(value);
