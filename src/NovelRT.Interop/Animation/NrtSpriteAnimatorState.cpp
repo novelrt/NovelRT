@@ -130,7 +130,8 @@ NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVe
       *cppFrame = cppVector.at(index);
     }
     catch (const std::out_of_range)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsArgumentOutOfRangeInternal();
       return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
     }
 

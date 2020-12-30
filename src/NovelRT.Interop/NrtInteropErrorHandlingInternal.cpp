@@ -8,8 +8,12 @@ const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an 
 const char* const errMsgIsDivideByZero = "Unable to continue! Divide by zero was attempted.";
 const char* const errMsgIsNotSupportedInternal = "The current operation is not supported.";
 const char* const errMsgIsAlreadyDeletedOrRemoved = "Unable to continue! The specific item has already been deleted or removed.";
-const char* const errMsgIsInitialisationFailure = "Service could not be initialised.";
-const char* const errMsgIsFunctionNotFound = "Failed to locate the specified managed function.";
+const char* const errMsgIsInitialisationFailure = "Unable to continue! Service could not be initialised.";
+const char* const errMsgIsFunctionNotFound = "Unable to continue! Failed to locate the specified managed function.";
+const char* const errMsgIsNotInitialized = "Unable to continue! The service is currently not initialised.";
+const char* const errMsgIsArgumentOutOfRange = "Unable to continue! The argument is out of range.";
+const char* const errMsgIsInvalidOperation = "Unable to continue! The current operation is invalid.";
+const char* const errMsgIsCharacterNotFound = "Unable to continue! The character can't be found.";
 const char* currentErrorMessage = nullptr;
 bool customMessageSet = false;
 
@@ -67,6 +71,26 @@ void Nrt_setErrMsgIsNotSupportedInternal() {
 void Nrt_setErrMsgIsFunctionNotFoundInternal() {
   validateCustomMessageInternal();
   currentErrorMessage = errMsgIsFunctionNotFound;
+}
+
+void Nrt_setErrMsgIsNotInitializedInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsNotInitialized;
+}
+
+void Nrt_setErrMsgIsArgumentOutOfRangeInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsArgumentOutOfRange;
+}
+
+void Nrt_setErrMsgIsInvalidOperationInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsInvalidOperation;
+}
+
+void Nrt_setErrMsgIsCharacterNotFoundInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsCharacterNotFound;
 }
 
 void Nrt_setErrMsgCustomInternal(const char* message) {
