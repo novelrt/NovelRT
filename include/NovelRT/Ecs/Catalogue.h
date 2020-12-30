@@ -10,6 +10,12 @@
 
 namespace NovelRT::Ecs
 {
+    /**
+     * @brief A thread-aware context into the current state of the ECS instance that created an instance of this object. You should not be instantiating this yourself in a regular setup.
+     * 
+     * When inside a system, an instance of this object is provided alongside the current delta time as a Timing::Timestamp
+     * and should be used to query and modify the ECS state.
+     */
     class Catalogue
     {
         private:
@@ -19,22 +25,59 @@ namespace NovelRT::Ecs
         std::vector<EntityId> _createdEntitiesThisFrame;
 
         public:
+        /**
+         * @brief Constructs a new Catalogue object with context of the ECS instance and thread state.
+         * 
+         * @param poolId The pool ID being used by the thread creating this catalogue instance.
+         * @param componentCache The storage object for all the components in this particular ECS instance.
+         * @param entityCache The storage object for all modifications being made directly to entities themselves (such as a delete instruction).
+         */
         Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept;
 
+        /**
+         * @brief Gets a view into the ComponentCache for the specified component type based on the context of the Catalogue.
+         * 
+         * While this method is not const due to implementation details, this method does not actually directly modify the catalogue or any underlying data itself.
+         * As such, the returned view should not be discarded. Calling this method without actively using the returned view has no effect and introduces overhead.
+         * 
+         * @tparam TComponent The component type the view should be exposing.
+         * @return ComponentView<TComponent> 
+         */
         template<typename TComponent>
-        [[nodiscard]] auto GetComponentView()
+        [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }
 
+        /**
+         * @brief Gets a variadic tuple of views into the ComponentCache for the specified component types based on the context of the Catalogue. This is a multi component version of Catalogue::GetComponentView.
+         * 
+         * While this method is not const, this method does not actually directly modify the catalogue or any underlying data itself.
+         * As such, the returned tuple should not be discarded. Calling this method without actively using the returned tuple has no effect and introduces overhead.
+         * 
+         * @tparam TComponents The component types the views should be exposing.
+         * @return std::tuple<ComponentView<TComponents>...> 
+         */
         template<typename... TComponents>
-        [[nodiscard]] auto GetComponentViews()
+        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
         {
             return std::make_tuple(ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
 
+        /**
+         * @brief Creates a new EntityId for use within the ECS.
+         * 
+         * If you discard the returned EntityId, the entity will simply be lost to the ECS and will have no effect.
+         * 
+         * @return EntityId 
+         */
         [[nodiscard]] EntityId CreateEntity() noexcept;
 
+        /**
+         * @brief Marks an entity for deletion when the current update cycle is resolved. In the next immutable ECS state, this entity will not exist.
+         * 
+         * @param entity The entity to delete.
+         */
         void DeleteEntity(EntityId entity) noexcept;
     };
 }

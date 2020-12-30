@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <algorithm>
 #include <stdexcept>
+#include "../Exceptions/DuplicateKeyException.h"
 
 namespace NovelRT::Ecs
 {
@@ -126,7 +127,7 @@ namespace NovelRT::Ecs
         {
             if (ContainsKey(key))
             {
-                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
+                throw DuplicateKeyException();
             }
 
             _denseBlock.push_back(value);
