@@ -20,7 +20,15 @@ extern "C" {
     }
 
     Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
-    texturePtr->loadPngAsTexture(std::string(file));
+
+    try
+    {
+      texturePtr->loadPngAsTexture(std::string(file));
+    }
+    catch (const Exceptions::InvalidOperationException)
+    { // todo: handle error message
+      return NRT_FAILURE_INVALID_OPERATION;
+    }
 
     return NRT_SUCCESS;
   }

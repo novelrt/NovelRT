@@ -162,8 +162,8 @@ void LoggingService::throwIfNullPtr(const void *const object, const std::string 
     if (object != nullptr)
         return;
     logError(exceptionMessage);
-    throw std::runtime_error(exceptionMessage);
-}
+    throw Exceptions::NullPointerException(exceptionMessage);
+  }
 
 void LoggingService::throwIfNotZero(int32_t error, const std::string &exceptionMessage)
 {

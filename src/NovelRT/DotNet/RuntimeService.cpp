@@ -72,8 +72,8 @@ namespace NovelRT::DotNet {
 
       if (result != 0)
       {
-        _logger.logError("Failed to initialize the runtime: {}", result);
-        throw std::runtime_error("Failed to initialize the runtime");
+        _logger.logError("Failed to initialise the runtime: {}", result);
+        throw Exceptions::InitialisationFailureException("Failed to initialise the runtime",result);
       }
 
       return hostContextHandle;
@@ -85,7 +85,7 @@ namespace NovelRT::DotNet {
       if (result != static_cast<int>(HostApiBufferTooSmall))
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw std::runtime_error("Failed to locate hostfxr");
+        throw Exceptions::OutOfMemoryException("The host API's buffer is too small");
       }
 
       auto buffer = std::vector<char_t>(buffer_size);
@@ -94,7 +94,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate hostfxr: {}", result);
-        throw std::runtime_error("Failed to locate hostfxr");
+        throw Exceptions::FileNotFoundException(get_hostfxr_string(buffer),"Failed to locate hostfxr");
       }
 
       return loadNativeLibrary(buffer.data());
@@ -115,7 +115,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to initialize the runtime: {}", result);
-        throw std::runtime_error("Failed to initialize the runtime");
+        throw Exceptions::InitialisationFailureException("Failed to initialise the runtime");
       }
 
       return reinterpret_cast<load_assembly_and_get_function_pointer_fn>(load_assembly_and_get_function_pointer);
@@ -132,7 +132,7 @@ namespace NovelRT::DotNet {
       if (result != 0)
       {
         _logger.logError("Failed to locate the specified managed function: {}", result);
-        throw std::runtime_error("Failed to locate the specified managed function");
+        throw Exceptions::FunctionNotFoundException(result);
       }
 
       auto getExports = reinterpret_cast<void(*)(Exports*)>(delegate);
@@ -181,4 +181,22 @@ namespace NovelRT::DotNet {
   {
     return std::make_shared<Ink::InkService>(shared_from_this(), _exports.getActual().GetInkServiceExports);
   }
+
+  #if defined(_WIN32)
+  std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer)
+  {
+      if (buffer.empty()) return std::string();
+      int size_needed = WideCharToMultiByte(CP_UTF8, 0, &buffer[0], (int)buffer.size(), nullptr, 0, nullptr, nullptr);
+      std::string result(size_needed, 0);
+      WideCharToMultiByte(CP_UTF8, 0, buffer.data(), (int)buffer.size(), &result[0], size_needed, nullptr, nullptr);
+      return result;
+  }
+  #else
+  std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer)
+  {
+      if (buffer.empty()) return std::string();
+      std::string result(buffer.begin(), buffer.end());
+      return result;
+  }
+  #endif
 }

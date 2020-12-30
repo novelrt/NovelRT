@@ -11,6 +11,9 @@ void Nrt_setErrMsgIsNullptrInternal();
 void Nrt_setErrMsgIsNaNInternal();
 void Nrt_setErrMsgIsDivideByZeroInternal();
 void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+void Nrt_setErrMsgIsNotSupportedInternal();
+void Nrt_setErrMsgIsInitialisationFailureInternal();
+void Nrt_setErrMsgIsFunctionNotFoundInternal();
 void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus

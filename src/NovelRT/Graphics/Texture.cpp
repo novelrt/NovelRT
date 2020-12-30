@@ -16,13 +16,14 @@ namespace NovelRT::Graphics {
   void Texture::loadPngAsTexture(const std::string& file) {
     if (_textureId.isCreated()) {
       _logger.logError("This texture has already been initialised with data. Please make a new texture!");
-      throw std::runtime_error("Unable to continue! Cannot overwrite Texture!");
+      throw Exceptions::InvalidOperationException("Unable to continue! Cannot overwrite Texture, please make a new texture.");
     }
     _textureFile = file;
     //The following libpng setup SHOULD always force it to RGBA, and should always ensure the bit size is the same
 
     FILE* cFile;
 #if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
+    // todo: replace with file not found exc
     _logger.throwIfNotZero(fopen_s(&cFile, file.c_str(), "rb"), "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #else
     cFile = fopen(file.c_str(), "rb");
@@ -31,19 +32,19 @@ namespace NovelRT::Graphics {
 
     if (png == nullptr) {
       _logger.logError("Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-      throw std::runtime_error("Unable to continue! File failed to load for texture.");
+      throw Exceptions::FileNotFoundException(file, "Unable to continue! File failed to load for texture. Please ensure the path is correct and that the file is not locked.");
     }
 
     auto info = png_create_info_struct(png);
 
     if (info == nullptr) {
       _logger.logError("Image at path {} failed to provide an info struct! Aborting...", file);
-      throw std::runtime_error("Unable to continue! File failed to load for texture.");
+      throw Exceptions::IOException(file, "Unable to continue! File failed to provide an info struct.");
     }
 
     if (setjmp(png_jmpbuf(png))) { //This is how libpng does error handling.
       _logger.logError("Image at path {} appears to be corrupted! Aborting...", file);
-      throw std::runtime_error("Unable to continue! File failed to load for texture.");
+      throw Exceptions::IOException(file, "Unable to continue! File appears to be corrupted.");
     }
 
     png_init_io(png, cFile);
@@ -86,7 +87,7 @@ namespace NovelRT::Graphics {
     if (rawImage == nullptr) {
       png_destroy_read_struct(&png, &info, nullptr);
       fclose(cFile);
-      throw std::runtime_error("Couldn't allocate space for PNG!");
+      throw Exceptions::OutOfMemoryException(std::string("Couldn't allocate space for PNG, file: \"").append(file).append("\"."));
     }
 
     data.rowPointers = new png_bytep[data.height];  //Setup row pointer array and set it into the pixel buffer.
@@ -95,7 +96,7 @@ namespace NovelRT::Graphics {
     //TODO: Proper error check on data.rowPointers
     if (data.rowPointers == nullptr) {
       _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-      throw std::runtime_error("Unable to continue! File failed to load for texture.");
+      throw Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"").append(file).append("\"."));
     }
 
     for (uint32_t i = 0; i < data.height; i++) {

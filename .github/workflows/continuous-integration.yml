@@ -2,27 +2,25 @@ name: Continuous Integration
 
 on:
   pull_request:
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   CI_Ubuntu:
-    name: ubuntu_${{ matrix.configuration }}_x64
+    name: Ubuntu_${{ matrix.configuration }}_x64
     runs-on: ubuntu-latest
     container:
       image: novelrt/novelrt-build:latest
     strategy:
       matrix:
-        configuration: [DEBUG, RELEASE]
+        configuration: [Debug, Release]
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Ubuntu - Run CI Build Script
+      - name: Run CI Build Script
         run: scripts/cibuild.sh --configuration ${{ matrix.configuration }}
 
   CI_Windows:
-    name: windows_${{ matrix.configuration }}_x64
+    name: Windows_${{ matrix.configuration }}_x64
     runs-on: windows-latest
 
     defaults:
@@ -34,7 +32,7 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Run Windows Setup

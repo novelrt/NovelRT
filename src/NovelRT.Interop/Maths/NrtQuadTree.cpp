@@ -119,7 +119,17 @@ extern "C" {
      }
 
     std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points = new std::vector<std::shared_ptr<Maths::QuadTreePoint>>();
-    *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(*reinterpret_cast<const Maths::GeoBounds*>(&bounds));
+
+    try
+    {
+      *points = reinterpret_cast<Maths::QuadTree*>(tree)->getIntersectingPoints(*reinterpret_cast<const Maths::GeoBounds*>(&bounds));
+    }
+    catch (const Exceptions::NotSupportedException)
+    {
+      Nrt_setErrMsgIsNotSupportedInternal();
+      return NRT_FAILURE_NOT_SUPPORTED;
+    }
+
     *outputResultVector = reinterpret_cast<NrtPointVector>(points);
 
     return NRT_SUCCESS;
@@ -146,7 +156,14 @@ extern "C" {
       return NRT_FAILURE_NULLPTR_PROVIDED;
     }
 
-    *outputPoint = reinterpret_cast<NrtQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
+    try
+    {
+      *outputPoint = reinterpret_cast<NrtQuadTreePoint>(reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->at(index).get());
+    }
+    catch (const std::out_of_range)
+    { // todo: handle error message
+      return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+    }
 
     return NRT_SUCCESS;
   }
