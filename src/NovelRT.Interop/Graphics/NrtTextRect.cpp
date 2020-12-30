@@ -140,7 +140,8 @@ extern "C" {
       textRectPtr->setText(std::string(inputText));
     }
     catch (const Exceptions::CharacterNotFoundException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsCharacterNotFoundInternal();
       return NRT_FAILURE_CHARACTER_NOT_FOUND;
     }
 
