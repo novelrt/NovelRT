@@ -27,6 +27,7 @@ extern "C" {
     }
     catch (const Exceptions::InvalidOperationException)
     { // todo: handle error message
+      Nrt_setErrMsgIsInvalidOperationInternal();
       return NRT_FAILURE_INVALID_OPERATION;
     }
 
