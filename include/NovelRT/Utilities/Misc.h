@@ -19,14 +19,14 @@ namespace NovelRT::Utilities {
     static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
     /**
-     * Gets the path to the executable.
+     * @brief Gets the path to the executable.
      *
      * @return The path to the executable.
      */
     static std::filesystem::path getExecutablePath();
 
     /**
-     * Gets the path to the directory that contains the executable. <br/>
+     * @brief Gets the path to the directory that contains the executable. <br/>
      * For example, `/home/stuff/game/best-game-executable` will return `/home/stuff/game`
      *
      * @return The path to the directory that contains the executable.
