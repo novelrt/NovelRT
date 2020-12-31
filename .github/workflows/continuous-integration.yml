@@ -40,3 +40,20 @@ jobs:
 
       - name: Run CI Build Script
         run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
+
+      - name: Check Formatting
+        id: formatting
+        run: scripts/ci-check-format.cmd ${{ matrix.configuration }}
+        if: ${{ steps.build.success() }}
+
+      - name: Generate Formatting Patch
+        id: generate-clang-format-patch
+        run: scripts/ci-generate-diff.cmd
+        if: ${{ steps.formatting.failure() }}
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v1
+        if: ${{ steps.generate-clang-format-patch.success() }}
+        with:
+          name: clang-format.patch
+          path: clang-format.patch

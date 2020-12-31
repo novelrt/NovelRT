@@ -19,7 +19,6 @@ if(CLANG_FORMAT)
         clang-format-ci
         COMMAND clang-format
         -n
-        --output-replacements-xml
         -style=file
         ${ALL_SRC_FILES}
     )
@@ -35,7 +34,6 @@ if(CLANG_FORMAT)
         clang-format-ci
         COMMAND /usr/bin/clang-format
         -n
-        --output-replacements-xml
         -style=file
         ${ALL_SRC_FILES}
     )
