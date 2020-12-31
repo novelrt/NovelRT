@@ -54,9 +54,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Run Windows Setup
+        run: scripts/machine-setup.cmd
+
       - name: Check Formatting
         id: formatting
-        run: scripts/ci-check-format.cmd Debug
+        run: scripts/cibuild.cmd -format -configuration ${{ matrix.configuration }}
 
       - name: Generate Formatting Patch
         id: generate-clang-format-patch

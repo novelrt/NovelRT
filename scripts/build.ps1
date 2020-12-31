@@ -7,6 +7,7 @@ Param(
   [switch] $help,
   [switch] $install,
   [switch] $test,
+  [switch] $format,
   [string] $dotnetInstallDirectory = "$HOME/dotnet",
   [Parameter(ValueFromRemainingArguments=$true)][String[]] $remaining
 )
@@ -26,6 +27,14 @@ function Build() {
 function Create-Directory([string[]] $Path) {
   if (!(Test-Path -Path $Path)) {
     New-Item -Path $Path -Force -ItemType "Directory" | Out-Null
+  }
+}
+
+function Check-Formatting() {
+  & cmake --build $BuildDir --config $configuration --target clang-format-ci
+
+  if ($LastExitCode -ne 0) {
+    throw "'Check Formatting' failed"
   }
 }
 
@@ -87,15 +96,22 @@ try {
   }
 
   if ($ci) {
-    $build = $true
-    $generate = $true
-    $install = $true
-    $test = $true
+    if($format)
+    {
+      $generate = $true
+    }
+    else
+    {
+      $build = $true
+      $generate = $true
+      $install = $true
+      $test = $true
+    }
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
   $vcpkgInstallDirectory = Join-Path -Path $RepoRoot -ChildPath "deps/vcpkg"
-  
+
   $ArtifactsDir = Join-Path -Path $RepoRoot -ChildPath "artifacts"
   Create-Directory -Path $ArtifactsDir
 
@@ -112,6 +128,10 @@ try {
 
   if ($generate) {
     Generate
+  }
+
+  if ($format) {
+    Check-Formatting
   }
 
   if ($build) {
