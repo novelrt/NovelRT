@@ -1,42 +1,44 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_SPARSESET_H
 #define NOVELRT_ECS_SPARSESET_H
 
-#include "EcsUtils.h"
 #include "../Atom.h"
-#include <unordered_map>
-#include <memory>
-#include <iterator>
-#include <cstddef>
+#include "EcsUtils.h"
 #include <algorithm>
+#include <cstddef>
+#include <iterator>
+#include <memory>
 #include <stdexcept>
+#include <unordered_map>
 
 namespace NovelRT::Ecs
 {
-    template <typename TKey, typename TValue, typename THashFunction = std::hash<TKey>>
-    class SparseSet
+    template <typename TKey, typename TValue, typename THashFunction = std::hash<TKey>> class SparseSet
     {
-        private:
+      private:
         std::vector<TKey> _sparseBlock;
         std::vector<TValue> _denseBlock;
         std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
-        public:
+      public:
         class Iterator
         {
-            public:
+          public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
             using value_type = std::tuple<TKey, TValue>;
             using pointer = std::tuple<typename std::vector<TKey>::iterator, typename std::vector<TValue>::iterator>;
             using reference = std::tuple<TKey&, TValue&>;
 
-            private:
+          private:
             pointer _ptr;
 
-            public:
-            Iterator(pointer ptr) : _ptr(ptr) {}
+          public:
+            Iterator(pointer ptr) : _ptr(ptr)
+            {
+            }
 
             reference operator*() const
             {
@@ -75,50 +77,56 @@ namespace NovelRT::Ecs
 
         class ConstIterator
         {
-            public:
+          public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
             using value_type = std::tuple<TKey, TValue>;
-            using pointer = std::tuple<typename std::vector<TKey>::const_iterator, typename std::vector<TValue>::const_iterator>;
+            using pointer =
+                std::tuple<typename std::vector<TKey>::const_iterator, typename std::vector<TValue>::const_iterator>;
             using reference = std::tuple<const TKey&, const TValue&>;
-        
-            private:
+
+          private:
             pointer _ptr;
-        
-            public:
-            ConstIterator(pointer ptr) : _ptr(ptr) {}
-        
+
+          public:
+            ConstIterator(pointer ptr) : _ptr(ptr)
+            {
+            }
+
             reference operator*() const
             {
                 return std::tie(*std::get<0>(_ptr), *std::get<1>(_ptr));
             }
-        
+
             const ConstIterator& operator++()
             {
                 std::get<0>(_ptr)++;
                 std::get<1>(_ptr)++;
                 return *this;
             }
-        
+
             ConstIterator operator++(int)
             {
                 Iterator tmp = *this;
                 ++(*this);
                 return tmp;
             }
-        
+
             friend bool operator==(const ConstIterator& lhs, const ConstIterator& rhs)
             {
                 return lhs._ptr == rhs._ptr;
             }
-        
+
             friend bool operator!=(const ConstIterator& lhs, const ConstIterator& rhs)
             {
                 return lhs._ptr != rhs._ptr;
             }
         };
 
-        SparseSet() noexcept : _sparseBlock(std::vector<TKey>()), _denseBlock(std::vector<TValue>()), _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
+        SparseSet() noexcept
+            : _sparseBlock(std::vector<TKey>()),
+              _denseBlock(std::vector<TValue>()),
+              _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
         {
         }
 
@@ -126,7 +134,9 @@ namespace NovelRT::Ecs
         {
             if (ContainsKey(key))
             {
-                throw std::runtime_error("Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined exception in the future
+                throw std::runtime_error(
+                    "Unable to continue! Duplicate key added to SparseSet!"); // TODO: Make this a well defined
+                                                                              // exception in the future
             }
 
             _denseBlock.push_back(value);
@@ -141,7 +151,7 @@ namespace NovelRT::Ecs
             _sparseBlock.erase(_sparseBlock.begin() + arrayIndex);
             _sparseMap.erase(key);
 
-            for (auto &i : _sparseMap)
+            for (auto& i : _sparseMap)
             {
                 if (i.second < arrayIndex)
                 {
@@ -159,7 +169,7 @@ namespace NovelRT::Ecs
                 Remove(key);
                 return true;
             }
-            
+
             return false;
         }
 
@@ -222,8 +232,7 @@ namespace NovelRT::Ecs
             return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
         }
         // clang-format on
-
     };
 } // namespace NovelRT::Ecs
 
-#endif //!NOVELRT_ECS_SPARSESET_H
+#endif //! NOVELRT_ECS_SPARSESET_H

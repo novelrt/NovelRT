@@ -8,55 +8,57 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT {
-  /**
-   * @brief Represents an object in the game world.
-   *
-   * WorldObjects have a transform, and can be active or not.
-   * They are also rendered in the world in order of their layer.
-   */
-  class WorldObject {
-  private:
-    Transform _transform;
-    int32_t _layer;
-    bool _active;
-
-  protected:
-    bool _isDirty;
-
-  public:
-    WorldObject(Transform transform, int32_t layer);
-    virtual ~WorldObject()
+namespace NovelRT
+{
+    /**
+     * @brief Represents an object in the game world.
+     *
+     * WorldObjects have a transform, and can be active or not.
+     * They are also rendered in the world in order of their layer.
+     */
+    class WorldObject
     {
-    }
+      private:
+        Transform _transform;
+        int32_t _layer;
+        bool _active;
 
-    inline Transform &transform()
-    {
-        _isDirty = true;
-        return _transform;
-    }
+      protected:
+        bool _isDirty;
 
-    inline const Transform &transform() const
-    {
-        return _transform;
-    }
+      public:
+        WorldObject(Transform transform, int32_t layer);
+        virtual ~WorldObject()
+        {
+        }
 
-    inline const int32_t &layer() const
-    {
-        return _layer;
-    }
+        inline Transform& transform()
+        {
+            _isDirty = true;
+            return _transform;
+        }
 
-    inline int32_t &layer()
-    {
-        return _layer;
-    }
+        inline const Transform& transform() const
+        {
+            return _transform;
+        }
 
-    virtual bool getActive() const;
+        inline const int32_t& layer() const
+        {
+            return _layer;
+        }
 
-    virtual void setActive(bool value);
+        inline int32_t& layer()
+        {
+            return _layer;
+        }
 
-    virtual void executeObjectBehaviour() = 0;
-};
+        virtual bool getActive() const;
+
+        virtual void setActive(bool value);
+
+        virtual void executeObjectBehaviour() = 0;
+    };
 } // namespace NovelRT
 
 #endif // NOVELRT_WORLDOBJECT_H

@@ -10,41 +10,41 @@
 
 namespace NovelRT::Animation
 {
-class SpriteAnimatorFrame
-{
-  public:
-    Utilities::Event<> FrameEnter;
-    Utilities::Event<> FrameExit;
-
-  private:
-    std::shared_ptr<Graphics::Texture> _texture;
-    Timing::Timestamp _duration;
-
-  public:
-    SpriteAnimatorFrame() : _duration(Timing::Timestamp::zero())
+    class SpriteAnimatorFrame
     {
-    }
+      public:
+        Utilities::Event<> FrameEnter;
+        Utilities::Event<> FrameExit;
 
-    inline const std::shared_ptr<Graphics::Texture> &texture() const noexcept
-    {
-        return _texture;
-    }
+      private:
+        std::shared_ptr<Graphics::Texture> _texture;
+        Timing::Timestamp _duration;
 
-    inline std::shared_ptr<Graphics::Texture> &texture() noexcept
-    {
-        return _texture;
-    }
+      public:
+        SpriteAnimatorFrame() : _duration(Timing::Timestamp::zero())
+        {
+        }
 
-    inline const Timing::Timestamp &duration() const noexcept
-    {
-        return _duration;
-    }
+        inline const std::shared_ptr<Graphics::Texture>& texture() const noexcept
+        {
+            return _texture;
+        }
 
-    inline Timing::Timestamp &duration() noexcept
-    {
-        return _duration;
-    }
-};
+        inline std::shared_ptr<Graphics::Texture>& texture() noexcept
+        {
+            return _texture;
+        }
+
+        inline const Timing::Timestamp& duration() const noexcept
+        {
+            return _duration;
+        }
+
+        inline Timing::Timestamp& duration() noexcept
+        {
+            return _duration;
+        }
+    };
 } // namespace NovelRT::Animation
 
 #endif //! NOVELRT_ANIMATION_SPRITEANIMATORFRAME_H

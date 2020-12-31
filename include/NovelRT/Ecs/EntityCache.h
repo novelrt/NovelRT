@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_ENTITYCACHE_H
 #define NOVELRT_ECS_ENTITYCACHE_H
@@ -11,11 +12,11 @@ namespace NovelRT::Ecs
 {
     class EntityCache
     {
-        private:
+      private:
         SparseSet<size_t, std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
 
-        public:
+      public:
         EntityCache(size_t poolSize) noexcept;
 
         inline const std::vector<EntityId>& GetEntitiesToRemoveThisFrame() const noexcept
@@ -27,6 +28,6 @@ namespace NovelRT::Ecs
 
         void ProcessEntityDeletionRequestsFromThreads() noexcept;
     };
-}
+} // namespace NovelRT::Ecs
 
-#endif //!NOVELRT_ECS_ENTITYCACHE_H
+#endif //! NOVELRT_ECS_ENTITYCACHE_H

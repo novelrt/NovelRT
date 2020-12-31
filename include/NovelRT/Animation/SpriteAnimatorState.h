@@ -10,85 +10,86 @@
 
 namespace NovelRT::Animation
 {
-class SpriteAnimatorState
-{
-  private:
-    std::vector<SpriteAnimatorFrame> _frames;
-    bool _shouldLoop = false; // this is to shut the warning up since we have no ctor
-    std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>> _transitions;
-
-  public:
-    inline void insertNewState(std::shared_ptr<SpriteAnimatorState> stateTarget,
-                               std::vector<std::function<bool()>> transitionConditions)
+    class SpriteAnimatorState
     {
+      private:
+        std::vector<SpriteAnimatorFrame> _frames;
+        bool _shouldLoop = false; // this is to shut the warning up since we have no ctor
+        std::vector<std::tuple<std::shared_ptr<SpriteAnimatorState>, std::vector<std::function<bool()>>>> _transitions;
 
-        if (stateTarget == nullptr)
+      public:
+        inline void insertNewState(std::shared_ptr<SpriteAnimatorState> stateTarget,
+                                   std::vector<std::function<bool()>> transitionConditions)
         {
-            return;
-        }
 
-        for (size_t i = 0; i < transitionConditions.size(); i++)
-        {
-            if (transitionConditions.at(i) == nullptr)
+            if (stateTarget == nullptr)
             {
-                transitionConditions.erase(transitionConditions.begin() +
-                                           static_cast<std::vector<SpriteAnimatorFrame>::iterator::difference_type>(i));
+                return;
             }
+
+            for (size_t i = 0; i < transitionConditions.size(); i++)
+            {
+                if (transitionConditions.at(i) == nullptr)
+                {
+                    transitionConditions.erase(
+                        transitionConditions.begin() +
+                        static_cast<std::vector<SpriteAnimatorFrame>::iterator::difference_type>(i));
+                }
+            }
+
+            _transitions.emplace_back(make_tuple(stateTarget, transitionConditions));
         }
 
-        _transitions.emplace_back(make_tuple(stateTarget, transitionConditions));
-    }
+        inline void removeStateAtIndex(size_t index)
+        { // not sure if we can make this noexcept somehow but whatever
+            _transitions.erase(_transitions.begin() + index);
+        }
 
-    inline void removeStateAtIndex(size_t index)
-    { // not sure if we can make this noexcept somehow but whatever
-        _transitions.erase(_transitions.begin() + index);
-    }
-
-    inline const bool &shouldLoop() const noexcept
-    {
-        return _shouldLoop;
-    }
-
-    inline bool &shouldLoop() noexcept
-    {
-        return _shouldLoop;
-    }
-
-    inline const std::vector<SpriteAnimatorFrame> &frames() const noexcept
-    {
-        return _frames;
-    }
-
-    inline std::vector<SpriteAnimatorFrame> &frames() noexcept
-    {
-        return _frames;
-    }
-
-    inline std::shared_ptr<SpriteAnimatorState> tryFindValidTransition()
-    {
-        for (auto transitionTuple : _transitions)
+        inline const bool& shouldLoop() const noexcept
         {
-            auto conditions = std::get<std::vector<std::function<bool()>>>(transitionTuple);
-            bool shouldTransitionToThisState = true;
+            return _shouldLoop;
+        }
 
-            for (auto condition : conditions)
+        inline bool& shouldLoop() noexcept
+        {
+            return _shouldLoop;
+        }
+
+        inline const std::vector<SpriteAnimatorFrame>& frames() const noexcept
+        {
+            return _frames;
+        }
+
+        inline std::vector<SpriteAnimatorFrame>& frames() noexcept
+        {
+            return _frames;
+        }
+
+        inline std::shared_ptr<SpriteAnimatorState> tryFindValidTransition()
+        {
+            for (auto transitionTuple : _transitions)
             {
-                if (condition())
+                auto conditions = std::get<std::vector<std::function<bool()>>>(transitionTuple);
+                bool shouldTransitionToThisState = true;
+
+                for (auto condition : conditions)
+                {
+                    if (condition())
+                        continue;
+
+                    shouldTransitionToThisState = false;
+                    break;
+                }
+
+                if (!shouldTransitionToThisState)
                     continue;
 
-                shouldTransitionToThisState = false;
-                break;
+                return std::get<std::shared_ptr<SpriteAnimatorState>>(transitionTuple);
             }
 
-            if (!shouldTransitionToThisState)
-                continue;
-
-            return std::get<std::shared_ptr<SpriteAnimatorState>>(transitionTuple);
+            return nullptr;
         }
-
-        return nullptr;
-    }
-};
+    };
 } // namespace NovelRT::Animation
 
 #endif //! NOVELRT_ANIMATION_SPRITEANIMATORSTATE_H

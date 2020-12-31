@@ -10,29 +10,29 @@
 
 namespace NovelRT::SceneGraph
 {
-class Scene
-{
-  private:
-    std::set<std::shared_ptr<SceneNode>> _nodes;
-
-  public:
-    const std::set<std::shared_ptr<SceneNode>> &getNodes()
+    class Scene
     {
-        return _nodes;
-    }
+      private:
+        std::set<std::shared_ptr<SceneNode>> _nodes;
 
-    bool insert(const std::shared_ptr<SceneNode> &node)
-    {
-        return _nodes.insert(node).second;
-    }
+      public:
+        const std::set<std::shared_ptr<SceneNode>>& getNodes()
+        {
+            return _nodes;
+        }
 
-    bool remove(const std::shared_ptr<SceneNode> &node)
-    {
-        auto numErased = _nodes.erase(node);
-        assert((numErased == 0) || (numErased == 1));
-        return numErased != 0;
-    }
-};
+        bool insert(const std::shared_ptr<SceneNode>& node)
+        {
+            return _nodes.insert(node).second;
+        }
+
+        bool remove(const std::shared_ptr<SceneNode>& node)
+        {
+            auto numErased = _nodes.erase(node);
+            assert((numErased == 0) || (numErased == 1));
+            return numErased != 0;
+        }
+    };
 } // namespace NovelRT::SceneGraph
 
 #endif

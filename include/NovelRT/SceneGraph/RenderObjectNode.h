@@ -10,21 +10,21 @@
 
 namespace NovelRT::SceneGraph
 {
-class RenderObjectNode : public SceneNode
-{
-  private:
-    std::shared_ptr<Graphics::RenderObject> _renderObject;
-
-  public:
-    RenderObjectNode(std::shared_ptr<Graphics::RenderObject> renderObject) : _renderObject(renderObject)
+    class RenderObjectNode : public SceneNode
     {
-    }
+      private:
+        std::shared_ptr<Graphics::RenderObject> _renderObject;
 
-    const std::shared_ptr<Graphics::RenderObject> &getRenderObject() const
-    {
-        return _renderObject;
-    }
-};
+      public:
+        RenderObjectNode(std::shared_ptr<Graphics::RenderObject> renderObject) : _renderObject(renderObject)
+        {
+        }
+
+        const std::shared_ptr<Graphics::RenderObject>& getRenderObject() const
+        {
+            return _renderObject;
+        }
+    };
 } // namespace NovelRT::SceneGraph
 
 #endif

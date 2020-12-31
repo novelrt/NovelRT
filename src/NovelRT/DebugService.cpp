@@ -28,67 +28,67 @@ messageCallback(GLenum source,
 
 namespace NovelRT
 {
-DebugService::DebugService(Utilities::Event<> &sceneConstructionEvent,
-                           std::shared_ptr<Graphics::RenderingService> renderingService) noexcept
-    : _renderingService(renderingService), _fpsCounter(nullptr), _framesPerSecond(0)
-{
-    sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
-}
-
-bool DebugService::getIsFpsCounterVisible() const
-{
-    return (_fpsCounter != nullptr) && _fpsCounter->getActive();
-}
-
-void DebugService::setIsFpsCounterVisible(bool value)
-{
-    if (_fpsCounter == nullptr)
+    DebugService::DebugService(Utilities::Event<>& sceneConstructionEvent,
+                               std::shared_ptr<Graphics::RenderingService> renderingService) noexcept
+        : _renderingService(renderingService), _fpsCounter(nullptr), _framesPerSecond(0)
     {
-        if (value)
+        sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
+    }
+
+    bool DebugService::getIsFpsCounterVisible() const
+    {
+        return (_fpsCounter != nullptr) && _fpsCounter->getActive();
+    }
+
+    void DebugService::setIsFpsCounterVisible(bool value)
+    {
+        if (_fpsCounter == nullptr)
         {
-            auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
+            if (value)
+            {
+                auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-            auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
+                auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
 
-            std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
-            std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
+                std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+                std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
 
-            std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
+                std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
 
-            _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
+                _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
+                updateFpsCounter();
+            }
+        }
+        else
+        {
+            _fpsCounter->setActive(value);
+        }
+    }
+
+    void DebugService::setFramesPerSecond(uint32_t value)
+    {
+        if (_framesPerSecond != value)
+        {
+            _framesPerSecond = value;
             updateFpsCounter();
         }
     }
-    else
+
+    void DebugService::updateFpsCounter()
     {
-        _fpsCounter->setActive(value);
+        if (_fpsCounter != nullptr)
+        {
+            char fpsText[16];
+            snprintf(fpsText, 16, "%u fps", _framesPerSecond);
+            _fpsCounter->setText(fpsText);
+        }
     }
-}
 
-void DebugService::setFramesPerSecond(uint32_t value)
-{
-    if (_framesPerSecond != value)
+    void DebugService::onSceneConstruction()
     {
-        _framesPerSecond = value;
-        updateFpsCounter();
+        if (_fpsCounter == nullptr)
+            return;
+
+        _fpsCounter->executeObjectBehaviour();
     }
-}
-
-void DebugService::updateFpsCounter()
-{
-    if (_fpsCounter != nullptr)
-    {
-        char fpsText[16];
-        snprintf(fpsText, 16, "%u fps", _framesPerSecond);
-        _fpsCounter->setText(fpsText);
-    }
-}
-
-void DebugService::onSceneConstruction()
-{
-    if (_fpsCounter == nullptr)
-        return;
-
-    _fpsCounter->executeObjectBehaviour();
-}
 } // namespace NovelRT

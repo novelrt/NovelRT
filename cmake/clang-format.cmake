@@ -1,6 +1,6 @@
 file(GLOB_RECURSE
      ALL_SRC_FILES
-      src/*/*.c src/*/*.cpp include/*/*.h include/*/*.hpp
+      src/*/*.c src/*/*.cpp samples/*/*.cpp samples/*/*.c include/*/*.h tests/*/*.cpp
      )
 
 

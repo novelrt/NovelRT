@@ -5,13 +5,13 @@
 
 namespace NovelRT
 {
-Transform::Transform(Maths::GeoVector2F position, float rotation, Maths::GeoVector2F scale) noexcept
-    : position(position), scale(scale), rotation(rotation)
-{
-}
+    Transform::Transform(Maths::GeoVector2F position, float rotation, Maths::GeoVector2F scale) noexcept
+        : position(position), scale(scale), rotation(rotation)
+    {
+    }
 
-Transform::Transform() noexcept
-    : position(Maths::GeoVector2F::zero()), scale(Maths::GeoVector2F::zero()), rotation(0.0f)
-{
-}
+    Transform::Transform() noexcept
+        : position(Maths::GeoVector2F::zero()), scale(Maths::GeoVector2F::zero()), rotation(0.0f)
+    {
+    }
 } // namespace NovelRT

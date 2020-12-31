@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_UTILITIES_LAZY_H
 #define NOVELRT_UTILITIES_LAZY_H
@@ -7,102 +8,125 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Utilities {
-  template<typename T>
-  class Lazy {
-  private:
-    std::function<T()> _delegate;
-    T _actual;
-    bool _isCreated;
-
-  public:
-    Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(), _isCreated(false) {}
-    Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(eagerStartValue), _isCreated(true) {}
-
-    T& getActual()
+namespace NovelRT::Utilities
+{
+    template <typename T> class Lazy
     {
-      if (!isCreated()) {
-        _actual = _delegate();
-        _isCreated = true;
-      }
+      private:
+        std::function<T()> _delegate;
+        T _actual;
+        bool _isCreated;
 
-      return _actual;
-    }
+      public:
+        Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(), _isCreated(false)
+        {
+        }
+        Lazy(T eagerStartValue, std::function<T()> delegate)
+            : _delegate(delegate), _actual(eagerStartValue), _isCreated(true)
+        {
+        }
 
-    void reset() {
-      _isCreated = false;
-    }
+        T& getActual()
+        {
+            if (!isCreated())
+            {
+                _actual = _delegate();
+                _isCreated = true;
+            }
 
-    void reset(T newExplicitValue) {
-      _isCreated = true;
-      _actual = newExplicitValue;
-    }
+            return _actual;
+        }
 
-    bool isCreated() const {
-      return _isCreated;
-    }
-  };
+        void reset()
+        {
+            _isCreated = false;
+        }
 
-  template<typename T>
-  class Lazy<std::unique_ptr<T>> {
-  private:
-    std::function<T*()> _delegate;
-    std::unique_ptr<T> _actual;
+        void reset(T newExplicitValue)
+        {
+            _isCreated = true;
+            _actual = newExplicitValue;
+        }
 
-  public:
-    Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr)) {}
+        bool isCreated() const
+        {
+            return _isCreated;
+        }
+    };
 
-    T* getActual()
+    template <typename T> class Lazy<std::unique_ptr<T>>
     {
-      if (!isCreated()) {
-        _actual = std::unique_ptr<T>(_delegate());
-      }
+      private:
+        std::function<T*()> _delegate;
+        std::unique_ptr<T> _actual;
 
-      return _actual.get();
-    }
+      public:
+        Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr))
+        {
+        }
 
-    void reset() {
-      _actual = nullptr;
-    }
+        T* getActual()
+        {
+            if (!isCreated())
+            {
+                _actual = std::unique_ptr<T>(_delegate());
+            }
 
-    void reset(T* newExplicitValue) {
-      _actual.reset(newExplicitValue);
-    }
+            return _actual.get();
+        }
 
-    bool isCreated() const {
-      return _actual != nullptr;
-    }
-  };
+        void reset()
+        {
+            _actual = nullptr;
+        }
 
-  template<typename T, typename Deleter>
-  class Lazy<std::unique_ptr<T, Deleter>> {
-  private:
-    std::function<T*()> _delegate;
-    std::unique_ptr<T, Deleter> _actual;
+        void reset(T* newExplicitValue)
+        {
+            _actual.reset(newExplicitValue);
+        }
 
-  public:
-    Lazy(std::function<T*()> delegate, Deleter deleter) : _delegate(delegate), _actual(std::unique_ptr<T, Deleter>(nullptr, deleter)) {}
+        bool isCreated() const
+        {
+            return _actual != nullptr;
+        }
+    };
 
-    T* getActual()
+    template <typename T, typename Deleter> class Lazy<std::unique_ptr<T, Deleter>>
     {
-      if (!isCreated()) {
-        _actual = std::unique_ptr<T, Deleter>(_delegate(), _actual.get_deleter());
-      }
+      private:
+        std::function<T*()> _delegate;
+        std::unique_ptr<T, Deleter> _actual;
 
-      return _actual.get();
-    }
+      public:
+        Lazy(std::function<T*()> delegate, Deleter deleter)
+            : _delegate(delegate), _actual(std::unique_ptr<T, Deleter>(nullptr, deleter))
+        {
+        }
 
-    void reset() {
-      _actual = nullptr;
-    }
+        T* getActual()
+        {
+            if (!isCreated())
+            {
+                _actual = std::unique_ptr<T, Deleter>(_delegate(), _actual.get_deleter());
+            }
 
-    void reset(T* newExplicitValue) {
-      _actual.reset(newExplicitValue);
-    }
+            return _actual.get();
+        }
 
-    bool isCreated() const {
-      return _actual != nullptr;
-    }
-  };
-}
-#endif //NOVELRT_UTILITIES_LAZY_H
+        void reset()
+        {
+            _actual = nullptr;
+        }
+
+        void reset(T* newExplicitValue)
+        {
+            _actual.reset(newExplicitValue);
+        }
+
+        bool isCreated() const
+        {
+            return _actual != nullptr;
+        }
+    };
+} // namespace NovelRT::Utilities
+#endif // NOVELRT_UTILITIES_LAZY_H

@@ -5,46 +5,54 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Graphics {
-  class Texture : public std::enable_shared_from_this<Texture> {
-    friend class ImageRect;
-    friend class TextRect;
-    friend class RenderingService;
-    friend class FontSet;
-  private:
-    Atom _id;
-    std::shared_ptr<RenderingService> _renderer;
-    Utilities::Lazy<GLuint> _textureId;
-    LoggingService _logger; //not proud of this
-    std::string _textureFile;
-    Maths::GeoVector2F _size;
+namespace NovelRT::Graphics
+{
+    class Texture : public std::enable_shared_from_this<Texture>
+    {
+        friend class ImageRect;
+        friend class TextRect;
+        friend class RenderingService;
+        friend class FontSet;
 
-    inline GLuint getTextureIdInternal() noexcept {
-      return _textureId.getActual();
-    }
+      private:
+        Atom _id;
+        std::shared_ptr<RenderingService> _renderer;
+        Utilities::Lazy<GLuint> _textureId;
+        LoggingService _logger; // not proud of this
+        std::string _textureFile;
+        Maths::GeoVector2F _size;
 
-    inline void setTextureIdInternal(GLuint textureId) noexcept {
-      _textureId.reset(textureId);
-    }
+        inline GLuint getTextureIdInternal() noexcept
+        {
+            return _textureId.getActual();
+        }
 
-    inline Atom getId() const noexcept {
-      return _id;
-    }
+        inline void setTextureIdInternal(GLuint textureId) noexcept
+        {
+            _textureId.reset(textureId);
+        }
 
-  public:
-    Texture(std::shared_ptr<RenderingService> renderer, Atom id);
-    void loadPngAsTexture(const std::string& file);
+        inline Atom getId() const noexcept
+        {
+            return _id;
+        }
 
-    inline const std::string& getTextureFile() const noexcept {
-      return _textureFile;
-    }
+      public:
+        Texture(std::shared_ptr<RenderingService> renderer, Atom id);
+        void loadPngAsTexture(const std::string& file);
 
-    inline Maths::GeoVector2F getSize() const noexcept {
-      return _size;
-    }
+        inline const std::string& getTextureFile() const noexcept
+        {
+            return _textureFile;
+        }
 
-    ~Texture();
-  };
-}
+        inline Maths::GeoVector2F getSize() const noexcept
+        {
+            return _size;
+        }
 
-#endif //!NOVELRT_GRAPHICS_TEXTURE_H
+        ~Texture();
+    };
+} // namespace NovelRT::Graphics
+
+#endif //! NOVELRT_GRAPHICS_TEXTURE_H

@@ -1,26 +1,27 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_SYSTEMSCHEDULER_H
 #define NOVELRT_ECS_SYSTEMSCHEDULER_H
 
-#include "EcsUtils.h"
 #include "../Timing/Timestamp.h"
+#include "Catalogue.h"
+#include "ComponentCache.h"
+#include "EcsUtils.h"
+#include "EntityCache.h"
+#include <atomic>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <thread>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <functional>
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include "Catalogue.h"
-#include "EntityCache.h"
-#include "ComponentCache.h"
 
 namespace NovelRT::Ecs
 {
     class SystemScheduler
     {
-        private:
+      private:
         struct QueueLockPair
         {
             std::vector<Atom> systemUpdateIds;
@@ -32,10 +33,10 @@ namespace NovelRT::Ecs
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
         std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>, AtomHashFunction> _systems;
-        
+
         EntityCache _entityCache;
         ComponentCache _componentCache;
-        
+
         uint32_t _workerThreadCount;
 
         std::vector<QueueLockPair> _threadWorkQueues;
@@ -53,7 +54,7 @@ namespace NovelRT::Ecs
         void CycleForJob(size_t poolId);
         void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
 
-        public:
+      public:
         SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
         void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept;
@@ -82,7 +83,7 @@ namespace NovelRT::Ecs
         {
             return _componentCache;
         }
-        
+
         void SpinThreads() noexcept;
 
         void ExecuteIteration(Timing::Timestamp delta);
@@ -91,4 +92,4 @@ namespace NovelRT::Ecs
     };
 } // namespace NovelRT::Ecs
 
-#endif //!NOVELRT_ECS_SYSTEMSCHEDULER_H
+#endif //! NOVELRT_ECS_SYSTEMSCHEDULER_H

@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_GRAPHICS_IMAGEDATA_H
 
@@ -6,14 +7,16 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Graphics {
-  struct ImageData {
-    uint32_t width;
-    uint32_t height;
-    png_byte colourType;
-    png_byte bitDepth;
-    png_bytep* rowPointers = nullptr; //just following the example here
-  };
-}
+namespace NovelRT::Graphics
+{
+    struct ImageData
+    {
+        uint32_t width;
+        uint32_t height;
+        png_byte colourType;
+        png_byte bitDepth;
+        png_bytep* rowPointers = nullptr; // just following the example here
+    };
+} // namespace NovelRT::Graphics
 
 #endif // !NOVELRT_GRAPHICS_IMAGEDATA_H

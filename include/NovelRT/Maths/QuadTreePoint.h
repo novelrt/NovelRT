@@ -5,23 +5,27 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Maths {
-  class QuadTreePoint : public std::enable_shared_from_this<QuadTreePoint> {
-  private:
-    GeoVector2F _position;
+namespace NovelRT::Maths
+{
+    class QuadTreePoint : public std::enable_shared_from_this<QuadTreePoint>
+    {
+      private:
+        GeoVector2F _position;
 
-  public:
-    QuadTreePoint(GeoVector2F position) :
-      _position(position) {
-    }
+      public:
+        QuadTreePoint(GeoVector2F position) : _position(position)
+        {
+        }
 
-    QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2F(x, y)) {
-    }
+        QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2F(x, y))
+        {
+        }
 
-    GeoVector2F getPosition() const noexcept {
-      return _position;
-    }
-  };
-}
+        GeoVector2F getPosition() const noexcept
+        {
+            return _position;
+        }
+    };
+} // namespace NovelRT::Maths
 
-#endif //!NOVELRT_MATHS_QUADTREENODE_H
+#endif //! NOVELRT_MATHS_QUADTREENODE_H

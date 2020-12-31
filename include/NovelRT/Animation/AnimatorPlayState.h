@@ -10,12 +10,12 @@
 
 namespace NovelRT::Animation
 {
-enum class AnimatorPlayState : uint32_t
-{
-    Stopped,
-    Playing,
-    Paused
-};
-}
+    enum class AnimatorPlayState : uint32_t
+    {
+        Stopped,
+        Playing,
+        Paused
+    };
+} // namespace NovelRT::Animation
 
 #endif //! NOVELRT_ANIMATION_ANIMATORPLAYSTATE_H

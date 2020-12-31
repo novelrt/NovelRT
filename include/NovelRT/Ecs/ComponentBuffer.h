@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_COMPONENTBUFFER_H
 #define NOVELRT_ECS_COMPONENTBUFFER_H
@@ -8,16 +9,18 @@
 
 namespace NovelRT::Ecs
 {
-    template<typename T>
-    class ComponentBuffer 
+    template <typename T> class ComponentBuffer
     {
-        private:
+      private:
         SparseSet<EntityId, T, AtomHashFunction> _rootSet;
         SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
         T _deleteInstructionState;
 
-        public:
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)
+      public:
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept
+            : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}),
+              _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}),
+              _deleteInstructionState(deleteInstructionState)
         {
             for (size_t i = 0; i < poolSize; i++)
             {
@@ -31,16 +34,16 @@ namespace NovelRT::Ecs
             {
                 _rootSet.TryRemove(i);
             }
-            
+
             for (auto [index, sparseSet] : _updateSets)
             {
                 for (auto [entity, component] : sparseSet)
                 {
                     if (component == _deleteInstructionState)
                     {
-                        _rootSet.TryRemove(entity); 
+                        _rootSet.TryRemove(entity);
                     }
-                    else if(!_rootSet.ContainsKey(entity))
+                    else if (!_rootSet.ContainsKey(entity))
                     {
                         _rootSet.Insert(entity, component);
                     }
@@ -56,7 +59,7 @@ namespace NovelRT::Ecs
         [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
             return _deleteInstructionState;
-        } 
+        }
 
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
@@ -90,6 +93,6 @@ namespace NovelRT::Ecs
         }
         // clang-format on
     };
-}
+} // namespace NovelRT::Ecs
 
-#endif //!NOVELRT_ECS_COMPONENTBUFFER_H
+#endif //! NOVELRT_ECS_COMPONENTBUFFER_H

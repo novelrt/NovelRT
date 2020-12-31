@@ -1,26 +1,25 @@
 
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_COMPONENTVIEW_H
 #define NOVELRT_ECS_COMPONENTVIEW_H
 
-#include "EcsUtils.h"
 #include "ComponentBuffer.h"
+#include "EcsUtils.h"
 
 namespace NovelRT::Ecs
 {
-    template <typename TComponent>
-    class ComponentView
+    template <typename TComponent> class ComponentView
     {
-        private:
+      private:
         size_t _poolId;
         ComponentBuffer<TComponent>& _componentBuffer;
-        
-        public:
-        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId),
-                                                                                           _componentBuffer(targetBuffer)
-        {
 
+      public:
+        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept
+            : _poolId(poolId), _componentBuffer(targetBuffer)
+        {
         }
 
         void PushComponentUpdateInstruction(EntityId entity, TComponent instructionState) noexcept
@@ -82,6 +81,6 @@ namespace NovelRT::Ecs
         }
         // clang-format on
     };
-}
+} // namespace NovelRT::Ecs
 
-#endif //!NOVELRT_ECS_COMPONENTVIEW_H
+#endif //! NOVELRT_ECS_COMPONENTVIEW_H
