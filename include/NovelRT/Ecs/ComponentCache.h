@@ -64,7 +64,7 @@ namespace NovelRT::Ecs
         /**
          * @brief Get the ComponentBuffer instance that manages the specified component type.
          * 
-         * This is a pure function. Retrieving the ComponentBuffer and then discarding it has no effect and introduces the overhead of a method call.
+         * This is a pure method. Retrieving the ComponentBuffer and then discarding it has no effect and introduces the overhead of a method call.
          * 
          * @tparam T The component type that the returned ComponentBuffer manages.
          * @return ComponentBuffer<T>& The ComponentBuffer for T by reference.

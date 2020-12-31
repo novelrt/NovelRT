@@ -80,10 +80,10 @@ namespace NovelRT::Ecs
 
 
         /**
-         * @brief This is a read-only property returns the delete instruction state for type T.
+         * @brief Gets the delete instruction state for type T.
          * 
          * If this state is pushed in as an update instruction, the entity in question will no longer have this component attached and the component will be deleted.
-         * Please note this is a pure method. Calling this and then discarding the value has no benefit.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return T in the specified state that represents deletion.
          */
@@ -109,7 +109,7 @@ namespace NovelRT::Ecs
         /**
          * @brief Gets a copy of the component instance attached to this entity.
          * 
-         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @param entity 
          * @return T A copy of the current state of the component attached to the given entity.
@@ -123,7 +123,7 @@ namespace NovelRT::Ecs
         /**
          * @brief Verifies if a given entity has a component.
          * 
-         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @param entity The target entity to check for an attached component on.
          * @return true if the immutable data contains the given EntityId.
@@ -137,7 +137,7 @@ namespace NovelRT::Ecs
         /**
          * @brief Gets the length of the current immutable data snapshot within the buffer.
          * 
-         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return size_t The length of the data.
          */
@@ -149,10 +149,10 @@ namespace NovelRT::Ecs
         // clang-format off
 
         /**
-         * @brief Gets the beginning forward iterator state for the immutable data in this ComponentBuffer.
+         * @brief Gets the beginning forward const iterator state for the immutable data in this ComponentBuffer.
          * 
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return SparseSet::ConstIterator starting at the beginning.
          */
@@ -162,10 +162,10 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Gets the end forward iterator state for the immutable data in this ComponentBuffer.
+         * @brief Gets the end forward const iterator state for the immutable data in this ComponentBuffer.
          * 
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure function. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
          * @return SparseSet::ConstIterator starting at the end.
          */

@@ -10,7 +10,15 @@ namespace NovelRT::Ecs
 {
     using EntityId = Atom;
     using ComponentTypeId = Atom;
-   
+    
+    /**
+     * @brief Retrieves the ComponentTypeId for a given component type.
+     * 
+     * This free function will create a new ID for the given type if one does not exist on the first call.
+     * 
+     * @tparam TComponent The component type to get he ID for.
+     * @return ComponentTypeId The numerical ID of the component type as an Atom.
+     */
     template <typename TComponent>
     [[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
