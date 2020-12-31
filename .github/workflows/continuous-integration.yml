@@ -42,10 +42,21 @@ jobs:
         id: build
         run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
 
+  Formatting:
+    name: Windows_Debug_x64_ClangFormat
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: cmd
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Check Formatting
         id: formatting
-        run: scripts/ci-check-format.cmd ${{ matrix.configuration }}
-        if: ${{ steps.build.outcome == 'success' }}
+        run: scripts/ci-check-format.cmd Debug
 
       - name: Generate Formatting Patch
         id: generate-clang-format-patch
