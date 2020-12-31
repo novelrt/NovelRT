@@ -39,6 +39,7 @@ jobs:
         run: scripts/machine-setup.cmd
 
       - name: Run CI Build Script
+        id: build
         run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
 
       - name: Check Formatting
