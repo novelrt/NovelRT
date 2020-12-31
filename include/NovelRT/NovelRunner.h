@@ -49,17 +49,17 @@ namespace NovelRT {
      */
     int32_t runNovel();
 
-    /// Gets the Rendering Service associated with this Runner.
+    /// @brief Gets the Rendering Service associated with this Runner.
     std::shared_ptr<Graphics::RenderingService> getRenderer() const;
-    /// Gets the Interaction Service associated with this Runner
+    /// @brief Gets the Interaction Service associated with this Runner
     std::shared_ptr<Input::InteractionService> getInteractionService() const;
-    /// Gets the Debug Service associated with this Runner.
+    /// @brief Gets the Debug Service associated with this Runner.
     std::shared_ptr<DebugService> getDebugService() const;
-    /// Gets the Audio Service associated with this Runner.
+    /// @brief Gets the Audio Service associated with this Runner.
     std::shared_ptr<Audio::AudioService> getAudioService() const;
-    /// Gets the .NET Runtime Service associated with this Runner.
+    /// @brief Gets the .NET Runtime Service associated with this Runner.
     std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
-    /// Gets the Windowing Service associated with this Runner.
+    /// @brief Gets the Windowing Service associated with this Runner.
     std::shared_ptr<Windowing::WindowingService> getWindowingService() const;
 
     /**
