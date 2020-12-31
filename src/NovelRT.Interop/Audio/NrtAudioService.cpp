@@ -54,7 +54,8 @@ NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAu
       out = serv->loadMusic(input);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -75,7 +76,8 @@ NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int 
       serv->setSoundVolume(source, val);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -95,7 +97,8 @@ NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned in
       serv->setSoundPosition(source, posX, posY);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -115,7 +118,8 @@ NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service) {
       serv->resumeMusic();
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -135,7 +139,8 @@ NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIte
       serv->playMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -155,7 +160,8 @@ NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service) {
       serv->pauseMusic();
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -175,7 +181,8 @@ NrtResult Nrt_AudioService_stopMusic(NrtAudioService service) {
       serv->stopMusic();
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -195,7 +202,8 @@ NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value) 
       serv->setMusicVolume(value);
     }
     catch( const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    {
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -227,7 +235,8 @@ NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsig
       *output = serv->loadSound(input);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 
@@ -258,7 +267,8 @@ NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handl
       serv->playSound(handle, loops);
     }
     catch (const Exceptions::NotInitialisedException)
-    { // todo: handle error message
+    { 
+      Nrt_setErrMsgIsNotInitialisedInternal();
       return NRT_FAILURE_NOT_INITIALISED;
     }
 

@@ -8,16 +8,14 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT
-{
-/**
- * Represents an object in the game world.
- *
- * WorldObjects have a transform, and can be active or not.
- * They are also rendered in the world in order of their layer.
- */
-class WorldObject
-{
+namespace NovelRT {
+  /**
+   * @brief Represents an object in the game world.
+   *
+   * WorldObjects have a transform, and can be active or not.
+   * They are also rendered in the world in order of their layer.
+   */
+  class WorldObject {
   private:
     Transform _transform;
     int32_t _layer;
