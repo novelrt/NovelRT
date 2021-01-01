@@ -69,7 +69,7 @@ jobs:
 
       - name: Upload Patch
         uses: actions/upload-artifact@v1
-        if: ${{ steps.results.outcome == 'failure' }}
+        if: ${{ failure() }}
         with:
           name: clang-format.patch
           path: artifacts/clang-format.patch
