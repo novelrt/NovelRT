@@ -8,13 +8,14 @@ ScriptRoot="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 RepoRoot="$ScriptRoot/.."
 ArtifactsDir="$RepoRoot/artifacts"
-CreateDirectory "$ArtifactsDir"
 
 function CreateDirectory {
   if [ ! -d "$1" ]; then
     mkdir -p "$1"
   fi
 }
+
+CreateDirectory "$ArtifactsDir"
 
 #See if diff picks up any changes after running clang-format
 git diff > "$ArtifactsDir/clang-format.patch"
