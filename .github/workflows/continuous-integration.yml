@@ -57,7 +57,7 @@ jobs:
         id: formatting
         uses: DoozyX/clang-format-lint-action@v0.11
         with:
-          source: 'src tests include'
+          source: 'src tests include samples'
           extensions: 'h,cpp,c,hpp'
           clangFormatVersion: 10
           inplace: True
