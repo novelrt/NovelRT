@@ -20,9 +20,9 @@ CreateDirectory "$ArtifactsDir"
 #See if diff picks up any changes after running clang-format
 git diff > "$ArtifactsDir/clang-format.patch"
 
-if [-s "$ArtifactsDir/clang-format.patch" ]
+if [ -s "$ArtifactsDir/clang-format.patch" ];
 then
-  raise error "Changes are required!"
+  raise error "Changes are required!";
 else
-  echo "No changes are required :D Passing..."
+  echo "No changes are required :D Passing...";
 fi
