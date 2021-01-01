@@ -22,7 +22,8 @@ git diff > "$ArtifactsDir/clang-format.patch"
 
 if [ -s "$ArtifactsDir/clang-format.patch" ];
 then
-  raise error "Changes are required!";
+  echo "Changes are required!"
+  exit -1;
 else
   echo "No changes are required :D Passing...";
 fi
