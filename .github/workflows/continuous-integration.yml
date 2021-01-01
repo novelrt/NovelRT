@@ -67,18 +67,9 @@ jobs:
         id: results
         run: scripts/ci-checkdiff.sh
 
-      - name: Confirm Results2
-        id: results2
-        run: ls -a scripts/
-
-      - name: Confirm Results3
-        id: results3
-        run: ls -a .
-
-
-      #- name: Upload Patch
-      #  uses: actions/upload-artifact@v1
-      #  if: ${{ steps.generate-clang-format-patch.outcome == 'success' }}
-      #  with:
-      #    name: clang-format.patch
-      #    path: clang-format.patch
+      - name: Upload Patch
+        uses: actions/upload-artifact@v1
+        if: ${{ steps.results.outcome == 'failure' }}
+        with:
+          name: clang-format.patch
+          path: artifacts/clang-format.patch
