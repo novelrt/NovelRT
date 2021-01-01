@@ -23,5 +23,5 @@ if [-s "$ArtifactsDir/clang-format.patch" ]
 then
   raise error "Changes are required!"
 else
-  echo "No changes are required :D"
+  echo "No changes are required :D Passing..."
 fi
