@@ -43,32 +43,26 @@ jobs:
         run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
 
   Formatting:
-    name: Windows_Debug_x64_ClangFormat
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: cmd
+    name: clang-format
+    runs-on: ubuntu-latest
+    #container:
+    #  image: novelrt/novelrt-build:latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Run Windows Setup
-        run: scripts/machine-setup.cmd
-
       - name: Check Formatting
         id: formatting
-        run: scripts/cibuild.cmd -format -configuration ${{ matrix.configuration }}
-
-      - name: Generate Formatting Patch
-        id: generate-clang-format-patch
-        run: scripts/ci-generate-diff.cmd
-        if: ${{ steps.formatting.outcome == 'failure' }}
-
-      - name: Upload Patch
-        uses: actions/upload-artifact@v1
-        if: ${{ steps.generate-clang-format-patch.outcome == 'success' }}
+        uses: actions/checkout@v2
+        uses: DoozyX/clang-format-lint-action@v0.11
         with:
-          name: clang-format.patch
-          path: clang-format.patch
+          source: 'src tests include'
+          extensions: 'h,cpp,c,hpp'
+          clangFormatVersion: 10
+          inplace: True
+          style: file
+
+      #- name: Upload Patch
+      #  uses: actions/upload-artifact@v1
+      #  if: ${{ steps.generate-clang-format-patch.outcome == 'success' }}
+      #  with:
+      #    name: clang-format.patch
+      #    path: clang-format.patch
