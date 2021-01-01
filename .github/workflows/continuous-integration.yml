@@ -49,9 +49,12 @@ jobs:
     #  image: novelrt/novelrt-build:latest
 
     steps:
+      - name: Checkout Code
+        id: checkout
+        uses: actions/checkout@v2
+
       - name: Check Formatting
         id: formatting
-        uses: actions/checkout@v2
         uses: DoozyX/clang-format-lint-action@v0.11
         with:
           source: 'src tests include'
