@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_H
 #define NOVELRT_H
@@ -272,4 +273,4 @@ namespace NovelRT::Windowing {
 
 // clang-format on
 
-#endif //!NOVELRT_H
+#endif //! NOVELRT_H
