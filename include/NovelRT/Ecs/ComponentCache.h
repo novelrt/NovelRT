@@ -40,7 +40,7 @@ namespace NovelRT::Ecs
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
-        template <typename T> [[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
+        template <typename T>[[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
         {
             return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
         }

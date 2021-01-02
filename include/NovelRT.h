@@ -3,6 +3,8 @@
 #ifndef NOVELRT_H
 #define NOVELRT_H
 
+// clang-format off
+
 #if defined(NDEBUG)
 #define unused(x)  (void)(x)
 #else
@@ -267,5 +269,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
 #include "NovelRT/SceneGraph/QuadTreeNode.h"
 #include "NovelRT/SceneGraph/Scene.h"
+
+// clang-format on
 
 #endif //!NOVELRT_H

@@ -22,12 +22,12 @@ namespace NovelRT::Ecs
       public:
         Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept;
 
-        template <typename TComponent> [[nodiscard]] auto GetComponentView()
+        template <typename TComponent>[[nodiscard]] auto GetComponentView()
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }
 
-        template <typename... TComponents> [[nodiscard]] auto GetComponentViews()
+        template <typename... TComponents>[[nodiscard]] auto GetComponentViews()
         {
             return std::make_tuple(
                 ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);

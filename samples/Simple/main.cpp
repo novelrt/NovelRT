@@ -11,13 +11,16 @@ extern "C"
 #include <lualib.h>
 }
 
-static int average(lua_State* luaState) {
-      int n = lua_gettop(luaState);
-      double sum = 0;
-  for (int i = 1; i <= n; i++) {
-      sum += lua_tonumber(luaState, i);    }
-  lua_pushnumber(luaState, sum / n);
-  lua_pushnumber(luaState, sum);
+static int average(lua_State* luaState)
+{
+    int n = lua_gettop(luaState);
+    double sum = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        sum += lua_tonumber(luaState, i);
+    }
+    lua_pushnumber(luaState, sum / n);
+    lua_pushnumber(luaState, sum);
     return 2;
 }
 
