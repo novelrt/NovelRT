@@ -47,7 +47,7 @@ namespace NovelRT::Ecs
         void RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept;
 
         /**
-         * @brief Propagates deletion requests from worker threads to the main thrad. Once this is called, the data can be accessed from EntityCache::GetEntitiesToRemoveThisFrame.
+         * @brief Propagates deletion requests from worker threads to the main thread. Once this is called, the data can be accessed from EntityCache::GetEntitiesToRemoveThisFrame.
          * 
          * In a standard ECS instance, This method should not be called by the developer.
          */

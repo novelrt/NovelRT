@@ -30,7 +30,7 @@ namespace NovelRT::Ecs
          * @brief Constructs a new ComponentBuffer for type T.
          * 
          * 
-         * @param poolSize The amount of worker threads being utilisied in this instance of the ECS.
+         * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is passed in during an update, the ComponentBuffer will delete the component from the target entity during resolution.
          */
         ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}), _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}), _deleteInstructionState(deleteInstructionState)
