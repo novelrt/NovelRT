@@ -5,7 +5,8 @@
 #define NOVELRT_ECS_H
 
 /**
- * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs for component management via stateless systems and other miscellaneous ECS features.
+ * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs
+ * for component management via stateless systems and other miscellaneous ECS features.
  */
 namespace NovelRT::Ecs
 {
