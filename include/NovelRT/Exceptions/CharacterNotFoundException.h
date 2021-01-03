@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_CHARACTER_NOT_FOUND_EXCEPTION_H
-#define NOVELRT_CHARACTER_NOT_FOUND_EXCEPTION_H
+#ifndef NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H
+#define NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H
 
 #include <stdexcept>
 #include <string>
@@ -16,4 +16,4 @@ namespace NovelRT::Exceptions {
 }
 
 
-#endif //NOVELRT_CHARACTER_NOT_FOUND_EXCEPTION_H
+#endif //!NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H

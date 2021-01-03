@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_OUT_OF_MEMORY_EXCEPTION_H
-#define NOVELRT_OUT_OF_MEMORY_EXCEPTION_H
+#ifndef NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H
+#define NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H
 
 #include <stdexcept>
 #include <string>
@@ -18,4 +18,4 @@ namespace NovelRT::Exceptions {
   };
 }
 
-#endif //NOVELRT_OUT_OF_MEMORY_EXCEPTION_H
+#endif //!NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H
