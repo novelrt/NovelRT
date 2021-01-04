@@ -64,10 +64,11 @@ const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
     }
   }
   va_end(args);
-
+  
+  char* finalPath = nullptr;
 //strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
 #if defined(WIN32)
-  char* finalPath = static_cast<char*>(malloc(finalString.length() + 1));
+  finalPath = static_cast<char*>(malloc(finalString.length() + 1));
 
   if(strlen(finalPath) < (finalString.length() + 1)) {
     Nrt_setErrMsgIsOutOfMemoryInternal();
