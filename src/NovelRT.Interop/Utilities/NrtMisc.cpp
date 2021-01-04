@@ -70,7 +70,7 @@ const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
 #if defined(WIN32)
   finalPath = static_cast<char*>(malloc(finalString.length() + 1));
 
-  if(strlen(finalPath) < (finalString.length() + 1)) {
+  if(finalPath == nullptr) {
     Nrt_setErrMsgIsOutOfMemoryInternal();
     return NULL;
   }
@@ -78,7 +78,7 @@ const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
   strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
 #else
   finalPath = strdup(finalString.c_str());
-  if(strlen(finalPath) == nullptr) {
+  if(finalPath == nullptr) {
     Nrt_setErrMsgIsOutOfMemoryInternal();
     return NULL;
   }
