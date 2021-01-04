@@ -11,13 +11,33 @@ extern "C" {
 #endif
 
 const char* Nrt_getExecutablePath() {
-  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
-  return cppPath->c_str();
+  std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
+  size_t length = cppPath.length() + 1;
+  char* returnPtr = nullptr;
+
+  #ifdef WIN32
+  returnPtr = static_cast<char*>(malloc(length));
+  strcpy_s(returnPtr, length, cppPath.c_str());
+  #else
+  returnPtr = strdup(cppPath.c_str());
+  #endif
+
+  return returnPtr;
 }
 
 const char* Nrt_getExecutableDirPath() {
-  std::string* cppPath = new std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
-  return cppPath->c_str();
+  std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
+  size_t length = cppPath.length() + 1;
+  char* returnPtr = nullptr;
+
+  #ifdef WIN32
+  returnPtr = static_cast<char*>(malloc(length));
+  strcpy_s(returnPtr, length, cppPath.c_str());
+  #else
+  returnPtr = strdup(cppPath.c_str());
+  #endif
+  
+  return returnPtr;
 }
 
 const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
@@ -45,17 +65,22 @@ const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
   }
   va_end(args);
 
-  char* finalPath = new char[finalString.length() + 1];
+//strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
+#if defined(WIN32)
+  char* finalPath = static_cast<char*>(malloc(finalString.length() + 1));
+
   if(strlen(finalPath) < (finalString.length() + 1)) {
-    Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
+    Nrt_setErrMsgIsOutOfMemoryInternal();
     return NULL;
   }
 
-//strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
-#if defined(WIN32)
   strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
 #else
   finalPath = strdup(finalString.c_str());
+  if(strlen(finalPath) == nullptr) {
+    Nrt_setErrMsgIsOutOfMemoryInternal();
+    return NULL;
+  }
 #endif
   return finalPath;
 }
