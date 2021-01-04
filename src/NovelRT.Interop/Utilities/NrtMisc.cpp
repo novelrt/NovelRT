@@ -12,10 +12,10 @@ extern "C" {
 
 const char* Nrt_getExecutablePath() {
   std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
-  size_t length = cppPath.length() + 1;
   char* returnPtr = nullptr;
 
   #ifdef WIN32
+  size_t length = cppPath.length() + 1;
   returnPtr = static_cast<char*>(malloc(length));
   strcpy_s(returnPtr, length, cppPath.c_str());
   #else
@@ -27,10 +27,10 @@ const char* Nrt_getExecutablePath() {
 
 const char* Nrt_getExecutableDirPath() {
   std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
-  size_t length = cppPath.length() + 1;
   char* returnPtr = nullptr;
 
   #ifdef WIN32
+  size_t length = cppPath.length() + 1;
   returnPtr = static_cast<char*>(malloc(length));
   strcpy_s(returnPtr, length, cppPath.c_str());
   #else
@@ -64,7 +64,7 @@ const char* Nrt_appendFilePath(int32_t numberOfArgs, ...) {
     }
   }
   va_end(args);
-  
+
   char* finalPath = nullptr;
 //strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
 #if defined(WIN32)
