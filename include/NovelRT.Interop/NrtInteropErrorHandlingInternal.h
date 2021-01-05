@@ -18,6 +18,7 @@ void Nrt_setErrMsgIsNotInitialisedInternal();
 void Nrt_setErrMsgIsArgumentOutOfRangeInternal();
 void Nrt_setErrMsgIsInvalidOperationInternal();
 void Nrt_setErrMsgIsCharacterNotFoundInternal();
+void Nrt_setErrMsgIsOutOfMemoryInternal();
 void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus

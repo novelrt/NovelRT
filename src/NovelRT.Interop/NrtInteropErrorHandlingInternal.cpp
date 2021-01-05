@@ -14,6 +14,7 @@ const char* const errMsgIsNotInitialised = "Unable to continue! The service is c
 const char* const errMsgIsArgumentOutOfRange = "Unable to continue! The argument is out of range.";
 const char* const errMsgIsInvalidOperation = "Unable to continue! The current operation is invalid.";
 const char* const errMsgIsCharacterNotFound = "Unable to continue! The character can't be found.";
+const char* const errMsgIsOutOfMemory = "Insufficient memory to continue the execution of the program.";
 const char* currentErrorMessage = nullptr;
 bool customMessageSet = false;
 
@@ -91,6 +92,11 @@ void Nrt_setErrMsgIsInvalidOperationInternal() {
 void Nrt_setErrMsgIsCharacterNotFoundInternal() {
   validateCustomMessageInternal();
   currentErrorMessage = errMsgIsCharacterNotFound;
+}
+
+void Nrt_setErrMsgIsOutOfMemoryInternal() {
+  validateCustomMessageInternal();
+  currentErrorMessage = errMsgIsOutOfMemory;
 }
 
 void Nrt_setErrMsgCustomInternal(const char* message) {
