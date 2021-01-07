@@ -67,8 +67,11 @@ namespace NovelRT {
 
   void DebugService::updateFpsCounter() {
     if (_fpsCounter != nullptr) {
-      char fpsText[16];
-      snprintf(fpsText, 16, "%u fps", _framesPerSecond);
+      if (_minFrames > _framesPerSecond && _framesPerSecond > 0) { _minFrames = _framesPerSecond; }
+      if (_maxFrames < _framesPerSecond) { _maxFrames = _framesPerSecond; }
+      char fpsText[128];
+      snprintf(fpsText, 128, "%u fps  %u min  %u max  %u avg  %u total", _framesPerSecond, _minFrames, _maxFrames,
+        accumulateAverage(_framesPerSecond), _frameCount);
       _fpsCounter->setText(fpsText);
     }
   }
