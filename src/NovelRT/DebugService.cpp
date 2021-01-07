@@ -58,20 +58,25 @@ namespace NovelRT {
     }
   }
 
-  void DebugService::setFramesPerSecond(uint32_t value) {
-    if (_framesPerSecond != value) {
-      _framesPerSecond = value;
+  void DebugService::setFramesPerSecond(uint32_t framesPerSecond) {
+    if (_framesPerSecond != framesPerSecond) {
+      _framesPerSecond = framesPerSecond;
+      if(_minFramesPerSecond > _framesPerSecond ) { _minFramesPerSecond = _framesPerSecond; }
+      if(_maxFramesPerSecond < _framesPerSecond ) { _maxFramesPerSecond = _framesPerSecond; }
       updateFpsCounter();
     }
   }
+  
+  void DebugService::GetStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames) {
+    _totalSeconds = totalSeconds;
+    _totalFrames = totalFrames;
+    setFramesPerSecond(framesPerSecond);
+  }
 
   void DebugService::updateFpsCounter() {
-    if (_fpsCounter != nullptr) {
-      if (_minFrames > _framesPerSecond && _framesPerSecond > 0) { _minFrames = _framesPerSecond; }
-      if (_maxFrames < _framesPerSecond) { _maxFrames = _framesPerSecond; }
-      char fpsText[128];
-      snprintf(fpsText, 128, "%u fps  %u min  %u max  %u avg  %u total", _framesPerSecond, _minFrames, _maxFrames,
-        accumulateAverage(_framesPerSecond), _frameCount);
+    if (_fpsCounter != nullptr && _totalSeconds > 0 && _totalFrames > 0) {
+      char fpsText[64];
+      snprintf(fpsText, 64, "%u fps %u avg %u min %u max %u total", _framesPerSecond, _totalFrames / _totalSeconds, _minFramesPerSecond, _maxFramesPerSecond, _totalFrames);
       _fpsCounter->setText(fpsText);
     }
   }
