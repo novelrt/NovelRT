@@ -16,7 +16,7 @@ namespace NovelRT {
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
 
     uint32_t _framesPerSecond;
-    
+
     uint32_t _minFrames = 1000;
     uint32_t _maxFrames = 0;
     uint32_t _frameCount = 1;
@@ -45,7 +45,7 @@ namespace NovelRT {
       }
       else
       {
-        frameSkip = true;
+        _frameSkip = true;
       }
       return _runningAverage / _frameCount++;
     }
