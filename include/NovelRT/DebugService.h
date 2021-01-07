@@ -14,12 +14,16 @@ namespace NovelRT {
   private:
     std::shared_ptr<Graphics::RenderingService> _renderingService;
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
+
     uint32_t _framesPerSecond;
+    
     uint32_t _minFrames = 1000;
     uint32_t _maxFrames = 0;
     uint32_t _frameCount = 1;
     uint32_t _runningAverage = 1;
-    bool _frameSkipe = false;
+
+    bool _frameSkip = false;
+
     void updateFpsCounter();
 
     void onSceneConstruction();
@@ -34,7 +38,7 @@ namespace NovelRT {
       return _framesPerSecond;
     }
 
-    inline uint32_t DebugService::accumulateAverage(uint32_t data) {
+    inline uint32_t accumulateAverage(uint32_t data) {
       if(_frameSkip)
       {
         _runningAverage += data;
