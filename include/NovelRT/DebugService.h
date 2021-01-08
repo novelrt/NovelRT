@@ -16,12 +16,6 @@ namespace NovelRT {
     std::unique_ptr<Graphics::TextRect> _fpsCounter;
 
     uint32_t _framesPerSecond;
-<<<<<<< HEAD
-    uint32_t _minFramesPerSecond = 1000;
-    uint32_t _maxFramesPerSecond = 0;
-    uint32_t _totalSeconds = 0;
-    uint32_t _totalFrames = 0;
-=======
 
     uint32_t _minFrames = 1000;
     uint32_t _maxFrames = 0;
@@ -30,7 +24,6 @@ namespace NovelRT {
 
     bool _frameSkip = false;
 
->>>>>>> 336ccfea02c18b658ea45876e684cb1f82a6b717
     void updateFpsCounter();
 
     void onSceneConstruction();
@@ -45,23 +38,7 @@ namespace NovelRT {
     void GetStatistics(uint32_t framesPerSecond,uint32_t totalSeconds,uint32_t totalFrames);
     
     inline uint32_t getFramesPerSecond() const {
-<<<<<<< HEAD
         return _framesPerSecond;
-=======
-      return _framesPerSecond;
-    }
-
-    inline uint32_t accumulateAverage(uint32_t data) {
-      if(_frameSkip)
-      {
-        _runningAverage += data;
-      }
-      else
-      {
-        _frameSkip = true;
-      }
-      return _runningAverage / _frameCount++;
->>>>>>> 336ccfea02c18b658ea45876e684cb1f82a6b717
     }
 
     void setFramesPerSecond(uint32_t framesPerSecond);
