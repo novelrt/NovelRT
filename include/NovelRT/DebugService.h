@@ -17,13 +17,10 @@ namespace NovelRT {
 
     uint32_t _framesPerSecond;
 
-    uint32_t _minFrames = 1000;
-    uint32_t _maxFrames = 0;
-    uint32_t _frameCount = 1;
-    uint32_t _runningAverage = 1;
-
-    bool _frameSkip = false;
-
+    uint32_t _minFramesPerSecond = 1000;
+    uint32_t _maxFramesPerSecond = 0;
+    uint32_t _totalSeconds = 0;
+    uint32_t _totalFrames = 0;
     void updateFpsCounter();
 
     void onSceneConstruction();
