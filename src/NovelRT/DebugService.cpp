@@ -29,7 +29,8 @@ namespace NovelRT {
   DebugService::DebugService(Utilities::Event<>& sceneConstructionEvent, std::shared_ptr<Graphics::RenderingService> renderingService) noexcept :
     _renderingService(renderingService),
     _fpsCounter(nullptr),
-    _framesPerSecond(0) {
+    _framesPerSecond(0),
+    _logging(LoggingService(Utilities::Misc::CONSOLE_LOG_STATS)) {
     sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
   }
 
@@ -46,7 +47,7 @@ namespace NovelRT {
 
         std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
         std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
-
+        LoggingService _logger;
         std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
 
         _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
@@ -78,6 +79,7 @@ namespace NovelRT {
       char fpsText[64];
       snprintf(fpsText, 64, "%u fps %u avg %u min %u max %u total", _framesPerSecond, _totalFrames / _totalSeconds, _minFramesPerSecond, _maxFramesPerSecond, _totalFrames);
       _fpsCounter->setText(fpsText);
+      _logging.logInfo(fpsText);
     }
   }
 
