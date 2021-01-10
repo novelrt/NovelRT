@@ -9,6 +9,7 @@
 #include "CompilationErrorException.h"
 #include "DuplicateKeyException.h"
 #include "FileNotFoundException.h"
+#include "FunctionNotFoundException.h"
 #include "InitialisationFailureException.h"
 #include "InvalidOperationException.h"
 #include "IOException.h"
