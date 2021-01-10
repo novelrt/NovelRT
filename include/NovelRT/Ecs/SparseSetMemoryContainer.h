@@ -51,12 +51,12 @@ namespace NovelRT::Ecs
 
            inline void CopyFromLocation(void* outputLocation) const noexcept
            {
-               memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
+               std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
            }
 
            inline void WriteToLocation(void* data) noexcept
            {
-               memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
+               std::memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
            }
 
            inline void MoveNext()
