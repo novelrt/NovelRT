@@ -157,7 +157,7 @@ namespace NovelRT::Graphics {
       std::vector<char> ProgramErrorMessage(static_cast<size_t>(infoLogLength) + 1);
       glGetProgramInfoLog(programId, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       _logger.logError(std::string(&ProgramErrorMessage[0]));
-      throw Exceptions::OpenGLLinkageFailure(programId, std::string(&ProgramErrorMessage[0]));
+      throw Exceptions::OpenGLLinkageFailureException(programId, std::string(&ProgramErrorMessage[0]));
     }
 
     glDetachShader(programId, vertexShaderId);
