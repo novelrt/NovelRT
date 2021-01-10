@@ -12,35 +12,37 @@ extern "C"
 {
 #endif
 
-const char* Nrt_getExecutablePath() {
-  std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
-  char* returnPtr = nullptr;
+    const char* Nrt_getExecutablePath()
+    {
+        std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
+        char* returnPtr = nullptr;
 
-  #ifdef WIN32
-  size_t length = cppPath.length() + 1;
-  returnPtr = static_cast<char*>(malloc(length));
-  strcpy_s(returnPtr, length, cppPath.c_str());
-  #else
-  returnPtr = strdup(cppPath.c_str());
-  #endif
+#ifdef WIN32
+        size_t length = cppPath.length() + 1;
+        returnPtr = static_cast<char*>(malloc(length));
+        strcpy_s(returnPtr, length, cppPath.c_str());
+#else
+    returnPtr = strdup(cppPath.c_str());
+#endif
 
-  return returnPtr;
-}
+        return returnPtr;
+    }
 
-const char* Nrt_getExecutableDirPath() {
-  std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
-  char* returnPtr = nullptr;
+    const char* Nrt_getExecutableDirPath()
+    {
+        std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
+        char* returnPtr = nullptr;
 
-  #ifdef WIN32
-  size_t length = cppPath.length() + 1;
-  returnPtr = static_cast<char*>(malloc(length));
-  strcpy_s(returnPtr, length, cppPath.c_str());
-  #else
-  returnPtr = strdup(cppPath.c_str());
-  #endif
+#ifdef WIN32
+        size_t length = cppPath.length() + 1;
+        returnPtr = static_cast<char*>(malloc(length));
+        strcpy_s(returnPtr, length, cppPath.c_str());
+#else
+    returnPtr = strdup(cppPath.c_str());
+#endif
 
-  return returnPtr;
-}
+        return returnPtr;
+    }
 
     const char* Nrt_appendFilePath(int32_t numberOfArgs, ...)
     {

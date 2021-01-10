@@ -8,20 +8,20 @@ extern "C"
 {
 #endif
 
-const char* Nrt_getLastErrorInternal();
-void Nrt_setErrMsgIsNullptrInternal();
-void Nrt_setErrMsgIsNaNInternal();
-void Nrt_setErrMsgIsDivideByZeroInternal();
-void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-void Nrt_setErrMsgIsNotSupportedInternal();
-void Nrt_setErrMsgIsInitialisationFailureInternal();
-void Nrt_setErrMsgIsFunctionNotFoundInternal();
-void Nrt_setErrMsgIsNotInitialisedInternal();
-void Nrt_setErrMsgIsArgumentOutOfRangeInternal();
-void Nrt_setErrMsgIsInvalidOperationInternal();
-void Nrt_setErrMsgIsCharacterNotFoundInternal();
-void Nrt_setErrMsgIsOutOfMemoryInternal();
-void Nrt_setErrMsgCustomInternal(const char* message);
+    const char* Nrt_getLastErrorInternal();
+    void Nrt_setErrMsgIsNullptrInternal();
+    void Nrt_setErrMsgIsNaNInternal();
+    void Nrt_setErrMsgIsDivideByZeroInternal();
+    void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+    void Nrt_setErrMsgIsNotSupportedInternal();
+    void Nrt_setErrMsgIsInitialisationFailureInternal();
+    void Nrt_setErrMsgIsFunctionNotFoundInternal();
+    void Nrt_setErrMsgIsNotInitialisedInternal();
+    void Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+    void Nrt_setErrMsgIsInvalidOperationInternal();
+    void Nrt_setErrMsgIsCharacterNotFoundInternal();
+    void Nrt_setErrMsgIsOutOfMemoryInternal();
+    void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus
 }
