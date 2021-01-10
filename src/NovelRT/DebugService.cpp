@@ -29,10 +29,11 @@ namespace NovelRT {
   DebugService::DebugService(Utilities::Event<>& sceneConstructionEvent, std::shared_ptr<Graphics::RenderingService> renderingService) noexcept :
     _renderingService(renderingService),
     _fpsCounter(nullptr),
-    _framesPerSecond(0),
-    _logging(LoggingService(Utilities::Misc::CONSOLE_LOG_STATS)) {
+    _logging(LoggingService(Utilities::Misc::CONSOLE_LOG_STATS)),
+    _framesPerSecond(0)
+ {
     sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
-  }
+ }
 
   bool DebugService::getIsFpsCounterVisible() const {
     return (_fpsCounter != nullptr) && _fpsCounter->getActive();
