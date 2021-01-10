@@ -17,6 +17,7 @@ namespace NovelRT::Ecs
 #include "EcsUtils.h"
 #include "EntityCache.h"
 #include "SparseSet.h"
+#include "SparseSetMemoryContainer.h"
 #include "SystemScheduler.h"
 
 #endif //!NOVELRT_ECS_H

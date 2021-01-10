@@ -31,6 +31,7 @@ set(ENGINE_SOURCES
   Ecs/Catalogue.cpp
   Ecs/ComponentCache.cpp
   Ecs/EntityCache.cpp
+  Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
 
   Graphics/BasicFillRect.cpp

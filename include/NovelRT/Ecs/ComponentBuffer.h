@@ -52,11 +52,6 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            for (EntityId i : destroyedEntities)
-            {
-                _rootSet.TryRemove(i);
-            }
-            
             for (auto [index, sparseSet] : _updateSets)
             {
                 for (auto [entity, component] : sparseSet)
@@ -75,6 +70,11 @@ namespace NovelRT::Ecs
                     }
                 }
                 sparseSet.Clear();
+            }
+
+            for (EntityId i : destroyedEntities)
+            {
+                _rootSet.TryRemove(i);
             }
         }
 

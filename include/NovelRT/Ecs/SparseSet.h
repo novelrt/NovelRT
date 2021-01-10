@@ -166,6 +166,28 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Attempts to insert a new key paired with an initial value into the set. All keys must be unique.
+         *
+         * @param key The new key to insert.
+         * @param value The initial value to associate with the key.
+         *
+         * @return true when the pair is successfully inserted.
+         * @return false when the pair could not be inserted as dictated by SparseSet::ContainsKey.
+         */
+        bool TryInsert(TKey key, TValue value) noexcept
+        {
+            if (ContainsKey(key))
+            {
+                return false;
+            }
+
+            _denseBlock.push_back(value);
+            _sparseBlock.push_back(key);
+            _sparseMap.emplace(key, _denseBlock.size() - 1);
+            return true;
+        }
+
+        /**
          * @brief Removes a given key and its associated value from the set.
          * 
          * @param key The key to remove.
@@ -318,7 +340,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] auto begin() noexcept
+        [[nodiscard]] Iterator begin() const noexcept
         {
             return Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
         }
@@ -332,7 +354,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] auto end() noexcept
+        [[nodiscard]] Iterator end() const noexcept
         {
             return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
         }
@@ -345,7 +367,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] auto cbegin() const noexcept
+        [[nodiscard]] ConstIterator cbegin() const noexcept
         {
             return ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
         }
@@ -358,7 +380,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the end.
          */
-        [[nodiscard]] auto cend() const noexcept
+        [[nodiscard]] ConstIterator cend() const noexcept
         {
             return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
         }
