@@ -340,7 +340,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator begin() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator begin() noexcept
         {
             return SparseSet<TKey,TValue, THashFunction>::Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
         }
@@ -354,7 +354,7 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator end() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator end() noexcept
         {
             return SparseSet<TKey,TValue, THashFunction>::Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
         }
