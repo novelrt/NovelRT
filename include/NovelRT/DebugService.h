@@ -21,6 +21,8 @@ namespace NovelRT {
     uint32_t _maxFramesPerSecond = 0;
     uint32_t _totalSeconds = 0;
     uint32_t _totalFrames = 0;
+
+    LoggingService _logging;
     void updateFpsCounter();
 
     void onSceneConstruction();
