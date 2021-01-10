@@ -3,6 +3,7 @@
 #include <NovelRT/Ecs/SparseSetMemoryContainer.h>
 #include <NovelRT/Exceptions/DuplicateKeyException.h>
 #include <NovelRT/Exceptions/MalformedAllocationException.h>
+#include <NovelRT/Exceptions/KeyNotFoundException.h>
 
 namespace NovelRT::Ecs
 {
@@ -18,9 +19,9 @@ namespace NovelRT::Ecs
         }
     }
 
-    size_t SparseSetMemoryContainer::GetByteLength(size_t dataLength) const noexcept
+    size_t SparseSetMemoryContainer::GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept
     {
-        return _sizeOfDataTypeInBytes * dataLength;
+        return _sizeOfDataTypeInBytes * denseIndex;
     }
 
     std::byte* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
@@ -28,7 +29,7 @@ namespace NovelRT::Ecs
         return &_data[location * _sizeOfDataTypeInBytes];
     }
 
-    void SparseSetMemoryContainer::InsertInternal(size_t key, std::byte* value)
+    void SparseSetMemoryContainer::InsertInternal(size_t key, void* value)
     {
         if (_sparse.size() <= key)
         {
@@ -37,12 +38,12 @@ namespace NovelRT::Ecs
 
         _dense.push_back(key);
         _sparse[key] = _dense.size() - 1;
-        _data.resize(GetByteLength(_dense.size()));
+        _data.resize(GetStartingByteIndexForDenseIndex(_dense.size()));
         auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
         std::memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
     }
 
-    void SparseSetMemoryContainer::Insert(size_t key, std::byte* value)
+    void SparseSetMemoryContainer::Insert(size_t key, void* value)
     {
         if (ContainsKey(key))
         {
@@ -52,7 +53,7 @@ namespace NovelRT::Ecs
         InsertInternal(key, value);
     }
 
-    bool SparseSetMemoryContainer::TryInsert(size_t key, std::byte* value) noexcept
+    bool SparseSetMemoryContainer::TryInsert(size_t key, void* value) noexcept
     {
         if (ContainsKey(key))
         {
@@ -72,10 +73,15 @@ namespace NovelRT::Ecs
 
     void SparseSetMemoryContainer::Remove(size_t key)
     {
-        //this validates if the key is present and throws if it is not
-        size_t indexCutoff = _sparse.at(key);
+        if (!ContainsKey(key))
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
 
-        _data.erase(_data.begin() + GetByteLength(indexCutoff), _data.begin() + GetByteLength(indexCutoff) + (_sizeOfDataTypeInBytes - 1));
+        size_t indexCutoff = _sparse[key];
+        auto byteIndex = GetStartingByteIndexForDenseIndex(indexCutoff);
+
+        _data.erase(_data.begin() + byteIndex, _data.begin() + (byteIndex + _sizeOfDataTypeInBytes));
 
         //the rest should be exception-free. :D
         _dense.erase(_dense.begin() + indexCutoff);
@@ -83,15 +89,18 @@ namespace NovelRT::Ecs
         _sparse[key] = 0;
 
         bool canResize = true;
-        for (auto i = _sparse.begin() + key; i != _sparse.end(); i++)
+        if (!_dense.empty())
         {
-            if (*i == 0 && _dense[0] != key)
+            for (auto it = _sparse.begin() + key; it != _sparse.end(); it++)
             {
-                continue;
-            }
+                if (*it == 0 && _dense[0] != key)
+                {
+                    continue;
+                }
 
-            canResize = false;
-            break;
+                canResize = false;
+                break;
+            }
         }
 
         if (canResize)
@@ -152,7 +161,7 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetValueContainerBasedOnDenseIndex(size_t denseIndex)
     {
-        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetByteLength(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
 
     size_t SparseSetMemoryContainer::Length() const noexcept

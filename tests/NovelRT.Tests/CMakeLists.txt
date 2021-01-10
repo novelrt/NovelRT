@@ -19,6 +19,7 @@ set(TEST_SOURCES
   Ecs/EntityCacheTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp
+  Ecs/SparseSetMemoryContainerTest.cpp
 
   Interop/NovelRTInteropUtilsTest.cpp
   Interop/Animation/SpriteAnimatorStateTest.cpp
@@ -47,7 +48,8 @@ set(TEST_SOURCES
   Utilities/EventTest.cpp
 
   main.cpp
-)
+ )
+
 
 add_executable(Engine_Tests ${TEST_SOURCES})
 target_link_libraries(Engine_Tests

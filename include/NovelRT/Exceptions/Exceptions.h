@@ -13,6 +13,7 @@
 #include "InitialisationFailureException.h"
 #include "InvalidOperationException.h"
 #include "IOException.h"
+#include "KeyNotFoundException.h"
 #include "MalformedAllocationException.h"
 #include "NotInitialisedException.h"
 #include "NotSupportedException.h"
