@@ -73,20 +73,6 @@ extern "C"
         }
         va_end(args);
 
-<<<<<<< HEAD
-        char* finalPath = new char[finalString.length() + 1];
-        if (strlen(finalPath) < (finalString.length() + 1))
-        {
-            Nrt_setErrMsgCustomInternal("Could not properly allocate memory for path!");
-            return NULL;
-        }
-
-// strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
-#if defined(WIN32)
-        strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
-#else
-    finalPath = strdup(finalString.c_str());
-=======
   char* finalPath = nullptr;
 //strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
 #if defined(WIN32)
@@ -104,7 +90,6 @@ extern "C"
     Nrt_setErrMsgIsOutOfMemoryInternal();
     return NULL;
   }
->>>>>>> master
 #endif
         return finalPath;
     }
