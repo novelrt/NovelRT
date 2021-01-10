@@ -59,7 +59,7 @@ namespace NovelRT::Ecs
 
            inline void MoveNext()
            {
-               for (int i = 0; i < _sizeOfObject; ++i)
+               for (size_t i = 0; i < _sizeOfObject; ++i)
                {
                    _iteratorAtValue++;
                }
@@ -94,7 +94,7 @@ namespace NovelRT::Ecs
 
             inline void MoveNext()
             {
-                for (int i = 0; i < _sizeOfObject; ++i)
+                for (size_t i = 0; i < _sizeOfObject; ++i)
                 {
                     _iteratorAtValue++;
                 }
@@ -176,16 +176,16 @@ namespace NovelRT::Ecs
                 return _ptr;
             }
 
-            const Iterator& operator++()
+            const ConstIterator& operator++()
             {
                 std::get<0>(_ptr)++;
                 std::get<1>(_ptr).MoveNext();
                 return *this;
             }
 
-            Iterator operator++(int)
+            ConstIterator operator++(int)
             {
-                Iterator tmp = *this;
+                ConstIterator tmp = *this;
                 ++(*this);
                 return tmp;
             }
