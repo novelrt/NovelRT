@@ -48,7 +48,7 @@ namespace NovelRT::Maths
             return _points[index];
         }
 
-        template <typename TQuadTreePoint> const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const
+        template<typename TQuadTreePoint> const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const
         {
             return static_cast<std::shared_ptr<TQuadTreePoint>>(getPoint(index));
         }
@@ -102,7 +102,7 @@ namespace NovelRT::Maths
             return result;
         }
 
-        template <typename TQuadTreePoint, typename... TArgs> bool tryInsert(GeoBounds bounds, TArgs... args)
+        template<typename TQuadTreePoint, typename... TArgs> bool tryInsert(GeoBounds bounds, TArgs... args)
         {
             return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0),
                                                               std::forward<TArgs>(args)...)) ||

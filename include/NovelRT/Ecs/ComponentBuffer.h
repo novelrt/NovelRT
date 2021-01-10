@@ -20,7 +20,7 @@ namespace NovelRT::Ecs
      *
      * @tparam T The type of component this ComponentBuffer will manage.
      */
-    template <typename T> class ComponentBuffer
+    template<typename T> class ComponentBuffer
     {
       private:
         SparseSet<EntityId, T, AtomHashFunction> _rootSet;

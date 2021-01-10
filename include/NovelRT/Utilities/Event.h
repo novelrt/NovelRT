@@ -9,7 +9,7 @@
 
 namespace NovelRT::Utilities
 {
-    template <typename... TArgs> class EventHandler
+    template<typename... TArgs> class EventHandler
     {
       private:
         Atom _id;
@@ -46,7 +46,7 @@ namespace NovelRT::Utilities
         }
     };
 
-    template <typename... TArgs> class Event
+    template<typename... TArgs> class Event
     {
       private:
         std::vector<EventHandler<TArgs...>> _handlers;

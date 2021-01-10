@@ -13,8 +13,8 @@ namespace NovelRT::SceneGraph
     class SceneNode : public std::enable_shared_from_this<SceneNode>
     {
       public:
-        template <typename T> class breadth_first_traversal_result_iterator;
-        template <typename T> class depth_first_traversal_result_iterator;
+        template<typename T> class breadth_first_traversal_result_iterator;
+        template<typename T> class depth_first_traversal_result_iterator;
 
       private:
         std::set<std::shared_ptr<SceneNode>> _parents;
@@ -111,14 +111,14 @@ namespace NovelRT::SceneGraph
             } while (!pendingNodes.empty());
         }
 
-        template <typename T>
+        template<typename T>
         breadth_first_traversal_result_iterator<T> traverseBreadthFirst(
             std::function<T(const std::shared_ptr<SceneNode>&)> function)
         {
             return breadth_first_traversal_result_iterator<T>(shared_from_this(), function);
         }
 
-        template <typename T>
+        template<typename T>
         depth_first_traversal_result_iterator<T> traverseDepthFirst(
             std::function<T(const std::shared_ptr<SceneNode>&)> function)
         {
@@ -138,7 +138,7 @@ namespace NovelRT::SceneGraph
             return *result;
         }
 
-        template <typename T> class breadth_first_traversal_result_iterator
+        template<typename T> class breadth_first_traversal_result_iterator
         {
           private:
             std::function<T(const std::shared_ptr<SceneNode>&)> _function;
@@ -216,7 +216,7 @@ namespace NovelRT::SceneGraph
             }
         };
 
-        template <typename T> class depth_first_traversal_result_iterator
+        template<typename T> class depth_first_traversal_result_iterator
         {
           private:
             std::function<T(const std::shared_ptr<SceneNode>&)> _function;

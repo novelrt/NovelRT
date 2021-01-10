@@ -14,7 +14,7 @@ namespace NovelRT::Ecs
      *
      * @tparam TComponent The type of component that this view provides access to.
      */
-    template <typename TComponent> class ComponentView
+    template<typename TComponent> class ComponentView
     {
       private:
         size_t _poolId;

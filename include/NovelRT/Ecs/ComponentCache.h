@@ -49,7 +49,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::OutOfMemoryException when a ComponentBuffer could not be allocated in memory for the
          * given component type.
          */
-        template <typename T> void RegisterComponentType(T deleteInstructionState)
+        template<typename T> void RegisterComponentType(T deleteInstructionState)
         {
             auto ptr = malloc(sizeof(ComponentBuffer<T>));
 
@@ -73,7 +73,7 @@ namespace NovelRT::Ecs
          * @tparam T The component type that the returned ComponentBuffer manages.
          * @return ComponentBuffer<T>& The ComponentBuffer for T by reference.
          */
-        template <typename T>[[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
+        template<typename T>[[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
         {
             return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
         }

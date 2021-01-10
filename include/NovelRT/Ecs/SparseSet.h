@@ -27,7 +27,7 @@ namespace NovelRT::Ecs
      * @tparam TValue The type to use for the value.
      * @tparam THashFunction An optional custom hashing function should your key type require one.
      */
-    template <typename TKey, typename TValue, typename THashFunction = std::hash<TKey>> class SparseSet
+    template<typename TKey, typename TValue, typename THashFunction = std::hash<TKey>> class SparseSet
     {
       private:
         std::vector<TKey> _sparseBlock;

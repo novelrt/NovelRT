@@ -10,7 +10,7 @@
 
 namespace NovelRT::Utilities
 {
-    template <typename T> class Lazy
+    template<typename T> class Lazy
     {
       private:
         std::function<T()> _delegate;
@@ -54,7 +54,7 @@ namespace NovelRT::Utilities
         }
     };
 
-    template <typename T> class Lazy<std::unique_ptr<T>>
+    template<typename T> class Lazy<std::unique_ptr<T>>
     {
       private:
         std::function<T*()> _delegate;
@@ -91,7 +91,7 @@ namespace NovelRT::Utilities
         }
     };
 
-    template <typename T, typename Deleter> class Lazy<std::unique_ptr<T, Deleter>>
+    template<typename T, typename Deleter> class Lazy<std::unique_ptr<T, Deleter>>
     {
       private:
         std::function<T*()> _delegate;

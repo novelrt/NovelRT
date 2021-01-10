@@ -20,7 +20,7 @@ namespace NovelRT::Ecs
      * @tparam TComponent The component type to get the ID for.
      * @return ComponentTypeId The numerical ID of the component type as an Atom.
      */
-    template <typename TComponent>[[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
+    template<typename TComponent>[[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
         static const Atom id = Atom::getNextComponentTypeId();
         return id;
