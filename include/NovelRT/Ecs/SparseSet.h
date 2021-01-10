@@ -340,9 +340,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] Iterator begin() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator begin() const noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
+            return SparseSet<TKey,TValue, THashFunction>::Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
         }
 
         /**
@@ -354,9 +354,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] Iterator end() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::Iterator end() const noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
+            return SparseSet<TKey,TValue, THashFunction>::Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
         }
 
         /**
@@ -367,9 +367,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] ConstIterator cbegin() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::ConstIterator cbegin() const noexcept
         {
-            return ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
+            return SparseSet<TKey,TValue, THashFunction>::ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
         }
 
         /**
@@ -380,9 +380,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the end.
          */
-        [[nodiscard]] ConstIterator cend() const noexcept
+        [[nodiscard]] SparseSet<TKey,TValue, THashFunction>::ConstIterator cend() const noexcept
         {
-            return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
+            return SparseSet<TKey,TValue, THashFunction>::ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
         }
 
         // clang-format on
