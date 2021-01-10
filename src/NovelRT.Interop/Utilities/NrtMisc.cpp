@@ -73,23 +73,25 @@ extern "C"
         }
         va_end(args);
 
-  char* finalPath = nullptr;
-//strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
+        char* finalPath = nullptr;
+// strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
 #if defined(WIN32)
-  finalPath = static_cast<char*>(malloc(finalString.length() + 1));
+        finalPath = static_cast<char*>(malloc(finalString.length() + 1));
 
-  if(finalPath == nullptr) {
-    Nrt_setErrMsgIsOutOfMemoryInternal();
-    return NULL;
-  }
+        if (finalPath == nullptr)
+        {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
+            return NULL;
+        }
 
-  strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
+        strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
 #else
-  finalPath = strdup(finalString.c_str());
-  if(finalPath == nullptr) {
-    Nrt_setErrMsgIsOutOfMemoryInternal();
-    return NULL;
-  }
+    finalPath = strdup(finalString.c_str());
+    if (finalPath == nullptr)
+    {
+        Nrt_setErrMsgIsOutOfMemoryInternal();
+        return NULL;
+    }
 #endif
         return finalPath;
     }
