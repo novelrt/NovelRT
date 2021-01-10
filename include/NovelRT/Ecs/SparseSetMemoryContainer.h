@@ -219,7 +219,7 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
 
-        [[nodiscard]] ByteIteratorView GetValueContainerBasedOnDenseIndex(size_t denseIndex) const;
+        [[nodiscard]] ByteIteratorView GetValueContainerBasedOnDenseIndex(size_t denseIndex);
 
         [[nodiscard]] size_t Length() const noexcept;
 

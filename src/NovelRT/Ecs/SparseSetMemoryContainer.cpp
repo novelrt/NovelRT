@@ -3,11 +3,10 @@
 #include <NovelRT/Ecs/SparseSetMemoryContainer.h>
 #include <NovelRT/Exceptions/DuplicateKeyException.h>
 #include <NovelRT/Exceptions/MalformedAllocationException.h>
-#include <NovelRT/Exceptions/OutOfMemoryException.h>
 
 namespace NovelRT::Ecs
 {
-    SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept : _dense(nullptr), _sparse(nullptr), _maximumSparseValue(0), _data(nullptr), _deallocateState(calloc(1, sizeOfDataTypeInBytes)), _dataPtrLength(0), _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes), _reallocateMemory(false)
+    SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept : _dense(std::vector<size_t>{}), _sparse(std::vector<size_t>{}), _data(std::vector<std::byte>{}), _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
 
@@ -151,9 +150,9 @@ namespace NovelRT::Ecs
         return _dense.at(denseIndex);
     }
 
-    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetValueContainerBasedOnDenseIndex(size_t denseIndex) const
+    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetValueContainerBasedOnDenseIndex(size_t denseIndex)
     {
-        return SparseSetMemoryContainer::ByteIteratorView(static_cast<char*>(_data) + GetByteLength(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetByteLength(denseIndex), _sizeOfDataTypeInBytes);
     }
 
     size_t SparseSetMemoryContainer::Length() const noexcept
