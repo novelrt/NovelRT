@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 #include <tuple>
+#include <cstring>
+#include <cstdlib>
 
 namespace NovelRT::Ecs
 {
@@ -89,7 +91,7 @@ namespace NovelRT::Ecs
 
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
-                memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
+                std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
             }
 
             inline void MoveNext()

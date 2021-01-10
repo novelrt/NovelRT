@@ -40,7 +40,7 @@ namespace NovelRT::Ecs
         _sparse[key] = _dense.size() - 1;
         _data.resize(GetByteLength(_dense.size()));
         auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
-        memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
+        std::memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, std::byte* value)
