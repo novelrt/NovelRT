@@ -130,7 +130,7 @@ TEST(SparseSetMemoryContainerTest, RemoveRemovesTheKeyCorrectlyWhenMultipleValue
     }
 }
 
-TEST(SparseSetMemoryContainerTest, RemoveThrowsKeyNotFoundException)
+TEST(SparseSetMemoryContainerTest, RemoveThrowsKeyNotFoundExceptionWhenDuplicateKeyRemoved)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     int32_t testValue = 10;
@@ -138,6 +138,130 @@ TEST(SparseSetMemoryContainerTest, RemoveThrowsKeyNotFoundException)
     container.Insert(0, &testValue);
     container.Remove(0);
     EXPECT_THROW(container.Remove(0), Exceptions::KeyNotFoundException);
+}
+
+TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectly)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(0, &testValue);
+    ASSERT_TRUE(container.TryRemove(0));
+    EXPECT_FALSE(container.ContainsKey(0));
+}
+
+TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectlyWhenMultipleValuesExist)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(0, &testValue);
+    container.Insert(1, &testValue);
+    container.Insert(2, &testValue);
+    ASSERT_TRUE(container.TryRemove(1));
+    EXPECT_FALSE(container.ContainsKey(1));
+    EXPECT_EQ(container.Length(), 2);
+
+    for (auto [id, dataView] : container)
+    {
+        ASSERT_TRUE(id == 0 || id == 2);
+        int32_t value = 0;
+        dataView.CopyFromLocation(&value);
+        EXPECT_EQ(value, testValue);
+    }
+}
+
+TEST(SparseSetMemoryContainerTest, TryRemoveThrowsKeyNotFoundExceptionWhenDuplicateKeyRemoved)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(0, &testValue);
+    ASSERT_TRUE(container.TryRemove(0));
+    EXPECT_THROW(container.Remove(0), Exceptions::KeyNotFoundException);
+}
+
+TEST(SparseSetMemoryContainerTest, ClearRemovesAllEntries)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(0, &testValue);
+    container.Clear();
+    EXPECT_EQ(container.Length(), 0);
+}
+
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexReturnsCorrectKey)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(3, &testValue);
+    EXPECT_EQ(container.CopyKeyBasedOnDenseIndex(0), 3);
+}
+
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexThrowsOutOfRangeWhenKeyDoesNotExist)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    EXPECT_THROW(container.CopyKeyBasedOnDenseIndex(0), std::out_of_range);
+}
+
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexUnsafeReturnsCorrectKey)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(3, &testValue);
+    EXPECT_EQ(container.CopyKeyBasedOnDenseIndexUnsafe(0), 3);
+}
+
+TEST(SparseSetMemoryContainerTest, LengthReturnsCorrectValue)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    int32_t testValue = 10;
+
+    container.Insert(0, &testValue);
+    container.Insert(1, &testValue);
+    container.Insert(2, &testValue);
+
+    ASSERT_EQ(container.Length(), 3);
+}
+
+TEST(SparseSetMemoryContainerTest, IndexingOperatorReturnsCorrectMutableByteIteratorView)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+
+    int32_t testValueOne = 10;
+    int32_t testValueTwo = 20;
+    int32_t testValueThree = 30;
+
+    container.Insert(0, &testValueOne);
+    container.Insert(1, &testValueTwo);
+    container.Insert(2, &testValueThree);
+
+    int32_t result = 0;
+    container[1].CopyFromLocation(&result);
+    EXPECT_EQ(result, testValueTwo);
+}
+
+TEST(SparseSetMemoryContainerTest, IndexingOperatorReturnsCorrectConstByteIteratorView)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+
+    int32_t testValueOne = 10;
+    int32_t testValueTwo = 20;
+    int32_t testValueThree = 30;
+
+    container.Insert(0, &testValueOne);
+    container.Insert(1, &testValueTwo);
+    container.Insert(2, &testValueThree);
+
+    int32_t result = 0;
+    auto view = static_cast<const SparseSetMemoryContainer&>(container)[1];
+    view.CopyFromLocation(&result);
+    EXPECT_EQ(result, testValueTwo);
 }
 
 TEST(SparseSetMemoryContainerTest, IteratingTheMutableCollectionReturnsCorrectValues)
@@ -175,6 +299,13 @@ TEST(SparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorrectValu
     for (auto it = container.cbegin(); it != container.cend(); it++)
     {
         auto [id, dataView] = *it;
+        int32_t value = 0;
+        dataView.CopyFromLocation(&value);
+        EXPECT_EQ(10, value);
+    }
+
+    for (auto [id, dataView] : static_cast<const SparseSetMemoryContainer&>(container))
+    {
         int32_t value = 0;
         dataView.CopyFromLocation(&value);
         EXPECT_EQ(10, value);

@@ -159,9 +159,19 @@ namespace NovelRT::Ecs
         return _dense.at(denseIndex);
     }
 
-    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetValueContainerBasedOnDenseIndex(size_t denseIndex)
+    size_t SparseSetMemoryContainer::CopyKeyBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
+    {
+        return _dense[denseIndex];
+    }
+
+    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex)
     {
         return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+    }
+
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex) const
+    {
+        return SparseSetMemoryContainer::ConstByteIteratorView(_data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
 
     size_t SparseSetMemoryContainer::Length() const noexcept
@@ -171,12 +181,11 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept
     {
-        if (!ContainsKey(key))
-        {
-           return ByteIteratorView(_data.end(), 0);
-        }
+        return GetByteIteratorViewBasedOnDenseIndex(_sparse[key]);
+    }
 
-        return GetValueContainerBasedOnDenseIndex(_sparse[key]);
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept {
+        return GetByteIteratorViewBasedOnDenseIndex(_sparse[key]);
     }
 
     // clang-format off
