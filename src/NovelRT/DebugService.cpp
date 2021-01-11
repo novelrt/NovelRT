@@ -67,7 +67,7 @@ namespace NovelRT {
     }
   }
   
-  void DebugService::GetStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames) {
+  void DebugService::getStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames) {
     _totalSeconds = totalSeconds;
     _totalFrames = totalFrames;
     setFramesPerSecond(framesPerSecond);
