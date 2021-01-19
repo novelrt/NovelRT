@@ -59,12 +59,14 @@ namespace NovelRT::Ecs
                std::memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
            }
 
+           [[nodiscard]] inline void* GetDataHandle() const noexcept
+           {
+               return &(*_iteratorAtValue);
+           }
+
            inline void MoveNext()
            {
-               for (size_t i = 0; i < _sizeOfObject; ++i)
-               {
-                   _iteratorAtValue++;
-               }
+               _iteratorAtValue += _sizeOfObject;
            }
         };
 
@@ -94,12 +96,14 @@ namespace NovelRT::Ecs
                 std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
             }
 
+            [[nodiscard]] const void* GetDataHandle() const noexcept
+            {
+                return &(*_iteratorAtValue);
+            }
+
             inline void MoveNext()
             {
-                for (size_t i = 0; i < _sizeOfObject; ++i)
-                {
-                    _iteratorAtValue++;
-                }
+                _iteratorAtValue += _sizeOfObject;
             }
         };
 

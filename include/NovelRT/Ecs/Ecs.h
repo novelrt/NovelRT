@@ -12,6 +12,7 @@ namespace NovelRT::Ecs
 
 #include "Catalogue.h"
 #include "ComponentBuffer.h"
+#include "ComponentBufferMemoryContainer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
 #include "EcsUtils.h"
