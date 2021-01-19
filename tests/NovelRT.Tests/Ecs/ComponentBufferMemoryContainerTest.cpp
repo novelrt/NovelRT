@@ -74,3 +74,43 @@ TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
         EXPECT_EQ(*reinterpret_cast<const int32_t*>(intComponent.GetDataHandle()), 10);
     }
 }
+
+TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
+{
+    int32_t deleteState = -1;
+    auto container = ComponentBufferMemoryContainer(2, &deleteState, sizeof(int32_t));
+    int32_t updateState = 10;
+
+    for (size_t i = 0; i < 2000; ++i)
+    {
+        container.PushComponentUpdateInstruction(0, i, &updateState);
+    }
+
+    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+
+    std::thread threadOne([&]()
+    {
+        for (size_t i = 0; i < 2000; ++i)
+        {
+            container.PushComponentUpdateInstruction(0, i, &updateState);
+        }
+    });
+
+    std::thread threadTwo([&]()
+    {
+        for (size_t i = 0; i < 2000; ++i)
+        {
+            container.PushComponentUpdateInstruction(1, i, &updateState);
+        }
+    });
+
+    threadOne.join();
+    threadTwo.join();
+
+    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto intRoot, auto intUpdate, auto){ *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) += *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());});
+
+    for (auto [entity, intComponent] : container)
+    {
+        EXPECT_EQ(*reinterpret_cast<const int32_t*>(intComponent.GetDataHandle()), 30);
+    }
+}
