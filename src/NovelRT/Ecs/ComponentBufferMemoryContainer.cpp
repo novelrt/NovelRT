@@ -4,7 +4,7 @@
 
 namespace NovelRT::Ecs
 {
-    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(size_t poolSize, void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept :
+    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept :
     _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
     _updateSets(std::vector<SparseSetMemoryContainer>{}),
     _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
@@ -50,7 +50,7 @@ namespace NovelRT::Ecs
         return ComponentBufferMemoryContainer::ImmutableDataView(reinterpret_cast<const void*>(_deleteInstructionState.data()), _sizeOfDataTypeInBytes);
     }
 
-    void ComponentBufferMemoryContainer::PushComponentUpdateInstruction(size_t poolId, EntityId entity, void* componentData)
+    void ComponentBufferMemoryContainer::PushComponentUpdateInstruction(size_t poolId, EntityId entity, const void* componentData)
     {
         _updateSets[poolId].Insert(entity, componentData);
     }

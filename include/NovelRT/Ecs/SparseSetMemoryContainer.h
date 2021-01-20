@@ -23,7 +23,7 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
-        void InsertInternal(size_t key, void* value);
+        void InsertInternal(size_t key, const void* value);
 
         void ValidateDataPtrLength() const;
 
@@ -209,9 +209,9 @@ namespace NovelRT::Ecs
 
         explicit SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept;
 
-        void Insert(size_t key, void* value);
+        void Insert(size_t key, const void* value);
 
-        bool TryInsert(size_t key, void* value) noexcept;
+        bool TryInsert(size_t key, const void* value) noexcept;
 
         void Remove(size_t key);
 

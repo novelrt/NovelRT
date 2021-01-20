@@ -41,13 +41,13 @@ namespace NovelRT::Ecs
             }
         };
 
-        ComponentBufferMemoryContainer(size_t poolSize, void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept;
+        ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept;
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept;
 
         [[nodiscard]] ImmutableDataView GetDeleteInstructionState() const noexcept;
 
-        void PushComponentUpdateInstruction(size_t poolId, EntityId entity, void* componentData);
+        void PushComponentUpdateInstruction(size_t poolId, EntityId entity, const void* componentData);
 
         [[nodiscard]] ImmutableDataView GetComponent(EntityId entity) const;
 

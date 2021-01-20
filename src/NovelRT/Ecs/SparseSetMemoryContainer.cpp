@@ -29,7 +29,7 @@ namespace NovelRT::Ecs
         return &_data[location * _sizeOfDataTypeInBytes];
     }
 
-    void SparseSetMemoryContainer::InsertInternal(size_t key, void* value)
+    void SparseSetMemoryContainer::InsertInternal(size_t key, const void* value)
     {
         if (_sparse.size() <= key)
         {
@@ -43,7 +43,7 @@ namespace NovelRT::Ecs
         std::memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
     }
 
-    void SparseSetMemoryContainer::Insert(size_t key, void* value)
+    void SparseSetMemoryContainer::Insert(size_t key, const void* value)
     {
         if (ContainsKey(key))
         {
@@ -53,7 +53,7 @@ namespace NovelRT::Ecs
         InsertInternal(key, value);
     }
 
-    bool SparseSetMemoryContainer::TryInsert(size_t key, void* value) noexcept
+    bool SparseSetMemoryContainer::TryInsert(size_t key, const void* value) noexcept
     {
         if (ContainsKey(key))
         {
