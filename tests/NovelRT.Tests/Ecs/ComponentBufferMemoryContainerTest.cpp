@@ -53,7 +53,7 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEn
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
-    container.PushComponentUpdateInstruction(0, 0, &deleteState);
+    container.PushComponentUpdateInstruction(0, 0, container.GetDeleteInstructionState().GetDataHandle());
     container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
     EXPECT_EQ(container.GetImmutableDataLength(), 0);
     EXPECT_FALSE(container.HasComponent(0));
