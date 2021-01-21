@@ -22,7 +22,7 @@ namespace NovelRT::Ecs
     {
         private:
         SparseSet<EntityId, T> _rootSet;
-        SparseSet<size_t, SparseSet<EntityId, T>> _updateSets;
+        std::vector<SparseSet<EntityId, T>> _updateSets;
         T _deleteInstructionState;
 
         public:
@@ -33,11 +33,11 @@ namespace NovelRT::Ecs
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is passed in during an update, the ComponentBuffer will delete the component from the target entity during resolution.
          */
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T>{}), _updateSets(SparseSet<size_t, SparseSet<EntityId, T>>{}), _deleteInstructionState(deleteInstructionState)
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T>{}), _updateSets(std::vector<SparseSet<EntityId, T>>{}), _deleteInstructionState(deleteInstructionState)
         {
             for (size_t i = 0; i < poolSize; i++)
             {
-                _updateSets.Insert(i, SparseSet<EntityId, T>{});
+                _updateSets.push_back(SparseSet<EntityId, T>{});
             }
         }
 
@@ -52,7 +52,7 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            for (auto [index, sparseSet] : _updateSets)
+            for (auto&& sparseSet : _updateSets)
             {
                 for (auto [entity, component] : sparseSet)
                 {

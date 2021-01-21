@@ -77,9 +77,17 @@ TEST(SparseSetTest, CanUseStruct)
         int32_t fieldOne = 1;
         void* fieldTwo = nullptr;
         bool fieldThree = false;
+        std::string fieldFour = "meme"; //this is to ensure it can take C++ types.
     };
 
     SparseSet<EntityId, MyAwesomeStruct> testSet{};
     testSet.Insert(0, MyAwesomeStruct{});
     EXPECT_EQ(testSet[0].fieldOne, 1);
+    EXPECT_EQ(testSet[0].fieldFour, "meme");
+
+    for (auto [entity, component] : testSet)
+    {
+        EXPECT_EQ(component.fieldOne, 1);
+        EXPECT_EQ(component.fieldFour, "meme");
+    }
 }
