@@ -229,6 +229,10 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] ConstByteIteratorView GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex) const;
 
+        [[nodiscard]] ByteIteratorView GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) noexcept;
+
+        [[nodiscard]] ConstByteIteratorView GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept;
+
         [[nodiscard]] size_t Length() const noexcept;
 
         [[nodiscard]] ByteIteratorView operator[](size_t key) noexcept;

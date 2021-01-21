@@ -166,10 +166,25 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex)
     {
+        if (denseIndex >= Length())
+        {
+            throw std::out_of_range("denseIndex exceeds the range of the dense data.");
+        }
+
         return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex) const
+    {
+        return SparseSetMemoryContainer::ConstByteIteratorView(_data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+    }
+
+    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) noexcept
+    {
+        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+    }
+
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
     {
         return SparseSetMemoryContainer::ConstByteIteratorView(_data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
@@ -181,11 +196,11 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept
     {
-        return GetByteIteratorViewBasedOnDenseIndex(_sparse[key]);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept {
-        return GetByteIteratorViewBasedOnDenseIndex(_sparse[key]);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
     }
 
     // clang-format off
