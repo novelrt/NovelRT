@@ -15,7 +15,7 @@ find_package(PkgConfig QUIET)
 pkg_check_modules(PC_GLM QUIET glm)
 
 set(GLM_DEFINITIONS ${PC_GLM_CFLAGS_OTHER})
-set(GLM_SEARCH_DIR ${GLM_ROOT_DIR} $ENV{GLM_INSTALL_DIR})
+set(GLM_SEARCH_DIR ${GLM_ROOT_DIR} ${CONAN_GLM_ROOT} $ENV{GLM_INSTALL_DIR})
 
 find_path(GLM_INCLUDE_DIR
   glm/glm.hpp

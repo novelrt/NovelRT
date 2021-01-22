@@ -117,7 +117,7 @@ endif()
 target_link_libraries(Engine
   PUBLIC
     BZip2::BZip2
-    Dotnet::Host
+    CoreCLR::nethost
     FLAC::FLAC
     Freetype::Freetype
     Glad::Glad
