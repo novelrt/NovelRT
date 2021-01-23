@@ -24,21 +24,46 @@ namespace NovelRT::Ecs
     class ComponentBuffer 
     {
         private:
-        ComponentBufferMemoryContainer _innerContainer;
+        std::shared_ptr<ComponentBufferMemoryContainer> _innerContainer;
 
         public:
         /**
-         * @brief Constructs a new ComponentBuffer for type T.
+         * @brief Constructs a new ComponentBuffer for type T. In a regular ECS setup, you should not be instantiating this yourself.
          * 
          * 
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is passed in during an update, the ComponentBuffer will delete the component from the target entity during resolution.
          */
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _innerContainer(poolSize, &deleteInstructionState, sizeof(T))
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(poolSize, &deleteInstructionState, sizeof(T)))
         {
             static_assert(std::is_trivially_copyable<T>::value, "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation for more information.");
         }
 
+        /**
+         * @brief Creates a new ComponentBuffer with an existing ComponentBufferMemoryContainer as the underlying memory store. In a regular ECS setup, you should not be instantiating this yourself.
+         *
+         * This is an unsafe operation. Memory containers do not persist any form of type safety.
+         * Please ensure that type T is either the same as, or is compatible with, the underlying data.
+         * If a container is supplied that does not match type T then the behaviour is undefined.
+         *
+         * @param innerContainer The container to base this ComponentBuffer on.
+         */
+        explicit ComponentBuffer(std::shared_ptr<ComponentBufferMemoryContainer> innerContainer) noexcept : _innerContainer(std::move(innerContainer))
+        {
+        }
+
+        /**
+         * @brief Fetches the underlying ComponentBufferMemoryContainer associated with this ComponentBuffer instance.
+         *
+         * Accessing the underlying memory container is considered an unsafe operation. In a regular ECS scenario, you should not need to access it.
+         * This is a pure method. Calling this without using the result has no effect and introduces the overhead for calling a method.
+         *
+         * @return std::shared_ptr<ComponentBufferMemoryContainer> The underlying container.
+         */
+        [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetUnderlyingContainer() const noexcept
+        {
+            return _innerContainer;
+        }
 
         /**
          * @brief Handles all modification instructions from all threads and clears the instruction sets in preparation for new instructions incoming for the next update iteration.
@@ -50,9 +75,8 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            _innerContainer.PrepContainerForFrame(destroyedEntities, [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); });
+            _innerContainer->PrepContainerForFrame(destroyedEntities, [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); });
         }
-
 
         /**
          * @brief Gets the delete instruction state for type T.
@@ -64,7 +88,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
-            return *reinterpret_cast<const T*>(_innerContainer.GetDeleteInstructionState().GetDataHandle());
+            return *reinterpret_cast<const T*>(_innerContainer->GetDeleteInstructionState().GetDataHandle());
         }
 
         /**
@@ -78,7 +102,7 @@ namespace NovelRT::Ecs
          */
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
-            _innerContainer.PushComponentUpdateInstruction(poolId, entity, &component);
+            _innerContainer->PushComponentUpdateInstruction(poolId, entity, &component);
         }
 
         /**
@@ -92,7 +116,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] T GetComponent(EntityId entity) const
         {
-            return *reinterpret_cast<const T*>(_innerContainer.GetComponent(entity).GetDataHandle());
+            return *reinterpret_cast<const T*>(_innerContainer->GetComponent(entity).GetDataHandle());
         }
 
         /**
@@ -106,7 +130,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
-            return _innerContainer.HasComponent(entity);
+            return _innerContainer->HasComponent(entity);
         }
 
         /**
@@ -118,7 +142,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept
         {
-            return _innerContainer.GetImmutableDataLength();
+            return _innerContainer->GetImmutableDataLength();
         }
 
         // clang-format off
@@ -133,7 +157,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator begin() const noexcept
         {
-            return SparseSet<EntityId, T>::ConstIterator(_innerContainer.begin());
+            return SparseSet<EntityId, T>::ConstIterator(_innerContainer->begin());
         }
 
         /**
@@ -146,7 +170,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator end() const noexcept
         {
-            return SparseSet<EntityId, T>::ConstIterator(_innerContainer.end());
+            return SparseSet<EntityId, T>::ConstIterator(_innerContainer->end());
         }
 
         // clang-format on

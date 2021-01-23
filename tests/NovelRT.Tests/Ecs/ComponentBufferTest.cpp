@@ -100,3 +100,15 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
         EXPECT_EQ(intComponent, 30);
     }
 }
+
+TEST(ComponentBufferTest, CanAccessValidUnderlyingContainer)
+{
+    auto container = ComponentBuffer<int32_t>(1, -1);
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        container.PushComponentUpdateInstruction(0, i, 10);
+    }
+
+    EXPECT_EQ(container.GetUnderlyingContainer()->GetImmutableDataLength(), container.GetImmutableDataLength());
+}
