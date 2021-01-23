@@ -59,7 +59,7 @@ TEST(SparseSetTest, CanIterateAndModifyDenseData)
     ASSERT_NO_THROW(testSet.Insert(Atom(2), 1));
     ASSERT_NO_THROW(testSet.Insert(Atom(3), 1));
 
-    for (auto&& [i, j] : testSet)
+    for (auto [i, j] : testSet)
     {
         j = 10;
     }

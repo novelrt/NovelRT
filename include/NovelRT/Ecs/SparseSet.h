@@ -22,7 +22,9 @@ namespace NovelRT::Ecs
      * 
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * The value type should not be massively complex as there may be many copy instructions that are not SIMDifiable if the type is too complicated.
-     * 
+     * The type TValue of the SparseSet must be trivially copyable as defined by the C++ specification. This is due to the internal language binding mechanisms of NovelRT,
+     * and is enforced by a check against std::is_trivally_copyable.
+     *
      * @tparam TKey The type to use for the Key.
      * @tparam TValue The type to use for the value.
      */
@@ -353,6 +355,33 @@ namespace NovelRT::Ecs
         [[nodiscard]] SparseSet<TKey,TValue>::Iterator end() noexcept
         {
             return SparseSet<TKey,TValue>::Iterator(_innerContainer.end());
+        }
+
+        /**
+         * @brief Gets the beginning forward const iterator state for this SparseSet.
+         *
+         * This function is under special formatting so that range-based for loops are supported.
+         * Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
+         * @return SparseSet::Iterator starting at the beginning.
+         */
+        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator begin() const noexcept
+        {
+            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.begin());
+        }
+
+        /**
+         * @brief Gets the ending forward const iterator state for this SparseSet.
+         *
+         * This function is under special formatting so that range-based for loops are supported.
+         * While this method is not const, it does not modify the SparseSet itself.
+         * Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
+         * @return SparseSet::Iterator starting at the end.
+         */
+        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator end() const noexcept
+        {
+            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.end());
         }
 
         /**

@@ -4,6 +4,7 @@
 #define NOVELRT_ECS_COMPONENTBUFFER_H
 
 #include "EcsUtils.h"
+#include "ComponentBufferMemoryContainer.h"
 #include "SparseSet.h"
 
 namespace NovelRT::Ecs
@@ -13,6 +14,8 @@ namespace NovelRT::Ecs
      * 
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * You should not have component types that are massively complex as there may be many copy instructions that are not SIMDifiable if the type is too complicated.
+     * The type T of the ComponentBuffer must be trivially copyable as defined by the C++ specification. This is due to the internal language binding mechanisms of NovelRT,
+     * and is enforced by a check against std::is_trivally_copyable.
      * The type in question will need to have addition and an equality comparison operator implemented in order for it to function as a type a ComponentBuffer can manage for you.
      * 
      * @tparam T The type of component this ComponentBuffer will manage.
@@ -21,9 +24,7 @@ namespace NovelRT::Ecs
     class ComponentBuffer 
     {
         private:
-        SparseSet<EntityId, T> _rootSet;
-        std::vector<SparseSet<EntityId, T>> _updateSets;
-        T _deleteInstructionState;
+        ComponentBufferMemoryContainer _innerContainer;
 
         public:
         /**
@@ -33,12 +34,9 @@ namespace NovelRT::Ecs
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is passed in during an update, the ComponentBuffer will delete the component from the target entity during resolution.
          */
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _rootSet(SparseSet<EntityId, T>{}), _updateSets(std::vector<SparseSet<EntityId, T>>{}), _deleteInstructionState(deleteInstructionState)
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _innerContainer(poolSize, &deleteInstructionState, sizeof(T))
         {
-            for (size_t i = 0; i < poolSize; i++)
-            {
-                _updateSets.push_back(SparseSet<EntityId, T>{});
-            }
+            static_assert(std::is_trivially_copyable<T>::value, "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation for more information.");
         }
 
 
@@ -52,30 +50,7 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            for (auto&& sparseSet : _updateSets)
-            {
-                for (auto [entity, component] : sparseSet)
-                {
-                    if (component == _deleteInstructionState)
-                    {
-                        _rootSet.TryRemove(entity); 
-                    }
-                    else if(!_rootSet.ContainsKey(entity))
-                    {
-                        _rootSet.Insert(entity, component);
-                    }
-                    else
-                    {
-                        _rootSet[entity] += component;
-                    }
-                }
-                sparseSet.Clear();
-            }
-
-            for (EntityId i : destroyedEntities)
-            {
-                _rootSet.TryRemove(i);
-            }
+            _innerContainer.PrepContainerForFrame(destroyedEntities, [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); });
         }
 
 
@@ -89,8 +64,8 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
-            return _deleteInstructionState;
-        } 
+            return *reinterpret_cast<const T*>(_innerContainer.GetDeleteInstructionState().GetDataHandle());
+        }
 
         /**
          * @brief Pushes in an update instruction for the given entity, component and thread pool ID.
@@ -103,7 +78,7 @@ namespace NovelRT::Ecs
          */
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
-            _updateSets[poolId].Insert(entity, component);
+            _innerContainer.PushComponentUpdateInstruction(poolId, entity, &component);
         }
 
         /**
@@ -117,7 +92,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] T GetComponent(EntityId entity) const
         {
-            return _rootSet[entity];
+            return *reinterpret_cast<const T*>(_innerContainer.GetComponent(entity).GetDataHandle());
         }
 
         /**
@@ -131,7 +106,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
-            return _rootSet.ContainsKey(entity);
+            return _innerContainer.HasComponent(entity);
         }
 
         /**
@@ -143,7 +118,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept
         {
-            return _rootSet.Length();
+            return _innerContainer.GetImmutableDataLength();
         }
 
         // clang-format off
@@ -156,9 +131,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] auto begin() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator begin() const noexcept
         {
-            return _rootSet.cbegin();
+            return SparseSet<EntityId, T>::ConstIterator(_innerContainer.begin());
         }
 
         /**
@@ -169,9 +144,9 @@ namespace NovelRT::Ecs
          * 
          * @return SparseSet::ConstIterator starting at the end.
          */
-        [[nodiscard]] auto end() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator end() const noexcept
         {
-            return _rootSet.cend();
+            return SparseSet<EntityId, T>::ConstIterator(_innerContainer.end());
         }
 
         // clang-format on
