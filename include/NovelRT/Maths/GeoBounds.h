@@ -12,7 +12,7 @@ namespace NovelRT::Maths
 {
     class GeoBounds
     {
-      public:
+    public:
         GeoVector2F position;
         GeoVector2F size;
         float rotation;

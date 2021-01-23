@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class DuplicateKeyException final : public std::runtime_error
     {
-      public:
+    public:
         DuplicateKeyException()
             : std::runtime_error("A duplicate key was added into a collection when duplicate keys are not permitted.")
         {

@@ -10,12 +10,12 @@ using namespace NovelRT::Ecs;
 
 class CatalogueTest : public testing::Test
 {
-  public:
+public:
     ComponentCache componentCache = ComponentCache(1);
     EntityCache entityCache = EntityCache(1);
     Catalogue* catalogue = nullptr;
 
-  protected:
+protected:
     void SetUp() override
     {
         componentCache = ComponentCache(1);

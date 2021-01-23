@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class OpenGLLinkageFailure final : public std::runtime_error
     {
-      public:
+    public:
         OpenGLLinkageFailure(uint32_t programId, const std::string& errorMessage)
             : std::runtime_error(std::string("Program with ID \"") + std::to_string(programId) +
                                  "\" has encountered an error. Error: " + errorMessage)

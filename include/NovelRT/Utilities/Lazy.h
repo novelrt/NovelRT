@@ -12,12 +12,12 @@ namespace NovelRT::Utilities
 {
     template<typename T> class Lazy
     {
-      private:
+    private:
         std::function<T()> _delegate;
         T _actual;
         bool _isCreated;
 
-      public:
+    public:
         Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(), _isCreated(false)
         {
         }
@@ -56,11 +56,11 @@ namespace NovelRT::Utilities
 
     template<typename T> class Lazy<std::unique_ptr<T>>
     {
-      private:
+    private:
         std::function<T*()> _delegate;
         std::unique_ptr<T> _actual;
 
-      public:
+    public:
         Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr))
         {
         }
@@ -93,11 +93,11 @@ namespace NovelRT::Utilities
 
     template<typename T, typename Deleter> class Lazy<std::unique_ptr<T, Deleter>>
     {
-      private:
+    private:
         std::function<T*()> _delegate;
         std::unique_ptr<T, Deleter> _actual;
 
-      public:
+    public:
         Lazy(std::function<T*()> delegate, Deleter deleter)
             : _delegate(delegate), _actual(std::unique_ptr<T, Deleter>(nullptr, deleter))
         {

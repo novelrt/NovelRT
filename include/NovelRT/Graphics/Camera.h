@@ -14,7 +14,7 @@ namespace NovelRT::Graphics
     {
         friend class RenderingService;
 
-      private:
+    private:
         Maths::GeoMatrix4x4F _viewMatrix;
         Maths::GeoMatrix4x4F _projectionMatrix;
         Utilities::Lazy<Maths::GeoMatrix4x4F> _cameraUboMatrix;
@@ -25,7 +25,7 @@ namespace NovelRT::Graphics
         void initialiseCameraForFrame();
         void forceResize(Maths::GeoVector2F windowSize);
 
-      public:
+    public:
         Camera();
 
         inline Maths::GeoMatrix4x4F getViewMatrix() const

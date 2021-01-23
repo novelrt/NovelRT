@@ -20,13 +20,13 @@ namespace NovelRT::Ecs
      */
     class Catalogue
     {
-      private:
+    private:
         size_t _poolId;
         ComponentCache& _componentCache;
         EntityCache& _entityCache;
         std::vector<EntityId> _createdEntitiesThisFrame;
 
-      public:
+    public:
         /**
          * @brief Constructs a new Catalogue object with context of the ECS instance and thread state.
          *

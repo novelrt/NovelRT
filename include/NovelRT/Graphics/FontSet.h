@@ -16,7 +16,7 @@ namespace NovelRT::Graphics
         friend class TextRect;
         friend class RenderingService;
 
-      private:
+    private:
         std::shared_ptr<RenderingService> _renderer;
         Atom _id;
         float _fontSize;
@@ -51,7 +51,7 @@ namespace NovelRT::Graphics
             return match->second;
         }
 
-      public:
+    public:
         FontSet(std::shared_ptr<RenderingService> renderer, Atom id) noexcept;
 
         void loadFontAsTextureSet(const std::string& file, float fontSize);

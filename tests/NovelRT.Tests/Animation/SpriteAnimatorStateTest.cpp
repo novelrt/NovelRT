@@ -10,7 +10,7 @@ using namespace NovelRT::Animation;
 
 class SpriteAnimatorStateTest : public testing::Test
 {
-  protected:
+protected:
     std::vector<std::shared_ptr<SpriteAnimatorState>> _states;
 
     void SetUp() override

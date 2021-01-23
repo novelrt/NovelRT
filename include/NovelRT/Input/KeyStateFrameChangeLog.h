@@ -14,7 +14,7 @@ namespace NovelRT::Input
     {
         friend class InteractionService;
 
-      private:
+    private:
         KeyState _currentState = KeyState::Idle;
         uint32_t _changeCount = 0;
 
@@ -29,7 +29,7 @@ namespace NovelRT::Input
             _changeCount++;
         }
 
-      public:
+    public:
         inline KeyState getCurrentState() const
         {
             return _currentState;

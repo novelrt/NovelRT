@@ -12,7 +12,7 @@ namespace NovelRT::Graphics
 {
     struct ShaderProgram
     {
-      public:
+    public:
         GLuint shaderProgramId = 0;
         GLuint finalViewMatrixBufferUboId = 0;
         std::vector<GLuint> uboIds;

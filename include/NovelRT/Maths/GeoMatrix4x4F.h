@@ -20,7 +20,7 @@ namespace NovelRT::Maths
         friend class Graphics::RenderingService;
         friend class Graphics::Camera;
 
-      private:
+    private:
         explicit GeoMatrix4x4F(glm::mat4 matrix)
             : x(*reinterpret_cast<GeoVector4F*>(&matrix[0])),
               y(*reinterpret_cast<GeoVector4F*>(&matrix[1])),
@@ -29,7 +29,7 @@ namespace NovelRT::Maths
         {
         }
 
-      public:
+    public:
         GeoVector4F x;
         GeoVector4F y;
         GeoVector4F z;

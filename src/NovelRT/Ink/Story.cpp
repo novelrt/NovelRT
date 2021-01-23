@@ -11,7 +11,8 @@ using namespace NovelRT::Utilities;
 
 namespace NovelRT::Ink
 {
-    Story::Story(std::shared_ptr<InkService> inkService, void (*getExports)(Exports* exports),
+    Story::Story(std::shared_ptr<InkService> inkService,
+                 void (*getExports)(Exports* exports),
                  const char* jsonString) noexcept
         : _inkService(inkService),
           _exports(Lazy<Exports>([getExports, this] {

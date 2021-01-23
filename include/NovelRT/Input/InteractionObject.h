@@ -14,15 +14,16 @@ namespace NovelRT::Input
     {
         friend class InteractionService;
 
-      public:
+    public:
         Utilities::Event<> Interacted;
 
-      private:
+    private:
         KeyCode _subscribedKey = KeyCode::LeftMouseButton;
         std::function<void(InteractionObject*)> _notifyHasBeenDrawnObject;
 
-      public:
-        InteractionObject(Transform transform, int32_t layer,
+    public:
+        InteractionObject(Transform transform,
+                          int32_t layer,
                           const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
 
         void executeObjectBehaviour() final;

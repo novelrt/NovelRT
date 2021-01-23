@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
     class ImageRect : public RenderObject
     {
 
-      private:
+    private:
         std::vector<GLfloat> _uvCoordinates;
         std::shared_ptr<Texture> _texture;
         Utilities::Lazy<GLuint> _uvBuffer;
@@ -22,15 +22,22 @@ namespace NovelRT::Graphics
         std::vector<GLfloat> _colourTintData;
         LoggingService _logger;
 
-      protected:
+    protected:
         void configureObjectBuffers() final;
         void drawObject() final;
 
-      public:
-        ImageRect(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera,
-                  std::shared_ptr<Texture> texture, RGBAConfig colourTint);
+    public:
+        ImageRect(Transform transform,
+                  int32_t layer,
+                  ShaderProgram shaderProgram,
+                  std::shared_ptr<Camera> camera,
+                  std::shared_ptr<Texture> texture,
+                  RGBAConfig colourTint);
 
-        ImageRect(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera,
+        ImageRect(Transform transform,
+                  int32_t layer,
+                  ShaderProgram shaderProgram,
+                  std::shared_ptr<Camera> camera,
                   RGBAConfig colourTint);
 
         const std::shared_ptr<Texture>& texture() const noexcept

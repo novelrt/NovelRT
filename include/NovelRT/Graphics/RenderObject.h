@@ -12,7 +12,7 @@ namespace NovelRT::Graphics
 {
     class RenderObject : public WorldObject
     {
-      protected:
+    protected:
         virtual void drawObject() = 0;
         virtual void configureObjectBuffers();
         static GLuint generateStandardBuffer();
@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<Camera> _camera;
         Utilities::Lazy<Maths::GeoMatrix4x4F> _finalViewMatrixData;
 
-      public:
+    public:
         RenderObject(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera);
 
         void executeObjectBehaviour() final;

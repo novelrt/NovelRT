@@ -13,17 +13,20 @@ namespace NovelRT::Graphics
     class BasicFillRect : public RenderObject
     {
 
-      private:
+    private:
         RGBAConfig _colourConfig;
         Utilities::Lazy<GLuint> _colourBuffer;
         std::vector<GLfloat> _colourData;
 
-      protected:
+    protected:
         void configureObjectBuffers() final;
         void drawObject() final;
 
-      public:
-        BasicFillRect(Transform transform, int32_t layer, std::shared_ptr<Camera> camera, ShaderProgram shaderProgram,
+    public:
+        BasicFillRect(Transform transform,
+                      int32_t layer,
+                      std::shared_ptr<Camera> camera,
+                      ShaderProgram shaderProgram,
                       RGBAConfig fillColour);
 
         RGBAConfig getColourConfig() const;

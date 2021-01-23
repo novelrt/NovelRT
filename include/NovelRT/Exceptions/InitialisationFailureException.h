@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class InitialisationFailureException final : public std::runtime_error
     {
-      public:
+    public:
         InitialisationFailureException() : std::runtime_error("Service could not be initialised.")
         {
         }

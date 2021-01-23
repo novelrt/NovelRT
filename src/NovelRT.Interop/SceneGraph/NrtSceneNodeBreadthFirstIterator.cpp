@@ -22,7 +22,8 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNode node, int32_t (*func)(NrtSceneNode),
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNode node,
+                                                       int32_t (*func)(NrtSceneNode),
                                                        NrtSceneNodeBreadthFirstIterator* outputIterator)
     {
         if (node == nullptr || func == nullptr)

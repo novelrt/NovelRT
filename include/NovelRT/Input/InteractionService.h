@@ -16,7 +16,7 @@ namespace NovelRT::Input
         friend class Windowing::WindowingService; // I get this looks weird but its because GLFW treats the window as
                                                   // this system as well as the window.
 
-      private:
+    private:
         static inline const uint32_t INPUT_BUFFER_COUNT = 2;
 
         uint32_t _previousBufferIndex;
@@ -32,7 +32,7 @@ namespace NovelRT::Input
         void acceptMouseButtonClickPush(int32_t button, int32_t action, Maths::GeoVector2F mousePosition);
         void acceptKeyboardInputBindingPush(int32_t key, int32_t action);
 
-      public:
+    public:
         InteractionService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
 
         void consumePlayerInput();

@@ -12,15 +12,15 @@ namespace NovelRT::Animation
 {
     class SpriteAnimatorFrame
     {
-      public:
+    public:
         Utilities::Event<> FrameEnter;
         Utilities::Event<> FrameExit;
 
-      private:
+    private:
         std::shared_ptr<Graphics::Texture> _texture;
         Timing::Timestamp _duration;
 
-      public:
+    public:
         SpriteAnimatorFrame() : _duration(Timing::Timestamp::zero())
         {
         }

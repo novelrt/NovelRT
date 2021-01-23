@@ -6,7 +6,7 @@ using namespace NovelRT;
 
 class InteropTimestampTest : public testing::Test
 {
-  protected:
+protected:
     NrtTimestamp _timestamp;
 
     void SetUp() override
@@ -14,7 +14,7 @@ class InteropTimestampTest : public testing::Test
         _timestamp = Nrt_Timestamp_create(Timing::TicksPerSecond);
     }
 
-  public:
+public:
     InteropTimestampTest() : _timestamp(Nrt_Timestamp_create(0))
     {
     }

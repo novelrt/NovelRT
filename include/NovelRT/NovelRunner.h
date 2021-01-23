@@ -16,7 +16,7 @@ namespace NovelRT
     class NovelRunner
     {
 
-      public:
+    public:
         /**
          * @brief This event is used for constructing the rendered scene. This is called once per frame update.
          */
@@ -27,7 +27,7 @@ namespace NovelRT
          */
         Utilities::Event<Timing::Timestamp> Update;
 
-      private:
+    private:
         int32_t _exitCode;
         Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
         std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
@@ -38,7 +38,7 @@ namespace NovelRT
         std::shared_ptr<DebugService> _novelDebugService;
         LoggingService _loggingService;
 
-      public:
+    public:
         /**
          * @brief Instantiates the NovelRunner class with its presets.
          *
@@ -46,8 +46,10 @@ namespace NovelRT
          * @param windowTitle The title of the window created for NovelRunner.
          * @param targetFrameRate The framerate that should be targeted and capped.
          */
-        explicit NovelRunner(int32_t displayNumber, const std::string& windowTitle = "NovelRTTest",
-                             uint32_t targetFrameRate = 0, bool transparency = false);
+        explicit NovelRunner(int32_t displayNumber,
+                             const std::string& windowTitle = "NovelRTTest",
+                             uint32_t targetFrameRate = 0,
+                             bool transparency = false);
         /**
          * @brief Launches the NovelRT game loop. This method will block until the game terminates.
          * @returns Exit code.

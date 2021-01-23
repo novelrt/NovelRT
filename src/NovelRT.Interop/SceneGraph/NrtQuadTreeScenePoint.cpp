@@ -16,7 +16,8 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position, NrtSceneNode node,
+    NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position,
+                                                  NrtSceneNode node,
                                                   NrtQuadTreeScenePoint* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
@@ -33,7 +34,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeScenePoint_createFloat(float x, float y, NrtSceneNode node,
+    NrtResult Nrt_QuadTreeScenePoint_createFloat(float x,
+                                                 float y,
+                                                 NrtSceneNode node,
                                                  NrtQuadTreeScenePoint* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)

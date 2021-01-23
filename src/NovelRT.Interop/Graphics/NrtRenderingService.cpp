@@ -80,8 +80,10 @@ extern "C"
     }
 
     NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingService renderingService,
-                                                           NrtImageRect* outputImageRect, NrtTransform transform,
-                                                           int32_t layer, const char* filePath,
+                                                           NrtImageRect* outputImageRect,
+                                                           NrtTransform transform,
+                                                           int32_t layer,
+                                                           const char* filePath,
                                                            NrtRGBAConfig colourTint)
     {
         if (renderingService == nullptr)
@@ -101,8 +103,10 @@ extern "C"
     }
 
     NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingService renderingService,
-                                                              NrtImageRect* outputImageRect, NrtTransform transform,
-                                                              int32_t layer, NrtRGBAConfig colourTint)
+                                                              NrtImageRect* outputImageRect,
+                                                              NrtTransform transform,
+                                                              int32_t layer,
+                                                              NrtRGBAConfig colourTint)
     {
         if (renderingService == nullptr)
         {
@@ -120,8 +124,10 @@ extern "C"
     }
 
     NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingService renderingService,
-                                                       NrtBasicFillRect* outputBasicFillRect, NrtTransform transform,
-                                                       int32_t layer, NrtRGBAConfig colourConfig)
+                                                       NrtBasicFillRect* outputBasicFillRect,
+                                                       NrtTransform transform,
+                                                       int32_t layer,
+                                                       NrtRGBAConfig colourConfig)
     {
         if (renderingService == nullptr)
         {
@@ -138,9 +144,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingService renderingService, NrtTextRect* outputTextRect,
-                                                  NrtTransform transform, int32_t layer, NrtRGBAConfig colourConfig,
-                                                  float fontSize, const char* fontFilePath)
+    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingService renderingService,
+                                                  NrtTextRect* outputTextRect,
+                                                  NrtTransform transform,
+                                                  int32_t layer,
+                                                  NrtRGBAConfig colourConfig,
+                                                  float fontSize,
+                                                  const char* fontFilePath)
     {
         if (renderingService == nullptr)
         {
@@ -231,7 +241,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService, NrtTexture* outputTexture,
+    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService,
+                                                      NrtTexture* outputTexture,
                                                       const char* fileTarget)
     {
         if (renderingService == nullptr)
@@ -248,8 +259,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingService renderingService, NrtFontSet* outputFontSet,
-                                              const char* fileTarget, float fontSize)
+    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingService renderingService,
+                                              NrtFontSet* outputFontSet,
+                                              const char* fileTarget,
+                                              float fontSize)
     {
         if (renderingService == nullptr)
         {

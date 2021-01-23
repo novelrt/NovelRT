@@ -10,10 +10,10 @@ using namespace NovelRT::Ecs;
 
 class EntityCacheTest : public testing::Test
 {
-  public:
+public:
     EntityCache cache = EntityCache(1);
 
-  protected:
+protected:
     void SetUp() override
     {
         cache = EntityCache(1);

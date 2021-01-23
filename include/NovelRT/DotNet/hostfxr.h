@@ -31,12 +31,16 @@ enum hostfxr_delegate_type
 };
 
 typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_main_fn)(const int argc, const char_t** argv);
-typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_main_startupinfo_fn)(const int argc, const char_t** argv,
-                                                               const char_t* host_path, const char_t* dotnet_root,
+typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_main_startupinfo_fn)(const int argc,
+                                                               const char_t** argv,
+                                                               const char_t* host_path,
+                                                               const char_t* dotnet_root,
                                                                const char_t* app_path);
-typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_main_bundle_startupinfo_fn)(const int argc, const char_t** argv,
+typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_main_bundle_startupinfo_fn)(const int argc,
+                                                                      const char_t** argv,
                                                                       const char_t* host_path,
-                                                                      const char_t* dotnet_root, const char_t* app_path,
+                                                                      const char_t* dotnet_root,
+                                                                      const char_t* app_path,
                                                                       int64_t bundle_header_offset);
 
 typedef void(HOSTFXR_CALLTYPE* hostfxr_error_writer_fn)(const char_t* message);
@@ -100,7 +104,9 @@ struct hostfxr_initialize_parameters
 // This function does not load the runtime.
 //
 typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_initialize_for_dotnet_command_line_fn)(
-    int argc, const char_t** argv, const struct hostfxr_initialize_parameters* parameters,
+    int argc,
+    const char_t** argv,
+    const struct hostfxr_initialize_parameters* parameters,
     /*out*/ hostfxr_handle* host_context_handle);
 
 //
@@ -134,7 +140,8 @@ typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_initialize_for_dotnet_command_line_fn)
 // the difference in properties is acceptable.
 //
 typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_initialize_for_runtime_config_fn)(
-    const char_t* runtime_config_path, const struct hostfxr_initialize_parameters* parameters,
+    const char_t* runtime_config_path,
+    const struct hostfxr_initialize_parameters* parameters,
     /*out*/ hostfxr_handle* host_context_handle);
 
 //
@@ -184,7 +191,8 @@ typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_get_runtime_property_value_fn)(const h
 // property will be removed.
 //
 typedef int32_t(HOSTFXR_CALLTYPE* hostfxr_set_runtime_property_value_fn)(const hostfxr_handle host_context_handle,
-                                                                         const char_t* name, const char_t* value);
+                                                                         const char_t* name,
+                                                                         const char_t* value);
 
 //
 // Gets all the runtime properties for an initialized host context

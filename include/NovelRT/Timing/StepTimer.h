@@ -13,7 +13,7 @@ namespace NovelRT::Timing
 {
     class StepTimer
     {
-      private:
+    private:
         const uint64_t _frequency;
         const uint64_t _maxCounterDelta;
 
@@ -31,7 +31,7 @@ namespace NovelRT::Timing
 
         bool _isFixedTimeStep;
 
-      public:
+    public:
         StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1);
 
         inline uint64_t getElapsedTicks() const

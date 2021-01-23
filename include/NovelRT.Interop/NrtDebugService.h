@@ -14,7 +14,8 @@ extern "C"
 
     typedef struct DebugServiceHandle* NrtDebugService;
 
-    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRenderingService renderingService,
+    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent,
+                                      NrtRenderingService renderingService,
                                       NrtDebugService* outputService);
     NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service);
     NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value);

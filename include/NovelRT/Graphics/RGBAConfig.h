@@ -13,13 +13,13 @@ namespace NovelRT::Graphics
     class RGBAConfig
     {
 
-      private:
+    private:
         int32_t _r;
         int32_t _g;
         int32_t _b;
         int32_t _a;
 
-      public:
+    public:
         RGBAConfig(int32_t r, int32_t g, int32_t b, int32_t a) noexcept;
 
         int32_t getR() const noexcept;

@@ -9,10 +9,10 @@ namespace NovelRT::Maths
 {
     class QuadTreePoint : public std::enable_shared_from_this<QuadTreePoint>
     {
-      private:
+    private:
         GeoVector2F _position;
 
-      public:
+    public:
         QuadTreePoint(GeoVector2F position) : _position(position)
         {
         }

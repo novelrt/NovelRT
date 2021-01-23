@@ -9,7 +9,7 @@ using namespace NovelRT::Timing;
 
 class TimestampTest : public testing::Test
 {
-  protected:
+protected:
     Timestamp _timestamp;
 
     void SetUp() override
@@ -17,7 +17,7 @@ class TimestampTest : public testing::Test
         _timestamp = Timestamp(TicksPerSecond);
     }
 
-  public:
+public:
     TimestampTest() : _timestamp(Timestamp(0))
     {
     }

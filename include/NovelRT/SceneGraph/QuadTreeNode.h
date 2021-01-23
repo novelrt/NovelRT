@@ -12,7 +12,7 @@ namespace NovelRT::SceneGraph
 {
     class QuadTreeNode : public SceneNode
     {
-      private:
+    private:
         static const int32_t TOP_LEFT = 0;
         static const int32_t TOP_RIGHT = 1;
         static const int32_t BOTTOM_LEFT = 2;
@@ -20,7 +20,7 @@ namespace NovelRT::SceneGraph
 
         std::array<std::shared_ptr<QuadTreeScenePoint>, 4> _quadTreePoints;
 
-      public:
+    public:
         QuadTreeNode(std::array<std::shared_ptr<QuadTreeScenePoint>, 4> quadTreePoints)
             : _quadTreePoints(quadTreePoints)
         {

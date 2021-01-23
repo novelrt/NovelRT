@@ -12,10 +12,10 @@ namespace NovelRT::SceneGraph
 {
     class Scene
     {
-      private:
+    private:
         std::set<std::shared_ptr<SceneNode>> _nodes;
 
-      public:
+    public:
         const std::set<std::shared_ptr<SceneNode>>& getNodes()
         {
             return _nodes;

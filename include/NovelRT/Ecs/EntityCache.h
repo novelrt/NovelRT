@@ -16,11 +16,11 @@ namespace NovelRT::Ecs
      */
     class EntityCache
     {
-      private:
+    private:
         SparseSet<size_t, std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
 
-      public:
+    public:
         /**
          * @brief Constructs a new instance of EntityCache with the given thread pool size.
          *

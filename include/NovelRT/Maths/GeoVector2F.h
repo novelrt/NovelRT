@@ -17,12 +17,12 @@ namespace NovelRT::Maths
         friend class GeoVector3F;
         friend class GeoVector4F;
 
-      private:
+    private:
         GeoVector2F(glm::vec2 value) : x(value.x), y(value.y)
         {
         }
 
-      public:
+    public:
         float x;
         float y;
 

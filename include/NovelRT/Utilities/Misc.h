@@ -12,7 +12,7 @@ namespace NovelRT::Utilities
 {
     class Misc
     {
-      public:
+    public:
         static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
         static inline const char* CONSOLE_LOG_APP = "Application";
         static inline const char* CONSOLE_LOG_DOTNET = ".NET";

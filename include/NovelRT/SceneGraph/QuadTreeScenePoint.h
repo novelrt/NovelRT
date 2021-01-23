@@ -12,10 +12,10 @@ namespace NovelRT::SceneGraph
 {
     class QuadTreeScenePoint : public Maths::QuadTreePoint
     {
-      private:
+    private:
         std::shared_ptr<SceneNode> _sceneNode;
 
-      public:
+    public:
         QuadTreeScenePoint(Maths::GeoVector2F position, std::shared_ptr<SceneNode> sceneNode)
             : Maths::QuadTreePoint(position), _sceneNode(sceneNode)
         {

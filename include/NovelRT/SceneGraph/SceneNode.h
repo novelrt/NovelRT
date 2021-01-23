@@ -12,15 +12,15 @@ namespace NovelRT::SceneGraph
 {
     class SceneNode : public std::enable_shared_from_this<SceneNode>
     {
-      public:
+    public:
         template<typename T> class breadth_first_traversal_result_iterator;
         template<typename T> class depth_first_traversal_result_iterator;
 
-      private:
+    private:
         std::set<std::shared_ptr<SceneNode>> _parents;
         std::set<std::shared_ptr<SceneNode>> _children;
 
-      public:
+    public:
         const std::set<std::shared_ptr<SceneNode>>& getChildren() const
         {
             return _children;
@@ -140,14 +140,14 @@ namespace NovelRT::SceneGraph
 
         template<typename T> class breadth_first_traversal_result_iterator
         {
-          private:
+        private:
             std::function<T(const std::shared_ptr<SceneNode>&)> _function;
             std::queue<std::shared_ptr<SceneNode>> _pendingNodes;
             std::set<std::shared_ptr<SceneNode>> _visitedNodes;
 
             T _value;
 
-          public:
+        public:
             using iterator_category = std::output_iterator_tag;
             using value_type = T;
             using pointer = value_type*;
@@ -218,14 +218,14 @@ namespace NovelRT::SceneGraph
 
         template<typename T> class depth_first_traversal_result_iterator
         {
-          private:
+        private:
             std::function<T(const std::shared_ptr<SceneNode>&)> _function;
             std::stack<std::shared_ptr<SceneNode>> _pendingNodes;
             std::set<std::shared_ptr<SceneNode>> _visitedNodes;
 
             T _value;
 
-          public:
+        public:
             using iterator_category = std::output_iterator_tag;
             using value_type = T;
             using pointer = value_type*;

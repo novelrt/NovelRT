@@ -10,10 +10,10 @@ using namespace NovelRT::Ecs;
 
 class ComponentCacheTest : public testing::Test
 {
-  public:
+public:
     ComponentCache cache = ComponentCache(1);
 
-  protected:
+protected:
     void SetUp() override
     {
         cache = ComponentCache(1);

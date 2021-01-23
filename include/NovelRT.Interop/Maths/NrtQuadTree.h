@@ -27,11 +27,13 @@ extern "C"
     NrtResult Nrt_QuadTree_getBottomRight(const NrtQuadTree tree, NrtQuadTree* outputCornerTree);
     NrtBool Nrt_QuadTree_tryInsert(NrtQuadTree tree, NrtQuadTreePoint point);
     NrtBool Nrt_QuadTree_tryRemove(const NrtQuadTree tree, NrtQuadTreePoint point);
-    NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds,
+    NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree,
+                                                 NrtGeoBounds bounds,
                                                  NrtPointVector* outputResultVector);
     NrtResult Nrt_PointVector_delete(NrtPointVector vector);
     size_t Nrt_PointVector_getSize(const NrtPointVector vector);
-    NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index,
+    NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector,
+                                                size_t index,
                                                 NrtQuadTreePoint* outputPoint);
     NrtResult Nrt_QuadTree_delete(NrtQuadTree tree);
 

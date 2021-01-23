@@ -103,7 +103,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node, int32_t (*action)(NrtSceneNode),
+    NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node,
+                                                             int32_t (*action)(NrtSceneNode),
                                                              NrtSceneNodeBreadthFirstIterator* outputIterator)
     {
         if (node == nullptr || action == nullptr || outputIterator == nullptr)
@@ -138,7 +139,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node, int32_t (*action)(NrtSceneNode),
+    NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node,
+                                                           int32_t (*action)(NrtSceneNode),
                                                            NrtSceneNodeDepthFirstIterator* outputIterator)
     {
         if (node == nullptr || action == nullptr || outputIterator == nullptr)
@@ -202,7 +204,8 @@ extern "C"
         return reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet)->size();
     }
 
-    NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet, size_t index,
+    NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet,
+                                                     size_t index,
                                                      NrtSceneNode* outputSceneNode)
     {
         if (nodeSet == nullptr || outputSceneNode == nullptr)

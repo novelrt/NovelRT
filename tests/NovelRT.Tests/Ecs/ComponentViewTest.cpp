@@ -11,11 +11,11 @@ using namespace NovelRT::Ecs;
 
 class ComponentViewTest : public testing::Test
 {
-  public:
+public:
     ComponentView<int32_t>* testView = nullptr;
     ComponentBuffer<int32_t> testBuffer = ComponentBuffer<int32_t>(1, -1);
 
-  protected:
+protected:
     void SetUp() override
     {
         testBuffer = ComponentBuffer<int32_t>(1, -1);

@@ -13,7 +13,7 @@ namespace NovelRT::Timing
     static const uint64_t TicksPerSecond = 10'000'000;
     class Timestamp
     {
-      public:
+    public:
         uint64_t ticks;
 
         explicit Timestamp(uint64_t ticks) noexcept : ticks(ticks)

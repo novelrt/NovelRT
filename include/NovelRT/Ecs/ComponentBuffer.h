@@ -22,12 +22,12 @@ namespace NovelRT::Ecs
      */
     template<typename T> class ComponentBuffer
     {
-      private:
+    private:
         SparseSet<EntityId, T, AtomHashFunction> _rootSet;
         SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
         T _deleteInstructionState;
 
-      public:
+    public:
         /**
          * @brief Constructs a new ComponentBuffer for type T.
          *

@@ -19,7 +19,7 @@ GeoBounds getCenteredBounds(float width, float height)
 
 class QuadTreeTest : public testing::Test
 {
-  protected:
+protected:
     std::shared_ptr<QuadTree> _quadTree;
 
     void SetUp() override

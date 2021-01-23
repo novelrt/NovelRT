@@ -51,7 +51,8 @@ extern "C"
         return Nrt_GeoVector4F_uniform(1.0f);
     }
 
-    void Nrt_GeoVector4F_rotateToAngleAroundPoint(NrtGeoVector4F* vector, float angleRotationValue,
+    void Nrt_GeoVector4F_rotateToAngleAroundPoint(NrtGeoVector4F* vector,
+                                                  float angleRotationValue,
                                                   NrtGeoVector3F point)
     {
         Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);

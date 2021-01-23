@@ -4,7 +4,8 @@
 
 namespace NovelRT::Input
 {
-    InteractionObject::InteractionObject(Transform transform, int32_t layer,
+    InteractionObject::InteractionObject(Transform transform,
+                                         int32_t layer,
                                          const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject)
         : WorldObject(transform, layer),
           Interacted(Utilities::Event<>()),

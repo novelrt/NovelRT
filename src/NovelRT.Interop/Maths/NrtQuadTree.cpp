@@ -134,7 +134,8 @@ extern "C"
             treePointer->tryRemove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this()));
     }
 
-    NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree, NrtGeoBounds bounds,
+    NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTree tree,
+                                                 NrtGeoBounds bounds,
                                                  NrtPointVector* outputResultVector)
     {
         if (tree == nullptr || outputResultVector == nullptr)
@@ -180,7 +181,8 @@ extern "C"
         return reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector)->size();
     }
 
-    NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector, size_t index,
+    NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVector vector,
+                                                size_t index,
                                                 NrtQuadTreePoint* outputPoint)
     {
         if (vector == nullptr || outputPoint == nullptr)

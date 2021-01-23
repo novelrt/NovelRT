@@ -11,11 +11,11 @@ namespace NovelRT::Utilities
 {
     template<typename... TArgs> class EventHandler
     {
-      private:
+    private:
         Atom _id;
         std::function<void(TArgs...)> _function;
 
-      public:
+    public:
         EventHandler() : EventHandler(nullptr)
         {
         }
@@ -48,10 +48,10 @@ namespace NovelRT::Utilities
 
     template<typename... TArgs> class Event
     {
-      private:
+    private:
         std::vector<EventHandler<TArgs...>> _handlers;
 
-      public:
+    public:
         Event() : _handlers(std::vector<EventHandler<TArgs...>>())
         {
         }

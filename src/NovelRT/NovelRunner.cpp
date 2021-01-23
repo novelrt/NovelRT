@@ -5,7 +5,9 @@
 
 namespace NovelRT
 {
-    NovelRunner::NovelRunner(int32_t displayNumber, const std::string& windowTitle, uint32_t targetFrameRate,
+    NovelRunner::NovelRunner(int32_t displayNumber,
+                             const std::string& windowTitle,
+                             uint32_t targetFrameRate,
                              bool transparency)
         : SceneConstructionRequested(Utilities::Event<>()),
           Update(Utilities::Event<Timing::Timestamp>()),

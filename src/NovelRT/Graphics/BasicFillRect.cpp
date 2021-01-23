@@ -6,8 +6,11 @@
 namespace NovelRT::Graphics
 {
 
-    BasicFillRect::BasicFillRect(Transform transform, int32_t layer, std::shared_ptr<Camera> camera,
-                                 ShaderProgram shaderProgram, RGBAConfig fillColour)
+    BasicFillRect::BasicFillRect(Transform transform,
+                                 int32_t layer,
+                                 std::shared_ptr<Camera> camera,
+                                 ShaderProgram shaderProgram,
+                                 RGBAConfig fillColour)
         : RenderObject(transform, layer, shaderProgram, camera),
           _colourConfig(fillColour),
           _colourBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer))

@@ -16,11 +16,11 @@ namespace NovelRT::Ecs
      */
     template<typename TComponent> class ComponentView
     {
-      private:
+    private:
         size_t _poolId;
         ComponentBuffer<TComponent>& _componentBuffer;
 
-      public:
+    public:
         /**
          * @brief Constructs a new ComponentView with the context of the current thread.
          *

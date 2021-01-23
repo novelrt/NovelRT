@@ -11,7 +11,7 @@ using namespace NovelRT::Timing;
 
 class SystemSchedulerTest : public testing::Test
 {
-  public:
+public:
     SystemScheduler* scheduler = nullptr;
     EntityCache* entityCache = nullptr;
     ComponentCache* componentCache = nullptr;
@@ -22,7 +22,7 @@ class SystemSchedulerTest : public testing::Test
     std::function<void(Timestamp, Catalogue)> sysTwo;
     std::function<void(Timestamp, Catalogue)> sysThree;
 
-  protected:
+protected:
     void SetUp() override
     {
         sysOneBool = true;

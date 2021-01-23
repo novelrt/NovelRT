@@ -12,7 +12,7 @@ namespace NovelRT::DotNet
 {
     class RuntimeService : public std::enable_shared_from_this<RuntimeService>
     {
-      private:
+    private:
         struct Exports
         {
             void (*Initialise)();
@@ -32,7 +32,7 @@ namespace NovelRT::DotNet
         LoggingService _logger;
         std::string get_hostfxr_string(std::vector<char_t> buffer);
 
-      public:
+    public:
         RuntimeService();
         ~RuntimeService();
 

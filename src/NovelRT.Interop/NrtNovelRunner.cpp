@@ -25,7 +25,8 @@ extern "C"
         return reinterpret_cast<NrtNovelRunner>(runner);
     }
 
-    NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber, const char* windowTitle,
+    NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber,
+                                                const char* windowTitle,
                                                 uint32_t targetFrameRate)
     {
         NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber, windowTitle, targetFrameRate);

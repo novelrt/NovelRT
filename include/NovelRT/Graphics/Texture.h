@@ -14,7 +14,7 @@ namespace NovelRT::Graphics
         friend class RenderingService;
         friend class FontSet;
 
-      private:
+    private:
         Atom _id;
         std::shared_ptr<RenderingService> _renderer;
         Utilities::Lazy<GLuint> _textureId;
@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
             return _id;
         }
 
-      public:
+    public:
         Texture(std::shared_ptr<RenderingService> renderer, Atom id);
         void loadPngAsTexture(const std::string& file);
 

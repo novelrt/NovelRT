@@ -29,29 +29,29 @@ namespace NovelRT::Ecs
      */
     template<typename TKey, typename TValue, typename THashFunction = std::hash<TKey>> class SparseSet
     {
-      private:
+    private:
         std::vector<TKey> _sparseBlock;
         std::vector<TValue> _denseBlock;
         std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
 
-      public:
+    public:
         /**
          * @brief A non const iterator for traversing the keys and values of this particular SparseSet as tuple pairs.
          *
          */
         class Iterator
         {
-          public:
+        public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
             using value_type = std::tuple<TKey, TValue>;
             using pointer = std::tuple<typename std::vector<TKey>::iterator, typename std::vector<TValue>::iterator>;
             using reference = std::tuple<TKey&, TValue&>;
 
-          private:
+        private:
             pointer _ptr;
 
-          public:
+        public:
             Iterator(pointer ptr) : _ptr(ptr)
             {
             }
@@ -98,7 +98,7 @@ namespace NovelRT::Ecs
          */
         class ConstIterator
         {
-          public:
+        public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
             using value_type = std::tuple<TKey, TValue>;
@@ -106,10 +106,10 @@ namespace NovelRT::Ecs
                 std::tuple<typename std::vector<TKey>::const_iterator, typename std::vector<TValue>::const_iterator>;
             using reference = std::tuple<const TKey&, const TValue&>;
 
-          private:
+        private:
             pointer _ptr;
 
-          public:
+        public:
             ConstIterator(pointer ptr) : _ptr(ptr)
             {
             }

@@ -90,8 +90,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo,
-                                                 NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour,
+    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne,
+                                                 NrtQuadTreeScenePoint pointTwo,
+                                                 NrtQuadTreeScenePoint pointThree,
+                                                 NrtQuadTreeScenePoint pointFour,
                                                  NrtQuadTreeScenePointArray* outputArray)
     { // TODO: can we not make this read nicer?
         if (pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr ||

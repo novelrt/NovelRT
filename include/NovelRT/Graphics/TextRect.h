@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
     class TextRect : public RenderObject
     {
 
-      private:
+    private:
         void reloadText();
 
         std::string _fontFileDir;
@@ -24,13 +24,17 @@ namespace NovelRT::Graphics
         RGBAConfig _colourConfig;
         std::shared_ptr<FontSet> _fontSet;
 
-      protected:
+    protected:
         void configureObjectBuffers() final;
         void drawObject() final;
 
-      public:
-        TextRect(Transform transform, int32_t layer, ShaderProgram programId, std::shared_ptr<Camera> camera,
-                 std::shared_ptr<FontSet> fontSet, RGBAConfig colourConfig);
+    public:
+        TextRect(Transform transform,
+                 int32_t layer,
+                 ShaderProgram programId,
+                 std::shared_ptr<Camera> camera,
+                 std::shared_ptr<FontSet> fontSet,
+                 RGBAConfig colourConfig);
 
         inline RGBAConfig getColourConfig() const noexcept
         {

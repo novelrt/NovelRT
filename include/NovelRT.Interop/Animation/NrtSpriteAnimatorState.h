@@ -14,7 +14,8 @@ extern "C"
 #endif
 
     NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create();
-    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget,
+    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state,
+                                                     NrtSpriteAnimatorState stateTarget,
                                                      NrtSpriteAnimatorStateConditionFunctions vector);
     NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index);
     int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state);
@@ -27,7 +28,8 @@ extern "C"
 
     NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create();
     NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame);
-    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index,
+    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector,
+                                                            int32_t index,
                                                             NrtSpriteAnimatorFrame* outputFrame);
     NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index);
     NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector);

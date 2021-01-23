@@ -16,7 +16,7 @@ namespace NovelRT::Windowing
     class WindowingService : public std::enable_shared_from_this<WindowingService>
     {
 
-      public:
+    public:
         struct MouseClickEventArgs
         {
             int32_t button = 0;
@@ -35,7 +35,7 @@ namespace NovelRT::Windowing
         Utilities::Event<MouseClickEventArgs> MouseButtonClicked;
         Utilities::Event<KeyboardButtonChangeEventArgs> KeyboardButtonChanged;
 
-      private:
+    private:
         Maths::GeoVector2F _windowSize;
         std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
         LoggingService _logger;
@@ -49,7 +49,7 @@ namespace NovelRT::Windowing
 
         void errorCallback(int32_t, const char* error);
 
-      public:
+    public:
         explicit WindowingService() noexcept;
 
         void initialiseWindow(int32_t displayNumber, const std::string& windowTitle, bool transparencyEnabled);

@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class InvalidOperationException final : public std::runtime_error
     {
-      public:
+    public:
         InvalidOperationException() : std::runtime_error("The current operation is invalid.")
         {
         }

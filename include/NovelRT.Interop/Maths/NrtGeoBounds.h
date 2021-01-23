@@ -24,7 +24,8 @@ extern "C"
     NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, int32_t index);
     NrtBool Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);
     NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds);
-    NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other,
+    NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first,
+                                           NrtGeoBounds other,
                                            NrtBool* outputResult); // TODO: This should NOT be an NrtResult wtf
     NrtBool Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs);
     NrtBool Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs);

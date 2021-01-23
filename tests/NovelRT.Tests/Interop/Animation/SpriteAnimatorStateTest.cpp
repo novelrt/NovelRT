@@ -12,7 +12,7 @@ using namespace NovelRT::Animation;
 
 class InteropSpriteAnimatorStateTest : public testing::Test
 {
-  protected:
+protected:
     std::vector<NrtSpriteAnimatorState> _states;
 
     void SetUp() override

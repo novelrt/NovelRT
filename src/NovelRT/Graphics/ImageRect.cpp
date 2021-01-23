@@ -5,8 +5,12 @@
 
 namespace NovelRT::Graphics
 {
-    ImageRect::ImageRect(Transform transform, int32_t layer, ShaderProgram shaderProgram,
-                         std::shared_ptr<Camera> camera, std::shared_ptr<Texture> texture, RGBAConfig colourTint)
+    ImageRect::ImageRect(Transform transform,
+                         int32_t layer,
+                         ShaderProgram shaderProgram,
+                         std::shared_ptr<Camera> camera,
+                         std::shared_ptr<Texture> texture,
+                         RGBAConfig colourTint)
         : RenderObject(transform, layer, shaderProgram, camera),
           _texture(texture),
           _uvBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer)),
@@ -16,8 +20,11 @@ namespace NovelRT::Graphics
     {
     }
 
-    ImageRect::ImageRect(Transform transform, int32_t layer, ShaderProgram shaderProgram,
-                         std::shared_ptr<Camera> camera, RGBAConfig colourTint)
+    ImageRect::ImageRect(Transform transform,
+                         int32_t layer,
+                         ShaderProgram shaderProgram,
+                         std::shared_ptr<Camera> camera,
+                         RGBAConfig colourTint)
         : ImageRect(transform, layer, shaderProgram, camera, nullptr, colourTint)
     {
     }

@@ -20,7 +20,8 @@ extern "C"
         return reinterpret_cast<NrtSpriteAnimatorState>(state);
     }
 
-    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state, NrtSpriteAnimatorState stateTarget,
+    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state,
+                                                     NrtSpriteAnimatorState stateTarget,
                                                      NrtSpriteAnimatorStateConditionFunctions vector)
     {
         if (state == nullptr || stateTarget == nullptr || vector == nullptr)
@@ -142,7 +143,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index,
+    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector,
+                                                            int32_t index,
                                                             NrtSpriteAnimatorFrame* outputFrame)
     {
         if (vector == nullptr || outputFrame == nullptr)

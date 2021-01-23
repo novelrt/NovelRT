@@ -12,7 +12,7 @@ namespace NovelRT::Graphics
 {
     struct GraphicsCharacterRenderData
     {
-      public:
+    public:
         std::shared_ptr<Texture> texture; // ID handle of the glyph texture
         uint32_t sizeX;                   // Size of glyph
         uint32_t sizeY;                   // Size of glyph

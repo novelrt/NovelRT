@@ -12,7 +12,7 @@ namespace NovelRT::Ink
 {
     class InkService : public std::enable_shared_from_this<InkService>
     {
-      private:
+    private:
         struct Exports
         {
             void (*Initialise)();
@@ -23,7 +23,7 @@ namespace NovelRT::Ink
         std::shared_ptr<DotNet::RuntimeService> _runtimeService;
         Utilities::Lazy<Exports> _exports;
 
-      public:
+    public:
         InkService(std::shared_ptr<DotNet::RuntimeService> runtimeService,
                    void (*getExports)(Exports* exports)) noexcept;
 

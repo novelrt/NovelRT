@@ -14,7 +14,7 @@ namespace NovelRT
     class DebugService
     {
 
-      private:
+    private:
         std::shared_ptr<Graphics::RenderingService> _renderingService;
         std::unique_ptr<Graphics::TextRect> _fpsCounter;
         uint32_t _framesPerSecond;
@@ -23,7 +23,7 @@ namespace NovelRT
 
         void onSceneConstruction();
 
-      public:
+    public:
         DebugService(Utilities::Event<>& sceneConstructionEvent,
                      std::shared_ptr<Graphics::RenderingService> renderingService) noexcept;
 

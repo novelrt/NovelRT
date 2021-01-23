@@ -12,7 +12,7 @@ namespace NovelRT::Ink
 {
     class Story
     {
-      private:
+    private:
         struct Exports
         {
             intptr_t (*CreateFromJsonString)(const char* jsonString);
@@ -27,8 +27,9 @@ namespace NovelRT::Ink
         Utilities::Lazy<Exports> _exports;
         Utilities::Lazy<intptr_t> _handle;
 
-      public:
-        Story(std::shared_ptr<InkService> inkService, void (*getExports)(Exports* exports),
+    public:
+        Story(std::shared_ptr<InkService> inkService,
+              void (*getExports)(Exports* exports),
               const char* jsonString) noexcept;
 
         bool CanContinue();

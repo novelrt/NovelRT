@@ -6,7 +6,9 @@
 namespace NovelRT::Graphics
 {
 
-    RenderObject::RenderObject(Transform transform, int32_t layer, ShaderProgram shaderProgram,
+    RenderObject::RenderObject(Transform transform,
+                               int32_t layer,
+                               ShaderProgram shaderProgram,
                                std::shared_ptr<Camera> camera)
         : WorldObject(transform, layer),
           _vertexBuffer(Utilities::Lazy<GLuint>(std::function<GLuint()>(generateStandardBuffer))),

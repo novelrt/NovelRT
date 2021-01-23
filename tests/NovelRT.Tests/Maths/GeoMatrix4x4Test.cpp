@@ -9,7 +9,7 @@ using namespace NovelRT::Maths;
 
 class GeoMatrix4x4Test : public testing::Test
 {
-  protected:
+protected:
     GeoMatrix4x4F _dummyMatrix;
 
     void SetUp() override

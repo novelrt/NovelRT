@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class NotSupportedException final : public std::runtime_error
     {
-      public:
+    public:
         NotSupportedException() : std::runtime_error("The current operation is not supported.")
         {
         }

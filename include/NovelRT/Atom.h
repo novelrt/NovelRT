@@ -13,10 +13,10 @@ namespace NovelRT
     {
         friend class AtomHashFunction;
 
-      private:
+    private:
         uintptr_t _value;
 
-      public:
+    public:
         explicit Atom() noexcept : Atom(0)
         {
         }
@@ -107,7 +107,7 @@ namespace NovelRT
 
     class AtomHashFunction
     {
-      public:
+    public:
         size_t operator()(Atom atom) const noexcept
         {
             return static_cast<size_t>(atom._value);

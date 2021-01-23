@@ -18,15 +18,15 @@ namespace NovelRT
      */
     class WorldObject
     {
-      private:
+    private:
         Transform _transform;
         int32_t _layer;
         bool _active;
 
-      protected:
+    protected:
         bool _isDirty;
 
-      public:
+    public:
         WorldObject(Transform transform, int32_t layer);
         virtual ~WorldObject()
         {

@@ -20,7 +20,7 @@ namespace NovelRT
     };
     class LoggingService
     {
-      private:
+    private:
         std::shared_ptr<spdlog::logger> _logger;
         inline void logDebug()
         {
@@ -35,7 +35,7 @@ namespace NovelRT
         {
         }
 
-      public:
+    public:
         LoggingService();
         LoggingService(const std::string& core);
         LoggingService(const std::string& core, LogLevel level);

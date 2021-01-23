@@ -19,8 +19,10 @@ extern "C"
     NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
     NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint);
 
-    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne, NrtQuadTreeScenePoint pointTwo,
-                                                 NrtQuadTreeScenePoint pointThree, NrtQuadTreeScenePoint pointFour,
+    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne,
+                                                 NrtQuadTreeScenePoint pointTwo,
+                                                 NrtQuadTreeScenePoint pointThree,
+                                                 NrtQuadTreeScenePoint pointFour,
                                                  NrtQuadTreeScenePointArray* outputArray);
 
 #ifdef __cplusplus

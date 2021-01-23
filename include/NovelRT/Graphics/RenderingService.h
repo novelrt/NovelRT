@@ -17,7 +17,7 @@ namespace NovelRT::Graphics
         friend class Texture;
         friend class FontSet;
 
-      private:
+    private:
         bool initialiseRenderPipeline(bool completeLaunch = true,
                                       Maths::GeoVector2F* const optionalWindowSize = nullptr);
         LoggingService _logger;
@@ -41,21 +41,27 @@ namespace NovelRT::Graphics
         void handleTexturePreDestruction(Texture* target);
         void handleFontSetPreDestruction(FontSet* target);
 
-      public:
+    public:
         RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
         int32_t initialiseRendering();
         void tearDown() const;
 
-        std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer, const std::string& filePath,
+        std::unique_ptr<ImageRect> createImageRect(Transform transform,
+                                                   int32_t layer,
+                                                   const std::string& filePath,
                                                    RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-        std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer,
+        std::unique_ptr<ImageRect> createImageRect(Transform transform,
+                                                   int32_t layer,
                                                    RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
         std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig);
 
-        std::unique_ptr<TextRect> createTextRect(Transform transform, int32_t layer, RGBAConfig colourConfig,
-                                                 float fontSize, const std::string& fontFilePath);
+        std::unique_ptr<TextRect> createTextRect(Transform transform,
+                                                 int32_t layer,
+                                                 RGBAConfig colourConfig,
+                                                 float fontSize,
+                                                 const std::string& fontFilePath);
 
         std::shared_ptr<Camera> getCamera() const;
 

@@ -15,7 +15,7 @@ namespace NovelRT::Maths
         friend class Input::InteractionService;
         friend class GeoMatrix4x4F;
 
-      private:
+    private:
         GeoVector4F(glm::vec4 value) : x(value.x), y(value.y), z(value.z), w(value.w)
         {
         }
@@ -30,7 +30,7 @@ namespace NovelRT::Maths
             return reinterpret_cast<glm::vec4&>(*this);
         }
 
-      public:
+    public:
         float x;
         float y;
         float z;
@@ -186,7 +186,8 @@ namespace NovelRT::Maths
             return *this;
         }
 
-        void rotateToAngleAroundPoint(float angleRotationValue, const GeoVector4F& point,
+        void rotateToAngleAroundPoint(float angleRotationValue,
+                                      const GeoVector4F& point,
                                       const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec4*>(this) =

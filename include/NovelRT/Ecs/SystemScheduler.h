@@ -26,7 +26,7 @@ namespace NovelRT::Ecs
      */
     class SystemScheduler
     {
-      private:
+    private:
         struct QueueLockPair
         {
             std::vector<Atom> systemUpdateIds;
@@ -59,7 +59,7 @@ namespace NovelRT::Ecs
         void CycleForJob(size_t poolId);
         void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
 
-      public:
+    public:
         /**
          * @brief Constructs a new instance of SystemScheduler.
          *

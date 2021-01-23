@@ -21,13 +21,13 @@ namespace NovelRT::Ecs
      */
     class ComponentCache
     {
-      private:
+    private:
         std::unordered_map<ComponentTypeId, void*, AtomHashFunction> _componentMap;
         std::vector<std::function<void()>> _destructorFunctions;
         size_t _poolSize;
         Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
 
-      public:
+    public:
         /**
          * @brief Constructs a new ComponentCache with a given thread pool size.
          *

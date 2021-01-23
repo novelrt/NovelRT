@@ -69,7 +69,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service, NrtKeyCode value,
+    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service,
+                                                 NrtKeyCode value,
                                                  NrtKeyStateFrameChangeLog* output)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
@@ -86,7 +87,8 @@ extern "C"
     }
 
     NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service,
-                                                                const NrtTransform transform, int32_t layer,
+                                                                const NrtTransform transform,
+                                                                int32_t layer,
                                                                 NrtBasicInteractionRect* outputRect)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);

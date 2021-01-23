@@ -15,7 +15,7 @@ namespace NovelRT
      */
     class Transform
     {
-      public:
+    public:
         Maths::GeoVector2F position;
         Maths::GeoVector2F scale;
         float rotation;

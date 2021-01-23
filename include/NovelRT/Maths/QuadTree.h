@@ -9,7 +9,7 @@ namespace NovelRT::Maths
 {
     class QuadTree : public std::enable_shared_from_this<QuadTree>
     {
-      private:
+    private:
         static const int32_t POINT_CAPACITY = 4;
 
         static const int32_t TOP_LEFT = 0;
@@ -26,7 +26,7 @@ namespace NovelRT::Maths
         void subdivideTree() noexcept;
         void tryMergeTree() noexcept;
 
-      public:
+    public:
         explicit QuadTree(GeoBounds bounds,
                           std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
             : _parent(parent), _bounds(bounds), _points(), _children(), _pointCount(0)

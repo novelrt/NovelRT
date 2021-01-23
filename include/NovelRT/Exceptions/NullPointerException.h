@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class NullPointerException final : public std::runtime_error
     {
-      public:
+    public:
         NullPointerException() : std::runtime_error("Object pointer not set to an instance of an object.")
         {
         }

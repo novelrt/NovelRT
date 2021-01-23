@@ -11,7 +11,7 @@ namespace NovelRT::Exceptions
 {
     class NotInitialisedException final : public std::runtime_error
     {
-      public:
+    public:
         NotInitialisedException(const std::string& functionName)
             : std::runtime_error("Service has not been initialised before attempting operation: " + functionName + ".")
         {

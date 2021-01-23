@@ -107,7 +107,8 @@ namespace NovelRT::Input
         _keyStates.at(_currentBufferIndex).insert_or_assign(keyCode, log);
     }
 
-    void InteractionService::acceptMouseButtonClickPush(int32_t button, int32_t action,
+    void InteractionService::acceptMouseButtonClickPush(int32_t button,
+                                                        int32_t action,
                                                         Maths::GeoVector2F mousePosition)
     {
         auto keyState = static_cast<KeyState>(action);

@@ -24,8 +24,12 @@ namespace NovelRT::Graphics
         reloadText();
     }
 
-    TextRect::TextRect(Transform transform, int32_t layer, ShaderProgram shaderProgram, std::shared_ptr<Camera> camera,
-                       std::shared_ptr<FontSet> fontSet, RGBAConfig colourConfig)
+    TextRect::TextRect(Transform transform,
+                       int32_t layer,
+                       ShaderProgram shaderProgram,
+                       std::shared_ptr<Camera> camera,
+                       std::shared_ptr<FontSet> fontSet,
+                       RGBAConfig colourConfig)
         : RenderObject(transform, layer, shaderProgram, camera),
           _text(""),
           _logger(Utilities::Misc::CONSOLE_LOG_GFX),

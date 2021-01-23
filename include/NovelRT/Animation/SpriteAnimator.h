@@ -13,7 +13,7 @@ namespace NovelRT::Animation
 
     class SpriteAnimator
     {
-      private:
+    private:
         Timing::Timestamp _accumulatedDelta;
         uint32_t _currentFrameIndex;
         NovelRunner* _runner; // I'm a bit worried about this, but whatever, just want it working for now
@@ -27,7 +27,7 @@ namespace NovelRT::Animation
 
         void constructAnimation(Timing::Timestamp delta);
 
-      public:
+    public:
         explicit SpriteAnimator(NovelRunner* runner, Graphics::ImageRect* rect) noexcept;
         void play();
         void pause();

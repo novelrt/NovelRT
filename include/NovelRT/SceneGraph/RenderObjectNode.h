@@ -12,10 +12,10 @@ namespace NovelRT::SceneGraph
 {
     class RenderObjectNode : public SceneNode
     {
-      private:
+    private:
         std::shared_ptr<Graphics::RenderObject> _renderObject;
 
-      public:
+    public:
         RenderObjectNode(std::shared_ptr<Graphics::RenderObject> renderObject) : _renderObject(renderObject)
         {
         }

@@ -18,7 +18,8 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent, NrtRenderingService renderingService,
+    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent,
+                                      NrtRenderingService renderingService,
                                       NrtDebugService* outputService)
     {
         if (sceneConstructionEvent == nullptr || renderingService == nullptr || outputService == nullptr)

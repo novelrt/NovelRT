@@ -13,7 +13,7 @@ namespace NovelRT::Audio
     // TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
     class AudioService
     {
-      private:
+    private:
         const size_t _bufferSize = 2048;
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
@@ -35,7 +35,7 @@ namespace NovelRT::Audio
         ALuint readFile(std::string input);
         std::string getALError();
 
-      public:
+    public:
         bool isInitialised;
 
         AudioService();

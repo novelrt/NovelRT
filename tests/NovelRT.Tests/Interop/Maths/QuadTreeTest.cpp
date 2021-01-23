@@ -40,7 +40,7 @@ bool checkBoundsForEquality(NrtGeoBounds one, NrtGeoBounds two)
 
 class InteropQuadTreeTest : public testing::Test
 {
-  protected:
+protected:
     NrtQuadTree _quadTree;
 
     void SetUp() override
