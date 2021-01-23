@@ -67,7 +67,7 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 {
     auto container = ComponentBuffer<int32_t>(2, -1);
 
-    for (size_t i = 0; i < 2000; ++i)
+    for (size_t i = 0; i < 2000; i++)
     {
         container.PushComponentUpdateInstruction(0, i, 10);
     }
@@ -76,7 +76,7 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 
     std::thread threadOne([&]()
     {
-        for (size_t i = 0; i < 2000; ++i)
+        for (size_t i = 0; i < 2000; i++)
         {
             container.PushComponentUpdateInstruction(0, i, 10);
         }
@@ -84,7 +84,7 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 
     std::thread threadTwo([&]()
     {
-        for (size_t i = 0; i < 2000; ++i)
+        for (size_t i = 0; i < 2000; i++)
         {
             container.PushComponentUpdateInstruction(1, i, 10);
         }
