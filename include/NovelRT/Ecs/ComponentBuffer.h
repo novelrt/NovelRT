@@ -14,7 +14,7 @@ namespace NovelRT::Ecs
      * 
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * You should not have component types that are massively complex as there may be many copy instructions that are not SIMDifiable if the type is too complicated.
-     * The type T of the ComponentBuffer must be trivially copyable as defined by the C++ specification. This is due to the internal language binding mechanisms of NovelRT,
+     * The type T of the ComponentBuffer must be trivially copyable as defined by the C++ language reference. This is due to the internal language binding mechanisms of NovelRT,
      * and is enforced by a check against std::is_trivally_copyable.
      * The type in question will need to have addition and an equality comparison operator implemented in order for it to function as a type a ComponentBuffer can manage for you.
      * 
@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is passed in during an update, the ComponentBuffer will delete the component from the target entity during resolution.
          */
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(poolSize, &deleteInstructionState, sizeof(T)))
+        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(poolSize, &deleteInstructionState, sizeof(T),  [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); }))
         {
             static_assert(std::is_trivially_copyable<T>::value, "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation for more information.");
         }
@@ -75,7 +75,7 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            _innerContainer->PrepContainerForFrame(destroyedEntities, [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); });
+            _innerContainer->PrepContainerForFrame(destroyedEntities);
         }
 
         /**

@@ -1,14 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
+#include <utility>
 
 namespace NovelRT::Ecs
 {
-    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept :
+    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept :
     _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
     _updateSets(std::vector<SparseSetMemoryContainer>{}),
     _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
-    _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
+    _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
+    _componentUpdateLogic(std::move(componentUpdateLogic))
     {
         std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
         for (int i = 0; i < poolSize; ++i)
@@ -17,7 +19,7 @@ namespace NovelRT::Ecs
         }
     }
 
-    void ComponentBufferMemoryContainer::PrepContainerForFrame(const std::vector<EntityId> &destroyedEntities, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept
+    void ComponentBufferMemoryContainer::PrepContainerForFrame(const std::vector<EntityId> &destroyedEntities) noexcept
     {
         for (auto&& updateSet : _updateSets)
         {
@@ -33,7 +35,7 @@ namespace NovelRT::Ecs
                 }
                 else
                 {
-                    componentUpdateLogic(_rootSet[entity], component, _sizeOfDataTypeInBytes);
+                    _componentUpdateLogic(_rootSet[entity], component, _sizeOfDataTypeInBytes);
                 }
             }
             updateSet.Clear();

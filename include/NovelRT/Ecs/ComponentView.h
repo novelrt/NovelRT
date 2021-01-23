@@ -18,7 +18,7 @@ namespace NovelRT::Ecs
     {
         private:
         size_t _poolId;
-        ComponentBuffer<TComponent>& _componentBuffer;
+        ComponentBuffer<TComponent> _componentBuffer;
         
         public:
         /**
@@ -27,8 +27,8 @@ namespace NovelRT::Ecs
          * @param poolId The thread's pool ID.
          * @param targetBuffer The buffer this view wraps.
          */
-        ComponentView(size_t poolId, ComponentBuffer<TComponent>& targetBuffer) noexcept : _poolId(poolId),
-                                                                                           _componentBuffer(targetBuffer)
+        ComponentView(size_t poolId, ComponentBuffer<TComponent> targetBuffer) noexcept : _poolId(poolId),
+                                                                                           _componentBuffer(std::move(targetBuffer))
         {
 
         }

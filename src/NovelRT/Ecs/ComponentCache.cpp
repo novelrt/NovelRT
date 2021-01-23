@@ -2,27 +2,30 @@
 
 #include <NovelRT/Ecs/ComponentCache.h>
 
+#include <utility>
+
 namespace NovelRT::Ecs
 {   
-    ComponentCache::ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize), _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
+    ComponentCache::ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, AtomHashFunction>{}), _poolSize(poolSize), _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
     {
+    }
+
+    std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(size_t sizeOfDataType, void* deleteInstructionState, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) const
+    {
+        return std::make_shared<ComponentBufferMemoryContainer>(_poolSize, deleteInstructionState, sizeOfDataType, componentUpdateLogic);
+    }
+
+    ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(size_t sizeOfDataType, void* deleteInstructionState, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic)
+    {
+        ComponentTypeId returnId = Atom::getNextComponentTypeId();
+        std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(sizeOfDataType, deleteInstructionState, std::move(componentUpdateLogic));
+        _bufferPrepEvent += [&](auto vec) { ptr->PrepContainerForFrame(vec); };
+        _componentMap.emplace(returnId, ptr);
+        return returnId;
     }
 
     void ComponentCache::PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept
     {
         _bufferPrepEvent(entitiesToDelete);
-    }
-
-    ComponentCache::~ComponentCache() noexcept
-    {
-        for (auto&& destructor : _destructorFunctions)
-        {
-            destructor();
-        }
-        
-        for (auto&& pair : _componentMap)
-        {
-            free(pair.second);
-        }
     }
 }

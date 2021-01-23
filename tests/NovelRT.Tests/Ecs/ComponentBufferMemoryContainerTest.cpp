@@ -10,23 +10,23 @@ using namespace NovelRT::Ecs;
 TEST(ComponentBufferMemoryContainerTest, PrepComponentBuffersForFrameDoesNotThrow)
 {
     int32_t deleteState = -1;
-    EXPECT_NO_THROW(ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t)).PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){}));
+    EXPECT_NO_THROW(ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto){}).PrepContainerForFrame(std::vector<EntityId>{}));
 }
 
 TEST(ComponentBufferMemoryContainerTest, GetDeleteInstructionStateReturnsCorrectState)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), nullptr);
     EXPECT_EQ(std::memcmp(container.GetDeleteInstructionState().GetDataHandle(), &deleteState, sizeof(int32_t)), 0);
 }
 
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAddsNewEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto){});
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
     ASSERT_EQ(container.GetImmutableDataLength(), 1);
     ASSERT_TRUE(container.HasComponent(0));
     EXPECT_EQ(*reinterpret_cast<const int32_t*>(container.GetComponent(0).GetDataHandle()), 10);
@@ -35,12 +35,12 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAddsNewEn
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesExistingEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto){ *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) += *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());});
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
     container.PushComponentUpdateInstruction(0, 0, &updateState);
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto intRoot, auto intUpdate, auto){ *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) += *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
     ASSERT_EQ(container.GetImmutableDataLength(), 1);
     ASSERT_TRUE(container.HasComponent(0));
     EXPECT_EQ(*reinterpret_cast<const int32_t*>(container.GetComponent(0).GetDataHandle()), 20);
@@ -49,12 +49,12 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesEx
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto){});
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
     container.PushComponentUpdateInstruction(0, 0, container.GetDeleteInstructionState().GetDataHandle());
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
     EXPECT_EQ(container.GetImmutableDataLength(), 0);
     EXPECT_FALSE(container.HasComponent(0));
 }
@@ -62,12 +62,12 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEn
 TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto){});
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PushComponentUpdateInstruction(0, 1, &updateState);
     container.PushComponentUpdateInstruction(0, 2, &updateState);
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
 
     for (auto [entity, intComponent] : container)
     {
@@ -78,7 +78,7 @@ TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
 TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(2, &deleteState, sizeof(int32_t));
+    auto container = ComponentBufferMemoryContainer(2, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto){ *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) += *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());});
     int32_t updateState = 10;
 
     for (size_t i = 0; i < 2000; ++i)
@@ -86,7 +86,7 @@ TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
         container.PushComponentUpdateInstruction(0, i, &updateState);
     }
 
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto, auto, auto){});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
 
     std::thread threadOne([&]()
     {
@@ -107,7 +107,7 @@ TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     threadOne.join();
     threadTwo.join();
 
-    container.PrepContainerForFrame(std::vector<EntityId>{}, [](auto intRoot, auto intUpdate, auto){ *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) += *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());});
+    container.PrepContainerForFrame(std::vector<EntityId>{});
 
     for (auto [entity, intComponent] : container)
     {

@@ -17,6 +17,7 @@ namespace NovelRT::Ecs
         std::vector<SparseSetMemoryContainer> _updateSets;
         std::vector<std::byte> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
+        std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> _componentUpdateLogic;
 
     public:
         class ImmutableDataView
@@ -41,9 +42,9 @@ namespace NovelRT::Ecs
             }
         };
 
-        ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes) noexcept;
+        ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept;
 
-        void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept;
+        void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;
 
         [[nodiscard]] ImmutableDataView GetDeleteInstructionState() const noexcept;
 

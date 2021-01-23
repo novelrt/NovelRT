@@ -22,7 +22,7 @@ namespace NovelRT::Ecs
      * 
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * The value type should not be massively complex as there may be many copy instructions that are not SIMDifiable if the type is too complicated.
-     * The type TValue of the SparseSet must be trivially copyable as defined by the C++ specification. This is due to the internal language binding mechanisms of NovelRT,
+     * The type TValue of the SparseSet must be trivially copyable as defined by the C++ language reference. This is due to the internal language binding mechanisms of NovelRT,
      * and is enforced by a check against std::is_trivally_copyable.
      *
      * @tparam TKey The type to use for the Key.

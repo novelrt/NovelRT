@@ -97,7 +97,7 @@ TEST_F(CatalogueTest, CanHandleEntityDeletionInSameFrame)
     catalogue->DeleteEntity(id);
     entityCache.ProcessEntityDeletionRequestsFromThreads();
     componentCache.PrepAllBuffersForNextFrame(entityCache.GetEntitiesToRemoveThisFrame());
-    EXPECT_EQ(catalogue->GetComponentView<int32_t>().GetImmutableDataLength(), 1);
-    EXPECT_EQ(catalogue->GetComponentView<char>().GetImmutableDataLength(), 1);
-    EXPECT_EQ(catalogue->GetComponentView<size_t>().GetImmutableDataLength(), 1);
+    EXPECT_EQ(catalogue->GetComponentView<int32_t>().GetImmutableDataLength(), 0);
+    EXPECT_EQ(catalogue->GetComponentView<char>().GetImmutableDataLength(), 0);
+    EXPECT_EQ(catalogue->GetComponentView<size_t>().GetImmutableDataLength(), 0);
 }
