@@ -4,12 +4,8 @@
 
 namespace NovelRT::Ecs
 {
-    EntityCache::EntityCache(size_t poolSize) noexcept : _updateVectors(SparseSet<size_t, std::vector<EntityId>>())
+    EntityCache::EntityCache(size_t poolSize) noexcept : _updateVectors(std::vector<std::vector<EntityId>>(poolSize))
     {
-        for (size_t i = 0; i < poolSize; i++)
-        {
-            _updateVectors.Insert(i, std::vector<EntityId>{});
-        }
     }
 
     void EntityCache::RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept
@@ -21,7 +17,7 @@ namespace NovelRT::Ecs
     {
         _entitiesToRemoveThisFrame.clear();
         size_t currentSize = 0;
-        for (auto&& [poolId, vector] : _updateVectors)
+        for (auto&& vector : _updateVectors)
         {
             _entitiesToRemoveThisFrame.resize(currentSize + vector.size());
             std::copy(vector.begin(), vector.end(), _entitiesToRemoveThisFrame.begin() + currentSize);

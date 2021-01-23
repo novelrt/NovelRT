@@ -37,7 +37,6 @@ namespace NovelRT::Ecs
          * @brief A non const iterator for traversing the keys and values of this particular SparseSet as tuple pairs.
          * 
          */
-         //TODO: add KVP struct to replace tuple. Tuple stuff doesn't work the way I want it to. Lol.
         class Iterator
         {
             public:
@@ -143,6 +142,7 @@ namespace NovelRT::Ecs
          */
         SparseSet() noexcept : _innerContainer(SparseSetMemoryContainer(sizeof(TValue)))
         {
+            static_assert(std::is_trivially_copyable<TValue>::value, "Value type must be trivially copyable for use with a SparseSet. See the documentation for more information.");
         }
 
         /**

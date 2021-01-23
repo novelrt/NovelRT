@@ -15,7 +15,7 @@ namespace NovelRT::Ecs
     class EntityCache
     {
         private:
-        SparseSet<size_t, std::vector<EntityId>> _updateVectors;
+        std::vector<std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
 
         public:
