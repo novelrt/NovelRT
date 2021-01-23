@@ -19,7 +19,7 @@ namespace NovelRT::Ecs
     {
         ComponentTypeId returnId = Atom::getNextComponentTypeId();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(sizeOfDataType, deleteInstructionState, std::move(componentUpdateLogic));
-        _bufferPrepEvent += [&](auto vec) { ptr->PrepContainerForFrame(vec); };
+        _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
         _componentMap.emplace(returnId, ptr);
         return returnId;
     }

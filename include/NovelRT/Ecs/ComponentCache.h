@@ -68,7 +68,7 @@ namespace NovelRT::Ecs
         void RegisterComponentType(T deleteInstructionState)
         {
             std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(sizeof(T), &deleteInstructionState, [](auto rootComponent, auto updateComponent, auto){ *reinterpret_cast<T*>(rootComponent.GetDataHandle()) += *reinterpret_cast<T*>(updateComponent.GetDataHandle()); });
-            _bufferPrepEvent += [&](auto vec){ ptr->PrepContainerForFrame(vec); };
+            _bufferPrepEvent += [ptr](auto vec){ ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
