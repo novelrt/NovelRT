@@ -1,9 +1,12 @@
 ---
 Language: Cpp
 BasedOnStyle: Microsoft
+AccessModifierOffset: -4
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackParameters: false
 BreakBeforeBraces: Allman
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: true
