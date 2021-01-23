@@ -25,7 +25,6 @@ namespace NovelRT::Ecs
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
         void InsertInternal(size_t key, const void* value);
 
-        void ValidateDataPtrLength() const;
 
     public:
         class ByteIteratorView

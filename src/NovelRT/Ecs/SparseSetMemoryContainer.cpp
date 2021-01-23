@@ -11,14 +11,6 @@ namespace NovelRT::Ecs
     {
     }
 
-    void SparseSetMemoryContainer::ValidateDataPtrLength() const
-    {
-        if (_data.size() != _dense.size() * _sizeOfDataTypeInBytes)
-        {
-            throw Exceptions::MalformedAllocationException();
-        }
-    }
-
     size_t SparseSetMemoryContainer::GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept
     {
         return _sizeOfDataTypeInBytes * denseIndex;
@@ -26,7 +18,7 @@ namespace NovelRT::Ecs
 
     std::byte* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
     {
-        return &_data[location * _sizeOfDataTypeInBytes];
+        return _data.data() + (location * _sizeOfDataTypeInBytes);
     }
 
     void SparseSetMemoryContainer::InsertInternal(size_t key, const void* value)
