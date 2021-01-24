@@ -13,7 +13,7 @@ namespace NovelRT::Ecs
     _componentUpdateLogic(std::move(componentUpdateLogic))
     {
         std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
-        for (int i = 0; i < poolSize; ++i)
+        for (size_t i = 0; i < poolSize; i++)
         {
             _updateSets.emplace_back(sizeOfDataTypeInBytes);
         }
@@ -58,6 +58,16 @@ namespace NovelRT::Ecs
     }
 
     ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponent(EntityId entity) const
+    {
+        if (!_rootSet.ContainsKey(entity))
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        return ComponentBufferMemoryContainer::ImmutableDataView(_rootSet[entity].GetDataHandle(), entity);
+    }
+
+    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponentUnsafe(EntityId entity) const noexcept
     {
         return ComponentBufferMemoryContainer::ImmutableDataView(_rootSet[entity].GetDataHandle(), entity);
     }

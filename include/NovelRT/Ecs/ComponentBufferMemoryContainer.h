@@ -7,6 +7,7 @@
 #include "SparseSetMemoryContainer.h"
 #include <vector>
 #include <functional>
+#include "../Exceptions/KeyNotFoundException.h"
 
 namespace NovelRT::Ecs
 {
@@ -51,6 +52,7 @@ namespace NovelRT::Ecs
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, const void* componentData);
 
         [[nodiscard]] ImmutableDataView GetComponent(EntityId entity) const;
+        [[nodiscard]] ImmutableDataView GetComponentUnsafe(EntityId entity) const noexcept;
 
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept;
 
