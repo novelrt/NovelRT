@@ -1,15 +1,15 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_SPARSESETMEMORYCONTAINER_H
 #define NOVELRT_SPARSESETMEMORYCONTAINER_H
 
 #include <cstddef>
+#include <cstdlib>
+#include <cstring>
 #include <tuple>
 #include <utility>
 #include <vector>
-#include <tuple>
-#include <cstring>
-#include <cstdlib>
 
 namespace NovelRT::Ecs
 {
@@ -25,7 +25,6 @@ namespace NovelRT::Ecs
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
         void InsertInternal(size_t key, const void* value);
 
-
     public:
         class ByteIteratorView
         {
@@ -34,39 +33,40 @@ namespace NovelRT::Ecs
             size_t _sizeOfObject;
 
         public:
-           explicit ByteIteratorView(std::vector<std::byte>::iterator iteratorAtValue, size_t sizeOfObject) noexcept : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
-           {
-           }
+            explicit ByteIteratorView(std::vector<std::byte>::iterator iteratorAtValue, size_t sizeOfObject) noexcept
+                : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
+            {
+            }
 
-           [[nodiscard]] inline bool IsValid() const noexcept
-           {
-               return  _sizeOfObject != 0;
-           }
+            [[nodiscard]] inline bool IsValid() const noexcept
+            {
+                return _sizeOfObject != 0;
+            }
 
-           [[nodiscard]] inline std::vector<std::byte>::iterator GetUnderlyingIterator() const noexcept
-           {
-               return _iteratorAtValue;
-           }
+            [[nodiscard]] inline std::vector<std::byte>::iterator GetUnderlyingIterator() const noexcept
+            {
+                return _iteratorAtValue;
+            }
 
-           inline void CopyFromLocation(void* outputLocation) const noexcept
-           {
-               std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
-           }
+            inline void CopyFromLocation(void* outputLocation) const noexcept
+            {
+                std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
+            }
 
-           inline void WriteToLocation(void* data) noexcept
-           {
-               std::memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
-           }
+            inline void WriteToLocation(void* data) noexcept
+            {
+                std::memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
+            }
 
-           [[nodiscard]] inline void* GetDataHandle() const noexcept
-           {
-               return &(*_iteratorAtValue);
-           }
+            [[nodiscard]] inline void* GetDataHandle() const noexcept
+            {
+                return &(*_iteratorAtValue);
+            }
 
-           inline void MoveNext()
-           {
-               _iteratorAtValue += _sizeOfObject;
-           }
+            inline void MoveNext()
+            {
+                _iteratorAtValue += _sizeOfObject;
+            }
         };
 
         class ConstByteIteratorView
@@ -76,13 +76,15 @@ namespace NovelRT::Ecs
             size_t _sizeOfObject;
 
         public:
-            explicit ConstByteIteratorView(std::vector<std::byte>::const_iterator iteratorAtValue, size_t sizeOfObject) noexcept : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
+            explicit ConstByteIteratorView(std::vector<std::byte>::const_iterator iteratorAtValue,
+                                           size_t sizeOfObject) noexcept
+                : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
             {
             }
 
             [[nodiscard]] inline bool IsValid() const noexcept
             {
-                return  _sizeOfObject != 0;
+                return _sizeOfObject != 0;
             }
 
             [[nodiscard]] inline std::vector<std::byte>::const_iterator GetUnderlyingIterator() const noexcept
@@ -119,7 +121,9 @@ namespace NovelRT::Ecs
             pointer _ptr;
 
         public:
-            explicit Iterator(pointer ptr) noexcept : _ptr(std::move(ptr)) {}
+            explicit Iterator(pointer ptr) noexcept : _ptr(std::move(ptr))
+            {
+            }
 
             reference operator*() const
             {
@@ -169,7 +173,9 @@ namespace NovelRT::Ecs
             pointer _ptr;
 
         public:
-            explicit ConstIterator(pointer ptr) noexcept : _ptr(std::move(ptr)) {}
+            explicit ConstIterator(pointer ptr) noexcept : _ptr(std::move(ptr))
+            {
+            }
 
             reference operator*() const
             {
@@ -230,7 +236,8 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] ByteIteratorView GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) noexcept;
 
-        [[nodiscard]] ConstByteIteratorView GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept;
+        [[nodiscard]] ConstByteIteratorView GetByteIteratorViewBasedOnDenseIndexUnsafe(
+            size_t denseIndex) const noexcept;
 
         [[nodiscard]] size_t Length() const noexcept;
 

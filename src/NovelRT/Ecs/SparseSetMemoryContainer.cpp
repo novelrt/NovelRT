@@ -1,13 +1,18 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #include <NovelRT/Ecs/SparseSetMemoryContainer.h>
 #include <NovelRT/Exceptions/DuplicateKeyException.h>
-#include <NovelRT/Exceptions/MalformedAllocationException.h>
 #include <NovelRT/Exceptions/KeyNotFoundException.h>
+#include <NovelRT/Exceptions/MalformedAllocationException.h>
 
 namespace NovelRT::Ecs
 {
-    SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept : _dense(std::vector<size_t>{}), _sparse(std::vector<size_t>{}), _data(std::vector<std::byte>{}), _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
+    SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept
+        : _dense(std::vector<size_t>{}),
+          _sparse(std::vector<size_t>{}),
+          _data(std::vector<std::byte>{}),
+          _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
 
@@ -75,7 +80,7 @@ namespace NovelRT::Ecs
 
         _data.erase(_data.begin() + byteIndex, _data.begin() + (byteIndex + _sizeOfDataTypeInBytes));
 
-        //the rest should be exception-free. :D
+        // the rest should be exception-free. :D
         _dense.erase(_dense.begin() + indexCutoff);
 
         _sparse[key] = 0;
@@ -156,29 +161,37 @@ namespace NovelRT::Ecs
         return _dense[denseIndex];
     }
 
-    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex)
+    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(
+        size_t denseIndex)
     {
         if (denseIndex >= Length())
         {
             throw std::out_of_range("denseIndex exceeds the range of the dense data.");
         }
 
-        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex),
+                                                          _sizeOfDataTypeInBytes);
     }
 
-    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(size_t denseIndex) const
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(
+        size_t denseIndex) const
     {
-        return SparseSetMemoryContainer::ConstByteIteratorView(_data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ConstByteIteratorView(
+            _data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
 
-    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) noexcept
+    SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(
+        size_t denseIndex) noexcept
     {
-        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex),
+                                                          _sizeOfDataTypeInBytes);
     }
 
-    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::
+        GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
     {
-        return SparseSetMemoryContainer::ConstByteIteratorView(_data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ConstByteIteratorView(
+            _data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
     }
 
     size_t SparseSetMemoryContainer::Length() const noexcept
@@ -191,7 +204,8 @@ namespace NovelRT::Ecs
         return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
     }
 
-    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept {
+    SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept
+    {
         return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
     }
 
@@ -228,7 +242,4 @@ namespace NovelRT::Ecs
     }
 
     // clang-format on
-}
-
-
-
+} // namespace NovelRT::Ecs

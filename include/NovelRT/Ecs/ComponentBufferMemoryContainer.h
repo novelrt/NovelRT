@@ -1,13 +1,14 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 #define NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 
+#include "../Exceptions/KeyNotFoundException.h"
 #include "EcsUtils.h"
 #include "SparseSetMemoryContainer.h"
-#include <vector>
 #include <functional>
-#include "../Exceptions/KeyNotFoundException.h"
+#include <vector>
 
 namespace NovelRT::Ecs
 {
@@ -18,7 +19,9 @@ namespace NovelRT::Ecs
         std::vector<SparseSetMemoryContainer> _updateSets;
         std::vector<std::byte> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
-        std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> _componentUpdateLogic;
+        std::function<
+            void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)>
+            _componentUpdateLogic;
 
     public:
         class ImmutableDataView
@@ -28,7 +31,8 @@ namespace NovelRT::Ecs
             size_t _sizeOfObject;
 
         public:
-            explicit ImmutableDataView(const void* data, size_t sizeOfObject) noexcept : _data(data), _sizeOfObject(sizeOfObject)
+            explicit ImmutableDataView(const void* data, size_t sizeOfObject) noexcept
+                : _data(data), _sizeOfObject(sizeOfObject)
             {
             }
 
@@ -43,7 +47,12 @@ namespace NovelRT::Ecs
             }
         };
 
-        ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept;
+        ComponentBufferMemoryContainer(size_t poolSize,
+                                       const void* deleteInstructionState,
+                                       size_t sizeOfDataTypeInBytes,
+                                       std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+                                                          SparseSetMemoryContainer::ByteIteratorView,
+                                                          size_t)> componentUpdateLogic) noexcept;
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;
 
@@ -66,6 +75,6 @@ namespace NovelRT::Ecs
 
         // clang-format on
     };
-}
+} // namespace NovelRT::Ecs
 
-#endif //NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
+#endif // NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H

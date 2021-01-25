@@ -1,16 +1,23 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
 #include <utility>
 
 namespace NovelRT::Ecs
 {
-    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(size_t poolSize, const void* deleteInstructionState, size_t sizeOfDataTypeInBytes, std::function<void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)> componentUpdateLogic) noexcept :
-    _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
-    _updateSets(std::vector<SparseSetMemoryContainer>{}),
-    _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
-    _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
-    _componentUpdateLogic(std::move(componentUpdateLogic))
+    ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(
+        size_t poolSize,
+        const void* deleteInstructionState,
+        size_t sizeOfDataTypeInBytes,
+        std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+                           SparseSetMemoryContainer::ByteIteratorView,
+                           size_t)> componentUpdateLogic) noexcept
+        : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
+          _updateSets(std::vector<SparseSetMemoryContainer>{}),
+          _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
+          _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
+          _componentUpdateLogic(std::move(componentUpdateLogic))
     {
         std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
         for (size_t i = 0; i < poolSize; i++)
@@ -19,7 +26,7 @@ namespace NovelRT::Ecs
         }
     }
 
-    void ComponentBufferMemoryContainer::PrepContainerForFrame(const std::vector<EntityId> &destroyedEntities) noexcept
+    void ComponentBufferMemoryContainer::PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
     {
         for (auto&& updateSet : _updateSets)
         {
@@ -29,7 +36,7 @@ namespace NovelRT::Ecs
                 {
                     _rootSet.TryRemove(entity);
                 }
-                else if(!_rootSet.ContainsKey(entity))
+                else if (!_rootSet.ContainsKey(entity))
                 {
                     _rootSet.Insert(entity, component.GetDataHandle());
                 }
@@ -47,17 +54,22 @@ namespace NovelRT::Ecs
         }
     }
 
-    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetDeleteInstructionState() const noexcept
+    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetDeleteInstructionState()
+        const noexcept
     {
-        return ComponentBufferMemoryContainer::ImmutableDataView(reinterpret_cast<const void*>(_deleteInstructionState.data()), _sizeOfDataTypeInBytes);
+        return ComponentBufferMemoryContainer::ImmutableDataView(
+            reinterpret_cast<const void*>(_deleteInstructionState.data()), _sizeOfDataTypeInBytes);
     }
 
-    void ComponentBufferMemoryContainer::PushComponentUpdateInstruction(size_t poolId, EntityId entity, const void* componentData)
+    void ComponentBufferMemoryContainer::PushComponentUpdateInstruction(size_t poolId,
+                                                                        EntityId entity,
+                                                                        const void* componentData)
     {
         _updateSets[poolId].Insert(entity, componentData);
     }
 
-    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponent(EntityId entity) const
+    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponent(
+        EntityId entity) const
     {
         if (!_rootSet.ContainsKey(entity))
         {
@@ -67,7 +79,8 @@ namespace NovelRT::Ecs
         return ComponentBufferMemoryContainer::ImmutableDataView(_rootSet[entity].GetDataHandle(), entity);
     }
 
-    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponentUnsafe(EntityId entity) const noexcept
+    ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponentUnsafe(
+        EntityId entity) const noexcept
     {
         return ComponentBufferMemoryContainer::ImmutableDataView(_rootSet[entity].GetDataHandle(), entity);
     }
@@ -95,5 +108,4 @@ namespace NovelRT::Ecs
     }
 
     // clang-format on
-}
-
+} // namespace NovelRT::Ecs

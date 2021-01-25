@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_GRAPHICS_RENDERINGSERVICE_H
 #define NOVELRT_GRAPHICS_RENDERINGSERVICE_H
@@ -7,58 +8,71 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Graphics {
-  class RenderingService : public std::enable_shared_from_this<RenderingService> {
-    friend class ImageRect;
-    friend class TextRect;
-    friend class Texture;
-    friend class FontSet;
-  private:
-    bool initialiseRenderPipeline(bool completeLaunch = true, Maths::GeoVector2F* const optionalWindowSize = nullptr);
-    LoggingService _logger;
-    std::shared_ptr<Windowing::WindowingService> _windowingService;
+namespace NovelRT::Graphics
+{
+    class RenderingService : public std::enable_shared_from_this<RenderingService>
+    {
+        friend class ImageRect;
+        friend class TextRect;
+        friend class Texture;
+        friend class FontSet;
 
-    ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
-    ShaderProgram _basicFillRectProgram;
-    ShaderProgram _texturedRectProgram;
-    ShaderProgram _fontProgram;
+    private:
+        bool initialiseRenderPipeline(bool completeLaunch = true,
+                                      Maths::GeoVector2F* const optionalWindowSize = nullptr);
+        LoggingService _logger;
+        std::shared_ptr<Windowing::WindowingService> _windowingService;
 
-    Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
-    std::shared_ptr<Camera> _camera;
+        ShaderProgram loadShaders(const std::string& vertexFilePath, const std::string& fragmentFilePath);
+        ShaderProgram _basicFillRectProgram;
+        ShaderProgram _texturedRectProgram;
+        ShaderProgram _fontProgram;
 
-    std::map<Atom, std::weak_ptr<Texture>> _textureCache;
-    std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
+        Utilities::Lazy<GLuint> _cameraObjectRenderUbo;
+        std::shared_ptr<Camera> _camera;
 
-    RGBAConfig _framebufferColour;
+        std::map<Atom, std::weak_ptr<Texture>> _textureCache;
+        std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
 
-    void bindCameraUboForProgram(GLuint shaderProgramId);
+        RGBAConfig _framebufferColour;
 
-    void handleTexturePreDestruction(Texture* target);
-    void handleFontSetPreDestruction(FontSet* target);
+        void bindCameraUboForProgram(GLuint shaderProgramId);
 
-  public:
-    RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
-    int32_t initialiseRendering();
-    void tearDown() const;
+        void handleTexturePreDestruction(Texture* target);
+        void handleFontSetPreDestruction(FontSet* target);
 
-    std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer, const std::string& filePath, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+    public:
+        RenderingService(std::shared_ptr<Windowing::WindowingService> windowingService) noexcept;
+        int32_t initialiseRendering();
+        void tearDown() const;
 
-    std::unique_ptr<ImageRect> createImageRect(Transform transform, int32_t layer, RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+        std::unique_ptr<ImageRect> createImageRect(Transform transform,
+                                                   int32_t layer,
+                                                   const std::string& filePath,
+                                                   RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig);
+        std::unique_ptr<ImageRect> createImageRect(Transform transform,
+                                                   int32_t layer,
+                                                   RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
 
-    std::unique_ptr<TextRect> createTextRect(Transform transform, int32_t layer, RGBAConfig colourConfig, float fontSize, const std::string& fontFilePath);
+        std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig);
 
-    std::shared_ptr<Camera> getCamera() const;
+        std::unique_ptr<TextRect> createTextRect(Transform transform,
+                                                 int32_t layer,
+                                                 RGBAConfig colourConfig,
+                                                 float fontSize,
+                                                 const std::string& fontFilePath);
 
-    void beginFrame() const;
-    void endFrame() const;
+        std::shared_ptr<Camera> getCamera() const;
 
-    void setBackgroundColour(RGBAConfig colour);
+        void beginFrame() const;
+        void endFrame() const;
 
-    std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
-    std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
-  };
-}
+        void setBackgroundColour(RGBAConfig colour);
 
-#endif //NOVELRT_GRAPHICS_RENDERINGSERVICE_H
+        std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
+        std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
+    };
+} // namespace NovelRT::Graphics
+
+#endif // NOVELRT_GRAPHICS_RENDERINGSERVICE_H

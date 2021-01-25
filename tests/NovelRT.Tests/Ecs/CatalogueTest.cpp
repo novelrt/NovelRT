@@ -1,20 +1,21 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
+// for more information.
 
-#include <gtest/gtest.h>
 #include <NovelRT.h>
 #include <atomic>
+#include <gtest/gtest.h>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
 
 class CatalogueTest : public testing::Test
 {
-    public:
+public:
     ComponentCache componentCache = ComponentCache(1);
     EntityCache entityCache = EntityCache(1);
     Catalogue* catalogue = nullptr;
 
-    protected:
+protected:
     void SetUp() override
     {
         componentCache = ComponentCache(1);
@@ -76,7 +77,7 @@ TEST_F(CatalogueTest, CanRemoveComponentFromEntityBasedOnView)
     {
         buffer.RemoveComponent(entity);
     }
-    
+
     componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
     EXPECT_EQ(buffer.GetImmutableDataLength(), 0);
 }
