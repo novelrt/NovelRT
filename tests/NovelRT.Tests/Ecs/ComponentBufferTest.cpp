@@ -1,4 +1,3 @@
-
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 #include <gtest/gtest.h>
@@ -16,6 +15,16 @@ TEST(ComponentBufferTest, PrepComponentBuffersForFrameDoesNotThrow)
 TEST(ComponentBufferTest, GetDeleteInstructionStateReturnsCorrectState)
 {
     EXPECT_EQ(ComponentBuffer<int32_t>(1, -1).GetDeleteInstructionState(), -1);
+}
+
+TEST(ComponentBufferTest, GetComponentUnsafeGetsComponentWithValidKey)
+{
+    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    buffer.PushComponentUpdateInstruction(0, 0, 10);
+    buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
+    ASSERT_EQ(buffer.GetImmutableDataLength(), 1);
+    ASSERT_TRUE(buffer.HasComponent(0));
+    EXPECT_EQ(buffer.GetComponentUnsafe(0), 10);
 }
 
 TEST(ComponentBufferTest, PushComponentUpdateInstructionAddsNewEntryCorrectly)

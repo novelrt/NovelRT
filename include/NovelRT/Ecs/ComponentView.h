@@ -134,6 +134,21 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Gets a copy of the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
+         * This is considered an unsafe operation. Before calling this, you must guarantee that the provided entity exists in the read-only portion
+         * of the underlying buffer. Please see ComponentView::HasComponent for more information.
+         *
+         * @param entity
+         * @return TComponent A copy of the current state of the component attached to the given entity.
+         */
+        [[nodiscard]] TComponent GetComponentUnsafe(EntityId entity) const noexcept
+        {
+            return _componentBuffer.GetComponent(entity);
+        }
+
+        /**
          * @brief Gets the length of the current immutable data snapshot within the buffer.
          * 
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
