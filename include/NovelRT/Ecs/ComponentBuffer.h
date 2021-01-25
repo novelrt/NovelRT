@@ -172,7 +172,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator begin() const noexcept
         {
-            return SparseSet<EntityId, T>::ConstIterator(_innerContainer->begin());
+            return typename SparseSet<EntityId, T>::ConstIterator(_innerContainer->begin());
         }
 
         /**
@@ -185,7 +185,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator end() const noexcept
         {
-            return SparseSet<EntityId, T>::ConstIterator(_innerContainer->end());
+            return typename SparseSet<EntityId, T>::ConstIterator(_innerContainer->end());
         }
 
         // clang-format on
