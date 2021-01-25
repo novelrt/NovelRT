@@ -10,9 +10,9 @@
 #include "DuplicateKeyException.h"
 #include "FileNotFoundException.h"
 #include "FunctionNotFoundException.h"
+#include "IOException.h"
 #include "InitialisationFailureException.h"
 #include "InvalidOperationException.h"
-#include "IOException.h"
 #include "KeyNotFoundException.h"
 #include "MalformedAllocationException.h"
 #include "NotInitialisedException.h"
@@ -22,5 +22,4 @@
 #include "OutOfMemoryException.h"
 #include "RuntimeNotFoundException.h"
 
-
-#endif //NOVELRT_EXCEPTIONS_H
+#endif // NOVELRT_EXCEPTIONS_H

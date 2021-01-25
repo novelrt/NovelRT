@@ -1,8 +1,9 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
+// for more information.
 
-#include <gtest/gtest.h>
 #include <NovelRT.h>
 #include <atomic>
+#include <gtest/gtest.h>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
@@ -83,16 +84,14 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 
     container.PrepComponentBufferForFrame(std::vector<EntityId>{});
 
-    std::thread threadOne([&]()
-    {
+    std::thread threadOne([&]() {
         for (size_t i = 0; i < 2000; i++)
         {
             container.PushComponentUpdateInstruction(0, i, 10);
         }
     });
 
-    std::thread threadTwo([&]()
-    {
+    std::thread threadTwo([&]() {
         for (size_t i = 0; i < 2000; i++)
         {
             container.PushComponentUpdateInstruction(1, i, 10);

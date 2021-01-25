@@ -48,7 +48,7 @@ namespace NovelRT::Ecs
          * @tparam TComponent The component type the view should be exposing.
          * @return ComponentView<TComponent>
          */
-        template<typename TComponent> [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
+        template<typename TComponent>[[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }
