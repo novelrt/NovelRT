@@ -1,10 +1,12 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_ECS_H
 #define NOVELRT_ECS_H
 
 /**
- * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs for component management via stateless systems and other miscellaneous ECS features.
+ * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs
+ * for component management via stateless systems and other miscellaneous ECS features.
  */
 namespace NovelRT::Ecs
 {
@@ -19,4 +21,4 @@ namespace NovelRT::Ecs
 #include "SparseSet.h"
 #include "SystemScheduler.h"
 
-#endif //!NOVELRT_ECS_H
+#endif //! NOVELRT_ECS_H
