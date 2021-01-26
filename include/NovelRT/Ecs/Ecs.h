@@ -22,5 +22,6 @@ namespace NovelRT::Ecs
 #include "SparseSet.h"
 #include "SparseSetMemoryContainer.h"
 #include "SystemScheduler.h"
+#include "UnsafeComponentView.h"
 
 #endif //! NOVELRT_ECS_H

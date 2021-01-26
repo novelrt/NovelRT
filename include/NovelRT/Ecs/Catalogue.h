@@ -65,11 +65,13 @@ namespace NovelRT::Ecs
          * @return std::tuple<ComponentView<TComponents>...>
          */
         template<typename... TComponents>
-        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
+        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() const noexcept
         {
             return std::make_tuple(
                 ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
+
+        [[nodiscard]] UnsafeComponentView GetComponentViewById(EntityId entity);
 
         /**
          * @brief Creates a new EntityId for use within the ECS.

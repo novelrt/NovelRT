@@ -39,6 +39,8 @@ extern "C"
         NRT_TRUE = 1
     };
 
+    typedef uintptr_t NrtAtom;
+
     const char* Nrt_getLastError();
 
 #ifdef __cplusplus

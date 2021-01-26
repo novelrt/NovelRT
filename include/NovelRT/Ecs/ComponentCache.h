@@ -63,9 +63,9 @@ namespace NovelRT::Ecs
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
             void* deleteInstructionState,
-            std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+            const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                                SparseSetMemoryContainer::ByteIteratorView,
-                               size_t)> componentUpdateLogic);
+                               size_t)>& componentUpdateLogic);
 
         /**
          * @brief Registers a new component type to the cache.
@@ -92,6 +92,8 @@ namespace NovelRT::Ecs
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
+        [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetComponentBufferById(ComponentTypeId id) const;
+
         /**
          * @brief Get the ComponentBuffer instance that manages the specified component type.
          *
@@ -105,7 +107,7 @@ namespace NovelRT::Ecs
          */
         template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
-            return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
+            return ComponentBuffer<T>(_componentMap.at(GetComponentBufferById(GetComponentTypeId<T>())));
         }
 
         /**

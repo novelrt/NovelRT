@@ -28,16 +28,21 @@ namespace NovelRT::Ecs
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
         void* deleteInstructionState,
-        std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+        const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                            SparseSetMemoryContainer::ByteIteratorView,
-                           size_t)> componentUpdateLogic)
+                           size_t)>& componentUpdateLogic)
     {
         ComponentTypeId returnId = Atom::getNextComponentTypeId();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-            CreateContainer(sizeOfDataType, deleteInstructionState, std::move(componentUpdateLogic));
+            CreateContainer(sizeOfDataType, deleteInstructionState, componentUpdateLogic);
         _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
         _componentMap.emplace(returnId, ptr);
         return returnId;
+    }
+
+    std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::GetComponentBufferById(ComponentTypeId id) const
+    {
+        return _componentMap.at(id);
     }
 
     void ComponentCache::PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept

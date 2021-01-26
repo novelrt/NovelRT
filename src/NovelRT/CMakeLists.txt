@@ -34,6 +34,7 @@ set(ENGINE_SOURCES
   Ecs/EntityCache.cpp
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
+  Ecs/UnsafeComponentView.cpp
 
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
