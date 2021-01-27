@@ -5,6 +5,7 @@
 #define NOVELRT_UNSAFECOMPONENTVIEW_H
 
 #include "ComponentBufferMemoryContainer.h"
+#include <memory>
 
 namespace NovelRT::Ecs
 {
