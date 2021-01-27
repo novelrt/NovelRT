@@ -180,9 +180,9 @@ namespace NovelRT::Ecs
          * This function is under special formatting so that range-based for loops are supported.
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          * 
-         * @return ComponentBuffer::ConstIterator starting at the beginning.
+         * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] typename ComponentBuffer<TComponent>::ConstIterator begin() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, TComponent>::ConstIterator begin() const noexcept
         {
             return _componentBuffer.begin();
         }
@@ -195,7 +195,7 @@ namespace NovelRT::Ecs
          * 
          * @return ComponentBuffer::ConstIterator starting at the end.
          */
-        [[nodiscard]] typename ComponentBuffer<TComponent>::ConstIterator end() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, TComponent>::ConstIterator end() const noexcept
         {
             return _componentBuffer.end();
         }

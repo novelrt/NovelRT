@@ -31,4 +31,9 @@ namespace NovelRT::Ecs
         _entityCache.RemoveEntity(_poolId, entity);
     }
 
+    UnsafeComponentView Catalogue::GetComponentViewById(ComponentTypeId componentTypeId)
+    {
+        return UnsafeComponentView(_poolId, _componentCache.GetComponentBufferById(componentTypeId));
+    }
+
 } // namespace NovelRT::Ecs

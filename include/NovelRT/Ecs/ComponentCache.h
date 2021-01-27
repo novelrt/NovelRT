@@ -107,7 +107,7 @@ namespace NovelRT::Ecs
          */
         template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
-            return ComponentBuffer<T>(_componentMap.at(GetComponentBufferById(GetComponentTypeId<T>())));
+            return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }
 
         /**

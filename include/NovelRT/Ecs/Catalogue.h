@@ -8,6 +8,7 @@
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
+#include "UnsafeComponentView.h"
 
 namespace NovelRT::Ecs
 {
@@ -48,7 +49,7 @@ namespace NovelRT::Ecs
          * @tparam TComponent The component type the view should be exposing.
          * @return ComponentView<TComponent>
          */
-        template<typename TComponent>[[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
+        template<typename TComponent> [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }
@@ -71,7 +72,7 @@ namespace NovelRT::Ecs
                 ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
 
-        [[nodiscard]] UnsafeComponentView GetComponentViewById(EntityId entity);
+        [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
         /**
          * @brief Creates a new EntityId for use within the ECS.
