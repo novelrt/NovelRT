@@ -343,34 +343,32 @@ namespace NovelRT::Ecs
             return *reinterpret_cast<const TValue*>(_innerContainer[key].GetDataHandle());
         }
 
-        // clang-format off
-
         /**
          * @brief Gets the beginning forward iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         *
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::Iterator begin() noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::Iterator begin() noexcept
         {
-            return SparseSet<TKey,TValue>::Iterator(_innerContainer.begin());
+            return SparseSet<TKey, TValue>::Iterator(_innerContainer.begin());
         }
 
         /**
          * @brief Gets the ending forward iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         *
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::Iterator end() noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::Iterator end() noexcept
         {
-            return SparseSet<TKey,TValue>::Iterator(_innerContainer.end());
+            return SparseSet<TKey, TValue>::Iterator(_innerContainer.end());
         }
 
         /**
@@ -381,9 +379,9 @@ namespace NovelRT::Ecs
          *
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator begin() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator begin() const noexcept
         {
-            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.begin());
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.begin());
         }
 
         /**
@@ -395,38 +393,38 @@ namespace NovelRT::Ecs
          *
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator end() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator end() const noexcept
         {
-            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.end());
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.end());
         }
 
         /**
          * @brief Gets the beginning forward const iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator cbegin() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator cbegin() const noexcept
         {
-            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.cbegin());
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.cbegin());
         }
 
         /**
          * @brief Gets the ending forward const iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return SparseSet::ConstIterator starting at the end.
          */
-        [[nodiscard]] SparseSet<TKey,TValue>::ConstIterator cend() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator cend() const noexcept
         {
-            return SparseSet<TKey,TValue>::ConstIterator(_innerContainer.cend());
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.cend());
         }
-
-        // clang-format on
     };
 } // namespace NovelRT::Ecs
 

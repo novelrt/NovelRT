@@ -21,7 +21,7 @@ extern "C"
 
     typedef struct SparseSetConstIteratorHandle* NrtSparseSetMemoryContainer_ConstIterator;
 
-NrtSparseSetMemoryContainer Nrt_SparseSetMemoryContainer_Create(size_t sizeOfDataTypeInBytes);
+    NrtSparseSetMemoryContainer Nrt_SparseSetMemoryContainer_Create(size_t sizeOfDataTypeInBytes);
 
     NrtResult Nrt_SparseSetMemoryContainer_Insert(NrtSparseSetMemoryContainer container, size_t key, const void* value);
 
@@ -73,17 +73,15 @@ NrtSparseSetMemoryContainer Nrt_SparseSetMemoryContainer_Create(size_t sizeOfDat
         const NrtSparseSetMemoryContainer container,
         size_t key);
 
-    // clang-format off
-
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_begin(NrtSparseSetMemoryContainer container);
 
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_end(NrtSparseSetMemoryContainer container);
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cbegin(const NrtSparseSetMemoryContainer container);
+    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cbegin(
+        const NrtSparseSetMemoryContainer container);
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(const NrtSparseSetMemoryContainer container);
-
-    // clang-format on
+    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(
+        const NrtSparseSetMemoryContainer container);
 
 #ifdef __cplusplus
 };

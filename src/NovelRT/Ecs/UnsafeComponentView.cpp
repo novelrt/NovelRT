@@ -19,7 +19,8 @@ namespace NovelRT::Ecs
 
     void UnsafeComponentView::RemoveComponent(EntityId entity)
     {
-        _memoryContainer->PushComponentUpdateInstruction(_poolId, entity, _memoryContainer->GetDeleteInstructionState().GetDataHandle());
+        _memoryContainer->PushComponentUpdateInstruction(_poolId, entity,
+                                                         _memoryContainer->GetDeleteInstructionState().GetDataHandle());
     }
 
     ComponentBufferMemoryContainer::ImmutableDataView UnsafeComponentView::GetComponent(EntityId entity) const
@@ -38,8 +39,6 @@ namespace NovelRT::Ecs
         return _memoryContainer->GetImmutableDataLength();
     }
 
-    // clang-format off
-
     SparseSetMemoryContainer::ConstIterator UnsafeComponentView::begin() const noexcept
     {
         return _memoryContainer->begin();
@@ -49,6 +48,4 @@ namespace NovelRT::Ecs
     {
         return _memoryContainer->end();
     }
-
-    // clang-format on
 } // namespace NovelRT::Ecs

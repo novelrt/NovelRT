@@ -245,8 +245,6 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] ConstByteIteratorView operator[](size_t key) const noexcept;
 
-        // clang-format off
-
         [[nodiscard]] Iterator begin() noexcept;
 
         [[nodiscard]] Iterator end() noexcept;
@@ -258,8 +256,6 @@ namespace NovelRT::Ecs
         [[nodiscard]] ConstIterator cbegin() const noexcept;
 
         [[nodiscard]] ConstIterator cend() const noexcept;
-
-        //clang-format on
     };
 }
 

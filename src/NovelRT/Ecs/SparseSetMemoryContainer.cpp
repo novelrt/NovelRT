@@ -209,11 +209,10 @@ namespace NovelRT::Ecs
         return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
     }
 
-    // clang-format off
-
     SparseSetMemoryContainer::Iterator SparseSetMemoryContainer::begin() noexcept
     {
-        return SparseSetMemoryContainer::Iterator(std::make_tuple(_dense.begin(), ByteIteratorView(_data.begin(), _sizeOfDataTypeInBytes)));
+        return SparseSetMemoryContainer::Iterator(
+            std::make_tuple(_dense.begin(), ByteIteratorView(_data.begin(), _sizeOfDataTypeInBytes)));
     }
 
     SparseSetMemoryContainer::Iterator SparseSetMemoryContainer::end() noexcept
@@ -233,13 +232,13 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ConstIterator SparseSetMemoryContainer::cbegin() const noexcept
     {
-        return SparseSetMemoryContainer::ConstIterator(std::make_tuple(_dense.cbegin(), ConstByteIteratorView(_data.cbegin(), _sizeOfDataTypeInBytes)));
+        return SparseSetMemoryContainer::ConstIterator(
+            std::make_tuple(_dense.cbegin(), ConstByteIteratorView(_data.cbegin(), _sizeOfDataTypeInBytes)));
     }
 
     SparseSetMemoryContainer::ConstIterator SparseSetMemoryContainer::cend() const noexcept
     {
-        return SparseSetMemoryContainer::ConstIterator(std::make_tuple(_dense.cend(), ConstByteIteratorView(_data.cend(), 0)));
+        return SparseSetMemoryContainer::ConstIterator(
+            std::make_tuple(_dense.cend(), ConstByteIteratorView(_data.cend(), 0)));
     }
-
-    // clang-format on
 } // namespace NovelRT::Ecs

@@ -50,15 +50,11 @@ extern "C"
 
     size_t Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(NrtComponentBufferMemoryContainer container);
 
-    // clang-format off
-
     NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_begin(
         NrtComponentBufferMemoryContainer container);
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_end(
         NrtComponentBufferMemoryContainer container);
-
-    // clang-format on
 
 #ifdef __cplusplus
 };

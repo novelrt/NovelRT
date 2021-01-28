@@ -172,14 +172,14 @@ namespace NovelRT::Ecs
             return _componentBuffer.GetImmutableDataLength();
         }
 
-        // clang-format off
-
         /**
-         * @brief Gets the beginning forward const iterator state for the immutable data from the underlying ComponentBuffer.
-         * 
+         * @brief Gets the beginning forward const iterator state for the immutable data from the underlying
+         * ComponentBuffer.
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return SparseSet::ConstIterator starting at the beginning.
          */
         [[nodiscard]] typename SparseSet<EntityId, TComponent>::ConstIterator begin() const noexcept
@@ -189,18 +189,17 @@ namespace NovelRT::Ecs
 
         /**
          * @brief Gets the end forward const iterator state for the immutable data from the underlying ComponentBuffer.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return ComponentBuffer::ConstIterator starting at the end.
          */
         [[nodiscard]] typename SparseSet<EntityId, TComponent>::ConstIterator end() const noexcept
         {
             return _componentBuffer.end();
         }
-
-        // clang-format on
     };
 } // namespace NovelRT::Ecs
 

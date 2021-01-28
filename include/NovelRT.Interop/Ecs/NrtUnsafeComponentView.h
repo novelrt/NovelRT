@@ -32,13 +32,9 @@ extern "C"
 
     size_t Nrt_UnsafeComponentview_GetImmutableDataLength(NrtUnsafeComponentView componentView);
 
-    // clang-format off
-
     NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_begin(NrtUnsafeComponentView componentView);
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_end(NrtUnsafeComponentView componentView);
-
-    // clang-format on
 
 #ifdef __cplusplus
 };

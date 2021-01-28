@@ -95,8 +95,6 @@ namespace NovelRT::Ecs
         return _rootSet.Length();
     }
 
-    // clang-format off
-
     SparseSetMemoryContainer::ConstIterator ComponentBufferMemoryContainer::begin() const noexcept
     {
         return _rootSet.cbegin();
@@ -106,6 +104,4 @@ namespace NovelRT::Ecs
     {
         return _rootSet.cend();
     }
-
-    // clang-format on
 } // namespace NovelRT::Ecs

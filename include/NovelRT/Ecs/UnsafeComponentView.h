@@ -28,13 +28,9 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept;
 
-        // clang-format off
-
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator begin() const noexcept;
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;
-
-        // clang-format on
     };
 }
 
