@@ -1,7 +1,8 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
-//TODO: Resolve older solution for this if possible.
-//DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
+// TODO: Resolve older solution for this if possible.
+// DO NOT DELETE THIS, MOVE THIS TO DEBUG SERVICE WHEN IT EXISTS
 /*void GLAPIENTRY
 messageCallback(GLenum source,
                 GLenum type,
@@ -35,29 +36,35 @@ namespace NovelRT {
     sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
  }
 
-  bool DebugService::getIsFpsCounterVisible() const {
-    return (_fpsCounter != nullptr) && _fpsCounter->getActive();
-  }
-
-  void DebugService::setIsFpsCounterVisible(bool value) {
-    if (_fpsCounter == nullptr) {
-      if (value) {
-        auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
-
-        auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
-
-        std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
-        std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
-        std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
-        _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
-        updateFpsCounter();
-      }
+    bool DebugService::getIsFpsCounterVisible() const
+    {
+        return (_fpsCounter != nullptr) && _fpsCounter->getActive();
     }
-    else {
-      _fpsCounter->setActive(value);
-    }
-  }
 
+    void DebugService::setIsFpsCounterVisible(bool value)
+    {
+        if (_fpsCounter == nullptr)
+        {
+            if (value)
+            {
+                auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
+
+                auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
+
+                std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+                std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
+
+                std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
+
+                _fpsCounter = _renderingService->createTextRect(transform, 0, yellow, 16, fontPath);
+                updateFpsCounter();
+            }
+        }
+        else
+        {
+            _fpsCounter->setActive(value);
+        }
+    }
   void DebugService::setFramesPerSecond(uint32_t framesPerSecond) {
     if (_framesPerSecond != framesPerSecond) {
       _framesPerSecond = framesPerSecond;
@@ -80,11 +87,12 @@ namespace NovelRT {
       _fpsCounter->setText(fpsText);
       _logging.logInfo(fpsText);
     }
-  }
 
-  void DebugService::onSceneConstruction() {
-    if (_fpsCounter == nullptr) return;
+    void DebugService::onSceneConstruction()
+    {
+        if (_fpsCounter == nullptr)
+            return;
 
-    _fpsCounter->executeObjectBehaviour();
-  }
-}
+        _fpsCounter->executeObjectBehaviour();
+    }
+} // namespace NovelRT

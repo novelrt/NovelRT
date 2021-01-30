@@ -1,10 +1,19 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #include <NovelRT/Ecs/SystemScheduler.h>
 
 namespace NovelRT::Ecs
 {
-    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept : _entityCache(1), _componentCache(1), _workerThreadCount(maximumThreadCount), _currentDelta(0), _threadAvailabilityMap(0), _threadShutDownStatus(0), _shouldShutDown(false), _ecsDataBufferIndex(0)
+    SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept
+        : _entityCache(1),
+          _componentCache(1),
+          _workerThreadCount(maximumThreadCount),
+          _currentDelta(0),
+          _threadAvailabilityMap(0),
+          _threadShutDownStatus(0),
+          _shouldShutDown(false),
+          _ecsDataBufferIndex(0)
     {
         if (_workerThreadCount != 0)
         {
@@ -13,7 +22,7 @@ namespace NovelRT::Ecs
 
         _workerThreadCount = std::thread::hardware_concurrency() - 1;
 
-        //in case the previous call doesn't work
+        // in case the previous call doesn't work
         if (_workerThreadCount == 0)
         {
             _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
@@ -62,7 +71,7 @@ namespace NovelRT::Ecs
 
             while (true)
             {
-                QueueLockPair &pair = _threadWorkQueues[poolId];
+                QueueLockPair& pair = _threadWorkQueues[poolId];
                 if (!firstIteration)
                 {
                     pair.threadLock.lock();
@@ -96,7 +105,7 @@ namespace NovelRT::Ecs
         for (size_t i = 0; i < workersToAssign; i++)
         {
             size_t offset = i * amountOfWork;
-            QueueLockPair &pair = _threadWorkQueues[i];
+            QueueLockPair& pair = _threadWorkQueues[i];
 
             _threadAvailabilityMap ^= 1ULL << i;
 
@@ -118,7 +127,7 @@ namespace NovelRT::Ecs
         {
             if (remainder < amountOfWork)
             {
-                QueueLockPair &pair = _threadWorkQueues[0];
+                QueueLockPair& pair = _threadWorkQueues[0];
                 size_t startIndex = (_systemIds.size() - 1) - remainder;
 
                 pair.threadLock.lock();
@@ -135,7 +144,7 @@ namespace NovelRT::Ecs
                 for (size_t i = 0; i < remainder / amountOfWork; i++)
                 {
                     size_t offset = startIndex + (i * amountOfWork);
-                    QueueLockPair &pair = _threadWorkQueues[i];
+                    QueueLockPair& pair = _threadWorkQueues[i];
 
                     pair.threadLock.lock();
 
@@ -171,7 +180,7 @@ namespace NovelRT::Ecs
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
     {
         _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
-        
+
         _currentDelta = delta;
 
         size_t independentSystemChunkSize = _systemIds.size() / _workerThreadCount;
@@ -196,4 +205,4 @@ namespace NovelRT::Ecs
             }
         }
     }
-} 
+} // namespace NovelRT::Ecs

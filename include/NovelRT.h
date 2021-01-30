@@ -1,7 +1,10 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_H
 #define NOVELRT_H
+
+// clang-format off
 
 #if defined(NDEBUG)
 #define unused(x)  (void)(x)
@@ -268,4 +271,6 @@ namespace NovelRT::Windowing {
 #include "NovelRT/SceneGraph/QuadTreeNode.h"
 #include "NovelRT/SceneGraph/Scene.h"
 
-#endif //!NOVELRT_H
+// clang-format on
+
+#endif //! NOVELRT_H

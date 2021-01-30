@@ -5,8 +5,8 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 
 | Job | Debug Status | Release Status |
 | --- | ------------ | -------------- |
-| Windows x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
-| Ubuntu x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
+| Windows x64 | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Windows%20x64%20-%20Debug/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Windows+x64+-+Debug%22) | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Windows%20x64%20-%20Release/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Windows+x64+-+Release%22) |
+| Ubuntu x64 | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Ubuntu%20x64%20-%20Debug/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Ubuntu+x64+-+Debug%22) | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Ubuntu%20x64%20-%20Release/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Ubuntu+x64+-+Release%22) |
 
 [![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
@@ -71,9 +71,9 @@ make -j
 ```
 
 #### Windows (x64 only)
-_Prerequisites:_  
-- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).  
-- Windows 10 x64  
+_Prerequisites:_
+- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).
+- Windows 10 x64
 (32-bit installation _may_ be covered in the future.)
 
 1) Use Python 3 to install the GLAD dependencies:
@@ -82,7 +82,7 @@ python -m pip install setuptools
 python -m pip install glad
 ```
 
-2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D  
+2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D
 (A walkthrough on installing manually via vcpkg will be included in the future.)
 
 3) Extract "NovelRTDeps_vcpkg.zip" from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.

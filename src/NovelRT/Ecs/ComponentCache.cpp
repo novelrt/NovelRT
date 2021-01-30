@@ -1,10 +1,14 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #include <NovelRT/Ecs/ComponentCache.h>
 
 namespace NovelRT::Ecs
-{   
-    ComponentCache::ComponentCache(size_t poolSize) noexcept : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}), _poolSize(poolSize), _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
+{
+    ComponentCache::ComponentCache(size_t poolSize) noexcept
+        : _componentMap(std::unordered_map<ComponentTypeId, void*, AtomHashFunction>{}),
+          _poolSize(poolSize),
+          _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
     {
     }
 
@@ -19,10 +23,10 @@ namespace NovelRT::Ecs
         {
             destructor();
         }
-        
+
         for (auto&& pair : _componentMap)
         {
             free(pair.second);
         }
     }
-}
+} // namespace NovelRT::Ecs

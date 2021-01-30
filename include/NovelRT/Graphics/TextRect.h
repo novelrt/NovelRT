@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_GRAPHICS_TEXTRECT_H
 #define NOVELRT_GRAPHICS_TEXTRECT_H
@@ -7,53 +8,56 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Graphics {
-  class TextRect : public RenderObject {
+namespace NovelRT::Graphics
+{
+    class TextRect : public RenderObject
+    {
 
-  private:
-    void reloadText();
+    private:
+        void reloadText();
 
-    std::string _fontFileDir;
-    std::string _previousFontFileDir;
-    std::string _text;
-    std::vector<std::unique_ptr<ImageRect>> _letterRects;
-    LoggingService _logger;
-    RGBAConfig _colourConfig;
-    std::shared_ptr<FontSet> _fontSet;
+        std::string _fontFileDir;
+        std::string _previousFontFileDir;
+        std::string _text;
+        std::vector<std::unique_ptr<ImageRect>> _letterRects;
+        LoggingService _logger;
+        RGBAConfig _colourConfig;
+        std::shared_ptr<FontSet> _fontSet;
 
-  protected:
-    void configureObjectBuffers() final;
-    void drawObject() final;
+    protected:
+        void configureObjectBuffers() final;
+        void drawObject() final;
 
-  public:
-    TextRect(Transform transform,
-      int32_t layer,
-      ShaderProgram programId,
-      std::shared_ptr<Camera> camera,
-      std::shared_ptr<FontSet> fontSet,
-      RGBAConfig colourConfig);
+    public:
+        TextRect(Transform transform,
+                 int32_t layer,
+                 ShaderProgram programId,
+                 std::shared_ptr<Camera> camera,
+                 std::shared_ptr<FontSet> fontSet,
+                 RGBAConfig colourConfig);
 
+        inline RGBAConfig getColourConfig() const noexcept
+        {
+            return _colourConfig;
+        }
 
-    inline RGBAConfig getColourConfig() const noexcept {
-      return _colourConfig;
-    }
+        void setColourConfig(RGBAConfig value);
 
-    void setColourConfig(RGBAConfig value);
+        std::string getText() const;
+        void setText(const std::string& value);
 
-    std::string getText() const;
-    void setText(const std::string& value);
+        void setActive(bool value) override;
 
-    void setActive(bool value) override;
+        inline std::shared_ptr<FontSet> getFontSet() const noexcept
+        {
+            return _fontSet;
+        }
 
-    inline std::shared_ptr<FontSet> getFontSet() const noexcept {
-      return _fontSet;
-    }
+        inline void setFontSet(std::shared_ptr<FontSet> value) noexcept
+        {
+            _fontSet = value;
+        }
+    };
+} // namespace NovelRT::Graphics
 
-    inline void setFontSet(std::shared_ptr<FontSet> value) noexcept {
-      _fontSet = value;
-    }
-
-  };
-}
-
-#endif //NOVELRT_GRAPHICS_TEXTRECT_H
+#endif // NOVELRT_GRAPHICS_TEXTRECT_H
