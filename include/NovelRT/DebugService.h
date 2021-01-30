@@ -30,7 +30,7 @@ namespace NovelRT {
 
     bool getIsFpsCounterVisible() const;
     void setIsFpsCounterVisible(bool value);
-    void getStatistics(uint32_t framesPerSecond,uint32_t totalSeconds,uint32_t totalFrames);
+    void accumulateStatistics(uint32_t framesPerSecond,uint32_t totalSeconds,uint32_t totalFrames);
     
     inline uint32_t getFramesPerSecond() const {
         return _framesPerSecond;
