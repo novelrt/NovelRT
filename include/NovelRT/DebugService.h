@@ -22,10 +22,6 @@ private:
     uint32_t _maxFramesPerSecond = 0;
     uint32_t _totalSeconds = 0;
     uint32_t _totalFrames = 0;
-    private:
-        std::shared_ptr<Graphics::RenderingService> _renderingService;
-        std::unique_ptr<Graphics::TextRect> _fpsCounter;
-        uint32_t _framesPerSecond;
 
         void updateFpsCounter();
 
