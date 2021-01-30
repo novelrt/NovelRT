@@ -35,19 +35,21 @@ namespace NovelRT
         _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
     }
 
-
-  int32_t NovelRunner::runNovel() {
-    while (_exitCode) {
-      _stepTimer.getActual()->tick(Update);
-      _novelDebugService->accumulateStatistics(_stepTimer.getActual()->getFramesPerSecond(), (uint32_t)_stepTimer.getActual()->getTotalTime().getSecondsFloat(), _stepTimer.getActual()->getFrameCount());
-      _novelRenderer->beginFrame();
-      SceneConstructionRequested();
-      _novelRenderer->endFrame();
-      _novelInteractionService->consumePlayerInput();
-      _novelInteractionService->executeClickedInteractable();
-      _novelAudioService->checkSources();
-    }
-
+    int32_t NovelRunner::runNovel()
+    {
+        while (_exitCode)
+        {
+            _stepTimer.getActual()->tick(Update);
+            _novelDebugService->accumulateStatistics(_stepTimer.getActual()->getFramesPerSecond(),
+                                                     (uint32_t)_stepTimer.getActual()->getTotalTime().getSecondsFloat(),
+                                                     _stepTimer.getActual()->getFrameCount());
+            _novelRenderer->beginFrame();
+            SceneConstructionRequested();
+            _novelRenderer->endFrame();
+            _novelInteractionService->consumePlayerInput();
+            _novelInteractionService->executeClickedInteractable();
+            _novelAudioService->checkSources();
+        }
 
         _novelWindowingService->tearDown();
         return _exitCode;

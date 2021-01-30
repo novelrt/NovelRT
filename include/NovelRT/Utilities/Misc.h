@@ -8,19 +8,19 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-
-namespace NovelRT::Utilities {
-  class Misc {
-  public:
-    static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
-    static inline const char* CONSOLE_LOG_APP = "Application";
-    static inline const char* CONSOLE_LOG_DOTNET = ".NET";
-    static inline const char* CONSOLE_LOG_GFX = "GFX";
-    static inline const char* CONSOLE_LOG_STATS = "Statistics";
-    static inline const char* CONSOLE_LOG_AUDIO = "Audio";
-    static inline const char* CONSOLE_LOG_INPUT = "Input";
-    static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
-
+namespace NovelRT::Utilities
+{
+    class Misc
+    {
+    public:
+        static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
+        static inline const char* CONSOLE_LOG_APP = "Application";
+        static inline const char* CONSOLE_LOG_DOTNET = ".NET";
+        static inline const char* CONSOLE_LOG_GFX = "GFX";
+        static inline const char* CONSOLE_LOG_STATS = "Statistics";
+        static inline const char* CONSOLE_LOG_AUDIO = "Audio";
+        static inline const char* CONSOLE_LOG_INPUT = "Input";
+        static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
         /**
          * @brief Gets the path to the executable.
