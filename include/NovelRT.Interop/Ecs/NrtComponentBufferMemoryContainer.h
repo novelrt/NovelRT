@@ -17,11 +17,13 @@ extern "C"
 
     typedef struct ComponentBufferImmutableDataViewHandle* NrtComponentBufferMemoryContainer_ImmutableDataView;
 
-    typedef (*NrtComponentUpdateFnPtr)(NrtSparseSetMemoryContainer_ByteIteratorView,
-                                       NrtSparseSetMemoryContainer_ByteIteratorView,
-                                       size_t);
+    typedef void (*NrtComponentUpdateFnPtr)(NrtSparseSetMemoryContainer_ByteIteratorView,
+                                            NrtSparseSetMemoryContainer_ByteIteratorView,
+                                            size_t);
 
     NrtComponentBufferMemoryContainer Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
+                                                                                void* deleteInstructionState,
+                                                                                size_t sizeOfDataTypeInBytes,
                                                                                 NrtComponentUpdateFnPtr fnPtr);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainer container,
@@ -55,6 +57,11 @@ extern "C"
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_end(
         NrtComponentBufferMemoryContainer container);
+
+    NrtResult Nrt_ComponentBufferMemoryContainer_Delete(NrtComponentBufferMemoryContainer container);
+
+    NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Delete(
+        NrtComponentBufferMemoryContainer_ImmutableDataView view);
 
 #ifdef __cplusplus
 };

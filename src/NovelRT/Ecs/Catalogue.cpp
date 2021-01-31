@@ -35,5 +35,4 @@ namespace NovelRT::Ecs
     {
         return UnsafeComponentView(_poolId, _componentCache.GetComponentBufferById(componentTypeId));
     }
-
 } // namespace NovelRT::Ecs

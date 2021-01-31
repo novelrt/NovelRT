@@ -15,8 +15,6 @@ extern "C"
 
     typedef struct EntityCacheHandle* NrtEntityCache;
 
-    typedef (*NrtSystemUpdatePtr)()
-
     NrtEntityCache Nrt_EntityCache_Create(size_t poolSize);
 
     NrtEntityIdVector Nrt_EntityCache_GetEntitiesToRemoveThisFrame(NrtEntityCache entityCache);

@@ -24,6 +24,7 @@ set(TEST_SOURCES
 
   Interop/NovelRTInteropUtilsTest.cpp
   Interop/Animation/SpriteAnimatorStateTest.cpp
+  Interop/Ecs/NrtCatalogue.cpp
   Interop/Maths/GeoBoundsTest.cpp
   Interop/Maths/GeoMatrix4x4Test.cpp
   Interop/Maths/GeoVector2FTest.cpp

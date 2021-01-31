@@ -65,7 +65,7 @@ namespace NovelRT::Ecs
                                                                         EntityId entity,
                                                                         const void* componentData)
     {
-        _updateSets[poolId].Insert(entity, componentData);
+        _updateSets.at(poolId).Insert(entity, componentData);
     }
 
     ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponent(

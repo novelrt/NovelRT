@@ -18,9 +18,8 @@ set(INTEROP_SOURCES
   Ecs/NrtComponentBufferMemoryContainer.cpp
   Ecs/NrtComponentCache.cpp
   Ecs/NrtUnsafeComponentView.cpp
-  Ecs/NrtEcs.cpp
-  Ecs/NrtEcsUtils.cpp
   Ecs/NrtEntityCache.cpp
+  Ecs/NrtEntityIdVector.cpp
   Ecs/NrtSparseSetMemoryContainer.cpp
   Ecs/NrtSystemScheduler.cpp
 

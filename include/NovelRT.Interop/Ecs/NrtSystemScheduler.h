@@ -16,7 +16,7 @@ extern "C"
 
     typedef struct SystemSchedulerHandle* NrtSystemScheduler;
 
-    typedef (*NrtSystemUpdatePtr)(NrtTimestamp, NrtCatalogue);
+    typedef void (*NrtSystemUpdatePtr)(NrtTimestamp, NrtCatalogue);
 
     NrtSystemScheduler Nrt_SystemScheduler_CreateWithDefaultThreadCount();
 

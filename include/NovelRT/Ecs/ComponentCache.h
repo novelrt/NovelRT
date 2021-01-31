@@ -92,6 +92,14 @@ namespace NovelRT::Ecs
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
 
+        /**
+         * @brief Returns a pointer to the memory container associated with this ID without type information.
+         *
+         * TODO: docs
+         *
+         * @param id
+         * @return
+         */
         [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetComponentBufferById(ComponentTypeId id) const;
 
         /**

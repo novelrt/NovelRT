@@ -61,7 +61,7 @@ namespace NovelRT::Ecs
          *
          * This is an unsafe operation. Memory containers do not persist any form of type safety.
          * Please ensure that type T is either the same as, or is compatible with, the underlying data.
-         * If a container is supplied that does not match type T then the behaviour is undefined.
+         * If a container is supplied that does not match type T then the behaviour of the entire object is undefined.
          *
          * @param innerContainer The container to base this ComponentBuffer on.
          */
@@ -123,6 +123,7 @@ namespace NovelRT::Ecs
          * make, as opposed to a final state.
          *
          * @exception Exceptions::DuplicateKeyException if multiple updates to the same entity are pushed.
+         * @exception std::out_of_range if an invalid poolId is provided.
          */
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
