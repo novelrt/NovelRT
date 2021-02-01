@@ -19,7 +19,7 @@ extern "C"
 
     NrtEntityIdVector Nrt_EntityCache_GetEntitiesToRemoveThisFrame(NrtEntityCache entityCache);
 
-    void Nrt_EntityCache_RemoveEntity(NrtEntityCache entityCache, NrtEntityId entityToRemove);
+    void Nrt_EntityCache_RemoveEntity(NrtEntityCache entityCache, size_t poolId, NrtEntityId entityToRemove);
 
     void Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(NrtEntityCache entityCache);
 

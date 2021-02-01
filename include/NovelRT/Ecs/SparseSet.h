@@ -163,6 +163,7 @@ namespace NovelRT::Ecs
          * @param value The initial value to associate with the key.
          *
          * @exception Exceptions::DuplicateKeyException when a duplicate key is provided.
+         * @exception std::bad_alloc if there is no memory left to allocate from the system to this SparseSet.
          */
         void Insert(TKey key, TValue value)
         {

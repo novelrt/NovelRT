@@ -31,7 +31,8 @@ extern "C"
         NRT_FAILURE_FUNCTION_NOT_FOUND = -12,
         NRT_FAILURE_INVALID_OPERATION = -13,
         NRT_FAILURE_DUPLICATE_KEY_PROVIDED = -14,
-        NRT_FAILURE_KEY_NOT_FOUND = -15
+        NRT_FAILURE_KEY_NOT_FOUND = -15,
+        NRT_FAILURE_OUT_OF_MEMORY = -16
     };
 
     typedef int32_t NrtBool;

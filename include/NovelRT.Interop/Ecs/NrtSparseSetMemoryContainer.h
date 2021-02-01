@@ -51,7 +51,7 @@ extern "C"
 
     NrtSparseSetMemoryContainer_ByteIteratorView
     Nrt_SparseSetMemoryContainer_GetByteIteratorViewBasedOnDenseIndexUnsafe(NrtSparseSetMemoryContainer container,
-                                                                            size_t index);
+                                                                            size_t denseIndex);
 
     NrtResult Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndex(
         NrtSparseSetMemoryContainer container,
@@ -60,7 +60,7 @@ extern "C"
 
     NrtSparseSetMemoryContainer_ConstByteIteratorView
     Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(
-        const NrtSparseSetMemoryContainer container,
+        NrtSparseSetMemoryContainer container,
         size_t index);
 
     size_t Nrt_SparseSetMemoryContainer_Length(NrtSparseSetMemoryContainer container);
@@ -69,8 +69,8 @@ extern "C"
         NrtSparseSetMemoryContainer container,
         size_t key);
 
-    NrtSparseSetMemoryContainer_ByteIteratorView Nrt_SparseSetMemoryContainer_ConstIndexer(
-        const NrtSparseSetMemoryContainer container,
+    NrtSparseSetMemoryContainer_ConstByteIteratorView Nrt_SparseSetMemoryContainer_ConstIndexer(
+        NrtSparseSetMemoryContainer container,
         size_t key);
 
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_begin(NrtSparseSetMemoryContainer container);
@@ -78,10 +78,9 @@ extern "C"
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_end(NrtSparseSetMemoryContainer container);
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cbegin(
-        const NrtSparseSetMemoryContainer container);
+        NrtSparseSetMemoryContainer container);
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(
-        const NrtSparseSetMemoryContainer container);
+    NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(NrtSparseSetMemoryContainer container);
 
 #ifdef __cplusplus
 };
