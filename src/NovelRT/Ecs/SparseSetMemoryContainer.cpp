@@ -4,7 +4,6 @@
 #include <NovelRT/Ecs/SparseSetMemoryContainer.h>
 #include <NovelRT/Exceptions/DuplicateKeyException.h>
 #include <NovelRT/Exceptions/KeyNotFoundException.h>
-#include <NovelRT/Exceptions/MalformedAllocationException.h>
 
 namespace NovelRT::Ecs
 {

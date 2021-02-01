@@ -14,7 +14,6 @@
 #include "InitialisationFailureException.h"
 #include "InvalidOperationException.h"
 #include "KeyNotFoundException.h"
-#include "MalformedAllocationException.h"
 #include "NotInitialisedException.h"
 #include "NotSupportedException.h"
 #include "NullPointerException.h"
