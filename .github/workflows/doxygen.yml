@@ -25,6 +25,7 @@ jobs:
             doxyfile-path: 'Doxygen/Doxyfile.doxygen'
 
       - name: Copy Documentation
+        if: ${{ success() }}
         run: mkdir $GITHUB_WORKSPACE/novelrt/docs && cp -r $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/html/* $GITHUB_WORKSPACE/novelrt/docs
 
       - name: Get current date
@@ -32,6 +33,7 @@ jobs:
         run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       - name: Commit Documentation Updates
+        if: ${{ success() }}
         uses: actions/checkout@v2
         - run: |
           git config user.name github-actions
