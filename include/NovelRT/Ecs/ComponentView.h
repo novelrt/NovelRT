@@ -41,6 +41,10 @@ namespace NovelRT::Ecs
          *
          * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
          * the same thread.
+         * @exception std::out_of_range if the setup of the ComponentView is invalid. See
+         * ComponentBuffer::PushComponentUpdateInstruction for more information.
+         * @exception std::bad_alloc if there is no more memory available to NovelRT. See
+         * SparseSet::Insert for more information.
          */
         void PushComponentUpdateInstruction(EntityId entity, TComponent instructionState)
         {
@@ -133,10 +137,10 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @param entity
+         * @param entity The EntityId of retrieve the component from.
          * @return TComponent A copy of the current state of the component attached to the given entity.
-         * @exception std::out_of_range if the given EntityId is not present within the immutable buffer data for this
-         * update cycle.
+         * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the immutable buffer
+         * data for this update cycle.
          */
         [[nodiscard]] TComponent GetComponent(EntityId entity) const
         {
@@ -151,12 +155,12 @@ namespace NovelRT::Ecs
          * provided entity exists in the read-only portion of the underlying buffer. Please see
          * ComponentView::HasComponent for more information.
          *
-         * @param entity
+         * @param entity The EntityId to retrieve the component from.
          * @return TComponent A copy of the current state of the component attached to the given entity.
          */
         [[nodiscard]] TComponent GetComponentUnsafe(EntityId entity) const noexcept
         {
-            return _componentBuffer.GetComponent(entity);
+            return _componentBuffer.GetComponentUnsafe(entity);
         }
 
         /**
