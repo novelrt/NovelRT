@@ -10,8 +10,8 @@
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
-std::vector<std::byte> dummyByteVector{std::byte(0)};
-std::vector<size_t> dummySizeTVector{0};
+std::vector<std::byte> dummyByteVectorSparseSet{std::byte(0)};
+std::vector<size_t> dummySizeTVectorSparseSet{0};
 
 extern "C"
 {
@@ -125,7 +125,7 @@ extern "C"
         try
         {
             auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
-            auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVector.end(), 0);
+            auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.end(), 0);
             *ptr = containerPtr->GetByteIteratorViewBasedOnDenseIndex(denseIndex);
             *outputResult = reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(ptr);
             return NRT_SUCCESS;
@@ -141,7 +141,7 @@ extern "C"
                                                                             size_t denseIndex)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVector.end(), 0);
+        auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.end(), 0);
         *ptr = containerPtr->GetByteIteratorViewBasedOnDenseIndexUnsafe(denseIndex);
         return reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(ptr);
     }
@@ -159,7 +159,7 @@ extern "C"
         try
         {
             auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
-            auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVector.end(), 0);
+            auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.end(), 0);
             *ptr = containerPtr->GetByteIteratorViewBasedOnDenseIndex(denseIndex);
             *outputResult = reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorView>(ptr);
             return NRT_SUCCESS;
@@ -175,7 +175,7 @@ extern "C"
                                                                                  size_t denseIndex)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVector.end(), 0);
+        auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.end(), 0);
         *ptr = containerPtr->GetByteIteratorViewBasedOnDenseIndexUnsafe(denseIndex);
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorView>(ptr);
     }
@@ -190,7 +190,7 @@ extern "C"
         size_t key)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVector.end(), 0);
+        auto ptr = new SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.end(), 0);
         *ptr = (*containerPtr)[key];
         return reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(ptr);
     }
@@ -200,7 +200,7 @@ extern "C"
         size_t key)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVector.end(), 0);
+        auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.end(), 0);
         *ptr = (*containerPtr)[key];
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorView>(ptr);
     }
@@ -208,8 +208,7 @@ extern "C"
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_begin(NrtSparseSetMemoryContainer container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::Iterator(std::make_tuple(
-            dummySizeTVector.end(), SparseSetMemoryContainer::ByteIteratorView(dummyByteVector.end(), 0)));
+        auto ptr = new SparseSetMemoryContainer::Iterator(std::make_tuple(dummySizeTVectorSparseSet.end(), SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.end(), 0)));
         *ptr = containerPtr->begin();
         return reinterpret_cast<NrtSparseSetMemoryContainer_Iterator>(ptr);
     }
@@ -217,8 +216,7 @@ extern "C"
     NrtSparseSetMemoryContainer_Iterator Nrt_SparseSetMemoryContainer_end(NrtSparseSetMemoryContainer container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::Iterator(std::make_tuple(
-            dummySizeTVector.end(), SparseSetMemoryContainer::ByteIteratorView(dummyByteVector.end(), 0)));
+        auto ptr = new SparseSetMemoryContainer::Iterator(std::make_tuple(dummySizeTVectorSparseSet.end(), SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.end(), 0)));
         *ptr = containerPtr->end();
         return reinterpret_cast<NrtSparseSetMemoryContainer_Iterator>(ptr);
     }
@@ -226,8 +224,7 @@ extern "C"
     NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cbegin(NrtSparseSetMemoryContainer container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
-            dummySizeTVector.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVector.cend(), 0)));
+        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(dummySizeTVectorSparseSet.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.cend(), 0)));
         *ptr = containerPtr->begin();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
     }
@@ -235,8 +232,7 @@ extern "C"
     NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(NrtSparseSetMemoryContainer container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
-        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
-            dummySizeTVector.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVector.cend(), 0)));
+        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(dummySizeTVectorSparseSet.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.cend(), 0)));
         *ptr = containerPtr->end();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
     }

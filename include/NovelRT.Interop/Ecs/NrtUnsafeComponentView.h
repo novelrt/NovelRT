@@ -18,6 +18,7 @@ extern "C"
     NrtUnsafeComponentView Nrt_UnsafeComponentView_Create(size_t poolId, NrtComponentBufferMemoryContainer container);
 
     NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentView componentView,
+                                                                     NrtEntityId entity,
                                                                      void* instructionData);
 
     NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentView componentView, NrtEntityId entity);
