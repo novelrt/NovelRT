@@ -9,6 +9,7 @@
 #include "SparseSetMemoryContainer.h"
 #include <functional>
 #include <vector>
+#include <memory>
 
 namespace NovelRT::Ecs
 {
