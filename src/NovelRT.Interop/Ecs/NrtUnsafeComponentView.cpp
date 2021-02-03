@@ -30,7 +30,8 @@ extern "C"
 
         try
         {
-            reinterpret_cast<UnsafeComponentView*>(componentView)->PushComponentUpdateInstruction(entity, instructionData);
+            reinterpret_cast<UnsafeComponentView*>(componentView)
+                ->PushComponentUpdateInstruction(entity, instructionData);
             return NRT_SUCCESS;
         }
         catch (const DuplicateKeyException&)
@@ -112,7 +113,9 @@ extern "C"
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_begin(NrtUnsafeComponentView componentView)
     {
-        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(dummySizeTVectorComponentView.cbegin(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
+        auto ptr = new SparseSetMemoryContainer::ConstIterator(
+            std::make_tuple(dummySizeTVectorComponentView.cbegin(),
+                            SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
 
         *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->begin();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
@@ -120,7 +123,9 @@ extern "C"
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_end(NrtUnsafeComponentView componentView)
     {
-        auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(dummySizeTVectorComponentView.cbegin(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
+        auto ptr = new SparseSetMemoryContainer::ConstIterator(
+            std::make_tuple(dummySizeTVectorComponentView.cbegin(),
+                            SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
 
         *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->begin();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);

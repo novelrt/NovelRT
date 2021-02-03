@@ -3,8 +3,8 @@
 
 #include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
 #include <NovelRT/Ecs/EcsUtils.h>
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 using namespace NovelRT::Ecs;
 
@@ -36,7 +36,8 @@ extern "C"
 
         auto vecPtr = reinterpret_cast<std::vector<EntityId>*>(vector);
         size_t lengthBefore = vecPtr->size();
-        static_cast<void>(std::remove_if(vecPtr->begin(), vecPtr->end(), [=](EntityId val) { return val == static_cast<NovelRT::Atom>(entity); }));
+        static_cast<void>(std::remove_if(vecPtr->begin(), vecPtr->end(),
+                                         [=](EntityId val) { return val == static_cast<NovelRT::Atom>(entity); }));
 
         if (vecPtr->size() == lengthBefore)
         {

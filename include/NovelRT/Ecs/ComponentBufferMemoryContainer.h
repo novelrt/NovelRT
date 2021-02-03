@@ -8,8 +8,8 @@
 #include "EcsUtils.h"
 #include "SparseSetMemoryContainer.h"
 #include <functional>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace NovelRT::Ecs
 {

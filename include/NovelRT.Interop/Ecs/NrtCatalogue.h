@@ -20,8 +20,8 @@ extern "C"
     NrtCatalogue Nrt_Catalogue_Create(size_t poolId, NrtComponentCache componentCache, NrtEntityCache entityCache);
 
     NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogue catalogue,
-                                                              NrtComponentTypeId componentId,
-                                                              NrtUnsafeComponentView* outputResult);
+                                                 NrtComponentTypeId componentId,
+                                                 NrtUnsafeComponentView* outputResult);
 
     NrtUnsafeComponentView Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogue catalogue,
                                                                     NrtComponentTypeId componentId);

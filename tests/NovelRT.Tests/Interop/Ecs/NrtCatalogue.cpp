@@ -3,5 +3,3 @@
 
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <gtest/gtest.h>
-
-

@@ -40,7 +40,8 @@ extern "C"
 
     NrtComponentCache Nrt_SystemScheduler_GetComponentCache(NrtSystemScheduler systemScheduler)
     {
-        return reinterpret_cast<NrtComponentCache>(&reinterpret_cast<SystemScheduler*>(systemScheduler)->GetComponentCache());
+        return reinterpret_cast<NrtComponentCache>(
+            &reinterpret_cast<SystemScheduler*>(systemScheduler)->GetComponentCache());
     }
 
     void Nrt_SystemScheduler_SpinThreads(NrtSystemScheduler systemScheduler)

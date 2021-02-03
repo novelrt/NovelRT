@@ -257,6 +257,6 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] ConstIterator cend() const noexcept;
     };
-}
+} // namespace NovelRT::Ecs
 
-#endif //NOVELRT_SPARSESETMEMORYCONTAINER_H
+#endif // NOVELRT_SPARSESETMEMORYCONTAINER_H

@@ -29,8 +29,8 @@ namespace NovelRT::Ecs
         size_t sizeOfDataType,
         void* deleteInstructionState,
         const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                           SparseSetMemoryContainer::ByteIteratorView,
-                           size_t)>& componentUpdateLogic)
+                                 SparseSetMemoryContainer::ByteIteratorView,
+                                 size_t)>& componentUpdateLogic)
     {
         ComponentTypeId returnId = Atom::getNextComponentTypeId();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr =

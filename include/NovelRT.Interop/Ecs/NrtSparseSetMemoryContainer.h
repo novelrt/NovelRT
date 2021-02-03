@@ -60,9 +60,8 @@ extern "C"
         NrtSparseSetMemoryContainer_ConstByteIteratorView* outputResult);
 
     NrtSparseSetMemoryContainer_ConstByteIteratorView
-    Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(
-        NrtSparseSetMemoryContainer container,
-        size_t index);
+    Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(NrtSparseSetMemoryContainer container,
+                                                                                 size_t index);
 
     size_t Nrt_SparseSetMemoryContainer_Length(NrtSparseSetMemoryContainer container);
 

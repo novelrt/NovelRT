@@ -24,7 +24,8 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] ComponentBufferMemoryContainer::ImmutableDataView GetComponent(EntityId entity) const;
 
-        [[nodiscard]] ComponentBufferMemoryContainer::ImmutableDataView GetComponentUnsafe(EntityId entity) const noexcept;
+        [[nodiscard]] ComponentBufferMemoryContainer::ImmutableDataView GetComponentUnsafe(
+            EntityId entity) const noexcept;
 
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept;
 
@@ -32,6 +33,6 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;
     };
-}
+} // namespace NovelRT::Ecs
 
 #endif // !NOVELRT_UNSAFECOMPONENTVIEW_H

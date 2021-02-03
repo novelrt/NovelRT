@@ -5,8 +5,8 @@
 #define NOVELRT_NRTCOMPONENTVIEW_H
 
 #include "../NrtInteropUtils.h"
-#include "NrtEcsUtils.h"
 #include "NrtComponentBufferMemoryContainer.h"
+#include "NrtEcsUtils.h"
 
 #ifdef __cplusplus
 extern "C"

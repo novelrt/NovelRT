@@ -4,8 +4,8 @@
 #ifndef NOVELRT_NRTENTITYCACHE_H
 #define NOVELRT_NRTENTITYCACHE_H
 
-#include "../Timing/NrtTimestamp.h"
 #include "../NrtInteropUtils.h"
+#include "../Timing/NrtTimestamp.h"
 #include "NrtEcsUtils.h"
 
 #ifdef __cplusplus
