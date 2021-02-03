@@ -28,7 +28,7 @@ jobs:
       - name: Copy Documentation
         id: copy
         if: ${{ success() }}
-        run: cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/html/* $GITHUB_WORKSPACE/novelrt/docs
+        run: mkdir -p $GITHUB_WORKSPACE/novelrt/docs && cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/html/* $GITHUB_WORKSPACE/novelrt/docs
 
       - name: Get current date
         id: date
