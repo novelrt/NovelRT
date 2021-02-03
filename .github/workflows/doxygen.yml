@@ -23,12 +23,12 @@ jobs:
         id: generate
         with:
             working-directory: '$GITHUB_WORKSPACE/novelrt/artifacts/build/Debug'
-            doxyfile-path: 'Doxygen/Doxyfile.doxygen'
+            doxyfile-path: 'doxygen/Doxyfile.doxygen'
 
       - name: Copy Documentation
         id: copy
         if: ${{ success() }}
-        run: mkdir -p $GITHUB_WORKSPACE/novelrt/docs && cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/html/* $GITHUB_WORKSPACE/novelrt/docs
+        run: mkdir -p $GITHUB_WORKSPACE/novelrt/docs && cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/doxygen/html/* $GITHUB_WORKSPACE/novelrt/docs
 
       - name: Get current date
         id: date
