@@ -7,6 +7,7 @@
 #include "../NrtInteropUtils.h"
 #include "../Timing/NrtTimestamp.h"
 #include "NrtEcsUtils.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C"
