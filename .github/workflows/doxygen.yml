@@ -20,11 +20,13 @@ jobs:
 
       - name: Generate Documentation
         uses: mattnotmitt/doxygen-action@v1
+        id: generate
         with:
             working-directory: '$GITHUB_WORKSPACE/novelrt/artifacts/build/Debug'
             doxyfile-path: 'Doxygen/Doxyfile.doxygen'
 
       - name: Copy Documentation
+        id: copy
         if: ${{ success() }}
         run: cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/html/* $GITHUB_WORKSPACE/novelrt/docs
 
@@ -35,7 +37,7 @@ jobs:
       - name: Commit Documentation Updates
         uses: actions/checkout@v2
         if: ${{ success() }}
-        - run: |
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout gh-pages
