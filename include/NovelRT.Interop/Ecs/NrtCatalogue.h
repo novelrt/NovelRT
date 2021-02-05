@@ -30,7 +30,7 @@ extern "C"
 
     NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogue catalogue, NrtEntityId entity);
 
-    NrtResult Nrt_Catalogue_Delete(NrtCatalogue catalogue);
+    NrtResult Nrt_Catalogue_Destroy(NrtCatalogue catalogue);
 
 #ifdef __cplusplus
 };

@@ -13,6 +13,34 @@ extern "C"
         return reinterpret_cast<NrtComponentCache>(new ComponentCache(poolSize));
     }
 
+    NrtResult Nrt_ComponentCache_RegisterComponentTypeUnsafe(NrtComponentCache componentCache,
+                                                             size_t sizeOfDataType,
+                                                             const void* deleteInstructionState,
+                                                             NrtComponentUpdateFnPtr updateFnPtr,
+                                                             NrtComponentTypeId* outputResult)
+    {
+        if (componentCache == nullptr || deleteInstructionState == nullptr || outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        try
+        {
+            *outputResult = reinterpret_cast<ComponentCache*>(componentCache)
+                ->RegisterComponentTypeUnsafe(
+                    sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
+                        updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&lhs),
+                                    reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&rhs), size);
+                    });
+
+            return NRT_SUCCESS;
+        }
+        catch (const std::bad_alloc&)
+        {
+            return NRT_FAILURE_OUT_OF_MEMORY;
+        }
+    }
+
     NrtResult Nrt_ComponentCache_GetComponentBufferById(NrtComponentCache componentCache,
                                                         NrtComponentTypeId id,
                                                         NrtComponentBufferMemoryContainer* outputResult)
@@ -35,7 +63,7 @@ extern "C"
             ->PrepAllBuffersForNextFrame(*reinterpret_cast<std::vector<EntityId>*>(entitiesToDelete));
     }
 
-    NrtResult Nrt_ComponentCache_Delete(NrtComponentCache componentCache)
+    NrtResult Nrt_ComponentCache_Destroy(NrtComponentCache componentCache)
     {
         if (componentCache == nullptr)
         {

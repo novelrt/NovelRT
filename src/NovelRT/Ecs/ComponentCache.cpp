@@ -16,7 +16,7 @@ namespace NovelRT::Ecs
 
     std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(
         size_t sizeOfDataType,
-        void* deleteInstructionState,
+        const void* deleteInstructionState,
         const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                                  SparseSetMemoryContainer::ByteIteratorView,
                                  size_t)>& componentUpdateLogic) const
@@ -27,7 +27,7 @@ namespace NovelRT::Ecs
 
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
-        void* deleteInstructionState,
+        const void* deleteInstructionState,
         const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                                  SparseSetMemoryContainer::ByteIteratorView,
                                  size_t)>& componentUpdateLogic)

@@ -24,6 +24,8 @@ extern "C"
 
     void Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(NrtEntityCache entityCache);
 
+    NrtResult Nrt_EntityCache_Destroy(NrtEntityCache entityCache);
+
 #ifdef __cplusplus
 };
 #endif

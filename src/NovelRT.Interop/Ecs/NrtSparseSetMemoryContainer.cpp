@@ -244,4 +244,194 @@ extern "C"
         *ptr = containerPtr->end();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
     }
+
+    NrtBool Nrt_SparseSetMemoryContainer_ByteIteratorView_IsValid(NrtSparseSetMemoryContainer_ByteIteratorView view)
+    {
+        return reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view)->IsValid() ? NRT_TRUE : NRT_FALSE;
+    }
+
+    void Nrt_SparseSetMemoryContainer_ByteIteratorView_CopyFromLocation(
+        NrtSparseSetMemoryContainer_ByteIteratorView view,
+        void* outputLocation)
+    {
+        reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view)->CopyFromLocation(outputLocation);
+    }
+
+    void Nrt_SparseSetMemoryContainer_ByteIteratorView_WriteToLocation(
+        NrtSparseSetMemoryContainer_ByteIteratorView view,
+        void* data)
+    {
+        reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view)->WriteToLocation(data);
+    }
+
+    void* Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(NrtSparseSetMemoryContainer_ByteIteratorView view)
+    {
+        return reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view)->GetDataHandle();
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_ByteIteratorView_Destroy(NrtSparseSetMemoryContainer_ByteIteratorView view)
+    {
+        if (view == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtBool Nrt_SparseSetMemoryContainer_ConstByteIteratorView_IsValid(
+        NrtSparseSetMemoryContainer_ConstByteIteratorView view)
+    {
+        return reinterpret_cast<SparseSetMemoryContainer::ConstByteIteratorView*>(view)->IsValid() ? NRT_TRUE
+                                                                                                   : NRT_FALSE;
+    }
+
+    void Nrt_SparseSetMemoryContainer_ConstByteIteratorView_CopyFromLocation(
+        NrtSparseSetMemoryContainer_ConstByteIteratorView view,
+        void* outputLocation)
+    {
+        reinterpret_cast<SparseSetMemoryContainer::ConstByteIteratorView*>(view)->CopyFromLocation(outputLocation);
+    }
+
+    const void* Nrt_SparseSetMemoryContainer_ConstByteIteratorView_GetDataHandle(
+        NrtSparseSetMemoryContainer_ConstByteIteratorView view)
+    {
+        return reinterpret_cast<SparseSetMemoryContainer::ConstByteIteratorView*>(view)->GetDataHandle();
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_ConstByteIteratorView_Destroy(
+        NrtSparseSetMemoryContainer_ConstByteIteratorView view)
+    {
+        if (view == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<SparseSetMemoryContainer::ConstByteIteratorView*>(view);
+
+        return NRT_SUCCESS;
+    }
+
+    void Nrt_SparseSetMemoryContainer_Iterator_MoveNext(NrtSparseSetMemoryContainer_Iterator iterator)
+    {
+        (*reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator))++;
+    }
+
+    NrtBool Nrt_SparseSetMemoryContainer_Iterator_Equal(NrtSparseSetMemoryContainer_Iterator lhs,
+                                                        NrtSparseSetMemoryContainer_Iterator rhs)
+    {
+        return ((*reinterpret_cast<SparseSetMemoryContainer::Iterator*>(lhs)) ==
+                (*reinterpret_cast<SparseSetMemoryContainer::Iterator*>(rhs)))
+                   ? NRT_TRUE
+                   : NRT_FALSE;
+    }
+
+    NrtBool Nrt_SparseSetMemoryContainer_Iterator_NotEqual(NrtSparseSetMemoryContainer_Iterator lhs,
+                                                           NrtSparseSetMemoryContainer_Iterator rhs)
+    {
+        return ((*reinterpret_cast<SparseSetMemoryContainer::Iterator*>(lhs)) !=
+                (*reinterpret_cast<SparseSetMemoryContainer::Iterator*>(rhs)))
+                   ? NRT_TRUE
+                   : NRT_FALSE;
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_Iterator_GetValuePair(
+        NrtSparseSetMemoryContainer_Iterator iterator,
+        size_t* outputId,
+        NrtSparseSetMemoryContainer_ByteIteratorView* outputView)
+    {
+        try
+        {
+            auto ptr = reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator);
+            auto [key, val] = ptr->operator*();
+            *outputId = key;
+            auto valPtr = new SparseSetMemoryContainer::Iterator(
+                std::make_tuple(dummySizeTVectorSparseSet.begin(),
+                                SparseSetMemoryContainer::ByteIteratorView(dummyByteVectorSparseSet.begin(), 0)));
+            *outputView = reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(valPtr);
+            return NRT_SUCCESS;
+        }
+        catch (const std::out_of_range&)
+        {
+            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+        }
+        catch (const std::exception&) // TODO: I'm not sure if this will throw anything else. Docs weren't clear. :(
+        {
+            return NRT_FAILURE_UNKNOWN;
+        }
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_Iterator_Destroy(NrtSparseSetMemoryContainer_Iterator iterator)
+    {
+        if (iterator == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator);
+
+        return NRT_SUCCESS;
+    }
+
+    void Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(NrtSparseSetMemoryContainer_ConstIterator iterator)
+    {
+        (*reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(iterator))++;
+    }
+
+    NrtBool Nrt_SparseSetMemoryContainer_ConstIterator_Equal(NrtSparseSetMemoryContainer_ConstIterator lhs,
+                                                             NrtSparseSetMemoryContainer_ConstIterator rhs)
+    {
+        return ((*reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(lhs)) ==
+                (*reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(rhs)))
+                   ? NRT_TRUE
+                   : NRT_FALSE;
+    }
+
+    NrtBool Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(NrtSparseSetMemoryContainer_ConstIterator lhs,
+                                                                NrtSparseSetMemoryContainer_ConstIterator rhs)
+    {
+        return ((*reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(lhs)) !=
+                (*reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(rhs)))
+                   ? NRT_TRUE
+                   : NRT_FALSE;
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(
+        NrtSparseSetMemoryContainer_ConstIterator iterator,
+        size_t* outputId,
+        NrtSparseSetMemoryContainer_ConstByteIteratorView* outputView)
+    {
+        try
+        {
+            auto ptr = reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator);
+            auto [key, val] = ptr->operator*();
+            *outputId = key;
+            auto valPtr = new SparseSetMemoryContainer::ConstIterator(
+                std::make_tuple(dummySizeTVectorSparseSet.cbegin(),
+                                SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.cbegin(), 0)));
+            *outputView = reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorView>(valPtr);
+            return NRT_SUCCESS;
+        }
+        catch (const std::out_of_range&)
+        {
+            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+        }
+        catch (const std::exception&) // I'm not sure if this will throw anything else. Docs weren't clear. :(
+        {
+            return NRT_FAILURE_UNKNOWN;
+        }
+    }
+}
+NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryContainer_ConstIterator iterator)
+{
+    if (iterator == nullptr)
+    {
+        return NRT_FAILURE_NULLPTR_PROVIDED;
+    }
+
+    delete reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(iterator);
+
+    return NRT_SUCCESS;
 }

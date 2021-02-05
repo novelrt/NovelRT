@@ -28,4 +28,16 @@ extern "C"
     {
         reinterpret_cast<EntityCache*>(entityCache)->ProcessEntityDeletionRequestsFromThreads();
     }
+
+    NrtResult Nrt_EntityCache_Destroy(NrtEntityCache entityCache)
+    {
+        if (entityCache == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<EntityCache*>(entityCache);
+
+        return NRT_SUCCESS;
+    }
 }

@@ -30,7 +30,7 @@ namespace NovelRT::Ecs
 
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,
-            void* deleteInstructionState,
+            const void* deleteInstructionState,
             const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                                      SparseSetMemoryContainer::ByteIteratorView,
                                      size_t)>& componentUpdateLogic) const;
@@ -50,7 +50,8 @@ namespace NovelRT::Ecs
          * specified size, or if the type being used is not trivially copyable as defined by the C++ language reference,
          * then the behaviour is undefined. See ComponentBuffer and std::is_trivially_copyable for more information.
          *
-         * The returned ID cannot be discarded. If the value is discarded, then the container is lost permanently.
+         * The returned ID cannot be discarded. If the value is discarded, then the container is lost permanently,
+         * effectively causing a memory leak.
          *
          * @param sizeOfDataType The size of the object type, in bytes.
          * @param deleteInstructionState The object state that indicates that the component should be deleted.
@@ -62,7 +63,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
-            void* deleteInstructionState,
+            const void* deleteInstructionState,
             const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
                                      SparseSetMemoryContainer::ByteIteratorView,
                                      size_t)>& componentUpdateLogic);
@@ -113,7 +114,7 @@ namespace NovelRT::Ecs
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
+        template<typename T> [[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
             return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }

@@ -6,52 +6,68 @@
 
 using namespace NovelRT::Ecs;
 
-NrtCatalogue Nrt_Catalogue_Create(size_t poolId, NrtComponentCache componentCache, NrtEntityCache entityCache)
+extern "C"
 {
-    auto catalogue = new Catalogue(poolId, *reinterpret_cast<ComponentCache*>(componentCache),
-                                   *reinterpret_cast<EntityCache*>(entityCache));
-    return reinterpret_cast<NrtCatalogue>(catalogue);
-}
-
-NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogue catalogue,
-                                             NrtComponentTypeId componentId,
-                                             NrtUnsafeComponentView* outputResult)
-{
-    if (catalogue == nullptr || outputResult == nullptr)
+    NrtCatalogue Nrt_Catalogue_Create(size_t poolId, NrtComponentCache componentCache, NrtEntityCache entityCache)
     {
-        return NRT_FAILURE_NULLPTR_PROVIDED;
+        auto catalogue = new Catalogue(poolId, *reinterpret_cast<ComponentCache*>(componentCache),
+                                       *reinterpret_cast<EntityCache*>(entityCache));
+        return reinterpret_cast<NrtCatalogue>(catalogue);
     }
 
-    auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
-    *reinterpret_cast<UnsafeComponentView*>(outputResult) = actualCatalogue->GetComponentViewById(componentId);
-
-    return NRT_SUCCESS;
-}
-
-NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogue catalogue)
-{
-    return reinterpret_cast<Catalogue*>(catalogue)->CreateEntity();
-}
-
-NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogue catalogue, NrtEntityId entity)
-{
-    if (catalogue == nullptr)
+    NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogue catalogue,
+                                                 NrtComponentTypeId componentId,
+                                                 NrtUnsafeComponentView* outputResult)
     {
-        return NRT_FAILURE_NULLPTR_PROVIDED;
+        if (catalogue == nullptr || outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
+        auto returnPtr = new UnsafeComponentView(0, nullptr);
+        *returnPtr = actualCatalogue->GetComponentViewById(componentId);
+        *outputResult = reinterpret_cast<NrtUnsafeComponentView>(returnPtr);
+
+        return NRT_SUCCESS;
     }
 
-    reinterpret_cast<Catalogue*>(catalogue)->DeleteEntity(entity);
-
-    return NRT_SUCCESS;
-}
-NrtResult Nrt_Catalogue_Delete(NrtCatalogue catalogue)
-{
-    if (catalogue == nullptr)
+    NrtUnsafeComponentView Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogue catalogue,
+                                                                    NrtComponentTypeId componentId)
     {
-        return NRT_FAILURE_NULLPTR_PROVIDED;
+        auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
+
+        auto returnPtr = new UnsafeComponentView(0, nullptr);
+        *returnPtr = actualCatalogue->GetComponentViewById(componentId);
+        return reinterpret_cast<NrtUnsafeComponentView>(returnPtr);
     }
 
-    delete reinterpret_cast<Catalogue*>(catalogue);
+    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogue catalogue)
+    {
+        return reinterpret_cast<Catalogue*>(catalogue)->CreateEntity();
+    }
 
-    return NRT_SUCCESS;
+    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogue catalogue, NrtEntityId entity)
+    {
+        if (catalogue == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        reinterpret_cast<Catalogue*>(catalogue)->DeleteEntity(entity);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_Catalogue_Destroy(NrtCatalogue catalogue)
+    {
+        if (catalogue == nullptr)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<Catalogue*>(catalogue);
+
+        return NRT_SUCCESS;
+    }
 }
