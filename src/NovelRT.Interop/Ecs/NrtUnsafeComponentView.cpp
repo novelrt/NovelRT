@@ -127,7 +127,7 @@ extern "C"
             std::make_tuple(dummySizeTVectorComponentView.cbegin(),
                             SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
 
-        *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->begin();
+        *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->end();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
     }
 
