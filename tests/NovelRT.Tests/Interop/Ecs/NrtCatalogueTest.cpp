@@ -56,7 +56,6 @@ protected:
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto) {}, &charComponentTypeId);
 
-
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);
         auto compViewChar = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, charComponentTypeId);
@@ -106,6 +105,8 @@ TEST_F(InteropCatalogueTest, CanGetValidComponentView)
 
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(beginIterator);
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(endIterator);
+
+    Nrt_UnsafeComponentView_Destroy(compView);
 }
 
 TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
@@ -134,5 +135,47 @@ TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
     NrtComponentBufferMemoryContainer ptr = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(componentCache, intComponentTypeId, &ptr), NRT_SUCCESS);
     EXPECT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(ptr), 0);
+
+    Nrt_UnsafeComponentView_Destroy(compView);
 }
 
+TEST_F(InteropCatalogueTest, CanHandleEntityDeletionBetweenFrames)
+{
+    Nrt_Catalogue_DeleteEntity(catalogue, 0);
+    Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(entityCache);
+    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
+                                                  Nrt_EntityCache_GetEntitiesToRemoveThisFrame(entityCache));
+
+    auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
+    auto compViewChar = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, charComponentTypeId);
+    auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);
+
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewInt), 0);
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewChar), 0);
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewSizeT), 0);
+
+    Nrt_UnsafeComponentView_Destroy(compViewInt);
+    Nrt_UnsafeComponentView_Destroy(compViewChar);
+    Nrt_UnsafeComponentView_Destroy(compViewSizeT);
+}
+
+TEST_F(InteropCatalogueTest, CanHandleEntityDeletionInSameFrame)
+{
+    auto id = Nrt_catalogue_CreateEntity(catalogue);
+    Nrt_Catalogue_DeleteEntity(catalogue, id);
+    Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(entityCache);
+    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
+                                                  Nrt_EntityCache_GetEntitiesToRemoveThisFrame(entityCache));
+
+    auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
+    auto compViewChar = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, charComponentTypeId);
+    auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);
+
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewInt), 1);
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewChar), 1);
+    EXPECT_EQ(Nrt_UnsafeComponentView_GetImmutableDataLength(compViewSizeT), 1);
+
+    Nrt_UnsafeComponentView_Destroy(compViewInt);
+    Nrt_UnsafeComponentView_Destroy(compViewChar);
+    Nrt_UnsafeComponentView_Destroy(compViewSizeT);
+}
