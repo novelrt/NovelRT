@@ -58,9 +58,12 @@ extern "C"
     NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_end(
         NrtComponentBufferMemoryContainer container);
 
-    NrtResult Nrt_ComponentBufferMemoryContainer_Delete(NrtComponentBufferMemoryContainer container);
+    NrtResult Nrt_ComponentBufferMemoryContainer_Destroy(NrtComponentBufferMemoryContainer container);
 
-    NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Delete(
+    const void* Nrt_ComponentBufferMemoryContainer_ImmutableDataView_GetDataHandle(
+        NrtComponentBufferMemoryContainer_ImmutableDataView view);
+
+    NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Destroy(
         NrtComponentBufferMemoryContainer_ImmutableDataView view);
 
 #ifdef __cplusplus

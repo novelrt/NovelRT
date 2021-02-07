@@ -138,7 +138,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
     }
 
-    NrtResult Nrt_ComponentBufferMemoryContainer_Delete(NrtComponentBufferMemoryContainer container)
+    NrtResult Nrt_ComponentBufferMemoryContainer_Destroy(NrtComponentBufferMemoryContainer container)
     {
         if (container == nullptr)
         {
@@ -150,7 +150,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Delete(
+    const void* Nrt_ComponentBufferMemoryContainer_ImmutableDataView_GetDataHandle(
+        NrtComponentBufferMemoryContainer_ImmutableDataView view)
+    {
+        return reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view)->GetDataHandle();
+    }
+
+    NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Destroy(
         NrtComponentBufferMemoryContainer_ImmutableDataView view)
     {
         if (view == nullptr)
