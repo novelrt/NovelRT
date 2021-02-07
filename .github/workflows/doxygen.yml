@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  CI_Doxygen:
-    name: ubuntu_debug_x64
+  Build and Publish Documentation:
+    name: Build and Publish Documentation
     runs-on: ubuntu-latest
     container:
       image: novelrt/novelrt-build:latest
@@ -15,24 +15,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Run CI Build Script (Engine & Docs only)
-        run: scripts/cibuild.sh --configuration Debug --generate -DNOVELRT_BUILD_TESTS OFF -DNOVELRT_BUILD_SAMPLES OFF
-
       - name: Generate Documentation
-        uses: mattnotmitt/doxygen-action@v1
-        id: generate
-        with:
-            working-directory: '$GITHUB_WORKSPACE/novelrt/artifacts/build/Debug'
-            doxyfile-path: 'doxygen/Doxyfile.doxygen'
-
-      - name: Copy Documentation
-        id: copy
-        if: ${{ success() }}
-        run: mkdir -p $GITHUB_WORKSPACE/novelrt/docs && cp -r -f -v $GITHUB_WORKSPACE/novelrt/artifacts/build/Debug/doxygen/html/* $GITHUB_WORKSPACE/novelrt/docs
-
-      - name: Get current date
-        id: date
-        run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: scripts/cibuild.sh --configuration Debug --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
@@ -41,6 +25,6 @@ jobs:
           git config user.email github-actions@github.com
           git checkout gh-pages
           git add ./docs/*
-          git commit -m "Updated documentation - ${{ steps.date.outputs.date }}"
+          git commit -m "Updated documentation - $GITHUB_SHA"
           git push
 

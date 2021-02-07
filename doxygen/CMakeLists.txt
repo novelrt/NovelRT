@@ -10,7 +10,14 @@ function(append_string_to_first_list_element APPEND_ARGS_INPUT APPEND_ARGS_APPEN
   set(${APPEND_OUT} ${APPEND_FINAL} PARENT_SCOPE)
 endfunction()
 
-set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/doxygen)
+if (NOT DEFINED DOXYGEN_OUTPUT_DIR)
+  set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/doxygen)
+else()
+  message("Doxygen output directory defined as: ${DOXYGEN_OUTPUT_DIR}")
+  set(DOXYGEN_OUTPUT_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
+  set(DOXYGEN_HTML_OUTPUT ${DOXYGEN_OUTPUT_DIR})
+endif()
+
 set(DOCS_MAINPAGE
         ${CMAKE_SOURCE_DIR}/README.md
         ${CMAKE_SOURCE_DIR}/LICENCE.md
