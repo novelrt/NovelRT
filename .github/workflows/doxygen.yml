@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate Documentation
-        run: scripts/cibuild.sh --configuration Debug --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
+        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
