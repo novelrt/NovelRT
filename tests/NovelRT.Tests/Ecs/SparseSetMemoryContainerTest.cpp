@@ -172,14 +172,14 @@ TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectlyWhenMultipleVa
     }
 }
 
-TEST(SparseSetMemoryContainerTest, TryRemoveThrowsKeyNotFoundExceptionWhenDuplicateKeyRemoved)
+TEST(SparseSetMemoryContainerTest, TryRemoveReturnsFalseWhenDuplicateKeyRemoved)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     int32_t testValue = 10;
 
     container.Insert(0, &testValue);
     ASSERT_TRUE(container.TryRemove(0));
-    EXPECT_THROW(container.Remove(0), Exceptions::KeyNotFoundException);
+    EXPECT_FALSE(container.TryRemove(0));
 }
 
 TEST(SparseSetMemoryContainerTest, ClearRemovesAllEntries)
@@ -192,7 +192,7 @@ TEST(SparseSetMemoryContainerTest, ClearRemovesAllEntries)
     EXPECT_EQ(container.Length(), 0);
 }
 
-TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexReturnsCorrectKey)
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexReturnsCorrectKey)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     int32_t testValue = 10;
@@ -201,15 +201,13 @@ TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexReturnsCorrectKey)
     EXPECT_EQ(container.CopyKeyBasedOnDenseIndex(0), 3);
 }
 
-TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexThrowsOutOfRangeWhenKeyDoesNotExist)
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexThrowsOutOfRangeWhenKeyDoesNotExist)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
-    int32_t testValue = 10;
-
     EXPECT_THROW(container.CopyKeyBasedOnDenseIndex(0), std::out_of_range);
 }
 
-TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnIndexUnsafeReturnsCorrectKey)
+TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexUnsafeReturnsCorrectKey)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     int32_t testValue = 10;

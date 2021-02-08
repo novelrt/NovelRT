@@ -47,7 +47,7 @@ extern "C"
         }
     }
 
-    NrtBool Nrt_SparseSetMemoryContainer_tryInsert(NrtSparseSetMemoryContainer container, size_t key, const void* value)
+    NrtBool Nrt_SparseSetMemoryContainer_TryInsert(NrtSparseSetMemoryContainer container, size_t key, const void* value)
     {
         return reinterpret_cast<SparseSetMemoryContainer*>(container)->TryInsert(key, value) ? NRT_TRUE : NRT_FALSE;
     }
@@ -243,6 +243,17 @@ extern "C"
                             SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.cend(), 0)));
         *ptr = containerPtr->end();
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
+    }
+
+    NrtResult Nrt_SparseSetMemoryContainer_Destroy(NrtSparseSetMemoryContainer container)
+    {
+        if (container)
+        {
+            return NRT_FAILURE_NULLPTR_PROVIDED;
+        }
+
+        delete reinterpret_cast<SparseSetMemoryContainer*>(container);
+        return NRT_SUCCESS;
     }
 
     NrtBool Nrt_SparseSetMemoryContainer_ByteIteratorView_IsValid(NrtSparseSetMemoryContainer_ByteIteratorView view)

@@ -26,7 +26,7 @@ extern "C"
 
     NrtResult Nrt_SparseSetMemoryContainer_Insert(NrtSparseSetMemoryContainer container, size_t key, const void* value);
 
-    NrtBool Nrt_SparseSetMemoryContainer_tryInsert(NrtSparseSetMemoryContainer container,
+    NrtBool Nrt_SparseSetMemoryContainer_TryInsert(NrtSparseSetMemoryContainer container,
                                                    size_t key,
                                                    const void* value);
 
@@ -81,6 +81,8 @@ extern "C"
         NrtSparseSetMemoryContainer container);
 
     NrtSparseSetMemoryContainer_ConstIterator Nrt_SparseSetMemoryContainer_cend(NrtSparseSetMemoryContainer container);
+
+    NrtResult Nrt_SparseSetMemoryContainer_Destroy(NrtSparseSetMemoryContainer container);
 
     NrtBool Nrt_SparseSetMemoryContainer_ByteIteratorView_IsValid(NrtSparseSetMemoryContainer_ByteIteratorView view);
 
