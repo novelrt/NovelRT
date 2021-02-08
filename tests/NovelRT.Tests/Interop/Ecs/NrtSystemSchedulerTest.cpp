@@ -87,13 +87,16 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     Nrt_SystemScheduler_RegisterSystem(scheduler, [](auto delta, auto catalogue) {
         auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
-      for (auto [entity, component] : intSystem)
-      {
-          intSystem.PushComponentUpdateInstruction(entity, 10);
-      }
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 10);
+        }
     });
 
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
-    EXPECT_EQ(reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        20);
 }

@@ -33,15 +33,9 @@ protected:
 
             scheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta, Catalogue) {
-                sysOneBool = false;
-            };
-            sysTwo = [&](Timestamp delta, Catalogue) {
-                sysTwoBool = false;
-            };
-            sysThree = [&](Timestamp delta, Catalogue) {
-                sysThreeBool = false;
-            };
+            sysOne = [&](Timestamp delta, Catalogue) { sysOneBool = false; };
+            sysTwo = [&](Timestamp delta, Catalogue) { sysTwoBool = false; };
+            sysThree = [&](Timestamp delta, Catalogue) { sysThreeBool = false; };
 
             scheduler->RegisterSystem(sysOne);
             scheduler->RegisterSystem(sysTwo);

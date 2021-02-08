@@ -26,12 +26,13 @@ extern "C"
 
         try
         {
-            *outputResult = reinterpret_cast<ComponentCache*>(componentCache)
-                ->RegisterComponentTypeUnsafe(
-                    sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
-                        updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&lhs),
-                                    reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&rhs), size);
-                    });
+            *outputResult =
+                reinterpret_cast<ComponentCache*>(componentCache)
+                    ->RegisterComponentTypeUnsafe(
+                        sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
+                            updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&lhs),
+                                        reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&rhs), size);
+                        });
 
             return NRT_SUCCESS;
         }

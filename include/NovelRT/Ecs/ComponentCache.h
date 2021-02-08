@@ -114,7 +114,7 @@ namespace NovelRT::Ecs
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T> [[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
+        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
             return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }
