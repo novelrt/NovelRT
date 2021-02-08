@@ -29,6 +29,7 @@ set(TEST_SOURCES
   Interop/Ecs/NrtComponentCacheTest.cpp
   Interop/Ecs/NrtEntityCacheTest.cpp
   Interop/Ecs/NrtSparseSetMemoryContainerTest.cpp
+  Interop/Ecs/NrtSystemSchedulerTest.cpp
   Interop/Maths/GeoBoundsTest.cpp
   Interop/Maths/GeoMatrix4x4Test.cpp
   Interop/Maths/GeoVector2FTest.cpp
