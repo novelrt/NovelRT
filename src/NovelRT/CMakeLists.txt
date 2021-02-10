@@ -29,9 +29,12 @@ set(ENGINE_SOURCES
   DotNet/RuntimeService.cpp
 
   Ecs/Catalogue.cpp
+  Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
   Ecs/EntityCache.cpp
+  Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
+  Ecs/UnsafeComponentView.cpp
 
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp

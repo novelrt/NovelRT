@@ -9,6 +9,7 @@
 #include "ComponentBuffer.h"
 #include "EcsUtils.h"
 #include <functional>
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -22,10 +23,17 @@ namespace NovelRT::Ecs
     class ComponentCache
     {
     private:
-        std::unordered_map<ComponentTypeId, void*, AtomHashFunction> _componentMap;
-        std::vector<std::function<void()>> _destructorFunctions;
+        std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, AtomHashFunction>
+            _componentMap;
         size_t _poolSize;
         Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
+
+        std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
+            size_t sizeOfDataType,
+            const void* deleteInstructionState,
+            const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+                                     SparseSetMemoryContainer::ByteIteratorView,
+                                     size_t)>& componentUpdateLogic) const;
 
     public:
         /**
@@ -33,7 +41,32 @@ namespace NovelRT::Ecs
          *
          * @param poolSize The amount of worker threads to allocate for.
          */
-        ComponentCache(size_t poolSize) noexcept;
+        explicit ComponentCache(size_t poolSize) noexcept;
+
+        /**
+         * @brief Registers a new component type and stores it internally.
+         *
+         * This is considered an unsafe operation. If the data stored in deleteInstructionState does not match with the
+         * specified size, or if the type being used is not trivially copyable as defined by the C++ language reference,
+         * then the behaviour is undefined. See ComponentBuffer and std::is_trivially_copyable for more information.
+         *
+         * The returned ID cannot be discarded. If the value is discarded, then the container is lost permanently,
+         * effectively causing a memory leak.
+         *
+         * @param sizeOfDataType The size of the object type, in bytes.
+         * @param deleteInstructionState The object state that indicates that the component should be deleted.
+         * @return ComponentTypeId the ID of the new component type and associated ComponentBufferMemoryContainer
+         * instance.
+         *
+         * @exception std::bad_alloc when a ComponentBuffer could not be allocated in memory for the given component
+         * type.
+         */
+        [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
+            size_t sizeOfDataType,
+            const void* deleteInstructionState,
+            const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
+                                     SparseSetMemoryContainer::ByteIteratorView,
+                                     size_t)>& componentUpdateLogic);
 
         /**
          * @brief Registers a new component type to the cache.
@@ -46,23 +79,29 @@ namespace NovelRT::Ecs
          * @param deleteInstructionState The instruction state for the component used for recognising a delete
          * instruction.
          *
-         * @exception Exceptions::OutOfMemoryException when a ComponentBuffer could not be allocated in memory for the
-         * given component type.
+         * @exception std::bad_alloc when a ComponentBuffer could not be allocated in memory for the given component
+         * type.
          */
         template<typename T> void RegisterComponentType(T deleteInstructionState)
         {
-            auto ptr = malloc(sizeof(ComponentBuffer<T>));
-
-            if (ptr == nullptr)
-            {
-                throw Exceptions::OutOfMemoryException(
-                    "Could not allocate component buffer for new component registration.");
-            }
-            auto bufferPtr = new (ptr) ComponentBuffer<T>(_poolSize, deleteInstructionState);
-            _destructorFunctions.push_back([bufferPtr]() { bufferPtr->~ComponentBuffer<T>(); });
-            _bufferPrepEvent += [bufferPtr](auto arg) { bufferPtr->PrepComponentBufferForFrame(arg); };
+            std::shared_ptr<ComponentBufferMemoryContainer> ptr =
+                CreateContainer(sizeof(T), &deleteInstructionState, [](auto rootComponent, auto updateComponent, auto) {
+                    *reinterpret_cast<T*>(rootComponent.GetDataHandle()) +=
+                        *reinterpret_cast<T*>(updateComponent.GetDataHandle());
+                });
+            _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
+
+        /**
+         * @brief Returns a pointer to the memory container associated with this ID without type information.
+         *
+         * TODO: docs
+         *
+         * @param id
+         * @return
+         */
+        [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetComponentBufferById(ComponentTypeId id) const;
 
         /**
          * @brief Get the ComponentBuffer instance that manages the specified component type.
@@ -71,11 +110,13 @@ namespace NovelRT::Ecs
          * overhead of a method call.
          *
          * @tparam T The component type that the returned ComponentBuffer manages.
-         * @return ComponentBuffer<T>& The ComponentBuffer for T by reference.
+         * @return ComponentBuffer<T> The ComponentBuffer for T by reference.
+         *
+         * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T>[[nodiscard]] ComponentBuffer<T>& GetComponentBuffer() noexcept
+        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
-            return *reinterpret_cast<ComponentBuffer<T>*>(_componentMap.at(GetComponentTypeId<T>()));
+            return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }
 
         /**
@@ -87,8 +128,6 @@ namespace NovelRT::Ecs
          * @param entitiesToDelete All entities that were explicitly pushed for deletion in the last update cycle.
          */
         void PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept;
-
-        ~ComponentCache() noexcept;
     };
 } // namespace NovelRT::Ecs
 

@@ -8,6 +8,7 @@
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
+#include "UnsafeComponentView.h"
 
 namespace NovelRT::Ecs
 {
@@ -65,11 +66,23 @@ namespace NovelRT::Ecs
          * @return std::tuple<ComponentView<TComponents>...>
          */
         template<typename... TComponents>
-        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
+        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() const noexcept
         {
             return std::make_tuple(
                 ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
         }
+
+        /**
+         * @brief Gets a typeless view into a memory container.
+         *
+         * The returned type, UnsafeComponentView, is considered an unsafe type by nature. Only call this in contexts
+         * where interop is required.
+         *
+         * @param componentTypeId The component ID to search for
+         * @return UnsafeComponentView a typeless component view into the ComponentBuffer's inner memory container.
+         * @exceptions std::out_of_range if the supplied ID is not present within the container.
+         */
+        [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
         /**
          * @brief Creates a new EntityId for use within the ECS.

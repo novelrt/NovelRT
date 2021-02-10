@@ -13,15 +13,23 @@ set(TEST_SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
   Ecs/CatalogueTest.cpp
+  Ecs/ComponentBufferMemoryContainerTest.cpp
   Ecs/ComponentBufferTest.cpp
   Ecs/ComponentCacheTest.cpp
   Ecs/ComponentViewTest.cpp
   Ecs/EntityCacheTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp
+  Ecs/SparseSetMemoryContainerTest.cpp
 
   Interop/NovelRTInteropUtilsTest.cpp
   Interop/Animation/SpriteAnimatorStateTest.cpp
+  Interop/Ecs/NrtCatalogueTest.cpp
+  Interop/Ecs/NrtComponentBufferMemoryContainerTest.cpp
+  Interop/Ecs/NrtComponentCacheTest.cpp
+  Interop/Ecs/NrtEntityCacheTest.cpp
+  Interop/Ecs/NrtSparseSetMemoryContainerTest.cpp
+  Interop/Ecs/NrtSystemSchedulerTest.cpp
   Interop/Maths/GeoBoundsTest.cpp
   Interop/Maths/GeoMatrix4x4Test.cpp
   Interop/Maths/GeoVector2FTest.cpp
@@ -47,7 +55,8 @@ set(TEST_SOURCES
   Utilities/EventTest.cpp
 
   main.cpp
-)
+ )
+
 
 add_executable(Engine_Tests ${TEST_SOURCES})
 target_link_libraries(Engine_Tests

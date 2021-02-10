@@ -4,6 +4,7 @@
 #ifndef NOVELRT_ECS_COMPONENTBUFFER_H
 #define NOVELRT_ECS_COMPONENTBUFFER_H
 
+#include "ComponentBufferMemoryContainer.h"
 #include "EcsUtils.h"
 #include "SparseSet.h"
 
@@ -15,21 +16,23 @@ namespace NovelRT::Ecs
      *
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * You should not have component types that are massively complex as there may be many copy instructions that are
-     * not SIMDifiable if the type is too complicated. The type in question will need to have addition and an equality
-     * comparison operator implemented in order for it to function as a type a ComponentBuffer can manage for you.
+     * not SIMDifiable if the type is too complicated. The type T of the ComponentBuffer must be trivially copyable as
+     * defined by the C++ language reference. This is due to the internal language binding mechanisms of NovelRT, and is
+     * enforced by a check against std::is_trivally_copyable. The type in question will need to have addition and an
+     * equality comparison operator implemented in order for it to function as a type a ComponentBuffer can manage for
+     * you.
      *
      * @tparam T The type of component this ComponentBuffer will manage.
      */
     template<typename T> class ComponentBuffer
     {
     private:
-        SparseSet<EntityId, T, AtomHashFunction> _rootSet;
-        SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>> _updateSets;
-        T _deleteInstructionState;
+        std::shared_ptr<ComponentBufferMemoryContainer> _innerContainer;
 
     public:
         /**
-         * @brief Constructs a new ComponentBuffer for type T.
+         * @brief Constructs a new ComponentBuffer for type T. In a regular ECS setup, you should not be instantiating
+         * this yourself.
          *
          *
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
@@ -38,14 +41,47 @@ namespace NovelRT::Ecs
          * resolution.
          */
         ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept
-            : _rootSet(SparseSet<EntityId, T, AtomHashFunction>{}),
-              _updateSets(SparseSet<size_t, SparseSet<EntityId, T, AtomHashFunction>>{}),
-              _deleteInstructionState(deleteInstructionState)
+            : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(
+                  poolSize,
+                  &deleteInstructionState,
+                  sizeof(T),
+                  [](auto rootComponent, auto updateComponent, auto) {
+                      *reinterpret_cast<T*>(rootComponent.GetDataHandle()) +=
+                          *reinterpret_cast<T*>(updateComponent.GetDataHandle());
+                  }))
         {
-            for (size_t i = 0; i < poolSize; i++)
-            {
-                _updateSets.Insert(i, SparseSet<EntityId, T, AtomHashFunction>{});
-            }
+            static_assert(std::is_trivially_copyable<T>::value,
+                          "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation "
+                          "for more information.");
+        }
+
+        /**
+         * @brief Creates a new ComponentBuffer with an existing ComponentBufferMemoryContainer as the underlying memory
+         * store. In a regular ECS setup, you should not be instantiating this yourself.
+         *
+         * This is an unsafe operation. Memory containers do not persist any form of type safety.
+         * Please ensure that type T is either the same as, or is compatible with, the underlying data.
+         * If a container is supplied that does not match type T then the behaviour of the entire object is undefined.
+         *
+         * @param innerContainer The container to base this ComponentBuffer on.
+         */
+        explicit ComponentBuffer(std::shared_ptr<ComponentBufferMemoryContainer> innerContainer) noexcept
+            : _innerContainer(std::move(innerContainer))
+        {
+        }
+
+        /**
+         * @brief Fetches the underlying ComponentBufferMemoryContainer associated with this ComponentBuffer instance.
+         *
+         * Accessing the underlying memory container is considered an unsafe operation. In a regular ECS scenario, you
+         * should not need to access it. This is a pure method. Calling this without using the result has no effect and
+         * introduces the overhead for calling a method.
+         *
+         * @return std::shared_ptr<ComponentBufferMemoryContainer> The underlying container.
+         */
+        [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetUnderlyingContainer() const noexcept
+        {
+            return _innerContainer;
         }
 
         /**
@@ -61,30 +97,7 @@ namespace NovelRT::Ecs
          */
         void PrepComponentBufferForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
         {
-            for (EntityId i : destroyedEntities)
-            {
-                _rootSet.TryRemove(i);
-            }
-
-            for (auto [index, sparseSet] : _updateSets)
-            {
-                for (auto [entity, component] : sparseSet)
-                {
-                    if (component == _deleteInstructionState)
-                    {
-                        _rootSet.TryRemove(entity);
-                    }
-                    else if (!_rootSet.ContainsKey(entity))
-                    {
-                        _rootSet.Insert(entity, component);
-                    }
-                    else
-                    {
-                        _rootSet[entity] += component;
-                    }
-                }
-                sparseSet.Clear();
-            }
+            _innerContainer->PrepContainerForFrame(destroyedEntities);
         }
 
         /**
@@ -98,7 +111,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] T GetDeleteInstructionState() const noexcept
         {
-            return _deleteInstructionState;
+            return *reinterpret_cast<const T*>(_innerContainer->GetDeleteInstructionState().GetDataHandle());
         }
 
         /**
@@ -110,10 +123,11 @@ namespace NovelRT::Ecs
          * make, as opposed to a final state.
          *
          * @exception Exceptions::DuplicateKeyException if multiple updates to the same entity are pushed.
+         * @exception std::out_of_range if an invalid poolId is provided.
          */
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
         {
-            _updateSets[poolId].Insert(entity, component);
+            _innerContainer->PushComponentUpdateInstruction(poolId, entity, &component);
         }
 
         /**
@@ -124,11 +138,27 @@ namespace NovelRT::Ecs
          *
          * @param entity
          * @return T A copy of the current state of the component attached to the given entity.
-         * @exception std::out_of_range if the given EntityId is not present within the set.
+         * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the set.
          */
         [[nodiscard]] T GetComponent(EntityId entity) const
         {
-            return _rootSet[entity];
+            return *reinterpret_cast<const T*>(_innerContainer->GetComponent(entity).GetDataHandle());
+        }
+
+        /**
+         * @brief Gets a copy of the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method. This is considered an unsafe operation. Before calling this, you must guarantee that the
+         * provided entity exists in the read-only portion of the underlying buffer. Please see
+         * ComponentBuffer::HasComponent for more information.
+         *
+         * @param entity
+         * @return T A copy of the current state of the component attached to the given entity.
+         */
+        [[nodiscard]] T GetComponentUnsafe(EntityId entity) const noexcept
+        {
+            return *reinterpret_cast<const T*>(_innerContainer->GetComponentUnsafe(entity).GetDataHandle());
         }
 
         /**
@@ -143,7 +173,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
-            return _rootSet.ContainsKey(entity);
+            return _innerContainer->HasComponent(entity);
         }
 
         /**
@@ -156,38 +186,36 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept
         {
-            return _rootSet.Length();
+            return _innerContainer->GetImmutableDataLength();
         }
-
-        // clang-format off
 
         /**
          * @brief Gets the beginning forward const iterator state for the immutable data in this ComponentBuffer.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return SparseSet::ConstIterator starting at the beginning.
          */
-        [[nodiscard]] auto begin() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator begin() const noexcept
         {
-            return _rootSet.cbegin();
+            return typename SparseSet<EntityId, T>::ConstIterator(_innerContainer->begin());
         }
 
         /**
          * @brief Gets the end forward const iterator state for the immutable data in this ComponentBuffer.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return SparseSet::ConstIterator starting at the end.
          */
-        [[nodiscard]] auto end() const noexcept
+        [[nodiscard]] typename SparseSet<EntityId, T>::ConstIterator end() const noexcept
         {
-            return _rootSet.cend();
+            return typename SparseSet<EntityId, T>::ConstIterator(_innerContainer->end());
         }
-
-        // clang-format on
     };
 } // namespace NovelRT::Ecs
 

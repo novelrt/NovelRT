@@ -15,6 +15,7 @@ extern "C"
 
     enum NrtResultKind
     {
+        NRT_DATA_NOT_MODIFIED = 1,
         NRT_SUCCESS = 0,
         NRT_FAILURE_UNKNOWN = -1,
         NRT_FAILURE_NULLPTR_PROVIDED = -2,
@@ -28,7 +29,12 @@ extern "C"
         NRT_FAILURE_INITIALISATION_FAILURE = -10,
         NRT_FAILURE_NOT_INITIALISED = -11,
         NRT_FAILURE_FUNCTION_NOT_FOUND = -12,
-        NRT_FAILURE_INVALID_OPERATION = -13
+        NRT_FAILURE_INVALID_OPERATION = -13,
+        NRT_FAILURE_DUPLICATE_KEY_PROVIDED = -14,
+        NRT_FAILURE_KEY_NOT_FOUND = -15,
+        NRT_FAILURE_OUT_OF_MEMORY = -16,
+        NRT_FAILURE_COMPILATION_ERROR = -17,
+        NRT_FAILURE_RUNTIME_NOT_FOUND = -18
     };
 
     typedef int32_t NrtBool;
@@ -38,6 +44,8 @@ extern "C"
         NRT_FALSE = 0,
         NRT_TRUE = 1
     };
+
+    typedef uintptr_t NrtAtom;
 
     const char* Nrt_getLastError();
 

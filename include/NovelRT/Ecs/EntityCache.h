@@ -17,7 +17,7 @@ namespace NovelRT::Ecs
     class EntityCache
     {
     private:
-        SparseSet<size_t, std::vector<EntityId>> _updateVectors;
+        std::vector<std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
 
     public:
@@ -31,12 +31,13 @@ namespace NovelRT::Ecs
         /**
          * @brief Fetches an immutable reference to the entities to be deleted this particular iteration of the ECS.
          *
+         * While this method is not marked as const, it does not modify the object directly.
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
          * @return const std::vector<EntityId>& The collection of EntityId instances to delete.
          */
-        [[nodiscard]] inline const std::vector<EntityId>& GetEntitiesToRemoveThisFrame() const noexcept
+        [[nodiscard]] inline std::vector<EntityId>& GetEntitiesToRemoveThisFrame() noexcept
         {
             return _entitiesToRemoveThisFrame;
         }
