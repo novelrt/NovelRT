@@ -13,8 +13,6 @@ class SystemSchedulerTest : public testing::Test
 {
 public:
     SystemScheduler* scheduler = nullptr;
-    EntityCache* entityCache = nullptr;
-    ComponentCache* componentCache = nullptr;
     std::atomic_bool sysOneBool = true;
     std::atomic_bool sysTwoBool = true;
     std::atomic_bool sysThreeBool = true;
@@ -35,18 +33,9 @@ protected:
 
             scheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta, Catalogue catalogue) {
-                sysOneBool = false;
-                std::cout << "SYSTEM ONE LOG: HELLO" << std::endl;
-            };
-            sysTwo = [&](Timestamp delta, Catalogue catalogue) {
-                sysTwoBool = false;
-                std::cout << "SYSTEM TWO LOG: HELLO" << std::endl;
-            };
-            sysThree = [&](Timestamp delta, Catalogue catalogue) {
-                sysThreeBool = false;
-                std::cout << "SYSTEM THREE LOG: HELLO" << std::endl;
-            };
+            sysOne = [&](Timestamp delta, Catalogue) { sysOneBool = false; };
+            sysTwo = [&](Timestamp delta, Catalogue) { sysTwoBool = false; };
+            sysThree = [&](Timestamp delta, Catalogue) { sysThreeBool = false; };
 
             scheduler->RegisterSystem(sysOne);
             scheduler->RegisterSystem(sysTwo);

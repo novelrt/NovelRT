@@ -193,17 +193,17 @@ namespace NovelRT::Maths
                                        *reinterpret_cast<const glm::vec3*>(&epsilonValue)));
         }
 
-        static const GeoVector3F zero()
+        static GeoVector3F zero()
         {
             return GeoVector3F::uniform(0);
         }
 
-        static const GeoVector3F one()
+        static GeoVector3F one()
         {
             return GeoVector3F::uniform(1);
         }
 
-        static const GeoVector3F uniform(float value)
+        static GeoVector3F uniform(float value)
         {
             return GeoVector3F(value, value, value);
         }

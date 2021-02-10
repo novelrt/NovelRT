@@ -6,7 +6,9 @@
 
 #include "../Atom.h"
 #include "../Exceptions/DuplicateKeyException.h"
+#include "../Utilities/KeyValuePair.h"
 #include "EcsUtils.h"
+#include "SparseSetMemoryContainer.h"
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
@@ -21,18 +23,17 @@ namespace NovelRT::Ecs
      *
      * Please note that this storage type assumes that the component in question is a simple struct at all times.
      * The value type should not be massively complex as there may be many copy instructions that are not SIMDifiable if
-     * the type is too complicated.
+     * the type is too complicated. The type TValue of the SparseSet must be trivially copyable as defined by the C++
+     * language reference. This is due to the internal language binding mechanisms of NovelRT, and is enforced by a
+     * check against std::is_trivally_copyable.
      *
      * @tparam TKey The type to use for the Key.
      * @tparam TValue The type to use for the value.
-     * @tparam THashFunction An optional custom hashing function should your key type require one.
      */
-    template<typename TKey, typename TValue, typename THashFunction = std::hash<TKey>> class SparseSet
+    template<typename TKey, typename TValue> class SparseSet
     {
     private:
-        std::vector<TKey> _sparseBlock;
-        std::vector<TValue> _denseBlock;
-        std::unordered_map<TKey, size_t, THashFunction> _sparseMap;
+        SparseSetMemoryContainer _innerContainer;
 
     public:
         /**
@@ -44,9 +45,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = std::tuple<TKey, TValue>;
-            using pointer = std::tuple<typename std::vector<TKey>::iterator, typename std::vector<TValue>::iterator>;
-            using reference = std::tuple<TKey&, TValue&>;
+            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using pointer = SparseSetMemoryContainer::Iterator;
+            using reference = Utilities::KeyValuePair<TKey, TValue&>;
 
         private:
             pointer _ptr;
@@ -58,7 +59,8 @@ namespace NovelRT::Ecs
 
             reference operator*() const
             {
-                return std::tie(*std::get<0>(_ptr), *std::get<1>(_ptr));
+                auto tuple = *_ptr;
+                return reference{std::get<0>(tuple), *reinterpret_cast<TValue*>(std::get<1>(tuple).GetDataHandle())};
             }
 
             pointer operator->()
@@ -68,8 +70,7 @@ namespace NovelRT::Ecs
 
             Iterator& operator++()
             {
-                std::get<0>(_ptr)++;
-                std::get<1>(_ptr)++;
+                _ptr++;
                 return *this;
             }
 
@@ -101,10 +102,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = std::tuple<TKey, TValue>;
-            using pointer =
-                std::tuple<typename std::vector<TKey>::const_iterator, typename std::vector<TValue>::const_iterator>;
-            using reference = std::tuple<const TKey&, const TValue&>;
+            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using pointer = SparseSetMemoryContainer::ConstIterator;
+            using reference = Utilities::KeyValuePair<TKey, const TValue&>;
 
         private:
             pointer _ptr;
@@ -116,13 +116,14 @@ namespace NovelRT::Ecs
 
             reference operator*() const
             {
-                return std::tie(*std::get<0>(_ptr), *std::get<1>(_ptr));
+                auto tuple = *_ptr;
+                return reference{std::get<0>(tuple),
+                                 *reinterpret_cast<const TValue*>(std::get<1>(tuple).GetDataHandle())};
             }
 
             const ConstIterator& operator++()
             {
-                std::get<0>(_ptr)++;
-                std::get<1>(_ptr)++;
+                _ptr++;
                 return *this;
             }
 
@@ -148,11 +149,11 @@ namespace NovelRT::Ecs
          * @brief Constructs a new instance of SparseSet with the given type parameters.
          *
          */
-        SparseSet() noexcept
-            : _sparseBlock(std::vector<TKey>()),
-              _denseBlock(std::vector<TValue>()),
-              _sparseMap(std::unordered_map<TKey, size_t, THashFunction>())
+        SparseSet() noexcept : _innerContainer(SparseSetMemoryContainer(sizeof(TValue)))
         {
+            static_assert(std::is_trivially_copyable<TValue>::value,
+                          "Value type must be trivially copyable for use with a SparseSet. See the documentation for "
+                          "more information.");
         }
 
         /**
@@ -162,17 +163,25 @@ namespace NovelRT::Ecs
          * @param value The initial value to associate with the key.
          *
          * @exception Exceptions::DuplicateKeyException when a duplicate key is provided.
+         * @exception std::bad_alloc if there is no memory left to allocate from the system to this SparseSet.
          */
         void Insert(TKey key, TValue value)
         {
-            if (ContainsKey(key))
-            {
-                throw Exceptions::DuplicateKeyException();
-            }
+            _innerContainer.Insert(key, &value);
+        }
 
-            _denseBlock.push_back(value);
-            _sparseBlock.push_back(key);
-            _sparseMap.emplace(key, _denseBlock.size() - 1);
+        /**
+         * @brief Attempts to insert a new key paired with an initial value into the set. All keys must be unique.
+         *
+         * @param key The new key to insert.
+         * @param value The initial value to associate with the key.
+         *
+         * @return true when the pair is successfully inserted.
+         * @return false when the pair could not be inserted as dictated by SparseSet::ContainsKey.
+         */
+        bool TryInsert(TKey key, TValue value) noexcept
+        {
+            return _innerContainer.TryInsert(key, &value);
         }
 
         /**
@@ -184,20 +193,7 @@ namespace NovelRT::Ecs
          */
         void Remove(TKey key)
         {
-            size_t arrayIndex = _sparseMap.at(key);
-            _denseBlock.erase(_denseBlock.begin() + arrayIndex);
-            _sparseBlock.erase(_sparseBlock.begin() + arrayIndex);
-            _sparseMap.erase(key);
-
-            for (auto& i : _sparseMap)
-            {
-                if (i.second < arrayIndex)
-                {
-                    continue;
-                }
-
-                i.second -= 1;
-            }
+            _innerContainer.Remove(key);
         }
 
         /**
@@ -210,13 +206,7 @@ namespace NovelRT::Ecs
          */
         bool TryRemove(TKey key) noexcept
         {
-            if (ContainsKey(key))
-            {
-                Remove(key);
-                return true;
-            }
-
-            return false;
+            return _innerContainer.TryRemove(key);
         }
 
         /**
@@ -225,9 +215,7 @@ namespace NovelRT::Ecs
          */
         void Clear() noexcept
         {
-            _sparseBlock.clear();
-            _denseBlock.clear();
-            _sparseMap.clear();
+            _innerContainer.Clear();
         }
 
         /**
@@ -242,7 +230,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] bool ContainsKey(TKey key) const noexcept
         {
-            return std::find(_sparseBlock.begin(), _sparseBlock.end(), key) != _sparseBlock.end();
+            return _innerContainer.ContainsKey(key);
         }
 
         /**
@@ -258,7 +246,23 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] TKey CopyKeyBasedOnDenseIndex(size_t denseIndex) const
         {
-            return _sparseBlock.at(denseIndex);
+            return _innerContainer.CopyKeyBasedOnDenseIndex(denseIndex);
+        }
+
+        /**
+         * @brief Copies the key out of the sparse set at the given dense index.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method. This method assumes that the dense index is guaranteed to exist. If it does not then the
+         * behaviour is undefined. You can guarantee the existence of the dense index by comparing the dense index being
+         * used to the length of the SparseSet. See SparseSet::Length for more information.
+         *
+         * @param denseIndex The location in the dense data to copy from.
+         * @return TKey The key at the specified dense location.
+         */
+        [[nodiscard]] TKey CopyKeyBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
+        {
+            return _innerContainer.CopyKeyBasedOnDenseIndexUnsafe(denseIndex);
         }
 
         /**
@@ -274,11 +278,29 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] TValue CopyValueBasedOnDenseIndex(size_t denseIndex) const
         {
-            return _denseBlock.at(denseIndex);
+            return *reinterpret_cast<const TValue*>(
+                _innerContainer.GetByteIteratorViewBasedOnDenseIndex(denseIndex).GetDataHandle());
         }
 
         /**
-         * @brief Gets the current length of the SparseSet.
+         * @brief Copies the value out of the sparse set at the given dense index.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method. This method assumes that the dense index is guaranteed to exist. IF it does not then the
+         * behaviour is undefined. You can guarantee the existence of the dense index by comparing the dense index being
+         * used to the length of the SparseSet. See SparseSet::Length for more information.
+         *
+         * @param denseIndex The location in the dense data to copy from.
+         * @return TValue The value at the specified dense location.
+         */
+        [[nodiscard]] TValue CopyValueBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
+        {
+            return *reinterpret_cast<const TValue*>(
+                _innerContainer.GetByteIteratorViewBasedOnDenseIndexUnsafe(denseIndex).GetDataHandle());
+        }
+
+        /**
+         * @brief Gets the current length of the SparseSet based on the dense data.
          *
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
@@ -287,7 +309,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] size_t Length() const noexcept
         {
-            return _sparseBlock.size();
+            return _innerContainer.Length();
         }
 
         /**
@@ -298,12 +320,12 @@ namespace NovelRT::Ecs
          *
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
-         *
-         * @exception std::out_of_range if the specified key does not exist within the SparseSet.
+         * This operator shares similar behaviour to that of std::vector. Specifically, if an invalid key is provided,
+         * then the resulting behaviour will be undefined.
          */
-        [[nodiscard]] TValue& operator[](TKey key)
+        [[nodiscard]] TValue& operator[](TKey key) noexcept
         {
-            return _denseBlock.at(_sparseMap.at(key));
+            return *reinterpret_cast<TValue*>(_innerContainer[key].GetDataHandle());
         }
 
         /**
@@ -317,68 +339,93 @@ namespace NovelRT::Ecs
          *
          * @exception std::out_of_range if the specified key does not exist within the SparseSet.
          */
-        [[nodiscard]] const TValue& operator[](TKey key) const
+        [[nodiscard]] const TValue& operator[](TKey key) const noexcept
         {
-            return _denseBlock.at(_sparseMap.at(key));
+            return *reinterpret_cast<const TValue*>(_innerContainer[key].GetDataHandle());
         }
-
-        // clang-format off
 
         /**
          * @brief Gets the beginning forward iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         *
          * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] auto begin() noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::Iterator begin() noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock.begin(), _denseBlock.begin()));
+            return SparseSet<TKey, TValue>::Iterator(_innerContainer.begin());
         }
 
         /**
          * @brief Gets the ending forward iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
+         *
          * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] auto end() noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::Iterator end() noexcept
         {
-            return Iterator(std::make_tuple(_sparseBlock.end(), _denseBlock.end()));
+            return SparseSet<TKey, TValue>::Iterator(_innerContainer.end());
         }
 
         /**
          * @brief Gets the beginning forward const iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
-         * @return SparseSet::ConstIterator starting at the beginning.
+         * Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
+         * @return SparseSet::Iterator starting at the beginning.
          */
-        [[nodiscard]] auto cbegin() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator begin() const noexcept
         {
-            return ConstIterator(std::make_tuple(_sparseBlock.cbegin(), _denseBlock.cbegin()));
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.begin());
         }
 
         /**
          * @brief Gets the ending forward const iterator state for this SparseSet.
-         * 
+         *
          * This function is under special formatting so that range-based for loops are supported.
-         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
-         * 
-         * @return SparseSet::ConstIterator starting at the end.
+         * While this method is not const, it does not modify the SparseSet itself.
+         * Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
+         * @return SparseSet::Iterator starting at the end.
          */
-        [[nodiscard]] auto cend() const noexcept
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator end() const noexcept
         {
-            return ConstIterator(std::make_tuple(_sparseBlock.cend(), _denseBlock.cend()));
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.end());
         }
 
-        // clang-format on
+        /**
+         * @brief Gets the beginning forward const iterator state for this SparseSet.
+         *
+         * This function is under special formatting so that range-based for loops are supported.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return SparseSet::ConstIterator starting at the beginning.
+         */
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator cbegin() const noexcept
+        {
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.cbegin());
+        }
+
+        /**
+         * @brief Gets the ending forward const iterator state for this SparseSet.
+         *
+         * This function is under special formatting so that range-based for loops are supported.
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return SparseSet::ConstIterator starting at the end.
+         */
+        [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator cend() const noexcept
+        {
+            return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.cend());
+        }
     };
 } // namespace NovelRT::Ecs
 

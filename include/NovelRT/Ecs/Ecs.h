@@ -14,11 +14,14 @@ namespace NovelRT::Ecs
 
 #include "Catalogue.h"
 #include "ComponentBuffer.h"
+#include "ComponentBufferMemoryContainer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
 #include "SparseSet.h"
+#include "SparseSetMemoryContainer.h"
 #include "SystemScheduler.h"
+#include "UnsafeComponentView.h"
 
 #endif //! NOVELRT_ECS_H
