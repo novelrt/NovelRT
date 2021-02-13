@@ -28,6 +28,14 @@ set(ENGINE_SOURCES
 
   DotNet/RuntimeService.cpp
 
+  Ecs/Catalogue.cpp
+  Ecs/ComponentBufferMemoryContainer.cpp
+  Ecs/ComponentCache.cpp
+  Ecs/EntityCache.cpp
+  Ecs/SparseSetMemoryContainer.cpp
+  Ecs/SystemScheduler.cpp
+  Ecs/UnsafeComponentView.cpp
+
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
   Graphics/FontSet.cpp
@@ -78,6 +86,7 @@ if(MSVC)
       /W4
       /WX
       /wd4611
+      /MP
   )
   get_target_property(opts Engine COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

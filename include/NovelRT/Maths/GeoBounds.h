@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_MATHS_GEOBOUNDS_H
 #define NOVELRT_MATHS_GEOBOUNDS_H
@@ -7,39 +8,32 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Maths {
-  class GeoBounds {
-  private:
-    GeoVector2<float> _position;
-    float _rotation;
-    GeoVector2<float> _size;
+namespace NovelRT::Maths
+{
+    class GeoBounds
+    {
+    public:
+        GeoVector2F position;
+        GeoVector2F size;
+        float rotation;
 
-  public:
-    GeoBounds(const GeoVector2<float>& position, const GeoVector2<float>& size, float rotation);
-    bool pointIsWithinBounds(const GeoVector2<float>& point) const;
-    bool intersectsWith(const GeoBounds& otherBounds) const;
-    GeoVector2<float> getCornerInLocalSpace(int index) const;
-    GeoVector2<float> getCornerInWorldSpace(int index) const;
-    const GeoVector2<float>& position() const;
-    GeoVector2<float>& position();
-    const GeoVector2<float>& size() const;
-    GeoVector2<float>& size();
-    const float& rotation() const;
-    float& rotation();
-    GeoVector2<float> getExtents() const;
+        GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
+        bool pointIsWithinBounds(GeoVector2F point) const;
+        bool intersectsWith(GeoBounds otherBounds) const;
+        GeoVector2F getCornerInLocalSpace(int32_t index) const;
+        GeoVector2F getCornerInWorldSpace(int32_t index) const;
+        GeoVector2F getExtents() const;
 
-    inline bool operator==(const GeoBounds& other) const {
-      return _position == other._position
-          && _size == other._size
-          && _rotation == other._rotation;
-    }
+        inline bool operator==(GeoBounds other) const
+        {
+            return position == other.position && size == other.size && rotation == other.rotation;
+        }
 
-    inline bool operator!=(const GeoBounds& other) const {
-      return _position != other._position
-        || _size != other._size
-        || _rotation != other._rotation;
-    }
-  };
-}
+        inline bool operator!=(GeoBounds other) const
+        {
+            return position != other.position || size != other.size || rotation != other.rotation;
+        }
+    };
+} // namespace NovelRT::Maths
 
-#endif //NOVELRT_MATHS_GEOBOUNDS_H
+#endif //! NOVELRT_MATHS_GEOBOUNDS_H

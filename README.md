@@ -5,8 +5,8 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 
 | Job | Debug Status | Release Status |
 | --- | ------------ | -------------- |
-| Windows x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=windows_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
-| Ubuntu x64 | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_debug_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) | [![Build Status](https://ci.novelrt.dev/_apis/build/status/novelrt.novelrt-ci?branchName=master&jobName=ubuntu_release_x64)](https://ci.novelrt.dev/_build/latest?definitionId=1&branchName=master) |
+| Windows x64 | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Windows%20x64%20-%20Debug/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Windows+x64+-+Debug%22) | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Windows%20x64%20-%20Release/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Windows+x64+-+Release%22) |
+| Ubuntu x64 | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Ubuntu%20x64%20-%20Debug/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Ubuntu+x64+-+Debug%22) | [![Build Status](https://github.com/novelrt/NovelRT/workflows/Ubuntu%20x64%20-%20Release/badge.svg?event=schedule)](https://github.com/novelrt/NovelRT/actions?query=workflow%3A%22Ubuntu+x64+-+Release%22) |
 
 [![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
@@ -47,6 +47,8 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OpenAL 1.19.1
 - spdlog 1.4.2
 
+**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead.**
+
 ### Build instructions
 
 We provide build scripts in the root of the repository which may work for you.
@@ -68,23 +70,33 @@ cmake ..
 make -j
 ```
 
-#### Windows
-First, you must [setup vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019#installation) and Python 3 to install the dependencies:
+#### Windows (x64 only)
+_Prerequisites:_
+- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).
+- Windows 10 x64
+(32-bit installation _may_ be covered in the future.)
+
+1) Use Python 3 to install the GLAD dependencies:
 ```
 python -m pip install setuptools
 python -m pip install glad
-vcpkg.exe install freetype glfw3 glm gtest libsndfile lua openal-soft spdlog --triplet x64-windows
 ```
-Then, clone and build NovelRT:
+
+2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D
+(A walkthrough on installing manually via vcpkg will be included in the future.)
+
+3) Extract "NovelRTDeps_vcpkg.zip" from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
+You should be left with a folder called "vcpkg" at this point.
+
+4) Clone and build NovelRT:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
 mkdir build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=path/to/vcpkg/toolchain.cmake ..
+cmake -DCMAKE_TOOLCHAIN_FILE=[path-from-step-4]/vcpkg/scripts/buildsystems/toolchain.cmake ..
 cmake --build . -j
 ```
-
 Alternatively, you can also specify a single target to build like so:
 ```
 cmake --build . -j -t TargetNameGoesHere
