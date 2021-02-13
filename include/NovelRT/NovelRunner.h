@@ -48,6 +48,7 @@ namespace NovelRT
          */
         explicit NovelRunner(int32_t displayNumber,
                              const std::string& windowTitle = "NovelRTTest",
+                             NovelRT::Windowing::WindowMode windowMode = NovelRT::Windowing::WindowMode::Windowed,
                              uint32_t targetFrameRate = 0,
                              bool transparency = false);
         /**

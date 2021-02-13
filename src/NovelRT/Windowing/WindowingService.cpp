@@ -26,7 +26,8 @@ namespace NovelRT::Windowing
 
     void WindowingService::initialiseWindow(int32_t /*displayNumber*/,
                                             const std::string& windowTitle,
-                                            bool transparencyEnabled)
+                                            bool transparencyEnabled,
+                                            NovelRT::Windowing::WindowMode initialWindowMode)
     {
         GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);
@@ -43,6 +44,26 @@ namespace NovelRT::Windowing
         static const char* OptimusLibraryName = "nvapi.dll";
         checkForOptimus(OptimusLibraryName);
 #endif
+
+        switch (initialWindowMode)
+        {
+            case WindowMode::Borderless:
+            {
+                glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+                break;
+            }
+            case WindowMode::Fullscreen:
+            {
+                _logger.logWarning("WindowMode::Fullscreen is not yet supported. Falling back to WindowMode::Windowed");
+                // The fall-through here is intentional due to FS not yet being supported.
+            }
+            case WindowMode::Windowed:
+            default:
+            {
+                glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+                break;
+            }
+        }
 
         // Set Framebuffer Transparency
         if (transparencyEnabled)

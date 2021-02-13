@@ -7,6 +7,7 @@ namespace NovelRT
 {
     NovelRunner::NovelRunner(int32_t displayNumber,
                              const std::string& windowTitle,
+                             NovelRT::Windowing::WindowMode windowMode,
                              uint32_t targetFrameRate,
                              bool transparency)
         : SceneConstructionRequested(Utilities::Event<>()),
@@ -29,7 +30,7 @@ namespace NovelRT
             throw Exceptions::InitialisationFailureException("Unable to continue! Cannot start without a glfw window.",
                                                              err);
         }
-        _novelWindowingService->initialiseWindow(displayNumber, windowTitle, transparency);
+        _novelWindowingService->initialiseWindow(displayNumber, windowTitle, transparency, windowMode);
         _novelRenderer->initialiseRendering();
         _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
         _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
