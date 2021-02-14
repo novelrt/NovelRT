@@ -114,12 +114,25 @@ namespace NovelRT::Windowing
         }
 
         _windowTitle = windowTitle;
-        _logger.logInfo("Window succesfully created.");
+        _logger.logInfo("Window successfully created.");
 
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
         glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
+
+        if (initialWindowMode == NovelRT::Windowing::WindowMode::Borderless)
+        {
+            int monitorX, monitorY;
+            glfwGetMonitorPos(primaryMonitor, &monitorX, &monitorY);
+
+            int windowWidth, windowHeight;
+            glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+            // Center the window to the screen.
+            glfwSetWindowPos(_window.get(), monitorX + (displayData->width - windowWidth) / 2,
+                             monitorY + (displayData->height - windowHeight) / 2);
+        }
 
         glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
 
@@ -177,7 +190,6 @@ namespace NovelRT::Windowing
         }
     }
 #endif
-
     void WindowingService::tearDown()
     {
         if (_isTornDown)
