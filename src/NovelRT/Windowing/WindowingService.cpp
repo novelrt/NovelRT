@@ -26,8 +26,8 @@ namespace NovelRT::Windowing
 
     void WindowingService::initialiseWindow(int32_t /*displayNumber*/,
                                             const std::string& windowTitle,
-                                            bool transparencyEnabled,
-                                            NovelRT::Windowing::WindowMode initialWindowMode)
+                                            NovelRT::Windowing::WindowMode initialWindowMode,
+                                            bool transparencyEnabled)
     {
         GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* displayData = glfwGetVideoMode(primaryMonitor);

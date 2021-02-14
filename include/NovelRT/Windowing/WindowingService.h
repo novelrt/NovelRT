@@ -54,8 +54,8 @@ namespace NovelRT::Windowing
 
         void initialiseWindow(int32_t displayNumber,
                               const std::string& windowTitle,
-                              bool transparencyEnabled,
-                              NovelRT::Windowing::WindowMode initialWindowMode);
+                              NovelRT::Windowing::WindowMode initialWindowMode,
+                              bool transparencyEnabled);
         void tearDown();
 
         inline GLFWwindow* getWindow() const

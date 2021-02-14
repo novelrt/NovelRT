@@ -26,6 +26,7 @@ extern "C"
     NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service,
                                                     int32_t displayNumber,
                                                     const char* windowTitle,
+                                                    NrtWindowMode windowMode,
                                                     int32_t transparencyEnabled)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
@@ -35,7 +36,8 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<bool>(transparencyEnabled));
+        servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<Windowing::WindowMode>(windowMode),
+                                     static_cast<bool>(transparencyEnabled));
         return NRT_SUCCESS;
     }
 

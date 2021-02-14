@@ -27,9 +27,11 @@ extern "C"
 
     NrtNovelRunner Nrt_NovelRunner_createCustom(int32_t displayNumber,
                                                 const char* windowTitle,
+                                                NrtWindowMode windowMode,
                                                 uint32_t targetFrameRate)
     {
-        NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber, windowTitle, targetFrameRate);
+        NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(
+            displayNumber, windowTitle, static_cast<NovelRT::Windowing::WindowMode>(windowMode), targetFrameRate);
         return reinterpret_cast<NrtNovelRunner>(runner);
     }
 
