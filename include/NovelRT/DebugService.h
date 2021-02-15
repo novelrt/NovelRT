@@ -13,11 +13,15 @@ namespace NovelRT
 
     class DebugService
     {
-
     private:
         std::shared_ptr<Graphics::RenderingService> _renderingService;
         std::unique_ptr<Graphics::TextRect> _fpsCounter;
+        LoggingService _logging;
         uint32_t _framesPerSecond;
+        uint32_t _minFramesPerSecond = 1000;
+        uint32_t _maxFramesPerSecond = 0;
+        uint32_t _totalSeconds = 0;
+        uint32_t _totalFrames = 0;
 
         void updateFpsCounter();
 
@@ -29,13 +33,14 @@ namespace NovelRT
 
         bool getIsFpsCounterVisible() const;
         void setIsFpsCounterVisible(bool value);
+        void accumulateStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames);
 
         inline uint32_t getFramesPerSecond() const
         {
             return _framesPerSecond;
         }
-        void setFramesPerSecond(uint32_t value);
+
+        void setFramesPerSecond(uint32_t framesPerSecond);
     };
 } // namespace NovelRT
-
 #endif // NOVELRT_NOVELDEBUGSERVICE_H
