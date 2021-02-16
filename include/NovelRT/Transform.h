@@ -4,9 +4,8 @@
 #ifndef NOVELRT_NOVELWORLDOBJECT_H
 #define NOVELRT_NOVELWORLDOBJECT_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "Maths/GeoVector2F.h"
+#include "Maths/GeoBounds.h"
 
 namespace NovelRT
 {

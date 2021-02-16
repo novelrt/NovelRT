@@ -4,9 +4,7 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR3_H
 #define NOVELRT_MATHS_GEOVECTOR3_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "GeoVector2F.h"
 
 namespace NovelRT::Maths
 {

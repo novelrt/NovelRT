@@ -4,9 +4,8 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR2_H
 #define NOVELRT_MATHS_GEOVECTOR2_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 namespace NovelRT::Maths
 {
