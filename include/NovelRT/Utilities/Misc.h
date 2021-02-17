@@ -4,8 +4,13 @@
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#include <filesystem>
+#include <type_traits>
+
+#if defined(NDEBUG)
+#define unused(x)  (void)(x)
+#else
+#define unused(x)  (void)(0)
 #endif
 
 namespace NovelRT::Utilities

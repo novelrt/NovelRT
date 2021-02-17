@@ -2,6 +2,7 @@
 #define NOVELRT_MATHS_QUADTREENODE_H
 
 #include "GeoVector2F.h"
+#include <memory>
 
 namespace NovelRT::Maths
 {

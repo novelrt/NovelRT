@@ -7,6 +7,16 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
+namespace NovelRT::Graphics
+{
+    class RenderObject;
+}
+
+namespace NovelRT::Input
+{
+    class InteractionService;
+}
+
 namespace NovelRT::Maths
 {
     class GeoVector2F

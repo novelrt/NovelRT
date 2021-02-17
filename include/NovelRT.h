@@ -10,12 +10,6 @@
   #define NOVELRT_C_API 1
 #endif // !__cplusplus
 
-#if defined(NDEBUG)
-#define unused(x)  (void)(x)
-#else
-#define unused(x)  (void)(0)
-#endif
-
 #if defined(_WIN32) || defined(_WIN64)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
