@@ -28,7 +28,7 @@ TEST_F(ComponentCacheTest, RegisterComponentTypeDoesNotThrow)
 TEST_F(ComponentCacheTest, GetComponentBufferReturnsValidBuffer)
 {
     cache.RegisterComponentType<int32_t>(NAN);
-    auto& buffer = cache.GetComponentBuffer<int32_t>();
+    auto buffer = cache.GetComponentBuffer<int32_t>();
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
 
@@ -41,7 +41,7 @@ TEST_F(ComponentCacheTest, GetComponentBufferReturnsValidBuffer)
 TEST_F(ComponentCacheTest, PrepAllBuffersForNextFrameUpdatesEntitiesCorrectly)
 {
     cache.RegisterComponentType<int32_t>(NAN);
-    auto& buffer = cache.GetComponentBuffer<int32_t>();
+    auto buffer = cache.GetComponentBuffer<int32_t>();
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     ASSERT_NO_THROW(cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{}));
     ASSERT_EQ(buffer.GetComponent(0), 10);

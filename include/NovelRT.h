@@ -115,24 +115,6 @@ namespace NovelRT::DotNet {
   typedef class RuntimeService RuntimeService;
 }
 /**
- * @brief Contains exceptions used within NovelRT
- */
-namespace NovelRT::Exceptions {
-  typedef class CharacterNotFoundException CharacterNotFoundException;
-  typedef class CompilationErrorException CompilationErrorException;
-  typedef class FileNotFoundException FileNotFoundException;
-  typedef class FunctionNotFoundException FunctionNotFoundException;
-  typedef class InitialisationFailureException InitialisationFailureException;
-  typedef class InvalidOperationException InvalidOperationException;
-  typedef class IOException IOException;
-  typedef class NotInitialisedException NotInitialisedException;
-  typedef class NotSupportedException NotSupportedException;
-  typedef class NullPointerException NullPointerException;
-  typedef class OpenGLLinkageFailure OpenGLLinkageFailure;
-  typedef class OutOfMemoryException OutOfMemoryException;
-  typedef class RuntimeNotFoundException RuntimeNotFoundException;
-}
-/**
  * @brief Contains graphics features, such as rendering, textures, cameras, etc.
  */
 namespace NovelRT::Graphics {
@@ -223,19 +205,7 @@ namespace NovelRT::Windowing {
 #include "NovelRT/Ecs/Ecs.h"
 
 // Exception types
-#include "NovelRT/Exceptions/CharacterNotFoundException.h"
-#include "NovelRT/Exceptions/CompilationErrorException.h"
-#include "NovelRT/Exceptions/FileNotFoundException.h"
-#include "NovelRT/Exceptions/FunctionNotFoundException.h"
-#include "NovelRT/Exceptions/InitialisationFailureException.h"
-#include "NovelRT/Exceptions/InvalidOperationException.h"
-#include "NovelRT/Exceptions/IOException.h"
-#include "NovelRT/Exceptions/NotInitialisedException.h"
-#include "NovelRT/Exceptions/NotSupportedException.h"
-#include "NovelRT/Exceptions/NullPointerException.h"
-#include "NovelRT/Exceptions/OpenGLLinkageFailure.h"
-#include "NovelRT/Exceptions/OutOfMemoryException.h"
-#include "NovelRT/Exceptions/RuntimeNotFoundException.h"
+#include "NovelRT/Exceptions/Exceptions.h"
 
 //Graphics types
 #include "NovelRT/Graphics/Camera.h"

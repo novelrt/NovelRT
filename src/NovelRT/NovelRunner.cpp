@@ -40,7 +40,9 @@ namespace NovelRT
         while (_exitCode)
         {
             _stepTimer.getActual()->tick(Update);
-            _novelDebugService->setFramesPerSecond(_stepTimer.getActual()->getFramesPerSecond());
+            _novelDebugService->accumulateStatistics(_stepTimer.getActual()->getFramesPerSecond(),
+                                                     (uint32_t)_stepTimer.getActual()->getTotalTime().getSecondsFloat(),
+                                                     _stepTimer.getActual()->getFrameCount());
             _novelRenderer->beginFrame();
             SceneConstructionRequested();
             _novelRenderer->endFrame();

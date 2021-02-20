@@ -30,7 +30,10 @@ namespace NovelRT
 {
     DebugService::DebugService(Utilities::Event<>& sceneConstructionEvent,
                                std::shared_ptr<Graphics::RenderingService> renderingService) noexcept
-        : _renderingService(renderingService), _fpsCounter(nullptr), _framesPerSecond(0)
+        : _renderingService(renderingService),
+          _fpsCounter(nullptr),
+          _logging(LoggingService(Utilities::Misc::CONSOLE_LOG_STATS)),
+          _framesPerSecond(0)
     {
         sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
     }
@@ -64,26 +67,41 @@ namespace NovelRT
             _fpsCounter->setActive(value);
         }
     }
-
-    void DebugService::setFramesPerSecond(uint32_t value)
+    void DebugService::setFramesPerSecond(uint32_t framesPerSecond)
     {
-        if (_framesPerSecond != value)
+        if (_framesPerSecond != framesPerSecond)
         {
-            _framesPerSecond = value;
+            _framesPerSecond = framesPerSecond;
+            if (_minFramesPerSecond > _framesPerSecond)
+            {
+                _minFramesPerSecond = _framesPerSecond;
+            }
+            if (_maxFramesPerSecond < _framesPerSecond)
+            {
+                _maxFramesPerSecond = _framesPerSecond;
+            }
             updateFpsCounter();
         }
     }
 
-    void DebugService::updateFpsCounter()
+    void DebugService::accumulateStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames)
     {
-        if (_fpsCounter != nullptr)
-        {
-            char fpsText[16];
-            snprintf(fpsText, 16, "%u fps", _framesPerSecond);
-            _fpsCounter->setText(fpsText);
-        }
+        _totalSeconds = totalSeconds;
+        _totalFrames = totalFrames;
+        setFramesPerSecond(framesPerSecond);
     }
 
+    void DebugService::updateFpsCounter()
+    {
+        if (_fpsCounter != nullptr && _totalSeconds > 0 && _totalFrames > 0)
+        {
+            char fpsText[64];
+            snprintf(fpsText, 64, "%u fps %u avg %u min %u max %u total", _framesPerSecond,
+                     _totalFrames / _totalSeconds, _minFramesPerSecond, _maxFramesPerSecond, _totalFrames);
+            _fpsCounter->setText(fpsText);
+            _logging.logInfo(fpsText);
+        }
+    }
     void DebugService::onSceneConstruction()
     {
         if (_fpsCounter == nullptr)

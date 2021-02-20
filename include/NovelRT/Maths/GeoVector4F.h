@@ -201,17 +201,17 @@ namespace NovelRT::Maths
             return glm::all(glm::equal(vec4Value(), other.vec4Value(), epsilonValue.vec4Value()));
         }
 
-        static const GeoVector4F zero()
+        static GeoVector4F zero()
         {
             return GeoVector4F::uniform(0);
         }
 
-        static const GeoVector4F one()
+        static GeoVector4F one()
         {
             return GeoVector4F::uniform(1);
         }
 
-        static const GeoVector4F uniform(float value)
+        static GeoVector4F uniform(float value)
         {
             return GeoVector4F(value, value, value, value);
         }
