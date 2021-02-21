@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
-#define NOVELRT_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
+#define NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
 
 #include "NovelRT/Graphics/RGBAConfig.h"
 #include <cstdint>
@@ -84,4 +84,4 @@ namespace NovelRT::Experimental::Graphics
 
 } // namespace NovelRT::Experimental::Graphics
 
-#endif // !NOVELRT_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
+#endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H

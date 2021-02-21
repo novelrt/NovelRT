@@ -221,6 +221,8 @@
   #include "NovelRT/Graphics/ImageRect.h"
   #include "NovelRT/Graphics/TextRect.h"
 
+  #include "NovelRT/Experimental/Graphics/Graphics.h"
+
   // Ink types
   #include "NovelRT/Ink/Story.h"
   #include "NovelRT/Ink/InkService.h"

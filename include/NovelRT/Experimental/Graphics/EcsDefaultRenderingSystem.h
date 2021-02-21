@@ -1,10 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_ECSDEFAULTRENDERINGSYSTEM_H
-#define NOVELRT_ECSDEFAULTRENDERINGSYSTEM_H
+#ifndef NOVELRT_EXPERIMENTAL_ECSDEFAULTRENDERINGSYSTEM_H
+#define NOVELRT_EXPERIMENTAL_ECSDEFAULTRENDERINGSYSTEM_H
 
-#include <memory>
+#include "EcsDefaultRenderingComponentTypes.h"
+#include <vector>
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -12,8 +13,9 @@ namespace NovelRT::Experimental::Graphics
     {
     private:
 
+
     public:
     };
 }
 
-#endif // NOVELRT_ECSDEFAULTRENDERINGSYSTEM_H
+#endif // !NOVELRT_EXPERIMENTAL_ECSDEFAULTRENDERINGSYSTEM_H
