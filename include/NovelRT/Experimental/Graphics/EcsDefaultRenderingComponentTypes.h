@@ -10,6 +10,7 @@
 #include "../../Maths/GeoVector3F.h"
 #include "../../Maths/GeoVector4F.h"
 #include "../../Maths/GeoMatrix4x4F.h"
+#include "../../Graphics/RGBAConfig.h"
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -19,7 +20,7 @@ namespace NovelRT::Experimental::Graphics
     {
         size_t meshDataIndex = 0;
         int32_t renderLayer = 0;
-        RGBAConfig colourTint = RGBAConfig(0, 0, 0, 0);
+        NovelRT::Graphics::RGBAConfig colourTint = NovelRT::Graphics::RGBAConfig(0, 0, 0, 0);
     };
 
     struct ShaderProgramComponent
