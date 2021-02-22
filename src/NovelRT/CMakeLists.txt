@@ -2,7 +2,7 @@ find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 find_package(FLAC ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(GLAD ${NOVELRT_GLAD_VERSION} REQUIRED
+find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
   COMPONENTS
     REPRODUCIBLE
     PROFILE core
@@ -120,7 +120,7 @@ target_link_libraries(Engine
     CoreCLR::nethost
     FLAC::FLAC
     Freetype::Freetype
-    Glad::Glad
+    glad
     GLFW::GLFW3
     GLM::GLM
     Ogg::Ogg
