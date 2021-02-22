@@ -65,7 +65,7 @@ set(INTEROP_SOURCES
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
 add_dependencies(Interop Engine)
-target_compile_features(Interop PUBLIC cxx_std_17)
+target_compile_features(Interop PUBLIC cxx_std_20)
 target_include_directories(Interop
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>

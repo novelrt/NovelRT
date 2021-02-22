@@ -73,7 +73,7 @@ set(ENGINE_SOURCES
 
 add_library(Engine SHARED ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
-target_compile_features(Engine PUBLIC cxx_std_17)
+target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>

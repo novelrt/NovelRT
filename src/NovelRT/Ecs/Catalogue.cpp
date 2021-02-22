@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Catalogue.h>
+#include <span>
 
 namespace NovelRT::Ecs
 {
