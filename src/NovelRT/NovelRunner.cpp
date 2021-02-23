@@ -7,7 +7,7 @@ namespace NovelRT
 {
     NovelRunner::NovelRunner(int32_t displayNumber,
                              const std::string& windowTitle,
-                             NovelRT::Windowing::WindowMode windowMode,
+                             Windowing::WindowMode windowMode,
                              uint32_t targetFrameRate,
                              bool transparency)
         : SceneConstructionRequested(Utilities::Event<>()),
