@@ -14,7 +14,16 @@ spdlog/1.5.0
 cmake_paths
 
 [options]
+freetype:shared=True
+glfw:shared=True
+libsndfile:shared=True
+lua:shared=True
+openal:shared=True
 glad:gl_profile=core
 glad:gl_version=4.0
 glad:gles2_version=3.0
 spdlog:header_only=True
+
+[imports]
+bin, *.dll -> ./src/NovelRT
+lib, *.dll -> ./src/NovelRT
