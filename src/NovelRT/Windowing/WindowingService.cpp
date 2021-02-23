@@ -54,7 +54,7 @@ namespace NovelRT::Windowing
             }
             case WindowMode::Fullscreen:
             {
-                _logger.logWarning("WindowMode::Fullscreen is not yet supported. Falling back to WindowMode::Windowed");
+                _logger.logWarning("WindowMode::Fullscreen is not yet supported. Falling back to WindowMode::Windowed.");
                 // The fall-through here is intentional due to FS not yet being supported.
             }
             case WindowMode::Windowed:

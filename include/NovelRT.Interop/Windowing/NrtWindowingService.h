@@ -12,14 +12,14 @@ extern "C"
 {
 #endif
 
-    typedef uint32_t NrtWindowMode;
-
     enum NrtWindowModeKind
     {
         NRT_WINDOW_MODE_WINDOWED = 0,
         NRT_WINDOW_MODE_BORDERLESS = 1,
         NRT_WINDOW_MODE_FULLSCREEN = 2
     };
+
+    typedef uint32_t NrtWindowMode;
 
     typedef struct WindowingServiceHandle* NrtWindowingService;
 
