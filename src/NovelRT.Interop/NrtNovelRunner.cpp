@@ -32,8 +32,8 @@ extern "C"
                                                 NrtWindowMode windowMode,
                                                 uint32_t targetFrameRate)
     {
-        NovelRunner* runner =
-            new NovelRunner(displayNumber, windowTitle, static_cast<WindowMode>(windowMode), targetFrameRate);
+        NovelRunner* runner = new NovelRunner(displayNumber, windowTitle,
+                                              static_cast<Windowing::WindowMode>(windowMode), targetFrameRate);
         return reinterpret_cast<NrtNovelRunner>(runner);
     }
 
