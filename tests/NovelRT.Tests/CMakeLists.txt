@@ -1,5 +1,5 @@
 find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
-  COMPONENTS Main
+  COMPONENTS gtest_main
 )
 
 include(GoogleTest)
@@ -41,8 +41,8 @@ target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     Interop
-    GTest::GTest
-    GTest::Main
+    GTest::gtest
+    GTest::gtest_main
 )
 
 add_custom_command(

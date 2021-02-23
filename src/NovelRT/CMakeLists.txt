@@ -9,7 +9,7 @@ find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
     SPEC gl
     API gl=4.0,gles2=3.0
 )
-find_package(GLFW ${NOVELRT_GLFW_VERSION} REQUIRED)
+find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
 find_package(GLM ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
@@ -18,12 +18,6 @@ find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(Sndfile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_Vorbis_VERSION} REQUIRED)
-
-add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
-set_target_properties(OpenAL::OpenAL PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${OPENAL_INCLUDE_DIR}"
-    IMPORTED_LOCATION "${OPENAL_LIBRARY}"
-)
 
 set(ENGINE_SOURCES
   Animation/SpriteAnimator.cpp
@@ -120,15 +114,15 @@ target_link_libraries(Engine
     CoreCLR::nethost
     FLAC::FLAC
     Freetype::Freetype
-    glad
-    GLFW::GLFW3
-    GLM::GLM
+    glad::glad
+    glfw::glfw
+    glm::glm
     Ogg::Ogg
     OpenAL::OpenAL
     Opus::Opus
     PNG::PNG
-    Sndfile::Sndfile
-    Spdlog::Spdlog
+    SndFile::SndFile
+    spdlog::spdlog
     Vorbis::Vorbis
 )
 

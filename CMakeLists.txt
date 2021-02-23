@@ -63,7 +63,7 @@ if(NOVELRT_BUILD_SAMPLES)
 endif()
 
 if(NOVELRT_BUILD_DOCUMENTATION)
-  add_subdirectory(doxygen)
+  #add_subdirectory(doxygen)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
