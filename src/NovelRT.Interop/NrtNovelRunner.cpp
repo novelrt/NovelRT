@@ -7,12 +7,14 @@
 #include <list>
 #include <stdint.h>
 
-std::list<std::shared_ptr<NovelRT::Audio::AudioService>> _audioCollection;
-std::list<std::shared_ptr<NovelRT::Input::InteractionService>> _interactionCollection;
-std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowingCollection;
-std::list<std::shared_ptr<NovelRT::DotNet::RuntimeService>> _runtimeCollection;
-std::list<std::shared_ptr<NovelRT::Graphics::RenderingService>> _rendererCollection;
-std::list<std::shared_ptr<NovelRT::DebugService>> _debugServiceCollection;
+using namespace NovelRT;
+
+std::list<std::shared_ptr<Audio::AudioService>> _audioCollection;
+std::list<std::shared_ptr<Input::InteractionService>> _interactionCollection;
+std::list<std::shared_ptr<Windowing::WindowingService>> _windowingCollection;
+std::list<std::shared_ptr<DotNet::RuntimeService>> _runtimeCollection;
+std::list<std::shared_ptr<Graphics::RenderingService>> _rendererCollection;
+std::list<std::shared_ptr<DebugService>> _debugServiceCollection;
 
 #ifdef __cplusplus
 extern "C"
@@ -21,7 +23,7 @@ extern "C"
 
     NrtNovelRunner Nrt_NovelRunner_create(int32_t displayNumber)
     {
-        NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(displayNumber);
+        NovelRunner* runner = new NovelRunner(displayNumber);
         return reinterpret_cast<NrtNovelRunner>(runner);
     }
 
@@ -30,8 +32,8 @@ extern "C"
                                                 NrtWindowMode windowMode,
                                                 uint32_t targetFrameRate)
     {
-        NovelRT::NovelRunner* runner = new NovelRT::NovelRunner(
-            displayNumber, windowTitle, static_cast<NovelRT::Windowing::WindowMode>(windowMode), targetFrameRate);
+        NovelRunner* runner = new NovelRunner(
+            displayNumber, windowTitle, static_cast<WindowMode>(windowMode), targetFrameRate);
         return reinterpret_cast<NrtNovelRunner>(runner);
     }
 
@@ -43,7 +45,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         cRunner->runNovel();
         return NRT_SUCCESS;
     }
@@ -56,7 +58,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
         cRunner->~NovelRunner();
         return NRT_SUCCESS;
@@ -70,7 +72,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _audioCollection.push_back(cRunner->getAudioService());
 
         auto ptr = _audioCollection.back().get();
@@ -92,7 +94,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _interactionCollection.push_back(cRunner->getInteractionService());
 
         auto ptr = _interactionCollection.back().get();
@@ -114,7 +116,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _windowingCollection.push_back(cRunner->getWindowingService());
 
         auto ptr = _windowingCollection.back().get();
@@ -136,7 +138,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _runtimeCollection.push_back(cRunner->getDotNetRuntimeService());
 
         auto ptr = _runtimeCollection.back().get();
@@ -158,7 +160,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _rendererCollection.push_back(cRunner->getRenderer());
 
         auto ptr = _rendererCollection.back().get();
@@ -180,7 +182,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         _debugServiceCollection.push_back(cRunner->getDebugService());
 
         auto ptr = _debugServiceCollection.back().get();
@@ -202,9 +204,9 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->Update += [func](NovelRT::Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta)); };
+        cRunner->Update += [func](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta)); };
 
         return NRT_SUCCESS;
     }
@@ -217,7 +219,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
         cRunner->SceneConstructionRequested += [func]() { func(); };
         return NRT_SUCCESS;
@@ -231,7 +233,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         *outputEvent = reinterpret_cast<NrtUtilitiesEventWithTimestamp&>(cRunner->Update);
         return NRT_SUCCESS;
     }
@@ -244,7 +246,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        NovelRT::NovelRunner* cRunner = reinterpret_cast<NovelRT::NovelRunner*>(runner);
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
         *outputEvent = reinterpret_cast<NrtUtilitiesEvent&>(cRunner->SceneConstructionRequested);
         return NRT_SUCCESS;
     }
