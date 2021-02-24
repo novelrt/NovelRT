@@ -10,7 +10,7 @@ find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
     API gl=4.0,gles2=3.0
 )
 find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
-find_package(GLM ${NOVELRT_GLM_VERSION} REQUIRED)
+find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
