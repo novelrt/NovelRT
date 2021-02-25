@@ -4,7 +4,7 @@ freetype/2.10.1
 glad/0.1.33
 glfw/3.3.2
 glm/0.9.9.7
-gtest/1.8.1
+gtest/1.10.0
 libsndfile/1.0.30
 lua/5.3.5
 openal/1.19.1
@@ -20,7 +20,6 @@ glfw:shared=True
 libsndfile:shared=True
 lua:shared=True
 openal:shared=True
-gtest:shared=True
 glad:gl_profile=core
 glad:gl_version=4.0
 glad:gles2_version=3.0
