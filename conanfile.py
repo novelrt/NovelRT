@@ -18,7 +18,7 @@ class NovelRTGlobalDependenciesConan(ConanFile):
 
     def build_requirements(self):
         if platform.system() == "Linux":
-            self.build_requires("bison")  # WHAT PUT HERE?
+            self.build_requires("bison/3.7.1")  # WHAT PUT HERE?
 
     def build(self):
         cmake = CMake(self)
