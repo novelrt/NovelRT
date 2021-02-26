@@ -31,6 +31,8 @@ function Create-Directory([string[]] $Path) {
 
 function Generate() {
   if ($ci) {
+  echo conan config install https://github.com/novelrt/ConanConfig.git
+  echo conan install . -if "$BuildDir" --build=missing --build=bison --profile windows-vs2019-amd64-$configuration.ToLower()
     $VcpkgToolchainFile = Join-Path -Path $vcpkgInstallDirectory -ChildPath "scripts/buildsystems/vcpkg.cmake"
     $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile", "-DNOVELRT_BUILD_DOCUMENTATION=OFF", "-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
   }
