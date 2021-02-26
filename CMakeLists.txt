@@ -47,7 +47,9 @@ if (NOVELRT_INCLUDE_CONAN_PATHS)
 endif()
 
 
-find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION})
+find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+  COMPONENTS dot
+)
 
 if(NOT DOXYGEN_FOUND)
   message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
@@ -61,7 +63,7 @@ if(NOVELRT_BUILD_SAMPLES)
 endif()
 
 if(NOVELRT_BUILD_DOCUMENTATION)
-  add_subdirectory(doxygen)
+  #add_subdirectory(doxygen)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
