@@ -1,4 +1,5 @@
 from conans import ConanFile, CMake
+import platform
 
 
 class NovelRTGlobalDependenciesConan(ConanFile):
