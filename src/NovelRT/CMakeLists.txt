@@ -65,6 +65,10 @@ set(ENGINE_SOURCES
 
 add_library(Engine SHARED ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
+if(WIN32)
+  set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+endif()
+
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC

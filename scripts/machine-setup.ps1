@@ -1,7 +1,6 @@
 # NOTE: DO NOT RUN THIS ON DEVELOPMENT MACHINES!
 # This is intended for setting up CI machines with the correct dependencies.
 
-$VcpkgInstallDirectory = Join-Path -Path $HOME -ChildPath "vcpkg"
 $DotNetInstallDirectory = Join-Path -Path $HOME -ChildPath "dotnet"
 $ProgressPreference = 'SilentlyContinue'
 
@@ -18,8 +17,8 @@ if (!(Get-Command python -ErrorAction SilentlyContinue ))
 }
 
 & python -m pip --version
-& python -m pip install setuptools
-& python -m pip install glad
+& python -m pip install conan
+& conan config install https://github.com/novelrt/ConanConfig.git
 
 if ($LastExitCode -ne 0) {
   throw "'pip install' failed"
@@ -63,25 +62,6 @@ catch {
   throw "Creating directory failed"
 }
 
-$vcpkgUri = "https://api.github.com/repos/capnkenny/nrt_vcpkg/releases/latest"
-$depsUri = ((Invoke-RestMethod -Method GET -Uri $vcpkgUri).assets | Where-Object name -like "NovelRTDeps_vcpkg.zip" ).browser_download_url
 
-$depZip = New-TemporaryFile | Rename-Item -NewName { $_.Name + ".zip" } -PassThru
-
-try {
-echo "Downloading dependencies..."
-Invoke-WebRequest -Uri $depsUri -Out $depZip
-}
-catch {
-  throw "Downloading dependencies failed: " + $_.Exception.Message
-}
-
-echo "Extracting archive..."
-try {
-Expand-Archive -Path $depZip -DestinationPath $DepsDir -Force
-}
-catch {
-  throw "Extracting dependencies failed " + + $_.Exception.Message
-}
 
 echo "Machine setup completed."
