@@ -85,19 +85,27 @@ cmake --build . -j
 _Prerequisites:_  
 - Windows 10 x64  
 (32-bit installation _may_ be covered in the future.)
+  
+Please download [Python 3 (x64) from here](https://www.python.org/downloads/) or from the Microsoft Store. Once that is done,
+install conan and our configurations should you require them:
+```
+pip install conan
+conan config install https://github.com/novelrt/ConanConfig.git
+```
 
-1) Clone and build NovelRT:
+If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
 mkdir build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=[path-from-step-4]/vcpkg/scripts/buildsystems/toolchain.cmake ..
+conan install .. --build=missing --profile windows-vs2019-amd64
+```
+
+Then you should be able to configure and build, like so:
+```
+cmake ..
 cmake --build . -j
-```
-Alternatively, you can also specify a single target to build like so:
-```
-cmake --build . -j -t TargetNameGoesHere
 ```
 
 ## Example
