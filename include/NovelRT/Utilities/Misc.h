@@ -1,4 +1,5 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
@@ -7,69 +8,73 @@
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif
 
-namespace NovelRT::Utilities {
-  class Misc {
-  public:
-    static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
-    static inline const char* CONSOLE_LOG_APP = "Application";
-    static inline const char* CONSOLE_LOG_DOTNET = ".NET";
-    static inline const char* CONSOLE_LOG_GFX = "GFX";
-    static inline const char* CONSOLE_LOG_AUDIO = "Audio";
-    static inline const char* CONSOLE_LOG_INPUT = "Input";
-    static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
+namespace NovelRT::Utilities
+{
+    class Misc
+    {
+    public:
+        static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
+        static inline const char* CONSOLE_LOG_APP = "Application";
+        static inline const char* CONSOLE_LOG_DOTNET = ".NET";
+        static inline const char* CONSOLE_LOG_GFX = "GFX";
+        static inline const char* CONSOLE_LOG_STATS = "Statistics";
+        static inline const char* CONSOLE_LOG_AUDIO = "Audio";
+        static inline const char* CONSOLE_LOG_INPUT = "Input";
+        static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
-    /**
-     * Gets the path to the executable.
-     *
-     * @return The path to the executable.
-     */
-    static std::filesystem::path getExecutablePath();
+        /**
+         * @brief Gets the path to the executable.
+         *
+         * @return The path to the executable.
+         */
+        static std::filesystem::path getExecutablePath();
 
-    /**
-     * Gets the path to the directory that contains the executable. <br/>
-     * For example, `/home/stuff/game/best-game-executable` will return `/home/stuff/game`
-     *
-     * @return The path to the directory that contains the executable.
-     */
-    static std::filesystem::path getExecutableDirPath() {
-      return getExecutablePath().parent_path();
+        /**
+         * @brief Gets the path to the directory that contains the executable. <br/>
+         * For example, `/home/stuff/game/best-game-executable` will return `/home/stuff/game`
+         *
+         * @return The path to the directory that contains the executable.
+         */
+        static std::filesystem::path getExecutableDirPath()
+        {
+            return getExecutablePath().parent_path();
+        }
+    };
+
+    template<class T, class U = std::underlying_type_t<T>> constexpr T operator~(T a)
+    {
+        return static_cast<T>(~static_cast<U>(a));
     }
-  };
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T operator~ (T a) {
-    return static_cast<T>(~static_cast<U>(a));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T operator|(T a, T b)
+    {
+        return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+    }
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T operator| (T a, T b) {
-    return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T operator&(T a, T b)
+    {
+        return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+    }
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T operator& (T a, T b) {
-    return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T operator^(T a, T b)
+    {
+        return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+    }
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T operator^ (T a, T b) {
-    return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator|=(T& a, T b)
+    {
+        return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+    }
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T& operator|= (T& a, T b) {
-    return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator&=(T& a, T b)
+    {
+        return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+    }
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T& operator&= (T& a, T b) {
-    return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
-  }
+    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator^=(T& a, T b)
+    {
+        return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+    }
+} // namespace NovelRT::Utilities
 
-  template<class T, class U = std::underlying_type_t<T>>
-  constexpr T& operator^= (T& a, T b) {
-    return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
-  }
-}
-
-#endif //!NOVELRT_UTILITIES_MISC_H
+#endif //! NOVELRT_UTILITIES_MISC_H

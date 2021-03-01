@@ -13,8 +13,15 @@ set(INTEROP_SOURCES
   Audio/NrtAudioService.cpp
 
   DotNet/NrtRuntimeService.cpp
-  Ink/NrtInkService.cpp
-  Ink/NrtStory.cpp
+
+  Ecs/NrtCatalogue.cpp
+  Ecs/NrtComponentBufferMemoryContainer.cpp
+  Ecs/NrtComponentCache.cpp
+  Ecs/NrtUnsafeComponentView.cpp
+  Ecs/NrtEntityCache.cpp
+  Ecs/NrtEntityIdVector.cpp
+  Ecs/NrtSparseSetMemoryContainer.cpp
+  Ecs/NrtSystemScheduler.cpp
 
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
@@ -24,6 +31,9 @@ set(INTEROP_SOURCES
   Graphics/NrtRGBAConfig.cpp
   Graphics/NrtTextRect.cpp
   Graphics/NrtTexture.cpp
+
+  Ink/NrtInkService.cpp
+  Ink/NrtStory.cpp
 
   Input/NrtBasicInteractionRect.cpp
   Input/NrtInteractionService.cpp
