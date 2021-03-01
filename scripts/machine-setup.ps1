@@ -52,16 +52,5 @@ if ($LastExitCode -ne 0) {
 }
 
 $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
-$DepsDir = Join-Path -Path $RepoRoot -ChildPath "deps"
-
-echo "Creating directory..."
-try {
-New-Item -Path $RepoRoot -Name "deps" -ItemType "directory" | Out-Null
-}
-catch {
-  throw "Creating directory failed"
-}
-
-
 
 echo "Machine setup completed."
