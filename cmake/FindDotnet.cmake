@@ -26,14 +26,14 @@ endif()
 find_package_handle_standard_args(Dotnet
   REQUIRED_VARS Dotnet_PROGRAM
   VERSION_VAR Dotnet_VERSION
-)
+  )
 
 if(Dotnet_FOUND)
   add_executable(Dotnet::CLI IMPORTED)
   set_target_properties(Dotnet::CLI
     PROPERTIES
-      IMPORTED_LOCATION ${Dotnet_PROGRAM}
-  )
+    IMPORTED_LOCATION ${Dotnet_PROGRAM}
+    )
 endif()
 
 mark_as_advanced(Dotnet_PROGRAM)

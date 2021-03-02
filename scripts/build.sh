@@ -88,6 +88,8 @@ function CreateDirectory {
 }
 
 function Generate {
+  conan config install https://github.com/novelrt/ConanConfig.git
+  conan install . -if "$BuildDir" --build=missing --build=bison --profile linux-clang10-amd64
   if [ -z "$remaining" ]; then
     cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
   else

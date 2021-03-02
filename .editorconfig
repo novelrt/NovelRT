@@ -26,3 +26,6 @@ file_header_template = Copyright © Matt Jones and Contributors. Licensed under 
 
 [*.cs]
 indent_size = 4
+
+[*.py]
+indent_size = 4

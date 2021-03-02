@@ -1,23 +1,23 @@
-find_package(Freetype 2.8.1 REQUIRED)
-find_package(glad 0.1.30 REQUIRED
+find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
+find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
+find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
+find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
+find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
   COMPONENTS
     REPRODUCIBLE
-    SPEC gl
     PROFILE core
+    SPEC gl
     API gl=4.0,gles2=3.0
 )
-find_package(GLFW 3.2.1 REQUIRED)
-find_package(OpenAL 1.19.1 REQUIRED)
-find_package(PNG 1.6.34 REQUIRED)
-find_package(Sndfile 1.0.28 REQUIRED)
-find_package(spdlog 1.4.2 REQUIRED)
-
-add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
-set_target_properties(OpenAL::OpenAL
-  PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${OPENAL_INCLUDE_DIR}"
-    IMPORTED_LOCATION "${OPENAL_LIBRARY}"
-)
+find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
+find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
+find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
+find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
+find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
+find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
+find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
+find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
+find_package(Vorbis ${NOVELRT_Vorbis_VERSION} REQUIRED)
 
 set(ENGINE_SOURCES
   Animation/SpriteAnimator.cpp
@@ -73,6 +73,10 @@ set(ENGINE_SOURCES
 
 add_library(Engine SHARED ${ENGINE_SOURCES})
 add_dependencies(Engine Dotnet)
+if(WIN32)
+  set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+endif()
+
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
@@ -118,12 +122,31 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
+    BZip2::BZip2
     CoreCLR::nethost
+    FLAC::FLAC
     Freetype::Freetype
-    Glad::GLAD
-    GLFW::GLFW3
+    glad::glad
+    glfw::glfw
+    glm::glm
+    Ogg::Ogg
     OpenAL::OpenAL
+    Opus::Opus
     PNG::PNG
-    Sndfile::sndfile
+    SndFile::SndFile
     spdlog::spdlog
+    Vorbis::Vorbis
 )
+
+if(WIN32)
+  target_link_libraries(Engine
+    PUBLIC
+      Winmm
+  )
+
+  if(NOVELRT_INCLUDE_CONAN_PATHS)
+    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_BINARY_DIR}/thirdparty
+      $<TARGET_FILE_DIR:Engine>)
+  endif()
+endif()
