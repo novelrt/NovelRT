@@ -18,7 +18,6 @@ if (!(Get-Command python -ErrorAction SilentlyContinue ))
 
 & python -m pip --version
 & python -m pip install conan
-& conan config install https://github.com/novelrt/ConanConfig.git
 
 if ($LastExitCode -ne 0) {
   throw "'pip install' failed"
