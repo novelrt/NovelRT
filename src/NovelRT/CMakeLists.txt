@@ -143,4 +143,10 @@ if(WIN32)
     PUBLIC
       Winmm
   )
+
+  if(NOVELRT_INCLUDE_CONAN_PATHS)
+    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_BINARY_DIR}/thirdparty
+      $<TARGET_FILE_DIR:Engine>)
+  endif()
 endif()

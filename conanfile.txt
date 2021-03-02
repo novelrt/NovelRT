@@ -19,11 +19,18 @@ glfw:shared=True
 libsndfile:shared=True
 lua:shared=True
 openal:shared=True
+PNG:shared=True
+BZip2:shared=True
+flac:shared=True
+fmt:shared=True
+Opus:shared=True
+Ogg:shared=True
+Vorbis:shared=True
 glad:gl_profile=core
 glad:gl_version=4.0
 glad:gles2_version=3.0
 spdlog:header_only=True
 
 [imports]
-bin, *.dll -> ./src/NovelRT
-lib, *.dll -> ./src/NovelRT
+bin, *.dll -> ./thirdparty
+lib, *.dll -> ./thirdparty
