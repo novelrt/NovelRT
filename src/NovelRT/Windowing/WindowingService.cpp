@@ -26,6 +26,7 @@ namespace NovelRT::Windowing
 
     void WindowingService::initialiseWindow(int32_t /*displayNumber*/,
                                             const std::string& windowTitle,
+                                            WindowMode initialWindowMode,
                                             bool transparencyEnabled)
     {
         GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
@@ -43,6 +44,27 @@ namespace NovelRT::Windowing
         static const char* OptimusLibraryName = "nvapi.dll";
         checkForOptimus(OptimusLibraryName);
 #endif
+
+        switch (initialWindowMode)
+        {
+            case WindowMode::Borderless:
+            {
+                glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+                break;
+            }
+            case WindowMode::Fullscreen:
+            {
+                _logger.logWarning(
+                    "WindowMode::Fullscreen is not yet supported. Falling back to WindowMode::Windowed.");
+                // The fall-through here is intentional due to FS not yet being supported.
+            }
+            case WindowMode::Windowed:
+            default:
+            {
+                glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+                break;
+            }
+        }
 
         // Set Framebuffer Transparency
         if (transparencyEnabled)
@@ -93,12 +115,25 @@ namespace NovelRT::Windowing
         }
 
         _windowTitle = windowTitle;
-        _logger.logInfo("Window succesfully created.");
+        _logger.logInfo("Window successfully created.");
 
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
         glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
+
+        if (initialWindowMode == NovelRT::Windowing::WindowMode::Borderless)
+        {
+            int monitorX, monitorY;
+            glfwGetMonitorPos(primaryMonitor, &monitorX, &monitorY);
+
+            int windowWidth, windowHeight;
+            glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+            // Center the window to the screen.
+            glfwSetWindowPos(_window.get(), monitorX + (displayData->width - windowWidth) / 2,
+                             monitorY + (displayData->height - windowHeight) / 2);
+        }
 
         glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
 
@@ -156,7 +191,6 @@ namespace NovelRT::Windowing
         }
     }
 #endif
-
     void WindowingService::tearDown()
     {
         if (_isTornDown)

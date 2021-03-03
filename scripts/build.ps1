@@ -31,8 +31,9 @@ function Create-Directory([string[]] $Path) {
 
 function Generate() {
   if ($ci) {
-    $VcpkgToolchainFile = Join-Path -Path $vcpkgInstallDirectory -ChildPath "scripts/buildsystems/vcpkg.cmake"
-    $remaining = ,"-DCMAKE_TOOLCHAIN_FILE=$VcpkgToolchainFile", "-DNOVELRT_BUILD_DOCUMENTATION=OFF", "-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
+  conan config install https://github.com/novelrt/ConanConfig.git
+  conan install . -if "$BuildDir" --build=missing --profile windows-vs2019-amd64
+    $remaining = ,"-DNOVELRT_BUILD_DOCUMENTATION=OFF", "-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
   }
 
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
@@ -47,7 +48,6 @@ function Help() {
   Write-Host -Object "  -configuration <value>            Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
   Write-Host -Object "  -dotnetInstallDirectory <value>   .NET Core install directory"
   Write-Host -Object "  -help                             Print help and exit"
-  Write-Host -Object "  -vcpkgInstallDirectory <value>    VCPKG install directory"
   Write-Host -Object ""
   Write-Host -Object "Actions:"
   Write-Host -Object "  -build                            Build repository"
@@ -94,8 +94,7 @@ try {
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
-  $vcpkgInstallDirectory = Join-Path -Path $RepoRoot -ChildPath "deps/vcpkg"
-  
+
   $ArtifactsDir = Join-Path -Path $RepoRoot -ChildPath "artifacts"
   Create-Directory -Path $ArtifactsDir
 

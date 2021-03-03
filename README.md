@@ -47,59 +47,67 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OpenAL 1.19.1
 - spdlog 1.4.2
 
-**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead.**
+**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
 ### Build instructions
 
-We provide build scripts in the root of the repository which may work for you.
-However, you will need to ensure the dependencies are correctly installed.
+These instructions are based on the Conan package manager. you can download Conan from [here.](https://conan.io/)
 
 #### Linux
-First, you must install the dependencies. Using Ubuntu 20.04, this looks something like this:
+First, you must install the dependencies. Using Ubuntu 20.04 there are extra requirements on top of Conan. With those dependencies, it looks something like this:
 ```
-sudo apt install clang cmake doxygen graphviz g++ libfreetype-dev libglfw3-dev \
-    libglm-dev libgmock-dev libgtest-dev liblua5.3-dev libopenal-dev libsndfile1-dev \
-    libspdlog-dev python3-glad
+sudo apt install clang  libgl-dev xorg-dev libx11-xcb-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
+libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
+libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev python3-pip \
 ```
-Then, clone and build NovelRT:
+
+Then, install Conan and our configurations should you require them:
+```
+pip3 install conan
+conan config install https://github.com/novelrt/ConanConfig.git
+```
+
+If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
 cd NovelRT/build
+conan install .. --build=missing --build=bison --profile linux-clang10-amd64
+```
+
+Then you should be able to configure and build, like so:
+```
 cmake ..
-make -j
+cmake --build . -j
 ```
 
 #### Windows (x64 only)
 _Prerequisites:_
 - You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) and the [.NET 5 SDK](https://dotnet.microsoft.com/download) (if you have not done so already).
 - Windows 10 x64
+
 (32-bit installation _may_ be covered in the future.)
-
-1) Use Python 3 to install the GLAD dependencies:
+  
+Please download [Python 3 (x64) from here](https://www.python.org/downloads/) or from the Microsoft Store. Once that is done,
+install conan and our configurations should you require them:
 ```
-python -m pip install setuptools
-python -m pip install glad
+pip install conan
+conan config install https://github.com/novelrt/ConanConfig.git
 ```
 
-2) Grab the latest copy of the Windows 64-bit dependencies (called "NovelRTDeps_vcpkg.zip") [here](https://github.com/capnkenny/nrt_vcpkg/releases), as we have already compiled them for you :D
-(A walkthrough on installing manually via vcpkg will be included in the future.)
-
-3) Extract "NovelRTDeps_vcpkg.zip" from Step 3 somewhere accessible _and remember the path_ - you will need it for the next step.
-You should be left with a folder called "vcpkg" at this point.
-
-4) Clone and build NovelRT:
+If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
 mkdir build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=[path-from-step-4]/vcpkg/scripts/buildsystems/toolchain.cmake ..
+conan install .. --build=missing --profile windows-vs2019-amd64
+```
+
+Then you should be able to configure and build, like so:
+```
+cmake ..
 cmake --build . -j
-```
-Alternatively, you can also specify a single target to build like so:
-```
-cmake --build . -j -t TargetNameGoesHere
 ```
 
 ## Example

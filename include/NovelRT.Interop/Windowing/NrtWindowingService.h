@@ -12,6 +12,15 @@ extern "C"
 {
 #endif
 
+    enum NrtWindowModeKind
+    {
+        NRT_WINDOW_MODE_WINDOWED = 0,
+        NRT_WINDOW_MODE_BORDERLESS = 1,
+        NRT_WINDOW_MODE_FULLSCREEN = 2
+    };
+
+    typedef uint32_t NrtWindowMode;
+
     typedef struct WindowingServiceHandle* NrtWindowingService;
 
     NrtWindowingService Nrt_WindowingService_create();
@@ -19,6 +28,7 @@ extern "C"
     NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service,
                                                     int32_t displayNumber,
                                                     const char* windowTitle,
+                                                    NrtWindowMode windowMode,
                                                     int32_t transparencyEnabled);
     NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service);
     const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service);

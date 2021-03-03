@@ -1,10 +1,5 @@
-find_package(GTest 1.10.0 REQUIRED
-  COMPONENTS
-    Main
-)
-find_package(GMock 1.10.0 REQUIRED
-  COMPONENTS
-    Main
+find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
+  COMPONENTS gtest_main
 )
 
 include(GoogleTest)
@@ -33,7 +28,7 @@ set(TEST_SOURCES
   Interop/Maths/GeoBoundsTest.cpp
   Interop/Maths/GeoMatrix4x4Test.cpp
   Interop/Maths/GeoVector2FTest.cpp
-  Interop/Maths/GeoVector3FTest.cpp  
+  Interop/Maths/GeoVector3FTest.cpp
   Interop/Maths/GeoVector4FTest.cpp
   Interop/Maths/QuadTreePointTest.cpp
   Interop/Maths/QuadTreeTest.cpp
@@ -63,10 +58,8 @@ target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     Interop
-    GTest::GTest
-    GTest::Main
-    GMock::GMock
-    GMock::Main
+    GTest::gtest
+    GTest::gtest_main
 )
 
 add_custom_command(
