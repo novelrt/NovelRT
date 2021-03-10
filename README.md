@@ -46,6 +46,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - Lua 5.3
 - OpenAL 1.19.1
 - spdlog 1.4.2
+- Microsoft GSL 3.1.0
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
