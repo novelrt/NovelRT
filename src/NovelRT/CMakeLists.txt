@@ -17,8 +17,8 @@ find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
-find_package(Vorbis ${NOVELRT_Vorbis_VERSION} REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_Microsoft.GSL_VERSION} REQUIRED)
+find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
+find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 
 set(ENGINE_SOURCES
   Animation/SpriteAnimator.cpp

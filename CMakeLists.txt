@@ -46,7 +46,7 @@ set(NOVELRT_PNG_VERSION "1.6.37" CACHE STRING "PNG version")
 set(NOVELRT_SNDFILE_VERSION "1.0.29" CACHE STRING "Sndfile version")
 set(NOVELRT_SPDLOG_VERSION "1.5.0" CACHE STRING "Spdlog version")
 set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Opus version")
-set(NOVELRT_Microsoft.GSL_VERSION "3.1.0" CACHE STRING "ms-gsl version")
+set(NOVELRT_GSL_VERSION "3.1.0" CACHE STRING "ms-gsl version")
 
 if (NOVELRT_INCLUDE_CONAN_PATHS)
   include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
