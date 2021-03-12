@@ -6,10 +6,10 @@
 
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
-#include "GraphicsBuffer.h"
 #include "GraphicsResourceCpuAccessKind.h"
-#include "GraphicsTexture.h"
+#include "HLGraphicsBuffer.h"
 #include "HLGraphicsResource.h"
+#include "HLGraphicsTexture.h"
 #include "IGraphicsDevice.h"
 #include "LLGraphicsResource.h"
 #include "LLGraphicsResourceViewContainer.h"
