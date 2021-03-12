@@ -13,6 +13,7 @@
 #include "IGraphicsDevice.h"
 #include "LLGraphicsResource.h"
 #include "LLGraphicsResourceViewContainer.h"
+#include "LLGraphicsTexture.h"
 #include "ShaderProgram.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H
