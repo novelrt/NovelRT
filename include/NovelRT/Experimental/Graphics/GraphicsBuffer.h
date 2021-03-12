@@ -4,15 +4,15 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICSBUFFER_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICSBUFFER_H
 
-#include "GraphicsResource.h"
+#include "HLGraphicsResource.h"
 
 namespace NovelRT::Experimental::Graphics
 {
-    class GraphicsBuffer : public GraphicsResource
+    class GraphicsBuffer : public HLGraphicsResource
     {
     public:
         explicit GraphicsBuffer(GraphicsResourceCpuAccessKind enabledAccessMode) noexcept
-            : GraphicsResource(enabledAccessMode)
+            : HLGraphicsResource(enabledAccessMode)
         {
         }
 

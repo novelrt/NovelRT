@@ -4,6 +4,8 @@
 #ifndef NOVELRT_EXPERIMENTAL_IGRAPHICSDEVICE_H
 #define NOVELRT_EXPERIMENTAL_IGRAPHICSDEVICE_H
 
+#include <gsl/span>
+
 namespace NovelRT::Experimental::Graphics
 {
     class IGraphicsDevice

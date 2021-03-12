@@ -7,10 +7,12 @@
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
 #include "GraphicsBuffer.h"
-#include "GraphicsResource.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsTexture.h"
+#include "HLGraphicsResource.h"
 #include "IGraphicsDevice.h"
+#include "LLGraphicsResource.h"
+#include "LLGraphicsResourceViewContainer.h"
 #include "ShaderProgram.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H

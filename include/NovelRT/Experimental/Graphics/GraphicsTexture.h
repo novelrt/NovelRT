@@ -4,11 +4,11 @@
 #ifndef NOVELRT_GRAPHICSTEXTURE_H
 #define NOVELRT_GRAPHICSTEXTURE_H
 
-#include "GraphicsResource.h"
+#include "HLGraphicsResource.h"
 
 namespace NovelRT::Experimental::Graphics
 {
-    class GraphicsTexture : public GraphicsResource
+    class GraphicsTexture : public HLGraphicsResource
     {
     };
 }
