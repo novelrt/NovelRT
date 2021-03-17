@@ -1,6 +1,5 @@
-//
-// Created by matth on 11/03/2021.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_LLGRAPHICSRESOURCE_H
 #define NOVELRT_LLGRAPHICSRESOURCE_H

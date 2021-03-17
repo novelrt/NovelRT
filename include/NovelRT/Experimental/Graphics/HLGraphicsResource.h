@@ -18,30 +18,32 @@ namespace NovelRT::Experimental::Graphics
     private:
         GraphicsResourceCpuAccessKind _enabledAccessMode;
 
+
     public:
         explicit HLGraphicsResource(GraphicsResourceCpuAccessKind enabledAccessMode) noexcept
             : _enabledAccessMode(enabledAccessMode)
         {
         }
 
-        [[nodiscard]] inline GraphicsResourceCpuAccessKind EnabledAccessMode() const noexcept
+        [[nodiscard]] virtual gsl::span<std::byte> MapUntyped(GraphicsResourceCpuAccessKind accessMode) = 0;
+        [[nodiscard]] virtual gsl::span<std::byte> MapRangeUntyped(GraphicsResourceCpuAccessKind accessMode,
+                                                                   size_t offset,
+                                                                   size_t range) = 0;
+        [[nodiscard]] virtual std::shared_ptr<LLGraphicsResource> GetLLResourceUntyped() const = 0;
+
+        [[nodiscard]] inline GraphicsResourceCpuAccessKind GetEnabledAccessMode() const noexcept
         {
             return _enabledAccessMode;
         }
-
-        [[nodiscard]] virtual gsl::span<std::byte> MapUntyped(GraphicsResourceCpuAccessKind accessMode) = 0;
-        [[nodiscard]] virtual gsl::span<std::byte> MapRangeUntyped(GraphicsResourceCpuAccessKind accessMode,
-                                                                   size_t range) = 0;
-        [[nodiscard]] virtual std::shared_ptr<LLGraphicsResource> GetLLResourceUntyped() const = 0;
 
         template<typename T> [[nodiscard]] gsl::span<T> Map(GraphicsResourceCpuAccessKind accessMode)
         {
             return gsl::span<T>(MapUntyped(accessMode));
         }
 
-        template<typename T> [[nodiscard]] gsl::span<T> MapRange(GraphicsResourceCpuAccessKind accessMode, size_t range)
+        template<typename T> [[nodiscard]] gsl::span<T> MapRange(GraphicsResourceCpuAccessKind accessMode, size_t offset, size_t range)
         {
-            return gsl::span<T>(MapRangeUntyped(accessMode, range));
+            return gsl::span<T>(MapRangeUntyped(accessMode, offset, range));
         }
 
         template<typename T> [[nodiscard]] LLGraphicsResourceViewContainer<T> GetLLResource() const

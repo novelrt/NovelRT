@@ -37,6 +37,8 @@ set(SOURCES
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
 
+  Experimental/Graphics/OpenGLES3_0/OpenGLESHLGraphicsBuffer.cpp
+
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
   Graphics/FontSet.cpp
