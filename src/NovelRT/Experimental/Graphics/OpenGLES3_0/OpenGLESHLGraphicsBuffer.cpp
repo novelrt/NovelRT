@@ -3,12 +3,14 @@
 
 #include <NovelRT/Exceptions/NotSupportedException.h>
 #include <NovelRT/Experimental/Graphics/OpenGLES3_0/OpenGLESHLGraphicsBuffer.h>
+#include <NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Experimental::Graphics::OpenGLES3_0
 {
     gsl::span<std::byte> OpenGLESHLGraphicsBuffer::MapUntyped(GraphicsResourceCpuAccessKind accessMode)
     {
-        if (accessMode > GetEnabledAccessMode() || accessMode == GraphicsResourceCpuAccessKind::None)
+        if ((GetEnabledAccessMode() & accessMode) != accessMode || accessMode == GraphicsResourceCpuAccessKind::None ||
+            (accessMode & GraphicsResourceCpuAccessKind::None) == GraphicsResourceCpuAccessKind::None)
         {
             throw Exceptions::NotSupportedException(
                 "This resource does not support the specified access mode for mapping.");
@@ -33,6 +35,7 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
                 throw Exceptions::NotSupportedException(
                     "This resource does not support the specified access mode for mapping.");
         }
+
         GLint output = 0;
         glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
         glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &output);
@@ -43,7 +46,8 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
                                                                    size_t offset,
                                                                    size_t range)
     {
-        if (accessMode > GetEnabledAccessMode() || accessMode == GraphicsResourceCpuAccessKind::None)
+        if ((GetEnabledAccessMode() & accessMode) != accessMode || accessMode == GraphicsResourceCpuAccessKind::None ||
+            (accessMode & GraphicsResourceCpuAccessKind::None) == GraphicsResourceCpuAccessKind::None)
         {
             throw Exceptions::NotSupportedException(
                 "This resource does not support the specified access mode for mapping.");
@@ -70,9 +74,8 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
-        return gsl::span<std::byte>(
-            static_cast<std::byte*>(glMapBufferRange(GL_ARRAY_BUFFER, offset, range, mode)), sizeof(std::byte) * range);
-
+        return gsl::span<std::byte>(static_cast<std::byte*>(glMapBufferRange(GL_ARRAY_BUFFER, offset, range, mode)),
+                                    sizeof(std::byte) * range);
     }
 
     std::shared_ptr<LLGraphicsResource> OpenGLESHLGraphicsBuffer::GetLLResourceUntyped() const

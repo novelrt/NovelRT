@@ -10,13 +10,13 @@ namespace NovelRT::Experimental::Graphics
 {
     enum class GraphicsResourceCpuAccessKind : uint32_t
     {
-        None = 0,
+        None = 1 << 0,
         GpuOnly = None,
-        Read = 1,
+        Read = 1 << 1,
         GpuToCpu = Read,
-        Write = 2,
+        Write = 1 << 2,
         CpuToGpu = Write,
-        ReadWrite = 3,
+        ReadWrite = Read | Write,
         GpuToCpuToGpu = ReadWrite
     };
 }
