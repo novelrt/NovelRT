@@ -195,7 +195,10 @@ int main(int /*argc*/, char* /*argv*/[])
     inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);
     inkInteractionRect->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
-    runner.getDebugService()->setIsFpsCounterVisible(true);
+
+    auto debugService = runner.getDebugService();
+    debugService->setIsFpsCounterVisible(true);
+    debugService->setIsShaderCounterVisible(true);
 
     runner.Update += [&](NovelRT::Timing::Timestamp delta) {
         const float rotationAmount = 45.0f;

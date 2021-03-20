@@ -16,6 +16,7 @@ namespace NovelRT
     private:
         std::shared_ptr<Graphics::RenderingService> _renderingService;
         std::unique_ptr<Graphics::TextRect> _fpsCounter;
+        std::unique_ptr<Graphics::TextRect> _shaderCounter;
         LoggingService _logging;
         uint32_t _framesPerSecond;
         uint32_t _minFramesPerSecond = 1000;
@@ -24,9 +25,14 @@ namespace NovelRT
         uint32_t _totalSeconds = 0;
         uint32_t _totalFrames = 0;
 
+        int32_t _vertexShadersLoaded = 0;
+        int32_t _fragmentShadersLoaded = 0;
+
         void updateFpsCounter();
 
         void onSceneConstruction();
+
+        void updateShaderCounter();
 
     public:
         DebugService(Utilities::Event<>& sceneConstructionEvent,
@@ -42,6 +48,11 @@ namespace NovelRT
         }
 
         void setFramesPerSecond(uint32_t framesPerSecond);
+
+        bool getIsShaderCounterVisible() const;
+        void setIsShaderCounterVisible(bool value);
+
+        void increaseLoadedShaderCount(bool isVertexShader);
     };
 } // namespace NovelRT
 #endif // NOVELRT_NOVELDEBUGSERVICE_H
