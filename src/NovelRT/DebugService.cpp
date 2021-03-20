@@ -67,6 +67,7 @@ namespace NovelRT
             _fpsCounter->setActive(value);
         }
     }
+
     void DebugService::setFramesPerSecond(uint32_t framesPerSecond)
     {
         if (_framesPerSecond != framesPerSecond)
@@ -99,9 +100,15 @@ namespace NovelRT
             snprintf(fpsText, 64, "%u fps %u avg %u min %u max %u total", _framesPerSecond,
                      _totalFrames / _totalSeconds, _minFramesPerSecond, _maxFramesPerSecond, _totalFrames);
             _fpsCounter->setText(fpsText);
-            _logging.logInfo(fpsText);
+
+            if (_totalSeconds - _lastTimeFpsDiagnosticsLogged > 1)
+            {
+                _lastTimeFpsDiagnosticsLogged = _totalSeconds;
+                _logging.logInfo(fpsText);
+            }
         }
     }
+
     void DebugService::onSceneConstruction()
     {
         if (_fpsCounter == nullptr)
