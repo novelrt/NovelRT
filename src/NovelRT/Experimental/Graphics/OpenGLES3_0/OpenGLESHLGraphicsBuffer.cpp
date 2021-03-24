@@ -7,7 +7,8 @@
 
 namespace NovelRT::Experimental::Graphics::OpenGLES3_0
 {
-    gsl::span<std::byte> OpenGLESHLGraphicsBuffer::MapUntyped(GraphicsResourceCpuAccessKind accessMode)
+    GLbitfield OpenGLESHLGraphicsBuffer::ValidateAndTranslateAccessMode(
+        GraphicsResourceCpuAccessKind accessMode) const
     {
         if ((GetEnabledAccessMode() & accessMode) != accessMode || accessMode == GraphicsResourceCpuAccessKind::None ||
             (accessMode & GraphicsResourceCpuAccessKind::None) == GraphicsResourceCpuAccessKind::None)
@@ -35,43 +36,22 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
                 throw Exceptions::NotSupportedException(
                     "This resource does not support the specified access mode for mapping.");
         }
+        return mode;
+    }
 
+    gsl::span<std::byte> OpenGLESHLGraphicsBuffer::MapUntyped(GraphicsResourceCpuAccessKind accessMode)
+    {
         GLint output = 0;
-        glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
+        glBindBuffer(GL_ARRAY_BUFFER, _bufferId); //TODO: this is such a hack. :(
         glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &output);
-        return gsl::span<std::byte>(static_cast<std::byte*>(glMapBuffer(GL_ARRAY_BUFFER, mode)), output);
+        return MapRangeUntyped(accessMode, 0, output);
     }
 
     gsl::span<std::byte> OpenGLESHLGraphicsBuffer::MapRangeUntyped(GraphicsResourceCpuAccessKind accessMode,
                                                                    size_t offset,
                                                                    size_t range)
     {
-        if ((GetEnabledAccessMode() & accessMode) != accessMode || accessMode == GraphicsResourceCpuAccessKind::None ||
-            (accessMode & GraphicsResourceCpuAccessKind::None) == GraphicsResourceCpuAccessKind::None)
-        {
-            throw Exceptions::NotSupportedException(
-                "This resource does not support the specified access mode for mapping.");
-        }
-
-        GLbitfield mode = GL_READ_ONLY;
-        switch (accessMode)
-        {
-            case GraphicsResourceCpuAccessKind::None:
-                throw std::runtime_error("It should be impossible to see this.");
-                break;
-            case GraphicsResourceCpuAccessKind::Read:
-                mode = GL_READ_ONLY;
-                break;
-            case GraphicsResourceCpuAccessKind::Write:
-                mode = GL_WRITE_ONLY;
-                break;
-            case GraphicsResourceCpuAccessKind::ReadWrite:
-                mode = GL_READ_WRITE;
-                break;
-            default:
-                throw Exceptions::NotSupportedException(
-                    "This resource does not support the specified access mode for mapping.");
-        }
+        GLbitfield mode = ValidateAndTranslateAccessMode(accessMode);
 
         glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
         return gsl::span<std::byte>(static_cast<std::byte*>(glMapBufferRange(GL_ARRAY_BUFFER, offset, range, mode)),
@@ -87,6 +67,7 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
     {
         glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
         glUnmapBuffer(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
 } // namespace NovelRT::Experimental::Graphics::OpenGLES3_0

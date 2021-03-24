@@ -14,8 +14,13 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
     private:
         GLuint _bufferId = 0;
 
+        [[nodiscard]] GLbitfield ValidateAndTranslateAccessMode(GraphicsResourceCpuAccessKind accessMode) const;
+
     public:
-        explicit OpenGLESHLGraphicsBuffer(GraphicsResourceCpuAccessKind accessKind) noexcept : HLGraphicsBuffer(accessKind){}
+        explicit OpenGLESHLGraphicsBuffer(GraphicsResourceCpuAccessKind accessKind) noexcept
+            : HLGraphicsBuffer(accessKind)
+        {
+        }
 
         [[nodiscard]] gsl::span<std::byte> MapUntyped(GraphicsResourceCpuAccessKind accessMode) final;
         [[nodiscard]] gsl::span<std::byte> MapRangeUntyped(GraphicsResourceCpuAccessKind accessMode,
