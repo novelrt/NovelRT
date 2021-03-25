@@ -1,0 +1,10 @@
+@../../settings.rsp
+@../../remap.rsp
+--file
+include-NrtAudio.h
+--output
+../../../src/NovelRT.DotNet/Interop/Audio
+--test-output
+../../../tests/NovelRT.DotNet/Interop/Audio
+--traverse
+../../../include/NovelRT.Interop/Audio/NrtAudioService.h
