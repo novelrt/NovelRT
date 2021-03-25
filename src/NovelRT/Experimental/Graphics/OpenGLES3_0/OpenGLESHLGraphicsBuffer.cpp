@@ -39,6 +39,11 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
         return mode;
     }
 
+    OpenGLESHLGraphicsBuffer::OpenGLESHLGraphicsBuffer(GraphicsResourceCpuAccessKind accessKind) noexcept
+        : HLGraphicsBuffer(accessKind), _glMappedAccessMode(0), _bufferId(0)
+    {
+    }
+
     gsl::span<std::byte> OpenGLESHLGraphicsBuffer::MapUntyped(GraphicsResourceCpuAccessKind accessMode)
     {
         GLint output = 0;
@@ -53,8 +58,11 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
     {
         GLbitfield mode = ValidateAndTranslateAccessMode(accessMode);
 
-        glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
-        return gsl::span<std::byte>(static_cast<std::byte*>(glMapBufferRange(GL_ARRAY_BUFFER, offset, range, mode)),
+        _glMappedAccessMode = accessMode == GraphicsResourceCpuAccessKind::Read ? GL_COPY_READ_BUFFER : GL_COPY_WRITE_BUFFER;
+
+        glBindBuffer(_glMappedAccessMode, _bufferId);
+
+        return gsl::span<std::byte>(static_cast<std::byte*>(glMapBufferRange(_glMappedAccessMode, offset, range, mode)),
                                     sizeof(std::byte) * range);
     }
 
@@ -65,9 +73,7 @@ namespace NovelRT::Experimental::Graphics::OpenGLES3_0
 
     void OpenGLESHLGraphicsBuffer::Unmap()
     {
-        glBindBuffer(GL_ARRAY_BUFFER, _bufferId);
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glUnmapBuffer(_glMappedAccessMode);
+        glBindBuffer(_glMappedAccessMode, 0);
     }
-
 } // namespace NovelRT::Experimental::Graphics::OpenGLES3_0
