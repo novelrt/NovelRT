@@ -2,11 +2,10 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtKeyStateKind
+    public enum NrtAnimatorPlayState
     {
-        NRT_IDLE = -1,
-        NRT_KEYUP = 0,
-        NRT_KEYDOWN = 1,
-        NRT_KEYDOWNHELD = 2,
+        NRT_PLAY_STATE_STOPPED = 0,
+        NRT_PLAY_STATE_PLAYING = 1,
+        NRT_PLAY_STATE_PAUSED = 2,
     }
 }

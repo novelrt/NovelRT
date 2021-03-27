@@ -2,7 +2,7 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtKeyCodeKind
+    public enum NrtKeyCode
     {
         NRT_KEYCODE_NOTHING = -1,
         NRT_KEYCODE_ENTER = 257,

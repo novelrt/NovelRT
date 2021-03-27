@@ -2,10 +2,11 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtWindowModeKind
+    public enum NrtKeyState
     {
-        NRT_WINDOW_MODE_WINDOWED = 0,
-        NRT_WINDOW_MODE_BORDERLESS = 1,
-        NRT_WINDOW_MODE_FULLSCREEN = 2,
+        NRT_IDLE = -1,
+        NRT_KEYUP = 0,
+        NRT_KEYDOWN = 1,
+        NRT_KEYDOWNHELD = 2,
     }
 }

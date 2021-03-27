@@ -8,3 +8,4 @@ include-NrtAudio.h
 ../../../tests/NovelRT.DotNet/Interop/Audio
 --traverse
 ../../../include/NovelRT.Interop/Audio/NrtAudioService.h
+../../../include/NovelRT.Interop/Audio/NrtAudioTypedefs.h

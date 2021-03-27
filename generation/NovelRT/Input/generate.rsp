@@ -8,7 +8,6 @@ include-NrtInput.h
 ../../../tests/NovelRT.DotNet/Interop/Input
 --traverse
 ../../../include/NovelRT.Interop/Input/NrtBasicInteractionRect.h
+../../../include/NovelRT.Interop/Input/NrtInputTypedefs.h
 ../../../include/NovelRT.Interop/Input/NrtInteractionService.h
-../../../include/NovelRT.Interop/Input/NrtKeyCode.h
-../../../include/NovelRT.Interop/Input/NrtKeyState.h
-../../../include/NovelRT.Interop/SceneGraph/../Input/NrtKeyStateFrameChangeLog.h
+../../../include/NovelRT.Interop/Input/NrtKeyStateFrameChangeLog.h

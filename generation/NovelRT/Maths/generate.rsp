@@ -7,10 +7,11 @@ include-NrtMaths.h
 --test-output
 ../../../tests/NovelRT.DotNet/Interop/Maths
 --traverse
-../../../include/NovelRT.Interop/SceneGraph/../Maths/NrtGeoBounds.h
+../../../include/NovelRT.Interop/Maths/NrtGeoBounds.h
 ../../../include/NovelRT.Interop/Maths/NrtGeoMatrix4x4F.h
-../../../include/NovelRT.Interop/Input/../Maths/NrtGeoVector2F.h
+../../../include/NovelRT.Interop/Maths/NrtGeoVector2F.h
 ../../../include/NovelRT.Interop/Maths/NrtGeoVector3F.h
 ../../../include/NovelRT.Interop/Maths/NrtGeoVector4F.h
+../../../include/NovelRT.Interop/Maths/NrtMathsTypedefs.h
 ../../../include/NovelRT.Interop/Maths/NrtQuadTree.h
-../../../include/NovelRT.Interop/Graphics/../Maths/NrtQuadTreePoint.h
+../../../include/NovelRT.Interop/Maths/NrtQuadTreePoint.h

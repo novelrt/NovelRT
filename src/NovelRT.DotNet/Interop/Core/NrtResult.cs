@@ -2,7 +2,7 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtResultKind
+    public enum NrtResult
     {
         NRT_DATA_NOT_MODIFIED = 1,
         NRT_SUCCESS = 0,

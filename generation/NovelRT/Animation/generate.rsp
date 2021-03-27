@@ -8,7 +8,6 @@ include-NrtAnimation.h
 ../../../tests/NovelRT.DotNet/Interop/Animation
 --traverse
 ../../../include/NovelRT.Interop/Animation/NrtAnimationTypedefs.h
-../../../include/NovelRT.Interop/Animation/NrtAnimatorPlayState.h
 ../../../include/NovelRT.Interop/Animation/NrtSpriteAnimator.h
 ../../../include/NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h
 ../../../include/NovelRT.Interop/Animation/NrtSpriteAnimatorState.h
