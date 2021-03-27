@@ -7,6 +7,7 @@
 
 #ifdef __cplusplus
 using namespace NovelRT;
+
 extern "C"
 {
 #endif

@@ -7,6 +7,7 @@
 #include <NovelRT/Exceptions/Exceptions.h>
 
 #include <stdexcept>
+#include <vector>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;

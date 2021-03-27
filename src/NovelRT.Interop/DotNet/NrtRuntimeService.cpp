@@ -5,6 +5,8 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
+#include <list>
+
 using namespace NovelRT;
 std::list<std::shared_ptr<Ink::InkService>> _inkServiceCollection;
 

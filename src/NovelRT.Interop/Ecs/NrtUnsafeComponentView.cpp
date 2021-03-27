@@ -6,6 +6,8 @@
 #include <NovelRT/Ecs/UnsafeComponentView.h>
 #include <NovelRT/Exceptions/Exceptions.h>
 
+#include <vector>
+
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
