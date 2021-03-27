@@ -1,0 +1,16 @@
+@../../settings.rsp
+@../../remap.rsp
+--file
+include-NrtCore.h
+--output
+../../../src/NovelRT.DotNet/Interop/Core
+--test-output
+../../../tests/NovelRT.DotNet/Interop/Core
+--traverse
+../../../include/NovelRT.Interop/NrtDebugService.h
+../../../include/NovelRT.Interop/NrtInteropErrorHandlingInternal.h
+../../../include/NovelRT.Interop/Ink/../NrtInteropUtils.h
+../../../include/NovelRT.Interop/NrtLoggingService.h
+../../../include/NovelRT.Interop/SceneGraph/../NrtLogLevel.h
+../../../include/NovelRT.Interop/Animation/../NrtNovelRunner.h
+../../../include/NovelRT.Interop/Input/../NrtTransform.h

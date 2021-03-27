@@ -29,7 +29,6 @@ extern "C"
     NrtBool Nrt_StepTimer_getIsFixedTimeStep(NrtStepTimer timer);
     NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimer timer, int32_t input);
     NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
-    NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimer timer);
     NrtResult Nrt_StepTimer_tick(NrtStepTimer timer, NrtUtilitiesEventWithTimestamp event);
 
 #ifdef __cplusplus
