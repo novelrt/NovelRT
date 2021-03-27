@@ -89,14 +89,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object)
+    NrtKeyCode Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object)
     {
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-        return reinterpret_cast<NrtKeyCodeKind&>(obj->subscribedKey());
+        return reinterpret_cast<NrtKeyCode&>(obj->subscribedKey());
     }
 
     NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object,
-                                                              NrtKeyCodeKind value)
+                                                              NrtKeyCode value)
     {
         if (object == nullptr)
         {

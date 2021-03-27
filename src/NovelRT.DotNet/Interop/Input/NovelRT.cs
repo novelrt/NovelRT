@@ -40,12 +40,12 @@ namespace NovelRT.Interop
         public static extern int Nrt_Input_BasicInteractionRect_validateInteractionPrimeter([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, [NativeTypeName("const NrtGeoVector2F")] NrtGeoVector2F mousePosition);
 
         [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtKeyCodeKind")]
-        public static extern NrtKeyCode Nrt_Input_BasicInteractionRect_getSubscribedKey([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object);
+        [return: NativeTypeName("NrtKeyCode")]
+        public static extern int Nrt_Input_BasicInteractionRect_getSubscribedKey([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_Input_BasicInteractionRect_setSubscribedKey([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, [NativeTypeName("NrtKeyCodeKind")] NrtKeyCode value);
+        public static extern int Nrt_Input_BasicInteractionRect_setSubscribedKey([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, [NativeTypeName("NrtKeyCode")] int value);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]

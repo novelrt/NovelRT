@@ -21,9 +21,9 @@ extern "C"
     NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRectHandle object, int32_t value);
     NrtResult Nrt_Input_BasicInteractionRect_validateInteractionPrimeter(NrtBasicInteractionRectHandle object,
                                                                          const NrtGeoVector2F mousePosition);
-    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object);
+    NrtKeyCode Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object);
     NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object,
-                                                              NrtKeyCodeKind value);
+                                                              NrtKeyCode value);
     NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)());
 
 #ifdef __cplusplus
