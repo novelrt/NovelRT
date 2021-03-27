@@ -11,14 +11,16 @@ extern "C"
 {
 #endif
 
-    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId, NrtComponentCacheHandle componentCache, NrtEntityCacheHandle entityCache);
+    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId,
+                                            NrtComponentCacheHandle componentCache,
+                                            NrtEntityCacheHandle entityCache);
 
     NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogueHandle catalogue,
                                                  NrtComponentTypeId componentId,
                                                  NrtUnsafeComponentViewHandle* outputResult);
 
     NrtUnsafeComponentViewHandle Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogueHandle catalogue,
-                                                                    NrtComponentTypeId componentId);
+                                                                          NrtComponentTypeId componentId);
 
     NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogueHandle catalogue);
 

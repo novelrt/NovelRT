@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/ComponentCache.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Ecs/NrtComponentCache.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT/Ecs/ComponentCache.h>
 
 using namespace NovelRT::Ecs;
 
@@ -32,7 +32,8 @@ extern "C"
                     ->RegisterComponentTypeUnsafe(
                         sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
-                                        reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
+                                        reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
+                                        size);
                         });
 
             return NRT_SUCCESS;

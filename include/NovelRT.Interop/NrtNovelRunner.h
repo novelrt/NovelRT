@@ -13,9 +13,9 @@ extern "C"
 
     NrtNovelRunnerHandle Nrt_NovelRunner_create(int32_t displayNumber);
     NrtNovelRunnerHandle Nrt_NovelRunner_createCustom(int32_t displayNumber,
-                                                const char* windowTitle,
-                                                NrtWindowMode windowMode,
-                                                uint32_t targetFrameRate);
+                                                      const char* windowTitle,
+                                                      NrtWindowMode windowMode,
+                                                      uint32_t targetFrameRate);
     NrtResult Nrt_NovelRunner_runNovel(NrtNovelRunnerHandle runner);
     NrtResult Nrt_NovelRunner_destroy(NrtNovelRunnerHandle runner);
 

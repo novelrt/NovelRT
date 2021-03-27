@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Audio/NrtAudioService.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -44,7 +44,9 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_AudioService_loadMusic(NrtAudioServiceHandle service, char* input, NrtAudioServiceIteratorHandle* output)
+    NrtResult Nrt_AudioService_loadMusic(NrtAudioServiceHandle service,
+                                         char* input,
+                                         NrtAudioServiceIteratorHandle* output)
     {
         if (service == nullptr)
         {
@@ -92,7 +94,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setSoundPosition(NrtAudioServiceHandle service, unsigned int source, float posX, float posY)
+    NrtResult Nrt_AudioService_setSoundPosition(NrtAudioServiceHandle service,
+                                                unsigned int source,
+                                                float posX,
+                                                float posY)
     {
         if (service == nullptr)
         {
@@ -138,7 +143,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_playMusic(NrtAudioServiceHandle service, NrtAudioServiceIteratorHandle handle, int32_t loops)
+    NrtResult Nrt_AudioService_playMusic(NrtAudioServiceHandle service,
+                                         NrtAudioServiceIteratorHandle handle,
+                                         int32_t loops)
     {
         if (service == nullptr)
         {

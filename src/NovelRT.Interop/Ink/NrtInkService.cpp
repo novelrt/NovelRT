@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Ink/NrtInkService.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #include <list>
 
@@ -42,7 +42,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service, const char* jsonString, NrtStoryHandle* outputStory)
+    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service,
+                                         const char* jsonString,
+                                         NrtStoryHandle* outputStory)
     {
         if (service == nullptr || outputStory == nullptr)
         {
@@ -57,7 +59,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service, NrtRuntimeServiceHandle* outputRuntimeService)
+    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service,
+                                               NrtRuntimeServiceHandle* outputRuntimeService)
     {
         if (service == nullptr || outputRuntimeService == nullptr)
         {

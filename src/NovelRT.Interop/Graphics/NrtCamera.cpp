@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Graphics/NrtCamera.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #include <list>
 
@@ -79,7 +79,8 @@ extern "C"
         return *reinterpret_cast<NrtCameraFrameState*>(&frameState);
     }
 
-    NrtResult Nrt_Camera_setForceResizeCallback(NrtCameraHandle camera, void (*callback)(NrtCameraHandle, NrtGeoVector2F))
+    NrtResult Nrt_Camera_setForceResizeCallback(NrtCameraHandle camera,
+                                                void (*callback)(NrtCameraHandle, NrtGeoVector2F))
     {
         if (camera == nullptr)
         {

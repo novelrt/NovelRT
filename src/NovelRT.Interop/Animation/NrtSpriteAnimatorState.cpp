@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Animation/NrtSpriteAnimatorState.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -90,7 +90,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state, NrtSpriteAnimatorFrameVectorHandle frames)
+    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state,
+                                                NrtSpriteAnimatorFrameVectorHandle frames)
     {
         if (state == nullptr || frames == nullptr)
         {
@@ -115,7 +116,8 @@ extern "C"
         }
 
         Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-        *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorStateHandle>(cppState->tryFindValidTransition().get());
+        *outputTransitionState =
+            reinterpret_cast<NrtSpriteAnimatorStateHandle>(cppState->tryFindValidTransition().get());
         return NRT_SUCCESS;
     }
 
@@ -125,7 +127,8 @@ extern "C"
         return reinterpret_cast<NrtSpriteAnimatorFrameVectorHandle>(vector);
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector, NrtSpriteAnimatorFrameHandle frame)
+    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector,
+                                                     NrtSpriteAnimatorFrameHandle frame)
     {
         if (vector == nullptr || frame == nullptr)
         {

@@ -1,15 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Catalogue.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Ecs/NrtCatalogue.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT/Ecs/Catalogue.h>
 
 using namespace NovelRT::Ecs;
 
 extern "C"
 {
-    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId, NrtComponentCacheHandle componentCache, NrtEntityCacheHandle entityCache)
+    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId,
+                                            NrtComponentCacheHandle componentCache,
+                                            NrtEntityCacheHandle entityCache)
     {
         auto catalogue = new Catalogue(poolId, *reinterpret_cast<ComponentCache*>(componentCache),
                                        *reinterpret_cast<EntityCache*>(entityCache));
@@ -34,7 +36,7 @@ extern "C"
     }
 
     NrtUnsafeComponentViewHandle Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogueHandle catalogue,
-                                                                    NrtComponentTypeId componentId)
+                                                                          NrtComponentTypeId componentId)
     {
         auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
 

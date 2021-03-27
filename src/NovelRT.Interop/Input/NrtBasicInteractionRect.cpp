@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Input/NrtBasicInteractionRect.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -95,8 +95,7 @@ extern "C"
         return reinterpret_cast<NrtKeyCode&>(obj->subscribedKey());
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object,
-                                                              NrtKeyCode value)
+    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object, NrtKeyCode value)
     {
         if (object == nullptr)
         {

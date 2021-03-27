@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
+#include <NovelRT.h>
 
 #include <gtest/gtest.h>
 
@@ -131,7 +131,8 @@ TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(beginIterator);
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(endIterator);
-    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache, reinterpret_cast<NrtEntityIdVectorHandle>(&entityIdVector));
+    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
+                                                  reinterpret_cast<NrtEntityIdVectorHandle>(&entityIdVector));
 
     NrtComponentBufferMemoryContainerHandle ptr = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(componentCache, intComponentTypeId, &ptr), NRT_SUCCESS);

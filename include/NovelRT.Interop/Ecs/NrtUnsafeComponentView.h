@@ -11,7 +11,8 @@ extern "C"
 {
 #endif
 
-    NrtUnsafeComponentViewHandle Nrt_UnsafeComponentView_Create(size_t poolId, NrtComponentBufferMemoryContainerHandle container);
+    NrtUnsafeComponentViewHandle Nrt_UnsafeComponentView_Create(size_t poolId,
+                                                                NrtComponentBufferMemoryContainerHandle container);
 
     NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentViewHandle componentView,
                                                                      NrtEntityId entity,
@@ -19,9 +20,10 @@ extern "C"
 
     NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentViewHandle componentView, NrtEntityId entity);
 
-    NrtResult Nrt_UnsafeComponentView_GetComponent(NrtUnsafeComponentViewHandle componentView,
-                                                   NrtEntityId entity,
-                                                   NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult);
+    NrtResult Nrt_UnsafeComponentView_GetComponent(
+        NrtUnsafeComponentViewHandle componentView,
+        NrtEntityId entity,
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult);
 
     NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_UnsafeComponentView_GetComponentUnsafe(
         NrtUnsafeComponentViewHandle componentView,
@@ -29,9 +31,11 @@ extern "C"
 
     size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(NrtUnsafeComponentViewHandle componentView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(
+        NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(NrtUnsafeComponentViewHandle componentView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(
+        NrtUnsafeComponentViewHandle componentView);
 
     NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentViewHandle componentView);
 

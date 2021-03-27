@@ -19,7 +19,8 @@ extern "C"
     NrtResult Nrt_Camera_setProjectionMatrix(NrtCameraHandle camera, NrtGeoMatrix4x4F inputMatrix);
     NrtGeoMatrix4x4F Nrt_Camera_getCameraUboMatrix(NrtCameraHandle camera);
     NrtCameraFrameState Nrt_Camera_getFrameState(NrtCameraHandle camera);
-    NrtResult Nrt_Camera_setForceResizeCallback(NrtCameraHandle camera, void (*callback)(NrtCameraHandle, NrtGeoVector2F));
+    NrtResult Nrt_Camera_setForceResizeCallback(NrtCameraHandle camera,
+                                                void (*callback)(NrtCameraHandle, NrtGeoVector2F));
     NrtCameraHandle Nrt_Camera_createDefaultOrthographicProjection(NrtGeoVector2F windowSize);
     NrtCameraHandle Nrt_Camera_createDefaultPerspectiveProjection(NrtGeoVector2F windowSize);
     NrtResult Nrt_Camera_destroy(NrtCameraHandle camera);

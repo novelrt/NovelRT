@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/Animation/NrtSpriteAnimatorState.h>
+#include <NovelRT.h>
 
 #include <gtest/gtest.h>
 

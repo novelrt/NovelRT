@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Animation/NrtSpriteAnimator.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -11,7 +11,9 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunnerHandle runner, NrtImageRectHandle rect, NrtSpriteAnimatorHandle* outputAnimator)
+    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunnerHandle runner,
+                                        NrtImageRectHandle rect,
+                                        NrtSpriteAnimatorHandle* outputAnimator)
     {
         if (runner == nullptr || rect == nullptr || outputAnimator == nullptr)
         {

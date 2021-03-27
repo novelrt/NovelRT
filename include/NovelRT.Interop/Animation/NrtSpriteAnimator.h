@@ -11,7 +11,9 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunnerHandle runner, NrtImageRectHandle rect, NrtSpriteAnimatorHandle* outputAnimator);
+    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunnerHandle runner,
+                                        NrtImageRectHandle rect,
+                                        NrtSpriteAnimatorHandle* outputAnimator);
     NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimatorHandle animator);
     NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimatorHandle animator);
     NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimatorHandle animator);

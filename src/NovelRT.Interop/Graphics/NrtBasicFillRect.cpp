@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Graphics/NrtBasicFillRect.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 using namespace NovelRT;
 using namespace NovelRT::Graphics;
@@ -137,7 +137,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect, NrtRenderObjectHandle* outputRenderObject)
+    NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect,
+                                                     NrtRenderObjectHandle* outputRenderObject)
     {
         if (rect == nullptr)
         {

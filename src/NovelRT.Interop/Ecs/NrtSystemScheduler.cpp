@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/SystemScheduler.h>
 #include <NovelRT/Exceptions/Exceptions.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -36,7 +36,8 @@ extern "C"
 
     NrtEntityCacheHandle Nrt_SystemScheduler_GetEntityCache(NrtSystemSchedulerHandle systemScheduler)
     {
-        return reinterpret_cast<NrtEntityCacheHandle>(&reinterpret_cast<SystemScheduler*>(systemScheduler)->GetEntityCache());
+        return reinterpret_cast<NrtEntityCacheHandle>(
+            &reinterpret_cast<SystemScheduler*>(systemScheduler)->GetEntityCache());
     }
 
     NrtComponentCacheHandle Nrt_SystemScheduler_GetComponentCache(NrtSystemSchedulerHandle systemScheduler)

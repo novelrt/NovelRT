@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/Maths/NrtGeoBounds.h>
 #include <NovelRT.Interop/Maths/NrtQuadTree.h>
 #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
+#include <NovelRT.h>
 
 #include <gtest/gtest.h>
 
@@ -80,7 +80,8 @@ TEST_F(InteropQuadTreeTest,
     auto handle = reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))
                       ->shared_from_this();
     ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTreeHandle>(handle.get())), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTreeHandle>(handle.get())), NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
+    ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTreeHandle>(handle.get())),
+              NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsValidPointVectorHandleAndCanAlsoBeDeleted)

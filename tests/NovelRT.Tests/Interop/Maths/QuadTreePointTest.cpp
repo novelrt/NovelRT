@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
 #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
+#include <NovelRT.h>
 
 #include <gtest/gtest.h>
 

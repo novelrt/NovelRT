@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/NrtNovelRunner.h>
+#include <NovelRT.h>
 
 #include <list>
 
@@ -28,9 +28,9 @@ extern "C"
     }
 
     NrtNovelRunnerHandle Nrt_NovelRunner_createCustom(int32_t displayNumber,
-                                                const char* windowTitle,
-                                                NrtWindowMode windowMode,
-                                                uint32_t targetFrameRate)
+                                                      const char* windowTitle,
+                                                      NrtWindowMode windowMode,
+                                                      uint32_t targetFrameRate)
     {
         NovelRunner* runner = new NovelRunner(displayNumber, windowTitle,
                                               static_cast<Windowing::WindowMode>(windowMode), targetFrameRate);

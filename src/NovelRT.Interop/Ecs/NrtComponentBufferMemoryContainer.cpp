@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
 #include <NovelRT/Exceptions/Exceptions.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -15,9 +15,9 @@ std::vector<std::byte> dummyByteCollection{};
 extern "C"
 {
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
-                                                                                void* deleteInstructionState,
-                                                                                size_t sizeOfDataTypeInBytes,
-                                                                                NrtComponentUpdateFnPtr fnPtr)
+                                                                                      void* deleteInstructionState,
+                                                                                      size_t sizeOfDataTypeInBytes,
+                                                                                      NrtComponentUpdateFnPtr fnPtr)
     {
         auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
                         size_t size) {
@@ -37,8 +37,8 @@ extern "C"
             *reinterpret_cast<std::vector<EntityId>*>(entitiesToDelete));
     }
 
-    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(
-        NrtComponentBufferMemoryContainerHandle container)
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle
+    Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
         *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetDeleteInstructionState();

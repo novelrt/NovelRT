@@ -12,15 +12,15 @@ extern "C"
 #endif
 
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
-                                                                                void* deleteInstructionState,
-                                                                                size_t sizeOfDataTypeInBytes,
-                                                                                NrtComponentUpdateFnPtr fnPtr);
+                                                                                      void* deleteInstructionState,
+                                                                                      size_t sizeOfDataTypeInBytes,
+                                                                                      NrtComponentUpdateFnPtr fnPtr);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
                                                                   NrtEntityIdVectorHandle entitiesToDelete);
 
-    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(
-        NrtComponentBufferMemoryContainerHandle container);
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle
+    Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(NrtComponentBufferMemoryContainerHandle container);
 
     NrtResult Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(
         NrtComponentBufferMemoryContainerHandle container,

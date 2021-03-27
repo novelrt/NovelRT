@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Graphics/NrtRenderingService.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.h>
 
 #include <list>
 
@@ -210,7 +210,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService, NrtRGBAConfigHandle colour)
+    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService,
+                                                       NrtRGBAConfigHandle colour)
     {
         if (renderingService == nullptr)
         {

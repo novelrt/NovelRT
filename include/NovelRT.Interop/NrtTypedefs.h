@@ -62,19 +62,19 @@ extern "C"
     typedef int32_t NrtLogLevel;
     typedef int32_t NrtResult;
 
-    #include "Maths/NrtMathsTypedefs.h"
-    #include "Timing/NrtTimingTypedefs.h"
-    #include "Utilities/NrtUtilitiesTypedefs.h"
+#include "Maths/NrtMathsTypedefs.h"
+#include "Timing/NrtTimingTypedefs.h"
+#include "Utilities/NrtUtilitiesTypedefs.h"
 
-    #include "Animation/NrtAnimationTypedefs.h"
-    #include "Audio/NrtAudioTypedefs.h"
-    #include "DotNet/NrtDotNetTypedefs.h"
-    #include "Ecs/NrtEcsTypedefs.h"
-    #include "Graphics/NrtGraphicsTypedefs.h"
-    #include "Ink/NrtInkTypedefs.h"
-    #include "Input/NrtInputTypedefs.h"
-    #include "SceneGraph/NrtSceneGraphTypedefs.h"
-    #include "Windowing/NrtWindowingTypedefs.h"
+#include "Animation/NrtAnimationTypedefs.h"
+#include "Audio/NrtAudioTypedefs.h"
+#include "DotNet/NrtDotNetTypedefs.h"
+#include "Ecs/NrtEcsTypedefs.h"
+#include "Graphics/NrtGraphicsTypedefs.h"
+#include "Ink/NrtInkTypedefs.h"
+#include "Input/NrtInputTypedefs.h"
+#include "SceneGraph/NrtSceneGraphTypedefs.h"
+#include "Windowing/NrtWindowingTypedefs.h"
 
 #ifdef __cplusplus
 }

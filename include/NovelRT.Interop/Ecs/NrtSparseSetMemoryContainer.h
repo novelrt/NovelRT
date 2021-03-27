@@ -13,7 +13,9 @@ extern "C"
 
     NrtSparseSetMemoryContainerHandle Nrt_SparseSetMemoryContainer_Create(size_t sizeOfDataTypeInBytes);
 
-    NrtResult Nrt_SparseSetMemoryContainer_Insert(NrtSparseSetMemoryContainerHandle container, size_t key, const void* value);
+    NrtResult Nrt_SparseSetMemoryContainer_Insert(NrtSparseSetMemoryContainerHandle container,
+                                                  size_t key,
+                                                  const void* value);
 
     NrtBool Nrt_SparseSetMemoryContainer_TryInsert(NrtSparseSetMemoryContainerHandle container,
                                                    size_t key,
@@ -49,8 +51,9 @@ extern "C"
         NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle* outputResult);
 
     NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle
-    Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(NrtSparseSetMemoryContainerHandle container,
-                                                                                 size_t index);
+    Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(
+        NrtSparseSetMemoryContainerHandle container,
+        size_t index);
 
     size_t Nrt_SparseSetMemoryContainer_Length(NrtSparseSetMemoryContainerHandle container);
 
@@ -62,18 +65,22 @@ extern "C"
         NrtSparseSetMemoryContainerHandle container,
         size_t key);
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_begin(NrtSparseSetMemoryContainerHandle container);
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_begin(
+        NrtSparseSetMemoryContainerHandle container);
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_end(NrtSparseSetMemoryContainerHandle container);
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_end(
+        NrtSparseSetMemoryContainerHandle container);
 
     NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cbegin(
         NrtSparseSetMemoryContainerHandle container);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cend(NrtSparseSetMemoryContainerHandle container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cend(
+        NrtSparseSetMemoryContainerHandle container);
 
     NrtResult Nrt_SparseSetMemoryContainer_Destroy(NrtSparseSetMemoryContainerHandle container);
 
-    NrtBool Nrt_SparseSetMemoryContainer_ByteIteratorView_IsValid(NrtSparseSetMemoryContainer_ByteIteratorViewHandle view);
+    NrtBool Nrt_SparseSetMemoryContainer_ByteIteratorView_IsValid(
+        NrtSparseSetMemoryContainer_ByteIteratorViewHandle view);
 
     void Nrt_SparseSetMemoryContainer_ByteIteratorView_CopyFromLocation(
         NrtSparseSetMemoryContainer_ByteIteratorViewHandle view,
@@ -86,7 +93,8 @@ extern "C"
     void* Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(
         NrtSparseSetMemoryContainer_ByteIteratorViewHandle view);
 
-    NrtResult Nrt_SparseSetMemoryContainer_ByteIteratorView_Destroy(NrtSparseSetMemoryContainer_ByteIteratorViewHandle view);
+    NrtResult Nrt_SparseSetMemoryContainer_ByteIteratorView_Destroy(
+        NrtSparseSetMemoryContainer_ByteIteratorViewHandle view);
 
     NrtBool Nrt_SparseSetMemoryContainer_ConstByteIteratorView_IsValid(
         NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle view);
@@ -129,7 +137,8 @@ extern "C"
         size_t* outputId,
         NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle* outputView);
 
-    NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryContainer_ConstIteratorHandle iterator);
+    NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(
+        NrtSparseSetMemoryContainer_ConstIteratorHandle iterator);
 #ifdef __cplusplus
 }
 #endif

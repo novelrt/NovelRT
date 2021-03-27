@@ -14,8 +14,8 @@ extern "C"
     NrtResult Nrt_RenderingService_create(NrtWindowingServiceHandle windowingService,
                                           NrtRenderingServiceHandle* outputRenderingService);
     NrtResult Nrt_RenderingService_initialiseRendering(
-        NrtRenderingServiceHandle renderingService); // this function has its own return codes, so in theory we can combine
-                                               // them both into the main return code
+        NrtRenderingServiceHandle renderingService); // this function has its own return codes, so in theory we can
+                                                     // combine them both into the main return code
     NrtResult Nrt_RenderingService_tearDown(NrtRenderingServiceHandle renderingService);
     NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingServiceHandle renderingService,
                                                            NrtImageRectHandle* outputImageRect,
@@ -43,7 +43,8 @@ extern "C"
     NrtResult Nrt_RenderingService_getCamera(NrtRenderingServiceHandle renderingService, NrtCameraHandle* outputCamera);
     NrtResult Nrt_RenderingService_beginFrame(NrtRenderingServiceHandle renderingService);
     NrtResult Nrt_RenderingService_endFrame(NrtRenderingServiceHandle renderingService);
-    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService, NrtRGBAConfigHandle colour);
+    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService,
+                                                       NrtRGBAConfigHandle colour);
     NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingServiceHandle renderingService,
                                                          NrtTextureHandle* outputTexture);
     NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingServiceHandle renderingService,

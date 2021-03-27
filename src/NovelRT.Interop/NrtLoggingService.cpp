@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/NrtLoggingService.h>
+#include <NovelRT.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -126,7 +126,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service, void* object, const char* exceptionMessage)
+    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service,
+                                                void* object,
+                                                const char* exceptionMessage)
     {
         if (service == nullptr)
         {
@@ -139,7 +141,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service, int32_t error, const char* exceptionMessage)
+    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service,
+                                                int32_t error,
+                                                const char* exceptionMessage)
     {
         if (service == nullptr)
         {

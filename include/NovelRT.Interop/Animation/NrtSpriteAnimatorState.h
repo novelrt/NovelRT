@@ -20,16 +20,19 @@ extern "C"
     NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorStateHandle state, int32_t loop);
     NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorStateHandle state,
                                                 NrtSpriteAnimatorFrameVectorHandle* outputFramess);
-    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state, NrtSpriteAnimatorFrameVectorHandle frames);
+    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state,
+                                                NrtSpriteAnimatorFrameVectorHandle frames);
     NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorStateHandle state,
                                                              NrtSpriteAnimatorStateHandle* outputTransitionState);
 
     NrtSpriteAnimatorFrameVectorHandle Nrt_SpriteAnimatorFrameVector_create();
-    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector, NrtSpriteAnimatorFrameHandle frame);
+    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector,
+                                                     NrtSpriteAnimatorFrameHandle frame);
     NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector,
                                                             int32_t index,
                                                             NrtSpriteAnimatorFrameHandle* outputFrame);
-    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector, int32_t index);
+    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector,
+                                                               int32_t index);
     NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVectorHandle vector);
 
 #ifdef __cplusplus

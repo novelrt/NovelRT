@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/SparseSetMemoryContainer.h>
 #include <NovelRT/Exceptions/Exceptions.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
 
 #include <stdexcept>
 
@@ -178,7 +178,7 @@ extern "C"
     NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle
     Nrt_SparseSetMemoryContainer_GetConstByteIteratorViewBasedOnDenseIndexUnsafe(
         NrtSparseSetMemoryContainerHandle container,
-                                                                                 size_t denseIndex)
+        size_t denseIndex)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
         auto ptr = new SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorSparseSet.end(), 0);

@@ -14,8 +14,11 @@ extern "C"
     NrtResult Nrt_InkService_initialise(NrtInkServiceHandle service);
     NrtResult Nrt_InkService_tearDown(NrtInkServiceHandle service);
 
-    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service, const char* jsonString, NrtStoryHandle* outputStory);
-    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service, NrtRuntimeServiceHandle* outputRuntimeService);
+    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service,
+                                         const char* jsonString,
+                                         NrtStoryHandle* outputStory);
+    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service,
+                                               NrtRuntimeServiceHandle* outputRuntimeService);
 
 #ifdef __cplusplus
 }

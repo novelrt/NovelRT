@@ -21,8 +21,12 @@ extern "C"
     NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingServiceHandle service, const char* message);
     NrtResult Nrt_LoggingService_logInternal(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level);
     NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level);
-    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service, void* object, const char* exceptionMessage);
-    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service, int32_t error, const char* exceptionMessage);
+    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service,
+                                                void* object,
+                                                const char* exceptionMessage);
+    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service,
+                                                int32_t error,
+                                                const char* exceptionMessage);
 
 #ifdef __cplusplus
 }
