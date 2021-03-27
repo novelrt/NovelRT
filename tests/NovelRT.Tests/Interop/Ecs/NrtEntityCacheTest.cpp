@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/Ecs/NrtEcs.h>
+
 #include <atomic>
 #include <gtest/gtest.h>
 
@@ -12,7 +13,7 @@ using namespace NovelRT::Ecs;
 class InteropEntityCacheTest : public testing::Test
 {
 public:
-    NrtEntityCache cache = nullptr;
+    NrtEntityCacheHandle cache = nullptr;
 
 protected:
     void SetUp() override

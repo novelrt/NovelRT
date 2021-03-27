@@ -4,19 +4,17 @@
 #ifndef NOVELRT_INTEROP_MATHS_QUADTREEPOINT_H
 #define NOVELRT_INTEROP_MATHS_QUADTREEPOINT_H
 
-#include "NrtGeoVector2F.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct QuadtreePoint* NrtQuadTreePoint;
-
-    NrtQuadTreePoint Nrt_QuadTreePoint_create(NrtGeoVector2F position);
-    NrtQuadTreePoint Nrt_QuadTreePoint_createFromFloat(float x, float y);
-    NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point);
-    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point);
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_create(NrtGeoVector2F position);
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_createFromFloat(float x, float y);
+    NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePointHandle point);
+    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePointHandle point);
 
 #ifdef __cplusplus
 }

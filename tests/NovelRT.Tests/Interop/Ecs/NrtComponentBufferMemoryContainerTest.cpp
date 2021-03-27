@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/Ecs/NrtEcs.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
@@ -32,7 +33,7 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAd
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(container), 1);
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_HasComponent(container, 0), NRT_TRUE);
     auto componentView = Nrt_ComponentBufferMemoryContainer_GetComponentUnsafe(container, 0);
@@ -57,12 +58,12 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUp
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(container), 1);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_HasComponent(container, 0), NRT_TRUE);
     auto componentView = Nrt_ComponentBufferMemoryContainer_GetComponentUnsafe(container, 0);
@@ -84,12 +85,12 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRe
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(container), 1);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &deleteState),
               NRT_SUCCESS);
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
     EXPECT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(container), 0);
     EXPECT_EQ(Nrt_ComponentBufferMemoryContainer_HasComponent(container, 0), NRT_FALSE);
@@ -112,17 +113,17 @@ TEST(InteropComponentBufferMemoryContainerTest, IterationWorksCorrectly)
               NRT_SUCCESS);
 
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
-    NrtSparseSetMemoryContainer_ConstIterator beginIt = nullptr;
-    NrtSparseSetMemoryContainer_ConstIterator endIt = Nrt_ComponentBufferMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle beginIt = nullptr;
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_end(container);
 
     for (beginIt = Nrt_ComponentBufferMemoryContainer_begin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIt, endIt) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIt))
     {
         size_t outputId = 0;
-        NrtSparseSetMemoryContainer_ConstByteIteratorView dataView = nullptr;
+        NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle dataView = nullptr;
         Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(beginIt, &outputId, &dataView);
 
         EXPECT_EQ(*reinterpret_cast<const int32_t*>(
@@ -154,7 +155,7 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     }
 
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
     std::thread threadOne([&]() {
         for (size_t i = 0; i < 2000; ++i)
@@ -173,17 +174,17 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     threadOne.join();
     threadTwo.join();
 
-    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
-    NrtSparseSetMemoryContainer_ConstIterator beginIt = nullptr;
-    NrtSparseSetMemoryContainer_ConstIterator endIt = Nrt_ComponentBufferMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle beginIt = nullptr;
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_end(container);
 
     for (beginIt = Nrt_ComponentBufferMemoryContainer_begin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIt, endIt) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIt))
     {
         size_t outputId = 0;
-        NrtSparseSetMemoryContainer_ConstByteIteratorView dataView = nullptr;
+        NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle dataView = nullptr;
         Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(beginIt, &outputId, &dataView);
 
         EXPECT_EQ(*reinterpret_cast<const int32_t*>(

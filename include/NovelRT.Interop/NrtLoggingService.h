@@ -4,28 +4,25 @@
 #ifndef NOVELRT_INTEROP_LOGGINGSERVICE_H
 #define NOVELRT_INTEROP_LOGGINGSERVICE_H
 
-#include "NrtInteropUtils.h"
-#include "NrtLogLevel.h"
+#include "NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct LoggingServiceHandle* NrtLoggingService;
-
-    NrtLoggingService Nrt_LoggingService_create();
-    NrtLoggingService Nrt_LoggingService_createCustomTitle(const char* core);
-    NrtLoggingService Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level);
-    NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level);
-    NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message);
-    NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message);
-    NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message);
-    NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message);
-    NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level);
-    NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level);
-    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage);
-    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage);
+    NrtLoggingServiceHandle Nrt_LoggingService_create();
+    NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitle(const char* core);
+    NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level);
+    NrtResult Nrt_LoggingService_log(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level);
+    NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingServiceHandle service, const char* message);
+    NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingServiceHandle service, const char* message);
+    NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingServiceHandle service, const char* message);
+    NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingServiceHandle service, const char* message);
+    NrtResult Nrt_LoggingService_logInternal(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level);
+    NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level);
+    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service, void* object, const char* exceptionMessage);
+    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service, int32_t error, const char* exceptionMessage);
 
 #ifdef __cplusplus
 }

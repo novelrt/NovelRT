@@ -4,30 +4,27 @@
 #ifndef NOVELRT_INTEROP_INPUT_BASICINTERACTIONRECT_H
 #define NOVELRT_INTEROP_INPUT_BASICINTERACTIONRECT_H
 
-#include "../NrtInteropUtils.h"
-#include "../NrtTransform.h"
-#include "NrtKeyCode.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct BasicInteractionRectHandle* NrtBasicInteractionRect;
-
-    NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object);
-    NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object,
+    NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRectHandle object);
+    NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object,
                                                           NrtTransform* outputTransform);
-    NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform);
-    int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object);
-    NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int32_t value);
-    int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object);
-    NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value);
-    NrtResult Nrt_Input_BasicInteractionRect_validateInteractionPrimeter(NrtBasicInteractionRect object,
+    NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRectHandle object, NrtTransform transform);
+    int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRectHandle object);
+    NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRectHandle object, int32_t value);
+    int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRectHandle object);
+    NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRectHandle object, int32_t value);
+    NrtResult Nrt_Input_BasicInteractionRect_validateInteractionPrimeter(NrtBasicInteractionRectHandle object,
                                                                          const NrtGeoVector2F mousePosition);
-    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object);
-    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind value);
-    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void (*ptr)());
+    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object);
+    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object,
+                                                              NrtKeyCodeKind value);
+    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)());
 
 #ifdef __cplusplus
 }

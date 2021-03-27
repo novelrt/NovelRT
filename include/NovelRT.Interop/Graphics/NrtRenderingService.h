@@ -4,63 +4,59 @@
 #ifndef NOVELRT_INTEROP_GRAPHICS_RENDERINGSERVICE_H
 #define NOVELRT_INTEROP_GRAPHICS_RENDERINGSERVICE_H
 
-#include "../NrtTransform.h"
-#include "../Windowing/NrtWindowingService.h"
-#include "NrtGraphicsTypedefs.h"
-#include "NrtRGBAConfig.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtResult Nrt_RenderingService_create(NrtWindowingService windowingService,
-                                          NrtRenderingService* outputRenderingService);
+    NrtResult Nrt_RenderingService_create(NrtWindowingServiceHandle windowingService,
+                                          NrtRenderingServiceHandle* outputRenderingService);
     NrtResult Nrt_RenderingService_initialiseRendering(
-        NrtRenderingService renderingService); // this function has its own return codes, so in theory we can combine
+        NrtRenderingServiceHandle renderingService); // this function has its own return codes, so in theory we can combine
                                                // them both into the main return code
-    NrtResult Nrt_RenderingService_tearDown(NrtRenderingService renderingService);
-    NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingService renderingService,
-                                                           NrtImageRect* outputImageRect,
+    NrtResult Nrt_RenderingService_tearDown(NrtRenderingServiceHandle renderingService);
+    NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingServiceHandle renderingService,
+                                                           NrtImageRectHandle* outputImageRect,
                                                            NrtTransform transform,
                                                            int32_t layer,
                                                            const char* filePath,
-                                                           NrtRGBAConfig colourTint);
-    NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingService renderingService,
-                                                              NrtImageRect* outputImageRect,
+                                                           NrtRGBAConfigHandle colourTint);
+    NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingServiceHandle renderingService,
+                                                              NrtImageRectHandle* outputImageRect,
                                                               NrtTransform transform,
                                                               int32_t layer,
-                                                              NrtRGBAConfig colourTint);
-    NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingService renderingService,
-                                                       NrtBasicFillRect* outputBasicFillRect,
+                                                              NrtRGBAConfigHandle colourTint);
+    NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingServiceHandle renderingService,
+                                                       NrtBasicFillRectHandle* outputBasicFillRect,
                                                        NrtTransform transform,
                                                        int32_t layer,
-                                                       NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingService renderingService,
-                                                  NrtTextRect* outputTextRect,
+                                                       NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingServiceHandle renderingService,
+                                                  NrtTextRectHandle* outputTextRect,
                                                   NrtTransform transform,
                                                   int32_t layer,
-                                                  NrtRGBAConfig colourConfig,
+                                                  NrtRGBAConfigHandle colourConfig,
                                                   float fontSize,
                                                   const char* fontFilePath);
-    NrtResult Nrt_RenderingService_getCamera(NrtRenderingService renderingService, NrtCamera* outputCamera);
-    NrtResult Nrt_RenderingService_beginFrame(NrtRenderingService renderingService);
-    NrtResult Nrt_RenderingService_endFrame(NrtRenderingService renderingService);
-    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingService renderingService, NrtRGBAConfig colour);
-    NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingService renderingService,
-                                                         NrtTexture* outputTexture);
-    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService,
-                                                      NrtTexture* outputTexture,
+    NrtResult Nrt_RenderingService_getCamera(NrtRenderingServiceHandle renderingService, NrtCameraHandle* outputCamera);
+    NrtResult Nrt_RenderingService_beginFrame(NrtRenderingServiceHandle renderingService);
+    NrtResult Nrt_RenderingService_endFrame(NrtRenderingServiceHandle renderingService);
+    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService, NrtRGBAConfigHandle colour);
+    NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingServiceHandle renderingService,
+                                                         NrtTextureHandle* outputTexture);
+    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingServiceHandle renderingService,
+                                                      NrtTextureHandle* outputTexture,
                                                       const char* fileTarget);
-    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingService renderingService,
-                                              NrtFontSet* outputFontSet,
+    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingServiceHandle renderingService,
+                                              NrtFontSetHandle* outputFontSet,
                                               const char* fileTarget,
-                                              float fontSize,
-                                              const char** errorMessage);
-    NrtResult Nrt_RenderingService_destroy(NrtRenderingService renderingService);
+                                              float fontSize);
+    NrtResult Nrt_RenderingService_destroy(NrtRenderingServiceHandle renderingService);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_GRAPHICS_RENDERINGSERVICE_H
+#endif // NOVELRT_INTEROP_GRAPHICS_RENDERINGSERVICE_H

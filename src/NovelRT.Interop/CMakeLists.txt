@@ -1,14 +1,13 @@
 set(INTEROP_SOURCES
-  NrtInteropErrorHandlingInternal.cpp
-  NrtInteropUtils.cpp
+  NrtDebugService.cpp
+  NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
   NrtNovelRunner.cpp
   NrtTransform.cpp
-  NrtDebugService.cpp
-
+  
+  Animation/NrtSpriteAnimator.cpp
   Animation/NrtSpriteAnimatorFrame.cpp
   Animation/NrtSpriteAnimatorState.cpp
-  Animation/NrtSpriteAnimator.cpp
 
   Audio/NrtAudioService.cpp
 
@@ -17,11 +16,11 @@ set(INTEROP_SOURCES
   Ecs/NrtCatalogue.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
   Ecs/NrtComponentCache.cpp
-  Ecs/NrtUnsafeComponentView.cpp
   Ecs/NrtEntityCache.cpp
   Ecs/NrtEntityIdVector.cpp
   Ecs/NrtSparseSetMemoryContainer.cpp
   Ecs/NrtSystemScheduler.cpp
+  Ecs/NrtUnsafeComponentView.cpp
 
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
@@ -39,24 +38,24 @@ set(INTEROP_SOURCES
   Input/NrtInteractionService.cpp
   Input/NrtKeyStateFrameChangeLog.cpp
 
-  Maths/NrtGeoMatrix4x4F.cpp
   Maths/NrtGeoBounds.cpp
+  Maths/NrtGeoMatrix4x4F.cpp
   Maths/NrtGeoVector2F.cpp
   Maths/NrtGeoVector3F.cpp
   Maths/NrtGeoVector4F.cpp
   Maths/NrtQuadTree.cpp
   Maths/NrtQuadTreePoint.cpp
-
+  
+  SceneGraph/NrtQuadTreeNode.cpp
+  SceneGraph/NrtQuadTreeScenePoint.cpp
+  SceneGraph/NrtRenderObjectNode.cpp
+  SceneGraph/NrtScene.cpp
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
   SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
-  SceneGraph/NrtScene.cpp
-  SceneGraph/NrtRenderObjectNode.cpp
-  SceneGraph/NrtQuadTreeScenePoint.cpp
-  SceneGraph/NrtQuadTreeNode.cpp
-
-  Timing/NrtTimestamp.cpp
+  
   Timing/NrtStepTimer.cpp
+  Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
 

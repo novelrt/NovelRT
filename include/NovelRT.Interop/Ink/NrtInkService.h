@@ -4,19 +4,18 @@
 #ifndef NOVELRT_INTEROP_INK_INKSERVICE_H
 #define NOVELRT_INTEROP_INK_INKSERVICE_H
 
-#include "../DotNet/NrtRuntimeTypedefs.h"
-#include "../NrtInteropUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtResult Nrt_InkService_initialise(NrtInkService service);
-    NrtResult Nrt_InkService_tearDown(NrtInkService service);
+    NrtResult Nrt_InkService_initialise(NrtInkServiceHandle service);
+    NrtResult Nrt_InkService_tearDown(NrtInkServiceHandle service);
 
-    NrtResult Nrt_InkService_createStory(NrtInkService service, const char* jsonString, NrtStory* outputStory);
-    NrtResult Nrt_InkService_getRuntimeService(NrtInkService service, NrtRuntimeService* outputRuntimeService);
+    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service, const char* jsonString, NrtStoryHandle* outputStory);
+    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service, NrtRuntimeServiceHandle* outputRuntimeService);
 
 #ifdef __cplusplus
 }

@@ -4,21 +4,12 @@
 #ifndef NOVELRT_INTEROP_TRANSFORM_H
 #define NOVELRT_INTEROP_TRANSFORM_H
 
-#include "Maths/NrtGeoBounds.h"
-#include "Maths/NrtGeoVector2F.h"
-#include "NrtInteropUtils.h"
+#include "NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef struct
-    {
-        NrtGeoVector2F position;
-        NrtGeoVector2F scale;
-        float rotation;
-    } NrtTransform;
 
     NrtGeoBounds Nrt_Transform_getAABB(const NrtTransform transform); // TODO: why are these const lol?
     NrtGeoBounds Nrt_Transform_getBounds(const NrtTransform transform);

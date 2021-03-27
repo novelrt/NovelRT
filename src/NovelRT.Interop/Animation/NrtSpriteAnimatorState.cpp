@@ -1,12 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h>
-#include <NovelRT.Interop/Animation/NrtSpriteAnimatorState.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
 #include <NovelRT.h>
-#include <stddef.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Animation/NrtSpriteAnimatorState.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -14,15 +11,15 @@ extern "C"
 {
 #endif
 
-    NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create()
+    NrtSpriteAnimatorStateHandle Nrt_SpriteAnimatorState_create()
     {
         Animation::SpriteAnimatorState* state = new Animation::SpriteAnimatorState();
-        return reinterpret_cast<NrtSpriteAnimatorState>(state);
+        return reinterpret_cast<NrtSpriteAnimatorStateHandle>(state);
     }
 
-    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state,
-                                                     NrtSpriteAnimatorState stateTarget,
-                                                     NrtSpriteAnimatorStateConditionFunctions vector)
+    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorStateHandle state,
+                                                     NrtSpriteAnimatorStateHandle stateTarget,
+                                                     NrtSpriteAnimatorStateConditionFunctionsHandle vector)
     {
         if (state == nullptr || stateTarget == nullptr || vector == nullptr)
         {
@@ -40,7 +37,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index)
+    NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorStateHandle state, size_t index)
     {
         if (state == nullptr)
         {
@@ -55,13 +52,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state)
+    NrtBool Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorStateHandle state)
     {
         Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
         return static_cast<NrtBool>(cppState->shouldLoop());
     }
 
-    NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, NrtBool loop)
+    NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorStateHandle state, NrtBool loop)
     {
         if (state == nullptr)
         {
@@ -76,8 +73,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state,
-                                                NrtSpriteAnimatorFrameVector* outputFrames)
+    NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorStateHandle state,
+                                                NrtSpriteAnimatorFrameVectorHandle* outputFrames)
     {
         if (state == nullptr || outputFrames == nullptr)
         {
@@ -89,11 +86,11 @@ extern "C"
         std::vector<Animation::SpriteAnimatorFrame>* frames = new std::vector<Animation::SpriteAnimatorFrame>();
         *frames = cppState->frames();
 
-        *outputFrames = reinterpret_cast<NrtSpriteAnimatorFrameVector>(&frames);
+        *outputFrames = reinterpret_cast<NrtSpriteAnimatorFrameVectorHandle>(&frames);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames)
+    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state, NrtSpriteAnimatorFrameVectorHandle frames)
     {
         if (state == nullptr || frames == nullptr)
         {
@@ -108,8 +105,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state,
-                                                             NrtSpriteAnimatorState* outputTransitionState)
+    NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorStateHandle state,
+                                                             NrtSpriteAnimatorStateHandle* outputTransitionState)
     {
         if (state == nullptr || outputTransitionState == nullptr)
         {
@@ -118,17 +115,17 @@ extern "C"
         }
 
         Animation::SpriteAnimatorState* cppState = reinterpret_cast<Animation::SpriteAnimatorState*>(state);
-        *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorState>(cppState->tryFindValidTransition().get());
+        *outputTransitionState = reinterpret_cast<NrtSpriteAnimatorStateHandle>(cppState->tryFindValidTransition().get());
         return NRT_SUCCESS;
     }
 
-    NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create()
+    NrtSpriteAnimatorFrameVectorHandle Nrt_SpriteAnimatorFrameVector_create()
     {
         std::vector<Animation::SpriteAnimatorFrame>* vector = new std::vector<Animation::SpriteAnimatorFrame>();
-        return reinterpret_cast<NrtSpriteAnimatorFrameVector>(vector);
+        return reinterpret_cast<NrtSpriteAnimatorFrameVectorHandle>(vector);
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame)
+    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector, NrtSpriteAnimatorFrameHandle frame)
     {
         if (vector == nullptr || frame == nullptr)
         {
@@ -143,9 +140,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector,
+    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector,
                                                             int32_t index,
-                                                            NrtSpriteAnimatorFrame* outputFrame)
+                                                            NrtSpriteAnimatorFrameHandle* outputFrame)
     {
         if (vector == nullptr || outputFrame == nullptr)
         {
@@ -170,7 +167,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index)
+    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector, int32_t index)
     {
         if (vector == nullptr)
         {
@@ -184,7 +181,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector)
+    NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVectorHandle vector)
     {
         if (vector == nullptr)
         {

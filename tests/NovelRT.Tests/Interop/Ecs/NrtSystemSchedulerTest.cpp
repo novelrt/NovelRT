@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/Ecs/NrtEcs.h>
+
 #include <atomic>
 #include <gtest/gtest.h>
 
@@ -13,7 +14,7 @@ using namespace NovelRT::Timing;
 class InteropSystemSchedulerTest : public testing::Test
 {
 public:
-    NrtSystemScheduler scheduler = nullptr;
+    NrtSystemSchedulerHandle scheduler = nullptr;
     std::atomic_bool sysOneBool = true;
     std::atomic_bool sysTwoBool = true;
     std::atomic_bool sysThreeBool = true;
@@ -41,7 +42,7 @@ protected:
             cppScheduler->RegisterSystem(sysOne);
             cppScheduler->RegisterSystem(sysTwo);
             cppScheduler->RegisterSystem(sysThree);
-            scheduler = reinterpret_cast<NrtSystemScheduler>(cppScheduler);
+            scheduler = reinterpret_cast<NrtSystemSchedulerHandle>(cppScheduler);
         }
     }
 
@@ -76,7 +77,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
 
-    NrtComponentBufferMemoryContainer container = nullptr;
+    NrtComponentBufferMemoryContainerHandle container = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, GetComponentTypeId<int32_t>(), &container), NRT_SUCCESS);
 
     int32_t data = 10;

@@ -1,8 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
 #include <NovelRT/Ecs/EcsUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
+
 #include <algorithm>
 #include <vector>
 
@@ -10,12 +12,12 @@ using namespace NovelRT::Ecs;
 
 extern "C"
 {
-    NrtEntityIdVector Nrt_EntityIdVector_Create()
+    NrtEntityIdVectorHandle Nrt_EntityIdVector_Create()
     {
-        return reinterpret_cast<NrtEntityIdVector>(new std::vector<EntityId>());
+        return reinterpret_cast<NrtEntityIdVectorHandle>(new std::vector<EntityId>());
     }
 
-    NrtResult Nrt_EntityIdVector_Insert(NrtEntityIdVector vector, NrtEntityId entity)
+    NrtResult Nrt_EntityIdVector_Insert(NrtEntityIdVectorHandle vector, NrtEntityId entity)
     {
         if (vector == nullptr)
         {
@@ -27,7 +29,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_EntityIdVector_Remove(NrtEntityIdVector vector, NrtEntityId entity)
+    NrtResult Nrt_EntityIdVector_Remove(NrtEntityIdVectorHandle vector, NrtEntityId entity)
     {
         if (vector == nullptr)
         {
@@ -47,7 +49,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_EntityIdVector_Delete(NrtEntityIdVector vector)
+    NrtResult Nrt_EntityIdVector_Delete(NrtEntityIdVectorHandle vector)
     {
         if (vector == nullptr)
         {

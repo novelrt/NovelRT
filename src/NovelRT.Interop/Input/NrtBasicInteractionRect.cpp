@@ -1,11 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Input/NrtBasicInteractionRect.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/NrtTransform.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Input/NrtBasicInteractionRect.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -13,7 +11,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRect object)
+    NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRectHandle object)
     {
         if (object == nullptr)
         {
@@ -26,7 +24,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRect object, NrtTransform* outputTransform)
+    NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object,
+                                                          NrtTransform* outputTransform)
     {
         if (object == nullptr)
         {
@@ -39,7 +38,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRect object, NrtTransform transform)
+    NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRectHandle object, NrtTransform transform)
     {
         if (object == nullptr)
         {
@@ -52,13 +51,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRect object)
+    int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRectHandle object)
     {
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
         return obj->layer();
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRect object, int32_t value)
+    NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRectHandle object, int32_t value)
     {
         if (object == nullptr)
         {
@@ -71,13 +70,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRect object)
+    int32_t Nrt_Input_BasicInteractionRect_getActive(NrtBasicInteractionRectHandle object)
     {
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
         return obj->getActive() ? NRT_TRUE : NRT_FALSE;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRect object, int32_t value)
+    NrtResult Nrt_Input_BasicInteractionRect_setActive(NrtBasicInteractionRectHandle object, int32_t value)
     {
         if (object == nullptr)
         {
@@ -90,13 +89,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRect object)
+    NrtKeyCodeKind Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object)
     {
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
         return reinterpret_cast<NrtKeyCodeKind&>(obj->subscribedKey());
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRect object, NrtKeyCodeKind value)
+    NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object,
+                                                              NrtKeyCodeKind value)
     {
         if (object == nullptr)
         {
@@ -109,7 +109,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRect object, void (*ptr)())
+    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)())
     {
         if (object == nullptr)
         {

@@ -5,33 +5,31 @@
 #ifndef NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
 #define NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
 
-#include "../NrtInteropUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct RGBAConfigHandle* NrtRGBAConfig;
+    NrtRGBAConfigHandle Nrt_RGBAConfig_Create(int32_t r, int32_t g, int32_t b, int32_t a);
+    int32_t Nrt_RGBAConfig_getR(NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RGBAConfig_setR(NrtRGBAConfigHandle colourConfig, int32_t inputValue);
+    int32_t Nrt_RGBAConfig_getG(NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RGBAConfig_setG(NrtRGBAConfigHandle colourConfig, int32_t inputValue);
+    int32_t Nrt_RGBAConfig_getB(NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RGBAConfig_setB(NrtRGBAConfigHandle colourConfig, int32_t inputValue);
+    int32_t Nrt_RGBAConfig_getA(NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RGBAConfig_setA(NrtRGBAConfigHandle colourConfig, int32_t inputValue);
 
-    NrtRGBAConfig Nrt_RGBAConfig_Create(int32_t r, int32_t g, int32_t b, int32_t a);
-    int32_t Nrt_RGBAConfig_getR(NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RGBAConfig_setR(NrtRGBAConfig colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAConfig_getG(NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RGBAConfig_setG(NrtRGBAConfig colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAConfig_getB(NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RGBAConfig_setB(NrtRGBAConfig colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAConfig_getA(NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RGBAConfig_setA(NrtRGBAConfig colourConfig, int32_t inputValue);
-
-    float Nrt_RGBAConfig_getRScalar(NrtRGBAConfig colourConfig);
-    float Nrt_RGBAConfig_getGScalar(NrtRGBAConfig colourConfig);
-    float Nrt_RGBAConfig_getBScalar(NrtRGBAConfig colourConfig);
-    float Nrt_RGBAConfig_getAScalar(NrtRGBAConfig colourConfig);
-    NrtResult Nrt_RGBAConfig_destroy(NrtRGBAConfig);
+    float Nrt_RGBAConfig_getRScalar(NrtRGBAConfigHandle colourConfig);
+    float Nrt_RGBAConfig_getGScalar(NrtRGBAConfigHandle colourConfig);
+    float Nrt_RGBAConfig_getBScalar(NrtRGBAConfigHandle colourConfig);
+    float Nrt_RGBAConfig_getAScalar(NrtRGBAConfigHandle colourConfig);
+    NrtResult Nrt_RGBAConfig_destroy(NrtRGBAConfigHandle);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
+#endif // NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H

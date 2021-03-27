@@ -1,10 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Graphics/NrtTexture.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Graphics/NrtTexture.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
@@ -15,7 +14,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_Texture_loadPngAsTexture(NrtTexture targetTexture, const char* file)
+    NrtResult Nrt_Texture_loadPngAsTexture(NrtTextureHandle targetTexture, const char* file)
     {
         if (targetTexture == nullptr)
         {
@@ -38,13 +37,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    const char* Nrt_Texture_getTextureFile(NrtTexture targetTexture)
+    const char* Nrt_Texture_getTextureFile(NrtTextureHandle targetTexture)
     {
         Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
         return texturePtr->getTextureFile().c_str();
     }
 
-    NrtGeoVector2F Nrt_Texture_getSize(NrtTexture targetTexture)
+    NrtGeoVector2F Nrt_Texture_getSize(NrtTextureHandle targetTexture)
     {
         Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
         auto vec = texturePtr->getSize();

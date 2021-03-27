@@ -1,11 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Graphics/NrtBasicFillRect.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/Windowing/NrtWindowingService.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Graphics/NrtRenderingService.h>
+
 #include <list>
 
 using namespace NovelRT;
@@ -24,8 +23,8 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_RenderingService_create(NrtWindowingService windowingService,
-                                          NrtRenderingService* outputRenderingService)
+    NrtResult Nrt_RenderingService_create(NrtWindowingServiceHandle windowingService,
+                                          NrtRenderingServiceHandle* outputRenderingService)
     {
         if (windowingService == nullptr)
         {
@@ -37,12 +36,12 @@ extern "C"
 
         auto renderingServicePtr = std::make_shared<RenderingService>(windowingServicePtr->shared_from_this());
         _renderingServiceCollection.push_back(renderingServicePtr);
-        *outputRenderingService = reinterpret_cast<NrtRenderingService>(renderingServicePtr.get());
+        *outputRenderingService = reinterpret_cast<NrtRenderingServiceHandle>(renderingServicePtr.get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_initialiseRendering(NrtRenderingService renderingService)
+    NrtResult Nrt_RenderingService_initialiseRendering(NrtRenderingServiceHandle renderingService)
     {
         if (renderingService == nullptr)
         {
@@ -65,7 +64,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_tearDown(NrtRenderingService renderingService)
+    NrtResult Nrt_RenderingService_tearDown(NrtRenderingServiceHandle renderingService)
     {
         if (renderingService == nullptr)
         {
@@ -79,12 +78,12 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingService renderingService,
-                                                           NrtImageRect* outputImageRect,
+    NrtResult Nrt_RenderingService_createImageRectWithFile(NrtRenderingServiceHandle renderingService,
+                                                           NrtImageRectHandle* outputImageRect,
                                                            NrtTransform transform,
                                                            int32_t layer,
                                                            const char* filePath,
-                                                           NrtRGBAConfig colourTint)
+                                                           NrtRGBAConfigHandle colourTint)
     {
         if (renderingService == nullptr)
         {
@@ -97,16 +96,16 @@ extern "C"
         _imageRectCollection.push_back(
             renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer,
                                                  std::string(filePath), *reinterpret_cast<RGBAConfig*>(colourTint)));
-        *outputImageRect = reinterpret_cast<NrtImageRect>(_imageRectCollection.back().get());
+        *outputImageRect = reinterpret_cast<NrtImageRectHandle>(_imageRectCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingService renderingService,
-                                                              NrtImageRect* outputImageRect,
+    NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingServiceHandle renderingService,
+                                                              NrtImageRectHandle* outputImageRect,
                                                               NrtTransform transform,
                                                               int32_t layer,
-                                                              NrtRGBAConfig colourTint)
+                                                              NrtRGBAConfigHandle colourTint)
     {
         if (renderingService == nullptr)
         {
@@ -118,16 +117,16 @@ extern "C"
 
         _imageRectCollection.push_back(renderingServicePtr->createImageRect(
             *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourTint)));
-        *outputImageRect = reinterpret_cast<NrtImageRect>(_imageRectCollection.back().get());
+        *outputImageRect = reinterpret_cast<NrtImageRectHandle>(_imageRectCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingService renderingService,
-                                                       NrtBasicFillRect* outputBasicFillRect,
+    NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingServiceHandle renderingService,
+                                                       NrtBasicFillRectHandle* outputBasicFillRect,
                                                        NrtTransform transform,
                                                        int32_t layer,
-                                                       NrtRGBAConfig colourConfig)
+                                                       NrtRGBAConfigHandle colourConfig)
     {
         if (renderingService == nullptr)
         {
@@ -139,16 +138,16 @@ extern "C"
 
         _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(
             *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig)));
-        *outputBasicFillRect = reinterpret_cast<NrtBasicFillRect>(_basicFillRectCollection.back().get());
+        *outputBasicFillRect = reinterpret_cast<NrtBasicFillRectHandle>(_basicFillRectCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingService renderingService,
-                                                  NrtTextRect* outputTextRect,
+    NrtResult Nrt_RenderingService_createTextRect(NrtRenderingServiceHandle renderingService,
+                                                  NrtTextRectHandle* outputTextRect,
                                                   NrtTransform transform,
                                                   int32_t layer,
-                                                  NrtRGBAConfig colourConfig,
+                                                  NrtRGBAConfigHandle colourConfig,
                                                   float fontSize,
                                                   const char* fontFilePath)
     {
@@ -164,12 +163,12 @@ extern "C"
         _textRectCollection.push_back(renderingServicePtr->createTextRect(
             *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig), fontSize,
             std::string(fontFilePath)));
-        *outputTextRect = reinterpret_cast<NrtTextRect>(_textRectCollection.back().get());
+        *outputTextRect = reinterpret_cast<NrtTextRectHandle>(_textRectCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getCamera(NrtRenderingService renderingService, NrtCamera* outputCamera)
+    NrtResult Nrt_RenderingService_getCamera(NrtRenderingServiceHandle renderingService, NrtCameraHandle* outputCamera)
     {
         if (renderingService == nullptr)
         {
@@ -178,12 +177,12 @@ extern "C"
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-        *outputCamera = reinterpret_cast<NrtCamera>(renderingServicePtr->getCamera().get());
+        *outputCamera = reinterpret_cast<NrtCameraHandle>(renderingServicePtr->getCamera().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_beginFrame(NrtRenderingService renderingService)
+    NrtResult Nrt_RenderingService_beginFrame(NrtRenderingServiceHandle renderingService)
     {
         if (renderingService == nullptr)
         {
@@ -197,7 +196,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_endFrame(NrtRenderingService renderingService)
+    NrtResult Nrt_RenderingService_endFrame(NrtRenderingServiceHandle renderingService)
     {
         if (renderingService == nullptr)
         {
@@ -211,7 +210,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingService renderingService, NrtRGBAConfig colour)
+    NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService, NrtRGBAConfigHandle colour)
     {
         if (renderingService == nullptr)
         {
@@ -225,8 +224,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingService renderingService,
-                                                         NrtTexture* outputTexture)
+    NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingServiceHandle renderingService,
+                                                         NrtTextureHandle* outputTexture)
     {
         if (renderingService == nullptr)
         {
@@ -236,13 +235,13 @@ extern "C"
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
         _textureCollection.push_back(renderingServicePtr->getTexture(""));
-        *outputTexture = reinterpret_cast<NrtTexture>(_textureCollection.back().get());
+        *outputTexture = reinterpret_cast<NrtTextureHandle>(_textureCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingService renderingService,
-                                                      NrtTexture* outputTexture,
+    NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingServiceHandle renderingService,
+                                                      NrtTextureHandle* outputTexture,
                                                       const char* fileTarget)
     {
         if (renderingService == nullptr)
@@ -254,13 +253,13 @@ extern "C"
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
         _textureCollection.push_back(renderingServicePtr->getTexture(std::string(fileTarget)));
-        *outputTexture = reinterpret_cast<NrtTexture>(_textureCollection.back().get());
+        *outputTexture = reinterpret_cast<NrtTextureHandle>(_textureCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingService renderingService,
-                                              NrtFontSet* outputFontSet,
+    NrtResult Nrt_RenderingService_getFontSet(NrtRenderingServiceHandle renderingService,
+                                              NrtFontSetHandle* outputFontSet,
                                               const char* fileTarget,
                                               float fontSize)
     {
@@ -273,12 +272,12 @@ extern "C"
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
         _fontSetCollection.push_back(renderingServicePtr->getFontSet(std::string(fileTarget), fontSize));
-        *outputFontSet = reinterpret_cast<NrtFontSet>(_fontSetCollection.back().get());
+        *outputFontSet = reinterpret_cast<NrtFontSetHandle>(_fontSetCollection.back().get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderingService_destroy(NrtRenderingService renderingService)
+    NrtResult Nrt_RenderingService_destroy(NrtRenderingServiceHandle renderingService)
     {
         if (renderingService == nullptr)
         {

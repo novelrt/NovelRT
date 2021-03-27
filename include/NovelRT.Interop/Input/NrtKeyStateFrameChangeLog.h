@@ -5,22 +5,19 @@
 #ifndef NOVELRT_INTEROP_INPUT_KEYSTATEFRAMECHANGELOG_H
 #define NOVELRT_INTEROP_INPUT_KEYSTATEFRAMECHANGELOG_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtKeyState.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct ChangeLogHandle* NrtKeyStateFrameChangeLog;
+    NrtKeyState Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLogHandle changeLog);
 
-    NrtKeyState Nrt_KeyStateFrameChangeLog_getCurrentState(NrtKeyStateFrameChangeLog changeLog);
+    uint32_t Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLogHandle changeLog);
 
-    uint32_t Nrt_KeyStateFrameChangeLog_getChangeCount(NrtKeyStateFrameChangeLog changeLog);
-
-    NrtBool Nrt_KeyStateFrameChangeLog_compareChangeLog(NrtKeyStateFrameChangeLog lhs, NrtKeyState rhs);
-    NrtBool Nrt_KeyStateFrameChangeLog_compareKeyState(NrtKeyState lhs, NrtKeyStateFrameChangeLog rhs);
+    NrtBool Nrt_KeyStateFrameChangeLog_compareChangeLog(NrtKeyStateFrameChangeLogHandle lhs, NrtKeyState rhs);
+    NrtBool Nrt_KeyStateFrameChangeLog_compareKeyState(NrtKeyState lhs, NrtKeyStateFrameChangeLogHandle rhs);
 
 #ifdef __cplusplus
 }

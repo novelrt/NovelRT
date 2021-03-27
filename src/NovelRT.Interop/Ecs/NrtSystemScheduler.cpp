@@ -1,55 +1,56 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
 #include <NovelRT/Ecs/SystemScheduler.h>
 #include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 extern "C"
 {
-    NrtSystemScheduler Nrt_SystemScheduler_CreateWithDefaultThreadCount()
+    NrtSystemSchedulerHandle Nrt_SystemScheduler_CreateWithDefaultThreadCount()
     {
-        return reinterpret_cast<NrtSystemScheduler>(new SystemScheduler());
+        return reinterpret_cast<NrtSystemSchedulerHandle>(new SystemScheduler());
     }
 
-    NrtSystemScheduler Nrt_SystemScheduler_Create(uint32_t maximumThreadCount)
+    NrtSystemSchedulerHandle Nrt_SystemScheduler_Create(uint32_t maximumThreadCount)
     {
-        return reinterpret_cast<NrtSystemScheduler>(new SystemScheduler(maximumThreadCount));
+        return reinterpret_cast<NrtSystemSchedulerHandle>(new SystemScheduler(maximumThreadCount));
     }
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemScheduler scheduler, NrtSystemUpdatePtr systemUpdatePtr)
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler, NrtSystemUpdateFnPtr systemUpdatePtr)
     {
         auto schedulerPtr = reinterpret_cast<SystemScheduler*>(scheduler);
         schedulerPtr->RegisterSystem([=](auto timestamp, auto catalogue) {
-            systemUpdatePtr(timestamp.ticks, reinterpret_cast<NrtCatalogue>(&catalogue));
+            systemUpdatePtr(timestamp.ticks, reinterpret_cast<NrtCatalogueHandle>(&catalogue));
         });
     }
 
-    uint32_t Nrt_SystemScheduler_GetWorkerThreadCount(NrtSystemScheduler systemScheduler)
+    uint32_t Nrt_SystemScheduler_GetWorkerThreadCount(NrtSystemSchedulerHandle systemScheduler)
     {
         return reinterpret_cast<SystemScheduler*>(systemScheduler)->GetWorkerThreadCount();
     }
 
-    NrtEntityCache Nrt_SystemScheduler_GetEntityCache(NrtSystemScheduler systemScheduler)
+    NrtEntityCacheHandle Nrt_SystemScheduler_GetEntityCache(NrtSystemSchedulerHandle systemScheduler)
     {
-        return reinterpret_cast<NrtEntityCache>(&reinterpret_cast<SystemScheduler*>(systemScheduler)->GetEntityCache());
+        return reinterpret_cast<NrtEntityCacheHandle>(&reinterpret_cast<SystemScheduler*>(systemScheduler)->GetEntityCache());
     }
 
-    NrtComponentCache Nrt_SystemScheduler_GetComponentCache(NrtSystemScheduler systemScheduler)
+    NrtComponentCacheHandle Nrt_SystemScheduler_GetComponentCache(NrtSystemSchedulerHandle systemScheduler)
     {
-        return reinterpret_cast<NrtComponentCache>(
+        return reinterpret_cast<NrtComponentCacheHandle>(
             &reinterpret_cast<SystemScheduler*>(systemScheduler)->GetComponentCache());
     }
 
-    void Nrt_SystemScheduler_SpinThreads(NrtSystemScheduler systemScheduler)
+    void Nrt_SystemScheduler_SpinThreads(NrtSystemSchedulerHandle systemScheduler)
     {
         reinterpret_cast<SystemScheduler*>(systemScheduler)->SpinThreads();
     }
 
-    NrtResult Nrt_SystemScheduler_ExecuteIteration(NrtSystemScheduler systemScheduler, NrtTimestamp delta)
+    NrtResult Nrt_SystemScheduler_ExecuteIteration(NrtSystemSchedulerHandle systemScheduler, NrtTimestamp delta)
     {
         if (systemScheduler == nullptr)
         {
@@ -127,7 +128,7 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_SystemScheduler_Destroy(NrtSystemScheduler systemScheduler)
+    NrtResult Nrt_SystemScheduler_Destroy(NrtSystemSchedulerHandle systemScheduler)
     {
         if (systemScheduler == nullptr)
         {

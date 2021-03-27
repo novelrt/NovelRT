@@ -1,36 +1,34 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/NrtLogLevel.h>
-#include <NovelRT.Interop/NrtLoggingService.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/NrtLoggingService.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtLoggingService Nrt_LoggingService_create()
+    NrtLoggingServiceHandle Nrt_LoggingService_create()
     {
         NovelRT::LoggingService* service = new NovelRT::LoggingService();
-        return reinterpret_cast<NrtLoggingService&>(service);
+        return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
-    NrtLoggingService Nrt_LoggingService_createCustomTitle(const char* core)
+    NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitle(const char* core)
     {
         NovelRT::LoggingService* service = new NovelRT::LoggingService(core);
-        return reinterpret_cast<NrtLoggingService&>(service);
+        return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
-    NrtLoggingService Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level)
+    NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level)
     {
         NovelRT::LoggingService* service = new NovelRT::LoggingService(core, static_cast<NovelRT::LogLevel>(level));
-        return reinterpret_cast<NrtLoggingService&>(service);
+        return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
-    NrtResult Nrt_LoggingService_log(NrtLoggingService service, const char* message, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_log(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
     {
         if (service == nullptr)
         {
@@ -44,7 +42,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingService service, const char* message)
+    NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
@@ -58,7 +56,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingService service, const char* message)
+    NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
@@ -72,7 +70,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingService service, const char* message)
+    NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
@@ -86,7 +84,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingService service, const char* message)
+    NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
@@ -100,7 +98,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logInternal(NrtLoggingService service, const char* message, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_logInternal(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
     {
         if (service == nullptr)
         {
@@ -114,7 +112,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingService service, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level)
     {
         if (service == nullptr)
         {
@@ -128,7 +126,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingService service, void* object, const char* exceptionMessage)
+    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service, void* object, const char* exceptionMessage)
     {
         if (service == nullptr)
         {
@@ -141,7 +139,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingService service, int32_t error, const char* exceptionMessage)
+    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service, int32_t error, const char* exceptionMessage)
     {
         if (service == nullptr)
         {

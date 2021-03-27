@@ -1,11 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Graphics/NrtImageRect.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/NrtTransform.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Graphics/NrtImageRect.h>
+
 #include <list>
 
 using namespace NovelRT::Graphics;
@@ -17,14 +16,14 @@ extern "C"
 {
 #endif
 
-    NrtTransform Nrt_ImageRect_getTransform(NrtImageRect rect)
+    NrtTransform Nrt_ImageRect_getTransform(NrtImageRectHandle rect)
     {
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
         Transform cppTransform = imageRectPtr->transform();
         return *reinterpret_cast<NrtTransform*>(&cppTransform);
     }
 
-    NrtResult Nrt_ImageRect_setTransform(NrtImageRect rect, NrtTransform inputTransform)
+    NrtResult Nrt_ImageRect_setTransform(NrtImageRectHandle rect, NrtTransform inputTransform)
     {
         if (rect == nullptr)
         {
@@ -38,13 +37,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    int32_t Nrt_ImageRect_getLayer(NrtImageRect rect)
+    int32_t Nrt_ImageRect_getLayer(NrtImageRectHandle rect)
     {
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
         return imageRectPtr->layer();
     }
 
-    NrtResult Nrt_ImageRect_setLayer(NrtImageRect rect, int32_t inputLayer)
+    NrtResult Nrt_ImageRect_setLayer(NrtImageRectHandle rect, int32_t inputLayer)
     {
         if (rect == nullptr)
         {
@@ -58,7 +57,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_ImageRect_getActive(NrtImageRect rect)
+    NrtBool Nrt_ImageRect_getActive(NrtImageRectHandle rect)
     {
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
 
@@ -69,7 +68,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtResult Nrt_ImageRect_setActive(NrtImageRect rect, NrtBool inputBool)
+    NrtResult Nrt_ImageRect_setActive(NrtImageRectHandle rect, NrtBool inputBool)
     {
         if (rect == nullptr)
         {
@@ -91,7 +90,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRect rect)
+    NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRectHandle rect)
     {
         if (rect == nullptr)
         {
@@ -106,7 +105,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_getTexture(NrtImageRect rect, NrtTexture* outputTexture)
+    NrtResult Nrt_ImageRect_getTexture(NrtImageRectHandle rect, NrtTextureHandle* outputTexture)
     {
         if (rect == nullptr)
         {
@@ -117,12 +116,12 @@ extern "C"
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
 
         auto texture = imageRectPtr->texture();
-        *outputTexture = reinterpret_cast<NrtTexture>(texture.get());
+        *outputTexture = reinterpret_cast<NrtTextureHandle>(texture.get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_setTexture(NrtImageRect rect, NrtTexture inputTexture)
+    NrtResult Nrt_ImageRect_setTexture(NrtImageRectHandle rect, NrtTextureHandle inputTexture)
     {
         if (rect == nullptr)
         {
@@ -136,7 +135,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_getColourTint(NrtImageRect rect, NrtRGBAConfig* outputColourTint)
+    NrtResult Nrt_ImageRect_getColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle* outputColourTint)
     {
         if (rect == nullptr)
         {
@@ -146,12 +145,12 @@ extern "C"
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
         RGBAConfig colour = imageRectPtr->colourTint();
-        *outputColourTint = *reinterpret_cast<NrtRGBAConfig*>(&colour);
+        *outputColourTint = *reinterpret_cast<NrtRGBAConfigHandle*>(&colour);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_setColourTint(NrtImageRect rect, NrtRGBAConfig inputColourTint)
+    NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle inputColourTint)
     {
         if (rect == nullptr)
         {
@@ -165,7 +164,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRect rect, NrtRenderObject* outputRenderObject)
+    NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRectHandle rect, NrtRenderObjectHandle* outputRenderObject)
     {
         if (rect == nullptr)
         {
@@ -173,7 +172,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        *outputRenderObject = reinterpret_cast<NrtRenderObject>(rect);
+        *outputRenderObject = reinterpret_cast<NrtRenderObjectHandle>(rect);
 
         return NRT_SUCCESS;
     }

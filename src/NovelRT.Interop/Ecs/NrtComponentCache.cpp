@@ -1,19 +1,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Ecs/NrtComponentCache.h>
 #include <NovelRT/Ecs/ComponentCache.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Ecs/NrtComponentCache.h>
 
 using namespace NovelRT::Ecs;
 
 extern "C"
 {
-    NrtComponentCache Nrt_ComponentCache_Create(size_t poolSize)
+    NrtComponentCacheHandle Nrt_ComponentCache_Create(size_t poolSize)
     {
-        return reinterpret_cast<NrtComponentCache>(new ComponentCache(poolSize));
+        return reinterpret_cast<NrtComponentCacheHandle>(new ComponentCache(poolSize));
     }
 
-    NrtResult Nrt_ComponentCache_RegisterComponentTypeUnsafe(NrtComponentCache componentCache,
+    NrtResult Nrt_ComponentCache_RegisterComponentTypeUnsafe(NrtComponentCacheHandle componentCache,
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
@@ -30,8 +31,8 @@ extern "C"
                 reinterpret_cast<ComponentCache*>(componentCache)
                     ->RegisterComponentTypeUnsafe(
                         sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
-                            updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&lhs),
-                                        reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&rhs), size);
+                            updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
+                                        reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
                         });
 
             return NRT_SUCCESS;
@@ -42,29 +43,29 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_ComponentCache_GetComponentBufferById(NrtComponentCache componentCache,
+    NrtResult Nrt_ComponentCache_GetComponentBufferById(NrtComponentCacheHandle componentCache,
                                                         NrtComponentTypeId id,
-                                                        NrtComponentBufferMemoryContainer* outputResult)
+                                                        NrtComponentBufferMemoryContainerHandle* outputResult)
     {
         if (componentCache == nullptr || outputResult == nullptr)
         {
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainer>(
+        *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
             reinterpret_cast<ComponentCache*>(componentCache)->GetComponentBufferById(id).get());
 
         return NRT_SUCCESS;
     }
 
-    void Nrt_ComponentCache_PrepAllBuffersForNextFrame(NrtComponentCache componentCache,
-                                                       NrtEntityIdVector entitiesToDelete)
+    void Nrt_ComponentCache_PrepAllBuffersForNextFrame(NrtComponentCacheHandle componentCache,
+                                                       NrtEntityIdVectorHandle entitiesToDelete)
     {
         reinterpret_cast<ComponentCache*>(componentCache)
             ->PrepAllBuffersForNextFrame(*reinterpret_cast<std::vector<EntityId>*>(entitiesToDelete));
     }
 
-    NrtResult Nrt_ComponentCache_Destroy(NrtComponentCache componentCache)
+    NrtResult Nrt_ComponentCache_Destroy(NrtComponentCacheHandle componentCache)
     {
         if (componentCache == nullptr)
         {

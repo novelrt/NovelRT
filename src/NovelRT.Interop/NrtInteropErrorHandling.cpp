@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <stddef.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 const char* const errMsgIsNullptr = "Unable to continue! A nullptr was passed when a ptr was expected.";
 const char* const errMsgIsNaN = "Unable to continue! Calculation resulted in an object that is not a number (NaN).";
@@ -24,6 +23,13 @@ bool customMessageSet = false;
 extern "C"
 {
 #endif
+
+    const char* Nrt_getLastError()
+    {
+        return Nrt_getLastErrorInternal();
+    }
+
+    // Internal
 
     const char* Nrt_getLastErrorInternal()
     {

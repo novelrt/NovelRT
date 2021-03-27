@@ -1,43 +1,36 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_NRTSYSTEMSCHEDULER_H
-#define NOVELRT_NRTSYSTEMSCHEDULER_H
+#ifndef NOVELRT_INTEROP_ECS_SYSTEMSCHEDULER_H
+#define NOVELRT_INTEROP_ECS_SYSTEMSCHEDULER_H
 
-#include "../NrtInteropUtils.h"
-#include "../Timing/NrtTimestamp.h"
-#include "NrtCatalogue.h"
-#include "NrtEcsUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct SystemSchedulerHandle* NrtSystemScheduler;
+    NrtSystemSchedulerHandle Nrt_SystemScheduler_CreateWithDefaultThreadCount();
 
-    typedef void (*NrtSystemUpdatePtr)(NrtTimestamp, NrtCatalogue);
+    NrtSystemSchedulerHandle Nrt_SystemScheduler_Create(uint32_t maximumThreadCount);
 
-    NrtSystemScheduler Nrt_SystemScheduler_CreateWithDefaultThreadCount();
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler, NrtSystemUpdateFnPtr systemUpdatePtr);
 
-    NrtSystemScheduler Nrt_SystemScheduler_Create(uint32_t maximumThreadCount);
+    uint32_t Nrt_SystemScheduler_GetWorkerThreadCount(NrtSystemSchedulerHandle systemScheduler);
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemScheduler scheduler, NrtSystemUpdatePtr systemUpdatePtr);
+    NrtEntityCacheHandle Nrt_SystemScheduler_GetEntityCache(NrtSystemSchedulerHandle systemScheduler);
 
-    uint32_t Nrt_SystemScheduler_GetWorkerThreadCount(NrtSystemScheduler systemScheduler);
+    NrtComponentCacheHandle Nrt_SystemScheduler_GetComponentCache(NrtSystemSchedulerHandle systemScheduler);
 
-    NrtEntityCache Nrt_SystemScheduler_GetEntityCache(NrtSystemScheduler systemScheduler);
+    void Nrt_SystemScheduler_SpinThreads(NrtSystemSchedulerHandle systemScheduler);
 
-    NrtComponentCache Nrt_SystemScheduler_GetComponentCache(NrtSystemScheduler systemScheduler);
+    NrtResult Nrt_SystemScheduler_ExecuteIteration(NrtSystemSchedulerHandle systemScheduler, NrtTimestamp delta);
 
-    void Nrt_SystemScheduler_SpinThreads(NrtSystemScheduler systemScheduler);
-
-    NrtResult Nrt_SystemScheduler_ExecuteIteration(NrtSystemScheduler systemScheduler, NrtTimestamp delta);
-
-    NrtResult Nrt_SystemScheduler_Destroy(NrtSystemScheduler systemScheduler);
+    NrtResult Nrt_SystemScheduler_Destroy(NrtSystemSchedulerHandle systemScheduler);
 
 #ifdef __cplusplus
-};
+}
 #endif
 
-#endif // !NOVELRT_NRTSYSTEMSCHEDULER_H
+#endif // NOVELRT_INTEROP_ECS_SYSTEMSCHEDULER_H

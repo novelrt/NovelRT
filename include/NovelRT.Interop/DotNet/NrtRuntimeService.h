@@ -4,24 +4,23 @@
 #ifndef NOVELRT_INTEROP_DOTNET_RUNTIMESERVICE_H
 #define NOVELRT_INTEROP_DOTNET_RUNTIMESERVICE_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtRuntimeTypedefs.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtRuntimeService Nrt_RuntimeService_create();
-    NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service);
+    NrtRuntimeServiceHandle Nrt_RuntimeService_create();
+    NrtResult Nrt_RuntimeService_destroy(NrtRuntimeServiceHandle service);
 
-    NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service);
-    NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service);
+    NrtResult Nrt_RuntimeService_initialise(NrtRuntimeServiceHandle service);
+    NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeServiceHandle service);
 
-    NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeService service, intptr_t obj);
-    NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* str);
+    NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeServiceHandle service, intptr_t obj);
+    NrtResult Nrt_RuntimeService_freeString(NrtRuntimeServiceHandle service, const char* str);
 
-    NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkService* outputInkService);
+    NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeServiceHandle service, NrtInkServiceHandle* outputInkService);
 
 #ifdef __cplusplus
 }

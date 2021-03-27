@@ -1,13 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
-#include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>
-#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
 #include <NovelRT.h>
-#include <stdint.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
@@ -15,7 +11,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArray points, NrtQuadTreeNode* outputNode)
+    NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArrayHandle points, NrtQuadTreeNodeHandle* outputNode)
     {
         if (points == nullptr || outputNode == nullptr)
         {
@@ -26,11 +22,11 @@ extern "C"
         std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4> cppArray =
             *reinterpret_cast<std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>*>(points);
         SceneGraph::QuadTreeNode* cppNode = new SceneGraph::QuadTreeNode(cppArray);
-        *outputNode = reinterpret_cast<NrtQuadTreeNode>(&cppNode);
+        *outputNode = reinterpret_cast<NrtQuadTreeNodeHandle>(&cppNode);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint)
+    NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
@@ -41,11 +37,11 @@ extern "C"
         SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
         SceneGraph::QuadTreeScenePoint* point = cppNode->getTopLeft().get();
-        *outputPoint = reinterpret_cast<NrtQuadTreeScenePoint>(&point);
+        *outputPoint = reinterpret_cast<NrtQuadTreeScenePointHandle>(&point);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint)
+    NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
@@ -56,11 +52,11 @@ extern "C"
         SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
         SceneGraph::QuadTreeScenePoint* point = cppNode->getTopRight().get();
-        *outputPoint = reinterpret_cast<NrtQuadTreeScenePoint>(&point);
+        *outputPoint = reinterpret_cast<NrtQuadTreeScenePointHandle>(&point);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint)
+    NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
@@ -71,11 +67,11 @@ extern "C"
         SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
         SceneGraph::QuadTreeScenePoint* point = cppNode->getBottomLeft().get();
-        *outputPoint = reinterpret_cast<NrtQuadTreeScenePoint>(&point);
+        *outputPoint = reinterpret_cast<NrtQuadTreeScenePointHandle>(&point);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNode node, NrtQuadTreeScenePoint* outputPoint)
+    NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
@@ -86,15 +82,15 @@ extern "C"
         SceneGraph::QuadTreeNode* cppNode = reinterpret_cast<SceneGraph::QuadTreeNode*>(node);
 
         SceneGraph::QuadTreeScenePoint* point = cppNode->getBottomRight().get();
-        *outputPoint = reinterpret_cast<NrtQuadTreeScenePoint>(&point);
+        *outputPoint = reinterpret_cast<NrtQuadTreeScenePointHandle>(&point);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePoint pointOne,
-                                                 NrtQuadTreeScenePoint pointTwo,
-                                                 NrtQuadTreeScenePoint pointThree,
-                                                 NrtQuadTreeScenePoint pointFour,
-                                                 NrtQuadTreeScenePointArray* outputArray)
+    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePointHandle pointOne,
+                                                 NrtQuadTreeScenePointHandle pointTwo,
+                                                 NrtQuadTreeScenePointHandle pointThree,
+                                                 NrtQuadTreeScenePointHandle pointFour,
+                                                 NrtQuadTreeScenePointArrayHandle* outputArray)
     { // TODO: can we not make this read nicer?
         if (pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr ||
             outputArray == nullptr)
@@ -115,7 +111,7 @@ extern "C"
         std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>* quadTreePoints =
             new std::array<std::shared_ptr<SceneGraph::QuadTreeScenePoint>, 4>();
         *quadTreePoints = {cppPointOne, cppPointTwo, cppPointThree, cppPointFour};
-        *outputArray = reinterpret_cast<NrtQuadTreeScenePointArray>(&quadTreePoints);
+        *outputArray = reinterpret_cast<NrtQuadTreeScenePointArrayHandle>(&quadTreePoints);
         return NRT_SUCCESS;
     }
 

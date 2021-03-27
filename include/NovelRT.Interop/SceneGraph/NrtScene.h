@@ -4,20 +4,18 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENE_H
 #define NOVELRT_INTEROP_SCENEGRAPH_SCENE_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtSceneGraphTypedefs.h"
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtScene Nrt_Scene_create();
-    NrtResult Nrt_Scene_getNodes(NrtScene scene, NrtSceneNodeSet* outputSet);
-    NrtBool Nrt_Scene_insert(NrtScene scene, NrtSceneNode nodeToInsert);
-    NrtBool Nrt_Scene_remove(NrtScene scene, NrtSceneNode nodeToRemove);
-    NrtResult Nrt_Scene_delete(NrtScene scene);
+    NrtSceneHandle Nrt_Scene_create();
+    NrtResult Nrt_Scene_getNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet);
+    NrtBool Nrt_Scene_insert(NrtSceneHandle scene, NrtSceneNodeHandle nodeToInsert);
+    NrtBool Nrt_Scene_remove(NrtSceneHandle scene, NrtSceneNodeHandle nodeToRemove);
+    NrtResult Nrt_Scene_delete(NrtSceneHandle scene);
 
 #ifdef __cplusplus
 }

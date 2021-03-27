@@ -1,8 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT.Interop/Maths/NrtQuadTreePoint.h"
 #include <NovelRT.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
+#include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
@@ -37,8 +39,8 @@ TEST(InteropQuadTreePointTest,
     const char* outputError = nullptr;
     auto ptr =
         reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f))->shared_from_this();
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePoint>(ptr.get())), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePoint>(ptr.get())),
+    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 
     // EXPECT_EQ(outputError, Nrt_getErrMsgIsAlreadyDeletedOrRemoved()); //TODO: fix this

@@ -2,10 +2,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Graphics/NrtFontSet.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
 #include <NovelRT.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/Graphics/NrtFontSet.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
@@ -16,7 +15,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_FontSet_loadFontAsTextureSet(NrtFontSet fontSet, const char* file, float fontSize)
+    NrtResult Nrt_FontSet_loadFontAsTextureSet(NrtFontSetHandle fontSet, const char* file, float fontSize)
     {
         if (fontSet == nullptr)
         {
@@ -39,7 +38,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_FontSet_getFontFile(NrtFontSet fontSet, const char** outputFontFile)
+    NrtResult Nrt_FontSet_getFontFile(NrtFontSetHandle fontSet, const char** outputFontFile)
     {
         if (fontSet == nullptr)
         {
@@ -53,7 +52,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_FontSet_getFontSize(NrtFontSet fontSet, float* outputFontSize)
+    NrtResult Nrt_FontSet_getFontSize(NrtFontSetHandle fontSet, float* outputFontSize)
     {
         if (fontSet == nullptr)
         {

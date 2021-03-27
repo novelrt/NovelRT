@@ -1,16 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#ifndef NOVELRT_INTEROP_INPUT_KEYCODE_H
-#define NOVELRT_INTEROP_INPUT_KEYCODE_H
 
-#include <stdint.h>
+#ifndef NOVELRT_INTEROP_INPUT_INPUTTYPEDEFS_H
+#define NOVELRT_INTEROP_INPUT_INPUTTYPEDEFS_H
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    // Mapped to GLFW for now
+    typedef struct NrtBasicInteractionRect* NrtBasicInteractionRectHandle;
+    typedef struct NrtKeyStateFrameChangeLog* NrtKeyStateFrameChangeLogHandle;
+    typedef struct NrtInteractionService* NrtInteractionServiceHandle;
+
     typedef enum
     {
         NRT_KEYCODE_NOTHING = -1,
@@ -146,10 +148,19 @@ extern "C"
         NRT_KEYCODE_LAST_MOUSE_BUTTON = NRT_KEYCODE_MOUSE_BUTTON_EIGHT
     } NrtKeyCodeKind;
 
+    typedef enum
+    {
+        NRT_IDLE = -1,
+        NRT_KEYUP = 0,
+        NRT_KEYDOWN = 1,
+        NRT_KEYDOWNHELD = 2,
+    } NrtKeyStateKind;
+
     typedef int32_t NrtKeyCode;
+    typedef int32_t NrtKeyState;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // NOVELRT_INTEROP_INPUT_KEYCODE_H
+#endif // NOVELRT_INTEROP_INPUT_INPUTTYPEDEFS_H
