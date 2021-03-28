@@ -2,8 +2,11 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
 #include <NovelRT/Exceptions/Exceptions.h>
+
+#include <vector>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -13,40 +16,40 @@ std::vector<std::byte> dummyByteCollection{};
 
 extern "C"
 {
-    NrtComponentBufferMemoryContainer Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
-                                                                                void* deleteInstructionState,
-                                                                                size_t sizeOfDataTypeInBytes,
-                                                                                NrtComponentUpdateFnPtr fnPtr)
+    NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
+                                                                                      void* deleteInstructionState,
+                                                                                      size_t sizeOfDataTypeInBytes,
+                                                                                      NrtComponentUpdateFnPtr fnPtr)
     {
         auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
                         size_t size) {
-            fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&lhs),
-                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorView>(&rhs), size);
+            fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
+                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
         };
 
-        return reinterpret_cast<NrtComponentBufferMemoryContainer>(
+        return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
             new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func));
     }
 
     // TODO: Not sure if I should add safety here?
-    void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainer container,
-                                                                  NrtEntityIdVector entitiesToDelete)
+    void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
+                                                                  NrtEntityIdVectorHandle entitiesToDelete)
     {
         reinterpret_cast<ComponentBufferMemoryContainer*>(container)->PrepContainerForFrame(
             *reinterpret_cast<std::vector<EntityId>*>(entitiesToDelete));
     }
 
-    NrtComponentBufferMemoryContainer_ImmutableDataView Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(
-        NrtComponentBufferMemoryContainer container)
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle
+    Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
         *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetDeleteInstructionState();
 
-        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataView>(ptr);
+        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataViewHandle>(ptr);
     }
 
     NrtResult Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(
-        NrtComponentBufferMemoryContainer container,
+        NrtComponentBufferMemoryContainerHandle container,
         size_t poolId,
         NrtEntityId entity,
         const void* componentData)
@@ -73,9 +76,9 @@ extern "C"
     }
 
     NrtResult Nrt_ComponentBufferMemoryContainer_GetComponent(
-        NrtComponentBufferMemoryContainer container,
+        NrtComponentBufferMemoryContainerHandle container,
         NrtEntityId entity,
-        NrtComponentBufferMemoryContainer_ImmutableDataView* outputResult)
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
         if (container == nullptr || outputResult == nullptr)
         {
@@ -86,7 +89,7 @@ extern "C"
         {
             auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
             *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetComponent(entity);
-            *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataView>(ptr);
+            *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataViewHandle>(ptr);
 
             return NRT_SUCCESS;
         }
@@ -96,49 +99,49 @@ extern "C"
         }
     }
 
-    NrtComponentBufferMemoryContainer_ImmutableDataView Nrt_ComponentBufferMemoryContainer_GetComponentUnsafe(
-        NrtComponentBufferMemoryContainer container,
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_ComponentBufferMemoryContainer_GetComponentUnsafe(
+        NrtComponentBufferMemoryContainerHandle container,
         NrtEntityId entity)
     {
         auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
         *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetComponentUnsafe(entity);
 
-        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataView>(ptr);
+        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataViewHandle>(ptr);
     }
 
-    NrtBool Nrt_ComponentBufferMemoryContainer_HasComponent(NrtComponentBufferMemoryContainer container,
+    NrtBool Nrt_ComponentBufferMemoryContainer_HasComponent(NrtComponentBufferMemoryContainerHandle container,
                                                             NrtEntityId entity)
     {
         return reinterpret_cast<ComponentBufferMemoryContainer*>(container)->HasComponent(entity) ? NRT_TRUE
                                                                                                   : NRT_FALSE;
     }
 
-    size_t Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(NrtComponentBufferMemoryContainer container)
+    size_t Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(NrtComponentBufferMemoryContainerHandle container)
     {
         return reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetImmutableDataLength();
     }
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_begin(
-        NrtComponentBufferMemoryContainer container)
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_begin(
+        NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
             dummySizeTCollection.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteCollection.end(), 0)));
         *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->begin();
 
-        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
+        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_ComponentBufferMemoryContainer_end(
-        NrtComponentBufferMemoryContainer container)
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_end(
+        NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
             dummySizeTCollection.end(), SparseSetMemoryContainer::ConstByteIteratorView(dummyByteCollection.end(), 0)));
         *ptr = reinterpret_cast<ComponentBufferMemoryContainer*>(container)->end();
 
-        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
+        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtResult Nrt_ComponentBufferMemoryContainer_Destroy(NrtComponentBufferMemoryContainer container)
+    NrtResult Nrt_ComponentBufferMemoryContainer_Destroy(NrtComponentBufferMemoryContainerHandle container)
     {
         if (container == nullptr)
         {
@@ -151,13 +154,13 @@ extern "C"
     }
 
     const void* Nrt_ComponentBufferMemoryContainer_ImmutableDataView_GetDataHandle(
-        NrtComponentBufferMemoryContainer_ImmutableDataView view)
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle view)
     {
         return reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view)->GetDataHandle();
     }
 
     NrtResult Nrt_ComponentBufferMemoryContainer_ImmutableDataView_Destroy(
-        NrtComponentBufferMemoryContainer_ImmutableDataView view)
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle view)
     {
         if (view == nullptr)
         {

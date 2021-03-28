@@ -8,4 +8,5 @@ include-NrtInk.h
 ../../../tests/NovelRT.DotNet/Interop/Ink
 --traverse
 ../../../include/NovelRT.Interop/Ink/NrtInkService.h
+../../../include/NovelRT.Interop/Ink/NrtInkTypedefs.h
 ../../../include/NovelRT.Interop/Ink/NrtStory.h

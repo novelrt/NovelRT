@@ -8,6 +8,34 @@ namespace NovelRT.Interop
     public static unsafe partial class NovelRT
     {
         [DllImport("Interop", ExactSpelling = true)]
+        public static extern NrtGeoBounds Nrt_GeoBounds_zero();
+
+        [DllImport("Interop", ExactSpelling = true)]
+        public static extern NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, [NativeTypeName("int32_t")] int index);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        public static extern NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, [NativeTypeName("int32_t")] int index);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtBool")]
+        public static extern int Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        public static extern NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtResult")]
+        public static extern int Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, [NativeTypeName("NrtBool *")] int* outputResult);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtBool")]
+        public static extern int Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtBool")]
+        public static extern int Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs);
+
+        [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtBool")]
         public static extern int Nrt_GeoVector2F_isNaN(NrtGeoVector2F vector);
 
@@ -371,109 +399,81 @@ namespace NovelRT.Interop
         public static extern void Nrt_GeoMatrix4x4F_multiplyAssignFloat([NativeTypeName("NrtGeoMatrix4x4F *")] NrtGeoMatrix4x4F* lhs, float rhs);
 
         [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoBounds Nrt_GeoBounds_zero();
-
-        [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, [NativeTypeName("int32_t")] int index);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, [NativeTypeName("int32_t")] int index);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtBool")]
-        public static extern int Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, [NativeTypeName("NrtBool *")] int* outputResult);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtBool")]
-        public static extern int Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtBool")]
-        public static extern int Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtQuadTreePoint")]
-        public static extern IntPtr Nrt_QuadTreePoint_create(NrtGeoVector2F position);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtQuadTreePoint")]
-        public static extern IntPtr Nrt_QuadTreePoint_createFromFloat(float x, float y);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoVector2F Nrt_QuadTreePoint_getPosition([NativeTypeName("const NrtQuadTreePoint")] IntPtr point);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTreePoint_delete([NativeTypeName("NrtQuadTreePoint")] IntPtr point);
-
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtQuadTree")]
+        [return: NativeTypeName("NrtQuadTreeHandle")]
         public static extern IntPtr Nrt_QuadTree_create(NrtGeoBounds bounds);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getParent([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTree *")] IntPtr* outputParentTree);
+        public static extern int Nrt_QuadTree_getParent([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreeHandle *")] IntPtr* outputParentTree);
 
         [DllImport("Interop", ExactSpelling = true)]
-        public static extern NrtGeoBounds Nrt_QuadTree_getBounds([NativeTypeName("const NrtQuadTree")] IntPtr tree);
+        public static extern NrtGeoBounds Nrt_QuadTree_getBounds([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getPoint([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("size_t")] nuint index, [NativeTypeName("NrtQuadTreePoint *")] IntPtr* outputPoint);
+        public static extern int Nrt_QuadTree_getPoint([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("size_t")] nuint index, [NativeTypeName("NrtQuadTreePointHandle *")] IntPtr* outputPoint);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint Nrt_QuadTree_getPointCount([NativeTypeName("const NrtQuadTree")] IntPtr tree);
+        public static extern nuint Nrt_QuadTree_getPointCount([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getTopLeft([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTree *")] IntPtr* outputCornerTree);
+        public static extern int Nrt_QuadTree_getTopLeft([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreeHandle *")] IntPtr* outputCornerTree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getTopRight([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTree *")] IntPtr* outputCornerTree);
+        public static extern int Nrt_QuadTree_getTopRight([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreeHandle *")] IntPtr* outputCornerTree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getBottomLeft([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTree *")] IntPtr* outputCornerTree);
+        public static extern int Nrt_QuadTree_getBottomLeft([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreeHandle *")] IntPtr* outputCornerTree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getBottomRight([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTree *")] IntPtr* outputCornerTree);
+        public static extern int Nrt_QuadTree_getBottomRight([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreeHandle *")] IntPtr* outputCornerTree);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtBool")]
-        public static extern int Nrt_QuadTree_tryInsert([NativeTypeName("NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTreePoint")] IntPtr point);
+        public static extern int Nrt_QuadTree_tryInsert([NativeTypeName("NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreePointHandle")] IntPtr point);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtBool")]
-        public static extern int Nrt_QuadTree_tryRemove([NativeTypeName("const NrtQuadTree")] IntPtr tree, [NativeTypeName("NrtQuadTreePoint")] IntPtr point);
+        public static extern int Nrt_QuadTree_tryRemove([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, [NativeTypeName("NrtQuadTreePointHandle")] IntPtr point);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_getIntersectingPoints([NativeTypeName("const NrtQuadTree")] IntPtr tree, NrtGeoBounds bounds, [NativeTypeName("NrtPointVector *")] IntPtr* outputResultVector);
+        public static extern int Nrt_QuadTree_getIntersectingPoints([NativeTypeName("const NrtQuadTreeHandle")] IntPtr tree, NrtGeoBounds bounds, [NativeTypeName("NrtPointVectorHandle *")] IntPtr* outputResultVector);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_PointVector_delete([NativeTypeName("NrtPointVector")] IntPtr vector);
+        public static extern int Nrt_PointVector_delete([NativeTypeName("NrtPointVectorHandle")] IntPtr vector);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint Nrt_PointVector_getSize([NativeTypeName("const NrtPointVector")] IntPtr vector);
+        public static extern nuint Nrt_PointVector_getSize([NativeTypeName("const NrtPointVectorHandle")] IntPtr vector);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_PointVector_getPointFromIndex([NativeTypeName("const NrtPointVector")] IntPtr vector, [NativeTypeName("size_t")] nuint index, [NativeTypeName("NrtQuadTreePoint *")] IntPtr* outputPoint);
+        public static extern int Nrt_PointVector_getPointFromIndex([NativeTypeName("const NrtPointVectorHandle")] IntPtr vector, [NativeTypeName("size_t")] nuint index, [NativeTypeName("NrtQuadTreePointHandle *")] IntPtr* outputPoint);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_QuadTree_delete([NativeTypeName("NrtQuadTree")] IntPtr tree);
+        public static extern int Nrt_QuadTree_delete([NativeTypeName("NrtQuadTreeHandle")] IntPtr tree);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtQuadTreePointHandle")]
+        public static extern IntPtr Nrt_QuadTreePoint_create(NrtGeoVector2F position);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtQuadTreePointHandle")]
+        public static extern IntPtr Nrt_QuadTreePoint_createFromFloat(float x, float y);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        public static extern NrtGeoVector2F Nrt_QuadTreePoint_getPosition([NativeTypeName("const NrtQuadTreePointHandle")] IntPtr point);
+
+        [DllImport("Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtResult")]
+        public static extern int Nrt_QuadTreePoint_delete([NativeTypeName("NrtQuadTreePointHandle")] IntPtr point);
     }
 }

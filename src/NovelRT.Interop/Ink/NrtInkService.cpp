@@ -2,9 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/Ink/NrtInkService.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <list>
 
 using namespace NovelRT;
@@ -16,7 +16,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_InkService_initialise(NrtInkService service)
+    NrtResult Nrt_InkService_initialise(NrtInkServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -29,7 +29,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InkService_tearDown(NrtInkService service)
+    NrtResult Nrt_InkService_tearDown(NrtInkServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -42,7 +42,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InkService_createStory(NrtInkService service, const char* jsonString, NrtStory* outputStory)
+    NrtResult Nrt_InkService_createStory(NrtInkServiceHandle service,
+                                         const char* jsonString,
+                                         NrtStoryHandle* outputStory)
     {
         if (service == nullptr || outputStory == nullptr)
         {
@@ -53,11 +55,12 @@ extern "C"
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);
         std::shared_ptr<Ink::Story> cStory = inkService->createStory(jsonString);
         _storyCollection.push_back(cStory);
-        *outputStory = reinterpret_cast<NrtStory>(cStory.get());
+        *outputStory = reinterpret_cast<NrtStoryHandle>(cStory.get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InkService_getRuntimeService(NrtInkService service, NrtRuntimeService* outputRuntimeService)
+    NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service,
+                                               NrtRuntimeServiceHandle* outputRuntimeService)
     {
         if (service == nullptr || outputRuntimeService == nullptr)
         {
@@ -67,7 +70,7 @@ extern "C"
 
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);
         _dotnetServiceCollection.push_back(inkService->getRuntimeService());
-        *outputRuntimeService = reinterpret_cast<NrtRuntimeService>(_dotnetServiceCollection.back().get());
+        *outputRuntimeService = reinterpret_cast<NrtRuntimeServiceHandle>(_dotnetServiceCollection.back().get());
         return NRT_SUCCESS;
     }
 

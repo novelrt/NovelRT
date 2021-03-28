@@ -2,9 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Animation/NrtSpriteAnimator.h>
-#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtNovelRunner.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
 #ifdef __cplusplus
@@ -13,7 +11,9 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunner runner, NrtImageRect rect, NrtSpriteAnimator* outputAnimator)
+    NrtResult Nrt_SpriteAnimator_create(NrtNovelRunnerHandle runner,
+                                        NrtImageRectHandle rect,
+                                        NrtSpriteAnimatorHandle* outputAnimator)
     {
         if (runner == nullptr || rect == nullptr || outputAnimator == nullptr)
         {
@@ -23,11 +23,11 @@ extern "C"
 
         Animation::SpriteAnimator* animator = new Animation::SpriteAnimator(
             reinterpret_cast<NovelRunner*>(runner), reinterpret_cast<Graphics::ImageRect*>(rect));
-        *outputAnimator = reinterpret_cast<NrtSpriteAnimator>(animator);
+        *outputAnimator = reinterpret_cast<NrtSpriteAnimatorHandle>(animator);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimator animator)
+    NrtResult Nrt_SpriteAnimator_play(NrtSpriteAnimatorHandle animator)
     {
         if (animator == nullptr)
         {
@@ -40,7 +40,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimator animator)
+    NrtResult Nrt_SpriteAnimator_pause(NrtSpriteAnimatorHandle animator)
     {
         if (animator == nullptr)
         {
@@ -53,7 +53,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimator animator)
+    NrtResult Nrt_SpriteAnimator_stop(NrtSpriteAnimatorHandle animator)
     {
         if (animator == nullptr)
         {
@@ -66,14 +66,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtAnimatorPlayState Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimator animator)
+    NrtAnimatorPlayState Nrt_SpriteAnimator_getCurrentPlayState(NrtSpriteAnimatorHandle animator)
     {
         Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
         Animation::AnimatorPlayState state = cppAnimator->getCurrentPlayState();
         return reinterpret_cast<NrtAnimatorPlayState&>(state);
     }
 
-    NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimator animator, NrtSpriteAnimatorState state)
+    NrtResult Nrt_SpriteAnimator_insertNewState(NrtSpriteAnimatorHandle animator, NrtSpriteAnimatorStateHandle state)
     {
         if (animator == nullptr || state == nullptr)
         {

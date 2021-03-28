@@ -4,10 +4,7 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
 #define NOVELRT_INTEROP_SCENEGRAPH_QUADTREESCENEPOINT_H
 
-#include "../Maths/NrtGeoVector2F.h"
-#include "../NrtInteropUtils.h"
-#include "NrtSceneGraphTypedefs.h"
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -15,13 +12,13 @@ extern "C"
 #endif
 
     NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position,
-                                                  NrtSceneNode node,
-                                                  NrtQuadTreeScenePoint* outputPoint);
+                                                  NrtSceneNodeHandle node,
+                                                  NrtQuadTreeScenePointHandle* outputPoint);
     NrtResult Nrt_QuadTreeScenePoint_createFloat(float x,
                                                  float y,
-                                                 NrtSceneNode node,
-                                                 NrtQuadTreeScenePoint* outputPoint);
-    NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePoint point, NrtSceneNode* outputNode);
+                                                 NrtSceneNodeHandle node,
+                                                 NrtQuadTreeScenePointHandle* outputPoint);
+    NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePointHandle point, NrtSceneNodeHandle* outputNode);
 
 #ifdef __cplusplus
 }

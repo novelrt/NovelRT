@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Maths/NrtGeoBounds.h>
 #include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
 #ifdef __cplusplus

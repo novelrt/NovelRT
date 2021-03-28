@@ -1,32 +1,30 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_INTEROP_SCENEGRAPH_DepthFirstIterator_H
-#define NOVELRT_INTEROP_SCENEGRAPH_DepthFirstIterator_H
+#ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODEDEPTHFIRSTITERATOR_H
+#define NOVELRT_INTEROP_SCENEGRAPH_SCENENODEDEPTHFIRSTITERATOR_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtSceneGraphTypedefs.h"
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtResult Nrt_SceneNodeDepthFirstIterator_create(NrtSceneNode node,
-                                                     int32_t (*func)(NrtSceneNode),
-                                                     NrtSceneNodeDepthFirstIterator* outputIterator);
-    NrtResult Nrt_SceneNodeDepthFirstIterator_increment(NrtSceneNodeDepthFirstIterator iterator);
-    NrtResult Nrt_SceneNodeDepthFirstIterator_postFixIncrement(NrtSceneNodeDepthFirstIterator iterator);
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isEnd(NrtSceneNodeDepthFirstIterator iterator);
-    int32_t Nrt_SceneNodeDepthFirstIterator_runFunction(NrtSceneNodeDepthFirstIterator iterator);
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isEqual(NrtSceneNodeDepthFirstIterator iterator,
-                                                    NrtSceneNodeDepthFirstIterator other);
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isNotEqual(NrtSceneNodeDepthFirstIterator iterator,
-                                                       NrtSceneNodeDepthFirstIterator other);
+    NrtResult Nrt_SceneNodeDepthFirstIterator_create(NrtSceneNodeHandle node,
+                                                     int32_t (*func)(NrtSceneNodeHandle),
+                                                     NrtSceneNodeDepthFirstIteratorHandle* outputIterator);
+    NrtResult Nrt_SceneNodeDepthFirstIterator_increment(NrtSceneNodeDepthFirstIteratorHandle iterator);
+    NrtResult Nrt_SceneNodeDepthFirstIterator_postFixIncrement(NrtSceneNodeDepthFirstIteratorHandle iterator);
+    NrtBool Nrt_SceneNodeDepthFirstIterator_isEnd(NrtSceneNodeDepthFirstIteratorHandle iterator);
+    int32_t Nrt_SceneNodeDepthFirstIterator_runFunction(NrtSceneNodeDepthFirstIteratorHandle iterator);
+    NrtBool Nrt_SceneNodeDepthFirstIterator_isEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
+                                                    NrtSceneNodeDepthFirstIteratorHandle other);
+    NrtBool Nrt_SceneNodeDepthFirstIterator_isNotEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
+                                                       NrtSceneNodeDepthFirstIteratorHandle other);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // NOVELRT_INTEROP_SCENEGRAPH_DepthFirstIterator_H
+#endif // NOVELRT_INTEROP_SCENEGRAPH_SCENENODEDEPTHFIRSTITERATOR_H

@@ -8,9 +8,8 @@ include-NrtCore.h
 ../../../tests/NovelRT.DotNet/Interop/Core
 --traverse
 ../../../include/NovelRT.Interop/NrtDebugService.h
-../../../include/NovelRT.Interop/NrtInteropErrorHandlingInternal.h
-../../../include/NovelRT.Interop/Ink/../NrtInteropUtils.h
+../../../include/NovelRT.Interop/NrtErrorHandling.h
 ../../../include/NovelRT.Interop/NrtLoggingService.h
-../../../include/NovelRT.Interop/SceneGraph/../NrtLogLevel.h
-../../../include/NovelRT.Interop/Animation/../NrtNovelRunner.h
-../../../include/NovelRT.Interop/Input/../NrtTransform.h
+../../../include/NovelRT.Interop/NrtNovelRunner.h
+../../../include/NovelRT.Interop/NrtTransform.h
+../../../include/NovelRT.Interop/Windowing/../NrtTypedefs.h

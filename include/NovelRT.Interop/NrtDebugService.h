@@ -4,23 +4,20 @@
 #ifndef NOVELRT_INTEROP_DEBUGSERVICE_H
 #define NOVELRT_INTEROP_DEBUGSERVICE_H
 
-#include "Graphics/NrtRenderingService.h"
-#include "Utilities/NrtCommonEvents.h"
+#include "NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct DebugServiceHandle* NrtDebugService;
-
-    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent,
-                                      NrtRenderingService renderingService,
-                                      NrtDebugService* outputService);
-    NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service);
-    NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value);
-    uint32_t Nrt_DebugService_getFramesPerSecond(NrtDebugService service);
-    NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value);
+    NrtResult Nrt_DebugService_create(NrtUtilitiesEventHandle sceneConstructionEvent,
+                                      NrtRenderingServiceHandle renderingService,
+                                      NrtDebugServiceHandle* outputService);
+    NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugServiceHandle service);
+    NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugServiceHandle service, int32_t value);
+    uint32_t Nrt_DebugService_getFramesPerSecond(NrtDebugServiceHandle service);
+    NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugServiceHandle service, uint32_t value);
 
 #ifdef __cplusplus
 }

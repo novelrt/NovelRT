@@ -7,5 +7,5 @@ include-NrtDotNet.h
 --test-output
 ../../../tests/NovelRT.DotNet/Interop/DotNet
 --traverse
+../../../include/NovelRT.Interop/DotNet/NrtDotNetTypedefs.h
 ../../../include/NovelRT.Interop/DotNet/NrtRuntimeService.h
-../../../include/NovelRT.Interop/Ink/../DotNet/NrtRuntimeTypedefs.h

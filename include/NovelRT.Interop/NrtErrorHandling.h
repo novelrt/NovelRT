@@ -1,13 +1,19 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#ifndef NOVELRT_INTEROP_NOVELRTINTEROPERRORHANDLINGINTERNAL_H
-#define NOVELRT_INTEROP_NOVELRTINTEROPERRORHANDLINGINTERNAL_H
+
+#ifndef NOVELRT_INTEROP_ERRORHANDLING_H
+#define NOVELRT_INTEROP_ERRORHANDLING_H
+
+#include "NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+    const char* Nrt_getLastError();
+
+    // Internal
     const char* Nrt_getLastErrorInternal();
     void Nrt_setErrMsgIsNullptrInternal();
     void Nrt_setErrMsgIsNaNInternal();
@@ -27,4 +33,4 @@ extern "C"
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_NOVELRTINTEROPERRORHANDLINGINTERNAL_H
+#endif // NOVELRT_INTEROP_ERRORHANDLING_H

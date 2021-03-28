@@ -4,8 +4,7 @@
 #ifndef NOVELRT_INTEROP_UTILITIES_MISC_H
 #define NOVELRT_INTEROP_UTILITIES_MISC_H
 
-#include "../NrtInteropUtils.h"
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"

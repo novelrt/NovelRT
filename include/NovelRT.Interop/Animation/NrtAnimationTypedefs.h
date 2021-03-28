@@ -9,13 +9,20 @@ extern "C"
 {
 #endif
 
-    typedef struct SpriteAnimatorFrameHandle* NrtSpriteAnimatorFrame;
+    typedef struct NrtSpriteAnimator* NrtSpriteAnimatorHandle;
+    typedef struct NrtSpriteAnimatorFrame* NrtSpriteAnimatorFrameHandle;
+    typedef struct NrtSpriteAnimatorFrameVector* NrtSpriteAnimatorFrameVectorHandle;
+    typedef struct NrtSpriteAnimatorState* NrtSpriteAnimatorStateHandle;
+    typedef struct NrtSpriteAnimatorStateConditionFunctions* NrtSpriteAnimatorStateConditionFunctionsHandle;
 
-    typedef struct SpriteAnimatorStateHandle* NrtSpriteAnimatorState;
-    typedef struct BoolFunctionVectorHandle* NrtSpriteAnimatorStateConditionFunctions;
-    typedef struct SpriteAnimatorFrameVectorHandle* NrtSpriteAnimatorFrameVector;
+    typedef enum
+    {
+        NRT_PLAY_STATE_STOPPED = 0,
+        NRT_PLAY_STATE_PLAYING = 1,
+        NRT_PLAY_STATE_PAUSED = 2
+    } NrtAnimatorPlayStateKind;
 
-    typedef struct SpriteAnimatorHandle* NrtSpriteAnimator;
+    typedef int32_t NrtAnimatorPlayState;
 
 #ifdef __cplusplus
 }

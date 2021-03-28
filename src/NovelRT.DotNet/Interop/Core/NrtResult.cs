@@ -1,19 +1,8 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
-// for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root for more information.
 
-#ifndef NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H
-#define NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H
-
-#include <stdint.h>
-
-#ifdef __cplusplus
-extern "C"
+namespace NovelRT.Interop
 {
-#endif
-
-    typedef int32_t NrtResult;
-
-    enum NrtResultKind
+    public enum NrtResult
     {
         NRT_DATA_NOT_MODIFIED = 1,
         NRT_SUCCESS = 0,
@@ -34,23 +23,6 @@ extern "C"
         NRT_FAILURE_KEY_NOT_FOUND = -15,
         NRT_FAILURE_OUT_OF_MEMORY = -16,
         NRT_FAILURE_COMPILATION_ERROR = -17,
-        NRT_FAILURE_RUNTIME_NOT_FOUND = -18
-    };
-
-    typedef int32_t NrtBool;
-
-    enum NrtBoolKind
-    {
-        NRT_FALSE = 0,
-        NRT_TRUE = 1
-    };
-
-    typedef uintptr_t NrtAtom;
-
-    const char* Nrt_getLastError();
-
-#ifdef __cplusplus
+        NRT_FAILURE_RUNTIME_NOT_FOUND = -18,
+    }
 }
-#endif
-
-#endif // NOVELRT_INTEROP_NOVELRTINTEROPUTILS_H

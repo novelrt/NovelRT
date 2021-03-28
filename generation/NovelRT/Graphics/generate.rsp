@@ -9,9 +9,8 @@ include-NrtGraphics.h
 --traverse
 ../../../include/NovelRT.Interop/Graphics/NrtBasicFillRect.h
 ../../../include/NovelRT.Interop/Graphics/NrtCamera.h
-../../../include/NovelRT.Interop/Graphics/NrtCameraFrameState.h
 ../../../include/NovelRT.Interop/Graphics/NrtFontSet.h
-../../../include/NovelRT.Interop/SceneGraph/../Graphics/NrtGraphicsTypedefs.h
+../../../include/NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h
 ../../../include/NovelRT.Interop/Graphics/NrtImageRect.h
 ../../../include/NovelRT.Interop/Graphics/NrtRenderingService.h
 ../../../include/NovelRT.Interop/Graphics/NrtRGBAConfig.h

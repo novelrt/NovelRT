@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
 #include <NovelRT.h>
+
 #include <cmath>
 #include <gtest/gtest.h>
 

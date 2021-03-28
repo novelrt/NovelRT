@@ -11,7 +11,7 @@ include-NrtEcs.h
 ../../../include/NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h
 ../../../include/NovelRT.Interop/Ecs/NrtComponentCache.h
 ../../../include/NovelRT.Interop/Ecs/NrtEcs.h
-../../../include/NovelRT.Interop/Ecs/NrtEcsUtils.h
+../../../include/NovelRT.Interop/Ecs/NrtEcsTypedefs.h
 ../../../include/NovelRT.Interop/Ecs/NrtEntityCache.h
 ../../../include/NovelRT.Interop/Ecs/NrtEntityIdVector.h
 ../../../include/NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h

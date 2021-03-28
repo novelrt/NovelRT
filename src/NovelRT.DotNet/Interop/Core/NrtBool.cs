@@ -2,7 +2,7 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtBoolKind
+    public enum NrtBool
     {
         NRT_FALSE = 0,
         NRT_TRUE = 1,

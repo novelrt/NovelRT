@@ -7,5 +7,5 @@ include-NrtUtilities.h
 --test-output
 ../../../tests/NovelRT.DotNet/Interop/Utilities
 --traverse
-../../../include/NovelRT.Interop/SceneGraph/../Utilities/NrtCommonEvents.h
 ../../../include/NovelRT.Interop/Utilities/NrtMisc.h
+../../../include/NovelRT.Interop/Utilities/NrtUtilitiesTypedefs.h

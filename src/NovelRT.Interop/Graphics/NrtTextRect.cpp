@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Graphics/NrtTextRect.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
 using namespace NovelRT::Graphics;
@@ -15,7 +14,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_TextRect_getTransform(NrtTextRect rect, NrtTransform* outputTransform)
+    NrtResult Nrt_TextRect_getTransform(NrtTextRectHandle rect, NrtTransform* outputTransform)
     {
         if (rect == nullptr)
         {
@@ -30,7 +29,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_setTransform(NrtTextRect rect, NrtTransform inputTransform)
+    NrtResult Nrt_TextRect_setTransform(NrtTextRectHandle rect, NrtTransform inputTransform)
     {
         if (rect == nullptr)
         {
@@ -44,13 +43,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    int32_t Nrt_TextRect_getLayer(NrtTextRect rect)
+    int32_t Nrt_TextRect_getLayer(NrtTextRectHandle rect)
     {
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
         return textRectPtr->layer();
     }
 
-    NrtResult Nrt_TextRect_setLayer(NrtTextRect rect, int32_t inputLayer)
+    NrtResult Nrt_TextRect_setLayer(NrtTextRectHandle rect, int32_t inputLayer)
     {
         if (rect == nullptr)
         {
@@ -64,7 +63,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_TextRect_getActive(NrtTextRect rect)
+    NrtBool Nrt_TextRect_getActive(NrtTextRectHandle rect)
     {
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
 
@@ -75,7 +74,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtResult Nrt_TextRect_setActive(NrtTextRect rect, NrtBool inputBool)
+    NrtResult Nrt_TextRect_setActive(NrtTextRectHandle rect, NrtBool inputBool)
     {
         if (rect == nullptr)
         {
@@ -97,7 +96,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRect rect)
+    NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRectHandle rect)
     {
         if (rect == nullptr)
         {
@@ -112,7 +111,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_getColourConfig(NrtTextRect rect, NrtRGBAConfig* outputColourConfig)
+    NrtResult Nrt_TextRect_getColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle* outputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -122,12 +121,12 @@ extern "C"
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
         auto colourConfig = textRectPtr->getColourConfig();
-        *outputColourConfig = reinterpret_cast<NrtRGBAConfig>(&colourConfig);
+        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(&colourConfig);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_setColourConfig(NrtTextRect rect, NrtRGBAConfig inputColourConfig)
+    NrtResult Nrt_TextRect_setColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle inputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -141,14 +140,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    const char* Nrt_TextRect_getText(NrtTextRect rect)
+    const char* Nrt_TextRect_getText(NrtTextRectHandle rect)
     {
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
         std::string* text = new std::string(textRectPtr->getText());
         return text->c_str();
     }
 
-    NrtResult Nrt_TextRect_setText(NrtTextRect rect, const char* inputText)
+    NrtResult Nrt_TextRect_setText(NrtTextRectHandle rect, const char* inputText)
     {
         if (rect == nullptr)
         {
@@ -170,7 +169,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_getFontSet(NrtTextRect rect, NrtFontSet* outputFontSet)
+    NrtResult Nrt_TextRect_getFontSet(NrtTextRectHandle rect, NrtFontSetHandle* outputFontSet)
     {
         if (rect == nullptr)
         {
@@ -180,12 +179,12 @@ extern "C"
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
         auto fontSet = textRectPtr->getFontSet();
-        *outputFontSet = reinterpret_cast<NrtFontSet>(fontSet.get());
+        *outputFontSet = reinterpret_cast<NrtFontSetHandle>(fontSet.get());
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_setFontSet(NrtTextRect rect, NrtFontSet inputFontSet)
+    NrtResult Nrt_TextRect_setFontSet(NrtTextRectHandle rect, NrtFontSetHandle inputFontSet)
     {
         if (rect == nullptr)
         {
@@ -199,7 +198,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRect rect, NrtRenderObject* outputRenderObject)
+    NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRectHandle rect, NrtRenderObjectHandle* outputRenderObject)
     {
         if (rect == nullptr)
         {
@@ -207,7 +206,7 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        *outputRenderObject = reinterpret_cast<NrtRenderObject>(rect);
+        *outputRenderObject = reinterpret_cast<NrtRenderObjectHandle>(rect);
 
         return NRT_SUCCESS;
     }

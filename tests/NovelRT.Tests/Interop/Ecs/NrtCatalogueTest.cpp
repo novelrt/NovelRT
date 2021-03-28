@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
@@ -11,9 +12,9 @@ using namespace NovelRT::Ecs;
 class InteropCatalogueTest : public testing::Test
 {
 public:
-    NrtComponentCache componentCache = nullptr;
-    NrtEntityCache entityCache = nullptr;
-    NrtCatalogue catalogue = nullptr;
+    NrtComponentCacheHandle componentCache = nullptr;
+    NrtEntityCacheHandle entityCache = nullptr;
+    NrtCatalogueHandle catalogue = nullptr;
 
     NrtComponentTypeId intComponentTypeId = 0;
     NrtComponentTypeId sizeTComponentTypeId = 0;
@@ -69,7 +70,7 @@ protected:
         Nrt_UnsafeComponentView_PushComponentUpdateInstruction(compViewChar, 0, &charInput);
 
         Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
-                                                      reinterpret_cast<NrtEntityIdVector>(&entityIdVector));
+                                                      reinterpret_cast<NrtEntityIdVectorHandle>(&entityIdVector));
     }
 
     void TearDown() override
@@ -83,15 +84,15 @@ protected:
 TEST_F(InteropCatalogueTest, CanGetValidComponentView)
 {
     auto compView = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, charComponentTypeId);
-    NrtSparseSetMemoryContainer_ConstIterator beginIterator = nullptr;
-    NrtSparseSetMemoryContainer_ConstIterator endIterator = Nrt_UnsafeComponentView_end(compView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle beginIterator = nullptr;
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_end(compView);
 
     for (beginIterator = Nrt_UnsafeComponentView_begin(compView);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIterator, endIterator) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIterator))
     {
         size_t outputId = 0;
-        NrtSparseSetMemoryContainer_ConstByteIteratorView itView = nullptr;
+        NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle itView = nullptr;
         ASSERT_EQ(Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(beginIterator, &outputId, &itView),
                   NRT_SUCCESS);
 
@@ -112,15 +113,15 @@ TEST_F(InteropCatalogueTest, CanGetValidComponentView)
 TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 {
     auto compView = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
-    NrtSparseSetMemoryContainer_ConstIterator beginIterator = nullptr;
-    NrtSparseSetMemoryContainer_ConstIterator endIterator = Nrt_UnsafeComponentView_end(compView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle beginIterator = nullptr;
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_end(compView);
 
     for (beginIterator = Nrt_UnsafeComponentView_begin(compView);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIterator, endIterator) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIterator))
     {
         size_t outputId = 0;
-        NrtSparseSetMemoryContainer_ConstByteIteratorView itView = nullptr;
+        NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle itView = nullptr;
         ASSERT_EQ(Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(beginIterator, &outputId, &itView),
                   NRT_SUCCESS);
 
@@ -130,9 +131,10 @@ TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(beginIterator);
     Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(endIterator);
-    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache, reinterpret_cast<NrtEntityIdVector>(&entityIdVector));
+    Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
+                                                  reinterpret_cast<NrtEntityIdVectorHandle>(&entityIdVector));
 
-    NrtComponentBufferMemoryContainer ptr = nullptr;
+    NrtComponentBufferMemoryContainerHandle ptr = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(componentCache, intComponentTypeId, &ptr), NRT_SUCCESS);
     EXPECT_EQ(Nrt_ComponentBufferMemoryContainer_GetImmutableDataLength(ptr), 0);
 

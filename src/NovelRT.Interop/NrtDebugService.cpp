@@ -1,13 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/Graphics/NrtRenderingService.h>
 #include <NovelRT.Interop/NrtDebugService.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <list>
-#include <stdint.h>
 
 std::list<std::shared_ptr<NovelRT::DebugService>> _debugCollection;
 std::list<std::shared_ptr<NovelRT::Graphics::RenderingService>> _debugRendererCollection;
@@ -18,9 +16,9 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_DebugService_create(NrtUtilitiesEvent sceneConstructionEvent,
-                                      NrtRenderingService renderingService,
-                                      NrtDebugService* outputService)
+    NrtResult Nrt_DebugService_create(NrtUtilitiesEventHandle sceneConstructionEvent,
+                                      NrtRenderingServiceHandle renderingService,
+                                      NrtDebugServiceHandle* outputService)
     {
         if (sceneConstructionEvent == nullptr || renderingService == nullptr || outputService == nullptr)
         {
@@ -33,17 +31,17 @@ extern "C"
             reinterpret_cast<Graphics::RenderingService*>(renderingService)->shared_from_this());
 
         DebugService* cppService = new DebugService(constructionEvent, _debugRendererCollection.back());
-        *outputService = reinterpret_cast<NrtDebugService>(cppService);
+        *outputService = reinterpret_cast<NrtDebugServiceHandle>(cppService);
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugService service)
+    NrtBool Nrt_DebugService_getIsFpsCounterVisible(NrtDebugServiceHandle service)
     {
         DebugService* cppService = reinterpret_cast<DebugService*>(service);
         return static_cast<int32_t>(cppService->getIsFpsCounterVisible());
     }
 
-    NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugService service, int32_t value)
+    NrtResult Nrt_DebugService_setIsFpsCounterVisible(NrtDebugServiceHandle service, int32_t value)
     {
         if (service == nullptr)
         {
@@ -56,13 +54,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    uint32_t Nrt_DebugService_getFramesPerSecond(NrtDebugService service)
+    uint32_t Nrt_DebugService_getFramesPerSecond(NrtDebugServiceHandle service)
     {
         DebugService* cppService = reinterpret_cast<DebugService*>(service);
         return cppService->getFramesPerSecond();
     }
 
-    NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugService service, uint32_t value)
+    NrtResult Nrt_DebugService_setFramesPerSecond(NrtDebugServiceHandle service, uint32_t value)
     {
         if (service == nullptr)
         {

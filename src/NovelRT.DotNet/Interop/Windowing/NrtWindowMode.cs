@@ -2,10 +2,10 @@
 
 namespace NovelRT.Interop
 {
-    public enum NrtAnimatorPlayStateKind
+    public enum NrtWindowMode
     {
-        NRT_PLAY_STATE_STOPPED = 0,
-        NRT_PLAY_STATE_PLAYING = 1,
-        NRT_PLAY_STATE_PAUSED = 2,
+        NRT_WINDOW_MODE_WINDOWED = 0,
+        NRT_WINDOW_MODE_BORDERLESS = 1,
+        NRT_WINDOW_MODE_FULLSCREEN = 2,
     }
 }

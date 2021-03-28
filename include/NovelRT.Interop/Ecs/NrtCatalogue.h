@@ -1,39 +1,35 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_NRTCATALOGUE_H
-#define NOVELRT_NRTCATALOGUE_H
+#ifndef NOVELRT_INTEROP_ECS_NRTCATALOGUE_H
+#define NOVELRT_INTEROP_ECS_NRTCATALOGUE_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtComponentCache.h"
-#include "NrtEcsUtils.h"
-#include "NrtEntityCache.h"
-#include "NrtUnsafeComponentView.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct CatalogueHandle* NrtCatalogue;
+    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId,
+                                            NrtComponentCacheHandle componentCache,
+                                            NrtEntityCacheHandle entityCache);
 
-    NrtCatalogue Nrt_Catalogue_Create(size_t poolId, NrtComponentCache componentCache, NrtEntityCache entityCache);
-
-    NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogue catalogue,
+    NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogueHandle catalogue,
                                                  NrtComponentTypeId componentId,
-                                                 NrtUnsafeComponentView* outputResult);
+                                                 NrtUnsafeComponentViewHandle* outputResult);
 
-    NrtUnsafeComponentView Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogue catalogue,
-                                                                    NrtComponentTypeId componentId);
+    NrtUnsafeComponentViewHandle Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogueHandle catalogue,
+                                                                          NrtComponentTypeId componentId);
 
-    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogue catalogue);
+    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogueHandle catalogue);
 
-    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogue catalogue, NrtEntityId entity);
+    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogueHandle catalogue, NrtEntityId entity);
 
-    NrtResult Nrt_Catalogue_Destroy(NrtCatalogue catalogue);
+    NrtResult Nrt_Catalogue_Destroy(NrtCatalogueHandle catalogue);
 
 #ifdef __cplusplus
-};
+}
 #endif
 
-#endif // !NOVELRT_NRTCATALOGUE_H
+#endif // NOVELRT_INTEROP_ECS_NRTCATALOGUE_H
