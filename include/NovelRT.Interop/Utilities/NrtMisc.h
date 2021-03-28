@@ -13,8 +13,8 @@ extern "C"
 
     const char* Nrt_getExecutablePath();
     const char* Nrt_getExecutableDirPath();
-    const char* Nrt_appendFilePath(int32_t numberOfArgs, ...);
-    const char* Nrt_appendText(int32_t numberOfArgs, ...);
+    const char* Nrt_appendFilePath(int32_t numberOfArgs, const char* const* args);
+    const char* Nrt_appendText(int32_t numberOfArgs, const char* const* args);
 
 #ifdef __cplusplus
 }
