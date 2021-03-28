@@ -110,19 +110,19 @@ try {
   $env:PATH="$DotNetInstallDirectory;$env:PATH"
 
   if ($generate) {
-    Generate
+    Measure-Command { Generate }
   }
 
   if ($build) {
-    Build
+    Measure-Command { Build }
   }
 
   if ($test) {
-    Test
+    Measure-Command { Test }
   }
 
   if ($install) {
-    Install
+    Measure-Command { Install }
   }
 }
 catch {
