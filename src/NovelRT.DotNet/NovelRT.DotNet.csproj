@@ -18,12 +18,17 @@
 
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
   <Target Name="GetCMakeOutputAssembly">
-    <Message Importance="High" Text="$(TargetFileName)" />
+    <Message Importance="High" Text="$(TargetPath)" />
   </Target>
 
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
   <Target Name="GetCMakeOutputByproducts" DependsOnTargets="ComputeFilesToPublish">
     <Message Importance="High" Text="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
+  </Target>
+
+  <!-- DO NOT REMOVE: Used to ensure the project is only built via CMake -->
+  <Target Name="ValidateBuildingViaCMake" BeforeTargets="Restore;Build;Pack;Publish" Condition="'$(BuildingViaCMake)' != 'true'">
+    <Error Text="This project must be built using CMake. See the README.md for more information" />
   </Target>
 
 </Project>

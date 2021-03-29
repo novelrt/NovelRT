@@ -20,7 +20,7 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 
-set(ENGINE_SOURCES
+set(SOURCES
   Animation/SpriteAnimator.cpp
 
   Audio/AudioService.cpp
@@ -72,7 +72,7 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine SHARED ${ENGINE_SOURCES})
+add_library(Engine SHARED ${SOURCES})
 add_dependencies(Engine Dotnet)
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")

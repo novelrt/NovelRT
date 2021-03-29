@@ -1,10 +1,10 @@
 find_package(lua 5.3 REQUIRED)
 
-set(SIMPLE_SOURCES
+set(SOURCES
   main.cpp
 )
 
-add_executable(Simple ${SIMPLE_SOURCES})
+add_executable(Simple ${SOURCES})
 add_dependencies(Simple Dotnet Resources)
 target_link_libraries(Simple
   PRIVATE

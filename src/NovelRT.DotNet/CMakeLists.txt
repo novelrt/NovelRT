@@ -1,8 +1,8 @@
 find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 
-set(DOTNET_CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
+set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
 
-set(DOTNET_SOURCES
+set(SOURCES
   NovelRT.DotNet.runtimeconfig.json
 
   InkService.cs
@@ -53,53 +53,52 @@ set(DOTNET_SOURCES
   Interop/Windowing/NrtWindowMode.cs
 )
 
-set(DOTNET_OPTIONS
+set(OPTIONS
   /nologo
-  /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
-  /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
-  /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}/
-  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/publish/
-  )
+  /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/obj/
+  /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/obj/
+  /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/bin/
+  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/
+  /p:BuildingViaCMake=true
+)
 
 execute_process(
-  COMMAND ${Dotnet_PROGRAM} msbuild ${DOTNET_CSPROJ} ${DOTNET_OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
   /t:Restore
 )
 
 execute_process(
-  COMMAND ${Dotnet_PROGRAM} msbuild ${DOTNET_CSPROJ} ${DOTNET_OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
   /t:GetCMakeOutputAssembly
-  OUTPUT_VARIABLE DOTNET_OUTPUT_ASSEMBLY
+  OUTPUT_VARIABLE OUTPUT_ASSEMBLY
 )
-string(STRIP "${DOTNET_OUTPUT_ASSEMBLY}" DOTNET_OUTPUT_ASSEMBLY)
+string(STRIP "${OUTPUT_ASSEMBLY}" OUTPUT_ASSEMBLY)
 
 execute_process(
-  COMMAND ${Dotnet_PROGRAM} msbuild ${DOTNET_CSPROJ} ${DOTNET_OPTIONS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
   /t:GetCMakeOutputByproducts
-  OUTPUT_VARIABLE DOTNET_OUTPUT_BYPRODUCTS
+  OUTPUT_VARIABLE OUTPUT_BYPRODUCTS
 )
-string(STRIP "${DOTNET_OUTPUT_BYPRODUCTS}" DOTNET_OUTPUT_BYPRODUCTS)
-
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/publish)
+string(STRIP "${OUTPUT_BYPRODUCTS}" OUTPUT_BYPRODUCTS)
 
 add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${DOTNET_OUTPUT_ASSEMBLY}
-  DEPENDS ${DOTNET_SOURCES} ${DOTNET_CSPROJ}
-  BYPRODUCTS ${DOTNET_OUTPUT_BYPRODUCTS}
-  COMMAND ${Dotnet_PROGRAM} msbuild ${DOTNET_CSPROJ} ${DOTNET_OPTIONS}
+  OUTPUT ${OUTPUT_ASSEMBLY}
+  DEPENDS ${SOURCES} ${CSPROJ}
+  BYPRODUCTS ${OUTPUT_BYPRODUCTS}
+  COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
   /t:Build,Publish
-  COMMENT "Building ${DOTNET_CSPROJ}"
+  COMMENT "Building ${CSPROJ}"
 )
 
 add_custom_target(Dotnet_Build ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${DOTNET_OUTPUT_ASSEMBLY}
+  DEPENDS ${OUTPUT_ASSEMBLY}
 )
 
 add_executable(Dotnet IMPORTED GLOBAL)
 add_dependencies(Dotnet Dotnet_Build)
 set_target_properties(Dotnet
   PROPERTIES
-  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/publish/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
+  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
 )
 
 if(WIN32)
@@ -113,14 +112,14 @@ endif()
 add_library(CoreCLR::nethost SHARED IMPORTED GLOBAL)
 set_target_properties(CoreCLR::nethost
   PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/publish"
-  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/publish/${nethost_lib}"
+  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}"
+  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/${nethost_lib}"
   )
 
 if(WIN32)
   set_target_properties(CoreCLR::nethost
     PROPERTIES
-    IMPORTED_IMPLIB "${CMAKE_CURRENT_BINARY_DIR}/publish/nethost.lib"
+    IMPORTED_IMPLIB "${CMAKE_CURRENT_BINARY_DIR}/nethost.lib"
     )
   # TODO: check if this is necessary on OS X too
 elseif(UNIX AND NOT APPLE)
