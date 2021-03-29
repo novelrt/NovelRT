@@ -55,10 +55,10 @@ set(SOURCES
 
 set(OPTIONS
   /nologo
-  /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
-  /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/
-  /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}/
-  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/publish/
+  /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.obj/
+  /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.obj/
+  /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.bin/
+  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/
   /p:BuildingViaCMake=true
 )
 
