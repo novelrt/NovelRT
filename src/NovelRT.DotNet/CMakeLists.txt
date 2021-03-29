@@ -82,7 +82,7 @@ execute_process(
 string(STRIP "${OUTPUT_BYPRODUCTS}" OUTPUT_BYPRODUCTS)
 
 add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
+  OUTPUT ${OUTPUT_ASSEMBLY}
   DEPENDS ${SOURCES} ${CSPROJ}
   BYPRODUCTS ${OUTPUT_BYPRODUCTS}
   COMMAND ${Dotnet_PROGRAM} msbuild ${CSPROJ} ${OPTIONS}
@@ -91,7 +91,7 @@ add_custom_command(
 )
 
 add_custom_target(Dotnet_Build ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
+  DEPENDS ${OUTPUT_ASSEMBLY}
 )
 
 add_executable(Dotnet IMPORTED GLOBAL)

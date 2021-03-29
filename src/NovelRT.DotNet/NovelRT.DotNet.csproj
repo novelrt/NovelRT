@@ -18,7 +18,7 @@
 
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
   <Target Name="GetCMakeOutputAssembly">
-    <Message Importance="High" Text="$(TargetFileName)" />
+    <Message Importance="High" Text="$(TargetPath)" />
   </Target>
 
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
