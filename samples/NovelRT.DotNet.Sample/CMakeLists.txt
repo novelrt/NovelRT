@@ -35,8 +35,6 @@ execute_process(
 )
 string(STRIP "${OUTPUT_BYPRODUCTS}" OUTPUT_BYPRODUCTS)
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/publish)
-
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
   DEPENDS ${SOURCES} ${CSPROJ}
@@ -55,7 +53,7 @@ add_dependencies(Dotnet_Sample Dotnet_Build Dotnet_Sample_Build)
 
 set_target_properties(Dotnet_Sample
   PROPERTIES
-  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/publish/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
+  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
 )
 
 add_custom_command(
@@ -68,13 +66,6 @@ add_custom_command(
 add_custom_command(
   TARGET Dotnet_Sample_Build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Resources>
-    ${CMAKE_CURRENT_BINARY_DIR}/publish
-)
-
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Engine>
     ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -82,20 +73,6 @@ add_custom_command(
 add_custom_command(
   TARGET Dotnet_Sample_Build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Engine>
-    ${CMAKE_CURRENT_BINARY_DIR}/publish
-)
-
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Interop>
     ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Interop>
-    ${CMAKE_CURRENT_BINARY_DIR}/publish
 )

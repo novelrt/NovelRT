@@ -81,8 +81,6 @@ execute_process(
 )
 string(STRIP "${OUTPUT_BYPRODUCTS}" OUTPUT_BYPRODUCTS)
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/publish)
-
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_ASSEMBLY}
   DEPENDS ${SOURCES} ${CSPROJ}
@@ -100,7 +98,7 @@ add_executable(Dotnet IMPORTED GLOBAL)
 add_dependencies(Dotnet Dotnet_Build)
 set_target_properties(Dotnet
   PROPERTIES
-  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/publish/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
+  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
 )
 
 if(WIN32)
@@ -114,14 +112,14 @@ endif()
 add_library(CoreCLR::nethost SHARED IMPORTED GLOBAL)
 set_target_properties(CoreCLR::nethost
   PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/publish"
-  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/publish/${nethost_lib}"
+  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}"
+  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/${nethost_lib}"
   )
 
 if(WIN32)
   set_target_properties(CoreCLR::nethost
     PROPERTIES
-    IMPORTED_IMPLIB "${CMAKE_CURRENT_BINARY_DIR}/publish/nethost.lib"
+    IMPORTED_IMPLIB "${CMAKE_CURRENT_BINARY_DIR}/nethost.lib"
     )
   # TODO: check if this is necessary on OS X too
 elseif(UNIX AND NOT APPLE)
