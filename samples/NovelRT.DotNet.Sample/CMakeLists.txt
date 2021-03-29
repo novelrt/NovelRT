@@ -60,7 +60,7 @@ add_custom_command(
   TARGET Dotnet_Sample_Build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Resources>
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/Resources
 )
 
 add_custom_command(
