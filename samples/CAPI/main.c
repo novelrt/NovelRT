@@ -152,13 +152,16 @@ int main()
         Nrt_LoggingService_logErrorLine(console, error);
         return -1;
     }
-    const char* path = Nrt_appendFilePath(2, execPath, "Resources");
+
+    const char* const pathParts[2] = {execPath, "Resources"};
+    const char* path = Nrt_appendFilePath(2, pathParts);
 
     // Getting & Initialising AudioService
     res = Nrt_NovelRunner_getAudioService(runner, &audio);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting AudioService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -167,7 +170,8 @@ int main()
         booleanResult = Nrt_AudioService_initialiseAudio(audio);
         if (booleanResult != NRT_TRUE)
         {
-            const char* errMsg = Nrt_appendText(2, "Error initialising AudioService: ", Nrt_getLastError());
+            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
+            const char* errMsg = Nrt_appendText(2, textParts);
             Nrt_LoggingService_logErrorLine(console, errMsg);
             return -1;
         }
@@ -181,7 +185,8 @@ int main()
     }
     else
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting InteractionService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting InteractionService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -190,7 +195,8 @@ int main()
     res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting RuntimeService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting RuntimeService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -217,7 +223,8 @@ int main()
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting RenderingService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting RenderingService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -232,9 +239,12 @@ int main()
     NrtTransform nChanTransform = {nChanPosition, nChanSize, 0};
     NrtRGBAConfigHandle nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
 
-    const char* nChanFileLocation = Nrt_appendFilePath(3, path, "Images", "novel-chan.png");
-    res = Nrt_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation,
-                                                       nChanColours);
+    {
+        const char* const pathParts[3] = {path, "Images", "novel-chan.png"};
+        const char* nChanFileLocation = Nrt_appendFilePath(3, pathParts);
+        res = Nrt_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation,
+                                                           nChanColours);
+    }
 
     // Creating InteractionRect
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
@@ -243,7 +253,8 @@ int main()
     // Creating Ink Story
     if (inkServiceProvided == NRT_TRUE)
     {
-        const char* storyLocation = Nrt_appendFilePath(3, path, "Scripts", "story.json");
+        const char* const pathParts[3] = {path, "Scripts", "story.json"};
+        const char* storyLocation = Nrt_appendFilePath(3, pathParts);
         Nrt_LoggingService_logInfoLine(console, storyLocation);
 
         FILE* json = fopen(storyLocation, "rb");

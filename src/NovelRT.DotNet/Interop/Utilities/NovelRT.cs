@@ -16,10 +16,10 @@ namespace NovelRT.Interop
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* Nrt_appendFilePath([NativeTypeName("int32_t")] int numberOfArgs);
+        public static extern sbyte* Nrt_appendFilePath([NativeTypeName("int32_t")] int numberOfArgs, [NativeTypeName("const char * const *")] sbyte** args);
 
         [DllImport("Interop", ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* Nrt_appendText([NativeTypeName("int32_t")] int numberOfArgs);
+        public static extern sbyte* Nrt_appendText([NativeTypeName("int32_t")] int numberOfArgs, [NativeTypeName("const char * const *")] sbyte** args);
     }
 }
