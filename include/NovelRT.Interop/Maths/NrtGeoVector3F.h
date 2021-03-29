@@ -11,13 +11,6 @@ extern "C"
 {
 #endif
 
-    typedef struct
-    {
-        float x;
-        float y;
-        float z;
-    } NrtGeoVector3F;
-
     NrtGeoVector3F Nrt_GeoVector3F_createFromGeoVector2F(NrtGeoVector2F vector);
     NrtBool Nrt_GeoVector3F_isNaN(NrtGeoVector3F vector);
     NrtGeoVector3F Nrt_GeoVector3F_uniform(float value);

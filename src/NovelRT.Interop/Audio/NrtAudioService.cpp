@@ -2,23 +2,22 @@
 // for more information.
 
 #include <NovelRT.Interop/Audio/NrtAudioService.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
-#include <stdint.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;
+
 extern "C"
 {
 #endif
 
-    NrtAudioService Nrt_AudioService_create()
+    NrtAudioServiceHandle Nrt_AudioService_create()
     {
-        return reinterpret_cast<NrtAudioService>(new Audio::AudioService()); // TODO: WTF??
+        return reinterpret_cast<NrtAudioServiceHandle>(new Audio::AudioService()); // TODO: WTF??
     }
 
-    NrtResult Nrt_AudioService_destroy(NrtAudioService service)
+    NrtResult Nrt_AudioService_destroy(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -31,7 +30,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_AudioService_initialiseAudio(NrtAudioService service)
+    NrtBool Nrt_AudioService_initialiseAudio(NrtAudioServiceHandle service)
     {
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
 
@@ -46,7 +45,9 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_AudioService_loadMusic(NrtAudioService service, char* input, NrtAudioServiceIterator* output)
+    NrtResult Nrt_AudioService_loadMusic(NrtAudioServiceHandle service,
+                                         char* input,
+                                         NrtAudioServiceIteratorHandle* output)
     {
         if (service == nullptr)
         {
@@ -67,11 +68,11 @@ extern "C"
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
-        *output = reinterpret_cast<NrtAudioServiceIterator&>(out);
+        *output = reinterpret_cast<NrtAudioServiceIteratorHandle&>(out);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setSoundVolume(NrtAudioService service, unsigned int source, float val)
+    NrtResult Nrt_AudioService_setSoundVolume(NrtAudioServiceHandle service, unsigned int source, float val)
     {
         if (service == nullptr)
         {
@@ -94,7 +95,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setSoundPosition(NrtAudioService service, unsigned int source, float posX, float posY)
+    NrtResult Nrt_AudioService_setSoundPosition(NrtAudioServiceHandle service,
+                                                unsigned int source,
+                                                float posX,
+                                                float posY)
     {
         if (service == nullptr)
         {
@@ -117,7 +121,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_resumeMusic(NrtAudioService service)
+    NrtResult Nrt_AudioService_resumeMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -140,7 +144,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_playMusic(NrtAudioService service, NrtAudioServiceIterator handle, int32_t loops)
+    NrtResult Nrt_AudioService_playMusic(NrtAudioServiceHandle service,
+                                         NrtAudioServiceIteratorHandle handle,
+                                         int32_t loops)
     {
         if (service == nullptr)
         {
@@ -163,7 +169,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_pauseMusic(NrtAudioService service)
+    NrtResult Nrt_AudioService_pauseMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -186,7 +192,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_stopMusic(NrtAudioService service)
+    NrtResult Nrt_AudioService_stopMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -209,7 +215,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setMusicVolume(NrtAudioService service, float value)
+    NrtResult Nrt_AudioService_setMusicVolume(NrtAudioServiceHandle service, float value)
     {
         if (service == nullptr)
         {
@@ -232,7 +238,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_checkSources(NrtAudioService service)
+    NrtResult Nrt_AudioService_checkSources(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -246,7 +252,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_loadSound(NrtAudioService service, char* input, unsigned int* output)
+    NrtResult Nrt_AudioService_loadSound(NrtAudioServiceHandle service, char* input, unsigned int* output)
     {
         if (service == nullptr)
         {
@@ -269,7 +275,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_unload(NrtAudioService service, unsigned int handle)
+    NrtResult Nrt_AudioService_unload(NrtAudioServiceHandle service, unsigned int handle)
     {
         if (service == nullptr)
         {
@@ -282,7 +288,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_playSound(NrtAudioService service, unsigned int handle, int loops)
+    NrtResult Nrt_AudioService_playSound(NrtAudioServiceHandle service, unsigned int handle, int loops)
     {
         if (service == nullptr)
         {
@@ -305,7 +311,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_stopSound(NrtAudioService service, unsigned int handle)
+    NrtResult Nrt_AudioService_stopSound(NrtAudioServiceHandle service, unsigned int handle)
     {
         if (service == nullptr)
         {
@@ -318,7 +324,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_tearDown(NrtAudioService service)
+    NrtResult Nrt_AudioService_tearDown(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {

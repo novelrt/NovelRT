@@ -2,8 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <algorithm>
 #include <list>
 
@@ -15,27 +16,27 @@ extern "C"
 {
 #endif
 
-    NrtQuadTreePoint Nrt_QuadTreePoint_create(NrtGeoVector2F position)
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_create(NrtGeoVector2F position)
     {
         _pointCollection.push_back(
             std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2F&>(position)));
-        return reinterpret_cast<NrtQuadTreePoint>(_pointCollection.back().get());
+        return reinterpret_cast<NrtQuadTreePointHandle>(_pointCollection.back().get());
     }
 
-    NrtQuadTreePoint Nrt_QuadTreePoint_createFromFloat(float x, float y)
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_createFromFloat(float x, float y)
     {
         _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2F(x, y)));
-        return reinterpret_cast<NrtQuadTreePoint>(_pointCollection.back().get());
+        return reinterpret_cast<NrtQuadTreePointHandle>(_pointCollection.back().get());
     }
 
-    NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePoint point)
+    NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePointHandle point)
     {
         Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
         NrtGeoVector2F returnValue = reinterpret_cast<const NrtGeoVector2F&>(pos);
         return returnValue;
     }
 
-    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePoint point)
+    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePointHandle point)
     {
         if (point == nullptr)
         {

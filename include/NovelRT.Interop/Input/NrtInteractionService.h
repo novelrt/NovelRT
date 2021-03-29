@@ -4,32 +4,24 @@
 #ifndef NOVELRT_INTEROP_INPUT_INTERACTIONSERVICE_H
 #define NOVELRT_INTEROP_INPUT_INTERACTIONSERVICE_H
 
-#include "../Maths/NrtGeoVector2F.h"
-#include "../NrtInteropUtils.h"
-#include "../NrtTransform.h"
-#include "../Windowing/NrtWindowingService.h"
-#include "NrtBasicInteractionRect.h"
-#include "NrtKeyCode.h"
-#include "NrtKeyStateFrameChangeLog.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct InteractionServiceHandle* NrtInteractionService;
-
-    NrtInteractionService Nrt_InteractionService_create(const NrtWindowingService windowingService);
-    NrtResult Nrt_InteractionService_consumePlayerInput(const NrtInteractionService service);
-    NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service,
+    NrtInteractionServiceHandle Nrt_InteractionService_create(const NrtWindowingServiceHandle windowingService);
+    NrtResult Nrt_InteractionService_consumePlayerInput(const NrtInteractionServiceHandle service);
+    NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionServiceHandle service,
                                                                 const NrtTransform transform,
                                                                 int32_t layer,
-                                                                NrtBasicInteractionRect* outputRect);
-    NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionService service);
-    NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionService service, NrtGeoVector2F value);
-    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service,
+                                                                NrtBasicInteractionRectHandle* outputRect);
+    NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionServiceHandle service);
+    NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionServiceHandle service, NrtGeoVector2F value);
+    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionServiceHandle service,
                                                  NrtKeyCode value,
-                                                 NrtKeyStateFrameChangeLog* output);
+                                                 NrtKeyStateFrameChangeLogHandle* output);
 
 #ifdef __cplusplus
 }

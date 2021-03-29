@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+
 #include <atomic>
 #include <gtest/gtest.h>
 
@@ -316,15 +317,15 @@ TEST(InteropSparseSetMemoryContainerTest, IteratingTheMutableCollectionReturnsCo
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 1, &testValueTwo), NRT_SUCCESS);
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 2, &testValueThree), NRT_SUCCESS);
 
-    NrtSparseSetMemoryContainer_Iterator begin = nullptr;
-    NrtSparseSetMemoryContainer_Iterator end = Nrt_SparseSetMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_IteratorHandle begin = nullptr;
+    NrtSparseSetMemoryContainer_IteratorHandle end = Nrt_SparseSetMemoryContainer_end(container);
 
     for (begin = Nrt_SparseSetMemoryContainer_begin(container);
          Nrt_SparseSetMemoryContainer_Iterator_NotEqual(begin, end);
          Nrt_SparseSetMemoryContainer_Iterator_MoveNext(begin))
     {
         size_t key = 0;
-        NrtSparseSetMemoryContainer_ByteIteratorView value = nullptr;
+        NrtSparseSetMemoryContainer_ByteIteratorViewHandle value = nullptr;
         Nrt_SparseSetMemoryContainer_Iterator_GetValuePair(begin, &key, &value);
         int32_t result =
             *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(value));
@@ -350,15 +351,15 @@ TEST(InteropSparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorr
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 1, &testValueTwo), NRT_SUCCESS);
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 2, &testValueThree), NRT_SUCCESS);
 
-    NrtSparseSetMemoryContainer_ConstIterator begin = nullptr;
-    NrtSparseSetMemoryContainer_ConstIterator end = Nrt_SparseSetMemoryContainer_cend(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle begin = nullptr;
+    NrtSparseSetMemoryContainer_ConstIteratorHandle end = Nrt_SparseSetMemoryContainer_cend(container);
 
     for (begin = Nrt_SparseSetMemoryContainer_cbegin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(begin, end);
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(begin))
     {
         size_t key = 0;
-        NrtSparseSetMemoryContainer_ConstByteIteratorView value = nullptr;
+        NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle value = nullptr;
         Nrt_SparseSetMemoryContainer_ConstIterator_GetValuePair(begin, &key, &value);
         int32_t result =
             *reinterpret_cast<const int32_t*>(Nrt_SparseSetMemoryContainer_ConstByteIteratorView_GetDataHandle(value));

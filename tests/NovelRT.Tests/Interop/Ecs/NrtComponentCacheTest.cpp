@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
@@ -11,7 +12,7 @@ using namespace NovelRT::Ecs;
 class InteropComponentCacheTest : public testing::Test
 {
 public:
-    NrtComponentCache cache = nullptr;
+    NrtComponentCacheHandle cache = nullptr;
 
 protected:
     void SetUp() override
@@ -43,12 +44,12 @@ TEST_F(InteropComponentCacheTest, GetComponentBufferByIdReturnsValidBuffer)
                   cache, sizeof(int32_t), &deleteState, [](auto, auto, auto) {}, &id),
               NRT_SUCCESS);
 
-    NrtComponentBufferMemoryContainer buffer = nullptr;
+    NrtComponentBufferMemoryContainerHandle buffer = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, id, &buffer), NRT_SUCCESS);
     int32_t inputData = 10;
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(buffer, 0, 0, &inputData), NRT_SUCCESS);
     std::vector<EntityId> dummyVec{};
-    Nrt_ComponentCache_PrepAllBuffersForNextFrame(cache, reinterpret_cast<NrtEntityIdVector>(&dummyVec));
+    Nrt_ComponentCache_PrepAllBuffersForNextFrame(cache, reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
     auto view = Nrt_ComponentBufferMemoryContainer_GetComponentUnsafe(buffer, 0);
     EXPECT_EQ(
         *reinterpret_cast<const int32_t*>(Nrt_ComponentBufferMemoryContainer_ImmutableDataView_GetDataHandle(view)),

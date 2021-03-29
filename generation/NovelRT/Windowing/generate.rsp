@@ -1,0 +1,11 @@
+@../../settings.rsp
+@../../remap.rsp
+--file
+include-NrtWindowing.h
+--output
+../../../src/NovelRT.DotNet/Interop/Windowing
+--test-output
+../../../tests/NovelRT.DotNet/Interop/Windowing
+--traverse
+../../../include/NovelRT.Interop/Windowing/NrtWindowingService.h
+../../../include/NovelRT.Interop/Windowing/NrtWindowingTypedefs.h

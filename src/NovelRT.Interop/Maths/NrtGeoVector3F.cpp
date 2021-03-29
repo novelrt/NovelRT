@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtGeoVector3F.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
 #ifdef __cplusplus

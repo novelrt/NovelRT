@@ -2,9 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/Input/NrtInteractionService.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/Windowing/NrtWindowingService.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <list>
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowCollection;
@@ -17,16 +17,16 @@ extern "C"
 {
 #endif
 
-    NrtInteractionService Nrt_InteractionService_create(const NrtWindowingService windowingService)
+    NrtInteractionServiceHandle Nrt_InteractionService_create(const NrtWindowingServiceHandle windowingService)
     {
         _windowCollection.push_back(std::shared_ptr<Windowing::WindowingService>(
             reinterpret_cast<Windowing::WindowingService*>(windowingService)));
         _interactionServiceCollection.push_back(
             std::make_shared<Input::InteractionService>(Input::InteractionService(_windowCollection.back())));
-        return reinterpret_cast<NrtInteractionService>(_interactionServiceCollection.back().get());
+        return reinterpret_cast<NrtInteractionServiceHandle>(_interactionServiceCollection.back().get());
     }
 
-    NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionService service)
+    NrtResult Nrt_InteractionService_consumePlayerInput(NrtInteractionServiceHandle service)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
@@ -40,7 +40,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionService service)
+    NrtResult Nrt_InteractionService_executeClickedInteractable(const NrtInteractionServiceHandle service)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
@@ -54,7 +54,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionService service, NrtGeoVector2F value)
+    NrtResult Nrt_InteractionService_setScreenSize(const NrtInteractionServiceHandle service, NrtGeoVector2F value)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
@@ -69,9 +69,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionService service,
+    NrtResult Nrt_InteractionService_getKeyState(const NrtInteractionServiceHandle service,
                                                  NrtKeyCode value,
-                                                 NrtKeyStateFrameChangeLog* output)
+                                                 NrtKeyStateFrameChangeLogHandle* output)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
@@ -82,14 +82,14 @@ extern "C"
         }
 
         auto changelog = servicePtr->getKeyState(reinterpret_cast<Input::KeyCode&>(value));
-        *output = reinterpret_cast<NrtKeyStateFrameChangeLog&>(changelog);
+        *output = reinterpret_cast<NrtKeyStateFrameChangeLogHandle&>(changelog);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionService service,
+    NrtResult Nrt_InteractionService_createBasicInteractionRect(const NrtInteractionServiceHandle service,
                                                                 const NrtTransform transform,
                                                                 int32_t layer,
-                                                                NrtBasicInteractionRect* outputRect)
+                                                                NrtBasicInteractionRectHandle* outputRect)
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
@@ -101,7 +101,7 @@ extern "C"
 
         _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(
             servicePtr->createBasicInteractionRect(*reinterpret_cast<const Transform*>(&transform), layer)));
-        *outputRect = reinterpret_cast<NrtBasicInteractionRect>(_rectCollection.back().get());
+        *outputRect = reinterpret_cast<NrtBasicInteractionRectHandle>(_rectCollection.back().get());
         return NRT_SUCCESS;
     }
 

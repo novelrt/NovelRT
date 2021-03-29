@@ -4,35 +4,36 @@
 #ifndef NOVELRT_INTEROP_ANIMATION_SPRITEANIMATORSTATE_H
 #define NOVELRT_INTEROP_ANIMATION_SPRITEANIMATORSTATE_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtAnimationTypedefs.h"
-#include <stddef.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtSpriteAnimatorState Nrt_SpriteAnimatorState_create();
-    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorState state,
-                                                     NrtSpriteAnimatorState stateTarget,
-                                                     NrtSpriteAnimatorStateConditionFunctions vector);
-    NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorState state, size_t index);
-    int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorState state);
-    NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorState state, int32_t loop);
-    NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorState state,
-                                                NrtSpriteAnimatorFrameVector* outputFramess);
-    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorState state, NrtSpriteAnimatorFrameVector frames);
-    NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorState state,
-                                                             NrtSpriteAnimatorState* outputTransitionState);
+    NrtSpriteAnimatorStateHandle Nrt_SpriteAnimatorState_create();
+    NrtResult Nrt_SpriteAnimatorState_insertNewState(NrtSpriteAnimatorStateHandle state,
+                                                     NrtSpriteAnimatorStateHandle stateTarget,
+                                                     NrtSpriteAnimatorStateConditionFunctionsHandle vector);
+    NrtResult Nrt_SpriteAnimatorState_removeStateAtIndex(NrtSpriteAnimatorStateHandle state, size_t index);
+    int32_t Nrt_SpriteAnimatorState_getShouldLoop(NrtSpriteAnimatorStateHandle state);
+    NrtResult Nrt_SpriteAnimatorState_setShouldLoop(NrtSpriteAnimatorStateHandle state, int32_t loop);
+    NrtResult Nrt_SpriteAnimatorState_getFrames(NrtSpriteAnimatorStateHandle state,
+                                                NrtSpriteAnimatorFrameVectorHandle* outputFramess);
+    NrtResult Nrt_SpriteAnimatorState_setFrames(NrtSpriteAnimatorStateHandle state,
+                                                NrtSpriteAnimatorFrameVectorHandle frames);
+    NrtResult Nrt_SpriteAnimatorState_tryFindValidTransition(NrtSpriteAnimatorStateHandle state,
+                                                             NrtSpriteAnimatorStateHandle* outputTransitionState);
 
-    NrtSpriteAnimatorFrameVector Nrt_SpriteAnimatorFrameVector_create();
-    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVector vector, NrtSpriteAnimatorFrame frame);
-    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVector vector,
+    NrtSpriteAnimatorFrameVectorHandle Nrt_SpriteAnimatorFrameVector_create();
+    NrtResult Nrt_SpriteAnimatorFrameVector_addFrame(NrtSpriteAnimatorFrameVectorHandle vector,
+                                                     NrtSpriteAnimatorFrameHandle frame);
+    NrtResult Nrt_SpriteAnimatorFrameVector_getFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector,
                                                             int32_t index,
-                                                            NrtSpriteAnimatorFrame* outputFrame);
-    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVector vector, int32_t index);
-    NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVector vector);
+                                                            NrtSpriteAnimatorFrameHandle* outputFrame);
+    NrtResult Nrt_SpriteAnimatorFrameVector_removeFrameAtIndex(NrtSpriteAnimatorFrameVectorHandle vector,
+                                                               int32_t index);
+    NrtResult Nrt_SpriteAnimatorFrameVector_delete(NrtSpriteAnimatorFrameVectorHandle vector);
 
 #ifdef __cplusplus
 }

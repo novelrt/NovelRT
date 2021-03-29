@@ -2,34 +2,35 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtEntityCache.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/EntityCache.h>
 
 using namespace NovelRT::Ecs;
 
 extern "C"
 {
-    NrtEntityCache Nrt_EntityCache_Create(size_t poolSize)
+    NrtEntityCacheHandle Nrt_EntityCache_Create(size_t poolSize)
     {
-        return reinterpret_cast<NrtEntityCache>(new EntityCache(poolSize));
+        return reinterpret_cast<NrtEntityCacheHandle>(new EntityCache(poolSize));
     }
 
-    NrtEntityIdVector Nrt_EntityCache_GetEntitiesToRemoveThisFrame(NrtEntityCache entityCache)
+    NrtEntityIdVectorHandle Nrt_EntityCache_GetEntitiesToRemoveThisFrame(NrtEntityCacheHandle entityCache)
     {
-        return reinterpret_cast<NrtEntityIdVector>(
+        return reinterpret_cast<NrtEntityIdVectorHandle>(
             &reinterpret_cast<EntityCache*>(entityCache)->GetEntitiesToRemoveThisFrame());
     }
 
-    void Nrt_EntityCache_RemoveEntity(NrtEntityCache entityCache, size_t poolId, NrtEntityId entityToRemove)
+    void Nrt_EntityCache_RemoveEntity(NrtEntityCacheHandle entityCache, size_t poolId, NrtEntityId entityToRemove)
     {
         reinterpret_cast<EntityCache*>(entityCache)->RemoveEntity(poolId, entityToRemove);
     }
 
-    void Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(NrtEntityCache entityCache)
+    void Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(NrtEntityCacheHandle entityCache)
     {
         reinterpret_cast<EntityCache*>(entityCache)->ProcessEntityDeletionRequestsFromThreads();
     }
 
-    NrtResult Nrt_EntityCache_Destroy(NrtEntityCache entityCache)
+    NrtResult Nrt_EntityCache_Destroy(NrtEntityCacheHandle entityCache)
     {
         if (entityCache == nullptr)
         {

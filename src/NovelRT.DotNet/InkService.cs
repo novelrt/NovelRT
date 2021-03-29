@@ -67,7 +67,7 @@ namespace NovelRT.DotNet
         private static byte Story_GetCanContinue(IntPtr storyHandle)
         {
             var story = RuntimeService.ResolveHandle<Story>(storyHandle);
-            return story.canContinue ? 1 : 0;
+            return story.canContinue ? (byte)1 : (byte)0;
         }
 
         [UnmanagedCallersOnly]

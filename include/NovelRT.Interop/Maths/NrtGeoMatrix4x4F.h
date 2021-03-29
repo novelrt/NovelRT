@@ -11,14 +11,6 @@ extern "C"
 {
 #endif
 
-    typedef struct
-    {
-        NrtGeoVector4F x;
-        NrtGeoVector4F y;
-        NrtGeoVector4F z;
-        NrtGeoVector4F w;
-    } NrtGeoMatrix4x4F;
-
     NrtBool Nrt_GeoMatrix4x4F_isNaN(NrtGeoMatrix4x4F matrix);
     NrtGeoMatrix4x4F Nrt_GeoMatrix4x4F_getDefaultIdentity();
     NrtBool Nrt_GeoMatrix4x4F_equal(NrtGeoMatrix4x4F lhs, NrtGeoMatrix4x4F rhs);

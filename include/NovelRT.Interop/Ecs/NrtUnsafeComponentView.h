@@ -1,46 +1,46 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_NRTCOMPONENTVIEW_H
-#define NOVELRT_NRTCOMPONENTVIEW_H
+#ifndef NOVELRT_INTEROP_ECS_UNSAFECOMPONENTVIEW_H
+#define NOVELRT_INTEROP_ECS_UNSAFECOMPONENTVIEW_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtComponentBufferMemoryContainer.h"
-#include "NrtEcsUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct UnsafeComponentViewHandle* NrtUnsafeComponentView;
+    NrtUnsafeComponentViewHandle Nrt_UnsafeComponentView_Create(size_t poolId,
+                                                                NrtComponentBufferMemoryContainerHandle container);
 
-    NrtUnsafeComponentView Nrt_UnsafeComponentView_Create(size_t poolId, NrtComponentBufferMemoryContainer container);
-
-    NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentView componentView,
+    NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentViewHandle componentView,
                                                                      NrtEntityId entity,
                                                                      void* instructionData);
 
-    NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentView componentView, NrtEntityId entity);
+    NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentViewHandle componentView, NrtEntityId entity);
 
-    NrtResult Nrt_UnsafeComponentView_GetComponent(NrtUnsafeComponentView componentView,
-                                                   NrtEntityId entity,
-                                                   NrtComponentBufferMemoryContainer_ImmutableDataView* outputResult);
+    NrtResult Nrt_UnsafeComponentView_GetComponent(
+        NrtUnsafeComponentViewHandle componentView,
+        NrtEntityId entity,
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult);
 
-    NrtComponentBufferMemoryContainer_ImmutableDataView Nrt_UnsafeComponentView_GetComponentUnsafe(
-        NrtUnsafeComponentView componentView,
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_UnsafeComponentView_GetComponentUnsafe(
+        NrtUnsafeComponentViewHandle componentView,
         NrtEntityId entity);
 
-    size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentView componentView);
+    size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_begin(NrtUnsafeComponentView componentView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(
+        NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_end(NrtUnsafeComponentView componentView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(
+        NrtUnsafeComponentViewHandle componentView);
 
-    NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentView componentView);
+    NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentViewHandle componentView);
 
 #ifdef __cplusplus
-};
+}
 #endif
 
-#endif // !NOVELRT_NRTCOMPONENTVIEW_H
+#endif // NOVELRT_INTEROP_ECS_UNSAFECOMPONENTVIEW_H

@@ -46,6 +46,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - Lua 5.3
 - OpenAL 1.19.1
 - spdlog 1.4.2
+- Microsoft GSL 3.1.0
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
@@ -109,6 +110,15 @@ Then you should be able to configure and build, like so:
 cmake ..
 cmake --build . -j
 ```
+
+#### Visual studio 2019 specific instructions
+
+When you open the NovelRT folder in VS2019 for the first time the CMakeSettings.json file will contain incorrect values.
+Change the buildRoot value to `${projectDir}\\build` and the installRoot to `${projectDir}\\install` and restart Visual Studio this will make sure that it uses the same build path as the CLI commands.
+You can delete the `out` folder in the NovelRT root as well as we won't use it anymore.
+Afterwards right click on the `conanfile.txt` file in the root and click the `Run conan install windows-vs2019-amd64` option.
+This runs the conan install command from the section above to regenerate the files we need to build with cmake as Visual Studio wiped the output from earlier.
+Then regenerate the cmake by clicking regenerate on the yellow warning ribbon on the top of Visual Studio.
 
 ## Example
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).

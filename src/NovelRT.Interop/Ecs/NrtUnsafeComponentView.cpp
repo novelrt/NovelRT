@@ -2,8 +2,11 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/UnsafeComponentView.h>
-#include <NovelRT/Exceptions/DuplicateKeyException.h>
+#include <NovelRT/Exceptions/Exceptions.h>
+
+#include <vector>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -13,13 +16,14 @@ std::vector<std::byte> dummyByteVectorComponentView;
 
 extern "C"
 {
-    NrtUnsafeComponentView Nrt_UnsafeComponentView_Create(size_t poolId, NrtComponentBufferMemoryContainer container)
+    NrtUnsafeComponentViewHandle Nrt_UnsafeComponentView_Create(size_t poolId,
+                                                                NrtComponentBufferMemoryContainerHandle container)
     {
-        return reinterpret_cast<NrtUnsafeComponentView>(new UnsafeComponentView(
+        return reinterpret_cast<NrtUnsafeComponentViewHandle>(new UnsafeComponentView(
             poolId, reinterpret_cast<ComponentBufferMemoryContainer*>(container)->shared_from_this()));
     }
 
-    NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentView componentView,
+    NrtResult Nrt_UnsafeComponentView_PushComponentUpdateInstruction(NrtUnsafeComponentViewHandle componentView,
                                                                      NrtEntityId entity,
                                                                      void* instructionData)
     {
@@ -48,7 +52,7 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentView componentView, NrtEntityId entity)
+    NrtResult Nrt_UnsafeComponentView_RemoveComponent(NrtUnsafeComponentViewHandle componentView, NrtEntityId entity)
     {
         if (componentView == nullptr)
         {
@@ -74,9 +78,10 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_UnsafeComponentView_GetComponent(NrtUnsafeComponentView componentView,
-                                                   NrtEntityId entity,
-                                                   NrtComponentBufferMemoryContainer_ImmutableDataView* outputResult)
+    NrtResult Nrt_UnsafeComponentView_GetComponent(
+        NrtUnsafeComponentViewHandle componentView,
+        NrtEntityId entity,
+        NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
         if (componentView == nullptr || outputResult == nullptr)
         {
@@ -87,7 +92,7 @@ extern "C"
         {
             auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
             *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->GetComponent(entity);
-            *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataView>(ptr);
+            *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataViewHandle>(ptr);
 
             return NRT_SUCCESS;
         }
@@ -97,41 +102,43 @@ extern "C"
         }
     }
 
-    NrtComponentBufferMemoryContainer_ImmutableDataView Nrt_UnsafeComponentView_GetComponentUnsafe(
-        NrtUnsafeComponentView componentView,
+    NrtComponentBufferMemoryContainer_ImmutableDataViewHandle Nrt_UnsafeComponentView_GetComponentUnsafe(
+        NrtUnsafeComponentViewHandle componentView,
         NrtEntityId entity)
     {
         auto ptr = new ComponentBufferMemoryContainer::ImmutableDataView(nullptr, 0);
         *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->GetComponent(entity);
-        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataView>(ptr);
+        return reinterpret_cast<NrtComponentBufferMemoryContainer_ImmutableDataViewHandle>(ptr);
     }
 
-    size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentView componentView)
+    size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentViewHandle componentView)
     {
         return reinterpret_cast<UnsafeComponentView*>(componentView)->GetImmutableDataLength();
     }
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_begin(NrtUnsafeComponentView componentView)
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(
+        NrtUnsafeComponentViewHandle componentView)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(
             std::make_tuple(dummySizeTVectorComponentView.cbegin(),
                             SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
 
         *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->begin();
-        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
+        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIterator Nrt_UnsafeComponentView_end(NrtUnsafeComponentView componentView)
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(
+        NrtUnsafeComponentViewHandle componentView)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(
             std::make_tuple(dummySizeTVectorComponentView.cbegin(),
                             SparseSetMemoryContainer::ConstByteIteratorView(dummyByteVectorComponentView.cend(), 0)));
 
         *ptr = reinterpret_cast<UnsafeComponentView*>(componentView)->end();
-        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIterator>(ptr);
+        return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentView componentView)
+    NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentViewHandle componentView)
     {
         if (componentView == nullptr)
         {

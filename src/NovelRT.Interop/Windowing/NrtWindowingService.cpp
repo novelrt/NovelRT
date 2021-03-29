@@ -1,12 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Windowing/NrtWindowingService.h>
 #include <NovelRT.h>
+
 #include <list>
-#include <stdint.h>
 
 std::list<std::shared_ptr<NovelRT::Windowing::WindowingService>> _windowingServiceCollection;
 
@@ -16,14 +15,14 @@ extern "C"
 {
 #endif
 
-    NrtWindowingService Nrt_WindowingService_create()
+    NrtWindowingServiceHandle Nrt_WindowingService_create()
     {
         _windowingServiceCollection.push_back(
             std::make_shared<Windowing::WindowingService>(Windowing::WindowingService()));
-        return reinterpret_cast<NrtWindowingService>(_windowingServiceCollection.back().get());
+        return reinterpret_cast<NrtWindowingServiceHandle>(_windowingServiceCollection.back().get());
     }
 
-    NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service,
+    NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingServiceHandle service,
                                                     int32_t displayNumber,
                                                     const char* windowTitle,
                                                     NrtWindowMode windowMode,
@@ -41,7 +40,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service)
+    NrtResult Nrt_WindowingService_tearDown(NrtWindowingServiceHandle service)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         if (servicePtr == nullptr)
@@ -54,14 +53,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service)
+    const char* Nrt_WindowingService_getWindowTitle(NrtWindowingServiceHandle service)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         std::string* title = new std::string(servicePtr->getWindowTitle());
         return title->c_str();
     }
 
-    NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value)
+    NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingServiceHandle service, const char* value)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         if (servicePtr == nullptr || value == nullptr)
@@ -74,7 +73,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVector2F value)
+    NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingServiceHandle service, NrtGeoVector2F value)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         if (servicePtr == nullptr)
@@ -87,7 +86,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingService service)
+    NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingServiceHandle service)
     {
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         auto vector = servicePtr->getWindowSize();

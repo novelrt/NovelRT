@@ -4,38 +4,35 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
 #define NOVELRT_INTEROP_SCENEGRAPH_SCENENODE_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtSceneGraphTypedefs.h"
-#include <stddef.h>
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtSceneNode Nrt_SceneNode_create();
-    NrtResult Nrt_SceneNode_getChildren(NrtSceneNode node, NrtSceneNodeSet* outputSet);
-    NrtResult Nrt_SceneNode_getParents(NrtSceneNode node, NrtSceneNodeSet* outputSet);
-    NrtBool Nrt_SceneNode_insert(NrtSceneNode node, NrtSceneNode nodeToInsert);
-    NrtBool Nrt_SceneNode_remove(NrtSceneNode node, NrtSceneNode nodeToRemove);
-    NrtBool Nrt_SceneNode_isAdjacent(NrtSceneNode firstNode, NrtSceneNode secondNode);
-    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNode node, void (*action)(NrtSceneNode));
-    NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNode node,
-                                                             int32_t (*action)(NrtSceneNode),
-                                                             NrtSceneNodeBreadthFirstIterator* outputIterator);
-    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNode node, void (*action)(NrtSceneNode));
-    NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNode node,
-                                                           int32_t (*action)(NrtSceneNode),
-                                                           NrtSceneNodeDepthFirstIterator* outputIterator);
-    NrtBool Nrt_SceneNode_canReach(NrtSceneNode firstNode, NrtSceneNode secondNode);
-    NrtResult Nrt_SceneNode_delete(NrtSceneNode node);
+    NrtSceneNodeHandle Nrt_SceneNode_create();
+    NrtResult Nrt_SceneNode_getChildren(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet);
+    NrtResult Nrt_SceneNode_getParents(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet);
+    NrtBool Nrt_SceneNode_insert(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToInsert);
+    NrtBool Nrt_SceneNode_remove(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToRemove);
+    NrtBool Nrt_SceneNode_isAdjacent(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode);
+    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle));
+    NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNodeHandle node,
+                                                             int32_t (*action)(NrtSceneNodeHandle),
+                                                             NrtSceneNodeBreadthFirstIteratorHandle* outputIterator);
+    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle));
+    NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNodeHandle node,
+                                                           int32_t (*action)(NrtSceneNodeHandle),
+                                                           NrtSceneNodeDepthFirstIteratorHandle* outputIterator);
+    NrtBool Nrt_SceneNode_canReach(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode);
+    NrtResult Nrt_SceneNode_delete(NrtSceneNodeHandle node);
 
-    NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSet nodeSet);
-    size_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSet nodeSet);
-    NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSet nodeSet,
+    NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSetHandle nodeSet);
+    size_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSetHandle nodeSet);
+    NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSetHandle nodeSet,
                                                      size_t index,
-                                                     NrtSceneNode* outputSceneNode);
+                                                     NrtSceneNodeHandle* outputSceneNode);
 
 #ifdef __cplusplus
 }

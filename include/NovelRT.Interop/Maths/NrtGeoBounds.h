@@ -4,20 +4,12 @@
 #ifndef NOVELRT_INTEROP_MATHS_GEOBOUNDS_H
 #define NOVELRT_INTEROP_MATHS_GEOBOUNDS_H
 
-#include "../NrtInteropUtils.h"
-#include "NrtGeoVector2F.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef struct
-    {
-        NrtGeoVector2F position;
-        NrtGeoVector2F size;
-        float rotation;
-    } NrtGeoBounds;
 
     NrtGeoBounds Nrt_GeoBounds_zero();
     NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int32_t index);

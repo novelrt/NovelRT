@@ -2,10 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h>
-#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/Timing/NrtTimestamp.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
 
 #ifdef __cplusplus
@@ -14,13 +11,13 @@ extern "C"
 {
 #endif
 
-    NrtSpriteAnimatorFrame Nrt_SpriteAnimatorFrame_create()
+    NrtSpriteAnimatorFrameHandle Nrt_SpriteAnimatorFrame_create()
     {
         Animation::SpriteAnimatorFrame* frame = new Animation::SpriteAnimatorFrame();
-        return reinterpret_cast<NrtSpriteAnimatorFrame>(frame);
+        return reinterpret_cast<NrtSpriteAnimatorFrameHandle>(frame);
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrame frame, NrtTexture* outputTexture)
+    NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrameHandle frame, NrtTextureHandle* outputTexture)
     {
         if (frame == nullptr || outputTexture == nullptr)
         {
@@ -31,11 +28,11 @@ extern "C"
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
         std::shared_ptr<Graphics::Texture> cppTexture = cppFrame->texture();
 
-        *outputTexture = reinterpret_cast<NrtTexture>(cppTexture.get());
+        *outputTexture = reinterpret_cast<NrtTextureHandle>(cppTexture.get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrame frame, NrtTexture texture)
+    NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrameHandle frame, NrtTextureHandle texture)
     {
         if (frame == nullptr || texture == nullptr)
         {
@@ -49,7 +46,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtTimestamp Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrame frame)
+    NrtTimestamp Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrameHandle frame)
     {
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
         Timing::Timestamp* cppDuration = new Timing::Timestamp(0);
@@ -58,7 +55,7 @@ extern "C"
         return reinterpret_cast<NrtTimestamp&>(*cppDuration);
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrame frame, NrtTimestamp timestamp)
+    NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrameHandle frame, NrtTimestamp timestamp)
     {
         if (frame == nullptr)
         {
@@ -72,7 +69,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrame frame, void (*func)())
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrameHandle frame, void (*func)())
     {
         if (frame == nullptr || func == nullptr)
         {
@@ -86,7 +83,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrame frame, void (*func)())
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrameHandle frame, void (*func)())
     {
         if (frame == nullptr || func == nullptr)
         {

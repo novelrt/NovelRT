@@ -2,7 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtGeoBounds.h>
+#include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
 #include <NovelRT.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;

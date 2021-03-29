@@ -1,0 +1,14 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "conan install windows-vs2019-amd64",
+      "appliesTo": "conanfile.txt",
+      "type": "launch",
+      "command": "${env.COMSPEC}",
+      "args": [
+        "cd build & conan install .. --build=missing --profile windows-vs2019-amd64"
+      ]
+    }
+  ]
+}

@@ -4,23 +4,19 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_RENDEROBJECTNODE_H
 #define NOVELRT_INTEROP_SCENEGRAPH_RENDEROBJECTNODE_H
 
-#include "../Graphics/NrtGraphicsTypedefs.h"
-#include "../NrtInteropUtils.h"
-#include <stdint.h>
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    typedef struct RenderObjectNodeHandle* NovelRTRenderObjectNode;
-
-    NrtResult Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectNode* outputNode);
-    NrtResult Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRenderObject* outputObject);
-    NrtResult Nrt_RenderObjectNode_delete(NovelRTRenderObjectNode node);
+    NrtResult Nrt_RenderObjectNode_create(NrtRenderObjectHandle object, NrtRenderObjectNodeHandle* outputNode);
+    NrtResult Nrt_RenderObjectNode_getRenderObject(NrtRenderObjectNodeHandle node, NrtRenderObjectHandle* outputObject);
+    NrtResult Nrt_RenderObjectNode_delete(NrtRenderObjectNodeHandle node);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_SCENEGRAPH_RENDEROBJECTNODE_H
+#endif // NOVELRT_INTEROP_SCENEGRAPH_RENDEROBJECTNODE_H

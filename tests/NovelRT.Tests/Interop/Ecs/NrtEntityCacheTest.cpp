@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT.h>
+
 #include <atomic>
 #include <gtest/gtest.h>
 
@@ -12,7 +13,7 @@ using namespace NovelRT::Ecs;
 class InteropEntityCacheTest : public testing::Test
 {
 public:
-    NrtEntityCache cache = nullptr;
+    NrtEntityCacheHandle cache = nullptr;
 
 protected:
     void SetUp() override

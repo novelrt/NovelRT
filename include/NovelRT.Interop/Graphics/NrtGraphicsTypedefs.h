@@ -9,17 +9,27 @@ extern "C"
 {
 #endif
 
-    typedef struct RenderObjectHandle* NrtRenderObject;
-    typedef struct RenderingServiceHandle* NrtRenderingService;
-    typedef struct TextureHandle* NrtTexture;
-    typedef struct FontSetHandle* NrtFontSet;
-    typedef struct BasicFillRectHandle* NrtBasicFillRect;
-    typedef struct ImageRectHandle* NrtImageRect;
-    typedef struct TextRectHandle* NrtTextRect;
-    typedef struct CameraHandle* NrtCamera;
+    typedef struct NrtBasicFillRect* NrtBasicFillRectHandle;
+    typedef struct NrtCamera* NrtCameraHandle;
+    typedef struct NrtFontSet* NrtFontSetHandle;
+    typedef struct NrtImageRect* NrtImageRectHandle;
+    typedef struct NrtRenderObject* NrtRenderObjectHandle;
+    typedef struct NrtRenderingService* NrtRenderingServiceHandle;
+    typedef struct NrtRGBAConfig* NrtRGBAConfigHandle;
+    typedef struct NrtTextRect* NrtTextRectHandle;
+    typedef struct NrtTexture* NrtTextureHandle;
+
+    typedef enum
+    {
+        NRT_UNMODIFIED = 0,
+        NRT_MODIFIEDINCURRENT = 1,
+        NRT_MODIFIEDINLAST = 2
+    } NrtCameraFrameStateKind;
+
+    typedef int32_t NrtCameraFrameState;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_GRAPHICS_GRAPHICSTYPEDEFS_H
+#endif // NOVELRT_INTEROP_GRAPHICS_GRAPHICSTYPEDEFS_H
