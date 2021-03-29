@@ -1,12 +1,12 @@
 find_package(lua 5.3 REQUIRED)
 
-set(CAPI_SOURCES
+set(SOURCES
   main.c
 )
 
-set_source_files_properties(${CAPI_SOURCES} PROPERTIES LANGUAGE C)
+set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE C)
 
-add_executable(CAPI ${CAPI_SOURCES})
+add_executable(CAPI ${SOURCES})
 add_dependencies(CAPI Dotnet Resources)
 target_link_libraries(CAPI
   PRIVATE

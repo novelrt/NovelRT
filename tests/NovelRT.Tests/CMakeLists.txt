@@ -4,7 +4,7 @@ find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
 
 include(GoogleTest)
 
-set(TEST_SOURCES
+set(SOURCES
   Animation/SpriteAnimatorStateTest.cpp
 
   Ecs/CatalogueTest.cpp
@@ -52,8 +52,7 @@ set(TEST_SOURCES
   main.cpp
  )
 
-
-add_executable(Engine_Tests ${TEST_SOURCES})
+add_executable(Engine_Tests ${SOURCES})
 target_link_libraries(Engine_Tests
   PUBLIC
     Engine
