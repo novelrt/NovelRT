@@ -13,6 +13,7 @@ set(OPTIONS
   /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/
   /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}/
   /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/publish/
+  /p:BuildingViaCMake=true
 )
 
 execute_process(
