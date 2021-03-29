@@ -12,15 +12,6 @@
     <ProjectReference Include="../../src/NovelRT.DotNet/NovelRT.DotNet.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="../../resources/**/*.ttf" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../resources/**/*.png" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../resources/**/*.lua" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../resources/**/*.ink" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../resources/**/*.json" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../resources/**/*.glsl" Link="Resources/%(RecursiveDir)/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
   <Target Name="GetCMakeOutputAssembly">
     <Message Importance="High" Text="$(TargetFileName)" />

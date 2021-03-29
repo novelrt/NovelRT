@@ -60,6 +60,20 @@ set_target_properties(Dotnet_Sample
 add_custom_command(
   TARGET Dotnet_Sample_Build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Resources>
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+add_custom_command(
+  TARGET Dotnet_Sample_Build POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Resources>
+    ${CMAKE_CURRENT_BINARY_DIR}/publish
+)
+
+add_custom_command(
+  TARGET Dotnet_Sample_Build POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Engine>
     ${CMAKE_CURRENT_BINARY_DIR}
 )
