@@ -5,13 +5,21 @@
 #define NOVELRT_VULKANGRAPHICSDEVICE_H
 
 #include "../ILLGraphicsDevice.h"
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
     class VulkanGraphicsDevice : public ILLGraphicsDevice
     {
-    public:
+    private:
+        VkInstance _instance;
 
+        void CreateInstance();
+
+
+    public:
+        void Initialise() override;
+        void TearDown() override;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

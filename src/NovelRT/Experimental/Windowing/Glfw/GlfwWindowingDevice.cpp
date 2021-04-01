@@ -53,22 +53,13 @@ namespace NovelRT::Experimental::Windowing::Glfw
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
-        switch (windowMode)
-        {
-            case NovelRT::Windowing::WindowMode::Windowed:
-                glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_TRUE);
-            case NovelRT::Windowing::WindowMode::Borderless:
-                glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
-                break;
-            case NovelRT::Windowing::WindowMode::Fullscreen:
-            default:
-                break;
-        }
+        glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
+        glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
     }
 
-    void GlfwWindowingDevice::TearDown()
+    void GlfwWindowingDevice::TearDown() noexcept
     {
         _window.reset();
     }

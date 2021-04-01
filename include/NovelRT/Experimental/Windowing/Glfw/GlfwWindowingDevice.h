@@ -23,11 +23,16 @@ namespace NovelRT::Experimental::Windowing::Glfw
     public:
         GlfwWindowingDevice() noexcept;
 
+        [[nodiscard]] inline GLFWwindow* GetRawGLFWwindowHandle() const noexcept
+        {
+            return _window.get();
+        }
+
         void Initialise(NovelRT::Windowing::WindowMode windowMode,
                         const std::string& windowTitle,
                         Maths::GeoVector2F desiredWindowSize) final;
 
-        void TearDown() final;
+        void TearDown() noexcept final;
     };
 } // namespace NovelRT::Experimental::Windowing::Glfw
 

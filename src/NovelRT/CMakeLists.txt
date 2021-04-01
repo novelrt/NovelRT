@@ -38,7 +38,7 @@ set(SOURCES
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
 
-
+  Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 
   Graphics/BasicFillRect.cpp

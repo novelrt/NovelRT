@@ -4,6 +4,7 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR2_H
 #define NOVELRT_MATHS_GEOVECTOR2_H
 
+
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
