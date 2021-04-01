@@ -11,20 +11,23 @@ namespace NovelRT::Exceptions
 {
     class InitialisationFailureException final : public std::runtime_error
     {
+    private:
+        static inline const std::string defaultMessage =
+            "An object, system, or service attempted to be initialised but failed to do so.";
+
     public:
-        InitialisationFailureException() : std::runtime_error("Service could not be initialised.")
+        InitialisationFailureException() : std::runtime_error(defaultMessage)
         {
         }
-        InitialisationFailureException(const std::string& message)
-            : std::runtime_error("Service could not be initialised. " + message)
+        InitialisationFailureException(const std::string& message) : std::runtime_error(defaultMessage + " Reason: " + message)
         {
         }
         InitialisationFailureException(const std::string& message, const std::string& arguments)
-            : std::runtime_error("Service could not be initialised. " + message + " error: " + arguments)
+            : std::runtime_error(defaultMessage + message + " Error: " + arguments)
         {
         }
         InitialisationFailureException(const std::string& message, const int32_t argument)
-            : InitialisationFailureException("Service could not be initialised. " + message, std::to_string(argument))
+            : InitialisationFailureException(defaultMessage + message, std::to_string(argument))
         {
         }
     };

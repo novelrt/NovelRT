@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_HLGRAPHICSTEXTURE_H
-#define NOVELRT_HLGRAPHICSTEXTURE_H
-
-#include "HLGraphicsResource.h"
+#ifndef NOVELRT_ILLGRAPHICSDEVICE_H
+#define NOVELRT_ILLGRAPHICSDEVICE_H
 
 namespace NovelRT::Experimental::Graphics
 {
-    class HLGraphicsTexture : public HLGraphicsResource
+    class ILLGraphicsDevice
     {
+    public:
+
     };
 }
 
-#endif // NOVELRT_HLGRAPHICSTEXTURE_H
+#endif // NOVELRT_ILLGRAPHICSDEVICE_H

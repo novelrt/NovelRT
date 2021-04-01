@@ -27,7 +27,7 @@ namespace NovelRT::Maths
         friend class GeoVector4F;
 
     private:
-        GeoVector2F(glm::vec2 value) : x(value.x), y(value.y)
+        explicit GeoVector2F(glm::vec2 value) noexcept : x(value.x), y(value.y)
         {
         }
 

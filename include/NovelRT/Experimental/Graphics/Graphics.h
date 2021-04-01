@@ -10,7 +10,7 @@
 #include "HLGraphicsBuffer.h"
 #include "HLGraphicsResource.h"
 #include "HLGraphicsTexture.h"
-#include "IGraphicsDevice.h"
+#include "IHLGraphicsDevice.h"
 #include "LLGraphicsResource.h"
 #include "LLGraphicsResourceViewContainer.h"
 #include "LLGraphicsTexture.h"

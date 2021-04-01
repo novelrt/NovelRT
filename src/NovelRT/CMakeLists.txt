@@ -19,6 +19,7 @@ find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
+find_package(VulkanHeaders ${NOVELRT_VULKAN_VERSION} REQUIRED)
 
 set(SOURCES
   Animation/SpriteAnimator.cpp
@@ -37,7 +38,8 @@ set(SOURCES
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
 
-  Experimental/Graphics/OpenGLES3_0/OpenGLESHLGraphicsBuffer.cpp
+
+  Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
@@ -143,6 +145,7 @@ target_link_libraries(Engine
     spdlog::spdlog
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
+    Vulkan::Vulkan
 )
 
 if(WIN32)

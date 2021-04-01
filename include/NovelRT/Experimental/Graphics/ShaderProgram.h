@@ -15,7 +15,6 @@ namespace NovelRT::Experimental::Graphics
         uint32_t viewMatrixUboId = 0;
         uint32_t projectionMatrixUboId = 0;
         std::vector<uint32_t> uboIds = std::vector<uint32_t>{};
-
     };
 } // namespace NovelRT::Experimental::Graphics
 
