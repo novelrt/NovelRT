@@ -1,3 +1,9 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
+
+#ifndef NOVELRT_GRAPHICS_GRAPHICSCHARACTERRENDERDATAHELPER_H
+#define NOVELRT_GRAPHICS_GRAPHICSCHARACTERRENDERDATAHELPER_H
+
 namespace NovelRT::Graphics
 {
     class GraphicsCharacterRenderDataHelper
@@ -9,3 +15,5 @@ namespace NovelRT::Graphics
         }
     };
 } // namespace NovelRT::Graphics
+
+#endif// !NOVELRT_GRAPHICS_GRAPHICSCHARACTERRENDERDATAHELPER_H

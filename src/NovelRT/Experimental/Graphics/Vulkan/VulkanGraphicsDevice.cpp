@@ -35,7 +35,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
-        createInfo.enabledExtensionCount = extensionLength;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensionLength);
         createInfo.ppEnabledExtensionNames = allExtensions.data();
         createInfo.enabledLayerCount = 0;
 

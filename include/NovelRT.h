@@ -212,12 +212,12 @@
   #include "NovelRT/Exceptions/Exceptions.h"
 
   // Graphics types
+  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
   #include "NovelRT/Graphics/Camera.h"
   #include "NovelRT/Graphics/Texture.h"
   #include "NovelRT/Graphics/FontSet.h"
   #include "NovelRT/Graphics/RenderObject.h"
   #include "NovelRT/Graphics/BasicFillRect.h"
-  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
   #include "NovelRT/Graphics/ImageRect.h"
   #include "NovelRT/Graphics/TextRect.h"
 
