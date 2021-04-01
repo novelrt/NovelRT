@@ -13,7 +13,7 @@ namespace NovelRT
     {
     public:
         static inline const std::string EngineName = "NovelRT";
-        static inline std::string ApplicationName;
+        static inline std::string ApplicationName = "Test";
         static inline std::vector<std::string> RequiredVulkanExtensions{};
         static inline std::vector<std::string> OptionalVulkanExtensions{};
         static inline std::vector<std::string> RequiredVulkanLayers{};

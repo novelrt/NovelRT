@@ -14,7 +14,6 @@ namespace NovelRT::Experimental::Graphics
     public:
         virtual void Initialise() = 0;
         virtual void TearDown() = 0;
-        virtual std::vector<std::string> GetRequiredVulkanExtensions() = 0;
     };
 }
 

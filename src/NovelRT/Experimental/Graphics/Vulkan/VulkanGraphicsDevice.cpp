@@ -5,6 +5,7 @@
 #include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Exceptions/InitialisationFailureException.h>
 #include <numeric>
+#include <iostream>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -43,6 +44,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             throw Exceptions::InitialisationFailureException("Failed to create an instance of Vulkan 1.2.");
         }
+        std::cout << "HELLO FROM VULKAN!!!" << std::endl;
     }
 
     void VulkanGraphicsDevice::Initialise()

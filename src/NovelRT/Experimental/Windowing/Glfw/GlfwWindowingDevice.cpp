@@ -3,6 +3,7 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.h>
 #include <NovelRT/Exceptions/NotSupportedException.h>
+#include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Windowing/Glfw/GlfwWindowingDevice.h>
 #include <cmath>
 
@@ -57,6 +58,25 @@ namespace NovelRT::Experimental::Windowing::Glfw
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
+
+        if (glfwVulkanSupported() == GLFW_FALSE)
+        {
+            return;
+        }
+
+        uint32_t extensionCount = 0;
+        auto extensions = glfwGetRequiredInstanceExtensions(&extensionCount);
+        if (extensionCount == 0)
+        {
+            const char* output = nullptr;
+            glfwGetError(&output);
+            throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+        }
+
+        for (size_t i = 0; i < extensionCount; i++)
+        {
+            EngineConfig::RequiredVulkanExtensions.emplace_back(extensions[i]);
+        }
     }
 
     void GlfwWindowingDevice::TearDown() noexcept
