@@ -74,6 +74,9 @@ set(SOURCES
 
 add_library(Engine SHARED ${SOURCES})
 add_dependencies(Engine Dotnet)
+
+set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
+
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
