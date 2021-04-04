@@ -16,6 +16,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkInstance _instance;
         LoggingService _logger;
 
+        [[nodiscard]] std::vector<const char*> GetStringVectorAsCharPtrVector(const std::vector<std::string>& target) const noexcept;
+        [[nodiscard]] std::vector<std::string> GetFinalExtensionSet() const;
+        [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet() const;
+
         void CreateInstance();
 
 
