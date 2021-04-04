@@ -101,6 +101,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<VkExtensionProperties> extensionProperties(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensionProperties.data());
 
+        _logger.logInfoLine("Found the following available instance extensions:");
+
+        for (auto&& extensionProperty : extensionProperties)
+        {
+            _logger.logInfoLine("  Extension Name: " + std::string(extensionProperty.extensionName) +
+                                "  Spec Version: " + std::to_string(extensionProperty.specVersion));
+        }
+
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanExtensions())
         {
             auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
@@ -142,16 +150,30 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         uint32_t layerCount = 0;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-        std::vector<VkLayerProperties> validationLayerProperties(layerCount);
-        vkEnumerateInstanceLayerProperties(&layerCount, validationLayerProperties.data());
+        std::vector<VkLayerProperties> layerProperties(layerCount);
+        vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data());
+
+        _logger.logInfoLine("Found the following available instance layers:");
+
+        for (auto&& layerProperty : layerProperties)
+        {
+            std::string specVersion = std::to_string(VK_VERSION_MAJOR(layerProperty.specVersion)) + "." +
+                                      std::to_string(VK_VERSION_MINOR(layerProperty.specVersion)) + "." +
+                                      std::to_string(VK_VERSION_PATCH(layerProperty.specVersion));
+
+            _logger.logInfoLine("  Layer Name: " + std::string(layerProperty.layerName) +
+                                "  Spec Version: " + specVersion +
+                                "  Impl Version: " + std::to_string(layerProperty.implementationVersion) +
+                                "  Description:  " + std::string(layerProperty.description));
+        }
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
             auto result =
-                std::find_if(validationLayerProperties.begin(), validationLayerProperties.end(),
+                std::find_if(layerProperties.begin(), layerProperties.end(),
                              [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
 
-            if (result == validationLayerProperties.end())
+            if (result == layerProperties.end())
             {
                 throw Exceptions::InitialisationFailureException("The required Vulkan layer " + requestedRequiredLayer +
                                                                  " is not available on this device.");
@@ -162,10 +184,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalLayer : EngineConfig::OptionalVulkanLayers())
         {
-            auto result = std::find_if(validationLayerProperties.begin(), validationLayerProperties.end(),
+            auto result = std::find_if(layerProperties.begin(), layerProperties.end(),
                                        [&](auto& x) { return strcmp(requestedOptionalLayer.c_str(), x.layerName); });
 
-            if (result == validationLayerProperties.end())
+            if (result == layerProperties.end())
             {
                 _logger.logWarningLine("The optional Vulkan layer " + requestedOptionalLayer +
                                        " is not available on this device. Vulkan may not behave as you expect.");
