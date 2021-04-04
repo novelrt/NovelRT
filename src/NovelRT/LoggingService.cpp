@@ -108,22 +108,22 @@ namespace NovelRT
         }
     }
 
-    void LoggingService::logInfoLine(const std::string& message)
+    void LoggingService::logInfoLine(const std::string& message) const
     {
         _logger->info(message);
     }
 
-    void LoggingService::logErrorLine(const std::string& message)
+    void LoggingService::logErrorLine(const std::string& message) const
     {
         _logger->error(message);
     }
 
-    void LoggingService::logWarningLine(const std::string& message)
+    void LoggingService::logWarningLine(const std::string& message) const
     {
         _logger->warn(message);
     }
 
-    void LoggingService::logDebugLine(const std::string& message)
+    void LoggingService::logDebugLine(const std::string& message) const
     {
         _logger->debug(message);
     }

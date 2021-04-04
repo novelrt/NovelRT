@@ -44,7 +44,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         auto window =
             glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
-                             static_cast<int32_t>(floor(desiredWindowSize.y)), EngineConfig::ApplicationName.c_str(), monitor, nullptr);
+                             static_cast<int32_t>(floor(desiredWindowSize.y)), EngineConfig::ApplicationName().c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {
@@ -74,7 +74,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         for (size_t i = 0; i < extensionCount; i++)
         {
-            EngineConfig::RequiredVulkanExtensions.emplace_back(extensions[i]);
+            EngineConfig::RequiredVulkanExtensions().emplace_back(extensions[i]);
         }
     }
 

@@ -9,7 +9,9 @@ lua/5.3.5
 openal/1.19.1
 spdlog/1.8.2
 ms-gsl/3.1.0
+vulkan-headers/1.2.172
 vulkan-loader/1.2.172
+vulkan-validationlayers/1.2.154.0
 
 [generators]
 cmake_find_package
@@ -28,6 +30,7 @@ fmt:shared=True
 Opus:shared=True
 Ogg:shared=True
 Vorbis:shared=True
+vulkan-loader:shared=True
 glad:gl_profile=core
 glad:gl_version=4.0
 glad:gles2_version=3.0

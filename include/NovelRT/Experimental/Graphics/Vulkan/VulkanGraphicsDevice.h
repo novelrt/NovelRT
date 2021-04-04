@@ -4,24 +4,44 @@
 #ifndef NOVELRT_VULKANGRAPHICSDEVICE_H
 #define NOVELRT_VULKANGRAPHICSDEVICE_H
 
+#include "../../../LoggingService.h"
 #include "../ILLGraphicsDevice.h"
 #include <vulkan/vulkan.h>
-#include "../../../LoggingService.h"
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
     class VulkanGraphicsDevice : public ILLGraphicsDevice
     {
     private:
+        static inline std::string defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
         VkInstance _instance;
         LoggingService _logger;
+        VkDebugUtilsMessengerEXT _debugLogger;
+        bool _debuggerWasCreated;
 
-        [[nodiscard]] std::vector<const char*> GetStringVectorAsCharPtrVector(const std::vector<std::string>& target) const noexcept;
+        static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                            VkDebugUtilsMessageTypeFlagsEXT messageType,
+                                                            const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                                                            void* pUserData);
+
+        [[nodiscard]] static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
+                                                                   const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+                                                                   const VkAllocationCallbacks* pAllocator,
+                                                                   VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept;
+
+        [[nodiscard]] static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) noexcept;
+
+
+        [[nodiscard]] static std::vector<const char*> GetStringVectorAsCharPtrVector(
+            const std::vector<std::string>& target) noexcept;
+
         [[nodiscard]] std::vector<std::string> GetFinalExtensionSet() const;
         [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet() const;
 
-        void CreateInstance();
+        void CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept;
+        void ConfigureDebugLogger();
 
+        void CreateInstance();
 
     public:
         VulkanGraphicsDevice() noexcept;

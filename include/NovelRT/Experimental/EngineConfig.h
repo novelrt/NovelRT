@@ -4,21 +4,20 @@
 #ifndef NOVELRT_ENGINECONFIG_H
 #define NOVELRT_ENGINECONFIG_H
 
+#include "../LoggingService.h"
 #include <string>
 #include <vector>
 
-namespace NovelRT
+namespace NovelRT::EngineConfig
 {
-    class EngineConfig
-    {
-    public:
-        static inline const std::string EngineName = "NovelRT";
-        static inline std::string ApplicationName = "Test";
-        static inline std::vector<std::string> RequiredVulkanExtensions{};
-        static inline std::vector<std::string> OptionalVulkanExtensions{};
-        static inline std::vector<std::string> RequiredVulkanLayers{};
-        static inline std::vector<std::string> OptionalVulkanLayers{};
-    };
-} // namespace NovelRT
+    const std::string& EngineName() noexcept;
+    std::string& ApplicationName() noexcept;
+    std::vector<std::string>& RequiredVulkanExtensions() noexcept;
+    std::vector<std::string>& OptionalVulkanExtensions() noexcept;
+    std::vector<std::string>& RequiredVulkanLayers() noexcept;
+    std::vector<std::string>& OptionalVulkanLayers() noexcept;
+    LogLevel& MinimumInternalLoggingLevel() noexcept;
+    bool& EnableDebugOutputFromEngineInternals() noexcept;
+} // namespace NovelRT::EngineConfig
 
 #endif // NOVELRT_ENGINECONFIG_H

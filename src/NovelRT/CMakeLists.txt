@@ -20,6 +20,7 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
+find_package(vulkan-validationlayers ${NOVELRT_VULKAN_VALIDATIONLAYERS} REQUIRED)
 
 set(SOURCES
   Animation/SpriteAnimator.cpp
@@ -38,6 +39,7 @@ set(SOURCES
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
 
+  Experimental/EngineConfig.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 
@@ -146,6 +148,7 @@ target_link_libraries(Engine
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
     Vulkan::Vulkan
+    vulkan-validationlayers::vulkan-validationlayers
 )
 
 if(WIN32)

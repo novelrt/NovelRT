@@ -49,10 +49,10 @@ namespace NovelRT
         LoggingService(const std::string& core);
         LoggingService(const std::string& core, LogLevel level);
         void log(const std::string& message, LogLevel level);
-        void logInfoLine(const std::string& message);
-        void logErrorLine(const std::string& message);
-        void logWarningLine(const std::string& message);
-        void logDebugLine(const std::string& message);
+        void logInfoLine(const std::string& message) const;
+        void logErrorLine(const std::string& message) const;
+        void logWarningLine(const std::string& message) const;
+        void logDebugLine(const std::string& message) const;
         void logInternal(const std::string& message, LogLevel level);
         void setLogLevel(LogLevel level);
         void throwIfNullPtr(const void* const object, const std::string& exceptionMessage);

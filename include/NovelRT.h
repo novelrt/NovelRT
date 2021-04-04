@@ -157,6 +157,9 @@
     typedef class WindowingService WindowingService;
   }
 
+  //generic experimental files in root namespace
+  #include "NovelRT/Experimental/EngineConfig.h"
+
   //enums
   #include "NovelRT/Input/KeyCode.h"
   #include "NovelRT/Input/KeyState.h"
