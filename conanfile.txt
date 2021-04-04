@@ -39,3 +39,5 @@ spdlog:header_only=True
 [imports]
 bin, *.dll -> ./thirdparty
 lib, *.dll -> ./thirdparty
+bin, *.json -> ./thirdparty
+lib, *.json -> ./thirdparty
