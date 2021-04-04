@@ -28,11 +28,11 @@ namespace NovelRT::Experimental::Windowing::Glfw
             return _window.get();
         }
 
-        void Initialise(NovelRT::Windowing::WindowMode windowMode,
-                        const std::string& windowTitle,
-                        Maths::GeoVector2F desiredWindowSize) final;
+        void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) final;
 
         void TearDown() noexcept final;
+
+        ~GlfwWindowingDevice();
     };
 } // namespace NovelRT::Experimental::Windowing::Glfw
 

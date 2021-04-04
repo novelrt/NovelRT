@@ -12,9 +12,7 @@ namespace NovelRT::Experimental::Windowing
     class IWindowingDevice
     {
     public:
-        virtual void Initialise(NovelRT::Windowing::WindowMode windowMode,
-                                const std::string& windowTitle,
-                                Maths::GeoVector2F desiredWindowSize = Maths::GeoVector2F::zero()) = 0;
+        virtual void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) = 0;
         virtual void TearDown() noexcept = 0;
     };
 } // namespace NovelRT::Experimental::Windowing

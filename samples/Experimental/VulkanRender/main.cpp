@@ -8,7 +8,7 @@ using namespace NovelRT::Experimental::Graphics::Vulkan;
 int main()
 {
     GlfwWindowingDevice device{};
-    device.Initialise(NovelRT::Windowing::WindowMode::Windowed, "Hello!", NovelRT::Maths::GeoVector2F(400, 400));
+    device.Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
     VulkanGraphicsDevice gfxDevice{};
     gfxDevice.Initialise();
 

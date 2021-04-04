@@ -63,20 +63,6 @@
 #include "NovelRT/DotNet/coreclr_delegates.h"
 #include "NovelRT/DotNet/hostfxr.h"
 
-// spdlog
-#if defined(_MSC_VER)
-  #pragma warning(push)
-  #pragma warning(disable:4275)
-#endif
-
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/async.h>
-
-#if defined(_MSC_VER)
-  #pragma warning(pop)
-#endif
-
 // libpng
 #include <png.h>
 #endif // __cplusplus

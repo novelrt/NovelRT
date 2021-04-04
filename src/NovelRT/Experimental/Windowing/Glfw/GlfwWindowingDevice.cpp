@@ -14,7 +14,6 @@ namespace NovelRT::Experimental::Windowing::Glfw
     }
 
     void GlfwWindowingDevice::Initialise(NovelRT::Windowing::WindowMode windowMode,
-                                         const std::string& windowTitle,
                                          Maths::GeoVector2F desiredWindowSize)
     {
         if (glfwInit() == GLFW_FALSE)
@@ -45,7 +44,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         auto window =
             glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
-                             static_cast<int32_t>(floor(desiredWindowSize.y)), windowTitle.c_str(), monitor, nullptr);
+                             static_cast<int32_t>(floor(desiredWindowSize.y)), EngineConfig::ApplicationName.c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {
@@ -82,6 +81,12 @@ namespace NovelRT::Experimental::Windowing::Glfw
     void GlfwWindowingDevice::TearDown() noexcept
     {
         _window.reset();
+    }
+
+    GlfwWindowingDevice::~GlfwWindowingDevice()
+    {
+        TearDown();
+        glfwTerminate();
     }
 
 } // namespace NovelRT::Experimental::Windowing::Glfw

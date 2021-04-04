@@ -4,8 +4,17 @@
 #ifndef NOVELRT_LOGGINGSERVICE_H
 #define NOVELRT_LOGGINGSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4275)
+#endif
+
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/async.h>
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
 #endif
 
 namespace NovelRT

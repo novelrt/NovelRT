@@ -6,6 +6,7 @@
 
 #include "../ILLGraphicsDevice.h"
 #include <vulkan/vulkan.h>
+#include "../../../LoggingService.h"
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -13,11 +14,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         VkInstance _instance;
+        LoggingService _logger;
 
         void CreateInstance();
 
 
     public:
+        VulkanGraphicsDevice() noexcept;
         void Initialise() override;
         void TearDown() override;
     };
