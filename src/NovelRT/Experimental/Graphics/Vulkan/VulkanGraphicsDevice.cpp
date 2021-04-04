@@ -48,7 +48,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                 const VkAllocationCallbacks* pAllocator,
                                                                 VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept
     {
-        auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
+        auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
+            vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
 
         if (func != nullptr)
         {
@@ -62,7 +63,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                              VkDebugUtilsMessengerEXT debugMessenger,
                                                              const VkAllocationCallbacks* pAllocator) noexcept
     {
-        auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
+        auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
+            vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
         if (func != nullptr)
         {
             func(instance, debugMessenger, pAllocator);
@@ -101,8 +103,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                                       [&](auto& x) { return requestedRequiredExt.compare(x.extensionName); });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -115,8 +118,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                                       [&](auto& x) { return requestedOptionalExt.compare(x.extensionName); });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -143,8 +147,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
-            auto result = std::find_if(validationLayerProperties.begin(), validationLayerProperties.end(),
-                                       [&](auto& x) { return requestedRequiredLayer.compare(x.layerName); });
+            auto result =
+                std::find_if(validationLayerProperties.begin(), validationLayerProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
 
             if (result == validationLayerProperties.end())
             {
@@ -158,7 +163,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         for (auto&& requestedOptionalLayer : EngineConfig::OptionalVulkanLayers())
         {
             auto result = std::find_if(validationLayerProperties.begin(), validationLayerProperties.end(),
-                                       [&](auto& x) { return requestedOptionalLayer.compare(x.layerName); });
+                                       [&](auto& x) { return strcmp(requestedOptionalLayer.c_str(), x.layerName); });
 
             if (result == validationLayerProperties.end())
             {
@@ -175,16 +180,17 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return allValidationLayers;
     }
 
-    void VulkanGraphicsDevice::CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept
+    void VulkanGraphicsDevice::CreateDefaultDebugCreateInfoStruct(
+        VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept
     {
         outputResult = {};
         outputResult.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         outputResult.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-                                     VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                                     VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+                                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
         outputResult.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-                                 VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                                 VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+                                   VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                                   VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         outputResult.pfnUserCallback = DebugCallback;
         outputResult.pUserData = this;
     }
