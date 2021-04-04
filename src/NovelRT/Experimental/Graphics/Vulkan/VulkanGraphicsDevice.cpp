@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/InitialisationFailureException.h>
+#include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Utilities/Misc.h>
@@ -44,8 +44,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             if (result == extensionProperties.end())
             {
                 throw Exceptions::InitialisationFailureException(
-                    "The required Vulkan extension " + requestedRequiredExt +
-                    " is not available on this device.");
+                    "The required Vulkan extension " + requestedRequiredExt + " is not available on this device.");
             }
         }
 
@@ -87,8 +86,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             if (result == validationLayerProperties.end())
             {
                 throw Exceptions::InitialisationFailureException(
-                    "The required Vulkan layer " + requestedRequiredLayer +
-                    " is not available on this device.");
+                    "The required Vulkan layer " + requestedRequiredLayer + " is not available on this device.");
             }
         }
 
@@ -129,7 +127,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         size_t extensionLength = allExtensionPtrs.size();
 
         std::vector<std::string> allValidationLayers = GetFinalValidationLayerSet();
-        std::vector<const char*> allValidationLayerPtrs  = GetStringVectorAsCharPtrVector(allValidationLayers);
+        std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(allValidationLayers);
         size_t validationLayerLength = allValidationLayers.size();
 
         VkInstanceCreateInfo createInfo{};
@@ -140,9 +138,47 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayerLength);
 
-        if (vkCreateInstance(&createInfo, nullptr, &_instance) != VK_SUCCESS)
+        VkResult instanceResult = vkCreateInstance(&createInfo, nullptr, &_instance);
+        if (instanceResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create an instance of Vulkan version 1.2.");
+            std::string defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
+            //this was originally going to be a switch, but compiler warnings as errors, lol
+            if (instanceResult == VK_ERROR_OUT_OF_HOST_MEMORY)
+            {
+                throw Exceptions::OutOfMemoryException(
+                    defaultFailureMessage + "The host ran out of memory before the operation could complete.");
+            }
+            else if (instanceResult == VK_ERROR_OUT_OF_DEVICE_MEMORY)
+            {
+                throw Exceptions::OutOfMemoryException(
+                    defaultFailureMessage + "The device ran out of memory before the operation could complete.");
+            }
+            else if (instanceResult == VK_ERROR_INITIALIZATION_FAILED)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    defaultFailureMessage + "The VkInstance could not be initialised correctly. This could indicate a "
+                                            "problem with the VK implementation.");
+            }
+            else if (instanceResult == VK_ERROR_LAYER_NOT_PRESENT)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    defaultFailureMessage + "The requested VkLayer was found originally, but could not be found during "
+                                            "initialisation of the VkInstance.");
+            }
+            else if (instanceResult == VK_ERROR_EXTENSION_NOT_PRESENT)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    defaultFailureMessage +
+                    "The requested VkExtension was found originally, but could not be found during "
+                    "initialisation of the VkInstance.");
+            }
+            else if (instanceResult == VK_ERROR_INCOMPATIBLE_DRIVER)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    defaultFailureMessage +
+                    "The device driver is not compatible with either this version of Vulkan, or Vulkan in its "
+                    "entirety. Please check your GPU vendor for additional information.");
+            }
         }
     }
 
