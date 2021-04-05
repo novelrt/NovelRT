@@ -161,17 +161,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                       std::to_string(VK_VERSION_MINOR(layerProperty.specVersion)) + "." +
                                       std::to_string(VK_VERSION_PATCH(layerProperty.specVersion));
 
-            _logger.logInfoLine("  Layer Name: " + std::string(layerProperty.layerName) +
-                                "  Spec Version: " + specVersion +
-                                "  Impl Version: " + std::to_string(layerProperty.implementationVersion) +
+            _logger.logInfoLine("  Layer Name: " + std::string(layerProperty.layerName) + "  Spec Version: " +
+                                specVersion + "  Impl Version: " + std::to_string(layerProperty.implementationVersion) +
                                 "  Description:  " + std::string(layerProperty.description));
         }
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
-            auto result =
-                std::find_if(layerProperties.begin(), layerProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
+            auto result = std::find_if(layerProperties.begin(), layerProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0;
+            });
 
             if (result == layerProperties.end())
             {
@@ -232,8 +231,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
         else if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
         {
-            throw Exceptions::NotSupportedException("VkDebugUtilsMessengerEXT is not available with either the current "
-                                                    "Vulkan configuration or does not exist on the device.");
+            _logger.logErrorLine("The VkDebugUtils could not be located and/or loaded on this device. Vulkan logging "
+                                 "and validation output will not be displayed.");
+            return;
         }
 
         _debuggerWasCreated = true;
@@ -244,8 +244,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
         {
-            NovelRT::EngineConfig::RequiredVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
-            NovelRT::EngineConfig::RequiredVulkanExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            NovelRT::EngineConfig::OptionalVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
+            NovelRT::EngineConfig::OptionalVulkanExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
         VkApplicationInfo appInfo{};
