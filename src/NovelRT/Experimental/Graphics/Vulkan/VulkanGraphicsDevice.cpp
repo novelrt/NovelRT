@@ -208,6 +208,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 defaultFailureMessage +
                 "The host ran out of memory before the VkDebugUtilsMessengerEXT could be created.");
         }
+        else if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
+        {
+            throw Exceptions::NotSupportedException("VkDebugUtilsMessengerEXT is not available with either the current "
+                                                    "Vulkan configuation or does not exist on the device.");
+        }
 
         _debuggerWasCreated = true;
         _logger.logWarningLine("Vulkan debugger enabled! This may harm performance.");
@@ -292,16 +297,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                     "entirety. Please check your GPU vendor for additional information.");
             }
         }
+
+        _logger.logInfoLine("VkInstance successfully created.");
     }
 
     void VulkanGraphicsDevice::Initialise()
     {
         CreateInstance();
-        _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
         {
             ConfigureDebugLogger();
         }
+
+        _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
