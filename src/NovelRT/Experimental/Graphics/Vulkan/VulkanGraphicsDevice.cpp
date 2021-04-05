@@ -211,7 +211,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         else if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
         {
             throw Exceptions::NotSupportedException("VkDebugUtilsMessengerEXT is not available with either the current "
-                                                    "Vulkan configuation or does not exist on the device.");
+                                                    "Vulkan configuration or does not exist on the device.");
         }
 
         _debuggerWasCreated = true;
@@ -220,6 +220,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::CreateInstance()
     {
+        if (EngineConfig::EnableDebugOutputFromEngineInternals())
+        {
+            NovelRT::EngineConfig::RequiredVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
+            NovelRT::EngineConfig::RequiredVulkanExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        }
+
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         appInfo.pApplicationName = EngineConfig::ApplicationName().c_str();
