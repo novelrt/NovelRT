@@ -14,7 +14,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsDevice : public ILLGraphicsDevice
     {
     private:
-        static inline std::string defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
+        static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
+
+        std::vector<std::string> _finalExtensionSet;
+        std::vector<std::string> _finalValidationLayerSet;
 
         VkInstance _instance;
         LoggingService _logger;
@@ -22,6 +25,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         bool _debuggerWasCreated;
 
         VkPhysicalDevice _physicalDevice;
+        VkDevice _device;
+
+        VkQueue _graphicsQueue;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -52,6 +58,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) noexcept;
         [[nodiscard]] static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
         void PickPhysicalDevice();
+
+        void CreateLogicalDevice();
 
     public:
         VulkanGraphicsDevice() noexcept;

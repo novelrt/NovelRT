@@ -5,8 +5,8 @@
 #include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Utilities/Misc.h>
-#include <numeric>
 #include <map>
+#include <numeric>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -77,7 +77,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
           _debugLogger(VK_NULL_HANDLE),
           _debuggerWasCreated(false),
-          _physicalDevice(VK_NULL_HANDLE)
+          _physicalDevice(VK_NULL_HANDLE),
+          _device(VK_NULL_HANDLE),
+          _graphicsQueue(VK_NULL_HANDLE)
     {
     }
 
@@ -228,7 +230,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (debuggerResult == VK_ERROR_OUT_OF_HOST_MEMORY)
         {
             throw Exceptions::OutOfMemoryException(
-                defaultFailureMessage +
+                _defaultFailureMessage +
                 "The host ran out of memory before the VkDebugUtilsMessengerEXT could be created.");
         }
         else if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
@@ -258,13 +260,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
-        std::vector<std::string> allExtensions = GetFinalExtensionSet();
-        std::vector<const char*> allExtensionPtrs = GetStringVectorAsCharPtrVector(allExtensions);
+        _finalExtensionSet = GetFinalExtensionSet();
+        std::vector<const char*> allExtensionPtrs = GetStringVectorAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionPtrs.size();
 
-        std::vector<std::string> allValidationLayers = GetFinalValidationLayerSet();
-        std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(allValidationLayers);
-        size_t validationLayerLength = allValidationLayers.size();
+        _finalValidationLayerSet = GetFinalValidationLayerSet();
+        std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(_finalValidationLayerSet);
+        size_t validationLayerLength = allValidationLayerPtrs.size();
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -293,36 +295,37 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             if (instanceResult == VK_ERROR_OUT_OF_HOST_MEMORY)
             {
                 throw Exceptions::OutOfMemoryException(
-                    defaultFailureMessage + "The host ran out of memory before the VkInstance could be created.");
+                    _defaultFailureMessage + "The host ran out of memory before the VkInstance could be created.");
             }
             else if (instanceResult == VK_ERROR_OUT_OF_DEVICE_MEMORY)
             {
                 throw Exceptions::OutOfMemoryException(
-                    defaultFailureMessage + "The device ran out of memory before the VkInstance could be created.");
+                    _defaultFailureMessage + "The device ran out of memory before the VkInstance could be created.");
             }
             else if (instanceResult == VK_ERROR_INITIALIZATION_FAILED)
             {
                 throw Exceptions::InitialisationFailureException(
-                    defaultFailureMessage + "The VkInstance could not be initialised correctly. This could indicate a "
-                                            "problem with the VK implementation.");
+                    _defaultFailureMessage + "The VkInstance could not be initialised correctly. This could indicate a "
+                                             "problem with the VK implementation.");
             }
             else if (instanceResult == VK_ERROR_LAYER_NOT_PRESENT)
             {
                 throw Exceptions::InitialisationFailureException(
-                    defaultFailureMessage + "The requested VkLayer was found originally, but could not be found during "
-                                            "initialisation of the VkInstance.");
+                    _defaultFailureMessage +
+                    "The requested VkLayer was found originally, but could not be found during "
+                    "initialisation of the VkInstance.");
             }
             else if (instanceResult == VK_ERROR_EXTENSION_NOT_PRESENT)
             {
                 throw Exceptions::InitialisationFailureException(
-                    defaultFailureMessage +
+                    _defaultFailureMessage +
                     "The requested VkExtension was found originally, but could not be found during "
                     "initialisation of the VkInstance.");
             }
             else if (instanceResult == VK_ERROR_INCOMPATIBLE_DRIVER)
             {
                 throw Exceptions::InitialisationFailureException(
-                    defaultFailureMessage +
+                    _defaultFailureMessage +
                     "The device driver is not compatible with either this version of Vulkan, or Vulkan in its "
                     "entirety. Please check your GPU vendor for additional information.");
             }
@@ -377,7 +380,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         score += deviceProperties.limits.maxImageDimension2D;
 
         QueueFamilyIndices indices = FindQueueFamilies(device);
-        if(deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete())
+        if (deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete())
         {
             score = -1;
         }
@@ -392,7 +395,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (deviceCount == 0)
         {
-            throw Exceptions::NotSupportedException("A Vulkan-compatible GPU was not found. Please refer "
+            throw Exceptions::NotSupportedException(_defaultFailureMessage +
+                                                    "A Vulkan-compatible GPU was not found. Please refer "
                                                     "to your GPU manufacturer's documentation for more information.");
         }
 
@@ -409,6 +413,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (candidates.rbegin()->first <= 0)
         {
             throw Exceptions::NotSupportedException(
+                _defaultFailureMessage +
                 "None of the supplied Vulkan-compatible GPUs were deemed suitable for the NovelRT render pipeline. "
                 "Please refer to the NovelRT documentation and your GPU manufacturer's documentation for more "
                 "information.");
@@ -421,6 +426,91 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("GPU device successfully chosen: " + std::string(deviceProperties.deviceName));
     }
 
+    void VulkanGraphicsDevice::CreateLogicalDevice()
+    {
+        QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+
+        VkDeviceQueueCreateInfo queueCreateInfo{};
+        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+        queueCreateInfo.queueCount = 1;
+
+        float queuePriority = 1.0f;
+        queueCreateInfo.pQueuePriorities = &queuePriority;
+
+        VkPhysicalDeviceFeatures deviceFeatures{};
+
+        VkDeviceCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        createInfo.pQueueCreateInfos = &queueCreateInfo;
+        createInfo.queueCreateInfoCount = 1;
+        createInfo.pEnabledFeatures = &deviceFeatures;
+        createInfo.enabledExtensionCount = 0;
+
+        if (_debuggerWasCreated)
+        {
+            createInfo.enabledLayerCount = static_cast<uint32_t>(_finalValidationLayerSet.size());
+            std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(_finalValidationLayerSet);
+            createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
+        }
+        else
+        {
+            createInfo.enabledLayerCount = 0;
+        }
+
+        VkResult deviceResult = vkCreateDevice(_physicalDevice, &createInfo, nullptr, &_device);
+
+        if (deviceResult != VK_SUCCESS)
+        {
+            // this was originally going to be a switch, but compiler warnings as errors, lol
+            if (deviceResult == VK_ERROR_OUT_OF_HOST_MEMORY)
+            {
+                throw Exceptions::OutOfMemoryException(
+                    _defaultFailureMessage + "The host ran out of memory before the VkDevice could be created.");
+            }
+            else if (deviceResult == VK_ERROR_OUT_OF_DEVICE_MEMORY)
+            {
+                throw Exceptions::OutOfMemoryException(
+                    _defaultFailureMessage + "The device ran out of memory before the VkDevice could be created.");
+            }
+            else if (deviceResult == VK_ERROR_INITIALIZATION_FAILED)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    _defaultFailureMessage + "The VkDevice could not be initialised correctly. This could indicate a "
+                                             "problem with the VK implementation.");
+            }
+            else if (deviceResult == VK_ERROR_EXTENSION_NOT_PRESENT)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    _defaultFailureMessage +
+                    "The requested VkExtension was found originally, but could not be found during "
+                    "initialisation of the VkDevice.");
+            }
+            else if (deviceResult == VK_ERROR_FEATURE_NOT_PRESENT)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    _defaultFailureMessage +
+                    "The requested device feature was found originally, but could not be found during "
+                    "initialisation of the VkDevice.");
+            }
+            else if (deviceResult == VK_ERROR_TOO_MANY_OBJECTS)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    _defaultFailureMessage + "Too many objects of type VkDevice have already been created.");
+            }
+            else if (deviceResult == VK_ERROR_DEVICE_LOST)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    _defaultFailureMessage +
+                    "Either the logical or physical device was lost during the initialisation of this VkDevice.");
+            }
+        }
+
+        vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
+
+        _logger.logInfoLine("VkDevice successfully created.");
+    }
+
     void VulkanGraphicsDevice::Initialise()
     {
         CreateInstance();
@@ -431,12 +521,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         PickPhysicalDevice();
+        CreateLogicalDevice();
 
         _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
+        vkDestroyDevice(_device, nullptr);
+
         if (_debuggerWasCreated)
         {
             DestroyDebugUtilsMessengerEXT(_instance, _debugLogger, nullptr);
