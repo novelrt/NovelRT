@@ -331,6 +331,35 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("VkInstance successfully created.");
     }
 
+    QueueFamilyIndices VulkanGraphicsDevice::FindQueueFamilies(VkPhysicalDevice device) noexcept
+    {
+        QueueFamilyIndices returnObject{};
+
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+        uint32_t familyIndex = 0;
+        for (const auto& queueFamily : queueFamilies)
+        {
+            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            {
+                returnObject.graphicsFamily = familyIndex;
+            }
+
+            if (returnObject.IsComplete())
+            {
+                break;
+            }
+
+            ++familyIndex;
+        }
+
+        return returnObject;
+    }
+
     int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice device) noexcept
     {
         VkPhysicalDeviceProperties deviceProperties;
@@ -347,7 +376,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         score += deviceProperties.limits.maxImageDimension2D;
 
-        if(deviceFeatures.geometryShader == VK_FALSE)
+        QueueFamilyIndices indices = FindQueueFamilies(device);
+        if(deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete())
         {
             score = -1;
         }

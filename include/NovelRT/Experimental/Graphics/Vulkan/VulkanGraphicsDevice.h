@@ -6,6 +6,7 @@
 
 #include "../../../LoggingService.h"
 #include "../ILLGraphicsDevice.h"
+#include "QueueFamilyIndices.h"
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
@@ -27,13 +28,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                             const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                                                             void* pUserData);
 
-        [[nodiscard]] static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
-                                                                   const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-                                                                   const VkAllocationCallbacks* pAllocator,
-                                                                   VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept;
+        [[nodiscard]] static VkResult CreateDebugUtilsMessengerEXT(
+            VkInstance instance,
+            const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+            const VkAllocationCallbacks* pAllocator,
+            VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept;
 
-        static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) noexcept;
-
+        static void DestroyDebugUtilsMessengerEXT(VkInstance instance,
+                                                  VkDebugUtilsMessengerEXT debugMessenger,
+                                                  const VkAllocationCallbacks* pAllocator) noexcept;
 
         [[nodiscard]] static std::vector<const char*> GetStringVectorAsCharPtrVector(
             const std::vector<std::string>& target) noexcept;
@@ -46,8 +49,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateInstance();
 
+        [[nodiscard]] static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) noexcept;
         [[nodiscard]] static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
-
         void PickPhysicalDevice();
 
     public:
