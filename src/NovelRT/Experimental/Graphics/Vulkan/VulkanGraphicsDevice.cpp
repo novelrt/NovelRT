@@ -6,6 +6,7 @@
 #include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <numeric>
+#include <map>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -330,15 +331,28 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("VkInstance successfully created.");
     }
 
-    bool VulkanGraphicsDevice::IsDeviceSuitable(VkPhysicalDevice device)
+    int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice device) noexcept
     {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
         vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
 
-        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-               deviceFeatures.geometryShader;
+        int32_t score = 0;
+
+        if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+        {
+            score += 1000;
+        }
+
+        score += deviceProperties.limits.maxImageDimension2D;
+
+        if(deviceFeatures.geometryShader == VK_FALSE)
+        {
+            score = -1;
+        }
+
+        return score;
     }
 
     void VulkanGraphicsDevice::PickPhysicalDevice()
@@ -355,21 +369,26 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
 
+        std::multimap<int32_t, VkPhysicalDevice> candidates{};
+
         for (const auto& device : devices)
         {
-            if (!IsDeviceSuitable(device))
-            {
-                continue;
-            }
+            candidates.emplace(RateDeviceSuitability(device), device);
         }
 
-        if (_physicalDevice == VK_NULL_HANDLE)
+        if (candidates.rbegin()->first <= 0)
         {
             throw Exceptions::NotSupportedException(
                 "None of the supplied Vulkan-compatible GPUs were deemed suitable for the NovelRT render pipeline. "
                 "Please refer to the NovelRT documentation and your GPU manufacturer's documentation for more "
                 "information.");
         }
+
+        _physicalDevice = candidates.rbegin()->second;
+
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(_physicalDevice, &deviceProperties);
+        _logger.logInfoLine("GPU device successfully chosen: " + std::string(deviceProperties.deviceName));
     }
 
     void VulkanGraphicsDevice::Initialise()
@@ -381,7 +400,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             ConfigureDebugLogger();
         }
 
-        //PickPhysicalDevice();
+        PickPhysicalDevice();
 
         _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }

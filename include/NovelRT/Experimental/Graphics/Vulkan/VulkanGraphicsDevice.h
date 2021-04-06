@@ -46,7 +46,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateInstance();
 
-        static bool IsDeviceSuitable(VkPhysicalDevice device);
+        static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
 
         void PickPhysicalDevice();
 
