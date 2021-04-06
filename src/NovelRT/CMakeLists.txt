@@ -147,7 +147,6 @@ target_link_libraries(Engine
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
     Vulkan::Vulkan
-    vulkan-validationlayers::vulkan-validationlayers
 )
 
 if(WIN32)
