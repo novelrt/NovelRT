@@ -14,10 +14,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         static inline std::string defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
+
         VkInstance _instance;
         LoggingService _logger;
         VkDebugUtilsMessengerEXT _debugLogger;
         bool _debuggerWasCreated;
+
+        VkPhysicalDevice _physicalDevice;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -42,6 +45,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void ConfigureDebugLogger();
 
         void CreateInstance();
+
+        static bool IsDeviceSuitable(VkPhysicalDevice device);
+
+        void PickPhysicalDevice();
 
     public:
         VulkanGraphicsDevice() noexcept;

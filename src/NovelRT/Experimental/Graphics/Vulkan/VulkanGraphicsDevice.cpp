@@ -72,10 +72,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     VulkanGraphicsDevice::VulkanGraphicsDevice() noexcept
-        : _instance(VkInstance{}),
+        : _instance(VK_NULL_HANDLE),
           _logger(LoggingService(Utilities::Misc::CONSOLE_LOG_GFX)),
-          _debugLogger(VkDebugUtilsMessengerEXT{}),
-          _debuggerWasCreated(false)
+          _debugLogger(VK_NULL_HANDLE),
+          _debuggerWasCreated(false),
+          _physicalDevice(VK_NULL_HANDLE)
     {
     }
 
@@ -329,13 +330,58 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("VkInstance successfully created.");
     }
 
+    bool VulkanGraphicsDevice::IsDeviceSuitable(VkPhysicalDevice device)
+    {
+        VkPhysicalDeviceProperties deviceProperties;
+        VkPhysicalDeviceFeatures deviceFeatures;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
+        vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+               deviceFeatures.geometryShader;
+    }
+
+    void VulkanGraphicsDevice::PickPhysicalDevice()
+    {
+        uint32_t deviceCount = 0;
+        vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
+
+        if (deviceCount == 0)
+        {
+            throw Exceptions::NotSupportedException("A Vulkan-compatible GPU was not found. Please refer "
+                                                    "to your GPU manufacturer's documentation for more information.");
+        }
+
+        std::vector<VkPhysicalDevice> devices(deviceCount);
+        vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
+
+        for (const auto& device : devices)
+        {
+            if (!IsDeviceSuitable(device))
+            {
+                continue;
+            }
+        }
+
+        if (_physicalDevice == VK_NULL_HANDLE)
+        {
+            throw Exceptions::NotSupportedException(
+                "None of the supplied Vulkan-compatible GPUs were deemed suitable for the NovelRT render pipeline. "
+                "Please refer to the NovelRT documentation and your GPU manufacturer's documentation for more "
+                "information.");
+        }
+    }
+
     void VulkanGraphicsDevice::Initialise()
     {
         CreateInstance();
+
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
         {
             ConfigureDebugLogger();
         }
+
+        //PickPhysicalDevice();
 
         _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
