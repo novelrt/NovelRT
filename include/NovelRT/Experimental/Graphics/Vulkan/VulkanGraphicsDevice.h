@@ -32,7 +32,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                    const VkAllocationCallbacks* pAllocator,
                                                                    VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept;
 
-        [[nodiscard]] static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) noexcept;
+        static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) noexcept;
 
 
         [[nodiscard]] static std::vector<const char*> GetStringVectorAsCharPtrVector(
@@ -46,7 +46,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateInstance();
 
-        static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
+        [[nodiscard]] static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
 
         void PickPhysicalDevice();
 
