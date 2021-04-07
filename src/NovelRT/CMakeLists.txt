@@ -20,6 +20,8 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 
+find_package(box2d 2.4.0 REQUIRED)
+
 set(ENGINE_SOURCES
   Animation/SpriteAnimator.cpp
 
@@ -60,6 +62,8 @@ set(ENGINE_SOURCES
   Maths/QuadTree.cpp
 
   NovelRunner.cpp
+
+  Physics/Box2d/Systems/Box2dSystem.cpp
 
   Timing/StepTimer.cpp
 
@@ -138,6 +142,8 @@ target_link_libraries(Engine
     spdlog::spdlog
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
+
+    box2d::box2d
 )
 
 if(WIN32)
