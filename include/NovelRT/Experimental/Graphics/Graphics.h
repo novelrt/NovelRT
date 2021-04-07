@@ -7,6 +7,8 @@
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
 #include "GraphicsResourceCpuAccessKind.h"
+#include "GraphicsSurfaceKind.h"
+#include "IGraphicsSurface.h"
 #include "LLGraphicsResource.h"
 #include "LLGraphicsResourceViewContainer.h"
 #include "LLGraphicsTexture.h"
