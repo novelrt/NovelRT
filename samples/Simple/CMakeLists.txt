@@ -1,4 +1,5 @@
 find_package(lua 5.3 REQUIRED)
+find_package(box2d 2.4.0 REQUIRED)
 
 set(SIMPLE_SOURCES
   main.cpp
@@ -10,6 +11,7 @@ target_link_libraries(Simple
   PRIVATE
     Engine
     lua::lua
+    box2d::box2d
 )
 
 add_custom_command(

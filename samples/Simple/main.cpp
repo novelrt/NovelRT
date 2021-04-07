@@ -2,6 +2,15 @@
 // for more information.
 
 #include <NovelRT.h>
+#include <box2d/b2_world.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_fixture.h>
+
+#include <NovelRT/Physics/Box2d/Systems/Box2dSystem.h>
+#include <NovelRT/Physics/Box2d/Components/PhysicsBody.h>
+#include <NovelRT/Physics/Box2d/Components/TestTransform.h>
+#include <NovelRT/Physics/Box2d/Components/PhysicsWorld.h>
 
 // TODO: What do I do with these?
 extern "C"
@@ -33,6 +42,52 @@ static int average(lua_State* luaState)
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+    // create world 
+    b2Vec2 gravity(0.0f, -10.0f);
+    b2World world(gravity);
+
+    NovelRT::Ecs::SystemScheduler scheduler(0);
+    
+    NovelRT::Physics::Box2d::Box2dSystem::RegisterSystem(&scheduler);
+
+    scheduler.GetComponentCache().RegisterComponentType<NovelRT::Physics::Box2d::PhysicsBody>(NovelRT::Physics::Box2d::PhysicsBody::DeletedBodyState);
+    scheduler.GetComponentCache().RegisterComponentType<NovelRT::Physics::Box2d::PhysicsWorld>(NovelRT::Physics::Box2d::PhysicsWorld::DeletedWorld);
+    scheduler.GetComponentCache().RegisterComponentType<NovelRT::Physics::Box2d::TestTransform>(NovelRT::Physics::Box2d::TestTransform::DeletedTransform);
+    scheduler.SpinThreads();
+
+    auto worldId = NovelRT::Physics::Box2d::Box2dSystem::CreateWorld(&scheduler,gravity,1.0f/60);
+
+    // define the ground
+    b2BodyDef groundBodyDef;
+    groundBodyDef.position.Set(200.0f, 10.0f);
+    
+    // create the body based on the definition
+    b2Body* groundBody = world.CreateBody(&groundBodyDef);
+
+    b2PolygonShape groundBox;
+    groundBox.SetAsBox(50.0f, 10.0f);
+
+    groundBody->CreateFixture(&groundBox,0);
+    
+    b2Vec2 b2VecTest(1,2);
+    NovelRT::Maths::GeoVector2F geoVec = *reinterpret_cast<NovelRT::Maths::GeoVector2F*>(&b2VecTest);
+
+    b2BodyDef bodyDef;
+    bodyDef.type = b2BodyType::b2_dynamicBody;
+    bodyDef.position = b2Vec2(200,100);
+
+    b2Body* body = world.CreateBody(&bodyDef);
+
+    b2PolygonShape dynamicBox;
+    dynamicBox.SetAsBox(10,10);
+
+    b2FixtureDef boxDef;
+    boxDef.shape = &dynamicBox;
+    boxDef.density = 1;
+    boxDef.friction = 0.3f;
+
+    body->CreateFixture(&boxDef);
+
     lua_State* L;
 
     std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
@@ -142,6 +197,9 @@ int main(int /*argc*/, char* /*argv*/[])
         runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255),
                                              70, (fontsDirPath / "Gayathri-Regular.ttf").string());
     textRect->setText("RubyGnomer");
+
+    auto groundRect = runner.getRenderer()->createBasicFillRect(NovelRT::Transform(NovelRT::Maths::GeoVector2F(200.0f, 10.0f),0,NovelRT::Maths::GeoVector2F(100,20)),2,NovelRT::Graphics::RGBAConfig(255,248,220,255));
+    auto boxRect = runner.getRenderer()->createBasicFillRect(NovelRT::Transform(NovelRT::Maths::GeoVector2F(0.0f, 4.0f), 0, NovelRT::Maths::GeoVector2F(20,20)),2,NovelRT::Graphics::RGBAConfig(30,248,220,255));
 
     auto lineTransform =
         NovelRT::Transform(rubyGnomerTextTransform.position, 0, NovelRT::Maths::GeoVector2F(1000.0f, 2.0f));
@@ -275,6 +333,9 @@ int main(int /*argc*/, char* /*argv*/[])
         textRect->executeObjectBehaviour();
         myBasicFillRect->executeObjectBehaviour();
         lineRect->executeObjectBehaviour();
+
+        groundRect->executeObjectBehaviour();
+        boxRect->executeObjectBehaviour();
     };
 
     auto dotnetRuntimeService = runner.getDotNetRuntimeService();
@@ -308,6 +369,47 @@ int main(int /*argc*/, char* /*argv*/[])
         console.logDebug(result);
         dotnetRuntimeService->freeString(result);
     };
+
+    float timeStep = 1.0f/60.0f;
+    int32 velocityIterations = 6;
+    int32 positionIterations = 2;
+
+    auto entityId = NovelRT::Atom::getNextEntityId();
+    auto t = boxRect->transform();
+    auto tt = NovelRT::Physics::Box2d::TestTransform{
+        t.position,
+        t.rotation
+    };
+
+    scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>().PushComponentUpdateInstruction(0,entityId,tt);
+
+    NovelRT::Physics::Box2d::Box2dSystem::AddBody(&scheduler, worldId, &groundBodyDef)->CreateFixture(&groundBox,0);
+    NovelRT::Physics::Box2d::Box2dSystem::AddEntityBody(&scheduler, worldId, entityId, &bodyDef, &boxDef);
+
+    // system.AddBody(&groundBodyDef)->CreateFixture(&groundBox,0);
+    // system.AddEntityBody(&scheduler,entityId,&bodyDef).body->CreateFixture(&boxDef);
+
+    runner.Update += [&](NovelRT::Timing::Timestamp delta) {
+        #if false
+        world.Step(delta.getSecondsFloat(), velocityIterations, positionIterations);
+        b2Vec2 position = body->GetPosition();
+        boxRect->transform().position = *reinterpret_cast<NovelRT::Maths::GeoVector2F*>(&position);
+        float angle = body->GetAngle();
+        char message[50];
+        sprintf(message,"%4.2f %4.2f %4.2f\n",position.x, position.y, angle);
+        
+        console.log(message, NovelRT::LogLevel::Debug);
+        #else
+
+        scheduler.ExecuteIteration(delta);
+        
+        auto testTransform = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>().GetComponent(entityId);
+        boxRect->transform().position = testTransform.position;
+        boxRect->transform().rotation = testTransform.rotation;
+        #endif
+    };
+
+    
 
     audio->playMusic(bgm, -1);
     runner.runNovel();
