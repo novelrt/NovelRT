@@ -14,7 +14,7 @@ namespace NovelRT::Physics::Box2d
 
         static const PhysicsWorld DeletedWorld;
 
-        PhysicsWorld& operator+=(const PhysicsWorld &rhs){
+        PhysicsWorld& operator+=(const PhysicsWorld& rhs){
             world = rhs.world;
             velocityIterations = rhs.velocityIterations;
             positionIterations = rhs.positionIterations;

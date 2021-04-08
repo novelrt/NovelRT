@@ -42,6 +42,7 @@ static int average(lua_State* luaState)
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+
     // create world 
     b2Vec2 gravity(0.0f, -10.0f);
     b2World world(gravity);
@@ -55,7 +56,8 @@ int main(int /*argc*/, char* /*argv*/[])
     scheduler.GetComponentCache().RegisterComponentType<NovelRT::Physics::Box2d::TestTransform>(NovelRT::Physics::Box2d::TestTransform::DeletedTransform);
     scheduler.SpinThreads();
 
-    auto worldId = NovelRT::Physics::Box2d::Box2dSystem::CreateWorld(&scheduler,gravity,1.0f/60);
+    auto worldEntityId = NovelRT::Atom::getNextEntityId();
+    auto pWorld = NovelRT::Physics::Box2d::Box2dSystem::AddWorld(&scheduler,worldEntityId,&world,1.0f/60);
 
     // define the ground
     b2BodyDef groundBodyDef;
@@ -383,8 +385,8 @@ int main(int /*argc*/, char* /*argv*/[])
 
     scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>().PushComponentUpdateInstruction(0,entityId,tt);
 
-    NovelRT::Physics::Box2d::Box2dSystem::AddBody(&scheduler, worldId, &groundBodyDef)->CreateFixture(&groundBox,0);
-    NovelRT::Physics::Box2d::Box2dSystem::AddEntityBody(&scheduler, worldId, entityId, &bodyDef, &boxDef);
+    NovelRT::Physics::Box2d::Box2dSystem::AddBody(&world, &groundBodyDef)->CreateFixture(&groundBox,0);
+    NovelRT::Physics::Box2d::Box2dSystem::AddEntityBody(&scheduler, &world, entityId, &bodyDef, &boxDef);
 
     // system.AddBody(&groundBodyDef)->CreateFixture(&groundBox,0);
     // system.AddEntityBody(&scheduler,entityId,&bodyDef).body->CreateFixture(&boxDef);
@@ -402,8 +404,14 @@ int main(int /*argc*/, char* /*argv*/[])
         #else
 
         scheduler.ExecuteIteration(delta);
+
+        auto ttBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>();
+        auto ttComponent = ttBuffer.GetComponent(entityId);
         
-        auto testTransform = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>().GetComponent(entityId);
+        auto pwBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::PhysicsWorld>();
+        auto pwComponent = pwBuffer.GetComponent(worldEntityId);
+
+        auto testTransform = ttComponent;
         boxRect->transform().position = testTransform.position;
         boxRect->transform().rotation = testTransform.rotation;
         #endif
