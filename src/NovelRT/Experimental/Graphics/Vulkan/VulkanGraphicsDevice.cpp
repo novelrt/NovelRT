@@ -291,44 +291,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkResult instanceResult = vkCreateInstance(&createInfo, nullptr, &_instance);
         if (instanceResult != VK_SUCCESS)
         {
-            // this was originally going to be a switch, but compiler warnings as errors, lol
-            if (instanceResult == VK_ERROR_OUT_OF_HOST_MEMORY)
-            {
-                throw Exceptions::OutOfMemoryException(
-                    _defaultFailureMessage + "The host ran out of memory before the VkInstance could be created.");
-            }
-            else if (instanceResult == VK_ERROR_OUT_OF_DEVICE_MEMORY)
-            {
-                throw Exceptions::OutOfMemoryException(
-                    _defaultFailureMessage + "The device ran out of memory before the VkInstance could be created.");
-            }
-            else if (instanceResult == VK_ERROR_INITIALIZATION_FAILED)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage + "The VkInstance could not be initialised correctly. This could indicate a "
-                                             "problem with the VK implementation.");
-            }
-            else if (instanceResult == VK_ERROR_LAYER_NOT_PRESENT)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "The requested VkLayer was found originally, but could not be found during "
-                    "initialisation of the VkInstance.");
-            }
-            else if (instanceResult == VK_ERROR_EXTENSION_NOT_PRESENT)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "The requested VkExtension was found originally, but could not be found during "
-                    "initialisation of the VkInstance.");
-            }
-            else if (instanceResult == VK_ERROR_INCOMPATIBLE_DRIVER)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "The device driver is not compatible with either this version of Vulkan, or Vulkan in its "
-                    "entirety. Please check your GPU vendor for additional information.");
-            }
+            throw Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
         }
 
         _logger.logInfoLine("VkInstance successfully created.");
@@ -462,48 +425,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (deviceResult != VK_SUCCESS)
         {
-            // this was originally going to be a switch, but compiler warnings as errors, lol
-            if (deviceResult == VK_ERROR_OUT_OF_HOST_MEMORY)
-            {
-                throw Exceptions::OutOfMemoryException(
-                    _defaultFailureMessage + "The host ran out of memory before the VkDevice could be created.");
-            }
-            else if (deviceResult == VK_ERROR_OUT_OF_DEVICE_MEMORY)
-            {
-                throw Exceptions::OutOfMemoryException(
-                    _defaultFailureMessage + "The device ran out of memory before the VkDevice could be created.");
-            }
-            else if (deviceResult == VK_ERROR_INITIALIZATION_FAILED)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage + "The VkDevice could not be initialised correctly. This could indicate a "
-                                             "problem with the VK implementation.");
-            }
-            else if (deviceResult == VK_ERROR_EXTENSION_NOT_PRESENT)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "The requested VkExtension was found originally, but could not be found during "
-                    "initialisation of the VkDevice.");
-            }
-            else if (deviceResult == VK_ERROR_FEATURE_NOT_PRESENT)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "The requested device feature was found originally, but could not be found during "
-                    "initialisation of the VkDevice.");
-            }
-            else if (deviceResult == VK_ERROR_TOO_MANY_OBJECTS)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage + "Too many objects of type VkDevice have already been created.");
-            }
-            else if (deviceResult == VK_ERROR_DEVICE_LOST)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    _defaultFailureMessage +
-                    "Either the logical or physical device was lost during the initialisation of this VkDevice.");
-            }
+            throw Exceptions::InitialisationFailureException("Failed to initialise the VkDevice.", deviceResult);
         }
 
         vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
@@ -553,7 +475,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 if (funcResult != VK_SUCCESS)
                 {
                     throw Exceptions::InitialisationFailureException(
-                        "Something went wrong when trying to initialise a VkSurfaceKHR using the GLFW handles!");
+                        "Failed to initialise the VkSurfaceKHR.", funcResult);
                 }
 
                 _nrtSurface = targetSurface;

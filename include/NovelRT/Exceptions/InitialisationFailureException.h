@@ -23,11 +23,11 @@ namespace NovelRT::Exceptions
         {
         }
         InitialisationFailureException(const std::string& message, const std::string& arguments)
-            : std::runtime_error(defaultMessage + message + " Error: " + arguments)
+            : std::runtime_error(defaultMessage + " Reason: " + message + " Error: " + arguments)
         {
         }
         InitialisationFailureException(const std::string& message, const int32_t argument)
-            : InitialisationFailureException(defaultMessage + message, std::to_string(argument))
+            : InitialisationFailureException(message, std::to_string(argument))
         {
         }
     };
