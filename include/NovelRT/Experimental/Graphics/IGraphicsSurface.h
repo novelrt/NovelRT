@@ -4,6 +4,7 @@
 #ifndef NOVELRT_IGRAPHICSSURFACE_H
 #define NOVELRT_IGRAPHICSSURFACE_H
 
+#include <optional>
 #include "../../Maths/GeoVector2F.h"
 #include "../../Utilities/Event.h"
 #include "GraphicsSurfaceKind.h"
@@ -13,7 +14,7 @@ namespace NovelRT::Experimental::Graphics
     class IGraphicsSurface
     {
     public:
-        Utilities::Event<Maths::GeoVector2F> SizeChanged; //TODO: Not sure how correct this is
+        std::optional<Utilities::Event<Maths::GeoVector2F>> SizeChanged;
 
         [[nodiscard]] virtual Maths::GeoVector2F GetSize() const noexcept = 0;
 
