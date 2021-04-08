@@ -12,9 +12,8 @@ namespace NovelRT::Experimental::Graphics
     class ILLGraphicsDevice
     {
     public:
-        virtual void Initialise() = 0;
+        virtual void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
         virtual void TearDown() = 0;
-        virtual void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
     };
 }
 

@@ -18,8 +18,7 @@ int main()
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
     auto gfxDevice = std::shared_ptr<ILLGraphicsDevice>(new VulkanGraphicsDevice());
-    gfxDevice->Initialise();
-    gfxDevice->ConfigureOutputSurface(device);
+    gfxDevice->Initialise(device);
 
     return 0;
 }

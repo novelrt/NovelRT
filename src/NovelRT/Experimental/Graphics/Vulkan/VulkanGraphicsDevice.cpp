@@ -7,6 +7,8 @@
 #include <NovelRT/Utilities/Misc.h>
 #include <map>
 #include <numeric>
+#include <set>
+#include <utility>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -297,7 +299,42 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("VkInstance successfully created.");
     }
 
-    QueueFamilyIndices VulkanGraphicsDevice::FindQueueFamilies(VkPhysicalDevice device) noexcept
+    void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
+    {
+        _nrtSurface = std::move(targetSurface);
+
+        switch (_nrtSurface->GetKind())
+        {
+            case GraphicsSurfaceKind::Glfw:
+            {
+                auto func =
+                    reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
+                        _nrtSurface->GetContextHandle());
+
+                VkResult funcResult = func(_instance, _nrtSurface->GetHandle(), nullptr, &_surface);
+                if (funcResult != VK_SUCCESS)
+                {
+                    throw Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
+                                                                     funcResult);
+                }
+
+
+                _logger.logInfoLine("VkSurfaceKHR successfully created.");
+                break;
+            }
+            case GraphicsSurfaceKind::Unknown:
+            case GraphicsSurfaceKind::Android:
+            case GraphicsSurfaceKind::Wayland:
+            case GraphicsSurfaceKind::Win32:
+            case GraphicsSurfaceKind::Xcb:
+            case GraphicsSurfaceKind::Xlib:
+            default:
+                throw Exceptions::NotSupportedException(
+                    "The specified graphics surface kind is not supported by this graphics device.");
+        }
+    }
+
+    QueueFamilyIndices VulkanGraphicsDevice::FindQueueFamilies(VkPhysicalDevice device) const noexcept
     {
         QueueFamilyIndices returnObject{};
 
@@ -307,12 +344,20 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
+        VkBool32 presentSupport = false;
+
         uint32_t familyIndex = 0;
         for (const auto& queueFamily : queueFamilies)
         {
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
             {
                 returnObject.graphicsFamily = familyIndex;
+            }
+
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, familyIndex, _surface, &presentSupport);
+            if (presentSupport)
+            {
+                returnObject.presentFamily = familyIndex;
             }
 
             if (returnObject.IsComplete())
@@ -326,7 +371,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return returnObject;
     }
 
-    int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice device) noexcept
+    int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice device) const noexcept
     {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
@@ -393,20 +438,26 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
 
-        VkDeviceQueueCreateInfo queueCreateInfo{};
-        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
-        queueCreateInfo.queueCount = 1;
+        std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
+        std::set<uint32_t> uniqueQueueFamilies{ indices.graphicsFamily.value(), indices.presentFamily.value() };
 
         float queuePriority = 1.0f;
-        queueCreateInfo.pQueuePriorities = &queuePriority;
+        for (uint32_t queueFamily : uniqueQueueFamilies)
+        {
+            VkDeviceQueueCreateInfo queueCreateInfo{};
+            queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queueCreateInfo.queueFamilyIndex = queueFamily;
+            queueCreateInfo.queueCount = 1;
+            queueCreateInfo.pQueuePriorities = &queuePriority;
+            queueCreateInfos.push_back(queueCreateInfo);
+        }
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        createInfo.pQueueCreateInfos = &queueCreateInfo;
-        createInfo.queueCreateInfoCount = 1;
+        createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+        createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
         createInfo.enabledExtensionCount = 0;
 
@@ -429,11 +480,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
+        vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
 
         _logger.logInfoLine("VkDevice successfully created.");
     }
 
-    void VulkanGraphicsDevice::Initialise()
+    void VulkanGraphicsDevice::Initialise(std::shared_ptr<IGraphicsSurface> targetSurface)
     {
         CreateInstance();
 
@@ -441,6 +493,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             ConfigureDebugLogger();
         }
+
+        ConfigureOutputSurface(targetSurface);
 
         PickPhysicalDevice();
         CreateLogicalDevice();
@@ -461,39 +515,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vkDestroyInstance(_instance, nullptr);
     }
 
-    void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
-    {
-        switch (targetSurface->GetKind())
-        {
-            case GraphicsSurfaceKind::Glfw:
-            {
-                auto func =
-                    reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
-                        targetSurface->GetContextHandle());
-
-                VkResult funcResult = func(_instance, targetSurface->GetHandle(), nullptr, &_surface);
-                if (funcResult != VK_SUCCESS)
-                {
-                    throw Exceptions::InitialisationFailureException(
-                        "Failed to initialise the VkSurfaceKHR.", funcResult);
-                }
-
-                _nrtSurface = targetSurface;
-
-                _logger.logInfoLine("VkSurfaceKHR successfully created.");
-                break;
-            }
-            case GraphicsSurfaceKind::Unknown:
-            case GraphicsSurfaceKind::Android:
-            case GraphicsSurfaceKind::Wayland:
-            case GraphicsSurfaceKind::Win32:
-            case GraphicsSurfaceKind::Xcb:
-            case GraphicsSurfaceKind::Xlib:
-            default:
-                throw Exceptions::NotSupportedException(
-                    "The specified graphics surface kind is not supported by this graphics device.");
-        }
-    }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
     {

@@ -29,6 +29,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDevice _device;
 
         VkQueue _graphicsQueue;
+        VkQueue _presentQueue;
 
         VkSurfaceKHR _surface;
 
@@ -60,17 +61,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateInstance();
 
-        [[nodiscard]] static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) noexcept;
-        [[nodiscard]] static int32_t RateDeviceSuitability(VkPhysicalDevice device) noexcept;
+        void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface);
+
+        [[nodiscard]] QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) const noexcept;
+        [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice device) const noexcept;
         void PickPhysicalDevice();
 
         void CreateLogicalDevice();
 
     public:
         VulkanGraphicsDevice() noexcept;
-        void Initialise() final;
+        void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) final;
         void TearDown() final;
-        void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface) final;
         ~VulkanGraphicsDevice();
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
