@@ -4,12 +4,13 @@
 #ifndef NOVELRT_IWINDOWINGDEVICE_H
 #define NOVELRT_IWINDOWINGDEVICE_H
 
+#include "../Graphics/IGraphicsSurface.h"
 #include "../../Maths/GeoVector2F.h"
 #include "../../Windowing/WindowMode.h"
 
 namespace NovelRT::Experimental::Windowing
 {
-    class IWindowingDevice
+    class IWindowingDevice : public Graphics::IGraphicsSurface
     {
     public:
         virtual void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) = 0;

@@ -89,4 +89,34 @@ namespace NovelRT::Experimental::Windowing::Glfw
         glfwTerminate();
     }
 
+    Maths::GeoVector2F GlfwWindowingDevice::GetSize() const noexcept
+    {
+        int32_t width = 0;
+        int32_t height = 0;
+
+        glfwGetFramebufferSize(GetRawGLFWwindowHandle(), &width, &height);
+
+        if (width == 0 || height == 0)
+        {
+            return Maths::GeoVector2F::zero();
+        }
+
+        return Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+    }
+
+    void* GlfwWindowingDevice::GetHandle() const noexcept
+    {
+        return GetRawGLFWwindowHandle();
+    }
+
+    void* GlfwWindowingDevice::GetContextHandle() const noexcept
+    {
+        return reinterpret_cast<void*>(&glfwCreateWindowSurface);
+    }
+
+    Graphics::GraphicsSurfaceKind GlfwWindowingDevice::GetKind() const noexcept
+    {
+        return Graphics::GraphicsSurfaceKind::Glfw;
+    }
+
 } // namespace NovelRT::Experimental::Windowing::Glfw

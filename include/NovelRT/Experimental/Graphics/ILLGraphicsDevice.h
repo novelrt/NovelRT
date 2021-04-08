@@ -14,6 +14,7 @@ namespace NovelRT::Experimental::Graphics
     public:
         virtual void Initialise() = 0;
         virtual void TearDown() = 0;
+        virtual void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
     };
 }
 

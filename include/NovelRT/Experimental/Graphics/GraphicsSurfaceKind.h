@@ -15,7 +15,8 @@ namespace NovelRT::Experimental::Graphics
         Wayland = 2,
         Win32 = 3,
         Xcb = 4,
-        Xlib = 5
+        Xlib = 5,
+        Glfw = 6
     };
 }
 

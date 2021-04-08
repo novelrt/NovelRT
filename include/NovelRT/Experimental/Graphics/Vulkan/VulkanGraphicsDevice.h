@@ -5,6 +5,7 @@
 #define NOVELRT_VULKANGRAPHICSDEVICE_H
 
 #include "../../../LoggingService.h"
+#include "../IGraphicsSurface.h"
 #include "../ILLGraphicsDevice.h"
 #include "QueueFamilyIndices.h"
 #include <vulkan/vulkan.h>
@@ -28,6 +29,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDevice _device;
 
         VkQueue _graphicsQueue;
+
+        VkSurfaceKHR _surface;
+
+        std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -63,8 +68,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsDevice() noexcept;
-        void Initialise() override;
-        void TearDown() override;
+        void Initialise() final;
+        void TearDown() final;
+        void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface) final;
+        ~VulkanGraphicsDevice();
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

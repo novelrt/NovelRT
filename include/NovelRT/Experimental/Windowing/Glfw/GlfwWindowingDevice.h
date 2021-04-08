@@ -23,6 +23,11 @@ namespace NovelRT::Experimental::Windowing::Glfw
     public:
         GlfwWindowingDevice() noexcept;
 
+        [[nodiscard]] Maths::GeoVector2F GetSize() const noexcept final;
+        [[nodiscard]] void* GetHandle() const noexcept final;
+        [[nodiscard]] void* GetContextHandle() const noexcept final;
+        [[nodiscard]] Graphics::GraphicsSurfaceKind GetKind() const noexcept final;
+
         [[nodiscard]] inline GLFWwindow* GetRawGLFWwindowHandle() const noexcept
         {
             return _window.get();

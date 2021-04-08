@@ -528,6 +528,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::TearDown()
     {
+        vkDestroySurfaceKHR(_instance, _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
 
         if (_debuggerWasCreated)
@@ -536,5 +537,44 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         vkDestroyInstance(_instance, nullptr);
+    }
+
+    void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
+    {
+        switch (targetSurface->GetKind())
+        {
+            case GraphicsSurfaceKind::Glfw:
+            {
+                auto func =
+                    reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
+                        targetSurface->GetContextHandle());
+
+                VkResult funcResult = func(_instance, targetSurface->GetHandle(), nullptr, &_surface);
+                if (funcResult != VK_SUCCESS)
+                {
+                    throw Exceptions::InitialisationFailureException(
+                        "Something went wrong when trying to initialise a VkSurfaceKHR using the GLFW handles!");
+                }
+
+                _nrtSurface = targetSurface;
+
+                _logger.logInfoLine("VkSurfaceKHR successfully created.");
+                break;
+            }
+            case GraphicsSurfaceKind::Unknown:
+            case GraphicsSurfaceKind::Android:
+            case GraphicsSurfaceKind::Wayland:
+            case GraphicsSurfaceKind::Win32:
+            case GraphicsSurfaceKind::Xcb:
+            case GraphicsSurfaceKind::Xlib:
+            default:
+                throw Exceptions::NotSupportedException(
+                    "The specified graphics surface kind is not supported by this graphics device.");
+        }
+    }
+
+    VulkanGraphicsDevice::~VulkanGraphicsDevice()
+    {
+        TearDown();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan
