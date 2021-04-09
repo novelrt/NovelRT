@@ -12,14 +12,12 @@
 
   <!-- Default settings that are used by other settings -->
   <PropertyGroup>
-    <BaseArtifactsPath>$(MSBuildThisFileDirectory)out/build/$(Platform)-$(Configuration)/$(NovelRTProjectCategory)/$(MSBuildProjectName)/CMakeFiles/$(MSBuildProjectName).dir/</BaseArtifactsPath>
     <RepositoryUrl>https://github.com/novelrt/novelrt</RepositoryUrl>
   </PropertyGroup>
 
   <!-- Default settings that explicitly differ from the Sdk.props defaults  -->
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <BaseIntermediateOutputPath>$(BaseArtifactsPath)obj</BaseIntermediateOutputPath>
     <DebugType>embedded</DebugType>
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -36,10 +34,8 @@
   <!-- Default settings that explicitly differ from the Sdk.targets defaults-->
   <PropertyGroup>
     <Authors>Matt Jones and Contributors</Authors>
-    <BaseOutputPath>$(BaseArtifactsPath)bin</BaseOutputPath>
     <Company>NovelRT</Company>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
-    <PackageOutputPath>$(BaseArtifactsPath)pkg</PackageOutputPath>
     <Product>NovelRT</Product>
     <RootNamespace>NovelRT</RootNamespace>
     <VersionPrefix>0.1.0</VersionPrefix>

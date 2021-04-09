@@ -19,7 +19,6 @@
 
   <PropertyGroup>
     <VSTestLogger>trx</VSTestLogger>
-    <VSTestResultsDirectory>$(BaseArtifactsPath)tst</VSTestResultsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
