@@ -26,6 +26,11 @@ namespace NovelRT::Ecs
      */
     template<typename TComponent>[[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
+        static_assert(
+            std::is_trivially_copyable<TComponent>::value,
+            "Component type must be trivially copyable for use with a ComponentTypeId. See the documentation for "
+            "more information.");
+
         auto& componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
 
         if (componentTypeId == Atom(0))
