@@ -13,7 +13,7 @@
   <!-- Settings that append the existing setting value -->
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);$(OS)</DefineConstants>
-    <NoWarn>$(NoWarn);NU5105</NoWarn>
+    <NoWarn>$(NoWarn);1591;NU5105</NoWarn>
   </PropertyGroup>
 
   <!-- Settings that are only set for CI builds -->
