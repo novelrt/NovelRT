@@ -6,11 +6,15 @@
 
 #include "../Atom.h"
 #include <cstdint>
+#include <typeindex>
+#include <unordered_map>
 
 namespace NovelRT::Ecs
 {
-    using EntityId = Atom;
-    using ComponentTypeId = Atom;
+    using EntityId = NovelRT::Atom;
+    using ComponentTypeId = NovelRT::Atom;
+
+    std::unordered_map<std::type_index, ComponentTypeId>& GetComponentTypeIds() noexcept;
 
     /**
      * @brief Retrieves the ComponentTypeId for a given component type.
@@ -20,10 +24,10 @@ namespace NovelRT::Ecs
      * @tparam TComponent The component type to get the ID for.
      * @return ComponentTypeId The numerical ID of the component type as an Atom.
      */
-    template<typename TComponent>[[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
+    template<typename TComponent> [[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
-        static const Atom id = Atom::getNextComponentTypeId();
-        return id;
+        auto componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
+        return componentTypeId;
     }
 } // namespace NovelRT::Ecs
 
