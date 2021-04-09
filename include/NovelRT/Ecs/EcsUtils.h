@@ -26,7 +26,15 @@ namespace NovelRT::Ecs
      */
     template<typename TComponent> [[nodiscard]] ComponentTypeId GetComponentTypeId() noexcept
     {
-        auto componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
+        auto& componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
+
+        if (componentTypeId == Atom(0))
+        {
+            // TODO: Two threads each trying to get a component type ID for T
+            // at the first time can race here. We'll either want to lock or
+            // do some kind of interlocked compare-exchange here to make it atomic
+            componentTypeId = Atom::getNextComponentTypeId();
+        }
         return componentTypeId;
     }
 } // namespace NovelRT::Ecs
