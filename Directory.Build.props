@@ -61,7 +61,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <PublicSign>true</PublicSign>
+    <PublicSign>false</PublicSign>
     <RepositoryType>git</RepositoryType>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
