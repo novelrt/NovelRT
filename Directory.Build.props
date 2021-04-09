@@ -24,6 +24,7 @@
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <SignAssembly>false</SignAssembly>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)" />
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
