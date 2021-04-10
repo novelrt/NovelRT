@@ -1,5 +1,6 @@
 #include <NovelRT/Physics/Box2d/Systems/Box2dSystem.h>
 
+// TODO: replace with a proper transform component.
 #include <NovelRT/Physics/Box2d/Components/TestTransform.h>
 
 // TODO: make sure that the pool ID's for ECS are handled well, if needed.
