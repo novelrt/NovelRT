@@ -20,8 +20,10 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 
-set(ENGINE_SOURCES
+set(SOURCES
   Animation/SpriteAnimator.cpp
+
+  Atom.cpp
 
   Audio/AudioService.cpp
 
@@ -32,6 +34,7 @@ set(ENGINE_SOURCES
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
+  Ecs/EcsUtils.cpp
   Ecs/EntityCache.cpp
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
@@ -72,8 +75,11 @@ set(ENGINE_SOURCES
   WorldObject.cpp
 )
 
-add_library(Engine SHARED ${ENGINE_SOURCES})
+add_library(Engine SHARED ${SOURCES})
 add_dependencies(Engine Dotnet)
+
+set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
+
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()

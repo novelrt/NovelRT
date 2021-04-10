@@ -7,32 +7,26 @@ namespace NovelRT.Interop
 {
     public static unsafe partial class NovelRT
     {
-        [DllImport("Interop", ExactSpelling = true)]
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtRuntimeServiceHandle")]
         public static extern IntPtr Nrt_RuntimeService_create();
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_destroy([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_destroy([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_initialise([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_initialise([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_tearDown([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_tearDown([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service);
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_freeObject([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("intptr_t")] nint obj);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_freeObject([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("intptr_t")] nint obj);
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_freeString([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("const char *")] sbyte* str);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_freeString([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("const char *")] sbyte* str);
 
-        [DllImport("Interop", ExactSpelling = true)]
-        [return: NativeTypeName("NrtResult")]
-        public static extern int Nrt_RuntimeService_getInkService([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("NrtInkServiceHandle *")] IntPtr* outputInkService);
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RuntimeService_getInkService([NativeTypeName("NrtRuntimeServiceHandle")] IntPtr service, [NativeTypeName("NrtInkServiceHandle *")] IntPtr* outputInkService);
     }
 }

@@ -55,54 +55,24 @@ namespace NovelRT
             return _value >= other._value;
         }
 
-        operator uintptr_t() noexcept
+        operator uintptr_t() const noexcept
         {
             return _value;
         }
 
         // TODO: These should be internal to NovelRT
 
-        static Atom getNextEventHandlerId() noexcept
-        {
-            static std::atomic_uintptr_t _nextEventHandlerId(0);
-            auto value = ++_nextEventHandlerId;
-            return Atom(value);
-        }
+        static Atom getNextEventHandlerId() noexcept;
 
-        static Atom getNextFontSetId() noexcept
-        {
-            static std::atomic_uintptr_t _nextFontSetId(0);
-            auto value = ++_nextFontSetId;
-            return Atom(value);
-        }
+        static Atom getNextFontSetId() noexcept;
 
-        static Atom getNextTextureId() noexcept
-        {
-            static std::atomic_uintptr_t _nextTextureId(0);
-            auto value = ++_nextTextureId;
-            return Atom(value);
-        }
+        static Atom getNextTextureId() noexcept;
 
-        static Atom getNextComponentTypeId() noexcept
-        {
-            static std::atomic_uintptr_t _nextComponentTypeId(0);
-            auto value = ++_nextComponentTypeId;
-            return Atom(value);
-        }
+        static Atom getNextComponentTypeId() noexcept;
 
-        static Atom getNextEntityId() noexcept
-        {
-            static std::atomic_uintptr_t _nextEntityId(0);
-            auto value = ++_nextEntityId;
-            return Atom(value);
-        }
+        static Atom getNextEntityId() noexcept;
 
-        static Atom getNextSystemId() noexcept
-        {
-            static std::atomic_uintptr_t _nextSystemId(0);
-            auto value = ++_nextSystemId;
-            return Atom(value);
-        }
+        static Atom getNextSystemId() noexcept;
     };
 
     class AtomHashFunction

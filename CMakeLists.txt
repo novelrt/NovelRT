@@ -52,7 +52,6 @@ if (NOVELRT_INCLUDE_CONAN_PATHS)
   include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif()
 
-
 find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
   COMPONENTS dot
 )

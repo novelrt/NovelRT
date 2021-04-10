@@ -50,4 +50,4 @@ NovelRT.Interop
 --with-callconv
 *=Winapi
 --with-librarypath
-*=Interop
+*=NovelRT.Interop

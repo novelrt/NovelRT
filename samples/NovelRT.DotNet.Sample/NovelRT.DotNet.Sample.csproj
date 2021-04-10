@@ -1,18 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="NovelRT.DotNet.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.DotNetAppHost" Version="5.0.0" />
-    <PackageReference Include="Inkle.Ink.Engine" Version="0.7.4" />
+    <ProjectReference Include="../../src/NovelRT.DotNet/NovelRT.DotNet.csproj" />
   </ItemGroup>
 
   <!-- DO NOT REMOVE: Used by CMakeLists to identify project outputs -->
@@ -25,7 +22,7 @@
     <Message Importance="High" Text="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
   </Target>
 
-  <!-- DO NOT REMOVE: Used to ensure the project is only built via CMake -->
+    <!-- DO NOT REMOVE: Used to ensure the project is only built via CMake -->
   <Target Name="ValidateBuildingViaCMake" BeforeTargets="Restore;Build;Pack;Publish" Condition="'$(BuildingViaCMake)' != 'true'">
     <Error Text="This project must be built using CMake. See the README.md for more information" />
   </Target>

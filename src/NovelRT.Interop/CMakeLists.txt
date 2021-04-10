@@ -1,10 +1,10 @@
-set(INTEROP_SOURCES
+set(SOURCES
   NrtDebugService.cpp
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
   NrtNovelRunner.cpp
   NrtTransform.cpp
-  
+
   Animation/NrtSpriteAnimator.cpp
   Animation/NrtSpriteAnimatorFrame.cpp
   Animation/NrtSpriteAnimatorState.cpp
@@ -45,7 +45,7 @@ set(INTEROP_SOURCES
   Maths/NrtGeoVector4F.cpp
   Maths/NrtQuadTree.cpp
   Maths/NrtQuadTreePoint.cpp
-  
+
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
   SceneGraph/NrtRenderObjectNode.cpp
@@ -53,7 +53,7 @@ set(INTEROP_SOURCES
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
   SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
-  
+
   Timing/NrtStepTimer.cpp
   Timing/NrtTimestamp.cpp
 
@@ -62,15 +62,17 @@ set(INTEROP_SOURCES
   Windowing/NrtWindowingService.cpp
 )
 
-add_library(Interop SHARED ${INTEROP_SOURCES})
+add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
+
+set_property(TARGET Interop PROPERTY OUTPUT_NAME "NovelRT.Interop")
+
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
-
 
 if(MSVC)
   target_compile_options(Interop
