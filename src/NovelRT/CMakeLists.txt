@@ -23,6 +23,8 @@ find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 set(SOURCES
   Animation/SpriteAnimator.cpp
 
+  Atom.cpp
+
   Audio/AudioService.cpp
 
   DebugService.cpp
@@ -32,6 +34,7 @@ set(SOURCES
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
+  Ecs/EcsUtils.cpp
   Ecs/EntityCache.cpp
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
