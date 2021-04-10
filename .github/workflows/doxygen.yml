@@ -21,7 +21,7 @@ jobs:
       - name: Generate Documentation
         run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
 
-      #Mandatory step it appears
+      #Mandatory step it appears otherwise pushing the commit will fail
       #Username and Email found from https://github.community/t/github-actions-bot-email-address/17204/3
       - name: Configure Git
       - run: |
