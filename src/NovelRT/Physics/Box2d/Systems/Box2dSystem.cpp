@@ -108,26 +108,26 @@ namespace NovelRT::Physics::Box2d
         return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef)
     {
         auto pWorld = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId);
         auto body = pWorld.world->CreateBody(bodyDef);
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef* const fixtureDef)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef* const fixtureDef)
     {
         auto pWorld = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId);
         auto body = pWorld.world->CreateBody(bodyDef);
         body->CreateFixture(fixtureDef);
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount)
     {
         auto pWorld = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId);
         auto body = pWorld.world->CreateBody(bodyDef);
@@ -137,27 +137,27 @@ namespace NovelRT::Physics::Box2d
         }
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef)
     {
         auto body = world->CreateBody(bodyDef);
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef* const fixtureDef)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef* const fixtureDef)
     {
         auto body = world->CreateBody(bodyDef);
         body->CreateFixture(fixtureDef);
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
 
-    PhysicsBody Box2dSystem::AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount)
+    b2Body* Box2dSystem::AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount)
     {
         auto body = world->CreateBody(bodyDef);
         for(int32_t i = 0; i < fixtureCount; ++i)
@@ -166,13 +166,36 @@ namespace NovelRT::Physics::Box2d
         }
         PhysicsBody pBody{ body };
         scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().PushComponentUpdateInstruction(0, entityId, pBody);   
-        return pBody;
+        return body;
     }
+
+    void Box2dSystem::AddBodyComponents(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId* const entityIds, b2Body** const bodies, const int32_t bodyCount)
+    {
+        auto pbBuffer = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>();
+        for(int32_t i = 0; i < bodyCount; ++i)
+        {
+            pbBuffer.PushComponentUpdateInstruction(0, entityIds[i], PhysicsBody{bodies[i]});
+        }
+    }
+
+    void Box2dSystem::RemoveBody(b2World* const world, b2Body* const body)
+    {
+        world->DestroyBody(body);
+    }
+
 
     void Box2dSystem::RemoveBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, b2Body* const body)
     {
         auto pWorld = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId);
         pWorld.world->DestroyBody(body);
+    }
+
+    void Box2dSystem::RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId)
+    {
+        auto physicsBodyComponentBuffer = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>();
+        auto pBody = physicsBodyComponentBuffer.GetComponent(entityId);
+        world->DestroyBody(pBody.body);
+        physicsBodyComponentBuffer.PushComponentUpdateInstruction(0, entityId, PhysicsBody::DeletedBodyState);
     }
 
     void Box2dSystem::RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId)
@@ -184,17 +207,40 @@ namespace NovelRT::Physics::Box2d
         physicsBodyComponentBuffer.PushComponentUpdateInstruction(0, entityId, PhysicsBody::DeletedBodyState);
     }
 
-    void Box2dSystem::RemoveBody(b2World* const world, b2Body* const body)
+    void Box2dSystem::RemoveBodies(b2World* const world, b2Body** const bodies, const int32_t bodyCount)
     {
-        world->DestroyBody(body);
+        for (int32_t i = 0; i < bodyCount; i++)
+        {
+            world->DestroyBody(bodies[i]);
+        }
     }
 
-    void Box2dSystem::RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId)
+    void Box2dSystem::RemoveBodies(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, b2Body** const bodies, const int32_t bodyCount)
     {
-        auto physicsBodyComponentBuffer = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>();
-        auto pBody = physicsBodyComponentBuffer.GetComponent(entityId);
-        world->DestroyBody(pBody.body);
-        physicsBodyComponentBuffer.PushComponentUpdateInstruction(0, entityId, PhysicsBody::DeletedBodyState);
+        auto world = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId).world;
+        for (int32_t i = 0; i < bodyCount; i++)
+        {
+            world->DestroyBody(bodies[i]);
+        }
+    }
+
+    void Box2dSystem::RemoveEntityBodies(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, NovelRT::Ecs::EntityId* const entityIds, const int32_t entityCount)
+    {
+        auto pbBuffer = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>();
+        for (int32_t i = 0; i < entityCount; i++)
+        {
+            world->DestroyBody(pbBuffer.GetComponent(entityIds[i]).body);
+        }
+    }
+
+    void Box2dSystem::RemoveEntityBodies(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, NovelRT::Ecs::EntityId* const entityIds, const int32_t entityCount)
+    {
+        auto world = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId).world;
+        auto pbBuffer = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>();
+        for (int32_t i = 0; i < entityCount; i++)
+        {
+            world->DestroyBody(pbBuffer.GetComponent(entityIds[i]).body);
+        }
     }
 
     b2World* Box2dSystem::GetWorld(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId)

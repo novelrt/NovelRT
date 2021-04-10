@@ -26,16 +26,24 @@ namespace NovelRT::Physics::Box2d
             static b2Body* AddBody(b2World* const world, const b2BodyDef* const bodyDef);
             static b2Body* AddBody(b2World* const world, const b2BodyDef* const bodyDef, const b2FixtureDef* const fixtureDef);
             static b2Body* AddBody(b2World* const world, const b2BodyDef* const bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef* const fixtureDef);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef* const fixtureDef);
-            static PhysicsBody AddEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount);
-            static void RemoveBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, b2Body* const body);
-            static void RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef* const fixtureDef);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef* const fixtureDef);
+            static b2Body* AddBodyComponent(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId, const b2BodyDef* const bodyDef, const b2FixtureDef** const fixtureDef, const int32_t fixtureCount);
+            
+            static void AddBodyComponents(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId* const entityIds, b2Body** const bodies, const int32_t bodyCount);
+            
             static void RemoveBody(b2World* const world, b2Body* const body);
+            static void RemoveBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, b2Body* const body);
             static void RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId);
+            static void RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, const NovelRT::Ecs::EntityId entityId);
+            
+            static void RemoveBodies(b2World* const world, b2Body** const bodies, const int32_t bodyCount);
+            static void RemoveBodies(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, b2Body** const bodies, const int32_t bodyCount);
+            static void RemoveEntityBodies(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, NovelRT::Ecs::EntityId* const entityIds, const int32_t entityCount);
+            static void RemoveEntityBodies(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId, NovelRT::Ecs::EntityId* const entityIds, const int32_t entityCount);
 
             static b2World* GetWorld(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId);
             static b2Body* GetBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId entityId);
