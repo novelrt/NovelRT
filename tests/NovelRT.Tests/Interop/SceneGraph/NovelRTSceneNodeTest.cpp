@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
-#include "NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h"
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
+#include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
 #include <NovelRT.h>
+
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
 using namespace NovelRT::SceneGraph;
 
-bool compareNodeWithSet(NrtSceneNode lhs, NrtSceneNodeSet rhs)
+bool compareNodeWithSet(NrtSceneNodeHandle lhs, NrtSceneNodeSetHandle rhs)
 {
     auto left = reinterpret_cast<SceneNode*>(lhs)->shared_from_this();
     auto right = *reinterpret_cast<std::set<std::shared_ptr<SceneNode>>*>(rhs)->begin();
@@ -20,8 +20,8 @@ bool compareNodeWithSet(NrtSceneNode lhs, NrtSceneNodeSet rhs)
 
 TEST(InteropSceneNodeTest, createHasZeroChildren)
 {
-    NrtSceneNode sceneNode = Nrt_SceneNode_create();
-    NrtSceneNodeSet nodeSet = NULL;
+    NrtSceneNodeHandle sceneNode = Nrt_SceneNode_create();
+    NrtSceneNodeSetHandle nodeSet = NULL;
     size_t size = 0;
 
     Nrt_SceneNode_getChildren(sceneNode, &nodeSet);
@@ -31,8 +31,8 @@ TEST(InteropSceneNodeTest, createHasZeroChildren)
 
 TEST(InteropSceneNodeTest, createHasZeroParents)
 {
-    NrtSceneNode sceneNode = Nrt_SceneNode_create();
-    NrtSceneNodeSet nodeSet = NULL;
+    NrtSceneNodeHandle sceneNode = Nrt_SceneNode_create();
+    NrtSceneNodeSetHandle nodeSet = NULL;
     size_t size = 0;
 
     Nrt_SceneNode_getParents(sceneNode, &nodeSet);
@@ -42,12 +42,12 @@ TEST(InteropSceneNodeTest, createHasZeroParents)
 
 TEST(InteropSceneNodeTest, insertNodeCreatesParentChildRelationship)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     ASSERT_EQ(1, Nrt_SceneNode_insert(parentNode, childNode));
 
-    NrtSceneNodeSet parentNodeParents = NULL;
-    NrtSceneNodeSet parentNodeChildren = NULL;
+    NrtSceneNodeSetHandle parentNodeParents = NULL;
+    NrtSceneNodeSetHandle parentNodeChildren = NULL;
     Nrt_SceneNode_getParents(parentNode, &parentNodeParents);
     Nrt_SceneNode_getChildren(parentNode, &parentNodeChildren);
     size_t parentSetSize = 0;
@@ -57,8 +57,8 @@ TEST(InteropSceneNodeTest, insertNodeCreatesParentChildRelationship)
     ASSERT_EQ(0, parentSetSize);
     ASSERT_EQ(1, childrenSetSize);
 
-    NrtSceneNodeSet childNodeParents = NULL;
-    NrtSceneNodeSet childNodeChildren = NULL;
+    NrtSceneNodeSetHandle childNodeParents = NULL;
+    NrtSceneNodeSetHandle childNodeChildren = NULL;
     Nrt_SceneNode_getParents(childNode, &childNodeParents);
     Nrt_SceneNode_getChildren(childNode, &childNodeChildren);
     parentSetSize = Nrt_SceneNodeSet_getSize(childNodeParents);
@@ -67,8 +67,8 @@ TEST(InteropSceneNodeTest, insertNodeCreatesParentChildRelationship)
     ASSERT_EQ(1, parentSetSize);
     ASSERT_EQ(0, childrenSetSize);
 
-    NrtSceneNode returnedFromParent = NULL;
-    NrtSceneNode returnedFromChild = NULL;
+    NrtSceneNodeHandle returnedFromParent = NULL;
+    NrtSceneNodeHandle returnedFromChild = NULL;
     Nrt_SceneNodeSet_getSceneNodeFromIndex(parentNodeChildren, 0, &returnedFromParent);
     Nrt_SceneNodeSet_getSceneNodeFromIndex(childNodeParents, 0, &returnedFromChild);
     ASSERT_TRUE(compareNodeWithSet(childNode, parentNodeChildren));
@@ -77,23 +77,23 @@ TEST(InteropSceneNodeTest, insertNodeCreatesParentChildRelationship)
 
 TEST(InteropSceneNodeTest, insertNodeTwiceReturnsFalse)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     ASSERT_TRUE(Nrt_SceneNode_insert(parentNode, childNode));
     ASSERT_FALSE(Nrt_SceneNode_insert(parentNode, childNode));
 }
 
 TEST(InteropSceneNodeTest, removeNodeUpdatesParentChildRelationship)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     int32_t result = 0;
     result = Nrt_SceneNode_insert(parentNode, childNode);
     result = Nrt_SceneNode_remove(parentNode, childNode);
     ASSERT_TRUE(result);
 
-    NrtSceneNodeSet parentNodeParents = NULL;
-    NrtSceneNodeSet parentNodeChildren = NULL;
+    NrtSceneNodeSetHandle parentNodeParents = NULL;
+    NrtSceneNodeSetHandle parentNodeChildren = NULL;
     Nrt_SceneNode_getParents(parentNode, &parentNodeParents);
     Nrt_SceneNode_getChildren(parentNode, &parentNodeChildren);
     size_t parentSetSize = 0;
@@ -103,8 +103,8 @@ TEST(InteropSceneNodeTest, removeNodeUpdatesParentChildRelationship)
     ASSERT_EQ(0, parentSetSize);
     ASSERT_EQ(0, childrenSetSize);
 
-    NrtSceneNodeSet childNodeParents = NULL;
-    NrtSceneNodeSet childNodeChildren = NULL;
+    NrtSceneNodeSetHandle childNodeParents = NULL;
+    NrtSceneNodeSetHandle childNodeChildren = NULL;
     Nrt_SceneNode_getParents(childNode, &childNodeParents);
     Nrt_SceneNode_getChildren(childNode, &childNodeChildren);
     parentSetSize = Nrt_SceneNodeSet_getSize(childNodeParents);
@@ -116,8 +116,8 @@ TEST(InteropSceneNodeTest, removeNodeUpdatesParentChildRelationship)
 
 TEST(InteropSceneNodeTest, removeNodeTwiceReturnsFalse)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     int32_t result = 0;
     result = Nrt_SceneNode_insert(parentNode, childNode);
     result = Nrt_SceneNode_remove(parentNode, childNode);
@@ -128,16 +128,16 @@ TEST(InteropSceneNodeTest, removeNodeTwiceReturnsFalse)
 
 TEST(InteropSceneNodeTest, unrelatedNodesAreNotAdjacent)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     ASSERT_FALSE(Nrt_SceneNode_isAdjacent(parentNode, childNode));
     ASSERT_FALSE(Nrt_SceneNode_isAdjacent(childNode, parentNode));
 }
 
 TEST(InteropSceneNodeTest, parentChildNodesAreAdjacent)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
     Nrt_SceneNode_insert(parentNode, childNode);
     ASSERT_TRUE(Nrt_SceneNode_isAdjacent(parentNode, childNode));
     ASSERT_TRUE(Nrt_SceneNode_isAdjacent(childNode, parentNode));
@@ -145,23 +145,23 @@ TEST(InteropSceneNodeTest, parentChildNodesAreAdjacent)
 
 TEST(InteropSceneNodeTest, childNodeIsReachableFromParent)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
-    NrtSceneNode childNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
 
     Nrt_SceneNode_insert(parentNode, childNode);
     ASSERT_TRUE(Nrt_SceneNode_canReach(parentNode, childNode));
 }
 
-NrtSceneNode childNode = Nrt_SceneNode_create();
+NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
 
 TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
 {
-    typedef int32_t (*wrapperFunction)(NrtSceneNode);
+    typedef int32_t (*wrapperFunction)(NrtSceneNodeHandle);
 
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     Nrt_SceneNode_insert(parentNode, childNode);
 
-    auto func = [](NrtSceneNode traversedNode) -> int32_t {
+    auto func = [](NrtSceneNodeHandle traversedNode) -> int32_t {
         if (traversedNode == childNode)
         {
             return NRT_TRUE;
@@ -170,9 +170,9 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
         return NRT_FALSE;
     };
 
-    int32_t (*vari)(NrtSceneNode) = func;
+    int32_t (*vari)(NrtSceneNodeHandle) = func;
 
-    NrtSceneNodeBreadthFirstIterator it = nullptr;
+    NrtSceneNodeBreadthFirstIteratorHandle it = nullptr;
     auto res = Nrt_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it);
 
     ASSERT_EQ(res, NRT_SUCCESS);
@@ -196,7 +196,7 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
 
 TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     childNode = Nrt_SceneNode_create();
     Nrt_SceneNode_insert(parentNode, childNode);
     ASSERT_FALSE(Nrt_SceneNode_canReach(childNode, parentNode));
@@ -207,13 +207,13 @@ TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild)
 
 TEST(InteropSceneNodeTest, nodeIsReachableFromSelf)
 {
-    NrtSceneNode parentNode = Nrt_SceneNode_create();
+    NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     ASSERT_TRUE(Nrt_SceneNode_canReach(parentNode, parentNode));
     ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
 }
 
 // These are now defined here as they needed to be referenced for the lambda functions.
-NrtSceneNode parentNode = Nrt_SceneNode_create();
+NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
 int32_t parentSceneNodeHitCount = 0;
 int32_t childSceneNodeHitCount = 0;
 int32_t otherSceneNodeHitCount = 0;
@@ -225,7 +225,7 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_TRUE(Nrt_SceneNode_insert(parentNode, childNode));
     ASSERT_TRUE(Nrt_SceneNode_insert(childNode, parentNode));
 
-    auto func = [](NrtSceneNode traversedNode) -> void {
+    auto func = [](NrtSceneNodeHandle traversedNode) -> void {
         if (traversedNode == parentNode)
         {
             parentSceneNodeHitCount++;
@@ -240,7 +240,7 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
         }
     };
 
-    void (*vari)(NrtSceneNode) = func;
+    void (*vari)(NrtSceneNodeHandle) = func;
 
     auto res = Nrt_SceneNode_traverseBreadthFirst(parentNode, vari);
     ASSERT_EQ(res, NRT_SUCCESS);
@@ -263,7 +263,7 @@ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_TRUE(Nrt_SceneNode_insert(parentNode, childNode));
     ASSERT_TRUE(Nrt_SceneNode_insert(childNode, parentNode));
 
-    auto func = [](NrtSceneNode traversedNode) -> void {
+    auto func = [](NrtSceneNodeHandle traversedNode) -> void {
         if (traversedNode == parentNode)
         {
             parentSceneNodeHitCount++;
@@ -278,7 +278,7 @@ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
         }
     };
 
-    void (*vari)(NrtSceneNode) = func;
+    void (*vari)(NrtSceneNodeHandle) = func;
 
     auto res = Nrt_SceneNode_traverseDepthFirst(parentNode, vari);
     ASSERT_EQ(res, NRT_SUCCESS);

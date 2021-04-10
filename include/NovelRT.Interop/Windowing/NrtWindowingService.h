@@ -4,37 +4,25 @@
 #ifndef NOVELRT_INTEROP_WINDOWING_WINDOWINGSERVICE_H
 #define NOVELRT_INTEROP_WINDOWING_WINDOWINGSERVICE_H
 
-#include "../Maths/NrtGeoVector2F.h"
-#include "../NrtInteropUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    enum NrtWindowModeKind
-    {
-        NRT_WINDOW_MODE_WINDOWED = 0,
-        NRT_WINDOW_MODE_BORDERLESS = 1,
-        NRT_WINDOW_MODE_FULLSCREEN = 2
-    };
+    NrtWindowingServiceHandle Nrt_WindowingService_create();
 
-    typedef uint32_t NrtWindowMode;
-
-    typedef struct WindowingServiceHandle* NrtWindowingService;
-
-    NrtWindowingService Nrt_WindowingService_create();
-
-    NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingService service,
+    NrtResult Nrt_WindowingService_initialiseWindow(NrtWindowingServiceHandle service,
                                                     int32_t displayNumber,
                                                     const char* windowTitle,
                                                     NrtWindowMode windowMode,
                                                     int32_t transparencyEnabled);
-    NrtResult Nrt_WindowingService_tearDown(NrtWindowingService service);
-    const char* Nrt_WindowingService_getWindowTitle(NrtWindowingService service);
-    NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingService service, const char* value);
-    NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingService service, NrtGeoVector2F value);
-    NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingService service);
+    NrtResult Nrt_WindowingService_tearDown(NrtWindowingServiceHandle service);
+    const char* Nrt_WindowingService_getWindowTitle(NrtWindowingServiceHandle service);
+    NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingServiceHandle service, const char* value);
+    NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingServiceHandle service, NrtGeoVector2F value);
+    NrtGeoVector2F Nrt_WindowingService_getWindowSize(NrtWindowingServiceHandle service);
 
 #ifdef __cplusplus
 }

@@ -1,17 +1,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef Nrt_INTEROP_TIMING_TIMESTAMP_H
-#define Nrt_INTEROP_TIMING_TIMESTAMP_H
+#ifndef NOVELRT_INTEROP_TIMING_TIMESTAMP_H
+#define NOVELRT_INTEROP_TIMING_TIMESTAMP_H
 
-#include "../NrtInteropUtils.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef uint64_t NrtTimestamp;
 
     NrtTimestamp Nrt_Timestamp_create(uint64_t ticks);
 
@@ -39,4 +37,4 @@ extern "C"
 }
 #endif
 
-#endif // Nrt_INTEROP_TIMING_TIMESTAMP_H
+#endif // NOVELRT_INTEROP_TIMING_TIMESTAMP_H

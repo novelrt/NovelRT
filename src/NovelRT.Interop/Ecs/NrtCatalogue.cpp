@@ -2,22 +2,25 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtCatalogue.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Catalogue.h>
 
 using namespace NovelRT::Ecs;
 
 extern "C"
 {
-    NrtCatalogue Nrt_Catalogue_Create(size_t poolId, NrtComponentCache componentCache, NrtEntityCache entityCache)
+    NrtCatalogueHandle Nrt_Catalogue_Create(size_t poolId,
+                                            NrtComponentCacheHandle componentCache,
+                                            NrtEntityCacheHandle entityCache)
     {
         auto catalogue = new Catalogue(poolId, *reinterpret_cast<ComponentCache*>(componentCache),
                                        *reinterpret_cast<EntityCache*>(entityCache));
-        return reinterpret_cast<NrtCatalogue>(catalogue);
+        return reinterpret_cast<NrtCatalogueHandle>(catalogue);
     }
 
-    NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogue catalogue,
+    NrtResult Nrt_Catalogue_GetComponentViewById(NrtCatalogueHandle catalogue,
                                                  NrtComponentTypeId componentId,
-                                                 NrtUnsafeComponentView* outputResult)
+                                                 NrtUnsafeComponentViewHandle* outputResult)
     {
         if (catalogue == nullptr || outputResult == nullptr)
         {
@@ -27,27 +30,27 @@ extern "C"
         auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
         auto returnPtr = new UnsafeComponentView(0, nullptr);
         *returnPtr = actualCatalogue->GetComponentViewById(componentId);
-        *outputResult = reinterpret_cast<NrtUnsafeComponentView>(returnPtr);
+        *outputResult = reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
 
         return NRT_SUCCESS;
     }
 
-    NrtUnsafeComponentView Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogue catalogue,
-                                                                    NrtComponentTypeId componentId)
+    NrtUnsafeComponentViewHandle Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogueHandle catalogue,
+                                                                          NrtComponentTypeId componentId)
     {
         auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
 
         auto returnPtr = new UnsafeComponentView(0, nullptr);
         *returnPtr = actualCatalogue->GetComponentViewById(componentId);
-        return reinterpret_cast<NrtUnsafeComponentView>(returnPtr);
+        return reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
     }
 
-    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogue catalogue)
+    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogueHandle catalogue)
     {
         return reinterpret_cast<Catalogue*>(catalogue)->CreateEntity();
     }
 
-    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogue catalogue, NrtEntityId entity)
+    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogueHandle catalogue, NrtEntityId entity)
     {
         if (catalogue == nullptr)
         {
@@ -59,7 +62,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Catalogue_Destroy(NrtCatalogue catalogue)
+    NrtResult Nrt_Catalogue_Destroy(NrtCatalogueHandle catalogue)
     {
         if (catalogue == nullptr)
         {

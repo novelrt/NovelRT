@@ -2,8 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtGeoMatrix4x4F.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <cmath>
 
 #ifdef __cplusplus

@@ -2,9 +2,9 @@
 // for more information.
 
 #include <NovelRT.Interop/DotNet/NrtRuntimeService.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.h>
+
 #include <list>
 
 using namespace NovelRT;
@@ -15,13 +15,13 @@ extern "C"
 {
 #endif
 
-    NrtRuntimeService Nrt_RuntimeService_create()
+    NrtRuntimeServiceHandle Nrt_RuntimeService_create()
     {
         NovelRT::DotNet::RuntimeService* service = new NovelRT::DotNet::RuntimeService();
-        return reinterpret_cast<NrtRuntimeService&>(service);
+        return reinterpret_cast<NrtRuntimeServiceHandle&>(service);
     }
 
-    NrtResult Nrt_RuntimeService_destroy(NrtRuntimeService service)
+    NrtResult Nrt_RuntimeService_destroy(NrtRuntimeServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -34,7 +34,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RuntimeService_initialise(NrtRuntimeService service)
+    NrtResult Nrt_RuntimeService_initialise(NrtRuntimeServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -62,7 +62,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeService service)
+    NrtResult Nrt_RuntimeService_tearDown(NrtRuntimeServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -75,7 +75,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeService service, intptr_t obj)
+    NrtResult Nrt_RuntimeService_freeObject(NrtRuntimeServiceHandle service, intptr_t obj)
     {
         if (service == nullptr)
         {
@@ -103,7 +103,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RuntimeService_freeString(NrtRuntimeService service, const char* str)
+    NrtResult Nrt_RuntimeService_freeString(NrtRuntimeServiceHandle service, const char* str)
     {
         if (service == nullptr || str == nullptr)
         {
@@ -131,7 +131,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeService service, NrtInkService* outputInkService)
+    NrtResult Nrt_RuntimeService_getInkService(NrtRuntimeServiceHandle service, NrtInkServiceHandle* outputInkService)
     {
         if (service == nullptr || outputInkService == nullptr)
         {
@@ -158,7 +158,7 @@ extern "C"
         }
 
         _inkServiceCollection.push_back(inkServicePtr);
-        *outputInkService = reinterpret_cast<NrtInkService>(inkServicePtr.get());
+        *outputInkService = reinterpret_cast<NrtInkServiceHandle>(inkServicePtr.get());
         return NRT_SUCCESS;
     }
 

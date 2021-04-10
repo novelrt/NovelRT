@@ -1,17 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
-#include <NovelRT.Interop/Graphics/NrtImageRect.h>
-#include <NovelRT.Interop/Ink/NrtInkService.h>
-#include <NovelRT.Interop/Ink/NrtStory.h>
-#include <NovelRT.Interop/Input/NrtInteractionService.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
-#include <NovelRT.Interop/NrtLoggingService.h>
-#include <NovelRT.Interop/NrtNovelRunner.h>
-#include <NovelRT.Interop/Timing/NrtStepTimer.h>
-#include <NovelRT.Interop/Timing/NrtTimestamp.h>
-#include <NovelRT.Interop/Utilities/NrtCommonEvents.h>
-#include <NovelRT.Interop/Utilities/NrtMisc.h>
+
+#define NOVELRT_C_API 1
+#include <NovelRT.h>
+
 #include <memory.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -25,20 +17,20 @@ int32_t hMove = 1; // 1 == move right, 0 == move left
 int32_t vMove = 1; // 1 == move up, 0 == move down
 
 // Services
-NrtAudioService audio = NULL;
-NrtInteractionService input = NULL;
-NrtLoggingService console = NULL;
-NrtRuntimeService dotnet = NULL;
-NrtInkService ink = NULL;
-NrtStepTimer timer = NULL;
-NrtRenderingService renderer = NULL;
-NrtUtilitiesEventWithTimestamp updateEvent = NULL;
-NrtRGBAConfig colourChange = NULL;
+NrtAudioServiceHandle audio = NULL;
+NrtInteractionServiceHandle input = NULL;
+NrtLoggingServiceHandle console = NULL;
+NrtRuntimeServiceHandle dotnet = NULL;
+NrtInkServiceHandle ink = NULL;
+NrtStepTimerHandle timer = NULL;
+NrtRenderingServiceHandle renderer = NULL;
+NrtUtilitiesEventWithTimestampHandle updateEvent = NULL;
+NrtRGBAConfigHandle colourChange = NULL;
 
 // Objects
-NrtImageRect nChanRect = NULL;
-NrtBasicInteractionRect interactRect = NULL;
-NrtStory story = NULL;
+NrtImageRectHandle nChanRect = NULL;
+NrtBasicInteractionRectHandle interactRect = NULL;
+NrtStoryHandle story = NULL;
 
 // Function to render NovelChan
 void renderNovelChan()
@@ -147,7 +139,7 @@ int main()
     srand(time(NULL));
 
     // Creating NovelRunner
-    NrtNovelRunner runner = Nrt_NovelRunner_create(0);
+    NrtNovelRunnerHandle runner = Nrt_NovelRunner_create(0);
 
     // Starting LoggingService
     console = Nrt_LoggingService_createCustomTitle("Interop");
@@ -160,13 +152,16 @@ int main()
         Nrt_LoggingService_logErrorLine(console, error);
         return -1;
     }
-    const char* path = Nrt_appendFilePath(2, execPath, "Resources");
+
+    const char* const pathParts[2] = {execPath, "Resources"};
+    const char* path = Nrt_appendFilePath(2, pathParts);
 
     // Getting & Initialising AudioService
     res = Nrt_NovelRunner_getAudioService(runner, &audio);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting AudioService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -175,7 +170,8 @@ int main()
         booleanResult = Nrt_AudioService_initialiseAudio(audio);
         if (booleanResult != NRT_TRUE)
         {
-            const char* errMsg = Nrt_appendText(2, "Error initialising AudioService: ", Nrt_getLastError());
+            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
+            const char* errMsg = Nrt_appendText(2, textParts);
             Nrt_LoggingService_logErrorLine(console, errMsg);
             return -1;
         }
@@ -189,7 +185,8 @@ int main()
     }
     else
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting InteractionService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting InteractionService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -198,7 +195,8 @@ int main()
     res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting RuntimeService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting RuntimeService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
@@ -225,24 +223,28 @@ int main()
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
     if (res != NRT_SUCCESS)
     {
-        const char* errMsg = Nrt_appendText(2, "Error getting RenderingService: ", Nrt_getLastError());
+        const char* const textParts[2] = {"Error getting RenderingService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
     colourChange = Nrt_RGBAConfig_Create(0, 0, 0, 255);
 
-    NrtRGBAConfig background = Nrt_RGBAConfig_Create(0, 0, 0, 0);
+    NrtRGBAConfigHandle background = Nrt_RGBAConfig_Create(0, 0, 0, 0);
     Nrt_RenderingService_setBackgroundColour(renderer, background);
 
     // Creating ImageRect
     NrtGeoVector2F nChanPosition = {1920 / 2, 1080 / 2};
     NrtGeoVector2F nChanSize = {762, 881};
     NrtTransform nChanTransform = {nChanPosition, nChanSize, 0};
-    NrtRGBAConfig nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
+    NrtRGBAConfigHandle nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
 
-    const char* nChanFileLocation = Nrt_appendFilePath(3, path, "Images", "novel-chan.png");
-    res = Nrt_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation,
-                                                       nChanColours);
+    {
+        const char* const pathParts[3] = {path, "Images", "novel-chan.png"};
+        const char* nChanFileLocation = Nrt_appendFilePath(3, pathParts);
+        res = Nrt_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation,
+                                                           nChanColours);
+    }
 
     // Creating InteractionRect
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
@@ -251,7 +253,8 @@ int main()
     // Creating Ink Story
     if (inkServiceProvided == NRT_TRUE)
     {
-        const char* storyLocation = Nrt_appendFilePath(3, path, "Scripts", "story.json");
+        const char* const pathParts[3] = {path, "Scripts", "story.json"};
+        const char* storyLocation = Nrt_appendFilePath(3, pathParts);
         Nrt_LoggingService_logInfoLine(console, storyLocation);
 
         FILE* json = fopen(storyLocation, "rb");

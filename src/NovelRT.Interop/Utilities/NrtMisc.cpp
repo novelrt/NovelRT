@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtMisc.h>
 #include <NovelRT.h>
-#include <stdarg.h>
+
 #include <string.h>
 
 #ifdef __cplusplus
@@ -44,7 +44,7 @@ extern "C"
         return returnPtr;
     }
 
-    const char* Nrt_appendFilePath(int32_t numberOfArgs, ...)
+    const char* Nrt_appendFilePath(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
@@ -58,12 +58,10 @@ extern "C"
 #endif
 
         std::string finalString = "";
-        va_list args;
-        va_start(args, numberOfArgs);
 
         for (int i = 0; i < numberOfArgs; i++)
         {
-            const char* arg = va_arg(args, const char*);
+            const char* arg = args[i];
             std::cout << arg << std::endl;
             finalString.append(arg);
             if (i < numberOfArgs - 1)
@@ -71,7 +69,6 @@ extern "C"
                 finalString.append(dirMarker);
             }
         }
-        va_end(args);
 
         char* finalPath = nullptr;
 // strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
@@ -96,7 +93,7 @@ extern "C"
         return finalPath;
     }
 
-    const char* Nrt_appendText(int32_t numberOfArgs, ...)
+    const char* Nrt_appendText(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
@@ -105,14 +102,11 @@ extern "C"
         }
 
         std::string finalString = "";
-        va_list args;
-        va_start(args, numberOfArgs);
 
         for (int i = 0; i < numberOfArgs; i++)
         {
-            finalString.append(va_arg(args, const char*));
+            finalString.append(args[i]);
         }
-        va_end(args);
 
         char* finalText = new char[finalString.length() + 1];
         if (strlen(finalText) < (finalString.length() + 1))

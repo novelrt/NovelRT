@@ -1,12 +1,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
-#include <NovelRT.Interop/NrtInteropErrorHandlingInternal.h>
-#include <NovelRT.Interop/NrtInteropUtils.h>
+
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/SceneGraph/NrtRenderObjectNode.h>
 #include <NovelRT.h>
+
 #include <list>
-#include <stdint.h>
+
 using namespace NovelRT;
 
 std::list<std::shared_ptr<Graphics::RenderObject>> _renderObjectNodeCollection;
@@ -16,7 +16,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_RenderObjectNode_create(NrtRenderObject object, NovelRTRenderObjectNode* outputNode)
+    NrtResult Nrt_RenderObjectNode_create(NrtRenderObjectHandle object, NrtRenderObjectNodeHandle* outputNode)
     {
         if (object == nullptr || outputNode == nullptr)
         {
@@ -27,11 +27,11 @@ extern "C"
         auto ptr = reinterpret_cast<Graphics::RenderObject*>(object);
         std::shared_ptr<Graphics::RenderObject> cppObject = std::shared_ptr<Graphics::RenderObject>(ptr);
         _renderObjectNodeCollection.push_back(cppObject);
-        *outputNode = reinterpret_cast<NovelRTRenderObjectNode>(new SceneGraph::RenderObjectNode(cppObject));
+        *outputNode = reinterpret_cast<NrtRenderObjectNodeHandle>(new SceneGraph::RenderObjectNode(cppObject));
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderObjectNode_getRenderObject(NovelRTRenderObjectNode node, NrtRenderObject* outputObject)
+    NrtResult Nrt_RenderObjectNode_getRenderObject(NrtRenderObjectNodeHandle node, NrtRenderObjectHandle* outputObject)
     {
         if (node == nullptr || outputObject == nullptr)
         {
@@ -41,11 +41,11 @@ extern "C"
 
         SceneGraph::RenderObjectNode* cppNode = reinterpret_cast<SceneGraph::RenderObjectNode*>(node);
         auto obj = cppNode->getRenderObject();
-        *outputObject = reinterpret_cast<NrtRenderObject>(&obj);
+        *outputObject = reinterpret_cast<NrtRenderObjectHandle>(&obj);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_RenderObjectNode_delete(NovelRTRenderObjectNode node)
+    NrtResult Nrt_RenderObjectNode_delete(NrtRenderObjectNodeHandle node)
     {
         if (node == nullptr)
         {

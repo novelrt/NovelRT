@@ -1,0 +1,12 @@
+@../../settings.rsp
+@../../remap.rsp
+--file
+include-NrtTiming.h
+--output
+../../../src/NovelRT.DotNet/Interop/Timing
+--test-output
+../../../tests/NovelRT.DotNet/Interop/Timing
+--traverse
+../../../include/NovelRT.Interop/Timing/NrtStepTimer.h
+../../../include/NovelRT.Interop/Timing/NrtTimestamp.h
+../../../include/NovelRT.Interop/Timing/NrtTimingTypedefs.h

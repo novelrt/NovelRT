@@ -1,0 +1,11 @@
+@../../settings.rsp
+@../../remap.rsp
+--file
+include-NrtDotNet.h
+--output
+../../../src/NovelRT.DotNet/Interop/DotNet
+--test-output
+../../../tests/NovelRT.DotNet/Interop/DotNet
+--traverse
+../../../include/NovelRT.Interop/DotNet/NrtDotNetTypedefs.h
+../../../include/NovelRT.Interop/DotNet/NrtRuntimeService.h

@@ -4,21 +4,12 @@
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR4F_H
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR4F_H
 
-#include "NrtGeoVector2F.h"
 #include "NrtGeoVector3F.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef struct
-    {
-        float x;
-        float y;
-        float z;
-        float w;
-    } NrtGeoVector4F;
 
     NrtGeoVector4F Nrt_GeoVector4F_createFromGeoVector2F(NrtGeoVector2F vector);
     NrtGeoVector4F Nrt_GeoVector4F_createFromGeoVector3F(NrtGeoVector3F vector);

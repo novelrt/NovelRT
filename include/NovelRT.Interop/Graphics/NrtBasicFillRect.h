@@ -4,9 +4,7 @@
 #ifndef NOVELRT_INTEROP_GRAPHICS_BASICFILLRECT_H
 #define NOVELRT_INTEROP_GRAPHICS_BASICFILLRECT_H
 
-#include "../NrtTransform.h"
-#include "NrtGraphicsTypedefs.h"
-#include "NrtRGBAConfig.h"
+#include "../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -14,22 +12,23 @@ extern "C"
 #endif
 
     // base type
-    NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRect rect, NrtTransform* outputTransform);
-    NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRect rect, NrtTransform inputTransform);
-    int32_t Nrt_BasicFillRect_getLayer(NrtBasicFillRect rect);
-    NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRect rect, int32_t inputLayer);
-    NrtBool Nrt_BasicFillRect_getActive(NrtBasicFillRect rect);
-    NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRect rect, NrtBool inputBool);
-    NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRect rect);
+    NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect, NrtTransform* outputTransform);
+    NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRectHandle rect, NrtTransform inputTransform);
+    int32_t Nrt_BasicFillRect_getLayer(NrtBasicFillRectHandle rect);
+    NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRectHandle rect, int32_t inputLayer);
+    NrtBool Nrt_BasicFillRect_getActive(NrtBasicFillRectHandle rect);
+    NrtResult Nrt_BasicFillRect_setActive(NrtBasicFillRectHandle rect, NrtBool inputBool);
+    NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRectHandle rect);
 
     // actual type
-    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRect rect, NrtRGBAConfig* outputColourConfig);
-    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRect rect, NrtRGBAConfig inputColourConfig);
+    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle* outputColourConfig);
+    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle inputColourConfig);
 
-    NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRect rect, NrtRenderObject* outputRenderObject);
+    NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect,
+                                                     NrtRenderObjectHandle* outputRenderObject);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //! NOVELRT_INTEROP_GRAPHICS_BASICFILLRECT_H
+#endif // NOVELRT_INTEROP_GRAPHICS_BASICFILLRECT_H

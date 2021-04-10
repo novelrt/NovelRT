@@ -29,5 +29,5 @@ TEST_F(EntityCacheTest, RemoveEntityGetsProcessedCorrectlyForGivenPoolId)
 {
     cache.RemoveEntity(0, 0);
     cache.ProcessEntityDeletionRequestsFromThreads();
-    EXPECT_EQ(cache.GetEntitiesToRemoveThisFrame().at(0), 0);
+    EXPECT_EQ(cache.GetEntitiesToRemoveThisFrame().at(0), Atom(0));
 }

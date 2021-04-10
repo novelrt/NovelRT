@@ -4,35 +4,20 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_TYPEDEFS_H
 #define NOVELRT_INTEROP_SCENEGRAPH_TYPEDEFS_H
 
-#include "../NrtInteropUtils.h"
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    // NrtQuadTreeScenePoint
-    typedef struct QuadTreeScenePointHandle* NrtQuadTreeScenePoint;
-
-    // NrtQuadTreeNode
-    typedef struct QuadTreeNodeHandle* NrtQuadTreeNode;
-    typedef struct QuadTreeScenePointArray* NrtQuadTreeScenePointArray;
-
-    // NrtScene
-    typedef struct SceneHandle* NrtScene;
-
-    // NrtSceneNode
-    typedef struct SceneNodeHandle* NrtSceneNode;
-    typedef struct StdSet_SceneNode* NrtSceneNodeSet;
-    typedef struct BreadthFirstIterator* NrtSceneNodeBreadthFirstIterator;
-    typedef struct DepthFirstIterator* NrtSceneNodeDepthFirstIterator;
-
-    // NrtSceneNodeBreadthFirstIterator
-    typedef struct BreadthFirstIterator* NrtSceneNodeBreadthFirstIterator;
-
-    // NrtSceneNodeDepthFirstIterator
-    typedef struct DepthFirstIterator* NrtSceneNodeDepthFirstIterator;
+    typedef struct NrtRenderObjectNode* NrtRenderObjectNodeHandle;
+    typedef struct NrtQuadTreeNode* NrtQuadTreeNodeHandle;
+    typedef struct NrtQuadTreeScenePoint* NrtQuadTreeScenePointHandle;
+    typedef struct NrtQuadTreeScenePointArray* NrtQuadTreeScenePointArrayHandle;
+    typedef struct NrtScene* NrtSceneHandle;
+    typedef struct NrtSceneNode* NrtSceneNodeHandle;
+    typedef struct NrtSceneNodeBreadthFirstIterator* NrtSceneNodeBreadthFirstIteratorHandle;
+    typedef struct NrtSceneNodeDepthFirstIterator* NrtSceneNodeDepthFirstIteratorHandle;
+    typedef struct NrtSceneNodeSet* NrtSceneNodeSetHandle;
 
 #ifdef __cplusplus
 }
