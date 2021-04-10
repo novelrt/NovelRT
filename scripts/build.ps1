@@ -3,6 +3,7 @@ Param(
   [switch] $build,
   [switch] $ci,
   [ValidateSet("Debug", "MinSizeRel", "Release", "RelWithDebInfo")][string] $configuration = "Debug",
+  [switch] $documentation,
   [switch] $generate,
   [switch] $help,
   [switch] $install,
@@ -43,6 +44,14 @@ function Generate() {
   }
 }
 
+function BuildDocumentation() {
+  & cmake --build $BuildDir --config $configuration --target Doxygen
+
+  if ($LastExitCode -ne 0) {
+    throw "'Build Documentation' failed"
+  }
+}
+
 function Help() {
   Write-Host -Object "Common settings:"
   Write-Host -Object "  -configuration <value>            Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
@@ -52,6 +61,7 @@ function Help() {
   Write-Host -Object "Actions:"
   Write-Host -Object "  -build                            Build repository"
   Write-Host -Object "  -generate                         Generate CMake cache"
+  Write-Host -Object "  -documentation                    Generate CMake cache and Build Doxygen documentation"
   Write-Host -Object "  -install                          Install repository"
   Write-Host -Object "  -test                             Test repository"
   Write-Host -Object ""
@@ -87,10 +97,20 @@ try {
   }
 
   if ($ci) {
-    $build = $true
     $generate = $true
-    $install = $true
-    $test = $true
+    if ($documentation)
+    {
+      $build = $false
+      $install = $false
+      $test = $false
+    }
+    else
+    {
+      $build = $true
+      $install = $true
+      $test = $true
+    }
+
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
@@ -111,6 +131,10 @@ try {
 
   if ($generate) {
     Generate
+  }
+
+  if ($documentation) {
+    BuildDocumentation
   }
 
   if ($build) {
