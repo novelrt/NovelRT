@@ -10,12 +10,11 @@ function(append_string_to_first_list_element APPEND_ARGS_INPUT APPEND_ARGS_APPEN
   set(${APPEND_OUT} ${APPEND_FINAL} PARENT_SCOPE)
 endfunction()
 
-if (NOT DEFINED DOXYGEN_OUTPUT_DIR)
-  set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/doxygen)
+if (NOT DEFINED DOXYGEN_OUTPUT_DIRECTORY)
+  set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/doxygen)
 else()
-  message("Doxygen output directory defined as: ${DOXYGEN_OUTPUT_DIR}")
-  set(DOXYGEN_OUTPUT_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
-  set(DOXYGEN_HTML_OUTPUT ${DOXYGEN_OUTPUT_DIR})
+  message("Doxygen output directory defined as: ${DOXYGEN_OUTPUT_DIRECTORY}")
+  set(DOXYGEN_HTML_OUTPUT ${DOXYGEN_OUTPUT_DIRECTORY})
 endif()
 
 set(DOCS_MAINPAGE
@@ -27,7 +26,7 @@ set(DOCS_MAINPAGE
 foreach(docFile ${DOCS_MAINPAGE})
   file(READ ${docFile} TEMP_DOC_FILE_CONTENTS)
   get_filename_component(TEMP_DOC_FILE_NAME ${docFile} NAME)
-  file(REMOVE ${DOXYGEN_OUTPUT_DIR}/${TEMP_DOC_FILE_NAME})
+  file(REMOVE ${DOXYGEN_OUTPUT_DIRECTORY}/${TEMP_DOC_FILE_NAME})
 
   if(${TEMP_DOC_FILE_NAME} STREQUAL "README.md")
     append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#mainpage}" TEMP_DOC_FILE_CONTENTS)
@@ -41,7 +40,7 @@ foreach(docFile ${DOCS_MAINPAGE})
     append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#licence}" TEMP_DOC_FILE_CONTENTS)
   endif()
 
-  file(WRITE ${DOXYGEN_OUTPUT_DIR}/${TEMP_DOC_FILE_NAME} "${TEMP_DOC_FILE_CONTENTS}")
+  file(WRITE ${DOXYGEN_OUTPUT_DIRECTORY}/${TEMP_DOC_FILE_NAME} "${TEMP_DOC_FILE_CONTENTS}")
 endforeach()
 
 set(DOXYGEN_PROJECT_LOGO novel-chan-header_doxy.jpg)
@@ -65,8 +64,8 @@ set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md CODE_OF_CONDUCT.md LICENCE.md")
 doxygen_add_docs(Doxygen
         ALL
         COMMENT "Generating documentation"
-        ${DOXYGEN_OUTPUT_DIR}/README.md
-        ${DOXYGEN_OUTPUT_DIR}/CODE_OF_CONDUCT.md
-        ${DOXYGEN_OUTPUT_DIR}/LICENCE.md
+        ${DOXYGEN_OUTPUT_DIRECTORY}/README.md
+        ${DOXYGEN_OUTPUT_DIRECTORY}/CODE_OF_CONDUCT.md
+        ${DOXYGEN_OUTPUT_DIRECTORY}/LICENCE.md
         ${CMAKE_SOURCE_DIR}/include
         )
