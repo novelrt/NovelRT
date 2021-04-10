@@ -9,10 +9,6 @@
 #include <NovelRT/Physics/Box2d/Components/PhysicsWorld.h>
 
 #include <NovelRT.h>
-//#include <NovelRT/Timing/Timestamp.h>
-//#include <NovelRT/Ecs/Catalogue.h>
-
-#include <NovelRT/Atom.h>
 
 
 namespace NovelRT::Physics::Box2d
