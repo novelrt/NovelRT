@@ -28,7 +28,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ci)
       ci=true
-      #AHHHH we need to fix this at some point.
       export CC=clang-10
       export CXX=clang++-10
       shift 1
