@@ -196,4 +196,16 @@ namespace NovelRT::Physics::Box2d
         world->DestroyBody(pBody.body);
         physicsBodyComponentBuffer.PushComponentUpdateInstruction(0, entityId, PhysicsBody::DeletedBodyState);
     }
+
+    b2World* Box2dSystem::GetWorld(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId)
+    {
+        auto pWorld = scheduler->GetComponentCache().GetComponentBuffer<PhysicsWorld>().GetComponent(worldEntityId);
+        return pWorld.world;
+    }
+
+    b2Body* Box2dSystem::GetBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId entityId)
+    {
+        auto pBody = scheduler->GetComponentCache().GetComponentBuffer<PhysicsBody>().GetComponent(entityId);
+        return pBody.body;
+    }
 }

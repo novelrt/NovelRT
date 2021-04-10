@@ -37,6 +37,9 @@ namespace NovelRT::Physics::Box2d
             static void RemoveBody(b2World* const world, b2Body* const body);
             static void RemoveEntityBody(NovelRT::Ecs::SystemScheduler* const scheduler, b2World* const world, const NovelRT::Ecs::EntityId entityId);
 
+            static b2World* GetWorld(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId worldEntityId);
+            static b2Body* GetBody(NovelRT::Ecs::SystemScheduler* const scheduler, const NovelRT::Ecs::EntityId entityId);
+
             static void RegisterSystem(NovelRT::Ecs::SystemScheduler* const scheduler){
                 scheduler->RegisterSystem(UpdatePosition);
             }
