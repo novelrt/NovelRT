@@ -386,7 +386,7 @@ int main(int /*argc*/, char* /*argv*/[])
     scheduler.GetComponentCache().GetComponentBuffer<NovelRT::Physics::Box2d::TestTransform>().PushComponentUpdateInstruction(0,entityId,tt);
 
     NovelRT::Physics::Box2d::Box2dSystem::AddBody(&world, &groundBodyDef)->CreateFixture(&groundBox,0);
-    NovelRT::Physics::Box2d::Box2dSystem::AddEntityBody(&scheduler, &world, entityId, &bodyDef, &boxDef);
+    NovelRT::Physics::Box2d::Box2dSystem::AddBodyComponent(&scheduler, &world, entityId, &bodyDef, &boxDef);
 
     // system.AddBody(&groundBodyDef)->CreateFixture(&groundBox,0);
     // system.AddEntityBody(&scheduler,entityId,&bodyDef).body->CreateFixture(&boxDef);
