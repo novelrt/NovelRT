@@ -4,6 +4,7 @@
 #include <NovelRT/Physics/Box2d/Components/TestTransform.h>
 
 // TODO: make sure that the pool ID's for ECS are handled well, if needed.
+// TODO: determine where inlining is appropriate.
 
 namespace NovelRT::Physics::Box2d
 {
