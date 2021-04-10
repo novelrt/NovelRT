@@ -3,7 +3,7 @@ name: Doxygen
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   Build and Publish Documentation:
@@ -15,16 +15,33 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Create documentation branch
+        run: git checkout -b documentation/$GITHUB_SHA
+
       - name: Generate Documentation
         run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
+
+      #Mandatory step it appears
+      #Username and Email found from https://github.community/t/github-actions-bot-email-address/17204/3
+      - name: Configure Git
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git checkout gh-pages
           git add ./docs/*
           git commit -m "Updated documentation - $GITHUB_SHA"
-          git push
+          git push origin documentation/$GITHUB_SHA
+
+      – name: Create Pull Request
+        uses: thomaseizinger/create-pull-request@1.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          head: origin documentation/$GITHUB_SHA
+          base: gh-pages
+          title: $GITHUB_SHA into gh-pages
+          body: |
+              Updated the documentation from commit $GITHUB_SHA in main.
 
