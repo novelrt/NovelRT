@@ -109,12 +109,12 @@ function Generate {
   fi
 }
 
-function GenerateDocumentationOnly {
+function BuildDocumentation {
     cmake --build "$BuildDir" --config "$configuration" --target Doxygen
   LASTEXITCODE=$?
 
   if [ "$LASTEXITCODE" != 0 ]; then
-    echo "'Generate Documentation' failed"
+    echo "'Build Documentation' failed"
     return "$LASTEXITCODE"
   fi
 }
@@ -128,6 +128,7 @@ function Help {
   echo "Actions:"
   echo "  --build                             Build repository"
   echo "  --generate                          Generate CMake cache"
+  echo "  --documentation                     Generate CMake cache and Build Doxygen documentation"
   echo "  --install                           Install repository"
   echo "  --test                              Test repository"
   echo ""
@@ -176,14 +177,13 @@ if $help; then
 fi
 
 if $ci; then
+  generate=true
   if $documentation; then
-    generate=false
     build=false
     install=false
     test=false
   else
     build=true
-    generate=true
     install=true
     test=true
   fi
@@ -214,8 +214,7 @@ if $generate; then
 fi
 
 if $documentation; then
-  Generate
-  GenerateDocumentationOnly
+  BuildDocumentation
 
   if [ "$LASTEXITCODE" != 0 ]; then
     return "$LASTEXITCODE"
