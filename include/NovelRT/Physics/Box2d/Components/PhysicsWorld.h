@@ -14,7 +14,8 @@ namespace NovelRT::Physics::Box2d
 
         static const PhysicsWorld DeletedWorld;
 
-        PhysicsWorld& operator+=(const PhysicsWorld& rhs){
+        PhysicsWorld& operator+=(const PhysicsWorld& rhs)
+        {
             world = rhs.world;
             velocityIterations = rhs.velocityIterations;
             positionIterations = rhs.positionIterations;
@@ -24,11 +25,6 @@ namespace NovelRT::Physics::Box2d
         }
     };
 
-    const PhysicsWorld PhysicsWorld::DeletedWorld = PhysicsWorld{
-        nullptr,
-        -1,-1,
-        NAN,
-        NAN
-    };
-}
-#endif //NOVELRT_PHYSICS_BOX2D_PHYSICSWORLD_H
+    const PhysicsWorld PhysicsWorld::DeletedWorld = PhysicsWorld{nullptr, -1, -1, NAN, NAN};
+} // namespace NovelRT::Physics::Box2d
+#endif // NOVELRT_PHYSICS_BOX2D_PHYSICSWORLD_H

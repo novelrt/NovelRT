@@ -11,13 +11,14 @@ namespace NovelRT::Physics::Box2d
 
         static const PhysicsBody DeletedBodyState;
 
-        PhysicsBody& operator+=(const PhysicsBody& rhs){
+        PhysicsBody& operator+=(const PhysicsBody& rhs)
+        {
             body = rhs.body;
             return *this;
         }
     };
 
     const PhysicsBody PhysicsBody::DeletedBodyState = PhysicsBody{nullptr};
-}
+} // namespace NovelRT::Physics::Box2d
 
-#endif //NOVELRT_PHYSICS_BOX2D_PHYSICSBODY_H
+#endif // NOVELRT_PHYSICS_BOX2D_PHYSICSBODY_H
