@@ -627,19 +627,33 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
         const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept
     {
+        VkSurfaceFormatKHR returnFormat{};
+        returnFormat.format = VK_FORMAT_UNDEFINED;
+
         for (const auto& availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM &&
-                availableFormat.colorSpace == VK_COLORSPACE_SRGB_NONLINEAR_KHR)
+            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM || availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
             {
-                return availableFormat;
+                if (returnFormat.format != VK_FORMAT_R8G8B8A8_UINT)
+                {
+                    returnFormat = availableFormat;
+                }
             }
         }
 
-        _logger.logWarningLine("Vulkan was unable to detect a RGBA32 format for the specified surface. The first "
-                               "format found is now being used. This may result in unexpected behaviour.");
+        if (returnFormat.format == VK_FORMAT_UNDEFINED)
+        {
+            _logger.logWarningLine("Vulkan was unable to detect one of the preferred formats for the specified surface. The first "
+                                   "format found is now being used. This may result in unexpected behaviour.");
 
-        return availableFormats[0];
+            returnFormat = availableFormats[0];
+        }
+        else
+        {
+            _logger.logInfo("Preferred surface format located.");
+        }
+
+        return returnFormat;
     }
 
     // TODO: freesync and gsync support will go here in a later PR.
