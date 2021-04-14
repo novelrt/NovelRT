@@ -81,7 +81,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _debuggerWasCreated(false),
           _physicalDevice(VK_NULL_HANDLE),
           _device(VK_NULL_HANDLE),
-          _graphicsQueue(VK_NULL_HANDLE)
+          _graphicsQueue(VK_NULL_HANDLE),
+          _swapChain(VK_NULL_HANDLE)
     {
     }
 
@@ -100,7 +101,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return targetPtrs;
     }
 
-    std::vector<std::string> VulkanGraphicsDevice::GetFinalExtensionSet() const
+    std::vector<std::string> VulkanGraphicsDevice::GetFinalInstanceExtensionSet() const
     {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -115,7 +116,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                 "  Spec Version: " + std::to_string(extensionProperty.specVersion));
         }
 
-        for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanExtensions())
+        for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanInstanceExtensions())
         {
             auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
                 return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
@@ -130,7 +131,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::vector<std::string> finalOptionalExtensions{};
 
-        for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanExtensions())
+        for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanInstanceExtensions())
         {
             auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
                 return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
@@ -146,7 +147,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             finalOptionalExtensions.emplace_back(requestedOptionalExt);
         }
 
-        std::vector<std::string> allExtensions = EngineConfig::RequiredVulkanExtensions();
+        std::vector<std::string> allExtensions = EngineConfig::RequiredVulkanInstanceExtensions();
         allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
         return allExtensions;
     }
@@ -207,6 +208,57 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return allValidationLayers;
     }
 
+    std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet() const
+    {
+        uint32_t extensionCount = 0;
+        vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, nullptr);
+        std::vector<VkExtensionProperties> extensionProperties(extensionCount);
+        vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, extensionProperties.data());
+
+        _logger.logInfoLine("Found the following available physical device extensions:");
+
+        for (auto&& extensionProperty : extensionProperties)
+        {
+            _logger.logInfoLine("  Extension Name: " + std::string(extensionProperty.extensionName) +
+                                "  Spec Version: " + std::to_string(extensionProperty.specVersion));
+        }
+
+        for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
+        {
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
+            });
+
+            if (result == extensionProperties.end())
+            {
+                throw Exceptions::InitialisationFailureException(
+                    "The required Vulkan extension " + requestedRequiredExt + " is not available on this device.");
+            }
+        }
+
+        std::vector<std::string> finalOptionalExtensions{};
+
+        for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
+        {
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
+            });
+
+            if (result == extensionProperties.end())
+            {
+                _logger.logWarningLine("The optional Vulkan extension " + requestedOptionalExt +
+                                       " is not available on this device. Vulkan may not behave as you expect.");
+                continue;
+            }
+
+            finalOptionalExtensions.emplace_back(requestedOptionalExt);
+        }
+
+        std::vector<std::string> allExtensions = EngineConfig::RequiredVulkanPhysicalDeviceExtensions();
+        allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
+        return allExtensions;
+    }
+
     void VulkanGraphicsDevice::CreateDefaultDebugCreateInfoStruct(
         VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept
     {
@@ -251,7 +303,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
         {
             NovelRT::EngineConfig::OptionalVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
-            NovelRT::EngineConfig::OptionalVulkanExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            NovelRT::EngineConfig::OptionalVulkanInstanceExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
         VkApplicationInfo appInfo{};
@@ -262,7 +314,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
-        _finalExtensionSet = GetFinalExtensionSet();
+        _finalExtensionSet = GetFinalInstanceExtensionSet();
         std::vector<const char*> allExtensionPtrs = GetStringVectorAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionPtrs.size();
 
@@ -318,7 +370,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                      funcResult);
                 }
 
-
                 _logger.logInfoLine("VkSurfaceKHR successfully created.");
                 break;
             }
@@ -334,15 +385,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
     }
 
-    QueueFamilyIndices VulkanGraphicsDevice::FindQueueFamilies(VkPhysicalDevice device) const noexcept
+    QueueFamilyIndices VulkanGraphicsDevice::FindQueueFamilies(VkPhysicalDevice physicalDevice) const noexcept
     {
         QueueFamilyIndices returnObject{};
 
         uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
 
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
 
         VkBool32 presentSupport = false;
 
@@ -354,7 +405,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 returnObject.graphicsFamily = familyIndex;
             }
 
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, familyIndex, _surface, &presentSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, familyIndex, _surface, &presentSupport);
             if (presentSupport)
             {
                 returnObject.presentFamily = familyIndex;
@@ -371,12 +422,89 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return returnObject;
     }
 
-    int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice device) const noexcept
+    bool VulkanGraphicsDevice::CheckPhysicalDeviceRequiredExtensionSupport(
+        VkPhysicalDevice physicalDevice) const noexcept
+    {
+        uint32_t extensionCount = 0;
+        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+        std::set<std::string> requiredExtensionSet(EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
+                                                   EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
+
+        for (const auto& extension : availableExtensions)
+        {
+            requiredExtensionSet.erase(std::string(extension.extensionName));
+        }
+
+        return requiredExtensionSet.empty();
+    }
+
+    int32_t VulkanGraphicsDevice::GetPhysicalDeviceOptionalExtensionSupportScore(
+        VkPhysicalDevice physicalDevice) const noexcept
+    {
+        float currentPercentageValue = 0;
+
+        uint32_t extensionCount = 0;
+        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+        std::set<std::string> optionalExtensionSet(EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
+                                                   EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
+
+        float percentageStep = (1.0f / optionalExtensionSet.size()) * 100;
+
+        for (const auto& extension : availableExtensions)
+        {
+
+            if (optionalExtensionSet.find(std::string(extension.extensionName)) == optionalExtensionSet.end())
+            {
+                continue;
+            }
+
+            currentPercentageValue += percentageStep;
+        }
+
+        return static_cast<int32_t>(currentPercentageValue);
+    }
+
+    SwapChainSupportDetails VulkanGraphicsDevice::QuerySwapChainSupport(VkPhysicalDevice physicalDevice) const noexcept
+    {
+        SwapChainSupportDetails returnDetails;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, _surface, &returnDetails.capabilities);
+
+        uint32_t formatCount = 0;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, _surface, &formatCount, nullptr);
+
+        if (formatCount != 0)
+        {
+            returnDetails.formats.resize(formatCount);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, _surface, &formatCount, returnDetails.formats.data());
+        }
+
+        uint32_t presentModeCount;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, _surface, &presentModeCount, nullptr);
+
+        if (presentModeCount != 0)
+        {
+            returnDetails.presentModes.resize(presentModeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, _surface, &presentModeCount,
+                                                      returnDetails.presentModes.data());
+        }
+
+        return returnDetails;
+    }
+
+    int32_t VulkanGraphicsDevice::RateDeviceSuitability(VkPhysicalDevice physicalDevice) const noexcept
     {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
-        vkGetPhysicalDeviceProperties(device, &deviceProperties);
-        vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+        vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
 
         int32_t score = 0;
 
@@ -386,9 +514,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         score += deviceProperties.limits.maxImageDimension2D;
+        score += GetPhysicalDeviceOptionalExtensionSupportScore(physicalDevice);
 
-        QueueFamilyIndices indices = FindQueueFamilies(device);
-        if (deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete())
+        SwapChainSupportDetails supportDetails = QuerySwapChainSupport(physicalDevice);
+
+        QueueFamilyIndices indices = FindQueueFamilies(physicalDevice);
+        if (deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete() ||
+            !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) || supportDetails.formats.empty() ||
+            supportDetails.presentModes.empty())
         {
             score = -1;
         }
@@ -407,6 +540,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                     "A Vulkan-compatible GPU was not found. Please refer "
                                                     "to your GPU manufacturer's documentation for more information.");
         }
+
+        EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
@@ -439,7 +574,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
-        std::set<uint32_t> uniqueQueueFamilies{ indices.graphicsFamily.value(), indices.presentFamily.value() };
+        std::set<uint32_t> uniqueQueueFamilies{indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies)
@@ -452,6 +587,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
+        auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet();
+        auto physicalDeviceExtensionPtrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
+
         VkPhysicalDeviceFeatures deviceFeatures{};
 
         VkDeviceCreateInfo createInfo{};
@@ -459,7 +597,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = 0;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
+        createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
         if (_debuggerWasCreated)
         {
@@ -485,6 +624,103 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("VkDevice successfully created.");
     }
 
+    VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
+        const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept
+    {
+        for (const auto& availableFormat : availableFormats)
+        {
+            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM &&
+                availableFormat.colorSpace == VK_COLORSPACE_SRGB_NONLINEAR_KHR)
+            {
+                return availableFormat;
+            }
+        }
+
+        _logger.logWarningLine("Vulkan was unable to detect a RGBA32 format for the specified surface. The first "
+                               "format found is now being used. This may result in unexpected behaviour.");
+
+        return availableFormats[0];
+    }
+
+    // TODO: freesync and gsync support will go here in a later PR.
+    VkPresentModeKHR VulkanGraphicsDevice::ChooseSwapPresentMode(
+        const std::vector<VkPresentModeKHR>& /*availablePresentModes*/) const noexcept
+    {
+        return VK_PRESENT_MODE_FIFO_KHR;
+    }
+
+    VkExtent2D VulkanGraphicsDevice::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept
+    {
+        if (capabilities.currentExtent.width != UINT32_MAX)
+        {
+            return capabilities.currentExtent;
+        }
+
+        auto localSize = _nrtSurface->GetSize();
+
+        VkExtent2D actualExtent = {static_cast<uint32_t>(localSize.x), static_cast<uint32_t>(localSize.y)};
+
+        actualExtent.width = std::max(capabilities.minImageExtent.width,
+                                      std::min(capabilities.maxImageExtent.width, actualExtent.width));
+        actualExtent.height = std::max(capabilities.minImageExtent.height,
+                                       std::min(capabilities.maxImageExtent.height, actualExtent.height));
+
+        return actualExtent;
+    }
+
+    void VulkanGraphicsDevice::CreateSwapChain()
+    {
+        SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(_physicalDevice);
+
+        VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
+        VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
+        VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
+        uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+
+        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+        {
+            imageCount = swapChainSupport.capabilities.maxImageCount;
+        }
+
+        VkSwapchainCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        createInfo.surface = _surface;
+        createInfo.minImageCount = imageCount;
+        createInfo.imageFormat = surfaceFormat.format;
+        createInfo.imageColorSpace = surfaceFormat.colorSpace;
+        createInfo.imageExtent = extent;
+        createInfo.imageArrayLayers = 1;
+        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+        QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+        uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+        if (indices.graphicsFamily != indices.presentFamily)
+        {
+            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            createInfo.queueFamilyIndexCount = 2;
+            createInfo.pQueueFamilyIndices = queueFamilyIndices;
+        }
+        else
+        {
+            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            createInfo.queueFamilyIndexCount = 0;
+            createInfo.pQueueFamilyIndices = nullptr;
+        }
+
+        createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+        createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        createInfo.presentMode = presentMode;
+        createInfo.clipped = VK_TRUE;
+        createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+        VkResult swapChainResult = vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_swapChain);
+        if (swapChainResult != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to create the Swapchain", swapChainResult);
+        }
+    }
+
     void VulkanGraphicsDevice::Initialise(std::shared_ptr<IGraphicsSurface> targetSurface)
     {
         CreateInstance();
@@ -498,12 +734,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         PickPhysicalDevice();
         CreateLogicalDevice();
+        CreateSwapChain();
 
         _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
+        vkDestroySwapchainKHR(_device, _swapChain, nullptr);
         vkDestroySurfaceKHR(_instance, _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
 
@@ -514,7 +752,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkDestroyInstance(_instance, nullptr);
     }
-
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
     {

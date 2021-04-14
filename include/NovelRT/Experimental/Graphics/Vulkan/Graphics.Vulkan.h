@@ -5,6 +5,7 @@
 #define NOVELRT_GRAPHICS_VULKAN_H
 
 #include "QueueFamilyIndices.h"
+#include "SwapChainSupportDetails.h"
 #include "VulkanGraphicsDevice.h"
 
 #endif // NOVELRT_GRAPHICS_VULKAN_H

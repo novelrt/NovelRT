@@ -8,6 +8,7 @@
 #include "../IGraphicsSurface.h"
 #include "../ILLGraphicsDevice.h"
 #include "QueueFamilyIndices.h"
+#include "SwapChainSupportDetails.h"
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
@@ -33,6 +34,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkSurfaceKHR _surface;
 
+        VkSwapchainKHR _swapChain;
+
         std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -53,8 +56,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] static std::vector<const char*> GetStringVectorAsCharPtrVector(
             const std::vector<std::string>& target) noexcept;
 
-        [[nodiscard]] std::vector<std::string> GetFinalExtensionSet() const;
+        [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet() const;
         [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet() const;
+        [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
+        [[nodiscard]] bool CheckPhysicalDeviceRequiredExtensionSupport(VkPhysicalDevice physicalDevice) const noexcept;
+        [[nodiscard]] int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
+            VkPhysicalDevice physicalDevice) const noexcept;
 
         void CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept;
         void ConfigureDebugLogger();
@@ -63,11 +70,21 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface);
 
-        [[nodiscard]] QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) const noexcept;
-        [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice device) const noexcept;
+        [[nodiscard]] QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice) const noexcept;
+        [[nodiscard]] SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice) const noexcept;
+        [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice physicalDevice) const noexcept;
         void PickPhysicalDevice();
 
         void CreateLogicalDevice();
+
+        [[nodiscard]] VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
+            const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept;
+
+        [[nodiscard]] VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const noexcept;
+        [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
+
+        void CreateSwapChain();
+
 
     public:
         VulkanGraphicsDevice() noexcept;

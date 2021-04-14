@@ -17,16 +17,28 @@ namespace NovelRT
         return applicationName;
     }
 
-    std::vector<std::string>& EngineConfig::RequiredVulkanExtensions() noexcept
+    std::vector<std::string>& EngineConfig::RequiredVulkanInstanceExtensions() noexcept
     {
-        static std::vector<std::string> requiredVulkanExtensions{};
-        return requiredVulkanExtensions;
+        static std::vector<std::string> requiredVulkanInstanceExtensions{};
+        return requiredVulkanInstanceExtensions;
     }
 
-    std::vector<std::string>& EngineConfig::OptionalVulkanExtensions() noexcept
+    std::vector<std::string>& EngineConfig::OptionalVulkanInstanceExtensions() noexcept
     {
-        static std::vector<std::string> optionalVulkanExtensions{};
-        return optionalVulkanExtensions;
+        static std::vector<std::string> optionalVulkanInstanceExtensions{};
+        return optionalVulkanInstanceExtensions;
+    }
+
+    std::vector<std::string>& EngineConfig::RequiredVulkanPhysicalDeviceExtensions() noexcept
+    {
+        static std::vector<std::string> requiredVulkanPhysicalDeviceExtensions{};
+        return requiredVulkanPhysicalDeviceExtensions;
+    }
+
+    std::vector<std::string>& EngineConfig::OptionalVulkanPhysicalDeviceExtensions() noexcept
+    {
+        static std::vector<std::string> optionalVulkanPhysicalDeviceExtensions{};
+        return optionalVulkanPhysicalDeviceExtensions;
     }
 
     std::vector<std::string>& EngineConfig::RequiredVulkanLayers() noexcept

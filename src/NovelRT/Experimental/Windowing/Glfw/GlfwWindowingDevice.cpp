@@ -74,7 +74,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         for (size_t i = 0; i < extensionCount; i++)
         {
-            EngineConfig::RequiredVulkanExtensions().emplace_back(extensions[i]);
+            EngineConfig::RequiredVulkanInstanceExtensions().emplace_back(extensions[i]);
         }
     }
 

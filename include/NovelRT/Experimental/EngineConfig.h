@@ -12,8 +12,10 @@ namespace NovelRT::EngineConfig
 {
     const std::string& EngineName() noexcept;
     std::string& ApplicationName() noexcept;
-    std::vector<std::string>& RequiredVulkanExtensions() noexcept;
-    std::vector<std::string>& OptionalVulkanExtensions() noexcept;
+    std::vector<std::string>& RequiredVulkanInstanceExtensions() noexcept;
+    std::vector<std::string>& OptionalVulkanInstanceExtensions() noexcept;
+    std::vector<std::string>& RequiredVulkanPhysicalDeviceExtensions() noexcept;
+    std::vector<std::string>& OptionalVulkanPhysicalDeviceExtensions() noexcept;
     std::vector<std::string>& RequiredVulkanLayers() noexcept;
     std::vector<std::string>& OptionalVulkanLayers() noexcept;
     LogLevel& MinimumInternalLoggingLevel() noexcept;
