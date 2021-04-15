@@ -35,6 +35,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkSurfaceKHR _surface;
 
         VkSwapchainKHR _swapChain;
+        std::vector<VkImage> _swapChainImages;
+        VkFormat _swapChainImageFormat;
+        VkExtent2D _swapChainExtent;
+
+        std::vector<VkImageView> _swapChainImageViews;
 
         std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
@@ -85,6 +90,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateSwapChain();
 
+        void CreateImageViews();
 
     public:
         VulkanGraphicsDevice() noexcept;

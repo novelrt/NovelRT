@@ -82,7 +82,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _physicalDevice(VK_NULL_HANDLE),
           _device(VK_NULL_HANDLE),
           _graphicsQueue(VK_NULL_HANDLE),
-          _swapChain(VK_NULL_HANDLE)
+          _presentQueue(VK_NULL_HANDLE),
+          _surface(VK_NULL_HANDLE),
+          _swapChain(VK_NULL_HANDLE),
+          _swapChainImages(std::vector<VkImage>{}),
+          _swapChainImageFormat(VkFormat{}),
+          _swapChainExtent(VkExtent2D{}),
+          _swapChainImageViews(std::vector<VkImageView>{})
     {
     }
 
@@ -541,7 +547,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                     "to your GPU manufacturer's documentation for more information.");
         }
 
-        EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
+        EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(
+            std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
@@ -632,7 +639,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (const auto& availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM || availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
+            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM ||
+                availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
             {
                 if (returnFormat.format != VK_FORMAT_R8G8B8A8_UINT)
                 {
@@ -643,14 +651,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (returnFormat.format == VK_FORMAT_UNDEFINED)
         {
-            _logger.logWarningLine("Vulkan was unable to detect one of the preferred formats for the specified surface. The first "
-                                   "format found is now being used. This may result in unexpected behaviour.");
+            _logger.logWarningLine(
+                "Vulkan was unable to detect one of the preferred VkFormats for the specified surface. The first "
+                "format found is now being used. This may result in unexpected behaviour.");
 
             returnFormat = availableFormats[0];
         }
         else
         {
-            _logger.logInfo("Preferred surface format located.");
+            _logger.logInfo("Preferred VkFormat detected.");
         }
 
         return returnFormat;
@@ -689,7 +698,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
         VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
-        uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+        uint32_t imageCount = swapChainSupport.capabilities.minImageCount +
+                              1; // this variable gets re-used for the actual image count later
 
         if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
         {
@@ -731,7 +741,62 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkResult swapChainResult = vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_swapChain);
         if (swapChainResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create the Swapchain", swapChainResult);
+            throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
+        }
+
+        _logger.logInfoLine("VkSwapchainKHR successfully created. Retrieving VkImages...");
+
+        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, nullptr);
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        _swapChainImages.resize(imageCount);
+        imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, _swapChainImages.data());
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        _swapChainImageFormat = surfaceFormat.format;
+        _swapChainExtent = extent;
+
+        _logger.logInfoLine("VkImages successfully retrieved.");
+    }
+
+    void VulkanGraphicsDevice::CreateImageViews()
+    {
+        _swapChainImageViews.resize(_swapChainImages.size());
+
+        for (size_t i = 0; i < _swapChainImages.size(); i++)
+        {
+            VkImageViewCreateInfo createInfo{};
+            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            createInfo.image = _swapChainImages[i];
+            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            createInfo.format = _swapChainImageFormat;
+            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            createInfo.subresourceRange.baseMipLevel = 0;
+            createInfo.subresourceRange.levelCount = 1;
+            createInfo.subresourceRange.baseArrayLayer = 0;
+            createInfo.subresourceRange.layerCount = 1;
+
+            VkResult imageViewResult = vkCreateImageView(_device, &createInfo, nullptr, &_swapChainImageViews[i]);
+
+            if (imageViewResult != VK_SUCCESS)
+            {
+                throw Exceptions::InitialisationFailureException(
+                    "Failed to initialise a VkImageView onto the provided VkImage.", imageViewResult);
+            }
         }
     }
 
@@ -749,12 +814,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         PickPhysicalDevice();
         CreateLogicalDevice();
         CreateSwapChain();
+        CreateImageViews();
 
         _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
+        for (auto&& imageView : _swapChainImageViews)
+        {
+            vkDestroyImageView(_device, imageView, nullptr);
+        }
+
         vkDestroySwapchainKHR(_device, _swapChain, nullptr);
         vkDestroySurfaceKHR(_instance, _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
@@ -765,6 +836,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         vkDestroyInstance(_instance, nullptr);
+
+        _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
