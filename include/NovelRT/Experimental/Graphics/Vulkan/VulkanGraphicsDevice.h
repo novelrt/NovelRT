@@ -92,10 +92,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateImageViews();
 
+        [[nodiscard]] VkShaderModule CreateShaderModule(const uint32_t* data, size_t codeSize);
+
     public:
         VulkanGraphicsDevice() noexcept;
         void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) final;
         void TearDown() final;
+        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(gsl::span<std::byte> byteData) final;
         ~VulkanGraphicsDevice();
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan

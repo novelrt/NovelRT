@@ -4,17 +4,19 @@
 #ifndef NOVELRT_EXPERIMENTAL_SHADERPROGRAM_H
 #define NOVELRT_EXPERIMENTAL_SHADERPROGRAM_H
 
-#include <vector>
+#include "GraphicsDeviceObject.h"
 #include <cstdint>
+#include <gsl/span>
+#include <vector>
+#include <string>
 
 namespace NovelRT::Experimental::Graphics
 {
-    struct ShaderProgram
+    class ShaderProgram : public GraphicsDeviceObject
     {
-        uint32_t shaderProgramId = 0;
-        uint32_t viewMatrixUboId = 0;
-        uint32_t projectionMatrixUboId = 0;
-        std::vector<uint32_t> uboIds = std::vector<uint32_t>{};
+    private:
+        std::string _entryPointName;
+
     };
 } // namespace NovelRT::Experimental::Graphics
 

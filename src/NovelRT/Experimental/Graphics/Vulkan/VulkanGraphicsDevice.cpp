@@ -798,6 +798,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                     "Failed to initialise a VkImageView onto the provided VkImage.", imageViewResult);
             }
         }
+
+        _logger.logInfoLine("Successfully initialised VkImageViews.");
     }
 
     void VulkanGraphicsDevice::Initialise(std::shared_ptr<IGraphicsSurface> targetSurface)
@@ -838,6 +840,30 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vkDestroyInstance(_instance, nullptr);
 
         _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
+    }
+
+    VkShaderModule VulkanGraphicsDevice::CreateShaderModule(const uint32_t* data, size_t codeSize)
+    {
+        VkShaderModuleCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        createInfo.codeSize = codeSize;
+        createInfo.pCode = data;
+
+        VkShaderModule shaderModule = VK_NULL_HANDLE;
+        VkResult shaderModuleResult = vkCreateShaderModule(_device, &createInfo, nullptr, &shaderModule);
+
+        if (shaderModuleResult != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException(
+                "Failed to initialise the provided SPIR-V data into a VkShaderModule.", shaderModuleResult);
+        }
+
+        return shaderModule;
+    }
+
+    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(gsl::span<std::byte> byteData)
+    {
+
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()

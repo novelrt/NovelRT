@@ -6,6 +6,7 @@
 
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
+#include "GraphicsDeviceObject.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsSurfaceKind.h"
 #include "IGraphicsSurface.h"

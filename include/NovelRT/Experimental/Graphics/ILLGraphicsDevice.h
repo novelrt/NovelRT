@@ -4,6 +4,10 @@
 #ifndef NOVELRT_ILLGRAPHICSDEVICE_H
 #define NOVELRT_ILLGRAPHICSDEVICE_H
 
+#include "ShaderProgram.h"
+#include <filesystem>
+#include <gsl/span>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,7 +18,11 @@ namespace NovelRT::Experimental::Graphics
     public:
         virtual void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
         virtual void TearDown() = 0;
+        [[nodiscard]] virtual ShaderProgram LoadShaderProgramBinaryAbsolute(
+            std::filesystem::path absoluteLocationVertex,
+            std::filesystem::path absoluteLocationPixel) = 0;
+        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(gsl::span<std::byte> byteData) = 0;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // NOVELRT_ILLGRAPHICSDEVICE_H
