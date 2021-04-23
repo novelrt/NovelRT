@@ -4,12 +4,9 @@
 #ifndef NOVELRT_SPARSESETMEMORYCONTAINER_H
 #define NOVELRT_SPARSESETMEMORYCONTAINER_H
 
-#include <cstddef>
-#include <cstdlib>
-#include <cstring>
-#include <tuple>
-#include <utility>
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

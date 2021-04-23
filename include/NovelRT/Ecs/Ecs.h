@@ -10,16 +10,49 @@
  */
 namespace NovelRT::Ecs
 {
+    class Catalogue;
+    class ComponentBufferMemoryContainer;
+    class ComponentCache;
+    class EntityCache;
+    class SparseSetMemoryContainer;
+    class SystemScheduler;
+    class UnsafeComponentView;
 }
 
-#include "Catalogue.h"
+//dependencies for ECS
+#include <atomic>
+#include <algorithm>
+#include <cstdlib>
+#include <cstddef>
+#include <cstring>
+#include <iterator>
+#include <functional>
+#include <memory>
+#include <vector>
+#include <unordered_map>
+#include <cstdint>
+#include <typeindex>
+#include <tuple>
+#include <utility>
+#include <mutex>
+#include <thread>
+#include "../Utilities/Event.h"
+#include "../Exceptions/Exceptions.h"
+#include "../Atom.h"
+#include "../Utilities/KeyValuePair.h"
+#include "EcsUtils.h"
+#include "SparseSetMemoryContainer.h"
+#include "../Timing/Timestamp.h"
+
+//ECS types
+#include "EcsUtils.h"
+#include "SparseSet.h"
 #include "ComponentBuffer.h"
+#include "ComponentView.h"
+#include "Catalogue.h"
 #include "ComponentBufferMemoryContainer.h"
 #include "ComponentCache.h"
-#include "ComponentView.h"
-#include "EcsUtils.h"
 #include "EntityCache.h"
-#include "SparseSet.h"
 #include "SparseSetMemoryContainer.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"

@@ -4,11 +4,9 @@
 #ifndef NOVELRT_ECS_CATALOGUE_H
 #define NOVELRT_ECS_CATALOGUE_H
 
-#include "ComponentCache.h"
-#include "ComponentView.h"
-#include "EcsUtils.h"
-#include "EntityCache.h"
-#include "UnsafeComponentView.h"
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

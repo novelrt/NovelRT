@@ -4,8 +4,9 @@
 #ifndef NOVELRT_ECS_COMPONENTVIEW_H
 #define NOVELRT_ECS_COMPONENTVIEW_H
 
-#include "ComponentBuffer.h"
-#include "EcsUtils.h"
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

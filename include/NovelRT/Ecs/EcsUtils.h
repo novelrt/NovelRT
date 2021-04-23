@@ -4,10 +4,9 @@
 #ifndef NOVELRT_ECS_ECSUTILS_H
 #define NOVELRT_ECS_ECSUTILS_H
 
-#include "../Atom.h"
-#include <cstdint>
-#include <typeindex>
-#include <unordered_map>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

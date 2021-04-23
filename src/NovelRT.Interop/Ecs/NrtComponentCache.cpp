@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtComponentCache.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/ComponentCache.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
 

@@ -4,9 +4,10 @@
 #ifndef NOVELRT_ECS_ENTITYCACHE_H
 #define NOVELRT_ECS_ENTITYCACHE_H
 
-#include "EcsUtils.h"
-#include "SparseSet.h"
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
+
 namespace NovelRT::Ecs
 {
     /**

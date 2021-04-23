@@ -4,12 +4,9 @@
 #ifndef NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 #define NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 
-#include "../Exceptions/KeyNotFoundException.h"
-#include "EcsUtils.h"
-#include "SparseSetMemoryContainer.h"
-#include <functional>
-#include <memory>
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

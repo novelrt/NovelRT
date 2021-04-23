@@ -2,9 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 #include <vector>
 

@@ -2,9 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/SystemScheduler.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;

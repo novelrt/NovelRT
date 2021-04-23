@@ -2,12 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/SparseSetMemoryContainer.h>
-#include <NovelRT/Exceptions/Exceptions.h>
-
-#include <stdexcept>
-#include <vector>
+#include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
