@@ -4,17 +4,9 @@
 #ifndef NOVELRT_ECS_SPARSESET_H
 #define NOVELRT_ECS_SPARSESET_H
 
-#include "../Atom.h"
-#include "../Exceptions/DuplicateKeyException.h"
-#include "../Utilities/KeyValuePair.h"
-#include "EcsUtils.h"
-#include "SparseSetMemoryContainer.h"
-#include <algorithm>
-#include <cstddef>
-#include <iterator>
-#include <memory>
-#include <stdexcept>
-#include <unordered_map>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

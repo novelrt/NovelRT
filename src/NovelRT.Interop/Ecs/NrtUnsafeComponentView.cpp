@@ -2,10 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/UnsafeComponentView.h>
-#include <NovelRT/Exceptions/Exceptions.h>
-
+#include <NovelRT/Ecs/Ecs.h>
 #include <vector>
 
 using namespace NovelRT::Ecs;

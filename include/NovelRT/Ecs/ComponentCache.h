@@ -4,14 +4,9 @@
 #ifndef NOVELRT_ECS_COMPONENTCACHE_H
 #define NOVELRT_ECS_COMPONENTCACHE_H
 
-#include "../Exceptions/OutOfMemoryException.h"
-#include "../Utilities/Event.h"
-#include "ComponentBuffer.h"
-#include "EcsUtils.h"
-#include <functional>
-#include <memory>
-#include <unordered_map>
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {
