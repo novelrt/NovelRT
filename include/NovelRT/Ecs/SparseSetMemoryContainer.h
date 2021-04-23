@@ -18,22 +18,22 @@ namespace NovelRT::Ecs
     private:
         std::vector<size_t> _dense;
         std::vector<size_t> _sparse;
-        std::vector<std::byte> _data;
+        std::vector<uint8_t> _data;
         size_t _sizeOfDataTypeInBytes;
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
-        [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
+        [[nodiscard]] uint8_t* GetDataObjectStartAtIndex(size_t location) noexcept;
         void InsertInternal(size_t key, const void* value);
 
     public:
         class ByteIteratorView
         {
         private:
-            std::vector<std::byte>::iterator _iteratorAtValue;
+            std::vector<uint8_t>::iterator _iteratorAtValue;
             size_t _sizeOfObject;
 
         public:
-            explicit ByteIteratorView(std::vector<std::byte>::iterator iteratorAtValue, size_t sizeOfObject) noexcept
+            explicit ByteIteratorView(std::vector<uint8_t>::iterator iteratorAtValue, size_t sizeOfObject) noexcept
                 : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
             {
             }
@@ -43,7 +43,7 @@ namespace NovelRT::Ecs
                 return _sizeOfObject != 0;
             }
 
-            [[nodiscard]] inline std::vector<std::byte>::iterator GetUnderlyingIterator() const noexcept
+            [[nodiscard]] inline std::vector<uint8_t>::iterator GetUnderlyingIterator() const noexcept
             {
                 return _iteratorAtValue;
             }
@@ -72,11 +72,11 @@ namespace NovelRT::Ecs
         class ConstByteIteratorView
         {
         private:
-            std::vector<std::byte>::const_iterator _iteratorAtValue;
+            std::vector<uint8_t>::const_iterator _iteratorAtValue;
             size_t _sizeOfObject;
 
         public:
-            explicit ConstByteIteratorView(std::vector<std::byte>::const_iterator iteratorAtValue,
+            explicit ConstByteIteratorView(std::vector<uint8_t>::const_iterator iteratorAtValue,
                                            size_t sizeOfObject) noexcept
                 : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
             {
@@ -87,7 +87,7 @@ namespace NovelRT::Ecs
                 return _sizeOfObject != 0;
             }
 
-            [[nodiscard]] inline std::vector<std::byte>::const_iterator GetUnderlyingIterator() const noexcept
+            [[nodiscard]] inline std::vector<uint8_t>::const_iterator GetUnderlyingIterator() const noexcept
             {
                 return _iteratorAtValue;
             }

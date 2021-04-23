@@ -15,7 +15,7 @@ namespace NovelRT::Ecs
                            size_t)> componentUpdateLogic) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
-          _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
+          _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
           _componentUpdateLogic(std::move(componentUpdateLogic))
     {

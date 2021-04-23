@@ -10,7 +10,7 @@ namespace NovelRT::Ecs
     SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept
         : _dense(std::vector<size_t>{}),
           _sparse(std::vector<size_t>{}),
-          _data(std::vector<std::byte>{}),
+          _data(std::vector<uint8_t>{}),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
@@ -20,7 +20,7 @@ namespace NovelRT::Ecs
         return _sizeOfDataTypeInBytes * denseIndex;
     }
 
-    std::byte* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
+    uint8_t* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
     {
         return _data.data() + (location * _sizeOfDataTypeInBytes);
     }
