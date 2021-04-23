@@ -12,7 +12,7 @@ using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTVectorComponentView;
-std::vector<std::byte> dummyByteVectorComponentView;
+std::vector<uint8_t> dummyByteVectorComponentView;
 
 extern "C"
 {

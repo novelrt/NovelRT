@@ -18,7 +18,7 @@ namespace NovelRT::Ecs
     private:
         SparseSetMemoryContainer _rootSet;
         std::vector<SparseSetMemoryContainer> _updateSets;
-        std::vector<std::byte> _deleteInstructionState;
+        std::vector<uint8_t> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
         std::function<
             void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)>

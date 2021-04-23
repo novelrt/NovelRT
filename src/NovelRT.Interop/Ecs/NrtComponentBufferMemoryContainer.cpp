@@ -12,7 +12,7 @@ using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTCollection{};
-std::vector<std::byte> dummyByteCollection{};
+std::vector<uint8_t> dummyByteCollection{};
 
 extern "C"
 {
