@@ -3,7 +3,6 @@
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
 #include <NovelRT/Ecs/Ecs.h>
-
 #include <vector>
 
 using namespace NovelRT::Ecs;
