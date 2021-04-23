@@ -4,7 +4,7 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.h>
 #include <NovelRT/Exceptions/NotSupportedException.h>
 #include <NovelRT/Experimental/EngineConfig.h>
-#include <NovelRT/Experimental/Windowing/Glfw/GlfwWindowingDevice.h>
+#include <NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h>
 #include <cmath>
 
 namespace NovelRT::Experimental::Windowing::Glfw

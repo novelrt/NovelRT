@@ -4,11 +4,9 @@
 #ifndef NOVELRT_EXPERIMENTAL_SHADERPROGRAM_H
 #define NOVELRT_EXPERIMENTAL_SHADERPROGRAM_H
 
-#include "GraphicsDeviceObject.h"
-#include <cstdint>
-#include <gsl/span>
-#include <vector>
-#include <string>
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -16,7 +14,6 @@ namespace NovelRT::Experimental::Graphics
     {
     private:
         std::string _entryPointName;
-
     };
 } // namespace NovelRT::Experimental::Graphics
 

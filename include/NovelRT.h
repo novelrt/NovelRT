@@ -210,9 +210,11 @@
   #include "NovelRT/Graphics/ImageRect.h"
   #include "NovelRT/Graphics/TextRect.h"
 
+  // Experimental types
   #include "NovelRT/Experimental/Graphics/Graphics.h"
   #include "NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h"
-  #include "NovelRT/Experimental/Windowing/Glfw/GlfwWindowingDevice.h"
+  #include "NovelRT/Experimental/Windowing/Windowing.h"
+  #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
 
   // Ink types
   #include "NovelRT/Ink/Story.h"

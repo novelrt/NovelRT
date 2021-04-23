@@ -4,13 +4,12 @@
 #ifndef NOVELRT_LLGRAPHICSRESOURCEVIEWCONTAINER_H
 #define NOVELRT_LLGRAPHICSRESOURCEVIEWCONTAINER_H
 
-#include <memory>
-#include <utility>
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {
-    class LLGraphicsResource;
-
     template<typename T> class LLGraphicsResourceViewContainer
     {
     private:

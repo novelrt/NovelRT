@@ -4,9 +4,9 @@
 #ifndef NOVELRT_IWINDOWINGDEVICE_H
 #define NOVELRT_IWINDOWINGDEVICE_H
 
-#include "../Graphics/IGraphicsSurface.h"
-#include "../../Maths/GeoVector2F.h"
-#include "../../Windowing/WindowMode.h"
+#ifndef NOVELRT_EXPERIMENTAL_WINDOWING_H
+#error NovelRT does not support including types explicitly by default. Please include Windowing.h instead for the Windowing namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Windowing
 {

@@ -4,11 +4,12 @@
 #ifndef NOVELRT_GRAPHICSDEVICEOBJECT_H
 #define NOVELRT_GRAPHICSDEVICEOBJECT_H
 
-#include <memory>
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {
-    class ILLGraphicsDevice;
     class GraphicsDeviceObject
     {
     private:

@@ -4,14 +4,9 @@
 #ifndef NOVELRT_GLFWWINDOWINGDEVICE_H
 #define NOVELRT_GLFWWINDOWINGDEVICE_H
 
-#include "../../../Maths/GeoVector2F.h"
-#include "../IWindowingDevice.h"
-#include <cstdint>
-
-// TODO: Figure out if this is required
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#include <memory>
+#ifndef NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_H
+#error NovelRT does not support including types explicitly by default. Please include Windowing.Glfw.h instead for the Windowing::Glfw namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Windowing::Glfw
 {

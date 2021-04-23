@@ -11,6 +11,11 @@
 namespace NovelRT::Graphics
 {
     class RenderObject;
+    class ImageRect;
+    class BasicFillRect;
+    class TextRect;
+    class RenderingService;
+    class Camera;
 }
 
 namespace NovelRT::Input

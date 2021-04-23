@@ -4,12 +4,9 @@
 #ifndef NOVELRT_VULKANGRAPHICSDEVICE_H
 #define NOVELRT_VULKANGRAPHICSDEVICE_H
 
-#include "../../../LoggingService.h"
-#include "../IGraphicsSurface.h"
-#include "../ILLGraphicsDevice.h"
-#include "QueueFamilyIndices.h"
-#include "SwapChainSupportDetails.h"
-#include <vulkan/vulkan.h>
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {

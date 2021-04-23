@@ -4,13 +4,9 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H
 
-#include "NovelRT/Graphics/RGBAConfig.h"
-#include <cstdint>
-#include "../../Maths/GeoVector2F.h"
-#include "../../Maths/GeoVector3F.h"
-#include "../../Maths/GeoVector4F.h"
-#include "../../Maths/GeoMatrix4x4F.h"
-#include "../../Graphics/RGBAConfig.h"
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {

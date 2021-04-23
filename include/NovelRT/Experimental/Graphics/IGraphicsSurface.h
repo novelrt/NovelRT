@@ -4,10 +4,9 @@
 #ifndef NOVELRT_IGRAPHICSSURFACE_H
 #define NOVELRT_IGRAPHICSSURFACE_H
 
-#include <optional>
-#include "../../Maths/GeoVector2F.h"
-#include "../../Utilities/Event.h"
-#include "GraphicsSurfaceKind.h"
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {

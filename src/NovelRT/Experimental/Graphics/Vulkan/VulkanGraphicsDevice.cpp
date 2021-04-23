@@ -1,14 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Experimental/EngineConfig.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <map>
 #include <numeric>
 #include <set>
 #include <utility>
+#include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -861,9 +861,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return shaderModule;
     }
 
-    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(gsl::span<std::byte> byteData)
+    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(gsl::span<std::byte> /*byteData*/)
     {
-
+        return nullptr;
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
