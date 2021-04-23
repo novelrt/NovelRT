@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
+#include <NovelRT/Ecs/Ecs.h>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -15,7 +15,7 @@ namespace NovelRT::Ecs
                            size_t)> componentUpdateLogic) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
-          _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
+          _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
           _componentUpdateLogic(std::move(componentUpdateLogic))
     {

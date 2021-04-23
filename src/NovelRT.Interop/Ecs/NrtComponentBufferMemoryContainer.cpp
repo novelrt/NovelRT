@@ -2,9 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 #include <vector>
 
@@ -12,7 +10,7 @@ using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTCollection{};
-std::vector<std::byte> dummyByteCollection{};
+std::vector<uint8_t> dummyByteCollection{};
 
 extern "C"
 {

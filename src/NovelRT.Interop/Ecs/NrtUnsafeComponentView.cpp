@@ -2,17 +2,14 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/UnsafeComponentView.h>
-#include <NovelRT/Exceptions/Exceptions.h>
-
+#include <NovelRT/Ecs/Ecs.h>
 #include <vector>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTVectorComponentView;
-std::vector<std::byte> dummyByteVectorComponentView;
+std::vector<uint8_t> dummyByteVectorComponentView;
 
 extern "C"
 {

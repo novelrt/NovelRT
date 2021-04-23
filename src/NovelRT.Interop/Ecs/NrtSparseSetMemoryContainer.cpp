@@ -2,17 +2,12 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/SparseSetMemoryContainer.h>
-#include <NovelRT/Exceptions/Exceptions.h>
-
-#include <stdexcept>
-#include <vector>
+#include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
-std::vector<std::byte> dummyByteVectorSparseSet{std::byte(0)};
+std::vector<uint8_t> dummyByteVectorSparseSet{uint8_t(0)};
 std::vector<size_t> dummySizeTVectorSparseSet{0};
 
 extern "C"

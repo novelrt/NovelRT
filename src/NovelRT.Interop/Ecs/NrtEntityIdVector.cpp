@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/EcsUtils.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 #include <algorithm>
 #include <vector>

@@ -33,5 +33,5 @@ TEST_F(InteropEntityCacheTest, RemoveEntityGetsProcessedCorrectlyForGivenPoolId)
     Nrt_EntityCache_RemoveEntity(cache, 0, 0);
     Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(cache);
     auto ptr = Nrt_EntityCache_GetEntitiesToRemoveThisFrame(cache);
-    EXPECT_EQ(reinterpret_cast<std::vector<EntityId>*>(ptr)->at(0), 0);
+    EXPECT_EQ(reinterpret_cast<std::vector<EntityId>*>(ptr)->at(0), Atom(0));
 }

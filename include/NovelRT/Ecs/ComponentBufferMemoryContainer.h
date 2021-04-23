@@ -4,12 +4,9 @@
 #ifndef NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 #define NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H
 
-#include "../Exceptions/KeyNotFoundException.h"
-#include "EcsUtils.h"
-#include "SparseSetMemoryContainer.h"
-#include <functional>
-#include <memory>
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {
@@ -18,7 +15,7 @@ namespace NovelRT::Ecs
     private:
         SparseSetMemoryContainer _rootSet;
         std::vector<SparseSetMemoryContainer> _updateSets;
-        std::vector<std::byte> _deleteInstructionState;
+        std::vector<uint8_t> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
         std::function<
             void(SparseSetMemoryContainer::ByteIteratorView, SparseSetMemoryContainer::ByteIteratorView, size_t)>
