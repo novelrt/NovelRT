@@ -46,14 +46,14 @@ namespace NovelRT::Ecs
 
 // ECS types
 #include "Catalogue.h"
-#include "ComponentBuffer.h"
 #include "ComponentBufferMemoryContainer.h"
+#include "ComponentBuffer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
-#include "SparseSet.h"
 #include "SparseSetMemoryContainer.h"
+#include "SparseSet.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
 
