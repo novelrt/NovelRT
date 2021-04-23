@@ -20,13 +20,12 @@ namespace NovelRT::Ecs
 } // namespace NovelRT::Ecs
 
 // dependencies for ECS
+// clang-format off
 #include "../Atom.h"
 #include "../Exceptions/Exceptions.h"
 #include "../Timing/Timestamp.h"
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
-#include "EcsUtils.h"
-#include "SparseSetMemoryContainer.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>
@@ -44,17 +43,25 @@ namespace NovelRT::Ecs
 #include <utility>
 #include <vector>
 
+// clang-format on
+
 // ECS types
-#include "Catalogue.h"
+
+// clang-format off
+
+#include "EcsUtils.h"
+#include "SparseSetMemoryContainer.h"
+#include "SparseSet.h"
 #include "ComponentBufferMemoryContainer.h"
 #include "ComponentBuffer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
-#include "SparseSetMemoryContainer.h"
-#include "SparseSet.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
+#include "Catalogue.h"
+
+// clang-format on
 
 #endif //! NOVELRT_ECS_H
