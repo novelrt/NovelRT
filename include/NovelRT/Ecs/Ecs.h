@@ -58,9 +58,9 @@ namespace NovelRT::Ecs
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
+#include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
-#include "Catalogue.h"
 
 // clang-format on
 
