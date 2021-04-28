@@ -39,7 +39,7 @@ namespace NovelRT.Interop.Ecs
         {
             NrtResult result = NovelRT.Nrt_Catalogue_DeleteEntity(this.internalHandle, entity);
             if (result == NrtResult.NRT_FAILURE_NULLPTR_PROVIDED)
-                throw new InvalidOperationException();
+                throw new ObjectDisposedException(GetType().FullName);
         }
         ~Catalogue()
         {
