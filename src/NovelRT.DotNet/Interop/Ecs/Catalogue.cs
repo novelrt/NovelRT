@@ -1,36 +1,22 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace NovelRT.Interop.Ecs
 {
-    public class Catalogue : ShimObject
+    public class Catalogue : ShimObject, IDisposable
     {
         public Catalogue(nuint poolId, ComponentCache componentCache, EntityCache entityCache)
         {
-            Create(poolId, componentCache.internalHandle, entityCache.internalHandle);
+            internalHandle = NovelRT.Nrt_Catalogue_Create(poolId, componentCache.internalHandle, entityCache.internalHandle);
         }
-        public Catalogue(nuint poolId, IntPtr componentCache, EntityCache entityCache){
-            Create(poolId, componentCache, entityCache.internalHandle);
-        }
-        public Catalogue(nuint poolId, ComponentCache componentCache, IntPtr entityCache)
+        public Catalogue(IntPtr handle)
         {
-            Create(poolId, componentCache.internalHandle, entityCache);
-        }
-        public Catalogue(nuint poolId, IntPtr componentCache, IntPtr entityCache)
-        {
-            Create(poolId, componentCache, entityCache);
-        }
-        public void Create(nuint poolId, IntPtr componentCache, IntPtr entityCache)
-        {
-            internalHandle = NovelRT.Nrt_Catalogue_Create(poolId, componentCache, entityCache);
+            internalHandle = handle;
         }
         //fix capitalization, related: https://github.com/novelrt/NovelRT/issues/293
-        nuint CreateEntity()
+        public nuint CreateEntity()
         {
             return NovelRT.Nrt_catalogue_CreateEntity(internalHandle);
         }
@@ -45,9 +31,36 @@ namespace NovelRT.Interop.Ecs
             throw new ArgumentOutOfRangeException();
         }
         //Stathis: backwards compatibility until (safe) ComponentView is implemented.
-        UnsafeComponentView GetComponentViewByID(nuint componentId)
+        public UnsafeComponentView GetComponentViewByID(nuint componentId)
         {
             return GetUnsafeComponentViewByID(componentId);
+        }
+        public void DeleteEntity(nuint entity)
+        {
+            NrtResult result = NovelRT.Nrt_Catalogue_DeleteEntity(this.internalHandle, entity);
+            if (result == NrtResult.NRT_FAILURE_NULLPTR_PROVIDED)
+                throw new InvalidOperationException();
+        }
+        ~Catalogue()
+        {
+            Dispose(isDisposing: false);
+        }
+        public void Dispose()
+        {
+            Dispose(isDisposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool isDisposing)
+        {
+            if (internalHandle != IntPtr.Zero)
+            {
+                NrtResult result = NovelRT.Nrt_Catalogue_Destroy(internalHandle);
+                if (result != NrtResult.NRT_SUCCESS)
+                {
+                    throw new ExternalException();
+                }
+            }
         }
     }
 }
