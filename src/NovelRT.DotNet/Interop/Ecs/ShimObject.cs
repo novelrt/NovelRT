@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NovelRT.Interop.Ecs
 {
-    public abstract class ShimObject
+    public abstract class ShimObject : IDisposable
     {
         private IntPtr _internalHandle;
         private bool _disposedValue;
