@@ -11,7 +11,7 @@ namespace NovelRT.Interop.Ecs
     public abstract class ShimObject
     {
         IntPtr _internalHandle;
-        private bool disposedValue;
+        private bool _disposedValue;
 
         /// <summary>
         /// The unique handle of the ShimObject.
