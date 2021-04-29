@@ -11,20 +11,6 @@ extern "C"
 {
 #endif
 
-    NrtGeoBounds Nrt_Transform_getAABB(const NrtTransform transform)
-    {
-        const Transform& cTransform = *reinterpret_cast<const Transform*>(&transform);
-        auto aabb = cTransform.getAABB();
-        return *reinterpret_cast<NrtGeoBounds*>(&aabb);
-    }
-
-    NrtGeoBounds Nrt_Transform_getBounds(const NrtTransform transform)
-    {
-        const Transform& cTransform = *reinterpret_cast<const Transform*>(&transform);
-        auto bounds = cTransform.getBounds();
-        return *reinterpret_cast<NrtGeoBounds*>(&bounds);
-    }
-
 #ifdef __cplusplus
 }
 #endif
