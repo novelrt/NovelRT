@@ -32,7 +32,6 @@ namespace NovelRT
          * @brief Creates a new Transform with the default values.
          */
         Transform() noexcept;
-
     };
 } // namespace NovelRT
 

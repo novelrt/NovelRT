@@ -34,7 +34,6 @@ namespace NovelRT::Maths
             return position != other.position || size != other.size || rotation != other.rotation;
         }
 
-
         /**
          * @brief Gets the Axis Aligned Bounding Box based on the position and scale of the specified transform.
          */
