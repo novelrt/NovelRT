@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NovelRT.Interop.Ecs
 {
-    public class UnsafeComponentView:ShimObject
+    public class UnsafeComponentView : ShimObject
     {
         public UnsafeComponentView(nuint poolId, ComponentBufferMemoryContainer container)
         {
