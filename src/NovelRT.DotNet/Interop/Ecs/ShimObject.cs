@@ -10,7 +10,7 @@ namespace NovelRT.Interop.Ecs
 {
     public abstract class ShimObject
     {
-        IntPtr _internalHandle;
+        private IntPtr _internalHandle;
         private bool _disposedValue;
 
         /// <summary>
