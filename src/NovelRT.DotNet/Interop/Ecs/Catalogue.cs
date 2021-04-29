@@ -15,7 +15,7 @@ namespace NovelRT.Interop.Ecs
         {
             internalHandle = handle;
         }
-        //fix capitalization, related: https://github.com/novelrt/NovelRT/issues/293
+        //TODO: fix capitalization, related: https://github.com/novelrt/NovelRT/issues/293
         public nuint CreateEntity()
         {
             return NovelRT.Nrt_catalogue_CreateEntity(internalHandle);

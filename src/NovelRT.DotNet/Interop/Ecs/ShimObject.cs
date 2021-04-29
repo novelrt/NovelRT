@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace NovelRT.Interop.Ecs
 {
-    public abstract class ShimObject
+    public abstract class ShimObject : IDisposable
     {
-        IntPtr _internalHandle;
-        private bool disposedValue;
+        private IntPtr _internalHandle;
+        private bool _disposedValue;
 
         /// <summary>
         /// The unique handle of the ShimObject.
