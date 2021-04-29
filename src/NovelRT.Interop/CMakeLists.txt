@@ -3,7 +3,6 @@ set(SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
   NrtNovelRunner.cpp
-  NrtTransform.cpp
 
   Animation/NrtSpriteAnimator.cpp
   Animation/NrtSpriteAnimatorFrame.cpp
