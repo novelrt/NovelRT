@@ -94,12 +94,18 @@ add_custom_target(Dotnet_Build ALL
   DEPENDS ${OUTPUT_ASSEMBLY}
 )
 
+
+
 add_executable(Dotnet IMPORTED GLOBAL)
 add_dependencies(Dotnet Dotnet_Build)
 set_target_properties(Dotnet
   PROPERTIES
   IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
 )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet.runtimeconfig.json
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 
 if(WIN32)
   set(nethost_lib "nethost.dll")

@@ -5,7 +5,6 @@
 #define NOVELRT_NOVELWORLDOBJECT_H
 
 #include "Maths/GeoVector2F.h"
-#include "Maths/GeoBounds.h"
 
 namespace NovelRT
 {
@@ -31,23 +30,6 @@ namespace NovelRT
          * @brief Creates a new Transform with the default values.
          */
         Transform() noexcept;
-
-        /**
-         * @brief Gets the Axis Aligned Bounding Box based on the position and scale of this transform.
-         */
-        inline Maths::GeoBounds getAABB() const
-        {
-            auto maxFscale = fmaxf(scale.x, scale.y);
-            return Maths::GeoBounds(position, Maths::GeoVector2F(maxFscale, maxFscale), 0);
-        }
-
-        /**
-         * @brief Gets the bounds based on the position, scale and rotation of this transform.
-         */
-        inline Maths::GeoBounds getBounds() const
-        {
-            return Maths::GeoBounds(position, scale, rotation);
-        }
     };
 } // namespace NovelRT
 

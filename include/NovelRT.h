@@ -173,9 +173,11 @@
   #include "NovelRT/Utilities/Lazy.h"
   #include "NovelRT/Utilities/Misc.h"
 
+  #include "NovelRT/Transform.h"
+
   #include "NovelRT/Animation/AnimatorPlayState.h"
   #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-  #include "NovelRT/Transform.h"
+
   #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
   #include "NovelRT/Graphics/ImageData.h"
   #include "NovelRT/Graphics/ShaderProgram.h"

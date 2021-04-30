@@ -5,6 +5,7 @@
 #define NOVELRT_MATHS_GEOBOUNDS_H
 
 #include "GeoVector2F.h"
+#include "NovelRT/Transform.h"
 
 namespace NovelRT::Maths
 {
@@ -30,6 +31,23 @@ namespace NovelRT::Maths
         inline bool operator!=(GeoBounds other) const
         {
             return position != other.position || size != other.size || rotation != other.rotation;
+        }
+
+        /**
+         * @brief Gets the Axis Aligned Bounding Box based on the position and scale of the specified transform.
+         */
+        static inline Maths::GeoBounds GetAABBFromTransform(Transform transform)
+        {
+            auto maxFscale = fmaxf(transform.scale.x, transform.scale.y);
+            return GeoBounds(transform.position, Maths::GeoVector2F(maxFscale, maxFscale), 0);
+        }
+
+        /**
+         * @brief Gets the bounds based on the position, scale and rotation of the specified transform.
+         */
+        static inline Maths::GeoBounds FromTransform(Transform transform)
+        {
+            return GeoBounds(transform.position, transform.scale, transform.rotation);
         }
     };
 } // namespace NovelRT::Maths
