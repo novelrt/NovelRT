@@ -5,18 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NovelRT.Interop;
 
-namespace NovelRT.Interop.Ecs
+namespace NovelRT.Ecs
 {
     public abstract class ShimObject : IDisposable
     {
-        private IntPtr _internalHandle;
-        private bool _disposedValue;
+        internal IntPtr _internalHandle;
+        internal bool _disposedValue;
 
         /// <summary>
         /// The unique handle of the ShimObject.
         /// </summary>
         public IntPtr internalHandle { get; internal set; }
 
+        public abstract void Dispose(bool isDisposing);
+
+        public void Dispose()
+        {
+            Dispose(isDisposing: true);
+            GC.SuppressFinalize(this);
+        }
+        
     }
 }
