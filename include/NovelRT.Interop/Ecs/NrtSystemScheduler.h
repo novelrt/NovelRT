@@ -15,7 +15,9 @@ extern "C"
 
     NrtSystemSchedulerHandle Nrt_SystemScheduler_Create(uint32_t maximumThreadCount);
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler, NrtSystemUpdateFnPtr systemUpdatePtr);
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler,
+                                            NrtSystemUpdateFnPtr systemUpdatePtr,
+                                            void* context);
 
     uint32_t Nrt_SystemScheduler_GetWorkerThreadCount(NrtSystemSchedulerHandle systemScheduler);
 

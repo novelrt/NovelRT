@@ -9,11 +9,11 @@
 
 using namespace NovelRT;
 
-int32_t (*_function)(NrtSceneNodeHandle) = NULL;
-
-int32_t Internal_BreadthFirstIteratorFunctionDelegate(const std::shared_ptr<SceneGraph::SceneNode>& node)
+int32_t Internal_BreadthFirstIteratorFunctionDelegate(int32_t (*action)(NrtSceneNodeHandle, void* context),
+                                                      void* context,
+                                                      const std::shared_ptr<SceneGraph::SceneNode>& node)
 {
-    return _function(reinterpret_cast<NrtSceneNodeHandle>(node.get()));
+    return action(reinterpret_cast<NrtSceneNodeHandle>(node.get()), context);
 }
 
 #ifdef __cplusplus
@@ -22,10 +22,11 @@ extern "C"
 #endif
 
     NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNodeHandle node,
-                                                       int32_t (*func)(NrtSceneNodeHandle),
+                                                       int32_t (*action)(NrtSceneNodeHandle, void* context),
+                                                       void* context,
                                                        NrtSceneNodeBreadthFirstIteratorHandle* outputIterator)
     {
-        if (node == nullptr || func == nullptr)
+        if (node == nullptr || action == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULLPTR_PROVIDED;
@@ -33,10 +34,9 @@ extern "C"
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-        _function = func;
+        auto func = std::bind(Internal_BreadthFirstIteratorFunctionDelegate, action, context, std::placeholders::_1);
         SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t> iterator =
-            SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(
-                nodePointer, Internal_BreadthFirstIteratorFunctionDelegate);
+            SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, func);
         *outputIterator = reinterpret_cast<NrtSceneNodeBreadthFirstIteratorHandle>(&iterator);
         return NRT_SUCCESS;
     }

@@ -27,9 +27,10 @@ extern "C"
 
     typedef void (*NrtComponentUpdateFnPtr)(NrtSparseSetMemoryContainer_ByteIteratorViewHandle,
                                             NrtSparseSetMemoryContainer_ByteIteratorViewHandle,
-                                            size_t);
+                                            size_t,
+                                            void*);
 
-    typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle);
+    typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle, void*);
 
     typedef NrtAtom NrtEntityId;
     typedef NrtAtom NrtComponentTypeId;
