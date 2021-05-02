@@ -11,17 +11,16 @@ using namespace NovelRT;
 
 std::list<std::shared_ptr<SceneGraph::SceneNode>> _sceneNodeCollection;
 
-void Internal_VoidSceneNodeFunctionInvoker(
-  void (*action)(NrtSceneNodeHandle, void*), void* context,
-  const std::shared_ptr<SceneGraph::SceneNode> node)
+void Internal_VoidSceneNodeFunctionInvoker(void (*action)(NrtSceneNodeHandle, void*),
+                                           void* context,
+                                           const std::shared_ptr<SceneGraph::SceneNode> node)
 {
     action(reinterpret_cast<NrtSceneNodeHandle>(node.get()), context);
 }
 
-int32_t Internal_Int32TSceneNodeFunctionInvoker(
-  int32_t (*action)(NrtSceneNodeHandle, void*),
-  void* context,
-  const std::shared_ptr<SceneGraph::SceneNode> node)
+int32_t Internal_Int32TSceneNodeFunctionInvoker(int32_t (*action)(NrtSceneNodeHandle, void*),
+                                                void* context,
+                                                const std::shared_ptr<SceneGraph::SceneNode> node)
 {
     return action(reinterpret_cast<NrtSceneNodeHandle>(node.get()), context);
 }
@@ -89,7 +88,9 @@ extern "C"
             nodePointer->isAdjacent(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
     }
 
-    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle,void*), void* context)
+    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node,
+                                                 void (*action)(NrtSceneNodeHandle, void*),
+                                                 void* context)
     {
         if (node == nullptr || action == nullptr)
         {
@@ -118,14 +119,15 @@ extern "C"
 
         auto func = std::bind(Internal_Int32TSceneNodeFunctionInvoker, action, context, std::placeholders::_1);
         SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* itPtr =
-            new SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(
-                nodePointer, func);
+            new SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>(nodePointer, func);
         *outputIterator = reinterpret_cast<NrtSceneNodeBreadthFirstIteratorHandle>(itPtr);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle, void*), void* context)
+    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node,
+                                               void (*action)(NrtSceneNodeHandle, void*),
+                                               void* context)
     {
         if (node == nullptr || action == nullptr)
         {
@@ -155,8 +157,7 @@ extern "C"
 
         auto func = std::bind(Internal_Int32TSceneNodeFunctionInvoker, action, context, std::placeholders::_1);
         SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* itPtr =
-            new SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(
-                nodePointer, func);
+            new SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, func);
         *outputIterator = reinterpret_cast<NrtSceneNodeDepthFirstIteratorHandle>(itPtr);
 
         return NRT_SUCCESS;

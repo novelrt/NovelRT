@@ -39,9 +39,10 @@ void renderNovelChan(void* context)
     Nrt_Input_BasicInteractionRect_executeObjectBehaviour(interactRect);
 }
 
-struct moveContext {
-  int xBounces;
-  int yBounces;
+struct moveContext
+{
+    int xBounces;
+    int yBounces;
 };
 
 // Function to move NovelChan DVD screensaver style

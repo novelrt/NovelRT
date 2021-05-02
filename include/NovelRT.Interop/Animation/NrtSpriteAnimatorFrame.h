@@ -18,8 +18,12 @@ extern "C"
     NrtTimestamp Nrt_SpriteAnimatorFrame_getDuration(NrtSpriteAnimatorFrameHandle frame);
     NrtResult Nrt_SpriteAnimatorFrame_setDuration(NrtSpriteAnimatorFrameHandle frame, NrtTimestamp timestamp);
 
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrameHandle frame, void (*func)(void*), void* context);
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrameHandle frame, void (*func)(void*), void* context);
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrameHandle frame,
+                                                    void (*func)(void*),
+                                                    void* context);
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrameHandle frame,
+                                                   void (*func)(void*),
+                                                   void* context);
 
 #ifdef __cplusplus
 }

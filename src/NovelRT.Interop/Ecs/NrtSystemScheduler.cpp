@@ -19,7 +19,9 @@ extern "C"
         return reinterpret_cast<NrtSystemSchedulerHandle>(new SystemScheduler(maximumThreadCount));
     }
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler, NrtSystemUpdateFnPtr systemUpdatePtr, void* context)
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler,
+                                            NrtSystemUpdateFnPtr systemUpdatePtr,
+                                            void* context)
     {
         auto schedulerPtr = reinterpret_cast<SystemScheduler*>(scheduler);
         schedulerPtr->RegisterSystem([=](auto timestamp, auto catalogue) {

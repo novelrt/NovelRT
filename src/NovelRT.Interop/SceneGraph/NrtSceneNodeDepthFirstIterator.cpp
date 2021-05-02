@@ -9,9 +9,9 @@
 
 using namespace NovelRT;
 
-int32_t Internal_DepthFirstIteratorFunctionDelegate(
-  int32_t (*action)(NrtSceneNodeHandle, void*), void* context,
-  const std::shared_ptr<SceneGraph::SceneNode>& node)
+int32_t Internal_DepthFirstIteratorFunctionDelegate(int32_t (*action)(NrtSceneNodeHandle, void*),
+                                                    void* context,
+                                                    const std::shared_ptr<SceneGraph::SceneNode>& node)
 {
     return action(reinterpret_cast<NrtSceneNodeHandle>(node.get()), context);
 }
@@ -36,8 +36,7 @@ extern "C"
 
         auto func = std::bind(Internal_DepthFirstIteratorFunctionDelegate, action, context, std::placeholders::_1);
         SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t> iterator =
-            SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(
-                nodePointer, func);
+            SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, func);
         *outputIterator = reinterpret_cast<NrtSceneNodeDepthFirstIteratorHandle>(&iterator);
 
         return NRT_SUCCESS;

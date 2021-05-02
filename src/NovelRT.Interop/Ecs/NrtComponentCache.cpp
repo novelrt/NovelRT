@@ -33,8 +33,7 @@ extern "C"
                         sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
-                                        size,
-                                        context);
+                                        size, context);
                         });
 
             return NRT_SUCCESS;

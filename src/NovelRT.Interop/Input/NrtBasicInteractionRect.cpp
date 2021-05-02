@@ -108,7 +108,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*action)(void*), void* context)
+    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object,
+                                                            void (*action)(void*),
+                                                            void* context)
     {
         if (object == nullptr)
         {

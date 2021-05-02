@@ -240,7 +240,7 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
         }
     };
 
-    void (*vari)(NrtSceneNodeHandle,void*) = func;
+    void (*vari)(NrtSceneNodeHandle, void*) = func;
 
     auto res = Nrt_SceneNode_traverseBreadthFirst(parentNode, vari, nullptr);
     ASSERT_EQ(res, NRT_SUCCESS);

@@ -41,8 +41,7 @@ protected:
                     reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
                 *intLhs += *intRhs;
             },
-            nullptr,
-            &intComponentTypeId);
+            nullptr, &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(size_t), &sizeTDeleteState,
@@ -53,11 +52,11 @@ protected:
                     reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
                 *sizeTLhs += *sizeTRhs;
             },
-            nullptr,
-            &sizeTComponentTypeId);
+            nullptr, &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, nullptr, &charComponentTypeId);
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, nullptr,
+            &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);

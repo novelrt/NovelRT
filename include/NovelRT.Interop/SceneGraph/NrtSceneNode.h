@@ -17,12 +17,16 @@ extern "C"
     NrtBool Nrt_SceneNode_insert(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToInsert);
     NrtBool Nrt_SceneNode_remove(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToRemove);
     NrtBool Nrt_SceneNode_isAdjacent(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode);
-    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle, void*), void* context);
+    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node,
+                                                 void (*action)(NrtSceneNodeHandle, void*),
+                                                 void* context);
     NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNodeHandle node,
                                                              int32_t (*action)(NrtSceneNodeHandle, void*),
                                                              void* context,
                                                              NrtSceneNodeBreadthFirstIteratorHandle* outputIterator);
-    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node, void (*action)(NrtSceneNodeHandle, void*), void* context);
+    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node,
+                                               void (*action)(NrtSceneNodeHandle, void*),
+                                               void* context);
     NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNodeHandle node,
                                                            int32_t (*action)(NrtSceneNodeHandle, void*),
                                                            void* context,
