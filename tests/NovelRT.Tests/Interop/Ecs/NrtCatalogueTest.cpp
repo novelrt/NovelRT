@@ -34,28 +34,30 @@ protected:
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(int32_t), &intDeleteState,
-            [](auto lhs, auto rhs, auto) {
+            [](auto lhs, auto rhs, auto, auto) {
                 auto intLhs =
                     reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
                 auto intRhs =
                     reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
                 *intLhs += *intRhs;
             },
+            nullptr,
             &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(size_t), &sizeTDeleteState,
-            [](auto lhs, auto rhs, auto) {
+            [](auto lhs, auto rhs, auto, auto) {
                 auto sizeTLhs =
                     reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
                 auto sizeTRhs =
                     reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
                 *sizeTLhs += *sizeTRhs;
             },
+            nullptr,
             &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto) {}, &charComponentTypeId);
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, nullptr, &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);

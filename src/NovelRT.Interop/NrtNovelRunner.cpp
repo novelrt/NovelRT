@@ -197,7 +197,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner, void (*func)(NrtTimestamp))
+    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner, void (*func)(NrtTimestamp, void*), void* context)
     {
         if (runner == nullptr || func == nullptr)
         {
@@ -207,12 +207,12 @@ extern "C"
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->Update += [func](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta)); };
+        cRunner->Update += [func, context](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta), context); };
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner, void (*func)())
+    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner, void (*func)(void*), void* context)
     {
         if (runner == nullptr || func == nullptr)
         {
@@ -222,7 +222,7 @@ extern "C"
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->SceneConstructionRequested += [func]() { func(); };
+        cRunner->SceneConstructionRequested += [func, context]() { func(context); };
         return NRT_SUCCESS;
     }
 

@@ -13,7 +13,7 @@ TEST(InteropComponentBufferMemoryContainerTest, GetDeleteInstructionStateReturns
 {
     int32_t deleteState = -1;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {});
+        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto, auto) {}, nullptr);
     auto deleteInstructionState = Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(container);
     EXPECT_EQ(std::memcmp(Nrt_ComponentBufferMemoryContainer_ImmutableDataView_GetDataHandle(deleteInstructionState),
                           &deleteState, sizeof(int32_t)),
@@ -28,7 +28,7 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAd
     int32_t deleteState = -1;
     int32_t updateState = 10;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {});
+        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto, auto) {}, nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
@@ -51,10 +51,10 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUp
     int32_t deleteState = -1;
     int32_t updateState = 10;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto lhs, auto rhs, auto) {
+        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto lhs, auto rhs, auto, auto) {
             *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
                 *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
-        });
+        }, nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
@@ -83,7 +83,7 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRe
     int32_t deleteState = -1;
     int32_t updateState = 10;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {});
+        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto, auto) {}, nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
@@ -108,7 +108,7 @@ TEST(InteropComponentBufferMemoryContainerTest, IterationWorksCorrectly)
     int32_t deleteState = -1;
     int32_t updateState = 10;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {});
+        Nrt_ComponentBufferMemoryContainer_Create(1, &deleteState, sizeof(int32_t), [](auto, auto, auto, auto) {}, nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
@@ -150,10 +150,10 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     int32_t deleteState = -1;
     int32_t updateState = 10;
     auto container =
-        Nrt_ComponentBufferMemoryContainer_Create(2, &deleteState, sizeof(int32_t), [](auto lhs, auto rhs, auto) {
+        Nrt_ComponentBufferMemoryContainer_Create(2, &deleteState, sizeof(int32_t), [](auto lhs, auto rhs, auto, auto) {
             *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
                 *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
-        });
+        }, nullptr);
 
     for (int i = 0; i < 2000; ++i)
     {

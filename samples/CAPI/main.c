@@ -33,14 +33,19 @@ NrtBasicInteractionRectHandle interactRect = NULL;
 NrtStoryHandle story = NULL;
 
 // Function to render NovelChan
-void renderNovelChan()
+void renderNovelChan(void* context)
 {
     Nrt_ImageRect_executeObjectBehaviour(nChanRect);
     Nrt_Input_BasicInteractionRect_executeObjectBehaviour(interactRect);
 }
 
+struct moveContext {
+  int xBounces;
+  int yBounces;
+};
+
 // Function to move NovelChan DVD screensaver style
-void moveNovelChan(NrtTimestamp delta)
+void moveNovelChan(NrtTimestamp delta, void* context)
 {
     if (nChanRect == NULL)
         return;
@@ -48,6 +53,7 @@ void moveNovelChan(NrtTimestamp delta)
     int32_t bounced = 0;
     float trueDelta = 0.0f;
     float moveAmount = 100.0f;
+    struct moveContext* moveContext = (struct moveContext*)context;
 
     trueDelta = Nrt_Timestamp_getSecondsFloat(delta);
     NrtTransform transform = Nrt_ImageRect_getTransform(nChanRect);
@@ -72,7 +78,12 @@ void moveNovelChan(NrtTimestamp delta)
         {
             hMove = 0;
             bounced = 1;
-            Nrt_LoggingService_logInfoLine(console, "Flipped X axis movement.");
+            int bounces = ++moveContext->xBounces;
+
+            int size = snprintf(NULL, 0, "Flipped X axis movement. Count: %i", bounces);
+            char buf[size + 1];
+            snprintf(buf, sizeof(buf), "Flipped X axis movement. Count: %i", bounces);
+            Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
     else
@@ -82,7 +93,12 @@ void moveNovelChan(NrtTimestamp delta)
         {
             hMove = 1;
             bounced = 1;
-            Nrt_LoggingService_logInfoLine(console, "Flipped X axis movement.");
+            int bounces = ++moveContext->xBounces;
+
+            int size = snprintf(NULL, 0, "Flipped X axis movement. Count: %i", bounces);
+            char buf[size + 1];
+            snprintf(buf, sizeof(buf), "Flipped X axis movement. Count: %i", bounces);
+            Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
 
@@ -93,7 +109,12 @@ void moveNovelChan(NrtTimestamp delta)
         {
             vMove = 0;
             bounced = 1;
-            Nrt_LoggingService_logInfoLine(console, "Flipped Y axis movement.");
+            int bounces = ++moveContext->yBounces;
+
+            int size = snprintf(NULL, 0, "Flipped Y axis movement. Count: %i", bounces);
+            char buf[size + 1];
+            snprintf(buf, sizeof(buf), "Flipped Y axis movement. Count: %i", bounces);
+            Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
     else
@@ -103,7 +124,12 @@ void moveNovelChan(NrtTimestamp delta)
         {
             vMove = 1;
             bounced = 1;
-            Nrt_LoggingService_logInfoLine(console, "Flipped Y axis movement.");
+            int bounces = ++moveContext->yBounces;
+
+            int size = snprintf(NULL, 0, "Flipped Y axis movement. Count: %i", bounces);
+            char buf[size + 1];
+            snprintf(buf, sizeof(buf), "Flipped Y axis movement. Count: %i", bounces);
+            Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
 
@@ -121,7 +147,7 @@ void moveNovelChan(NrtTimestamp delta)
 }
 
 // Function to interact with Ink
-void interactWithNovelChan()
+void interactWithNovelChan(void* context)
 {
     if (Nrt_Story_canContinue(story) == NRT_FALSE)
     {
@@ -278,14 +304,15 @@ int main()
         {
             Nrt_Story_resetState(story);
         }
-        Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &interactWithNovelChan);
+        Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &interactWithNovelChan, NULL);
     }
 
     // Setting up Scene Construction
-    Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan);
+    Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan, NULL);
 
     // Setting up Update methods
-    Nrt_NovelRunner_addUpdate(runner, moveNovelChan);
+    struct moveContext moveContext;
+    Nrt_NovelRunner_addUpdate(runner, moveNovelChan, &moveContext);
 
     // Run the novel!
     Nrt_NovelRunner_runNovel(runner);

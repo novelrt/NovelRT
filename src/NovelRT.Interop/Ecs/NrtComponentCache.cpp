@@ -17,6 +17,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             void* context,
                                                              NrtComponentTypeId* outputResult)
     {
         if (componentCache == nullptr || deleteInstructionState == nullptr || outputResult == nullptr)
@@ -32,7 +33,8 @@ extern "C"
                         sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
-                                        size);
+                                        size,
+                                        context);
                         });
 
             return NRT_SUCCESS;

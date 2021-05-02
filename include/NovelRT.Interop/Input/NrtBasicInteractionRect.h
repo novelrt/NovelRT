@@ -23,7 +23,7 @@ extern "C"
                                                                          const NrtGeoVector2F mousePosition);
     NrtKeyCode Nrt_Input_BasicInteractionRect_getSubscribedKey(NrtBasicInteractionRectHandle object);
     NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey(NrtBasicInteractionRectHandle object, NrtKeyCode value);
-    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)());
+    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)(void*), void* context);
 
 #ifdef __cplusplus
 }

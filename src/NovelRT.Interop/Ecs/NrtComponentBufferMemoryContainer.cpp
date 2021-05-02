@@ -17,12 +17,15 @@ extern "C"
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
-                                                                                      NrtComponentUpdateFnPtr fnPtr)
+                                                                                      NrtComponentUpdateFnPtr fnPtr,
+                                                                                      void* context)
     {
         auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
                         size_t size) {
             fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
-                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
+                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
+                  size,
+                  context);
         };
 
         return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(

@@ -161,7 +161,7 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
     NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     Nrt_SceneNode_insert(parentNode, childNode);
 
-    auto func = [](NrtSceneNodeHandle traversedNode) -> int32_t {
+    auto func = [](NrtSceneNodeHandle traversedNode, auto) -> int32_t {
         if (traversedNode == childNode)
         {
             return NRT_TRUE;
@@ -170,10 +170,10 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
         return NRT_FALSE;
     };
 
-    int32_t (*vari)(NrtSceneNodeHandle) = func;
+    int32_t (*vari)(NrtSceneNodeHandle, void*) = func;
 
     NrtSceneNodeBreadthFirstIteratorHandle it = nullptr;
-    auto res = Nrt_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, &it);
+    auto res = Nrt_SceneNode_traverseBreadthFirstWithIterator(parentNode, vari, nullptr, &it);
 
     ASSERT_EQ(res, NRT_SUCCESS);
 
@@ -225,7 +225,7 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_TRUE(Nrt_SceneNode_insert(parentNode, childNode));
     ASSERT_TRUE(Nrt_SceneNode_insert(childNode, parentNode));
 
-    auto func = [](NrtSceneNodeHandle traversedNode) -> void {
+    auto func = [](NrtSceneNodeHandle traversedNode, auto) -> void {
         if (traversedNode == parentNode)
         {
             parentSceneNodeHitCount++;
@@ -240,9 +240,9 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
         }
     };
 
-    void (*vari)(NrtSceneNodeHandle) = func;
+    void (*vari)(NrtSceneNodeHandle,void*) = func;
 
-    auto res = Nrt_SceneNode_traverseBreadthFirst(parentNode, vari);
+    auto res = Nrt_SceneNode_traverseBreadthFirst(parentNode, vari, nullptr);
     ASSERT_EQ(res, NRT_SUCCESS);
     ASSERT_EQ(1, parentSceneNodeHitCount);
     ASSERT_EQ(1, childSceneNodeHitCount);
@@ -263,7 +263,7 @@ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_TRUE(Nrt_SceneNode_insert(parentNode, childNode));
     ASSERT_TRUE(Nrt_SceneNode_insert(childNode, parentNode));
 
-    auto func = [](NrtSceneNodeHandle traversedNode) -> void {
+    auto func = [](NrtSceneNodeHandle traversedNode, auto) -> void {
         if (traversedNode == parentNode)
         {
             parentSceneNodeHitCount++;
@@ -278,9 +278,9 @@ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
         }
     };
 
-    void (*vari)(NrtSceneNodeHandle) = func;
+    void (*vari)(NrtSceneNodeHandle, void*) = func;
 
-    auto res = Nrt_SceneNode_traverseDepthFirst(parentNode, vari);
+    auto res = Nrt_SceneNode_traverseDepthFirst(parentNode, vari, nullptr);
     ASSERT_EQ(res, NRT_SUCCESS);
     ASSERT_EQ(1, parentSceneNodeHitCount);
     ASSERT_EQ(1, childSceneNodeHitCount);

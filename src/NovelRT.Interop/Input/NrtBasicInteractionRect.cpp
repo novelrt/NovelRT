@@ -108,7 +108,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*ptr)())
+    NrtResult Nrt_Input_BasicInteractionRect_addInteraction(NrtBasicInteractionRectHandle object, void (*action)(void*), void* context)
     {
         if (object == nullptr)
         {
@@ -117,7 +117,7 @@ extern "C"
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
-        obj->Interacted += ptr;
+        obj->Interacted += std::bind(action, context);
         return NRT_SUCCESS;
     }
 

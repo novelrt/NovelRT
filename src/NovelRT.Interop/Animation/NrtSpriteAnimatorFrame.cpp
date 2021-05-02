@@ -69,7 +69,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrameHandle frame, void (*func)())
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter(NrtSpriteAnimatorFrameHandle frame, void (*func)(void*), void* context)
     {
         if (frame == nullptr || func == nullptr)
         {
@@ -78,12 +78,12 @@ extern "C"
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
-        cppFrame->FrameEnter += func;
+        cppFrame->FrameEnter += std::bind(func, context);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrameHandle frame, void (*func)())
+    NrtResult Nrt_SpriteAnimatorFrame_addFrameExit(NrtSpriteAnimatorFrameHandle frame, void (*func)(void*), void* context)
     {
         if (frame == nullptr || func == nullptr)
         {
@@ -92,7 +92,7 @@ extern "C"
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
-        cppFrame->FrameExit += func;
+        cppFrame->FrameExit += std::bind(func, context);
 
         return NRT_SUCCESS;
     }
