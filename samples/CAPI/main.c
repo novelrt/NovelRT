@@ -83,7 +83,7 @@ void moveNovelChan(NrtTimestamp delta, void* context)
 
             int size = snprintf(NULL, 0, "Flipped X axis movement. Count: %i", bounces);
             char* buf = alloca(size + 1);
-            snprintf(buf, sizeof(buf), "Flipped X axis movement. Count: %i", bounces);
+            snprintf(buf, size + 1, "Flipped X axis movement. Count: %i", bounces);
             Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
@@ -98,7 +98,7 @@ void moveNovelChan(NrtTimestamp delta, void* context)
 
             int size = snprintf(NULL, 0, "Flipped X axis movement. Count: %i", bounces);
             char* buf = alloca(size + 1);
-            snprintf(buf, sizeof(buf), "Flipped X axis movement. Count: %i", bounces);
+            snprintf(buf, size + 1, "Flipped X axis movement. Count: %i", bounces);
             Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
@@ -114,7 +114,7 @@ void moveNovelChan(NrtTimestamp delta, void* context)
 
             int size = snprintf(NULL, 0, "Flipped Y axis movement. Count: %i", bounces);
             char* buf = alloca(size + 1);
-            snprintf(buf, sizeof(buf), "Flipped Y axis movement. Count: %i", bounces);
+            snprintf(buf, size + 1, "Flipped Y axis movement. Count: %i", bounces);
             Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
@@ -129,7 +129,7 @@ void moveNovelChan(NrtTimestamp delta, void* context)
 
             int size = snprintf(NULL, 0, "Flipped Y axis movement. Count: %i", bounces);
             char* buf = alloca(size + 1);
-            snprintf(buf, sizeof(buf), "Flipped Y axis movement. Count: %i", bounces);
+            snprintf(buf, size + 1, "Flipped Y axis movement. Count: %i", bounces);
             Nrt_LoggingService_logInfoLine(console, buf);
         }
     }
