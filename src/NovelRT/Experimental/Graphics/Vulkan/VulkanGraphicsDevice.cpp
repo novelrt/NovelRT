@@ -2,13 +2,12 @@
 // for more information.
 
 #include <NovelRT/Experimental/EngineConfig.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <map>
 #include <numeric>
 #include <set>
 #include <utility>
-#include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -842,28 +841,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
     }
 
-    VkShaderModule VulkanGraphicsDevice::CreateShaderModule(const uint32_t* data, size_t codeSize)
+    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
+                                                                             ShaderProgramKind kind,
+                                                                             gsl::span<uint8_t> byteData)
     {
-        VkShaderModuleCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = codeSize;
-        createInfo.pCode = data;
-
-        VkShaderModule shaderModule = VK_NULL_HANDLE;
-        VkResult shaderModuleResult = vkCreateShaderModule(_device, &createInfo, nullptr, &shaderModule);
-
-        if (shaderModuleResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException(
-                "Failed to initialise the provided SPIR-V data into a VkShaderModule.", shaderModuleResult);
-        }
-
-        return shaderModule;
-    }
-
-    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(gsl::span<std::byte> /*byteData*/)
-    {
-        return nullptr;
+        return std::shared_ptr<ShaderProgram>(
+            new VulkanShaderProgram(*this, std::move(entryPointName), kind, byteData));
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()

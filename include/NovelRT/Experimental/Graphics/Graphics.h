@@ -19,6 +19,12 @@ namespace NovelRT::Experimental::Graphics
     class LLGraphicsBuffer;
     class LLGraphicsTexture;
     class ShaderProgram;
+    class GraphicsPipeline;
+    class GraphicsPipelineSignature;
+    class GraphicsPipelineInput;
+    class GraphicsPipelineResource;
+    class GraphicsPipelineInputElement;
+    enum class GraphicsPipelineInputElementKind : uint32_t;
 }
 
 //Graphics dependencies
@@ -39,9 +45,6 @@ namespace NovelRT::Experimental::Graphics
 #include "../../Utilities/Event.h"
 
 //Graphics types
-
-
-
 #include "ShaderProgramKind.h"
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
@@ -55,5 +58,10 @@ namespace NovelRT::Experimental::Graphics
 #include "LLGraphicsResourceViewContainer.h"
 #include "LLGraphicsTexture.h"
 #include "ShaderProgram.h"
+#include "GraphicsPipeline.h"
+#include "GraphicsPipelineSignature.h"
+#include "GraphicsPipelineInput.h"
+#include "GraphicsPipelineInputElement.h"
+#include "GraphicsPipelineInputElementKind.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H

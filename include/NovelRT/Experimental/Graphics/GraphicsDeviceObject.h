@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    class GraphicsDeviceObject
+    class GraphicsDeviceObject : public std::enable_shared_from_this<GraphicsDeviceObject>
     {
     private:
         std::shared_ptr<ILLGraphicsDevice> _graphicsDevice;
@@ -25,6 +25,8 @@ namespace NovelRT::Experimental::Graphics
         {
             return _graphicsDevice;
         }
+
+        virtual ~GraphicsDeviceObject() = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 

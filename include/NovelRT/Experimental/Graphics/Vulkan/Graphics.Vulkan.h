@@ -20,10 +20,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include <vulkan/vulkan.h>
 #include "../Graphics.h"
 #include "../../../LoggingService.h"
+#include "../../../Utilities/Lazy.h"
+#include "../../../Exceptions/Exceptions.h"
 
 // Graphics.Vulkan types
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
+#include "VulkanShaderProgram.h"
 #include "VulkanGraphicsDevice.h"
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H

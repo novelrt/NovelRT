@@ -42,7 +42,9 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
 
   Experimental/EngineConfig.cpp
+  Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
+  Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 
   Graphics/BasicFillRect.cpp

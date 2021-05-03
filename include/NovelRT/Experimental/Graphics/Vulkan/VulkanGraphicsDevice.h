@@ -82,21 +82,27 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
             const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept;
 
-        [[nodiscard]] VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const noexcept;
+        [[nodiscard]] VkPresentModeKHR ChooseSwapPresentMode(
+            const std::vector<VkPresentModeKHR>& availablePresentModes) const noexcept;
         [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
 
         void CreateSwapChain();
 
         void CreateImageViews();
 
-        [[nodiscard]] VkShaderModule CreateShaderModule(const uint32_t* data, size_t codeSize);
-
     public:
         VulkanGraphicsDevice() noexcept;
         void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) final;
         void TearDown() final;
-        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(gsl::span<std::byte> byteData) final;
+        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
+                                                                         ShaderProgramKind kind,
+                                                                         gsl::span<uint8_t> byteData) final;
         ~VulkanGraphicsDevice();
+
+        [[nodiscard]] inline VkDevice GetVkDevice() const noexcept
+        {
+            return _device;
+        }
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

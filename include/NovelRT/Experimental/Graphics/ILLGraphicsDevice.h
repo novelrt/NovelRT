@@ -10,12 +10,23 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    class ILLGraphicsDevice
+    class ILLGraphicsDevice : public std::enable_shared_from_this<ILLGraphicsDevice>
     {
     public:
         virtual void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
         virtual void TearDown() = 0;
-        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(gsl::span<std::byte> byteData) = 0;
+        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
+                                                                                 ShaderProgramKind kind,
+                                                                                 gsl::span<uint8_t> byteData) = 0;
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsPipeline> CreatePipeline(
+            std::shared_ptr<GraphicsPipelineSignature> signature,
+            std::shared_ptr<ShaderProgram> vertexShader = nullptr,
+            std::shared_ptr<ShaderProgram> pixelShader = nullptr) = 0;
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
+            gsl::span<GraphicsPipelineInput> inputs = gsl::span<GraphicsPipelineInput>{},
+            gsl::span<GraphicsPipelineResource> resources = gsl::span<GraphicsPipelineResource>{}) = 0;
     };
 } // namespace NovelRT::Experimental::Graphics
 
