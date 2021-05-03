@@ -26,10 +26,18 @@ extern "C"
             return NRT_FAILURE_NULLPTR_PROVIDED;
         }
 
-        auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
         auto returnPtr = new UnsafeComponentView(0, nullptr);
-        *returnPtr = actualCatalogue->GetComponentViewById(componentId);
-        *outputResult = reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
+        try
+        {
+            auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
+            *returnPtr = actualCatalogue->GetComponentViewById(componentId);
+            *outputResult = reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
+        }
+        catch (const std::out_of_range&)
+        {
+            delete returnPtr;
+            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+        }
 
         return NRT_SUCCESS;
     }

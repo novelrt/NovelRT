@@ -182,3 +182,10 @@ TEST_F(InteropCatalogueTest, CanHandleEntityDeletionInSameFrame)
     Nrt_UnsafeComponentView_Destroy(compViewChar);
     Nrt_UnsafeComponentView_Destroy(compViewSizeT);
 }
+
+TEST_F(InteropCatalogueTest, GetComponentViewByIdReturnsOutOfRangeFailureWhenOutOfRange)
+{
+    NrtUnsafeComponentViewHandle handleResult = nullptr;
+    auto result = Nrt_Catalogue_GetComponentViewById(catalogue, 5000, &handleResult);
+    ASSERT_EQ(result, NRT_FAILURE_ARGUMENT_OUT_OF_RANGE);
+}
