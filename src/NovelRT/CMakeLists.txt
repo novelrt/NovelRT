@@ -42,6 +42,9 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
 
   Experimental/EngineConfig.cpp
+  Experimental/Graphics/GraphicsPipelineInput.cpp
+  Experimental/Graphics/GraphicsPipelineInputElement.cpp
+  Experimental/Graphics/GraphicsPipelineSignature.cpp
   Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp

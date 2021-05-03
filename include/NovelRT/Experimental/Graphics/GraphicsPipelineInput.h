@@ -16,15 +16,9 @@ namespace NovelRT::Experimental::Graphics
         std::vector<GraphicsPipelineInputElement> _elements;
 
     public:
-        GraphicsPipelineInput(gsl::span<GraphicsPipelineInputElement> elements) noexcept :
-        _elements(std::vector<GraphicsPipelineInputElement>(elements.begin(), elements.end()))
-        {
-        }
+        explicit GraphicsPipelineInput(gsl::span<const GraphicsPipelineInputElement> elements) noexcept;
 
-        [[nodiscard]] inline gsl::span<GraphicsPipelineInputElement> GetElements() const noexcept
-        {
-            return gsl::span<GraphicsPipelineInputElement>(&(*_elements.begin()), _elements.size());
-        }
+        [[nodiscard]] gsl::span<const GraphicsPipelineInputElement> GetElements() const noexcept;
     };
 }
 

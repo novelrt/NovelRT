@@ -25,6 +25,8 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsPipelineResource;
     class GraphicsPipelineInputElement;
     enum class GraphicsPipelineInputElementKind : uint32_t;
+    enum class GraphicsPipelineResourceKind : uint32_t;
+    enum class ShaderProgramVisibility : uint32_t;
 }
 
 //Graphics dependencies
@@ -36,6 +38,7 @@ namespace NovelRT::Experimental::Graphics
 #include <gsl/span>
 #include <string>
 #include <utility>
+#include <typeindex>
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Maths/GeoVector2F.h"
 #include "../../Maths/GeoVector3F.h"
@@ -63,5 +66,6 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineInput.h"
 #include "GraphicsPipelineInputElement.h"
 #include "GraphicsPipelineInputElementKind.h"
+#include "GraphicsPipelineResource.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H
