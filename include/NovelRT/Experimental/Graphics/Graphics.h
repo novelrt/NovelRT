@@ -67,5 +67,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineInputElement.h"
 #include "GraphicsPipelineInputElementKind.h"
 #include "GraphicsPipelineResource.h"
+#include "GraphicsPipelineResourceKind.h"
+#include "ShaderProgramVisibility.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H
