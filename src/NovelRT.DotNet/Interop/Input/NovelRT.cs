@@ -40,7 +40,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_Input_BasicInteractionRect_setSubscribedKey([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, NrtKeyCode value);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_Input_BasicInteractionRect_addInteraction([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, [NativeTypeName("void (*)()")] delegate* unmanaged<void> ptr);
+        public static extern NrtResult Nrt_Input_BasicInteractionRect_addInteraction([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, [NativeTypeName("void (*)(void *)")] delegate* unmanaged<void*, void> ptr, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtInteractionServiceHandle")]
