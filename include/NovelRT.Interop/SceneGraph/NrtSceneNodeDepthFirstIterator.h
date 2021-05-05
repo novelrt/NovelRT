@@ -12,7 +12,8 @@ extern "C"
 #endif
 
     NrtResult Nrt_SceneNodeDepthFirstIterator_create(NrtSceneNodeHandle node,
-                                                     int32_t (*func)(NrtSceneNodeHandle),
+                                                     int32_t (*func)(NrtSceneNodeHandle, void*),
+                                                     void* context,
                                                      NrtSceneNodeDepthFirstIteratorHandle* outputIterator);
     NrtResult Nrt_SceneNodeDepthFirstIterator_increment(NrtSceneNodeDepthFirstIteratorHandle iterator);
     NrtResult Nrt_SceneNodeDepthFirstIterator_postFixIncrement(NrtSceneNodeDepthFirstIteratorHandle iterator);
