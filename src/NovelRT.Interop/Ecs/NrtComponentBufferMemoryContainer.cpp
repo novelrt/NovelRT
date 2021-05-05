@@ -55,7 +55,7 @@ extern "C"
     {
         if (container == nullptr || componentData == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -81,7 +81,7 @@ extern "C"
     {
         if (container == nullptr || outputResult == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -144,7 +144,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer*>(container);
@@ -163,7 +163,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view);

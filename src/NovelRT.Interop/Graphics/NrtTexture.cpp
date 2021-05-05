@@ -19,7 +19,7 @@ extern "C"
         if (targetTexture == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);

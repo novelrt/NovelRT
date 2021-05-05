@@ -26,7 +26,7 @@ extern "C"
     {
         if (componentView == nullptr || instructionData == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -53,7 +53,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -82,7 +82,7 @@ extern "C"
     {
         if (componentView == nullptr || outputResult == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -139,7 +139,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<UnsafeComponentView*>(componentView);

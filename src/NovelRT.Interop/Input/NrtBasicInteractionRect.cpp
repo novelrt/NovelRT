@@ -16,7 +16,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -30,7 +30,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -43,7 +43,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -62,7 +62,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -81,7 +81,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -100,7 +100,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
@@ -115,7 +115,7 @@ extern "C"
         if (object == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);

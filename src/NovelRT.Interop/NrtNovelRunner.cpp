@@ -42,7 +42,7 @@ extern "C"
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -55,7 +55,7 @@ extern "C"
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -69,7 +69,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -78,7 +78,7 @@ extern "C"
         auto ptr = _audioCollection.back().get();
         if (ptr == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         *outputService = reinterpret_cast<NrtAudioServiceHandle>(ptr);
@@ -92,7 +92,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -102,7 +102,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtInteractionServiceHandle>(ptr);
 
@@ -114,7 +114,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -124,7 +124,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtWindowingServiceHandle>(ptr);
 
@@ -136,7 +136,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -146,7 +146,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtRuntimeServiceHandle>(ptr);
 
@@ -158,7 +158,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -168,7 +168,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtRenderingServiceHandle>(ptr);
 
@@ -180,7 +180,7 @@ extern "C"
         if (runner == nullptr || outputService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -190,7 +190,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtDebugServiceHandle>(ptr);
 
@@ -202,7 +202,7 @@ extern "C"
         if (runner == nullptr || func == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -220,7 +220,7 @@ extern "C"
         if (runner == nullptr || func == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -235,7 +235,7 @@ extern "C"
         if (runner == nullptr || outputEvent == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -249,7 +249,7 @@ extern "C"
         if (runner == nullptr || outputEvent == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);

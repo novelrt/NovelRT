@@ -29,7 +29,7 @@ TEST(InteropQuadTreePointTest, deleteReturnsSuccess)
 TEST(InteropQuadTreePointTest, deleteReturnsNullptrFailureWhenGivenNullptr)
 {
     const char* outputError = nullptr;
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
     // EXPECT_EQ(outputError, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 

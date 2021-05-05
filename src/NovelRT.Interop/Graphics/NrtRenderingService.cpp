@@ -29,7 +29,7 @@ extern "C"
         if (windowingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         WindowingService* windowingServicePtr = reinterpret_cast<WindowingService*>(windowingService);
@@ -46,7 +46,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -69,7 +69,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -88,7 +88,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -110,7 +110,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -131,7 +131,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -154,7 +154,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -173,7 +173,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -187,7 +187,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -201,7 +201,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -216,7 +216,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -231,7 +231,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -248,7 +248,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -267,7 +267,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -283,7 +283,7 @@ extern "C"
         if (renderingService == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);

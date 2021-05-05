@@ -22,7 +22,7 @@ extern "C"
     {
         if (componentCache == nullptr || deleteInstructionState == nullptr || outputResult == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -50,7 +50,7 @@ extern "C"
     {
         if (componentCache == nullptr || outputResult == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
@@ -70,7 +70,7 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentCache*>(componentCache);

@@ -55,7 +55,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -113,7 +113,7 @@ extern "C"
         }
         catch (const NullPointerException&)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         catch (const OutOfMemoryException&)
         {
@@ -133,7 +133,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<SystemScheduler*>(systemScheduler);

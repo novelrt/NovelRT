@@ -20,7 +20,7 @@ extern "C"
         if (fontSet == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -43,7 +43,7 @@ extern "C"
         if (fontSet == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -57,7 +57,7 @@ extern "C"
         if (fontSet == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);

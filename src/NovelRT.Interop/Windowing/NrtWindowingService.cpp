@@ -32,7 +32,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<Windowing::WindowMode>(windowMode),
@@ -46,7 +46,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->tearDown();
@@ -66,7 +66,7 @@ extern "C"
         if (servicePtr == nullptr || value == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->setWindowTitle(value);
@@ -79,7 +79,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2F*>(&value));

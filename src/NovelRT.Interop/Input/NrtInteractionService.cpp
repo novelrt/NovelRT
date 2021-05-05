@@ -33,7 +33,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->consumePlayerInput();
@@ -47,7 +47,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         servicePtr->executeClickedInteractable();
@@ -61,7 +61,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto vector = reinterpret_cast<Maths::GeoVector2F&>(value);
@@ -78,7 +78,7 @@ extern "C"
         if (servicePtr == nullptr || output == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto changelog = servicePtr->getKeyState(reinterpret_cast<Input::KeyCode&>(value));
@@ -96,7 +96,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(

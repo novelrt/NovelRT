@@ -28,7 +28,7 @@ extern "C"
         if (tree == nullptr || outputParentTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -50,7 +50,7 @@ extern "C"
         if (tree == nullptr || outputPoint == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -70,7 +70,7 @@ extern "C"
         if (tree == nullptr || outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -84,7 +84,7 @@ extern "C"
         if (tree == nullptr || outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -98,7 +98,7 @@ extern "C"
         if (tree == nullptr || outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -112,7 +112,7 @@ extern "C"
         if (tree == nullptr || outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto treePointer = reinterpret_cast<Maths::QuadTree*>(tree);
@@ -142,7 +142,7 @@ extern "C"
         if (tree == nullptr || outputResultVector == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         std::vector<std::shared_ptr<Maths::QuadTreePoint>>* points =
@@ -169,7 +169,7 @@ extern "C"
         if (vector == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
@@ -189,7 +189,7 @@ extern "C"
         if (vector == nullptr || outputPoint == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -210,7 +210,7 @@ extern "C"
         if (tree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto ptr = reinterpret_cast<Maths::QuadTree*>(tree)->shared_from_this();
