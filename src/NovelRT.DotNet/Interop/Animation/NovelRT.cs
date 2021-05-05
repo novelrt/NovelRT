@@ -43,10 +43,10 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_SpriteAnimatorFrame_setDuration([NativeTypeName("NrtSpriteAnimatorFrameHandle")] IntPtr frame, [NativeTypeName("NrtTimestamp")] ulong timestamp);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter([NativeTypeName("NrtSpriteAnimatorFrameHandle")] IntPtr frame, [NativeTypeName("void (*)()")] delegate* unmanaged<void> func);
+        public static extern NrtResult Nrt_SpriteAnimatorFrame_addFrameEnter([NativeTypeName("NrtSpriteAnimatorFrameHandle")] IntPtr frame, [NativeTypeName("void (*)(void *)")] delegate* unmanaged<void*, void> func, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SpriteAnimatorFrame_addFrameExit([NativeTypeName("NrtSpriteAnimatorFrameHandle")] IntPtr frame, [NativeTypeName("void (*)()")] delegate* unmanaged<void> func);
+        public static extern NrtResult Nrt_SpriteAnimatorFrame_addFrameExit([NativeTypeName("NrtSpriteAnimatorFrameHandle")] IntPtr frame, [NativeTypeName("void (*)(void *)")] delegate* unmanaged<void*, void> func, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtSpriteAnimatorStateHandle")]

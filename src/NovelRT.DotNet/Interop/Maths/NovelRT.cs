@@ -11,6 +11,12 @@ namespace NovelRT.Interop
         public static extern NrtGeoBounds Nrt_GeoBounds_zero();
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtGeoBounds Nrt_GeoBounds_GetAABBFromTransform(NrtTransform transform);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtGeoBounds Nrt_GeoBounds_FromTransform(NrtTransform transform);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, [NativeTypeName("int32_t")] int index);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]

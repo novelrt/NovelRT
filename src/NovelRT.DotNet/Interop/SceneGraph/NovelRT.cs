@@ -79,16 +79,16 @@ namespace NovelRT.Interop
         public static extern NrtBool Nrt_SceneNode_isAdjacent([NativeTypeName("NrtSceneNodeHandle")] IntPtr firstNode, [NativeTypeName("NrtSceneNodeHandle")] IntPtr secondNode);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNode_traverseBreadthFirst([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("void (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, void> action);
+        public static extern NrtResult Nrt_SceneNode_traverseBreadthFirst([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("void (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, void> action, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, int> action, [NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle *")] IntPtr* outputIterator);
+        public static extern NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, int> action, void* context, [NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle *")] IntPtr* outputIterator);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNode_traverseDepthFirst([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("void (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, void> action);
+        public static extern NrtResult Nrt_SceneNode_traverseDepthFirst([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("void (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, void> action, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, int> action, [NativeTypeName("NrtSceneNodeDepthFirstIteratorHandle *")] IntPtr* outputIterator);
+        public static extern NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, int> action, void* context, [NativeTypeName("NrtSceneNodeDepthFirstIteratorHandle *")] IntPtr* outputIterator);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtBool Nrt_SceneNode_canReach([NativeTypeName("NrtSceneNodeHandle")] IntPtr firstNode, [NativeTypeName("NrtSceneNodeHandle")] IntPtr secondNode);
@@ -107,7 +107,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex([NativeTypeName("const NrtSceneNodeSetHandle")] IntPtr nodeSet, [NativeTypeName("size_t")] nuint index, [NativeTypeName("NrtSceneNodeHandle *")] IntPtr* outputSceneNode);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNodeBreadthFirstIterator_create([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, int> func, [NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle *")] IntPtr* outputIterator);
+        public static extern NrtResult Nrt_SceneNodeBreadthFirstIterator_create([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, int> func, void* context, [NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle *")] IntPtr* outputIterator);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_SceneNodeBreadthFirstIterator_increment([NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle")] IntPtr iterator);
@@ -129,7 +129,7 @@ namespace NovelRT.Interop
         public static extern NrtBool Nrt_SceneNodeBreadthFirstIterator_isNotEqual([NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle")] IntPtr iterator, [NativeTypeName("NrtSceneNodeBreadthFirstIteratorHandle")] IntPtr other);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_SceneNodeDepthFirstIterator_create([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle)")] delegate* unmanaged<IntPtr, int> func, [NativeTypeName("NrtSceneNodeDepthFirstIteratorHandle *")] IntPtr* outputIterator);
+        public static extern NrtResult Nrt_SceneNodeDepthFirstIterator_create([NativeTypeName("NrtSceneNodeHandle")] IntPtr node, [NativeTypeName("int32_t (*)(NrtSceneNodeHandle, void *)")] delegate* unmanaged<IntPtr, void*, int> func, void* context, [NativeTypeName("NrtSceneNodeDepthFirstIteratorHandle *")] IntPtr* outputIterator);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_SceneNodeDepthFirstIterator_increment([NativeTypeName("NrtSceneNodeDepthFirstIteratorHandle")] IntPtr iterator);
