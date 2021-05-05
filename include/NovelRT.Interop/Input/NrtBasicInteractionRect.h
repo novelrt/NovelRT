@@ -12,8 +12,7 @@ extern "C"
 #endif
 
     NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour(NrtBasicInteractionRectHandle object);
-    NrtResult Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object,
-                                                          NrtTransform* outputTransform);
+    NrtTransform Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object);
     NrtResult Nrt_Input_BasicInteractionRect_setTransform(NrtBasicInteractionRectHandle object, NrtTransform transform);
     int32_t Nrt_Input_BasicInteractionRect_getLayer(NrtBasicInteractionRectHandle object);
     NrtResult Nrt_Input_BasicInteractionRect_setLayer(NrtBasicInteractionRectHandle object, int32_t value);

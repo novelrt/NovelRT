@@ -53,9 +53,14 @@ extern "C"
         NrtEntityId entity,
         const void* componentData)
     {
-        if (container == nullptr || componentData == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (componentData == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -79,9 +84,14 @@ extern "C"
         NrtEntityId entity,
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -144,7 +154,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer*>(container);
@@ -163,7 +173,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view);

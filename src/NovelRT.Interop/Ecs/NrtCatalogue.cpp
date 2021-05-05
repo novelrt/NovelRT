@@ -21,9 +21,14 @@ extern "C"
                                                  NrtComponentTypeId componentId,
                                                  NrtUnsafeComponentViewHandle* outputResult)
     {
-        if (catalogue == nullptr || outputResult == nullptr)
+        if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto returnPtr = new UnsafeComponentView(0, nullptr);
@@ -61,7 +66,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         reinterpret_cast<Catalogue*>(catalogue)->DeleteEntity(entity);
@@ -73,7 +78,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<Catalogue*>(catalogue);

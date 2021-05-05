@@ -19,10 +19,16 @@ extern "C"
 
     NrtResult Nrt_SpriteAnimatorFrame_getTexture(NrtSpriteAnimatorFrameHandle frame, NrtTextureHandle* outputTexture)
     {
-        if (frame == nullptr || outputTexture == nullptr)
+        if (frame == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputTexture == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
@@ -34,10 +40,16 @@ extern "C"
 
     NrtResult Nrt_SpriteAnimatorFrame_setTexture(NrtSpriteAnimatorFrameHandle frame, NrtTextureHandle texture)
     {
-        if (frame == nullptr || texture == nullptr)
+        if (frame == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (texture == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
@@ -60,7 +72,7 @@ extern "C"
         if (frame == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
@@ -73,10 +85,16 @@ extern "C"
                                                     void (*func)(void*),
                                                     void* context)
     {
+        if (frame == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
         if (frame == nullptr || func == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);
@@ -89,10 +107,16 @@ extern "C"
                                                    void (*func)(void*),
                                                    void* context)
     {
+        if (frame == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
         if (frame == nullptr || func == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Animation::SpriteAnimatorFrame* cppFrame = reinterpret_cast<Animation::SpriteAnimatorFrame*>(frame);

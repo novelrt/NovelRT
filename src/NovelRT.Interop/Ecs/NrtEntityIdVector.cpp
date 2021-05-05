@@ -20,7 +20,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         reinterpret_cast<std::vector<EntityId>*>(vector)->emplace_back(entity);
@@ -32,7 +32,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto vecPtr = reinterpret_cast<std::vector<EntityId>*>(vector);
@@ -52,7 +52,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<std::vector<EntityId>*>(vector);
