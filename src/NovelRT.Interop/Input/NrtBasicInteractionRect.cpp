@@ -24,7 +24,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-     NrtTransform Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object)
+    NrtTransform Nrt_Input_BasicInteractionRect_getTransform(NrtBasicInteractionRectHandle object)
     {
         auto obj = reinterpret_cast<Input::BasicInteractionRect*>(object);
         return reinterpret_cast<NrtTransform&>(obj->transform());

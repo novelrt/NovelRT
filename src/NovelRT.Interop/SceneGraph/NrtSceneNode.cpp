@@ -153,7 +153,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (action == nullptr || outputIterator == nullptr)
+        if (action == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;

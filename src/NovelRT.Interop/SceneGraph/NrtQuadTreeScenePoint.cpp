@@ -51,7 +51,7 @@ extern "C"
 
     NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePointHandle point, NrtSceneNodeHandle* outputNode)
     {
-        if (node == nullptr)
+        if (point == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;

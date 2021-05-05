@@ -228,7 +228,7 @@ extern "C"
                                                 size_t index,
                                                 NrtQuadTreePointHandle* outputPoint)
     {
-        if (tree == nullptr)
+        if (vector == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;

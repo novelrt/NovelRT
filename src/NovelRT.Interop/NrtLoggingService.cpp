@@ -144,12 +144,6 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (message == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
-        }
-
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
         cService->setLogLevel(static_cast<NovelRT::LogLevel>(level));
 
@@ -166,7 +160,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (message == nullptr)
+        if (exceptionMessage == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -187,7 +181,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (message == nullptr)
+        if (exceptionMessage == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;

@@ -14,7 +14,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect)
+    NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect)
     {
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);

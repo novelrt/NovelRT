@@ -26,10 +26,10 @@ TEST(InteropQuadTreePointTest, deleteReturnsSuccess)
     EXPECT_EQ(Nrt_QuadTreePoint_delete(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f)), NRT_SUCCESS);
 }
 
-TEST(InteropQuadTreePointTest, deleteReturnsNullptrFailureWhenGivenNullptr)
+TEST(InteropQuadTreePointTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     const char* outputError = nullptr;
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
     // EXPECT_EQ(outputError, Nrt_getErrMsgIsNullptr()); //TODO: fix this
 }
 

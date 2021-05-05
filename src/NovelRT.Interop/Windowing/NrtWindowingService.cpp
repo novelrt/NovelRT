@@ -90,7 +90,7 @@ extern "C"
 
     NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingServiceHandle service, NrtGeoVector2F value)
     {
-        if (servicePtr == nullptr)
+        if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;

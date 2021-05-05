@@ -97,7 +97,7 @@ extern "C"
                                                                 int32_t layer,
                                                                 NrtBasicInteractionRectHandle* outputRect)
     {
-        if (servicePtr == nullptr)
+        if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;

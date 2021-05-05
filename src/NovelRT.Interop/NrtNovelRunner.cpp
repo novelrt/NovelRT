@@ -241,7 +241,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (outputService == nullptr)
+        if (func == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
