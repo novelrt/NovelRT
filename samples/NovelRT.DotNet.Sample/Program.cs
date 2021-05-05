@@ -270,7 +270,7 @@ namespace NovelRT.DotNet.Sample
 
         // Function to render NovelChan
         [UnmanagedCallersOnly]
-        private static void renderNovelChan()
+        private static unsafe void renderNovelChan(void* contextData)
         {
             Nrt_ImageRect_executeObjectBehaviour(nChanRect);
             Nrt_Input_BasicInteractionRect_executeObjectBehaviour(interactRect);
@@ -278,7 +278,7 @@ namespace NovelRT.DotNet.Sample
 
         // Function to move NovelChan DVD screensaver style
         [UnmanagedCallersOnly]
-        private static void moveNovelChan(ulong delta)
+        private static unsafe void moveNovelChan(ulong delta, void* contextData)
         {
             if (nChanRect == IntPtr.Zero)
                 return;
@@ -376,7 +376,7 @@ namespace NovelRT.DotNet.Sample
 
         // Function to interact with Ink
         [UnmanagedCallersOnly]
-        private static void interactWithNovelChan()
+        private static unsafe void interactWithNovelChan(void* contextData)
         {
             if ((NrtBool)Nrt_Story_canContinue(story) == NRT_FALSE)
             {
