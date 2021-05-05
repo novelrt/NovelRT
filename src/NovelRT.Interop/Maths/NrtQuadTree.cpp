@@ -25,7 +25,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getParent(const NrtQuadTreeHandle tree, NrtQuadTreeHandle* outputParentTree)
     {
-        if (tree == nullptr || outputParentTree == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputParentTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -47,7 +53,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getPoint(const NrtQuadTreeHandle tree, size_t index, NrtQuadTreePointHandle* outputPoint)
     {
-        if (tree == nullptr || outputPoint == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputPoint == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -67,7 +79,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getTopLeft(const NrtQuadTreeHandle tree, NrtQuadTreeHandle* outputCornerTree)
     {
-        if (tree == nullptr || outputCornerTree == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -81,7 +99,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getTopRight(const NrtQuadTreeHandle tree, NrtQuadTreeHandle* outputCornerTree)
     {
-        if (tree == nullptr || outputCornerTree == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -95,7 +119,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getBottomLeft(const NrtQuadTreeHandle tree, NrtQuadTreeHandle* outputCornerTree)
     {
-        if (tree == nullptr || outputCornerTree == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -109,7 +139,13 @@ extern "C"
 
     NrtResult Nrt_QuadTree_getBottomRight(const NrtQuadTreeHandle tree, NrtQuadTreeHandle* outputCornerTree)
     {
-        if (tree == nullptr || outputCornerTree == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputCornerTree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -139,7 +175,13 @@ extern "C"
                                                  NrtGeoBounds bounds,
                                                  NrtPointVectorHandle* outputResultVector)
     {
-        if (tree == nullptr || outputResultVector == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResultVector == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -169,7 +211,7 @@ extern "C"
         if (vector == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(vector);
@@ -186,7 +228,13 @@ extern "C"
                                                 size_t index,
                                                 NrtQuadTreePointHandle* outputPoint)
     {
-        if (vector == nullptr || outputPoint == nullptr)
+        if (tree == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputPoint == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -210,7 +258,7 @@ extern "C"
         if (tree == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto ptr = reinterpret_cast<Maths::QuadTree*>(tree)->shared_from_this();

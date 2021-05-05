@@ -41,7 +41,7 @@ extern "C"
         if (point == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this();
