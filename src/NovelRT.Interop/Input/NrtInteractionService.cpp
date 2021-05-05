@@ -33,7 +33,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         servicePtr->consumePlayerInput();
@@ -47,7 +47,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         servicePtr->executeClickedInteractable();
@@ -61,7 +61,7 @@ extern "C"
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto vector = reinterpret_cast<Maths::GeoVector2F&>(value);
@@ -75,7 +75,13 @@ extern "C"
     {
         auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
-        if (servicePtr == nullptr || output == nullptr)
+        if (servicePtr == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (output == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -91,13 +97,19 @@ extern "C"
                                                                 int32_t layer,
                                                                 NrtBasicInteractionRectHandle* outputRect)
     {
-        auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
-
         if (servicePtr == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputRect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
+
+        auto servicePtr = reinterpret_cast<Input::InteractionService*>(service);
 
         _rectCollection.push_back(std::unique_ptr<Input::BasicInteractionRect>(
             servicePtr->createBasicInteractionRect(*reinterpret_cast<const Transform*>(&transform), layer)));
