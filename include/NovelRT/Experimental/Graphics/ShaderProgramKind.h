@@ -12,7 +12,10 @@ namespace NovelRT::Experimental::Graphics
 {
     enum class ShaderProgramKind : uint32_t
     {
-
+        Unknown = 0,
+        Vertex = 1,
+        Pixel = 2,
+        Fragment = Pixel
     };
 }
 

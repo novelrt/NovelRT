@@ -4,6 +4,24 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_H
 
+//Graphics dependencies
+#include <cstdint>
+#include <vector>
+#include <memory>
+#include <optional>
+#include <filesystem>
+#include <gsl/span>
+#include <string>
+#include <utility>
+#include <typeindex>
+#include "../../Graphics/RGBAConfig.h"
+#include "../../Maths/GeoVector2F.h"
+#include "../../Maths/GeoVector3F.h"
+#include "../../Maths/GeoVector4F.h"
+#include "../../Maths/GeoMatrix4x4F.h"
+#include "../../Graphics/RGBAConfig.h"
+#include "../../Utilities/Event.h"
+
 /**
  * @brief The experimental Graphics plugin API. Comes with built-in support for the ECS.
  */
@@ -29,23 +47,6 @@ namespace NovelRT::Experimental::Graphics
     enum class ShaderProgramVisibility : uint32_t;
 }
 
-//Graphics dependencies
-#include <cstdint>
-#include <vector>
-#include <memory>
-#include <optional>
-#include <filesystem>
-#include <gsl/span>
-#include <string>
-#include <utility>
-#include <typeindex>
-#include "../../Graphics/RGBAConfig.h"
-#include "../../Maths/GeoVector2F.h"
-#include "../../Maths/GeoVector3F.h"
-#include "../../Maths/GeoVector4F.h"
-#include "../../Maths/GeoMatrix4x4F.h"
-#include "../../Graphics/RGBAConfig.h"
-#include "../../Utilities/Event.h"
 
 //Graphics types
 #include "ShaderProgramKind.h"
