@@ -68,7 +68,7 @@ extern "C"
         if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);

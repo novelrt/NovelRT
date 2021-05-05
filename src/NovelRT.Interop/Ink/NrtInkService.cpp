@@ -21,7 +21,7 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);
@@ -34,7 +34,7 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);
@@ -46,10 +46,16 @@ extern "C"
                                          const char* jsonString,
                                          NrtStoryHandle* outputStory)
     {
-        if (service == nullptr || outputStory == nullptr)
+        if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputStory == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);
@@ -62,10 +68,16 @@ extern "C"
     NrtResult Nrt_InkService_getRuntimeService(NrtInkServiceHandle service,
                                                NrtRuntimeServiceHandle* outputRuntimeService)
     {
-        if (service == nullptr || outputRuntimeService == nullptr)
+        if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputRuntimeService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         Ink::InkService* inkService = reinterpret_cast<Ink::InkService*>(service);

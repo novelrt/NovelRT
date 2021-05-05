@@ -33,7 +33,7 @@ extern "C"
     {
         if (entityCache == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<EntityCache*>(entityCache);

@@ -144,5 +144,5 @@ TEST(InteropGeoBoundsTest, intersectsWithReturnsNullptrFailureWhenGivenNullptr)
     NrtGeoBounds bounds0{Nrt_GeoVector2F_zero(), Nrt_GeoVector2F_uniform(5.0f), 20.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_uniform(1.0f), Nrt_GeoVector2F_uniform(5.0f), 0.0f};
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_NULLPTR_PROVIDED);
+    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
 }

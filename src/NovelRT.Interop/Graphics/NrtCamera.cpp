@@ -35,7 +35,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -56,7 +56,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -86,7 +86,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -117,7 +117,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);

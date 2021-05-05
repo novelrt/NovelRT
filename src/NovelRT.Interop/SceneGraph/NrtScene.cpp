@@ -19,10 +19,16 @@ extern "C"
 
     NrtResult Nrt_Scene_getNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet)
     {
-        if (scene == nullptr || outputSet == nullptr)
+        if (scene == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputSet == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
@@ -53,7 +59,7 @@ extern "C"
         if (scene == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
