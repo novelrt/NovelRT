@@ -17,9 +17,15 @@ namespace NovelRT.Utilities
                 switch(result)
                 {
                     case NrtResult.NRT_FAILURE_NULLPTR_PROVIDED: throw new ObjectDisposedException(caller.GetType().FullName);
-                    //case NrtResult
+                    case NrtResult.NRT_FAILURE_ARGUMENT_OUT_OF_RANGE: throw new ArgumentOutOfRangeException();
+                    //TODO: Implement all NrtResults when Matt stops messing with them
                 }
             }
+        }
+        internal static bool NrtBoolToBool(NrtBool boolean){
+            if (boolean == NrtBool.NRT_TRUE)
+                return true;
+            return false;
         }
     }
 }
