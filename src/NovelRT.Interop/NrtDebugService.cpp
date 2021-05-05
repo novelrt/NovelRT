@@ -46,7 +46,7 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         DebugService* cppService = reinterpret_cast<DebugService*>(service);
@@ -65,7 +65,7 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         DebugService* cppService = reinterpret_cast<DebugService*>(service);

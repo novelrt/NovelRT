@@ -33,7 +33,7 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -61,6 +61,12 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -73,6 +79,12 @@ extern "C"
     NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -89,6 +101,12 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -103,6 +121,12 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -115,6 +139,12 @@ extern "C"
     NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level)
     {
         if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -133,6 +163,12 @@ extern "C"
         if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -146,6 +182,12 @@ extern "C"
                                                 const char* exceptionMessage)
     {
         if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (message == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;

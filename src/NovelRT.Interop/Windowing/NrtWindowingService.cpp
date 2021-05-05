@@ -95,7 +95,7 @@ extern "C"
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
-        
+
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
 
         servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2F*>(&value));
