@@ -4,6 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using NovelRT.Interop;
 using static NovelRT.Interop.NovelRT;
+using NovelRT.Utilities;
 namespace NovelRT.Ecs
 {
     public class Catalogue : ShimObject, IDisposable
@@ -25,11 +26,8 @@ namespace NovelRT.Ecs
         {
             IntPtr returnedView = new(0);
             NrtResult result = Nrt_Catalogue_GetComponentViewById(internalHandle, componentID, &returnedView);
-            if (result == NrtResult.NRT_SUCCESS)
-            {
-                return new UnsafeComponentView(returnedView);
-            }
-            throw new ArgumentOutOfRangeException();
+            NrtUtilities.ThrowExceptionIfFailed(result, this);
+            return new UnsafeComponentView(returnedView);
         }
         //Stathis: backwards compatibility until (safe) ComponentView is implemented.
         public UnsafeComponentView GetComponentViewByID(nuint componentId)
@@ -39,8 +37,7 @@ namespace NovelRT.Ecs
         public void DeleteEntity(nuint entity)
         {
             NrtResult result = Nrt_Catalogue_DeleteEntity(this.internalHandle, entity);
-            if (result == NrtResult.NRT_FAILURE_NULLPTR_PROVIDED)
-                throw new ObjectDisposedException(GetType().FullName);
+            NrtUtilities.ThrowExceptionIfFailed(result, this);
         }
         ~Catalogue()
         {
@@ -52,10 +49,7 @@ namespace NovelRT.Ecs
             if (internalHandle != IntPtr.Zero)
             {
                 NrtResult result = Nrt_Catalogue_Destroy(internalHandle);
-                if (result != NrtResult.NRT_SUCCESS)
-                {
-                    throw new ObjectDisposedException(GetType().FullName);
-                }
+                NrtUtilities.ThrowExceptionIfFailed(result,this);
             }
         }
     }
