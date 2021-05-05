@@ -253,14 +253,14 @@ namespace NovelRT.DotNet.Sample
                 {
                     Nrt_Story_resetState(story);
                 }
-                Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &interactWithNovelChan);
+                Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &interactWithNovelChan, null);
             }
 
             // Setting up Scene Construction
-            Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan);
+            Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan, null);
 
             // Setting up Update methods
-            Nrt_NovelRunner_addUpdate(runner, &moveNovelChan);
+            Nrt_NovelRunner_addUpdate(runner, &moveNovelChan, null);
 
             // Run the novel!
             Nrt_NovelRunner_runNovel(runner);
