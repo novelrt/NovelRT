@@ -24,7 +24,12 @@ extern "C"
                                                                      NrtEntityId entity,
                                                                      void* instructionData)
     {
-        if (componentView == nullptr || instructionData == nullptr)
+        if (componentView == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (instructionData == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -53,7 +58,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         try
@@ -80,7 +85,12 @@ extern "C"
         NrtEntityId entity,
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
-        if (componentView == nullptr || outputResult == nullptr)
+        if (componentView == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -139,7 +149,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<UnsafeComponentView*>(componentView);

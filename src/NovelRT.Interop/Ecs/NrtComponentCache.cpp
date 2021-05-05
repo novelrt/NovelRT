@@ -20,7 +20,12 @@ extern "C"
                                                              void* context,
                                                              NrtComponentTypeId* outputResult)
     {
-        if (componentCache == nullptr || deleteInstructionState == nullptr || outputResult == nullptr)
+        if (componentCache == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (deleteInstructionState == nullptr || outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -48,7 +53,12 @@ extern "C"
                                                         NrtComponentTypeId id,
                                                         NrtComponentBufferMemoryContainerHandle* outputResult)
     {
-        if (componentCache == nullptr || outputResult == nullptr)
+        if (componentCache == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -70,7 +80,7 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentCache*>(componentCache);

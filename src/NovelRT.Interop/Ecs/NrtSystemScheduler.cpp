@@ -55,7 +55,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         try
@@ -133,7 +133,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SystemScheduler*>(systemScheduler);

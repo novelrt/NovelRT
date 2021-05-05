@@ -21,7 +21,12 @@ extern "C"
                                                   size_t key,
                                                   const void* value)
     {
-        if (container == nullptr || value == nullptr)
+        if (container == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (value == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -57,7 +62,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         try
@@ -90,7 +95,12 @@ extern "C"
                                                                     size_t denseIndex,
                                                                     size_t* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -118,7 +128,12 @@ extern "C"
         size_t denseIndex,
         NrtSparseSetMemoryContainer_ByteIteratorViewHandle* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -152,7 +167,12 @@ extern "C"
         size_t denseIndex,
         NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
         {
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
@@ -253,9 +273,9 @@ extern "C"
 
     NrtResult Nrt_SparseSetMemoryContainer_Destroy(NrtSparseSetMemoryContainerHandle container)
     {
-        if (container)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SparseSetMemoryContainer*>(container);
@@ -293,7 +313,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(view);
@@ -326,7 +346,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SparseSetMemoryContainer::ConstByteIteratorView*>(view);
@@ -362,6 +382,16 @@ extern "C"
         size_t* outputId,
         NrtSparseSetMemoryContainer_ByteIteratorViewHandle* outputView)
     {
+        if (iterator == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputId == nullptr || outputView == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+        }
+
         try
         {
             auto ptr = reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator);
@@ -386,7 +416,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SparseSetMemoryContainer::Iterator*>(iterator);
@@ -422,6 +452,16 @@ extern "C"
         size_t* outputId,
         NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle* outputView)
     {
+        if (iterator == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputId == nullptr || outputView == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+        }
+
         try
         {
             auto ptr = reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(iterator);
@@ -446,7 +486,7 @@ NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryC
 {
     if (iterator == nullptr)
     {
-        return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+        return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     delete reinterpret_cast<SparseSetMemoryContainer::ConstIterator*>(iterator);
