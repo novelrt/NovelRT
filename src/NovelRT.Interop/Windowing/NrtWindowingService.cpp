@@ -28,8 +28,15 @@ extern "C"
                                                     NrtWindowMode windowMode,
                                                     int32_t transparencyEnabled)
     {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-        if (servicePtr == nullptr)
+
+        if (windowTitle == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -42,12 +49,13 @@ extern "C"
 
     NrtResult Nrt_WindowingService_tearDown(NrtWindowingServiceHandle service)
     {
-        auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-        if (servicePtr == nullptr)
+        if (service == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
+
+        auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
 
         servicePtr->tearDown();
         return NRT_SUCCESS;
@@ -62,8 +70,15 @@ extern "C"
 
     NrtResult Nrt_WindowingService_setWindowTitle(NrtWindowingServiceHandle service, const char* value)
     {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
-        if (servicePtr == nullptr || value == nullptr)
+
+        if (value == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -75,12 +90,13 @@ extern "C"
 
     NrtResult Nrt_WindowingService_setWindowSize(NrtWindowingServiceHandle service, NrtGeoVector2F value)
     {
-        auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
         if (servicePtr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
+        
+        auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
 
         servicePtr->setWindowSize(*reinterpret_cast<const Maths::GeoVector2F*>(&value));
         return NRT_SUCCESS;
