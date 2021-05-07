@@ -15,9 +15,9 @@ namespace NovelRT::Input
     public:
         BasicInteractionRect(Transform transform,
                              int32_t layer,
-                             const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
+                             const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject) noexcept;
 
-        bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const override;
+        bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const noexcept override;
     };
 } // namespace NovelRT::Input
 

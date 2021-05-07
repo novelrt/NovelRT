@@ -18,18 +18,18 @@ namespace NovelRT::Maths
         float rotation;
 
         GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
-        bool pointIsWithinBounds(GeoVector2F point) const;
+        bool pointIsWithinBounds(GeoVector2F point) const noexcept;
         bool intersectsWith(GeoBounds otherBounds) const;
-        GeoVector2F getCornerInLocalSpace(int32_t index) const;
-        GeoVector2F getCornerInWorldSpace(int32_t index) const;
-        GeoVector2F getExtents() const;
+        GeoVector2F getCornerInLocalSpace(int32_t index) const noexcept;
+        GeoVector2F getCornerInWorldSpace(int32_t index) const noexcept;
+        GeoVector2F getExtents() const noexcept;
 
-        inline bool operator==(GeoBounds other) const
+        inline bool operator==(GeoBounds other) const noexcept
         {
             return position == other.position && size == other.size && rotation == other.rotation;
         }
 
-        inline bool operator!=(GeoBounds other) const
+        inline bool operator!=(GeoBounds other) const noexcept
         {
             return position != other.position || size != other.size || rotation != other.rotation;
         }
@@ -37,7 +37,7 @@ namespace NovelRT::Maths
         /**
          * @brief Gets the Axis Aligned Bounding Box based on the position and scale of the specified transform.
          */
-        static inline Maths::GeoBounds GetAABBFromTransform(Transform transform)
+        static inline Maths::GeoBounds GetAABBFromTransform(Transform transform) noexcept
         {
             auto maxFscale = fmaxf(transform.scale.x, transform.scale.y);
             return GeoBounds(transform.position, Maths::GeoVector2F(maxFscale, maxFscale), 0);
@@ -46,7 +46,7 @@ namespace NovelRT::Maths
         /**
          * @brief Gets the bounds based on the position, scale and rotation of the specified transform.
          */
-        static inline Maths::GeoBounds FromTransform(Transform transform)
+        static inline Maths::GeoBounds FromTransform(Transform transform) noexcept
         {
             return GeoBounds(transform.position, transform.scale, transform.rotation);
         }

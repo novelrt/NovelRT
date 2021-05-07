@@ -10,7 +10,7 @@ namespace NovelRT::Graphics
                                  int32_t layer,
                                  std::shared_ptr<Camera> camera,
                                  ShaderProgram shaderProgram,
-                                 RGBAConfig fillColour)
+                                 RGBAConfig fillColour) noexcept
         : RenderObject(transform, layer, shaderProgram, camera),
           _colourConfig(fillColour),
           _colourBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer))
@@ -42,7 +42,7 @@ namespace NovelRT::Graphics
         glBindVertexArray(0);
     }
 
-    RGBAConfig BasicFillRect::getColourConfig() const
+    RGBAConfig BasicFillRect::getColourConfig() const noexcept
     {
         return _colourConfig;
     }

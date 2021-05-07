@@ -164,12 +164,12 @@ namespace NovelRT::DotNet
         tearDown();
     }
 
-    void RuntimeService::initialise()
+    void RuntimeService::initialise() noexcept
     {
         _exports.getActual().Initialise();
     }
 
-    void RuntimeService::tearDown()
+    void RuntimeService::tearDown() noexcept
     {
         if (_exports.isCreated())
         {
@@ -189,23 +189,23 @@ namespace NovelRT::DotNet
         }
     }
 
-    void RuntimeService::freeObject(intptr_t obj)
+    void RuntimeService::freeObject(intptr_t obj) noexcept
     {
         _exports.getActual().FreeObject(obj);
     }
 
-    void RuntimeService::freeString(const char* str)
+    void RuntimeService::freeString(const char* str) noexcept
     {
         _exports.getActual().FreeString(str);
     }
 
-    std::shared_ptr<Ink::InkService> RuntimeService::getInkService()
+    std::shared_ptr<Ink::InkService> RuntimeService::getInkService() noexcept
     {
         return std::make_shared<Ink::InkService>(shared_from_this(), _exports.getActual().GetInkServiceExports);
     }
 
 #if defined(_WIN32)
-    std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer)
+    std::string RuntimeService::get_hostfxr_string(std::vector<char_t> buffer) noexcept
     {
         if (buffer.empty())
             return std::string();

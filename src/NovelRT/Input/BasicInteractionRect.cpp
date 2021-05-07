@@ -8,12 +8,12 @@ namespace NovelRT::Input
     BasicInteractionRect::BasicInteractionRect(
         Transform transform,
         int32_t layer,
-        const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
-        : InteractionObject(transform, layer, notifyHasBeenDrawnObject)
+        const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject) noexcept
+        : InteractionObject(transform, layer, notifyHasBeenDrawnObject) 
     {
     }
 
-    bool BasicInteractionRect::validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const
+    bool BasicInteractionRect::validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const noexcept
     {
         auto position = transform().position;
         auto size = transform().scale;

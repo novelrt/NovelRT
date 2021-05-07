@@ -190,23 +190,23 @@ namespace NovelRT::Maths
                                        *reinterpret_cast<const glm::vec2*>(&epsilonValue)));
         }
 
-        static GeoVector2F zero()
+        static GeoVector2F zero() noexcept
         {
             return GeoVector2F::uniform(0);
         }
 
-        static GeoVector2F one()
+        static GeoVector2F one() noexcept
         {
             return GeoVector2F::uniform(1);
         }
 
-        static GeoVector2F uniform(float value)
+        static GeoVector2F uniform(float value) noexcept
         {
             return GeoVector2F(value, value);
         }
     };
 
-    inline GeoVector2F operator*(float lhs, GeoVector2F rhs)
+    inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
     {
         return rhs * lhs;
     }

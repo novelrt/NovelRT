@@ -22,52 +22,52 @@ namespace NovelRT::Graphics
         CameraFrameState _cameraFrameState;
         std::function<void(Camera*, Maths::GeoVector2F)> _forceResizeCallback;
 
-        void initialiseCameraForFrame();
-        void forceResize(Maths::GeoVector2F windowSize);
+        void initialiseCameraForFrame() noexcept;
+        void forceResize(Maths::GeoVector2F windowSize) noexcept;
 
     public:
-        Camera();
+        Camera() noexcept;
 
-        inline Maths::GeoMatrix4x4F getViewMatrix() const
+        inline Maths::GeoMatrix4x4F getViewMatrix() const noexcept
         {
             return _viewMatrix;
         }
 
-        inline void setViewMatrix(Maths::GeoMatrix4x4F value)
+        inline void setViewMatrix(Maths::GeoMatrix4x4F value) noexcept
         {
             _cameraFrameState = CameraFrameState::ModifiedInCurrent;
             _cameraUboMatrix.reset();
             _viewMatrix = value;
         }
 
-        inline Maths::GeoMatrix4x4F getProjectionMatrix() const
+        inline Maths::GeoMatrix4x4F getProjectionMatrix() const noexcept
         {
             return _projectionMatrix;
         }
 
-        inline void setProjectionMatrix(Maths::GeoMatrix4x4F value)
+        inline void setProjectionMatrix(Maths::GeoMatrix4x4F value) noexcept
         {
             _cameraFrameState = CameraFrameState::ModifiedInCurrent;
             _cameraUboMatrix.reset();
             _projectionMatrix = value;
         }
 
-        inline Maths::GeoMatrix4x4F getCameraUboMatrix()
+        inline Maths::GeoMatrix4x4F getCameraUboMatrix() noexcept
         {
             return _cameraUboMatrix.getActual();
         }
 
-        inline CameraFrameState getFrameState() const
+        inline CameraFrameState getFrameState() const noexcept
         {
             return _cameraFrameState;
         }
 
-        inline const std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback() const
+        inline const std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback() const noexcept
         {
             return _forceResizeCallback;
         }
 
-        inline std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback()
+        inline std::function<void(Camera*, Maths::GeoVector2F)>& forceResizeCallback() noexcept
         {
             return _forceResizeCallback;
         }
@@ -75,12 +75,12 @@ namespace NovelRT::Graphics
         /**
          * @brief Creates an orthographic camera using default settings and the given window size.
          */
-        static std::unique_ptr<Camera> createDefaultOrthographicProjection(Maths::GeoVector2F windowSize);
+        static std::unique_ptr<Camera> createDefaultOrthographicProjection(Maths::GeoVector2F windowSize) noexcept;
 
         /**
          * @brief Creates a perspective camera using default settings and the given window size.
          */
-        static std::unique_ptr<Camera> createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize);
+        static std::unique_ptr<Camera> createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize) noexcept;
     };
 } // namespace NovelRT::Graphics
 

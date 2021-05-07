@@ -35,11 +35,11 @@ namespace NovelRT::Maths
         GeoVector4F z;
         GeoVector4F w;
 
-        GeoMatrix4x4F() : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
+        GeoMatrix4x4F() noexcept : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
         {
         }
 
-        GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) : x(x), y(y), z(z), w(w)
+        GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
