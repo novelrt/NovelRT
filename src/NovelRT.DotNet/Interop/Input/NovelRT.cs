@@ -11,7 +11,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_Input_BasicInteractionRect_executeObjectBehaviour([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_Input_BasicInteractionRect_getTransform([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, NrtTransform* outputTransform);
+        public static extern NrtTransform Nrt_Input_BasicInteractionRect_getTransform([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_Input_BasicInteractionRect_setTransform([NativeTypeName("NrtBasicInteractionRectHandle")] IntPtr @object, NrtTransform transform);
