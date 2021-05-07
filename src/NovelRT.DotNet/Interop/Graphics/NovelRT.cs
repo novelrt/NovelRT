@@ -8,7 +8,7 @@ namespace NovelRT.Interop
     public static unsafe partial class NovelRT
     {
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_BasicFillRect_getTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, NrtTransform* outputTransform);
+        public static extern NrtTransform Nrt_BasicFillRect_getTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_BasicFillRect_setTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, NrtTransform inputTransform);
@@ -213,7 +213,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_RGBAConfig_destroy([NativeTypeName("NrtRGBAConfigHandle")] IntPtr param0);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_TextRect_getTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect, NrtTransform* outputTransform);
+        public static extern NrtTransform Nrt_TextRect_getTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_TextRect_setTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect, NrtTransform inputTransform);
