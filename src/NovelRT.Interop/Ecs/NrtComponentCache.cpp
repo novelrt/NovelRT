@@ -17,11 +17,17 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             void* context,
                                                              NrtComponentTypeId* outputResult)
     {
-        if (componentCache == nullptr || deleteInstructionState == nullptr || outputResult == nullptr)
+        if (componentCache == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (deleteInstructionState == nullptr || outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -32,7 +38,7 @@ extern "C"
                         sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
-                                        size);
+                                        size, context);
                         });
 
             return NRT_SUCCESS;
@@ -47,9 +53,14 @@ extern "C"
                                                         NrtComponentTypeId id,
                                                         NrtComponentBufferMemoryContainerHandle* outputResult)
     {
-        if (componentCache == nullptr || outputResult == nullptr)
+        if (componentCache == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
@@ -69,7 +80,7 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentCache*>(componentCache);

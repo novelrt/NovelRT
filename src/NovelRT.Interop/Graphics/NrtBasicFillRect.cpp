@@ -14,18 +14,11 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect, NrtTransform* outputTransform)
+    NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect)
     {
-        if (rect == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
-        }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        *outputTransform = *reinterpret_cast<NrtTransform*>(&cppRect->transform());
-
-        return NRT_SUCCESS;
+        return *reinterpret_cast<NrtTransform*>(&cppRect->transform());
     }
 
     NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRectHandle rect, NrtTransform inputTransform)
@@ -33,7 +26,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -53,7 +46,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -77,7 +70,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -99,7 +92,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -113,7 +106,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -128,7 +121,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
@@ -143,7 +136,13 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputRenderObject == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         *outputRenderObject = reinterpret_cast<NrtRenderObjectHandle>(rect);

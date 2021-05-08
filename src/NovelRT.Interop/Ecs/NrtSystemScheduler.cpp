@@ -19,11 +19,13 @@ extern "C"
         return reinterpret_cast<NrtSystemSchedulerHandle>(new SystemScheduler(maximumThreadCount));
     }
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler, NrtSystemUpdateFnPtr systemUpdatePtr)
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler,
+                                            NrtSystemUpdateFnPtr systemUpdatePtr,
+                                            void* context)
     {
         auto schedulerPtr = reinterpret_cast<SystemScheduler*>(scheduler);
         schedulerPtr->RegisterSystem([=](auto timestamp, auto catalogue) {
-            systemUpdatePtr(timestamp.ticks, reinterpret_cast<NrtCatalogueHandle>(&catalogue));
+            systemUpdatePtr(timestamp.ticks, reinterpret_cast<NrtCatalogueHandle>(&catalogue), context);
         });
     }
 
@@ -53,7 +55,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         try
@@ -111,7 +113,7 @@ extern "C"
         }
         catch (const NullPointerException&)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         catch (const OutOfMemoryException&)
         {
@@ -131,7 +133,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<SystemScheduler*>(systemScheduler);

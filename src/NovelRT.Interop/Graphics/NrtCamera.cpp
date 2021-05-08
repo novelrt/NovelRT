@@ -35,7 +35,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -56,7 +56,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -80,19 +80,20 @@ extern "C"
     }
 
     NrtResult Nrt_Camera_setForceResizeCallback(NrtCameraHandle camera,
-                                                void (*callback)(NrtCameraHandle, NrtGeoVector2F))
+                                                void (*callback)(NrtCameraHandle, NrtGeoVector2F, void*),
+                                                void* context)
     {
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
-        cameraPtr->forceResizeCallback() =
-            std::function<void(Camera*, GeoVector2F)>([callback](auto camera, auto newSize) {
-                callback(reinterpret_cast<NrtCameraHandle>(camera), *reinterpret_cast<NrtGeoVector2F*>(&newSize));
-            });
+        cameraPtr->forceResizeCallback() = std::function<void(Camera*, GeoVector2F)>([callback, context](auto camera,
+                                                                                                         auto newSize) {
+            callback(reinterpret_cast<NrtCameraHandle>(camera), *reinterpret_cast<NrtGeoVector2F*>(&newSize), context);
+        });
 
         return NRT_SUCCESS;
     }
@@ -116,7 +117,7 @@ extern "C"
         if (camera == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);

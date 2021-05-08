@@ -8,7 +8,7 @@ namespace NovelRT.Interop
     public static unsafe partial class NovelRT
     {
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_BasicFillRect_getTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, NrtTransform* outputTransform);
+        public static extern NrtTransform Nrt_BasicFillRect_getTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_BasicFillRect_setTransform([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, NrtTransform inputTransform);
@@ -61,7 +61,7 @@ namespace NovelRT.Interop
         public static extern NrtCameraFrameState Nrt_Camera_getFrameState([NativeTypeName("NrtCameraHandle")] IntPtr camera);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_Camera_setForceResizeCallback([NativeTypeName("NrtCameraHandle")] IntPtr camera, [NativeTypeName("void (*)(NrtCameraHandle, NrtGeoVector2F)")] delegate* unmanaged<IntPtr, NrtGeoVector2F, void> callback);
+        public static extern NrtResult Nrt_Camera_setForceResizeCallback([NativeTypeName("NrtCameraHandle")] IntPtr camera, [NativeTypeName("void (*)(NrtCameraHandle, NrtGeoVector2F, void *)")] delegate* unmanaged<IntPtr, NrtGeoVector2F, void*, void> callback, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtCameraHandle")]
@@ -213,7 +213,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_RGBAConfig_destroy([NativeTypeName("NrtRGBAConfigHandle")] IntPtr param0);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_TextRect_getTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect, NrtTransform* outputTransform);
+        public static extern NrtTransform Nrt_TextRect_getTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_TextRect_setTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect, NrtTransform inputTransform);

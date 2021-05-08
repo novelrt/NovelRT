@@ -17,12 +17,13 @@ extern "C"
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
-                                                                                      NrtComponentUpdateFnPtr fnPtr)
+                                                                                      NrtComponentUpdateFnPtr fnPtr,
+                                                                                      void* context)
     {
         auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
                         size_t size) {
             fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
-                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
+                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size, context);
         };
 
         return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
@@ -52,9 +53,14 @@ extern "C"
         NrtEntityId entity,
         const void* componentData)
     {
-        if (container == nullptr || componentData == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (componentData == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -78,9 +84,14 @@ extern "C"
         NrtEntityId entity,
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -143,7 +154,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer*>(container);
@@ -162,7 +173,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view);
