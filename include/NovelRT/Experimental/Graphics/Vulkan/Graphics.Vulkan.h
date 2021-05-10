@@ -12,6 +12,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     struct QueueFamilyIndices;
     struct SwapChainSupportDetails;
     class VulkanGraphicsDevice;
+    class VulkanGraphicsPipeline;
+    class VulkanShaderProgram;
+    class VulkanGraphicsPipeline;
+    class VulkanGraphicsPipelineSignature;
 }
 
 //Graphics.Vulkan dependencies
@@ -28,5 +32,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "SwapChainSupportDetails.h"
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsDevice.h"
+#include "VulkanGraphicsPipeline.h"
+#include "VulkanGraphicsPipelineSignature.h"
+#include "VulkanShaderProgram.h"
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H

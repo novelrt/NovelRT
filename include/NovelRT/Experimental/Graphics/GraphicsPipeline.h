@@ -18,7 +18,10 @@ namespace NovelRT::Experimental::Graphics
         std::shared_ptr<ShaderProgram> _pixelShader;
 
     public:
-        GraphicsPipeline(std::shared_ptr<ILLGraphicsDevice> device, std::shared_ptr<GraphicsPipelineSignature> signature, std::shared_ptr<ShaderProgram> vertexShader, std::shared_ptr<ShaderProgram> pixelShader) noexcept;
+        GraphicsPipeline(std::shared_ptr<ILLGraphicsDevice> device,
+                         std::shared_ptr<GraphicsPipelineSignature> signature,
+                         std::shared_ptr<ShaderProgram> vertexShader,
+                         std::shared_ptr<ShaderProgram> pixelShader) noexcept;
 
         [[nodiscard]] bool HasVertexShader() const noexcept;
         [[nodiscard]] bool HasPixelShader() const noexcept;
@@ -26,6 +29,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] std::shared_ptr<ShaderProgram> GetPixelShader() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> GetSignature() const noexcept;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // NOVELRT_GRAPHICSPIPELINE_H

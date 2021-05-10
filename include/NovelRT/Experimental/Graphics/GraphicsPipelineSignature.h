@@ -17,11 +17,13 @@ namespace NovelRT::Experimental::Graphics
         std::vector<GraphicsPipelineResource> _resources;
 
     public:
-        GraphicsPipelineSignature(std::shared_ptr<ILLGraphicsDevice> device, gsl::span<const GraphicsPipelineInput> inputs, gsl::span<const GraphicsPipelineResource> resources) noexcept;
+        GraphicsPipelineSignature(std::shared_ptr<ILLGraphicsDevice> device,
+                                  gsl::span<const GraphicsPipelineInput> inputs,
+                                  gsl::span<const GraphicsPipelineResource> resources) noexcept;
 
         [[nodiscard]] gsl::span<const GraphicsPipelineInput> GetInputs() const noexcept;
         [[nodiscard]] gsl::span<const GraphicsPipelineResource> GetResources() const noexcept;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // NOVELRT_GRAPHICSPIPELINESIGNATURE_H

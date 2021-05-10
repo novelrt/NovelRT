@@ -42,11 +42,14 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
 
   Experimental/EngineConfig.cpp
+  Experimental/Graphics/GraphicsPipeline.cpp
   Experimental/Graphics/GraphicsPipelineInput.cpp
   Experimental/Graphics/GraphicsPipelineInputElement.cpp
   Experimental/Graphics/GraphicsPipelineSignature.cpp
   Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 

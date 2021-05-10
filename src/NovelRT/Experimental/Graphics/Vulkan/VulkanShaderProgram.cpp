@@ -5,11 +5,11 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    VulkanShaderProgram::VulkanShaderProgram(VulkanGraphicsDevice& device,
+    VulkanShaderProgram::VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
                                              std::string entryPointName,
                                              ShaderProgramKind kind,
                                              gsl::span<uint8_t> bytecode) noexcept
-        : ShaderProgram(device.shared_from_this(), std::move(entryPointName), kind),
+        : ShaderProgram(device, std::move(entryPointName), kind),
           _shaderModule(Utilities::Lazy<VkShaderModule>(
               std::function<VkShaderModule()>([this]() { return CreateShaderModule(); }))),
           _bytecode(bytecode),
@@ -21,16 +21,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _shaderModuleCreateInfo.pCode = reinterpret_cast<uint32_t*>(&(*_bytecode.begin()));
     }
 
-    VulkanGraphicsDevice* VulkanShaderProgram::GetGraphicsDeviceAsVulkanDevice() const noexcept
-    {
-        return reinterpret_cast<VulkanGraphicsDevice*>(GetDevice().get());
-    }
-
     VkShaderModule VulkanShaderProgram::CreateShaderModule()
     {
         VkShaderModule returnShaderModule = VK_NULL_HANDLE;
 
-        VkResult moduleCreationResult = vkCreateShaderModule(GetGraphicsDeviceAsVulkanDevice()->GetVkDevice(),
+        VkResult moduleCreationResult = vkCreateShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
                                                              &_shaderModuleCreateInfo, nullptr, &returnShaderModule);
 
         if (moduleCreationResult != VK_SUCCESS)
@@ -44,7 +39,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanShaderProgram::~VulkanShaderProgram()
     {
-        vkDestroyShaderModule(GetGraphicsDeviceAsVulkanDevice()->GetVkDevice(), _shaderModule.getActual(), nullptr);
+        vkDestroyShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(), _shaderModule.getActual(), nullptr);
     }
 
     gsl::span<uint8_t> VulkanShaderProgram::GetBytecode() const noexcept

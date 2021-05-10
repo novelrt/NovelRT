@@ -3,6 +3,7 @@
 
 #include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <map>
 #include <numeric>
@@ -123,9 +124,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanInstanceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -138,9 +139,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanInstanceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -180,9 +181,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
-            auto result = std::find_if(layerProperties.begin(), layerProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0;
-            });
+            auto result =
+                std::find_if(layerProperties.begin(), layerProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
 
             if (result == layerProperties.end())
             {
@@ -230,9 +231,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -245,9 +246,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -846,11 +847,26 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                              gsl::span<uint8_t> byteData)
     {
         return std::shared_ptr<ShaderProgram>(
-            new VulkanShaderProgram(*this, std::move(entryPointName), kind, byteData));
+            new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), std::move(entryPointName), kind, byteData));
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
     {
         TearDown();
+    }
+
+    std::shared_ptr<GraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
+        std::shared_ptr<GraphicsPipelineSignature> signature,
+        std::shared_ptr<ShaderProgram> vertexShader,
+        std::shared_ptr<ShaderProgram> pixelShader)
+    {
+        return std::make_shared<GraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader);
+    }
+
+    std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
+        gsl::span<GraphicsPipelineInput> inputs,
+        gsl::span<GraphicsPipelineResource> resources)
+    {
+        return std::make_shared<GraphicsPipelineSignature>(shared_from_this(), inputs, resources);
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

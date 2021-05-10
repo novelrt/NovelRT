@@ -17,11 +17,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         gsl::span<uint8_t> _bytecode;
         VkShaderModuleCreateInfo _shaderModuleCreateInfo;
 
-        VulkanGraphicsDevice* GetGraphicsDeviceAsVulkanDevice() const noexcept;
         VkShaderModule CreateShaderModule();
 
     public:
-        VulkanShaderProgram(VulkanGraphicsDevice& device,
+        VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
                             std::string entryPointName,
                             ShaderProgramKind kind,
                             gsl::span<uint8_t> bytecode) noexcept;
