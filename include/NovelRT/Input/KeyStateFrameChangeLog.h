@@ -18,7 +18,7 @@ namespace NovelRT::Input
         KeyState _currentState = KeyState::Idle;
         uint32_t _changeCount = 0;
 
-        inline void pushNewState(KeyState newState)
+        inline void pushNewState(KeyState newState) noexcept
         {
             if (_currentState == newState)
             {

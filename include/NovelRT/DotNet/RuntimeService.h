@@ -30,19 +30,19 @@ namespace NovelRT::DotNet
         Utilities::Lazy<load_assembly_and_get_function_pointer_fn> _load_assembly_and_get_function_pointer;
         Utilities::Lazy<Exports> _exports;
         LoggingService _logger;
-        std::string get_hostfxr_string(std::vector<char_t> buffer) noexcept;
+        std::string get_hostfxr_string(std::vector<char_t> buffer);
 
     public:
         RuntimeService();
         ~RuntimeService();
 
-        void initialise() noexcept;
+        void initialise();
         void tearDown() noexcept;
 
-        void freeObject(intptr_t obj) noexcept;
-        void freeString(const char* str) noexcept;
+        void freeObject(intptr_t obj);
+        void freeString(const char* str);
 
-        std::shared_ptr<Ink::InkService> getInkService() noexcept;
+        std::shared_ptr<Ink::InkService> getInkService();
     };
 } // namespace NovelRT::DotNet
 

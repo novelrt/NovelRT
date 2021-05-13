@@ -5,14 +5,14 @@
 
 namespace NovelRT::Graphics
 {
-    Camera::Camera() noexcept
+    Camera::Camera()
         : _cameraUboMatrix(Utilities::Lazy<Maths::GeoMatrix4x4F>(
               std::function<Maths::GeoMatrix4x4F()>(std::bind(&Camera::generateUboMatrix, this)))),
           _cameraFrameState(CameraFrameState::ModifiedInCurrent)
     {
     }
 
-    std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(Maths::GeoVector2F windowSize) noexcept
+    std::unique_ptr<Camera> Camera::createDefaultOrthographicProjection(Maths::GeoVector2F windowSize)
     {
         auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
             camera->setProjectionMatrix(
@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
         return returnVal;
     }
 
-    std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize) noexcept
+    std::unique_ptr<Camera> Camera::createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize)
     {
         auto callback = [](Camera* camera, Maths::GeoVector2F windowSize) {
             auto aspect = windowSize.y != 0 ? windowSize.x / windowSize.y : 0;
@@ -68,7 +68,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    void Camera::forceResize(Maths::GeoVector2F windowSize) noexcept
+    void Camera::forceResize(Maths::GeoVector2F windowSize)
     {
         forceResizeCallback()(this, windowSize);
     }

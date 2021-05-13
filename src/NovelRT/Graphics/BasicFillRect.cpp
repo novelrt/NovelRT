@@ -10,7 +10,7 @@ namespace NovelRT::Graphics
                                  int32_t layer,
                                  std::shared_ptr<Camera> camera,
                                  ShaderProgram shaderProgram,
-                                 RGBAConfig fillColour) noexcept
+                                 RGBAConfig fillColour)
         : RenderObject(transform, layer, shaderProgram, camera),
           _colourConfig(fillColour),
           _colourBuffer(Utilities::Lazy<GLuint>(generateStandardBuffer))

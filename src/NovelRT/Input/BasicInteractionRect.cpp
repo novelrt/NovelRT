@@ -8,7 +8,7 @@ namespace NovelRT::Input
     BasicInteractionRect::BasicInteractionRect(
         Transform transform,
         int32_t layer,
-        const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject) noexcept
+        const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
         : InteractionObject(transform, layer, notifyHasBeenDrawnObject) 
     {
     }

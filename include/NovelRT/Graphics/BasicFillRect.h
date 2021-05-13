@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
                       int32_t layer,
                       std::shared_ptr<Camera> camera,
                       ShaderProgram shaderProgram,
-                      RGBAConfig fillColour) noexcept;
+                      RGBAConfig fillColour);
 
         RGBAConfig getColourConfig() const noexcept;
         void setColourConfig(RGBAConfig value);

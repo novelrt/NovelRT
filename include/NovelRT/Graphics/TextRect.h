@@ -43,10 +43,10 @@ namespace NovelRT::Graphics
 
         void setColourConfig(RGBAConfig value);
 
-        std::string getText() const;
+        std::string getText() const noexcept;
         void setText(const std::string& value);
 
-        void setActive(bool value) override;
+        void setActive(bool value) noexcept override;
 
         inline std::shared_ptr<FontSet> getFontSet() const noexcept
         {
