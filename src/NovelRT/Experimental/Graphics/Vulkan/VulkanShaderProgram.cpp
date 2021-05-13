@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanShaderProgram.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -45,5 +46,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     gsl::span<uint8_t> VulkanShaderProgram::GetBytecode() const noexcept
     {
         return _bytecode;
+    }
+    VkShaderModule VulkanShaderProgram::GetShaderModule()
+    {
+        return _shaderModule.getActual();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

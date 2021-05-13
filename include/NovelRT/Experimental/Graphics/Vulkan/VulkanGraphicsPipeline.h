@@ -14,6 +14,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         Utilities::Lazy<VkPipeline> _vulkanPipeline;
+        [[nodiscard]] VkPipeline CreateVulkanPipeline();
+        [[nodiscard]] size_t GetInputElementsCount(gsl::span<const GraphicsPipelineInput> inputs) const noexcept;
+        [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index) const noexcept;
 
     public:
         VulkanGraphicsPipeline(std::shared_ptr<VulkanGraphicsDevice> device,

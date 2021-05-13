@@ -869,4 +869,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         return std::make_shared<GraphicsPipelineSignature>(shared_from_this(), inputs, resources);
     }
+
+    std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
+    {
+        return _nrtSurface;
+    }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

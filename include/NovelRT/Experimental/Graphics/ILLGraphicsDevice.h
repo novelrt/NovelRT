@@ -15,6 +15,9 @@ namespace NovelRT::Experimental::Graphics
     public:
         virtual void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) = 0;
         virtual void TearDown() = 0;
+
+        [[nodiscard]] virtual std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept = 0;
+
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
                                                                                  ShaderProgramKind kind,
                                                                                  gsl::span<uint8_t> byteData) = 0;

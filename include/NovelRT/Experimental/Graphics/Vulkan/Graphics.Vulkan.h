@@ -19,6 +19,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 }
 
 //Graphics.Vulkan dependencies
+#include <array>
 #include <optional>
 #include <vector>
 #include <vulkan/vulkan.h>

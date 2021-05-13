@@ -40,6 +40,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
+        VkRenderPass _renderPass;
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
                                                             const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -95,6 +97,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) final;
         void TearDown() final;
 
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept final;
+
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
                                                                          ShaderProgramKind kind,
                                                                          gsl::span<uint8_t> byteData) final;
@@ -113,6 +117,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] inline VkDevice GetVkDevice() const noexcept
         {
             return _device;
+        }
+
+        [[nodiscard]] inline VkRenderPass GetRenderPass() const noexcept
+        {
+            return _renderPass;
         }
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
