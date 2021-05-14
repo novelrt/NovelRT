@@ -134,7 +134,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
                         vertexInputAttributeDescriptions[inputElementsIndex] = insertValue;
 
-                        inputBindingStride += inputElement.GetSize();
+                        inputBindingStride += static_cast<uint32_t>(inputElement.GetSize());
                         inputElementsIndex++;
                     }
 
@@ -178,6 +178,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to create a VulkanGraphicsPipeline.",
                                                              createGraphicsPipelineResult);
         }
+
+        return vulkanPipeline;
     }
 
     size_t VulkanGraphicsPipeline::GetInputElementsCount(gsl::span<const GraphicsPipelineInput> inputs) const noexcept

@@ -40,7 +40,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
-        VkRenderPass _renderPass;
+        Utilities::Lazy<VkRenderPass> _renderPass;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -92,6 +92,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateImageViews();
 
+        VkRenderPass CreateRenderPass();
+
     public:
         VulkanGraphicsDevice() noexcept;
         void Initialise(std::shared_ptr<IGraphicsSurface> targetSurface) final;
@@ -119,9 +121,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _device;
         }
 
-        [[nodiscard]] inline VkRenderPass GetRenderPass() const noexcept
+        [[nodiscard]] inline VkRenderPass GetRenderPass()
         {
-            return _renderPass;
+            return _renderPass.getActual();
         }
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan

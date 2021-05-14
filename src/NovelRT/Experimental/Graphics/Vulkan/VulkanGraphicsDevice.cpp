@@ -88,7 +88,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _swapChainImages(std::vector<VkImage>{}),
           _swapChainImageFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
-          _swapChainImageViews(std::vector<VkImageView>{})
+          _swapChainImageViews(std::vector<VkImageView>{}),
+          _renderPass([&](){ return CreateRenderPass(); })
     {
     }
 
@@ -873,5 +874,42 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
     {
         return _nrtSurface;
+    }
+    VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
+    {
+        VkRenderPass returnRenderPass;
+
+        VkAttachmentDescription attachmentDescription{};
+        attachmentDescription.format = _swapChainImageFormat;
+        attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+        attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+        VkAttachmentReference colourAttachmentReference{};
+        colourAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+        VkSubpassDescription subpass{};
+        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        subpass.colorAttachmentCount = 1;
+        subpass.pColorAttachments = &colourAttachmentReference;
+
+        VkRenderPassCreateInfo renderPassCreateInfo{};
+        renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+        renderPassCreateInfo.attachmentCount = 1;
+        renderPassCreateInfo.pAttachments = &attachmentDescription;
+        renderPassCreateInfo.subpassCount = 1;
+        renderPassCreateInfo.pSubpasses = &subpass;
+
+        VkResult renderPassResult = vkCreateRenderPass(_device, &renderPassCreateInfo, nullptr, &returnRenderPass);
+
+        if (renderPassResult != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.", renderPassResult);
+        }
+
+        _logger.logInfoLine("Successfully created the VkRenderPass.");
+        return returnRenderPass;
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan
