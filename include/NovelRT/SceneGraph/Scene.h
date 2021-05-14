@@ -16,7 +16,7 @@ namespace NovelRT::SceneGraph
         std::set<std::shared_ptr<SceneNode>> _nodes;
 
     public:
-        const std::set<std::shared_ptr<SceneNode>>& getNodes()
+        const std::set<std::shared_ptr<SceneNode>>& getNodes() noexcept
         {
             return _nodes;
         }
@@ -26,7 +26,7 @@ namespace NovelRT::SceneGraph
             return _nodes.insert(node).second;
         }
 
-        bool remove(const std::shared_ptr<SceneNode>& node)
+        bool remove(const std::shared_ptr<SceneNode>& node) noexcept
         {
             auto numErased = _nodes.erase(node);
             assert((numErased == 0) || (numErased == 1));

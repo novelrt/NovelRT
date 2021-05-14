@@ -21,7 +21,7 @@ namespace NovelRT::SceneGraph
         std::array<std::shared_ptr<QuadTreeScenePoint>, 4> _quadTreePoints;
 
     public:
-        QuadTreeNode(std::array<std::shared_ptr<QuadTreeScenePoint>, 4> quadTreePoints)
+        QuadTreeNode(std::array<std::shared_ptr<QuadTreeScenePoint>, 4> quadTreePoints) noexcept
             : _quadTreePoints(quadTreePoints)
         {
         }

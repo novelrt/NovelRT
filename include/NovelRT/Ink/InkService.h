@@ -32,7 +32,7 @@ namespace NovelRT::Ink
 
         std::shared_ptr<Story> createStory(const char* jsonString);
 
-        std::shared_ptr<DotNet::RuntimeService> getRuntimeService();
+        std::shared_ptr<DotNet::RuntimeService> getRuntimeService() noexcept;
 
         friend class NovelRT::DotNet::RuntimeService;
     };

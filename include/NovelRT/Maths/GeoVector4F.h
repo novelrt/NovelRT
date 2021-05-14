@@ -16,7 +16,7 @@ namespace NovelRT::Maths
         friend class GeoMatrix4x4F;
 
     private:
-        GeoVector4F(glm::vec4 value) : x(value.x), y(value.y), z(value.z), w(value.w) noexcept
+        GeoVector4F(glm::vec4 value) noexcept : x(value.x), y(value.y), z(value.z), w(value.w)
         {
         }
 
