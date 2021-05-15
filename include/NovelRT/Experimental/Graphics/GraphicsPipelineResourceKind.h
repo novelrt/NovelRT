@@ -13,10 +13,8 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsPipelineResourceKind : uint32_t
     {
         Unknown = 0,
-        Position = 1,
-        Colour = 2,
-        Normal = 3,
-        TextureCoordinate = 4
+        ConstantBuffer = 1,
+        Texture = 2
     };
 }
 

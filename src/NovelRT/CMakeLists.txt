@@ -45,6 +45,7 @@ set(SOURCES
   Experimental/Graphics/GraphicsPipeline.cpp
   Experimental/Graphics/GraphicsPipelineInput.cpp
   Experimental/Graphics/GraphicsPipelineInputElement.cpp
+  Experimental/Graphics/GraphicsPipelineResource.cpp
   Experimental/Graphics/GraphicsPipelineSignature.cpp
   Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp

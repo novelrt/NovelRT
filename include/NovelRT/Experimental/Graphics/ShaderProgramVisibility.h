@@ -11,6 +11,7 @@ namespace NovelRT::Experimental::Graphics
         NoneOrUnknown = 0,
         Vertex = 1 << 0,
         Pixel = 1 << 1,
+        Fragment = Pixel,
         All = Vertex | Pixel
     };
 }

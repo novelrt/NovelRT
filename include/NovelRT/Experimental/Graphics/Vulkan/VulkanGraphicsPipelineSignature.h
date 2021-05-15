@@ -12,7 +12,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 {
     class VulkanGraphicsPipelineSignature : public GraphicsPipelineSignature
     {
-    private:
+
         Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
         Utilities::Lazy<VkDescriptorSet> _vulkanDescriptorSet;
         Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
@@ -27,6 +27,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void DestroyDescriptorSet();
         void DestroyDescriptorSetLayout();
         void DestroyPipelineLayout();
+
+        [[nodiscard]] VkShaderStageFlags GetVulkanShaderStageFlags(ShaderProgramVisibility shaderVisibility) const noexcept;
 
     public:
         VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,
@@ -45,7 +47,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         [[nodiscard]] inline VkDescriptorSetLayout GetDescriptorSetLayout()
         {
-            _vulkanDescriptorSetLayout.getActual();
+            return _vulkanDescriptorSetLayout.getActual();
         }
 
         [[nodiscard]] inline VkPipelineLayout GetPipelineLayout()
@@ -53,7 +55,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanPipelineLayout.getActual();
         }
 
-        ~VulkanGraphicsPipelineSignature();
+        ~VulkanGraphicsPipelineSignature() final;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

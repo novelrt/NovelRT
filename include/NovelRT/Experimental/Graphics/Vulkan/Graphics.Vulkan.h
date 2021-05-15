@@ -27,6 +27,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "../../../LoggingService.h"
 #include "../../../Utilities/Lazy.h"
 #include "../../../Exceptions/Exceptions.h"
+#include "../../../Utilities/Misc.h"
 
 // Graphics.Vulkan types
 #include "QueueFamilyIndices.h"
