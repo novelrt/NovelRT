@@ -12,7 +12,7 @@ namespace NovelRT.Ecs
 {
     public class EntityCache : ShimObject
     {
-                public override void Dispose(bool isDisposing)
+        public override void Dispose(bool isDisposing)
         {
             if (internalHandle != IntPtr.Zero)
             {
