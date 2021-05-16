@@ -875,6 +875,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         return _nrtSurface;
     }
+
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
     {
         VkRenderPass returnRenderPass;
