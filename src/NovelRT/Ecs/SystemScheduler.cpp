@@ -137,7 +137,7 @@ namespace NovelRT::Ecs
                 }
                 pair.threadLock.unlock();
             }
-            else if (remainder > amountOfWork)
+            else
             {
                 size_t startIndex = (_systemIds.size() - 1) - remainder;
 
