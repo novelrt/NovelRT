@@ -90,3 +90,48 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
 }
+
+TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
+{
+    TearDown();
+
+    scheduler = new SystemScheduler(3);
+    scheduler->SpinThreads();
+
+    std::atomic_bool sysFourBool = true;
+    std::atomic_bool sysFiveBool = true;
+    std::atomic_bool sysSixBool = true;
+    std::atomic_bool sysSevenBool = true;
+
+    scheduler->RegisterSystem(sysOne);
+    scheduler->RegisterSystem(sysTwo);
+    scheduler->RegisterSystem(sysThree);
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysFourBool = false; });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_FALSE(sysFourBool);
+
+    sysFourBool = true;
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysFiveBool = false; });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_FALSE(sysFourBool && sysFiveBool);
+
+    sysFourBool = true;
+    sysFiveBool = true;
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysSixBool = false; });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_FALSE(sysFourBool && sysFiveBool && sysSixBool);
+
+    sysFourBool = true;
+    sysFiveBool = true;
+    sysSixBool = true;
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysSevenBool = false; });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_FALSE(sysOneBool && sysTwoBool && sysThreeBool && sysFourBool && sysFiveBool && sysSixBool && sysSevenBool);
+}
