@@ -34,22 +34,22 @@ protected:
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(int32_t), &intDeleteState,
-            [](auto lhs, auto rhs, auto, auto) {
-                auto intLhs =
-                    reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
-                auto intRhs =
-                    reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+            [](auto lhs, auto rhs, auto, auto)
+            {
+                auto intLhs = reinterpret_cast<int32_t*>(lhs);
+                auto intRhs = reinterpret_cast<const int32_t*>(rhs);
                 *intLhs += *intRhs;
             },
             nullptr, &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(size_t), &sizeTDeleteState,
-            [](auto lhs, auto rhs, auto, auto) {
+            [](auto lhs, auto rhs, auto, auto)
+            {
                 auto sizeTLhs =
-                    reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
+                    reinterpret_cast<size_t*>(lhs);
                 auto sizeTRhs =
-                    reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+                    reinterpret_cast<const size_t*>(rhs);
                 *sizeTLhs += *sizeTRhs;
             },
             nullptr, &sizeTComponentTypeId);

@@ -26,9 +26,7 @@ namespace NovelRT::Ecs
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,
             const void* deleteInstructionState,
-            const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                                     SparseSetMemoryContainer::ByteIteratorView,
-                                     size_t)>& componentUpdateLogic) const;
+            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic) const;
 
     public:
         /**
@@ -50,6 +48,7 @@ namespace NovelRT::Ecs
          *
          * @param sizeOfDataType The size of the object type, in bytes.
          * @param deleteInstructionState The object state that indicates that the component should be deleted.
+         * @param componentUpdateLogic The function to use for concurrent update consolidation.
          * @return ComponentTypeId the ID of the new component type and associated ComponentBufferMemoryContainer
          * instance.
          *
@@ -59,9 +58,7 @@ namespace NovelRT::Ecs
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
             const void* deleteInstructionState,
-            const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                                     SparseSetMemoryContainer::ByteIteratorView,
-                                     size_t)>& componentUpdateLogic);
+            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic);
 
         /**
          * @brief Registers a new component type to the cache.
@@ -80,10 +77,9 @@ namespace NovelRT::Ecs
         template<typename T> void RegisterComponentType(T deleteInstructionState)
         {
             std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-                CreateContainer(sizeof(T), &deleteInstructionState, [](auto rootComponent, auto updateComponent, auto) {
-                    *reinterpret_cast<T*>(rootComponent.GetDataHandle()) +=
-                        *reinterpret_cast<T*>(updateComponent.GetDataHandle());
-                });
+                CreateContainer(sizeof(T), &deleteInstructionState,
+                                [](auto rootComponent, auto updateComponent, auto)
+                                { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); });
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
@@ -109,7 +105,7 @@ namespace NovelRT::Ecs
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
+        template<typename T> [[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
             return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }

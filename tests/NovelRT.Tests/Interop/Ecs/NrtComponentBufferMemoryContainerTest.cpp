@@ -52,10 +52,8 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUp
     int32_t updateState = 10;
     auto container = Nrt_ComponentBufferMemoryContainer_Create(
         1, &deleteState, sizeof(int32_t),
-        [](auto lhs, auto rhs, auto, auto) {
-            *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
-                *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
-        },
+        [](auto lhs, auto rhs, auto, auto)
+        { *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs); },
         nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
@@ -153,10 +151,8 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     int32_t updateState = 10;
     auto container = Nrt_ComponentBufferMemoryContainer_Create(
         2, &deleteState, sizeof(int32_t),
-        [](auto lhs, auto rhs, auto, auto) {
-            *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
-                *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
-        },
+        [](auto lhs, auto rhs, auto, auto)
+        { *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs); },
         nullptr);
 
     for (int i = 0; i < 2000; ++i)
@@ -168,19 +164,23 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(container,
                                                              reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
-    std::thread threadOne([&]() {
-        for (size_t i = 0; i < 2000; ++i)
+    std::thread threadOne(
+        [&]()
         {
-            Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, i, &updateState);
-        }
-    });
+            for (size_t i = 0; i < 2000; ++i)
+            {
+                Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, i, &updateState);
+            }
+        });
 
-    std::thread threadTwo([&]() {
-        for (size_t i = 0; i < 2000; ++i)
+    std::thread threadTwo(
+        [&]()
         {
-            Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 1, i, &updateState);
-        }
-    });
+            for (size_t i = 0; i < 2000; ++i)
+            {
+                Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 1, i, &updateState);
+            }
+        });
 
     threadOne.join();
     threadTwo.join();

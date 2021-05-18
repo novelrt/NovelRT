@@ -136,6 +136,8 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
 
             for (auto [entity, component] : intSystem)
             {
+                std::cerr << "Lambda 1" << std::endl;
+                std::cerr << component << std::endl;
                 intSystem.PushComponentUpdateInstruction(entity, 10);
             }
         },
@@ -154,6 +156,8 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
 
             for (auto [entity, component] : intSystem)
             {
+                std::cerr << "Lambda 2" << std::endl;
+                std::cerr << component << std::endl;
                 intSystem.PushComponentUpdateInstruction(entity, 10);
             }
         },

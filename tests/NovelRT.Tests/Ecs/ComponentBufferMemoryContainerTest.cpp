@@ -39,8 +39,8 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesEx
     int32_t deleteState = -1;
     auto container =
         ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto) {
-            *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) +=
-                *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());
+            *reinterpret_cast<int32_t*>(intRoot) +=
+                *reinterpret_cast<const int32_t*>(intUpdate);
         });
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
@@ -86,8 +86,8 @@ TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     int32_t deleteState = -1;
     auto container =
         ComponentBufferMemoryContainer(2, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto) {
-            *reinterpret_cast<int32_t*>(intRoot.GetDataHandle()) +=
-                *reinterpret_cast<int32_t*>(intUpdate.GetDataHandle());
+            *reinterpret_cast<int32_t*>(intRoot) +=
+                *reinterpret_cast<const int32_t*>(intUpdate);
         });
     int32_t updateState = 10;
 
