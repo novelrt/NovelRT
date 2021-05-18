@@ -102,36 +102,52 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
     std::atomic_bool sysFiveBool = true;
     std::atomic_bool sysSixBool = true;
     std::atomic_bool sysSevenBool = true;
+    EntityId entity = Atom::getNextEntityId();
 
     scheduler->RegisterSystem(sysOne);
     scheduler->RegisterSystem(sysTwo);
     scheduler->RegisterSystem(sysThree);
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysFourBool = false; });
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 10);
+        }
+    });
 
     scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_FALSE(sysFourBool);
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 10);
 
-    sysFourBool = true;
-
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysFiveBool = false; });
-
-    scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_FALSE(sysFourBool && sysFiveBool);
-
-    sysFourBool = true;
-    sysFiveBool = true;
-
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysSixBool = false; });
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 10);
+        }
+    });
 
     scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_FALSE(sysFourBool && sysFiveBool && sysSixBool);
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 30);
 
-    sysFourBool = true;
-    sysFiveBool = true;
-    sysSixBool = true;
-
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue) { sysSevenBool = false; });
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 10);
+        }
+    });
 
     scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_FALSE(sysOneBool && sysTwoBool && sysThreeBool && sysFourBool && sysFiveBool && sysSixBool && sysSevenBool);
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 10);
+        }
+    });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 100);
 }
