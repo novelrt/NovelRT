@@ -102,7 +102,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     EXPECT_EQ(
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
-        20);
+        30);
 }
 
 

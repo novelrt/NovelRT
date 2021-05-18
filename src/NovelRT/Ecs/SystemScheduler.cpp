@@ -104,6 +104,11 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork)
     {
+        if (_systemIds.empty())
+        {
+            return;
+        }
+
         int32_t sizeOfProcessedWork = 0;
 
         for (size_t i = 0; i < workersToAssign; i++)
@@ -173,7 +178,6 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
     {
-        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
 
         _currentDelta = delta;
 
@@ -183,6 +187,7 @@ namespace NovelRT::Ecs
         size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
 
         ScheduleUpdateWork(workersToAssign, amountOfWork);
+        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
 
         _entityCache.ProcessEntityDeletionRequestsFromThreads();
     }
