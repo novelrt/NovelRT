@@ -104,6 +104,9 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
     std::atomic_bool sysSevenBool = true;
     EntityId entity = Atom::getNextEntityId();
 
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
+
     scheduler->RegisterSystem(sysOne);
     scheduler->RegisterSystem(sysTwo);
     scheduler->RegisterSystem(sysThree);
