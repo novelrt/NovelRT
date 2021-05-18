@@ -212,3 +212,95 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
             entity),
         90);
 }
+
+TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
+{
+    EntityId entity = Atom::getNextEntityId();
+
+    auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
+    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
+
+    NrtComponentBufferMemoryContainerHandle container = nullptr;
+    ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, GetComponentTypeId<int32_t>(), &container), NRT_SUCCESS);
+
+    int32_t data = 10;
+    Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, entity, &data);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+
+    for (int i = 0; i < 8; ++i) // 11 total systems
+    Nrt_SystemScheduler_RegisterSystem(
+        scheduler,
+        [](auto delta, auto catalogue, auto) {
+            auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+            for (auto [entity, component] : intSystem)
+            {
+                intSystem.PushComponentUpdateInstruction(entity, 1);
+            }
+        },
+        nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        18);
+
+    for (int i = 0; i < 6; ++i) // 17 total systems
+        Nrt_SystemScheduler_RegisterSystem(
+            scheduler,
+            [](auto delta, auto catalogue, auto) {
+                auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+                for (auto [entity, component] : intSystem)
+                {
+                    intSystem.PushComponentUpdateInstruction(entity, 1);
+                }
+            },
+            nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        32);
+
+    for (int i = 0; i < 6; ++i) // 23 total systems
+        Nrt_SystemScheduler_RegisterSystem(
+            scheduler,
+            [](auto delta, auto catalogue, auto) {
+                auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+                for (auto [entity, component] : intSystem)
+                {
+                    intSystem.PushComponentUpdateInstruction(entity, 1);
+                }
+            },
+            nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        52);
+
+    for (int i = 0; i < 14; ++i) // 37 total systems
+        Nrt_SystemScheduler_RegisterSystem(
+            scheduler,
+            [](auto delta, auto catalogue, auto) {
+                auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+                for (auto [entity, component] : intSystem)
+                {
+                    intSystem.PushComponentUpdateInstruction(entity, 1);
+                }
+            },
+            nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        86);
+}

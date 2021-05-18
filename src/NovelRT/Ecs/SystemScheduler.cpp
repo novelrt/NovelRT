@@ -134,21 +134,23 @@ namespace NovelRT::Ecs
 
         if (remainder != 0)
         {
-            if (remainder < amountOfWork)
+            if (remainder <= amountOfWork)
             {
                 QueueLockPair& pair = _threadWorkQueues[0];
                 size_t startIndex = _systemIds.size() - remainder;
 
                 pair.threadLock.lock();
+
+                if ((_threadAvailabilityMap & 1ULL << (0)) == 0)
+                {
+                    _threadAvailabilityMap ^= 1ULL << (0);
+                }
+
                 for (size_t i = startIndex; i < _systemIds.size(); i++)
                 {
-                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
-                    {
-                        _threadAvailabilityMap ^= 1ULL << i;
-                    }
-
                     pair.systemUpdateIds.push_back(_systemIds[i]);
                 }
+
                 pair.threadLock.unlock();
             }
             else
@@ -157,53 +159,51 @@ namespace NovelRT::Ecs
 
                 for (size_t i = 0; i < remainder / amountOfWork; i++)
                 {
-                    size_t offset = startIndex + i;
+                    size_t offset = startIndex + (i * amountOfWork);
                     QueueLockPair& pair = _threadWorkQueues[i];
 
                     pair.threadLock.lock();
+
+                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << i;
+                    }
+
                     for (size_t j = 0; j < amountOfWork; j++)
                     {
                         size_t currentWorkIndex = offset + j;
-
-                        if ((_threadAvailabilityMap & 1ULL << i) == 0)
-                        {
-                            _threadAvailabilityMap ^= 1ULL << i;
-                        }
-
                         pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
                         ++sizeOfProcessedWork;
                     }
+
+                    pair.threadLock.unlock();
+                }
+
+                if (remainder % amountOfWork != 0)
+                {
+                    size_t threadWorkIndex =
+                        ((remainder / amountOfWork) + 1) < _threadWorkQueues.size() ? ((remainder / amountOfWork) + 1) : 0;
+
+                    QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
+                    size_t startingIndex = _systemIds.size() - sizeOfProcessedWork;
+
+                    pair.threadLock.lock();
+
+                    if ((_threadAvailabilityMap & 1ULL << threadWorkIndex) == 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << threadWorkIndex;
+                    }
+
+                    for (size_t i = startingIndex; i < _systemIds.size(); i++)
+                    {
+                        pair.systemUpdateIds.push_back(_systemIds[i]);
+                    }
+
                     pair.threadLock.unlock();
                 }
             }
         }
-        /*
-        {
-            size_t startIndex = _systemIds.size() - remainder;
-            size_t workerIndex = 0;
-            for (size_t i = 0; i < remainder; i++)
-            {
-                size_t offset = startIndex + i;
-
-                if (workerIndex >= _workerThreadCount)
-                {
-                    workerIndex = 0;
-                }
-
-                QueueLockPair& pair = _threadWorkQueues[workerIndex++];
-
-                pair.threadLock.lock();
-
-                if ((_threadAvailabilityMap & 1ULL << i) == 0)
-                {
-                    _threadAvailabilityMap ^= 1ULL << i;
-                }
-
-                pair.systemUpdateIds.push_back(_systemIds[offset]);
-                pair.threadLock.unlock();
-            }
-        }
-        */
+        
         while (_threadAvailabilityMap != 0)
         {
             std::this_thread::yield();
