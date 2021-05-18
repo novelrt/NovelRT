@@ -141,7 +141,7 @@ namespace NovelRT::Ecs
                     workerIndex = 0;
                 }
 
-                QueueLockPair& pair = _threadWorkQueues[workerIndex];
+                QueueLockPair& pair = _threadWorkQueues[workerIndex++];
 
                 pair.threadLock.lock();
 
