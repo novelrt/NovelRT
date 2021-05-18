@@ -15,18 +15,17 @@ namespace NovelRT::Ecs
           _shouldShutDown(false),
           _ecsDataBufferIndex(0)
     {
-        if (_workerThreadCount != 0)
+        if (_workerThreadCount == 0)
         {
-            return;
+            _workerThreadCount = std::thread::hardware_concurrency() - 1;
         }
 
-        _workerThreadCount = std::thread::hardware_concurrency() - 1;
-
-        // in case the previous call doesn't work
         if (_workerThreadCount == 0)
         {
             _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
+
+        // in case the previous call doesn't work
 
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
