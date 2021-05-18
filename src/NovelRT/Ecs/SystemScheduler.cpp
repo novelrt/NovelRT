@@ -134,6 +134,51 @@ namespace NovelRT::Ecs
 
         if (remainder != 0)
         {
+            if (remainder < amountOfWork)
+            {
+                QueueLockPair& pair = _threadWorkQueues[0];
+                size_t startIndex = _systemIds.size() - remainder;
+
+                pair.threadLock.lock();
+                for (size_t i = startIndex; i < _systemIds.size(); i++)
+                {
+                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << i;
+                    }
+
+                    pair.systemUpdateIds.push_back(_systemIds[i]);
+                }
+                pair.threadLock.unlock();
+            }
+            else
+            {
+                size_t startIndex = _systemIds.size() - remainder;
+
+                for (size_t i = 0; i < remainder / amountOfWork; i++)
+                {
+                    size_t offset = startIndex + i;
+                    QueueLockPair& pair = _threadWorkQueues[i];
+
+                    pair.threadLock.lock();
+                    for (size_t j = 0; j < amountOfWork; j++)
+                    {
+                        size_t currentWorkIndex = offset + j;
+
+                        if ((_threadAvailabilityMap & 1ULL << i) == 0)
+                        {
+                            _threadAvailabilityMap ^= 1ULL << i;
+                        }
+
+                        pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
+                        ++sizeOfProcessedWork;
+                    }
+                    pair.threadLock.unlock();
+                }
+            }
+        }
+        /*
+        {
             size_t startIndex = _systemIds.size() - remainder;
             size_t workerIndex = 0;
             for (size_t i = 0; i < remainder; i++)
@@ -158,7 +203,7 @@ namespace NovelRT::Ecs
                 pair.threadLock.unlock();
             }
         }
-
+        */
         while (_threadAvailabilityMap != 0)
         {
             std::this_thread::yield();

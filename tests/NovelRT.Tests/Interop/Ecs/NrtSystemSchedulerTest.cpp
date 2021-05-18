@@ -98,6 +98,11 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
         nullptr);
 
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        20);
+
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
     EXPECT_EQ(
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
@@ -129,25 +134,29 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
     int32_t data = 10;
     Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, entity, &data);
 
-    Nrt_SystemScheduler_RegisterSystem(
-        scheduler,
-        [](auto delta, auto catalogue, auto) {
-            auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
-
-            for (auto [entity, component] : intSystem)
-            {
-                std::cerr << "Lambda 1" << std::endl;
-                std::cerr << component << std::endl;
-                intSystem.PushComponentUpdateInstruction(entity, 10);
-            }
-        },
-        nullptr);
-
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
     EXPECT_EQ(
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
         10);
+
+    Nrt_SystemScheduler_RegisterSystem(
+        scheduler,
+        [](auto delta, auto catalogue, auto) {
+            auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+            for (auto [entity, component] : intSystem)
+            {
+                intSystem.PushComponentUpdateInstruction(entity, 9);
+            }
+        },
+        nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        19);
     
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
@@ -156,9 +165,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
 
             for (auto [entity, component] : intSystem)
             {
-                std::cerr << "Lambda 2" << std::endl;
-                std::cerr << component << std::endl;
-                intSystem.PushComponentUpdateInstruction(entity, 10);
+                intSystem.PushComponentUpdateInstruction(entity, 8);
             }
         },
         nullptr);
@@ -167,8 +174,8 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
     EXPECT_EQ(
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
-        30);
-    /*
+        36);
+    
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
         [](auto delta, auto catalogue, auto) {
@@ -176,7 +183,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
 
             for (auto [entity, component] : intSystem)
             {
-                intSystem.PushComponentUpdateInstruction(entity, 10);
+                intSystem.PushComponentUpdateInstruction(entity, 7);
             }
         },
         nullptr);
@@ -186,5 +193,22 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
         60);
-        */
+
+    Nrt_SystemScheduler_RegisterSystem(
+        scheduler,
+        [](auto delta, auto catalogue, auto) {
+            auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+
+            for (auto [entity, component] : intSystem)
+            {
+                intSystem.PushComponentUpdateInstruction(entity, 6);
+            }
+        },
+        nullptr);
+
+    ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
+    EXPECT_EQ(
+        reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
+            entity),
+        90);
 }

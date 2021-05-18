@@ -86,6 +86,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 
     scheduler->ExecuteIteration(Timestamp(0));
     ASSERT_TRUE(isEqual);
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
 
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 30);
@@ -98,10 +99,6 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
     scheduler = new SystemScheduler(3);
     scheduler->SpinThreads();
 
-    std::atomic_bool sysFourBool = true;
-    std::atomic_bool sysFiveBool = true;
-    std::atomic_bool sysSixBool = true;
-    std::atomic_bool sysSevenBool = true;
     EntityId entity = Atom::getNextEntityId();
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
@@ -115,43 +112,43 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
-            intSystem.PushComponentUpdateInstruction(entity, 10);
+            intSystem.PushComponentUpdateInstruction(entity, 9);
         }
     });
 
     scheduler->ExecuteIteration(Timestamp(0));
-    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 19);
 
     scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
-            intSystem.PushComponentUpdateInstruction(entity, 10);
+            intSystem.PushComponentUpdateInstruction(entity, 8);
         }
     });
-    //
-    //scheduler->ExecuteIteration(Timestamp(0));
-    //EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 40);
-    //
-    //scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
-    //    auto intSystem = catalogue.GetComponentView<int32_t>();
-    //    for (auto [entity, component] : intSystem)
-    //    {
-    //        intSystem.PushComponentUpdateInstruction(entity, 10);
-    //    }
-    //});
-    //
-    //scheduler->ExecuteIteration(Timestamp(0));
-    //EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 70);
-    //
-    //scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
-    //    auto intSystem = catalogue.GetComponentView<int32_t>();
-    //    for (auto [entity, component] : intSystem)
-    //    {
-    //        intSystem.PushComponentUpdateInstruction(entity, 10);
-    //    }
-    //});
-    //
-    //scheduler->ExecuteIteration(Timestamp(0));
-    //EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 110);
+    
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 36);
+    
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 7);
+        }
+    });
+    
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
+    
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        auto intSystem = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intSystem)
+        {
+            intSystem.PushComponentUpdateInstruction(entity, 6);
+        }
+    });
+    
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 90);
 }
