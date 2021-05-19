@@ -180,7 +180,7 @@ namespace NovelRT::Ecs
 
                 if (remainder % amountOfWork != 0)
                 {
-                    size_t threadWorkIndex = ((remainder / amountOfWork) < _threadWorkQueues.size()
+                    size_t threadWorkIndex = (remainder / amountOfWork) < _threadWorkQueues.size()
                                                  ? (remainder / amountOfWork)
                                                  : 0;
 
