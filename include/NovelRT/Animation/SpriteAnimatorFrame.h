@@ -21,7 +21,7 @@ namespace NovelRT::Animation
         Timing::Timestamp _duration;
 
     public:
-        SpriteAnimatorFrame() : _duration(Timing::Timestamp::zero())
+        SpriteAnimatorFrame() noexcept : _duration(Timing::Timestamp::zero())
         {
         }
 

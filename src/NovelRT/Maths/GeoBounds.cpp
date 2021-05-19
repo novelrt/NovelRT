@@ -10,7 +10,7 @@ namespace NovelRT::Maths
     {
     }
 
-    bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const
+    bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const noexcept
     {
         auto corner0 = getCornerInWorldSpace(0);
         auto corner2 = getCornerInWorldSpace(2);
@@ -36,7 +36,7 @@ namespace NovelRT::Maths
         return !((minA > maxB) || (maxA < minB));
     }
 
-    GeoVector2F GeoBounds::getCornerInLocalSpace(int32_t index) const
+    GeoVector2F GeoBounds::getCornerInLocalSpace(int32_t index) const noexcept
     {
         GeoVector2F returnValue;
         auto boundsSize = size;
@@ -60,12 +60,12 @@ namespace NovelRT::Maths
         return returnValue;
     }
 
-    GeoVector2F GeoBounds::getCornerInWorldSpace(int32_t index) const
+    GeoVector2F GeoBounds::getCornerInWorldSpace(int32_t index) const noexcept
     {
         return position + getCornerInLocalSpace(index);
     }
 
-    GeoVector2F GeoBounds::getExtents() const
+    GeoVector2F GeoBounds::getExtents() const noexcept
     {
         return size / 2.0f;
     }

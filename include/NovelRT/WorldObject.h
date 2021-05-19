@@ -27,35 +27,35 @@ namespace NovelRT
         bool _isDirty;
 
     public:
-        WorldObject(Transform transform, int32_t layer);
+        WorldObject(Transform transform, int32_t layer) noexcept;
         virtual ~WorldObject()
         {
         }
 
-        inline Transform& transform()
+        inline Transform& transform() noexcept
         {
             _isDirty = true;
             return _transform;
         }
 
-        inline const Transform& transform() const
+        inline const Transform& transform() const noexcept
         {
             return _transform;
         }
 
-        inline const int32_t& layer() const
+        inline const int32_t& layer() const noexcept
         {
             return _layer;
         }
 
-        inline int32_t& layer()
+        inline int32_t& layer() noexcept
         {
             return _layer;
         }
 
-        virtual bool getActive() const;
+        virtual bool getActive() const noexcept;
 
-        virtual void setActive(bool value);
+        virtual void setActive(bool value) noexcept;
 
         virtual void executeObjectBehaviour() = 0;
     };

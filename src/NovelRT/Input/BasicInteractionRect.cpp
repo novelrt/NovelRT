@@ -13,7 +13,7 @@ namespace NovelRT::Input
     {
     }
 
-    bool BasicInteractionRect::validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const
+    bool BasicInteractionRect::validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const noexcept
     {
         auto position = transform().position;
         auto size = transform().scale;

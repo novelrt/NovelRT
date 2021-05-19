@@ -16,17 +16,17 @@ namespace NovelRT::SceneGraph
         std::shared_ptr<SceneNode> _sceneNode;
 
     public:
-        QuadTreeScenePoint(Maths::GeoVector2F position, std::shared_ptr<SceneNode> sceneNode)
+        QuadTreeScenePoint(Maths::GeoVector2F position, std::shared_ptr<SceneNode> sceneNode) noexcept
             : Maths::QuadTreePoint(position), _sceneNode(sceneNode)
         {
         }
 
-        QuadTreeScenePoint(float x, float y, std::shared_ptr<SceneNode> sceneNode)
+        QuadTreeScenePoint(float x, float y, std::shared_ptr<SceneNode> sceneNode) noexcept
             : Maths::QuadTreePoint(x, y), _sceneNode(sceneNode)
         {
         }
 
-        const std::shared_ptr<SceneNode>& getSceneNode() const
+        const std::shared_ptr<SceneNode>& getSceneNode() const noexcept
         {
             return _sceneNode;
         }

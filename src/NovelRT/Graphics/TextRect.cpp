@@ -38,7 +38,7 @@ namespace NovelRT::Graphics
     {
     }
 
-    std::string TextRect::getText() const
+    std::string TextRect::getText() const noexcept
     {
         return _text;
     }
@@ -98,7 +98,7 @@ namespace NovelRT::Graphics
         std::for_each(beginIt, endIt, [](const std::unique_ptr<ImageRect>& ptr) { ptr->setActive(false); });
     }
 
-    void TextRect::setActive(bool value)
+    void TextRect::setActive(bool value) noexcept
     {
         WorldObject::setActive(value);
         std::for_each(_letterRects.begin(), _letterRects.end(), [&value](auto& x) { x->setActive(value); });

@@ -30,17 +30,17 @@ namespace NovelRT::Utilities
             _function(std::forward<TArgs>(args)...);
         }
 
-        Atom getId() const
+        Atom getId() const noexcept
         {
             return _id;
         }
 
-        bool operator==(const EventHandler<TArgs...>& other) const
+        bool operator==(const EventHandler<TArgs...>& other) const noexcept
         {
             return _id == other._id;
         }
 
-        bool operator!=(const EventHandler<TArgs...>& other) const
+        bool operator!=(const EventHandler<TArgs...>& other) const noexcept
         {
             return _id != other._id;
         }
@@ -56,7 +56,7 @@ namespace NovelRT::Utilities
         {
         }
 
-        size_t getHandlerCount() const
+        size_t getHandlerCount() const noexcept
         {
             return _handlers.size();
         }

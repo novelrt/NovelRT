@@ -48,12 +48,12 @@ namespace NovelRT::Graphics
         return returnVal;
     }
 
-    Maths::GeoMatrix4x4F Camera::generateUboMatrix()
+    Maths::GeoMatrix4x4F Camera::generateUboMatrix() noexcept
     {
         return getProjectionMatrix() * getViewMatrix();
     }
 
-    void Camera::initialiseCameraForFrame()
+    void Camera::initialiseCameraForFrame() noexcept
     {
         switch (_cameraFrameState)
         {
