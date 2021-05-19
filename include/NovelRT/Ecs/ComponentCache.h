@@ -77,9 +77,9 @@ namespace NovelRT::Ecs
         template<typename T> void RegisterComponentType(T deleteInstructionState)
         {
             std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-                CreateContainer(sizeof(T), &deleteInstructionState,
-                                [](auto rootComponent, auto updateComponent, auto)
-                                { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); });
+                CreateContainer(sizeof(T), &deleteInstructionState, [](auto rootComponent, auto updateComponent, auto) {
+                    *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
+                });
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
@@ -105,7 +105,7 @@ namespace NovelRT::Ecs
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T> [[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
+        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
             return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }

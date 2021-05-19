@@ -46,8 +46,7 @@ namespace NovelRT::Ecs
         ComponentBufferMemoryContainer(size_t poolSize,
                                        const void* deleteInstructionState,
                                        size_t sizeOfDataTypeInBytes,
-                                       std::function<void(void*, const void*,
-                                                          size_t)> componentUpdateLogic) noexcept;
+                                       std::function<void(void*, const void*, size_t)> componentUpdateLogic) noexcept;
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;
 

@@ -110,7 +110,6 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
         30);
 }
 
-
 TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
 {
     TearDown();
@@ -157,7 +156,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
         19);
-    
+
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
         [](auto delta, auto catalogue, auto) {
@@ -169,13 +168,13 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourT
             }
         },
         nullptr);
-    
+
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
     EXPECT_EQ(
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
         36);
-    
+
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
         [](auto delta, auto catalogue, auto) {
@@ -229,17 +228,17 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
 
     for (int i = 0; i < 8; ++i) // 11 total systems
-    Nrt_SystemScheduler_RegisterSystem(
-        scheduler,
-        [](auto delta, auto catalogue, auto) {
-            auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
+        Nrt_SystemScheduler_RegisterSystem(
+            scheduler,
+            [](auto delta, auto catalogue, auto) {
+                auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
-            for (auto [entity, component] : intSystem)
-            {
-                intSystem.PushComponentUpdateInstruction(entity, 1);
-            }
-        },
-        nullptr);
+                for (auto [entity, component] : intSystem)
+                {
+                    intSystem.PushComponentUpdateInstruction(entity, 1);
+                }
+            },
+            nullptr);
 
     ASSERT_EQ(Nrt_SystemScheduler_ExecuteIteration(scheduler, 0), NRT_SUCCESS);
     EXPECT_EQ(

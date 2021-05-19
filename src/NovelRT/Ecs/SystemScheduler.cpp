@@ -116,7 +116,6 @@ namespace NovelRT::Ecs
             size_t offset = i * amountOfWork;
             QueueLockPair& pair = _threadWorkQueues[i];
 
-
             pair.threadLock.lock();
 
             _threadAvailabilityMap ^= 1ULL << i;
@@ -181,8 +180,9 @@ namespace NovelRT::Ecs
 
                 if (remainder % amountOfWork != 0)
                 {
-                    size_t threadWorkIndex =
-                        ((remainder / amountOfWork) + 1) < _threadWorkQueues.size() ? ((remainder / amountOfWork) + 1) : 0;
+                    size_t threadWorkIndex = ((remainder / amountOfWork) + 1) < _threadWorkQueues.size()
+                                                 ? ((remainder / amountOfWork) + 1)
+                                                 : 0;
 
                     QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
                     size_t startingIndex = _systemIds.size() - sizeOfProcessedWork;
@@ -203,7 +203,7 @@ namespace NovelRT::Ecs
                 }
             }
         }
-        
+
         while (_threadAvailabilityMap != 0)
         {
             std::this_thread::yield();

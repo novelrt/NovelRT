@@ -46,8 +46,7 @@ namespace NovelRT::Ecs
                   &deleteInstructionState,
                   sizeof(T),
                   [](auto rootComponent, auto updateComponent, auto) {
-                      *reinterpret_cast<T*>(rootComponent) +=
-                          *reinterpret_cast<const T*>(updateComponent);
+                      *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
                   }))
         {
             static_assert(std::is_trivially_copyable<T>::value,

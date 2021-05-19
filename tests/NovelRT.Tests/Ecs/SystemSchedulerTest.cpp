@@ -126,10 +126,10 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
             intSystem.PushComponentUpdateInstruction(entity, 8);
         }
     });
-    
+
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 36);
-    
+
     scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
@@ -137,10 +137,10 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
             intSystem.PushComponentUpdateInstruction(entity, 7);
         }
     });
-    
+
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
-    
+
     scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
@@ -148,7 +148,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
             intSystem.PushComponentUpdateInstruction(entity, 6);
         }
     });
-    
+
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 90);
 }

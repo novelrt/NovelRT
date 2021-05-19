@@ -20,10 +20,7 @@ extern "C"
                                                                                       NrtComponentUpdateFnPtr fnPtr,
                                                                                       void* context)
     {
-        auto func = [=](void* lhs, const void* rhs,
-                        size_t size) {
-            fnPtr(lhs, rhs, size, context);
-        };
+        auto func = [=](void* lhs, const void* rhs, size_t size) { fnPtr(lhs, rhs, size, context); };
 
         return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
             new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func));
