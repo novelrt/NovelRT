@@ -35,7 +35,8 @@ namespace NovelRT::Maths
         GeoVector4F z;
         GeoVector4F w;
 
-        GeoMatrix4x4F() noexcept : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
+        GeoMatrix4x4F() noexcept
+            : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
         {
         }
 

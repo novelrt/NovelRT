@@ -9,7 +9,7 @@ namespace NovelRT::Input
         Transform transform,
         int32_t layer,
         const std::function<void(Input::InteractionObject*)> notifyHasBeenDrawnObject)
-        : InteractionObject(transform, layer, notifyHasBeenDrawnObject) 
+        : InteractionObject(transform, layer, notifyHasBeenDrawnObject)
     {
     }
 

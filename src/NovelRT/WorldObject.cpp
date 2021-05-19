@@ -5,7 +5,8 @@
 
 namespace NovelRT
 {
-    WorldObject::WorldObject(Transform transform, int32_t layer) noexcept : _transform(transform), _layer(layer), _active(true)
+    WorldObject::WorldObject(Transform transform, int32_t layer) noexcept
+        : _transform(transform), _layer(layer), _active(true)
     {
     }
 
