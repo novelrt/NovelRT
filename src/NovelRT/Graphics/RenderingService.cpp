@@ -259,7 +259,7 @@ namespace NovelRT::Graphics
         return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
     }
 
-    std::shared_ptr<Camera> RenderingService::getCamera() const
+    std::shared_ptr<Camera> RenderingService::getCamera() const noexcept
     {
         return _camera;
     }
@@ -328,7 +328,7 @@ namespace NovelRT::Graphics
         return returnValue;
     }
 
-    void RenderingService::setBackgroundColour(RGBAConfig colour)
+    void RenderingService::setBackgroundColour(RGBAConfig colour) noexcept
     {
         _framebufferColour = colour;
     }

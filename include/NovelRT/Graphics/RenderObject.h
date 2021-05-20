@@ -15,8 +15,8 @@ namespace NovelRT::Graphics
     protected:
         virtual void drawObject() = 0;
         virtual void configureObjectBuffers();
-        static GLuint generateStandardBuffer();
-        Maths::GeoMatrix4x4F generateViewData();
+        static GLuint generateStandardBuffer() noexcept;
+        Maths::GeoMatrix4x4F generateViewData() noexcept;
         Maths::GeoMatrix4x4F generateCameraBlock();
 
         Utilities::Lazy<GLuint> _vertexBuffer;

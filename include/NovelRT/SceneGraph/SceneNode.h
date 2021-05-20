@@ -21,12 +21,12 @@ namespace NovelRT::SceneGraph
         std::set<std::shared_ptr<SceneNode>> _children;
 
     public:
-        const std::set<std::shared_ptr<SceneNode>>& getChildren() const
+        const std::set<std::shared_ptr<SceneNode>>& getChildren() const noexcept
         {
             return _children;
         }
 
-        const std::set<std::shared_ptr<SceneNode>>& getParents() const
+        const std::set<std::shared_ptr<SceneNode>>& getParents() const noexcept
         {
             return _parents;
         }
@@ -164,12 +164,12 @@ namespace NovelRT::SceneGraph
                 ++*this;
             }
 
-            const_reference operator*() const
+            const_reference operator*() const noexcept
             {
                 return _value;
             }
 
-            const_pointer operator->() const
+            const_pointer operator->() const noexcept
             {
                 return std::pointer_traits<pointer>::pointer_to(**this);
             }
@@ -192,25 +192,25 @@ namespace NovelRT::SceneGraph
                 return *this;
             }
 
-            breadth_first_traversal_result_iterator operator++(int32_t)
+            breadth_first_traversal_result_iterator operator++(int32_t) noexcept
             {
                 auto tmp = *this;
                 ++*this;
                 return tmp;
             }
 
-            bool operator==(const breadth_first_traversal_result_iterator& other) const
+            bool operator==(const breadth_first_traversal_result_iterator& other) const noexcept
             {
                 return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty() ||
                                                   _pendingNodes.front() == other._pendingNodes.front());
             }
 
-            bool operator!=(const breadth_first_traversal_result_iterator& other) const
+            bool operator!=(const breadth_first_traversal_result_iterator& other) const noexcept
             {
                 return !(*this == other);
             }
 
-            bool isEnd() const
+            bool isEnd() const noexcept
             {
                 return _pendingNodes.empty();
             }
@@ -242,12 +242,12 @@ namespace NovelRT::SceneGraph
                 ++*this;
             }
 
-            const_reference operator*() const
+            const_reference operator*() const noexcept
             {
                 return _value;
             }
 
-            const_pointer operator->() const
+            const_pointer operator->() const noexcept
             {
                 return std::pointer_traits<pointer>::pointer_to(**this);
             }
@@ -270,25 +270,25 @@ namespace NovelRT::SceneGraph
                 return *this;
             }
 
-            depth_first_traversal_result_iterator operator++(int32_t)
+            depth_first_traversal_result_iterator operator++(int32_t) noexcept
             {
                 auto tmp = *this;
                 ++*this;
                 return tmp;
             }
 
-            bool operator==(const depth_first_traversal_result_iterator& other) const
+            bool operator==(const depth_first_traversal_result_iterator& other) const noexcept
             {
                 return _value == other._value && (_pendingNodes.empty() == other._pendingNodes.empty() ||
                                                   _pendingNodes.top() == other._pendingNodes.top());
             }
 
-            bool operator!=(const depth_first_traversal_result_iterator& other) const
+            bool operator!=(const depth_first_traversal_result_iterator& other) const noexcept
             {
                 return !(*this == other);
             }
 
-            bool isEnd() const
+            bool isEnd() const noexcept
             {
                 return _pendingNodes.empty();
             }

@@ -31,11 +31,11 @@ namespace NovelRT
         DebugService(Utilities::Event<>& sceneConstructionEvent,
                      std::shared_ptr<Graphics::RenderingService> renderingService) noexcept;
 
-        bool getIsFpsCounterVisible() const;
+        bool getIsFpsCounterVisible() const noexcept;
         void setIsFpsCounterVisible(bool value);
         void accumulateStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames);
 
-        inline uint32_t getFramesPerSecond() const
+        inline uint32_t getFramesPerSecond() const noexcept
         {
             return _framesPerSecond;
         }

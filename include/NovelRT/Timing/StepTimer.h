@@ -32,68 +32,68 @@ namespace NovelRT::Timing
         bool _isFixedTimeStep;
 
     public:
-        StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1);
+        StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1) noexcept;
 
-        inline uint64_t getElapsedTicks() const
+        inline uint64_t getElapsedTicks() const noexcept
         {
             return _elapsedTicks;
         }
-        inline uint64_t getTotalTicks() const
+        inline uint64_t getTotalTicks() const noexcept
         {
             return _totalTicks;
         }
 
-        inline Timestamp getElapsedTime() const
+        inline Timestamp getElapsedTime() const noexcept
         {
             auto elapsedTicks = getElapsedTicks();
             return Timestamp(elapsedTicks);
         }
-        inline Timestamp getTotalTime() const
+        inline Timestamp getTotalTime() const noexcept
         {
             auto totalTicks = getTotalTicks();
             return Timestamp(totalTicks);
         }
 
-        inline const uint64_t& targetElapsedTicks() const
+        inline const uint64_t& targetElapsedTicks() const noexcept
         {
             return _targetElapsedTicks;
         }
 
-        inline uint64_t& targetElapsedTicks()
+        inline uint64_t& targetElapsedTicks() noexcept
         {
             return _targetElapsedTicks;
         }
 
-        inline Timestamp getTargetElapsedTime() const
+        inline Timestamp getTargetElapsedTime() const noexcept
         {
             auto ticks = targetElapsedTicks();
             return Timestamp(ticks);
         }
-        inline void setTargetElapsedTime(Timestamp value)
+        inline void setTargetElapsedTime(Timestamp value) noexcept
         {
             targetElapsedTicks() = value.ticks;
         }
 
-        inline uint32_t getFrameCount() const
+        inline uint32_t getFrameCount() const noexcept
         {
             return _frameCount;
         }
-        inline uint32_t getFramesPerSecond() const
+        inline uint32_t getFramesPerSecond() const noexcept
         {
             return _framesPerSecond;
         }
 
-        inline const bool& isFixedTimeStep() const
+        inline const bool& isFixedTimeStep() const noexcept
         {
             return _isFixedTimeStep;
         }
 
-        inline bool& isFixedTimeStep()
+        inline bool& isFixedTimeStep() noexcept
         {
             return _isFixedTimeStep;
         }
 
-        void resetElapsedTime();
+        void resetElapsedTime() noexcept;
         void tick(const Utilities::Event<Timestamp>& update);
     };
 } // namespace NovelRT::Timing
