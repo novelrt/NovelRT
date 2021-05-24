@@ -156,7 +156,6 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
 TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
     EntityId entity = Atom::getNextEntityId();
-    uint32_t count = scheduler->GetWorkerThreadCount();
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
