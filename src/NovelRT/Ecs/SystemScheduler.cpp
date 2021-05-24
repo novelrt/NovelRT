@@ -184,7 +184,7 @@ namespace NovelRT::Ecs
                         (remainder / amountOfWork) < _threadWorkQueues.size() ? (remainder / amountOfWork) : 0;
 
                     QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
-                    size_t startingIndex = _systemIds.size() - sizeOfProcessedWork;
+                    size_t startingIndex = _systemIds.size() - (_systemIds.size() - sizeOfProcessedWork);
 
                     pair.threadLock.lock();
 
