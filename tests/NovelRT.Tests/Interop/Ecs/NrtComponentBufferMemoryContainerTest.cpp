@@ -53,8 +53,7 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUp
     auto container = Nrt_ComponentBufferMemoryContainer_Create(
         1, &deleteState, sizeof(int32_t),
         [](auto lhs, auto rhs, auto, auto) {
-            *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
-                *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+            *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs);
         },
         nullptr);
 
@@ -154,8 +153,7 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
     auto container = Nrt_ComponentBufferMemoryContainer_Create(
         2, &deleteState, sizeof(int32_t),
         [](auto lhs, auto rhs, auto, auto) {
-            *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs)) +=
-                *reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+            *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs);
         },
         nullptr);
 

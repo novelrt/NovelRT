@@ -39,7 +39,7 @@ namespace NovelRT::Ink
         return std::make_shared<Story>(shared_from_this(), _exports.getActual().GetStoryExports, jsonString);
     }
 
-    std::shared_ptr<DotNet::RuntimeService> InkService::getRuntimeService()
+    std::shared_ptr<DotNet::RuntimeService> InkService::getRuntimeService() noexcept
     {
         return _runtimeService;
     }

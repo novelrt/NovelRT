@@ -56,32 +56,32 @@ namespace NovelRT
         return _exitCode;
     }
 
-    std::shared_ptr<Graphics::RenderingService> NovelRunner::getRenderer() const
+    std::shared_ptr<Graphics::RenderingService> NovelRunner::getRenderer() const noexcept
     {
         return _novelRenderer;
     }
 
-    std::shared_ptr<Input::InteractionService> NovelRunner::getInteractionService() const
+    std::shared_ptr<Input::InteractionService> NovelRunner::getInteractionService() const noexcept
     {
         return _novelInteractionService;
     }
 
-    std::shared_ptr<DebugService> NovelRunner::getDebugService() const
+    std::shared_ptr<DebugService> NovelRunner::getDebugService() const noexcept
     {
         return _novelDebugService;
     }
 
-    std::shared_ptr<Audio::AudioService> NovelRunner::getAudioService() const
+    std::shared_ptr<Audio::AudioService> NovelRunner::getAudioService() const noexcept
     {
         return _novelAudioService;
     }
 
-    std::shared_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const
+    std::shared_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const noexcept
     {
         return _novelDotNetRuntimeService;
     }
 
-    std::shared_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const
+    std::shared_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const noexcept
     {
         return _novelWindowingService;
     }

@@ -58,30 +58,30 @@ namespace NovelRT::Windowing
                               bool transparencyEnabled);
         void tearDown();
 
-        inline GLFWwindow* getWindow() const
+        inline GLFWwindow* getWindow() const noexcept
         {
             return _window.get();
         }
 
-        inline std::string getWindowTitle() const
+        inline std::string getWindowTitle() const noexcept
         {
             return _windowTitle;
         }
 
-        inline void setWindowTitle(const std::string& value)
+        inline void setWindowTitle(const std::string& value) noexcept
         {
             _windowTitle = value;
             return glfwSetWindowTitle(getWindow(), _windowTitle.c_str());
         }
 
-        inline void setWindowSize(Maths::GeoVector2F value)
+        inline void setWindowSize(Maths::GeoVector2F value) noexcept
         {
             _windowSize = value;
             glfwSetWindowSize(getWindow(), static_cast<int32_t>(value.x), static_cast<int32_t>(value.y));
             WindowResized(_windowSize);
         }
 
-        inline Maths::GeoVector2F getWindowSize() const
+        inline Maths::GeoVector2F getWindowSize() const noexcept
         {
             return _windowSize;
         }

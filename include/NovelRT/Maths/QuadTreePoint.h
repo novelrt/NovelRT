@@ -12,11 +12,11 @@ namespace NovelRT::Maths
         GeoVector2F _position;
 
     public:
-        QuadTreePoint(GeoVector2F position) : _position(position)
+        QuadTreePoint(GeoVector2F position) noexcept : _position(position)
         {
         }
 
-        QuadTreePoint(float x, float y) : QuadTreePoint(GeoVector2F(x, y))
+        QuadTreePoint(float x, float y) noexcept : QuadTreePoint(GeoVector2F(x, y))
         {
         }
 

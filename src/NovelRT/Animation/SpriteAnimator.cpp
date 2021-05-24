@@ -79,7 +79,7 @@ namespace NovelRT::Animation
         _animatorState = AnimatorPlayState::Playing;
     }
 
-    void SpriteAnimator::pause()
+    void SpriteAnimator::pause() noexcept
     {
         _animatorState = AnimatorPlayState::Paused;
     }

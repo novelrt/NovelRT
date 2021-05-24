@@ -38,7 +38,7 @@ namespace NovelRT
         sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
     }
 
-    bool DebugService::getIsFpsCounterVisible() const
+    bool DebugService::getIsFpsCounterVisible() const noexcept
     {
         return (_fpsCounter != nullptr) && _fpsCounter->getActive();
     }

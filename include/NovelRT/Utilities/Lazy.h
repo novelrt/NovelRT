@@ -35,18 +35,18 @@ namespace NovelRT::Utilities
             return _actual;
         }
 
-        void reset()
+        void reset() noexcept
         {
             _isCreated = false;
         }
 
-        void reset(T newExplicitValue)
+        void reset(T newExplicitValue) noexcept
         {
             _isCreated = true;
             _actual = newExplicitValue;
         }
 
-        bool isCreated() const
+        bool isCreated() const noexcept
         {
             return _isCreated;
         }
@@ -73,17 +73,17 @@ namespace NovelRT::Utilities
             return _actual.get();
         }
 
-        void reset()
+        void reset() noexcept
         {
             _actual = nullptr;
         }
 
-        void reset(T* newExplicitValue)
+        void reset(T* newExplicitValue) noexcept
         {
             _actual.reset(newExplicitValue);
         }
 
-        bool isCreated() const
+        bool isCreated() const noexcept
         {
             return _actual != nullptr;
         }
@@ -111,17 +111,17 @@ namespace NovelRT::Utilities
             return _actual.get();
         }
 
-        void reset()
+        void reset() noexcept
         {
             _actual = nullptr;
         }
 
-        void reset(T* newExplicitValue)
+        void reset(T* newExplicitValue) noexcept
         {
             _actual.reset(newExplicitValue);
         }
 
-        bool isCreated() const
+        bool isCreated() const noexcept
         {
             return _actual != nullptr;
         }

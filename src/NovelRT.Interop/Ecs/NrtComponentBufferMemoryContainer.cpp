@@ -20,11 +20,7 @@ extern "C"
                                                                                       NrtComponentUpdateFnPtr fnPtr,
                                                                                       void* context)
     {
-        auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
-                        size_t size) {
-            fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
-                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size, context);
-        };
+        auto func = [=](void* lhs, const void* rhs, size_t size) { fnPtr(lhs, rhs, size, context); };
 
         return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
             new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func));

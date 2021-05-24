@@ -63,12 +63,12 @@ namespace NovelRT::Graphics
                                                  float fontSize,
                                                  const std::string& fontFilePath);
 
-        std::shared_ptr<Camera> getCamera() const;
+        std::shared_ptr<Camera> getCamera() const noexcept;
 
         void beginFrame() const;
         void endFrame() const;
 
-        void setBackgroundColour(RGBAConfig colour);
+        void setBackgroundColour(RGBAConfig colour) noexcept;
 
         std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
         std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);

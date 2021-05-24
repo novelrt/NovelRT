@@ -13,7 +13,7 @@ namespace NovelRT
     typedef spdlog::async_factory spdlog_factory;
 #endif
 
-    LoggingService::LoggingService()
+    LoggingService::LoggingService() noexcept
     {
         try
         {
@@ -39,7 +39,7 @@ namespace NovelRT
         }
     }
 
-    LoggingService::LoggingService(const std::string& core)
+    LoggingService::LoggingService(const std::string& core) noexcept
     {
         try
         {
@@ -65,7 +65,7 @@ namespace NovelRT
         }
     }
 
-    LoggingService::LoggingService(const std::string& core, LogLevel level)
+    LoggingService::LoggingService(const std::string& core, LogLevel level) noexcept
     {
         try
         {

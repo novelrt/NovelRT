@@ -16,11 +16,11 @@ namespace NovelRT::SceneGraph
         std::shared_ptr<Graphics::RenderObject> _renderObject;
 
     public:
-        RenderObjectNode(std::shared_ptr<Graphics::RenderObject> renderObject) : _renderObject(renderObject)
+        RenderObjectNode(std::shared_ptr<Graphics::RenderObject> renderObject) noexcept : _renderObject(renderObject)
         {
         }
 
-        const std::shared_ptr<Graphics::RenderObject>& getRenderObject() const
+        const std::shared_ptr<Graphics::RenderObject>& getRenderObject() const noexcept
         {
             return _renderObject;
         }

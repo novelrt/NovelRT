@@ -17,7 +17,7 @@ namespace NovelRT::Input
                              int32_t layer,
                              const std::function<void(InteractionObject*)> notifyHasBeenDrawnObject);
 
-        bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const override;
+        bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const noexcept override;
     };
 } // namespace NovelRT::Input
 

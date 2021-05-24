@@ -15,18 +15,17 @@ namespace NovelRT::Ecs
           _shouldShutDown(false),
           _ecsDataBufferIndex(0)
     {
-        if (_workerThreadCount != 0)
+        if (_workerThreadCount == 0)
         {
-            return;
+            _workerThreadCount = std::thread::hardware_concurrency() - 1;
         }
 
-        _workerThreadCount = std::thread::hardware_concurrency() - 1;
-
-        // in case the previous call doesn't work
         if (_workerThreadCount == 0)
         {
             _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
+
+        // in case the previous call doesn't work
 
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
@@ -62,6 +61,11 @@ namespace NovelRT::Ecs
                 {
                     _threadShutDownStatus ^= 1ULL << poolId;
                     return;
+                }
+
+                if ((_threadAvailabilityMap & 1ULL << poolId) != 0)
+                {
+                    _threadAvailabilityMap ^= 1ULL << poolId;
                 }
 
                 std::this_thread::yield();
@@ -100,6 +104,11 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork)
     {
+        if (_systemIds.empty())
+        {
+            return;
+        }
+
         int32_t sizeOfProcessedWork = 0;
 
         for (size_t i = 0; i < workersToAssign; i++)
@@ -107,10 +116,9 @@ namespace NovelRT::Ecs
             size_t offset = i * amountOfWork;
             QueueLockPair& pair = _threadWorkQueues[i];
 
-            _threadAvailabilityMap ^= 1ULL << i;
-
             pair.threadLock.lock();
 
+            _threadAvailabilityMap ^= 1ULL << i;
             for (size_t j = 0; j < amountOfWork; j++)
             {
                 size_t currentWorkIndex = offset + j;
@@ -125,21 +133,28 @@ namespace NovelRT::Ecs
 
         if (remainder != 0)
         {
-            if (remainder < amountOfWork)
+            if (remainder <= amountOfWork)
             {
                 QueueLockPair& pair = _threadWorkQueues[0];
-                size_t startIndex = (_systemIds.size() - 1) - remainder;
+                size_t startIndex = _systemIds.size() - remainder;
 
                 pair.threadLock.lock();
+
+                if ((_threadAvailabilityMap & 1ULL << (0)) == 0)
+                {
+                    _threadAvailabilityMap ^= 1ULL << (0);
+                }
+
                 for (size_t i = startIndex; i < _systemIds.size(); i++)
                 {
                     pair.systemUpdateIds.push_back(_systemIds[i]);
                 }
+
                 pair.threadLock.unlock();
             }
-            else if (remainder > amountOfWork)
+            else
             {
-                size_t startIndex = (_systemIds.size() - 1) - remainder;
+                size_t startIndex = _systemIds.size() - remainder;
 
                 for (size_t i = 0; i < remainder / amountOfWork; i++)
                 {
@@ -148,11 +163,39 @@ namespace NovelRT::Ecs
 
                     pair.threadLock.lock();
 
+                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << i;
+                    }
+
                     for (size_t j = 0; j < amountOfWork; j++)
                     {
                         size_t currentWorkIndex = offset + j;
                         pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
                         ++sizeOfProcessedWork;
+                    }
+
+                    pair.threadLock.unlock();
+                }
+
+                if (_systemIds.size() - sizeOfProcessedWork != 0)
+                {
+                    size_t threadWorkIndex =
+                        (remainder / amountOfWork) < _threadWorkQueues.size() ? (remainder / amountOfWork) : 0;
+
+                    QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
+                    size_t startingIndex = _systemIds.size() - (_systemIds.size() - sizeOfProcessedWork);
+
+                    pair.threadLock.lock();
+
+                    if ((_threadAvailabilityMap & 1ULL << threadWorkIndex) == 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << threadWorkIndex;
+                    }
+
+                    for (size_t i = startingIndex; i < _systemIds.size(); i++)
+                    {
+                        pair.systemUpdateIds.push_back(_systemIds[i]);
                     }
 
                     pair.threadLock.unlock();
@@ -179,7 +222,6 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
     {
-        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
 
         _currentDelta = delta;
 
@@ -189,6 +231,7 @@ namespace NovelRT::Ecs
         size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
 
         ScheduleUpdateWork(workersToAssign, amountOfWork);
+        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
 
         _entityCache.ProcessEntityDeletionRequestsFromThreads();
     }
