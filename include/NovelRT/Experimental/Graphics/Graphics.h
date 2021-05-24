@@ -14,6 +14,7 @@
 #include <string>
 #include <utility>
 #include <typeindex>
+#include <chrono>
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Maths/GeoVector2F.h"
 #include "../../Maths/GeoVector3F.h"
@@ -45,6 +46,9 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsPipelineInputElementKind : uint32_t;
     enum class GraphicsPipelineResourceKind : uint32_t;
     enum class ShaderProgramVisibility : uint32_t;
+    class GraphicsContext;
+    class GraphicsFence;
+    class GraphicsPrimitive;
 }
 
 
@@ -53,6 +57,8 @@ namespace NovelRT::Experimental::Graphics
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
 #include "GraphicsDeviceObject.h"
+#include "GraphicsContext.h"
+#include "GraphicsFence.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsSurfaceKind.h"
 #include "IGraphicsSurface.h"
@@ -64,6 +70,7 @@ namespace NovelRT::Experimental::Graphics
 #include "ShaderProgram.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"
+#include "GraphicsPrimitive.h"
 #include "GraphicsPipelineInput.h"
 #include "GraphicsPipelineInputElement.h"
 #include "GraphicsPipelineInputElementKind.h"
