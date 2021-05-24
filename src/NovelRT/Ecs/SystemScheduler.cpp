@@ -178,7 +178,7 @@ namespace NovelRT::Ecs
                     pair.threadLock.unlock();
                 }
 
-                if (remainder % amountOfWork != 0)
+                if (_systemIds.size() - amountOfWork != 0)
                 {
                     size_t threadWorkIndex =
                         (remainder / amountOfWork) < _threadWorkQueues.size() ? (remainder / amountOfWork) : 0;
