@@ -175,8 +175,6 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 18);
-    
-
 
     for (int i = 0; i < 6; ++i) // 17 total systems
     {
@@ -219,5 +217,4 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 86);
-    
 }
