@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Input
 {
-    class IInputgDevice
+    class IInputDevice
     {
     private:
         static inline const uint32_t INPUT_BUFFER_COUNT = 2;
