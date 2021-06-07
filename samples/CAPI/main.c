@@ -307,11 +307,11 @@ int main()
     }
 
     // Setting up Scene Construction
-    Nrt_NovelRunner_addSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
+    Nrt_NovelRunner_subscribeSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
     struct MoveContext moveContext;
-    Nrt_NovelRunner_addUpdate(runner, MoveNovelChan, &moveContext, NULL);
+    Nrt_NovelRunner_subscribeUpdate(runner, MoveNovelChan, &moveContext, NULL);
 
     // Run the novel!
     Nrt_NovelRunner_runNovel(runner);

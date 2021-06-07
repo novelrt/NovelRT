@@ -28,17 +28,17 @@ extern "C"
     NrtResult Nrt_NovelRunner_getRenderer(NrtNovelRunnerHandle runner, NrtRenderingServiceHandle* outputService);
     NrtResult Nrt_NovelRunner_getDebugService(NrtNovelRunnerHandle runner, NrtDebugServiceHandle* outputService);
 
-    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner,
+    NrtResult Nrt_NovelRunner_subscribeUpdate(NrtNovelRunnerHandle runner,
                                         void (*func)(NrtTimestamp, void*),
                                         void* context,
                                         NrtAtom* eventHandlerId);
-    NrtResult Nrt_NovelRunner_removeUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId);
+    NrtResult Nrt_NovelRunner_unsubscribeUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId);
 
-    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner,
+    NrtResult Nrt_NovelRunner_subscribeSceneConstructionRequested(NrtNovelRunnerHandle runner,
                                                             void (*func)(void*),
                                                             void* context,
                                                             NrtAtom* eventHandlerId);
-    NrtResult Nrt_NovelRunner_removeSceneConstructionRequested(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId);
+    NrtResult Nrt_NovelRunner_unsubscribeSceneConstructionRequested(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId);
 
     NrtResult Nrt_NovelRunner_getUpdateEvent(NrtNovelRunnerHandle runner,
                                              NrtUtilitiesEventWithTimestampHandle* outputEvent);

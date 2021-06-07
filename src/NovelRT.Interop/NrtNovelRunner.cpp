@@ -233,7 +233,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner,
+    NrtResult Nrt_NovelRunner_subscribeUpdate(NrtNovelRunnerHandle runner,
                                         void (*func)(NrtTimestamp, void*),
                                         void* context,
                                         NrtAtom* eventHandlerId)
@@ -265,7 +265,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_removeUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
+    NrtResult Nrt_NovelRunner_unsubscribeUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
     {
         if (runner == nullptr)
         {
@@ -280,7 +280,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner,
+    NrtResult Nrt_NovelRunner_subscribeSceneConstructionRequested(NrtNovelRunnerHandle runner,
                                                             void (*func)(void*),
                                                             void* context,
                                                             NrtAtom* eventHandlerId)
@@ -310,7 +310,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_removeSceneConstructionRequested(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
+    NrtResult Nrt_NovelRunner_unsubscribeSceneConstructionRequested(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
     {
         if (runner == nullptr)
         {
