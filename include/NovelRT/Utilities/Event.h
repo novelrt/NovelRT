@@ -93,7 +93,8 @@ namespace NovelRT::Utilities
 
             for (auto it = _handlers.begin(); it != _handlers.end(); ++it)
             {
-                if (it->getId() == atom) {
+                if (it->getId() == atom)
+                {
                     _handlers.erase(it); // Remove the current item
                     return;
                 }

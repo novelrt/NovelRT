@@ -234,9 +234,9 @@ extern "C"
     }
 
     NrtResult Nrt_NovelRunner_subscribeUpdate(NrtNovelRunnerHandle runner,
-                                        void (*func)(NrtTimestamp, void*),
-                                        void* context,
-                                        NrtAtom* eventHandlerId)
+                                              void (*func)(NrtTimestamp, void*),
+                                              void* context,
+                                              NrtAtom* eventHandlerId)
     {
         using namespace NovelRT::Utilities;
 
@@ -254,8 +254,8 @@ extern "C"
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        auto eventHandler = EventHandler<Timing::Timestamp>([func, context](Timing::Timestamp delta)
-                                                            { func(reinterpret_cast<NrtTimestamp&>(delta), context); });
+        auto eventHandler = EventHandler<Timing::Timestamp>(
+            [func, context](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta), context); });
         if (eventHandlerId != nullptr)
         {
             *eventHandlerId = eventHandler.getId();
@@ -281,9 +281,9 @@ extern "C"
     }
 
     NrtResult Nrt_NovelRunner_subscribeSceneConstructionRequested(NrtNovelRunnerHandle runner,
-                                                            void (*func)(void*),
-                                                            void* context,
-                                                            NrtAtom* eventHandlerId)
+                                                                  void (*func)(void*),
+                                                                  void* context,
+                                                                  NrtAtom* eventHandlerId)
     {
         using namespace NovelRT::Utilities;
 
