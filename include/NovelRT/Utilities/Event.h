@@ -86,6 +86,20 @@ namespace NovelRT::Utilities
                 _handlers.erase(match);
         }
 
+        void operator-=(Atom atom)
+        {
+            if (atom == Atom())
+                return;
+
+            for (auto it = _handlers.begin(); it != _handlers.end(); ++it)
+            {
+                if (it->getId() == atom) {
+                    _handlers.erase(it); // Remove the current item
+                    return;
+                }
+            }
+        }
+
         void operator()(TArgs... args) const
         {
             auto handlers = _handlers;
