@@ -234,9 +234,9 @@ extern "C"
     }
 
     NrtResult Nrt_NovelRunner_SubscribeToUpdate(NrtNovelRunnerHandle runner,
-                                              void (*func)(NrtTimestamp, void*),
-                                              void* context,
-                                              NrtAtom* eventHandlerId)
+                                                void (*func)(NrtTimestamp, void*),
+                                                void* context,
+                                                NrtAtom* eventHandlerId)
     {
         using namespace NovelRT::Utilities;
 
@@ -281,9 +281,9 @@ extern "C"
     }
 
     NrtResult Nrt_NovelRunner_SubscribeToSceneConstructionRequested(NrtNovelRunnerHandle runner,
-                                                                  void (*func)(void*),
-                                                                  void* context,
-                                                                  NrtAtom* eventHandlerId)
+                                                                    void (*func)(void*),
+                                                                    void* context,
+                                                                    NrtAtom* eventHandlerId)
     {
         using namespace NovelRT::Utilities;
 
@@ -310,7 +310,8 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_UnsubscribeFromSceneConstructionRequested(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
+    NrtResult Nrt_NovelRunner_UnsubscribeFromSceneConstructionRequested(NrtNovelRunnerHandle runner,
+                                                                        NrtAtom eventHandlerId)
     {
         if (runner == nullptr)
         {
