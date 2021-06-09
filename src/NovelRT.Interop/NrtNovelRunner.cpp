@@ -233,8 +233,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner, void (*func)(NrtTimestamp, void*), void* context)
+    NrtResult Nrt_NovelRunner_SubscribeToUpdate(NrtNovelRunnerHandle runner,
+                                                void (*func)(NrtTimestamp, void*),
+                                                void* context,
+                                                NrtAtom* eventHandlerId)
     {
+        using namespace NovelRT::Utilities;
+
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
@@ -249,16 +254,39 @@ extern "C"
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->Update +=
-            [func, context](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta), context); };
+        auto eventHandler = EventHandler<Timing::Timestamp>(
+            [func, context](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta), context); });
+        if (eventHandlerId != nullptr)
+        {
+            *eventHandlerId = eventHandler.getId();
+        }
+        cRunner->Update += eventHandler;
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner,
-                                                            void (*func)(void*),
-                                                            void* context)
+    NrtResult Nrt_NovelRunner_UnsubscribeFromUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
     {
+        if (runner == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+        cRunner->Update -= Atom(eventHandlerId);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_NovelRunner_SubscribeToSceneConstructionRequested(NrtNovelRunnerHandle runner,
+                                                                    void (*func)(void*),
+                                                                    void* context,
+                                                                    NrtAtom* eventHandlerId)
+    {
+        using namespace NovelRT::Utilities;
+
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
@@ -273,7 +301,28 @@ extern "C"
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->SceneConstructionRequested += [func, context]() { func(context); };
+        auto eventHandler = EventHandler<>([func, context]() { func(context); });
+        if (eventHandlerId != nullptr)
+        {
+            *eventHandlerId = eventHandler.getId();
+        }
+        cRunner->SceneConstructionRequested += eventHandler;
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_NovelRunner_UnsubscribeFromSceneConstructionRequested(NrtNovelRunnerHandle runner,
+                                                                        NrtAtom eventHandlerId)
+    {
+        if (runner == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+        cRunner->SceneConstructionRequested -= Atom(eventHandlerId);
+
         return NRT_SUCCESS;
     }
 
