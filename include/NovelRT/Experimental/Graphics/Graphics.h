@@ -49,6 +49,10 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsContext;
     class GraphicsFence;
     class GraphicsPrimitive;
+    class GraphicsMemoryAllocator;
+    class GraphicsMemoryAllocatorSettings;
+    enum class GraphicsTextureKind : uint32_t;
+    struct GraphicsMemoryAllocatorSettings;
 }
 
 
@@ -59,8 +63,12 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsDeviceObject.h"
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
+#include "GraphicsMemoryAllocatorSettings.h"
+#include "IGraphicsMemoryRegionCollection.h"
+#include "GraphicsMemoryAllocator.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsSurfaceKind.h"
+#include "GraphicsTextureKind.h"
 #include "IGraphicsSurface.h"
 #include "ILLGraphicsDevice.h"
 #include "LLGraphicsResource.h"
