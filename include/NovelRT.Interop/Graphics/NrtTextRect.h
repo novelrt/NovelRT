@@ -12,6 +12,8 @@ extern "C"
 {
 #endif
 
+    NrtResult Nrt_TextRect_destroy(NrtTextRectHandle rect);
+
     NrtTransform Nrt_TextRect_getTransform(NrtTextRectHandle rect);
     NrtResult Nrt_TextRect_setTransform(NrtTextRectHandle rect, NrtTransform inputTransform);
     int32_t Nrt_TextRect_getLayer(NrtTextRectHandle rect);

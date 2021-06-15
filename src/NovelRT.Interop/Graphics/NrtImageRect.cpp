@@ -16,6 +16,19 @@ extern "C"
 {
 #endif
 
+    NrtResult Nrt_ImageRect_destroy(NrtImageRectHandle rect)
+    {
+        if (rect == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        delete reinterpret_cast<ImageRect*>(rect);
+
+        return NRT_SUCCESS;
+    }
+
     NrtTransform Nrt_ImageRect_getTransform(NrtImageRectHandle rect)
     {
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -144,8 +157,9 @@ extern "C"
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
-        RGBAConfig colour = imageRectPtr->colourTint();
-        *outputColourTint = *reinterpret_cast<NrtRGBAConfigHandle*>(&colour);
+        auto colourTint = new RGBAConfig(0, 0, 0, 0);
+        *colourTint = imageRectPtr->colourTint();
+        *outputColourTint = reinterpret_cast<NrtRGBAConfigHandle>(colourTint);
 
         return NRT_SUCCESS;
     }

@@ -11,6 +11,9 @@ extern "C"
 {
 #endif
 
+    // destroy
+    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect);
+
     // base type
     NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect);
     NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRectHandle rect, NrtTransform inputTransform);

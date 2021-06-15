@@ -14,6 +14,19 @@ extern "C"
 {
 #endif
 
+    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect)
+    {
+        if (rect == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        delete reinterpret_cast<BasicFillRect*>(rect);
+
+        return NRT_SUCCESS;
+    }
+
     NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect)
     {
 
@@ -110,8 +123,9 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        auto colourConfig = cppRect->getColourConfig();
-        *outputColourConfig = *reinterpret_cast<NrtRGBAConfigHandle*>(&colourConfig);
+        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        *colourConfig = cppRect->getColourConfig();
+        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
 
         return NRT_SUCCESS;
     }
