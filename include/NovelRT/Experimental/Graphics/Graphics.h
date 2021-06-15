@@ -64,6 +64,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
 #include "GraphicsMemoryAllocatorSettings.h"
+//#include "GraphicsMemoryRegion.h"
 #include "IGraphicsMemoryRegionCollection.h"
 #include "GraphicsMemoryAllocator.h"
 #include "GraphicsResourceCpuAccessKind.h"
