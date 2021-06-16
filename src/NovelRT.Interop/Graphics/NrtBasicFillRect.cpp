@@ -14,19 +14,6 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect)
-    {
-        if (rect == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
-        }
-
-        delete reinterpret_cast<BasicFillRect*>(rect);
-
-        return NRT_SUCCESS;
-    }
-
     NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect)
     {
 
@@ -160,6 +147,19 @@ extern "C"
         }
 
         *outputRenderObject = reinterpret_cast<NrtRenderObjectHandle>(rect);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect)
+    {
+        if (rect == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        delete reinterpret_cast<BasicFillRect*>(rect);
 
         return NRT_SUCCESS;
     }

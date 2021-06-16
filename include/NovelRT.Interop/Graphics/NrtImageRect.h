@@ -11,8 +11,6 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_ImageRect_destroy(NrtImageRectHandle rect);
-
     NrtTransform Nrt_ImageRect_getTransform(NrtImageRectHandle rect);
     NrtResult Nrt_ImageRect_setTransform(NrtImageRectHandle rect, NrtTransform inputTransform);
     int32_t Nrt_ImageRect_getLayer(NrtImageRectHandle rect);
@@ -26,6 +24,8 @@ extern "C"
     NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle inputColourTint);
 
     NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRectHandle rect, NrtRenderObjectHandle* outputRenderObject);
+    NrtResult Nrt_ImageRect_destroy(NrtImageRectHandle rect);
+
 
 #ifdef __cplusplus
 }

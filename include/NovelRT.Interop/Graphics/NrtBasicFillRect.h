@@ -11,9 +11,6 @@ extern "C"
 {
 #endif
 
-    // destroy
-    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect);
-
     // base type
     NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect);
     NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRectHandle rect, NrtTransform inputTransform);
@@ -29,6 +26,8 @@ extern "C"
 
     NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect,
                                                      NrtRenderObjectHandle* outputRenderObject);
+    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect);
+
 
 #ifdef __cplusplus
 }
