@@ -11,5 +11,6 @@
 #include "GeoVector4F.h"
 #include "QuadTree.h"
 #include "QuadTreePoint.h"
+#include "Utilities.h"
 
 #endif // NOVELRT_MATHS_H

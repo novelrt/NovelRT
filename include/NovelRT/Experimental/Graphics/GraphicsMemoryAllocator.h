@@ -1,3 +1,5 @@
+#include <utility>
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -14,7 +16,7 @@ namespace NovelRT::Experimental::Graphics
     public:
         GraphicsMemoryAllocator(std::shared_ptr<ILLGraphicsDevice> device,
                                 GraphicsMemoryAllocatorSettings settings) noexcept
-            : GraphicsDeviceObject(device), _settings(settings)
+            : GraphicsDeviceObject(std::move(device)), _settings(settings)
         {
             bool isExternallySynchronised =
                 _settings.IsExternallySynchronised.has_value() && _settings.IsExternallySynchronised.value();
