@@ -28,7 +28,6 @@ extern "C"
                                                      NrtRenderObjectHandle* outputRenderObject);
     NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect);
 
-
 #ifdef __cplusplus
 }
 #endif

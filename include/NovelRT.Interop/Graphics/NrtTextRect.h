@@ -29,7 +29,6 @@ extern "C"
     NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRectHandle rect, NrtRenderObjectHandle* outputRenderObject);
     NrtResult Nrt_TextRect_destroy(NrtTextRectHandle rect);
 
-
 #ifdef __cplusplus
 }
 #endif
