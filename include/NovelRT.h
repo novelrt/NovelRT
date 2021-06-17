@@ -215,6 +215,7 @@
   // Experimental types
   #include "NovelRT/Experimental/Graphics/Graphics.h"
   #include "NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h"
+  #include "NovelRT/Experimental/Threading/Threading.h"
   #include "NovelRT/Experimental/Windowing/Windowing.h"
   #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
 

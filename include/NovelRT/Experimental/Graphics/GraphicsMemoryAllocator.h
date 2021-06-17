@@ -3,8 +3,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICSMEMORYALLOCATOR_H
-#define NOVELRT_GRAPHICSMEMORYALLOCATOR_H
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICSMEMORYALLOCATOR_H
+#define NOVELRT_EXPERIMENTAL_GRAPHICSMEMORYALLOCATOR_H
+
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -72,7 +76,7 @@ namespace NovelRT::Experimental::Graphics
             size_t size,
             GraphicsMemoryRegionAllocationFlags allocationFlags = GraphicsMemoryRegionAllocationFlags::None) = 0;
 
-        [[nodiscard]] virtual GraphicsMemoryBudget GetBudget(GraphicsMemoryBlockCollection blockCollection) = 0;
+        [[nodiscard]] virtual GraphicsMemoryBudget GetBudget(std::shared_ptr<GraphicsMemoryBlockCollection> blockCollection) = 0;
 
         // TODO: maybe this should be std::list instead?
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator
@@ -89,4 +93,4 @@ namespace NovelRT::Experimental::Graphics
     };
 } // namespace NovelRT::Experimental::Graphics
 
-#endif // NOVELRT_GRAPHICSMEMORYALLOCATOR_H
+#endif // !NOVELRT_EXPERIMENTAL_GRAPHICSMEMORYALLOCATOR_H

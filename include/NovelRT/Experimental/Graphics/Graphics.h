@@ -15,6 +15,7 @@
 #include <utility>
 #include <typeindex>
 #include <chrono>
+#include "../Threading/Threading.h"
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Maths/GeoVector2F.h"
 #include "../../Maths/GeoVector3F.h"
@@ -53,8 +54,9 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryAllocatorSettings;
     enum class GraphicsTextureKind : uint32_t;
     struct GraphicsMemoryAllocatorSettings;
+    enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
+    class GraphicsMemoryBlockCollection;
 }
-
 
 //Graphics types
 #include "ShaderProgramKind.h"
@@ -64,7 +66,9 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
 #include "GraphicsMemoryAllocatorSettings.h"
+#include "GraphicsMemoryBlockCollection.h"
 #include "IGraphicsMemoryRegionCollection.h"
+#include "GraphicsMemoryRegionAllocationFlags.h"
 #include "GraphicsMemoryAllocator.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsSurfaceKind.h"
