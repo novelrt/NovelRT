@@ -126,7 +126,7 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        cppRect->setColourConfig(*reinterpret_cast<RGBAConfig*>(&inputColourConfig));
+        cppRect->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
 
         return NRT_SUCCESS;
     }
