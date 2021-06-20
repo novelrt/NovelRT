@@ -1,3 +1,5 @@
+#include <utility>
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -7,6 +9,9 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
 #error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
 #endif
+
+// TODO: Figure out why putting this in Graphics.h didn't work.
+#include "GraphicsMemoryRegion.h"
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -20,7 +25,108 @@ namespace NovelRT::Experimental::Graphics
         size_t _minimumSize;
         size_t _size;
         Threading::VolatileState _state;
+
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryBlock> AddBlock(size_t size);
+        [[nodiscard]] size_t GetAdjustedBlockSize(size_t size);
+        void IncrementallySortBlocks() noexcept;
+        void RemoveBlock(std::shared_ptr<GraphicsMemoryBlock> block);
+        void RemoveBlockAt(size_t index);
+
+        void TryAllocateRegion(size_t size,
+                               size_t alignment,
+                               GraphicsMemoryRegionAllocationFlags flags,
+                               GraphicsMemoryRegion<GraphicsMemoryBlock> region);
+
+    protected:
+        [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryBlock> CreateBlock(size_t size) = 0;
+
+    public:
+        GraphicsMemoryBlockCollection(std::shared_ptr<ILLGraphicsDevice> device,
+                                      std::shared_ptr<GraphicsMemoryAllocator> allocator);
+
+        [[nodiscard]] inline int32_t GetMaximumBlockCount() const noexcept
+        {
+            return _allocator->GetSettings().MaximumBlockCountPerCollection;
+        }
+
+        [[nodiscard]] inline size_t GetMaximumSharedBlockSize() const noexcept
+        {
+            return _allocator->GetSettings().MaximumSharedBlockSize.value_or(0ULL);
+        }
+
+        [[nodiscard]] inline int32_t GetMinimumBlockCount() const noexcept
+        {
+            return _allocator->GetSettings().MinimumBlockCountPerCollection;
+        }
+
+        [[nodiscard]] inline size_t MinimumBlockSize() const noexcept
+        {
+            return _allocator->GetSettings().MinimumBlockSize;
+        }
+
+        [[nodiscard]] inline size_t GetMinimumSize() const noexcept
+        {
+            return _minimumSize;
+        }
+
+        [[nodiscard]] inline size_t GetSize() const noexcept
+        {
+            return _size;
+        }
+
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsMemoryBlock> Allocate(
+            size_t size,
+            size_t alignment = 1ULL,
+            GraphicsMemoryRegionAllocationFlags flags = GraphicsMemoryRegionAllocationFlags::None);
+
+        [[nodiscard]] bool TryAllocate(size_t size,
+                                       size_t alignment,
+                                       GraphicsMemoryRegionAllocationFlags flags,
+                                       GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion);
+
+        [[nodiscard]] bool TryAllocate(size_t size, GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion);
+
+        [[nodiscard]] bool TryAllocate(size_t size,
+                                       size_t alignment,
+                                       GraphicsMemoryRegionAllocationFlags flags,
+                                       gsl::span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
+
+        [[nodiscard]] bool TryAllocate(size_t size, gsl::span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
+
+        void Free(const GraphicsMemoryRegion<GraphicsMemoryBlock>& region);
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::iterator begin() noexcept
+        {
+            return _blocks.begin();
+        }
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::iterator end() noexcept
+        {
+            return _blocks.end();
+        }
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::const_iterator begin() const noexcept
+        {
+            return _blocks.begin();
+        }
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::const_iterator end() const noexcept
+        {
+            return _blocks.end();
+        }
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::const_iterator cbegin() const noexcept
+        {
+            return _blocks.cbegin();
+        }
+
+        [[nodiscard]] inline std::vector<std::shared_ptr<GraphicsMemoryBlock>>::const_iterator cend() const noexcept
+        {
+            return _blocks.cend();
+        }
+
+        [[nodiscard]] bool TrySetMinimumSize(size_t minimumSize) noexcept;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICSMEMORYBLOCKCOLLECTION_H

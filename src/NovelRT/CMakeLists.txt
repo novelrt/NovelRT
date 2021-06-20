@@ -43,6 +43,8 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
 
   Experimental/EngineConfig.cpp
+  Experimental/Graphics/GraphicsMemoryBlock.cpp
+  Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
   Experimental/Graphics/GraphicsPipeline.cpp
   Experimental/Graphics/GraphicsPipelineInput.cpp
   Experimental/Graphics/GraphicsPipelineInputElement.cpp

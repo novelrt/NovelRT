@@ -28,7 +28,7 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual GraphicsMemoryRegion<TSelf> Allocate(size_t size, size_t alignment) = 0;
         virtual void Clear() = 0;
 
-        virtual void Free(GraphicsMemoryRegion<TSelf> region) = 0;
+        virtual void Free(const GraphicsMemoryRegion<TSelf>& region) = 0;
 
         [[nodiscard]] virtual bool TryAllocate(size_t size,
                                                size_t alignment,
