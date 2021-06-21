@@ -36,6 +36,11 @@ namespace NovelRT::Experimental::Graphics
         {
         }
 
+        GraphicsMemoryRegion() noexcept
+            : _alignment(0ULL), _collection(nullptr), _device(nullptr), _isAllocated(false), _offset(0ULL), _size(0ULL)
+        {
+        }
+
         [[nodiscard]] size_t GetAlignment() const noexcept
         {
             return _alignment;

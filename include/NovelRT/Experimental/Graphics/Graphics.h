@@ -24,6 +24,7 @@
 #include "../../Maths/GeoMatrix4x4F.h"
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Utilities/Event.h"
+#include "../../Utilities/Misc.h"
 
 /**
  * @brief The experimental Graphics plugin API. Comes with built-in support for the ECS.
@@ -59,6 +60,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryBlockCollection;
     class GraphicsMemoryBlock;
     enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
+    class GraphicsMemoryBudget;
 }
 
 //Graphics types
@@ -69,10 +71,11 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
 #include "GraphicsMemoryAllocatorSettings.h"
-#include "GraphicsMemoryAllocator.h"
-#include "GraphicsMemoryRegionAllocationFlags.h"
-#include "GraphicsMemoryBlockCollection.h"
 #include "IGraphicsMemoryRegionCollection.h"
+#include "GraphicsMemoryRegionAllocationFlags.h"
+#include "GraphicsMemoryAllocator.h"
+#include "GraphicsMemoryBlockCollection.h"
+#include "GraphicsMemoryBudget.h"
 #include "GraphicsMemoryBlock.h"
 #include "GraphicsResourceCpuAccessKind.h"
 #include "GraphicsSurfaceKind.h"

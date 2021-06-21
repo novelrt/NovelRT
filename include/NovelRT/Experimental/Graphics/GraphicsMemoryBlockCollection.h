@@ -27,15 +27,17 @@ namespace NovelRT::Experimental::Graphics
         Threading::VolatileState _state;
 
         [[nodiscard]] std::shared_ptr<GraphicsMemoryBlock> AddBlock(size_t size);
-        [[nodiscard]] size_t GetAdjustedBlockSize(size_t size);
+        [[nodiscard]] size_t GetAdjustedBlockSize(size_t size) const noexcept;
+        [[nodiscard]] size_t GetLargestSharedBlockSize() const noexcept;
         void IncrementallySortBlocks() noexcept;
-        void RemoveBlock(std::shared_ptr<GraphicsMemoryBlock> block);
+        void RemoveBlock(const std::shared_ptr<GraphicsMemoryBlock>& block);
+        void RemoveBlockAt(std::vector<std::shared_ptr<GraphicsMemoryBlock>>::iterator iterator);
         void RemoveBlockAt(size_t index);
 
-        void TryAllocateRegion(size_t size,
+        bool TryAllocateRegion(size_t size,
                                size_t alignment,
                                GraphicsMemoryRegionAllocationFlags flags,
-                               GraphicsMemoryRegion<GraphicsMemoryBlock> region);
+                               GraphicsMemoryRegion<GraphicsMemoryBlock>& region);
 
     protected:
         [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryBlock> CreateBlock(size_t size) = 0;
@@ -59,7 +61,7 @@ namespace NovelRT::Experimental::Graphics
             return _allocator->GetSettings().MinimumBlockCountPerCollection;
         }
 
-        [[nodiscard]] inline size_t MinimumBlockSize() const noexcept
+        [[nodiscard]] inline size_t GetMinimumBlockSize() const noexcept
         {
             return _allocator->GetSettings().MinimumBlockSize;
         }

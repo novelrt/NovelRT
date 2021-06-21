@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Graphics.h>
+#include <NovelRT/Experimental/Graphics/GraphicsMemoryBlock.h>
 
 namespace NovelRT::Experimental::Graphics
 {
