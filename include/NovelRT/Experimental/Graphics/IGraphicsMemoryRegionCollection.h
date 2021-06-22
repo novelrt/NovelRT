@@ -36,7 +36,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] GraphicsMemoryRegion<TSelf> Allocate(size_t size)
         {
-            return std::move(Allocate(size, 1));
+            return Allocate(size, 1);
         }
 
         [[nodiscard]] bool TryAllocate(size_t size, GraphicsMemoryRegion<TSelf>& outRegion)
@@ -132,7 +132,7 @@ namespace NovelRT::Experimental::Graphics
                     throw Exceptions::OutOfMemoryException();
                 }
 
-                return std::move(region);
+                return region;
             }
 
             void Clear() final

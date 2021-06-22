@@ -322,8 +322,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
-        std::vector<const char*> allExtensionPtrs = GetStringVectorAsCharPtrVector(_finalExtensionSet);
-        size_t extensionLength = allExtensionPtrs.size();
+        std::vector<const char*> allExtensionullptrs = GetStringVectorAsCharPtrVector(_finalExtensionSet);
+        size_t extensionLength = allExtensionullptrs.size();
 
         _finalValidationLayerSet = GetFinalValidationLayerSet();
         std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(_finalValidationLayerSet);
@@ -333,7 +333,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensionLength);
-        createInfo.ppEnabledExtensionNames = allExtensionPtrs.data();
+        createInfo.ppEnabledExtensionNames = allExtensionullptrs.data();
         createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayerLength);
 
@@ -355,7 +355,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
         }
 
-        _logger.logInfoLine("VkInstance successfully created.");
+        _logger.logInfoLine("VkInstance successfy created.");
     }
 
     void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
@@ -377,7 +377,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                      funcResult);
                 }
 
-                _logger.logInfoLine("VkSurfaceKHR successfully created.");
+                _logger.logInfoLine("VkSurfaceKHR successfy created.");
                 break;
             }
             case GraphicsSurfaceKind::Unknown:
@@ -574,7 +574,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(_physicalDevice, &deviceProperties);
-        _logger.logInfoLine("GPU device successfully chosen: " + std::string(deviceProperties.deviceName));
+        _logger.logInfoLine("GPU device successfy chosen: " + std::string(deviceProperties.deviceName));
     }
 
     void VulkanGraphicsDevice::CreateLogicalDevice()
@@ -596,7 +596,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet();
-        auto physicalDeviceExtensionPtrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
+        auto physicalDeviceExtensionullptrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
@@ -605,8 +605,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
-        createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionullptrs.size());
+        createInfo.ppEnabledExtensionNames = physicalDeviceExtensionullptrs.data();
 
         if (_debuggerWasCreated)
         {
@@ -629,7 +629,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
         vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
 
-        _logger.logInfoLine("VkDevice successfully created.");
+        _logger.logInfoLine("VkDevice successfy created.");
     }
 
     VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
@@ -745,7 +745,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
         }
 
-        _logger.logInfoLine("VkSwapchainKHR successfully created. Retrieving VkImages...");
+        _logger.logInfoLine("VkSwapchainKHR successfy created. Retrieving VkImages...");
 
         VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, nullptr);
 
@@ -767,7 +767,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _swapChainImageFormat = surfaceFormat.format;
         _swapChainExtent = extent;
 
-        _logger.logInfoLine("VkImages successfully retrieved.");
+        _logger.logInfoLine("VkImages successfy retrieved.");
     }
 
     void VulkanGraphicsDevice::CreateImageViews()
@@ -800,7 +800,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             }
         }
 
-        _logger.logInfoLine("Successfully initialised VkImageViews.");
+        _logger.logInfoLine("Successfy initialised VkImageViews.");
     }
 
     void VulkanGraphicsDevice::Initialise(std::shared_ptr<IGraphicsSurface> targetSurface)
@@ -819,7 +819,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         CreateSwapChain();
         CreateImageViews();
 
-        _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
+        _logger.logInfoLine("Vulkan version 1.2 has been successfy initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
@@ -840,7 +840,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkDestroyInstance(_instance, nullptr);
 
-        _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
+        _logger.logInfoLine("Vulkan version 1.2 instance successfy torn down.");
     }
 
     std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
@@ -910,7 +910,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.", renderPassResult);
         }
 
-        _logger.logInfoLine("Successfully created the VkRenderPass.");
+        _logger.logInfoLine("Successfy created the VkRenderPass.");
         return returnRenderPass;
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

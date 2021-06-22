@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics
         _blocks.push_back(block);
         _size += size;
 
-        return std::move(block);
+        return block;
     }
 
     size_t GraphicsMemoryBlockCollection::GetAdjustedBlockSize(size_t size) const noexcept
@@ -31,11 +31,11 @@ namespace NovelRT::Experimental::Graphics
                 // Allocate 1/8, 1/4, 1/2 as first blocks, ensuring we don't go smaller than the minimum.
                 size_t largestBlockSize = GetLargestSharedBlockSize();
 
-                for (size_t i = 0ULL; i < 3; ++i)
+                for (size_t i = 0; i < 3; ++i)
                 {
-                    size_t smallerBlockSize = blockSize / 2ULL;
+                    size_t smallerBlockSize = blockSize / 2;
 
-                    if ((smallerBlockSize > largestBlockSize) && (smallerBlockSize >= (size * 2ULL)))
+                    if ((smallerBlockSize > largestBlockSize) && (smallerBlockSize >= (size * 2)))
                     {
                         blockSize = std::max(smallerBlockSize, minimumBlockSize);
                     }
@@ -56,7 +56,7 @@ namespace NovelRT::Experimental::Graphics
 
     size_t GraphicsMemoryBlockCollection::GetLargestSharedBlockSize() const noexcept
     {
-        size_t result = 0ULL;
+        size_t result = 0;
         gsl::span<const std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
 
@@ -85,11 +85,11 @@ namespace NovelRT::Experimental::Graphics
 
         gsl::span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
 
-        if (blocks.size() >= 2ULL)
+        if (blocks.size() >= 2)
         {
             std::shared_ptr<GraphicsMemoryBlock> previousBlock = blocks[0];
 
-            for (size_t i = 1ULL; i < blocks.size(); ++i)
+            for (size_t i = 1; i < blocks.size(); ++i)
             {
                 std::shared_ptr<GraphicsMemoryBlock> block = blocks[i];
 
@@ -99,7 +99,7 @@ namespace NovelRT::Experimental::Graphics
                 }
                 else
                 {
-                    blocks[i - 1ULL] = block;
+                    blocks[i - 1] = block;
                     blocks[i] = previousBlock;
                     return;
                 }
@@ -147,24 +147,23 @@ namespace NovelRT::Experimental::Graphics
             _allocator->GetBudget(std::dynamic_pointer_cast<GraphicsMemoryBlockCollection>(shared_from_this()));
 
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
-        size_t sizeWithMargins =
-            size + (2ULL * _allocator->GetSettings().MinimumAllocatedRegionMarginSize.value_or(0ULL));
+        size_t sizeWithMargins = size + (2 * _allocator->GetSettings().MinimumAllocatedRegionMarginSize.value_or(0));
 
         gsl::span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
         size_t blocksLength = blocks.size();
 
         size_t availableMemory = (budget.GetEstimatedUsage() < budget.GetEstimatedBudget())
                                      ? (budget.GetEstimatedBudget() - budget.GetEstimatedUsage())
-                                     : 0ULL;
+                                     : 0;
 
-        bool canCreateNewBlock =
-            !useExistingBlock && (blocksLength < GetMaximumBlockCount()) && (availableMemory >= sizeWithMargins);
+        bool canCreateNewBlock = !useExistingBlock && (blocksLength < static_cast<size_t>(GetMaximumBlockCount())) &&
+                                 (availableMemory >= sizeWithMargins);
 
         // 1. Search existing blocks.
 
         if (!useDedicatedBlock && (size <= maximumSharedBlockSize))
         {
-            for (size_t blockIndex = 0ULL; blockIndex < blocksLength; ++blockIndex)
+            for (size_t blockIndex = 0; blockIndex < blocksLength; ++blockIndex)
             {
                 std::shared_ptr<GraphicsMemoryBlock> currentBlock = blocks[blockIndex];
 
@@ -209,7 +208,7 @@ namespace NovelRT::Experimental::Graphics
           _blocks{},
           _mutex(),
           _emptyBlock(nullptr),
-          _minimumSize(0ULL),
+          _minimumSize(0),
           _size(0LL),
           _state()
     {
@@ -228,9 +227,9 @@ namespace NovelRT::Experimental::Graphics
         const GraphicsMemoryAllocatorSettings& settings = _allocator->GetSettings();
 
         int32_t minimumBlockCount = settings.MinimumBlockCountPerCollection;
-        size_t maximumSharedBlockSize = settings.MaximumSharedBlockSize.value_or(0ULL);
+        size_t maximumSharedBlockSize = settings.MaximumSharedBlockSize.value_or(0);
 
-        for (size_t i = 0ULL; i < minimumBlockCount; ++i)
+        for (int32_t i = 0; i < minimumBlockCount; ++i)
         {
             size_t blockSize = GetAdjustedBlockSize(maximumSharedBlockSize);
             static_cast<void>(AddBlock(blockSize));
@@ -244,7 +243,7 @@ namespace NovelRT::Experimental::Graphics
         size_t alignment,
         GraphicsMemoryRegionAllocationFlags flags)
     {
-        GraphicsMemoryRegion<GraphicsMemoryBlock> outRegion(0ULL, nullptr, nullptr, false, 0ULL, 0ULL);
+        GraphicsMemoryRegion<GraphicsMemoryBlock> outRegion(0, nullptr, nullptr, false, 0, 0);
         bool succeeded = TryAllocate(size, alignment, flags, outRegion);
 
         if (!succeeded)
@@ -282,7 +281,7 @@ namespace NovelRT::Experimental::Graphics
 
             if (_emptyBlock != nullptr)
             {
-                if (blocksCount > GetMinimumBlockCount())
+                if (blocksCount > static_cast<size_t>(GetMinimumBlockCount()))
                 {
                     size_t size = GetSize();
                     size_t minimumSize = GetMinimumSize();
@@ -328,7 +327,8 @@ namespace NovelRT::Experimental::Graphics
                     _allocator->GetBudget(std::static_pointer_cast<GraphicsMemoryBlockCollection>(shared_from_this()));
 
                 if ((budget.GetEstimatedUsage() >= budget.GetEstimatedBudget()) &&
-                    (blocksCount > GetMinimumBlockCount()) && ((GetSize() - block->GetSize()) >= GetMinimumSize()))
+                    (blocksCount > static_cast<size_t>(GetMinimumBlockCount())) &&
+                    ((GetSize() - block->GetSize()) >= GetMinimumSize()))
                 {
                     RemoveBlockAt(blockIndex);
                 }
@@ -353,7 +353,7 @@ namespace NovelRT::Experimental::Graphics
 
     bool GraphicsMemoryBlockCollection::TryAllocate(size_t size, GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion)
     {
-        return TryAllocate(size, 1ULL, GraphicsMemoryRegionAllocationFlags::None, outRegion);
+        return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None, outRegion);
     }
 
     bool GraphicsMemoryBlockCollection::TryAllocate(size_t size,
@@ -368,7 +368,7 @@ namespace NovelRT::Experimental::Graphics
         {
             std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
 
-            for (index = 0ULL; index < regions.size(); ++index)
+            for (index = 0; index < regions.size(); ++index)
             {
                 succeeded = TryAllocateRegion(size, alignment, flags, regions[index]);
 
@@ -381,7 +381,7 @@ namespace NovelRT::Experimental::Graphics
 
         if (!succeeded)
         {
-            while (index-- != 0ULL)
+            while (index-- != 0)
             {
                 Free(regions[index]);
                 regions[index] = GraphicsMemoryRegion<GraphicsMemoryBlock>();
@@ -394,7 +394,7 @@ namespace NovelRT::Experimental::Graphics
     bool GraphicsMemoryBlockCollection::TryAllocate(size_t size,
                                                     gsl::span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions)
     {
-        return TryAllocate(size, 1ULL, GraphicsMemoryRegionAllocationFlags::None, regions);
+        return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None, regions);
     }
 
     bool GraphicsMemoryBlockCollection::TrySetMinimumSize(size_t minimumSize)
@@ -416,7 +416,7 @@ namespace NovelRT::Experimental::Graphics
             std::shared_ptr<GraphicsMemoryBlock> emptyBlock = nullptr;
             size_t minimumBlockCount = GetMinimumBlockCount();
 
-            for (size_t blockIndex = blockCount; blockIndex-- != 0ULL;)
+            for (size_t blockIndex = blockCount; blockIndex-- != 0;)
             {
                 std::shared_ptr<GraphicsMemoryBlock> block = _blocks[blockIndex];
 
@@ -468,7 +468,6 @@ namespace NovelRT::Experimental::Graphics
             }
 
             _emptyBlock = (_emptyBlock == nullptr) ? emptyBlock : _emptyBlock;
-
         }
 
         _minimumSize = minimumSize;
