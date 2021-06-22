@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    class VulkanGraphicsPipelineSignature : public GraphicsPipelineSignature
+    class VulkanGraphicsPipelineSignature final : public GraphicsPipelineSignature
     {
 
         Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
