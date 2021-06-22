@@ -272,7 +272,7 @@ namespace NovelRT::Experimental::Graphics
                     // TODO: I suck at translating assertions.
                     if (*nextRegionNode == nullptr)
                     {
-                        throw Exceptions::NPointerException("A memory region node is nullptr.");
+                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
                     }
 
                     UnregisterFreeRegion(nextRegionNode);
@@ -284,7 +284,7 @@ namespace NovelRT::Experimental::Graphics
                     // TODO: I suck at translating assertions.
                     if (*nextRegionNode == nullptr)
                     {
-                        throw Exceptions::NPointerException("A memory region node is nullptr.");
+                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
                     }
 
                     UnregisterFreeRegion(previousRegionNode);
@@ -302,7 +302,7 @@ namespace NovelRT::Experimental::Graphics
             {
                 if (*regionNode == nullptr)
                 {
-                    throw Exceptions::NPointerException("A memory region node is nullptr.");
+                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
                 }
 
                 auto nextRegionNode = regionNode;
@@ -310,7 +310,7 @@ namespace NovelRT::Experimental::Graphics
 
                 if (*nextRegionNode == nullptr)
                 {
-                    throw Exceptions::NPointerException("A memory region node is nullptr.");
+                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
                 }
 
                 if (nextRegionNode.GetIsAllocated())
