@@ -83,7 +83,7 @@ namespace NovelRT::Experimental::Graphics
 
             [[nodiscard]] int32_t GetAllocatedRegionCount() const noexcept final
             {
-                return _regions.size() - _freeRegionCount;
+                return static_cast<int32_t>(_regions.size() - _freeRegionCount);
             }
 
             [[nodiscard]] std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept final
@@ -98,7 +98,7 @@ namespace NovelRT::Experimental::Graphics
 
             [[nodiscard]] size_t GetLargestFreeRegionSize() const noexcept final
             {
-                return _freeRegionsBySize.size() != 0ULL ? _freeRegionsBySize.back().GetSize() : 0ULL;
+                return _freeRegionsBySize.size() != 0ULL ? _freeRegionsBySize.back()->GetSize() : 0ULL;
             }
 
             [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
@@ -123,7 +123,7 @@ namespace NovelRT::Experimental::Graphics
 
             [[nodiscard]] GraphicsMemoryRegion<TSelf> Allocate(size_t size, size_t alignment) final
             {
-                GraphicsMemoryRegion<TSelf> region = nullptr;
+                GraphicsMemoryRegion<TSelf> region(0, nullptr, nullptr, false, 0, 0);
                 auto result = TryAllocate(size, alignment, region);
 
                 if (!result)
@@ -144,8 +144,9 @@ namespace NovelRT::Experimental::Graphics
 
                 _regions.clear();
 
-                GraphicsMemoryRegion<TSelf> region(1, _collection, false, 0ULL, size);
-                auto iterator = _regions.emplace_front(region);
+                GraphicsMemoryRegion<TSelf> region(1, _collection, GetDevice(), false, 0ULL, size);
+                _regions.emplace_front(region);
+                auto iterator = _regions.begin();
                 _freeRegionsBySize.clear();
                 _freeRegionsBySize.emplace_back(iterator);
 
@@ -196,7 +197,7 @@ namespace NovelRT::Experimental::Graphics
                         _freeRegionsBySize);
                     size_t freeRegionsBySizeLength = freeRegionsBySizeSpan.size();
 
-                    if (freeRegionsBySizeSpan > 0)
+                    if (freeRegionsBySizeLength > 0)
                     {
                         for (auto index = BinarySearchFirstRegionNodeWithSizeNotLessThan(sizeWithMargins);
                              index < freeRegionsBySizeLength; ++index)
@@ -219,8 +220,8 @@ namespace NovelRT::Experimental::Graphics
         private:
             [[nodiscard]] size_t BinarySearchFirstRegionNodeWithSizeNotLessThan(size_t size) const noexcept
             {
-                gsl::span<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
-                    _freeRegionsBySize);
+                gsl::span<const typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
+                    &(*_freeRegionsBySize.begin()), _freeRegionsBySize.size());
 
                 size_t index = 0ULL;
                 size_t endIndex = freeRegionsBySizeSpan.size();
@@ -229,7 +230,7 @@ namespace NovelRT::Experimental::Graphics
                 {
                     size_t midIndex = (index + endIndex) / 2ULL;
 
-                    if (freeRegionsBySizeSpan[midIndex].GetSize() < size)
+                    if (freeRegionsBySizeSpan[midIndex]->GetSize() < size)
                     {
                         index = midIndex + 1ULL;
                     }
@@ -332,14 +333,14 @@ namespace NovelRT::Experimental::Graphics
 
             void RegisterFreeRegion(typename std::list<GraphicsMemoryRegion<TSelf>>::iterator regionNode)
             {
-                if (regionNode.GetIsAllocated())
+                if (regionNode->GetIsAllocated())
                 {
                     throw Exceptions::InvalidOperationException(
                         "An allocated memory region was designated to be registered as free.");
                 }
 
                 // TODO: this is unsigned. I probably can get away with == but whatever.
-                if (regionNode.GetSize() <= 0ULL)
+                if (regionNode->GetSize() <= 0ULL)
                 {
                     throw Exceptions::InvalidOperationException(
                         "A memory region of size 0 (or less) was provided as a free region to register.");
@@ -347,7 +348,7 @@ namespace NovelRT::Experimental::Graphics
 
                 // TODO: validate free regions by size list
 
-                if (regionNode.GetSize() >= GetMinimumFreeRegionSizeToRegister())
+                if (regionNode->GetSize() >= GetMinimumFreeRegionSizeToRegister())
                 {
                     if (_freeRegionsBySize.size() == 0ULL)
                     {
@@ -355,7 +356,7 @@ namespace NovelRT::Experimental::Graphics
                     }
                     else
                     {
-                        size_t index = BinarySearchFirstRegionNodeWithSizeNotLessThan(regionNode.GetSize());
+                        size_t index = BinarySearchFirstRegionNodeWithSizeNotLessThan(regionNode->GetSize());
                         _freeRegionsBySize.insert(_freeRegionsBySize.begin() + index, regionNode);
                     }
                 }
@@ -373,9 +374,9 @@ namespace NovelRT::Experimental::Graphics
                         "An attempt to allocate a memory region of size 0 (or less) was made.");
                 }
 
-                if (*regionNode == nullptr)
+                if (regionNode == _collection->end())
                 {
-                    throw Exceptions::NullPointerException("Parameter name: regionNode");
+                    throw std::out_of_range("Parameter name: regionNode");
                 }
 
                 GraphicsMemoryRegion<TSelf>& region = *regionNode;
@@ -411,21 +412,21 @@ namespace NovelRT::Experimental::Graphics
 
                 UnregisterFreeRegion(regionNode);
 
-                *region = GraphicsMemoryRegion<TSelf>(alignment, _collection, true, offset, size);
+                region = GraphicsMemoryRegion<TSelf>(alignment, _collection, GetDevice(), true, offset, size);
 
                 if (paddingEnd != 0)
                 {
-                    auto iterator = _regions.insert(std::next(regionNode),
-                                                    std::make_shared<GraphicsMemoryRegion<TSelf>>(
-                                                        1ULL, _collection, false, offset + size, paddingEnd));
+                    auto iterator = _regions.insert(
+                        std::next(regionNode),
+                        GraphicsMemoryRegion<TSelf>(1ULL, _collection, GetDevice(), false, offset + size, paddingEnd));
                     RegisterFreeRegion(iterator);
                 }
 
                 if (paddingBegin != 0)
                 {
                     auto iterator =
-                        _regions.insert(regionNode, std::make_shared<GraphicsMemoryRegion<TSelf>>(
-                                                        1ULL, _collection, false, offset - paddingBegin, paddingBegin));
+                        _regions.insert(regionNode, GraphicsMemoryRegion<TSelf>(1ULL, _collection, GetDevice(), false,
+                                                                                offset - paddingBegin, paddingBegin));
                     RegisterFreeRegion(iterator);
                 }
 
@@ -447,13 +448,13 @@ namespace NovelRT::Experimental::Graphics
 
             void UnregisterFreeRegion(typename std::list<GraphicsMemoryRegion<TSelf>>::iterator regionNode)
             {
-                if (regionNode.GetIsAllocated())
+                if (regionNode->GetIsAllocated())
                 {
                     throw Exceptions::InvalidOperationException("An attempt was made to unregister a free region, but "
                                                                 "the target region is currently allocated.");
                 }
 
-                if (regionNode.GetSize() <= 0ULL)
+                if (regionNode->GetSize() <= 0ULL)
                 {
                     throw Exceptions::InvalidOperationException(
                         "An attempt was made to unregister an invalid region that has a size of 0 (or less).");
@@ -461,9 +462,9 @@ namespace NovelRT::Experimental::Graphics
 
                 // TODO: validate free regions by size list
 
-                if (regionNode.GetSize() >= GetMinimumFreeRegionSizeToRegister())
+                if (regionNode->GetSize() >= GetMinimumFreeRegionSizeToRegister())
                 {
-                    for (auto index = BinarySearchFirstRegionNodeWithSizeNotLessThan(regionNode.GetSize());
+                    for (auto index = BinarySearchFirstRegionNodeWithSizeNotLessThan(regionNode->GetSize());
                          index < _freeRegionsBySize.size(); ++index)
                     {
                         if (_freeRegionsBySize[index] == regionNode)
@@ -472,7 +473,7 @@ namespace NovelRT::Experimental::Graphics
                             return;
                         }
 
-                        if (_freeRegionsBySize[index]->GetSize() != regionNode.GetSize())
+                        if (_freeRegionsBySize[index]->GetSize() != regionNode->GetSize())
                         {
                             // TODO: Fix exception message
                             throw std::runtime_error("Something broke lol");

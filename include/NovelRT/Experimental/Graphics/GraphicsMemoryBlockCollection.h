@@ -127,7 +127,7 @@ namespace NovelRT::Experimental::Graphics
             return _blocks.cend();
         }
 
-        [[nodiscard]] bool TrySetMinimumSize(size_t minimumSize) noexcept;
+        [[nodiscard]] bool TrySetMinimumSize(size_t minimumSize);
     };
 } // namespace NovelRT::Experimental::Graphics
 

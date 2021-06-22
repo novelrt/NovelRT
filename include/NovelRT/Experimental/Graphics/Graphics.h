@@ -17,11 +17,7 @@
 #include <chrono>
 #include <mutex>
 #include "../Threading/Threading.h"
-#include "../../Graphics/RGBAConfig.h"
-#include "../../Maths/GeoVector2F.h"
-#include "../../Maths/GeoVector3F.h"
-#include "../../Maths/GeoVector4F.h"
-#include "../../Maths/GeoMatrix4x4F.h"
+#include "../../Maths/Maths.h"
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"
@@ -53,9 +49,8 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsFence;
     class GraphicsPrimitive;
     class GraphicsMemoryAllocator;
-    class GraphicsMemoryAllocatorSettings;
-    enum class GraphicsTextureKind : uint32_t;
     struct GraphicsMemoryAllocatorSettings;
+    enum class GraphicsTextureKind : uint32_t;
     enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
     class GraphicsMemoryBlockCollection;
     class GraphicsMemoryBlock;

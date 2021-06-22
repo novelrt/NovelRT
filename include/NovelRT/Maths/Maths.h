@@ -4,6 +4,18 @@
 #ifndef NOVELRT_MATHS_H
 #define NOVELRT_MATHS_H
 
+namespace NovelRT::Maths
+{
+    class GeoBounds;
+    class GeoMatrix4x4F;
+    class GeoVector2F;
+    class GeoVector3F;
+    class GeoVector4F;
+    class QuadTree;
+    class QuadTreePoint;
+    class Utilities;
+}
+
 #include "GeoBounds.h"
 #include "GeoMatrix4x4F.h"
 #include "GeoVector2F.h"

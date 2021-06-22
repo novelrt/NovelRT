@@ -397,7 +397,7 @@ namespace NovelRT::Experimental::Graphics
         return TryAllocate(size, 1ULL, GraphicsMemoryRegionAllocationFlags::None, regions);
     }
 
-    bool GraphicsMemoryBlockCollection::TrySetMinimumSize(size_t minimumSize) noexcept
+    bool GraphicsMemoryBlockCollection::TrySetMinimumSize(size_t minimumSize)
     {
         std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
 
@@ -469,13 +469,14 @@ namespace NovelRT::Experimental::Graphics
 
             _emptyBlock = (_emptyBlock == nullptr) ? emptyBlock : _emptyBlock;
 
-            if (_size != size)
-            {
-                throw std::runtime_error("Sizes don't match!"); // TODO: Make this a real exception later maybe? or just
-                                                                // put it in debug builds only?
-            }
-
-            return true;
         }
+
+        _minimumSize = minimumSize;
+        if (_size != size)
+        {
+            throw std::runtime_error("Sizes don't match!"); // TODO: Make this a real exception later maybe? or just
+            // put it in debug builds only?
+        }
+        return true;
     }
 } // namespace NovelRT::Experimental::Graphics

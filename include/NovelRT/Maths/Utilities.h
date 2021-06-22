@@ -5,6 +5,7 @@
 #define NOVELRT_MATHS_UTILITIES_H
 
 #include <NovelRT/Exceptions/InvalidOperationException.h>
+
 namespace NovelRT::Maths
 {
     class Utilities
