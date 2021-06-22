@@ -37,7 +37,7 @@ namespace NovelRT::Experimental::Graphics
         }
 
         GraphicsMemoryRegion() noexcept
-            : _alignment(0ULL), _collection(nullptr), _device(nullptr), _isAllocated(false), _offset(0ULL), _size(0ULL)
+            : _alignment(0), _collection(nullptr), _device(nullptr), _isAllocated(false), _offset(0), _size(0)
         {
         }
 

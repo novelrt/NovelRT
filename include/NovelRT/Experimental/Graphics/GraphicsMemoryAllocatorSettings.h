@@ -14,12 +14,12 @@ namespace NovelRT::Experimental::Graphics
     {
         int32_t MaximumBlockCountPerCollection = 0;
         int32_t MinimumBlockCountPerCollection = 0;
-        uint64_t MinimumBlockSize = 0;
-        uint64_t MinimumFreeRegionSizeToRegister = 0;
+        size_t MinimumBlockSize = 0;
+        size_t MinimumFreeRegionSizeToRegister = 0;
         std::optional<std::type_index> RegionCollectionMetadataType;
         std::optional<bool> IsExternallySynchronised;
-        std::optional<uint64_t> MaximumSharedBlockSize;
-        std::optional<uint64_t> MinimumAllocatedRegionMarginSize;
+        std::optional<size_t> MaximumSharedBlockSize;
+        std::optional<size_t> MinimumAllocatedRegionMarginSize;
     };
 } // namespace NovelRT::Experimental::Graphics
 

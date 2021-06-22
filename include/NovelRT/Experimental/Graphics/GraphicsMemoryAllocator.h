@@ -29,22 +29,22 @@ namespace NovelRT::Experimental::Graphics
                                                          ? _settings.MaximumBlockCountPerCollection
                                                          : std::numeric_limits<int32_t>::max();
 
-            uint64_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.has_value()
+            size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.has_value()
                                                   ? _settings.MaximumSharedBlockSize.value()
-                                                  : 256ULL * 1024ULL * 1024ULL;
+                                                  : 256 * 1024 * 1024;
 
             int32_t minimumBlockCountPerCollection =
                 _settings.MinimumBlockCountPerCollection >= 0 ? _settings.MinimumBlockCountPerCollection : 0;
 
-            uint64_t minimumBlockSize = _settings.MinimumBlockSize != 0ULL ? _settings.MinimumBlockSize
-                                                                           : std::max(4096ULL, static_cast<size_t>(maximumSharedBlockSize));
+            size_t minimumBlockSize = _settings.MinimumBlockSize != 0 ? _settings.MinimumBlockSize
+                                                                           : std::max(static_cast<size_t>(4096), maximumSharedBlockSize);
 
-            uint64_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
+            size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
                                                             ? _settings.MinimumAllocatedRegionMarginSize.value()
-                                                            : 0ULL;
+                                                            : 0;
 
-            uint64_t minimumFreeRegionSizeToRegister =
-                _settings.MinimumFreeRegionSizeToRegister != 0ULL ? _settings.MinimumFreeRegionSizeToRegister : 4096ULL;
+            size_t minimumFreeRegionSizeToRegister =
+                _settings.MinimumFreeRegionSizeToRegister != 0 ? _settings.MinimumFreeRegionSizeToRegister : 4096;
 
             std::type_index regionCollectionMetadataType =
                 _settings.RegionCollectionMetadataType.has_value()

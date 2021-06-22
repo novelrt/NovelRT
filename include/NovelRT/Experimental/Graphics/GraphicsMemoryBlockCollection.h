@@ -53,7 +53,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] inline size_t GetMaximumSharedBlockSize() const noexcept
         {
-            return _allocator->GetSettings().MaximumSharedBlockSize.value_or(0ULL);
+            return _allocator->GetSettings().MaximumSharedBlockSize.value_or(0);
         }
 
         [[nodiscard]] inline int32_t GetMinimumBlockCount() const noexcept
@@ -78,7 +78,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsMemoryBlock> Allocate(
             size_t size,
-            size_t alignment = 1ULL,
+            size_t alignment = 1,
             GraphicsMemoryRegionAllocationFlags flags = GraphicsMemoryRegionAllocationFlags::None);
 
         [[nodiscard]] bool TryAllocate(size_t size,

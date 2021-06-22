@@ -36,12 +36,12 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] GraphicsMemoryRegion<TSelf> Allocate(size_t size)
         {
-            return std::move(Allocate(size, 1ULL));
+            return std::move(Allocate(size, 1));
         }
 
         [[nodiscard]] bool TryAllocate(size_t size, GraphicsMemoryRegion<TSelf>& outRegion)
         {
-            return TryAllocate(size, 1ULL, outRegion);
+            return TryAllocate(size, 1, outRegion);
         }
 
         [[nodiscard]] virtual TIterator begin() = 0;
@@ -73,10 +73,10 @@ namespace NovelRT::Experimental::Graphics
                 : _collection(nullptr),
                   _freeRegionsBySize(std::vector<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>{}),
                   _regions(std::list<GraphicsMemoryRegion<TSelf>>{}),
-                  _minimumFreeRegionSizeToRegister(-1ULL),
-                  _minimumAllocatedRegionMarginSize(-1ULL),
-                  _size(-1ULL),
-                  _totalFreeRegionSize(-1ULL),
+                  _minimumFreeRegionSizeToRegister(-1),
+                  _minimumAllocatedRegionMarginSize(-1),
+                  _size(-1),
+                  _totalFreeRegionSize(-1),
                   _freeRegionCount(-1)
             {
             }
@@ -98,7 +98,7 @@ namespace NovelRT::Experimental::Graphics
 
             [[nodiscard]] size_t GetLargestFreeRegionSize() const noexcept final
             {
-                return _freeRegionsBySize.size() != 0ULL ? _freeRegionsBySize.back()->GetSize() : 0ULL;
+                return _freeRegionsBySize.size() != 0 ? _freeRegionsBySize.back()->GetSize() : 0;
             }
 
             [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
@@ -144,7 +144,7 @@ namespace NovelRT::Experimental::Graphics
 
                 _regions.clear();
 
-                GraphicsMemoryRegion<TSelf> region(1, _collection, GetDevice(), false, 0ULL, size);
+                GraphicsMemoryRegion<TSelf> region(1, _collection, GetDevice(), false, 0, size);
                 _regions.emplace_front(region);
                 auto iterator = _regions.begin();
                 _freeRegionsBySize.clear();
@@ -163,7 +163,7 @@ namespace NovelRT::Experimental::Graphics
                     throw Exceptions::NullPointerException("Parameter name: collection.");
                 }
 
-                if (size == 0ULL)
+                if (size == 0)
                 {
                     throw std::out_of_range(
                         "The size parameter was set to 0. This is not a valid size and is out of range.");
@@ -177,7 +177,7 @@ namespace NovelRT::Experimental::Graphics
 
             [[nodiscard]] bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<TSelf>& outRegion) final
             {
-                if (size == 0ULL)
+                if (size == 0)
                 {
                     throw std::out_of_range(
                         "The size parameter was set to 0. This is not a valid size and is out of range.");
@@ -223,16 +223,16 @@ namespace NovelRT::Experimental::Graphics
                 gsl::span<const typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
                     &(*_freeRegionsBySize.begin()), _freeRegionsBySize.size());
 
-                size_t index = 0ULL;
+                size_t index = 0;
                 size_t endIndex = freeRegionsBySizeSpan.size();
 
                 while (index < endIndex)
                 {
-                    size_t midIndex = (index + endIndex) / 2ULL;
+                    size_t midIndex = (index + endIndex) / 2;
 
                     if (freeRegionsBySizeSpan[midIndex]->GetSize() < size)
                     {
-                        index = midIndex + 1ULL;
+                        index = midIndex + 1;
                     }
                     else
                     {
@@ -272,7 +272,7 @@ namespace NovelRT::Experimental::Graphics
                     // TODO: I suck at translating assertions.
                     if (*nextRegionNode == nullptr)
                     {
-                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                        throw Exceptions::NPointerException("A memory region node is nullptr.");
                     }
 
                     UnregisterFreeRegion(nextRegionNode);
@@ -284,7 +284,7 @@ namespace NovelRT::Experimental::Graphics
                     // TODO: I suck at translating assertions.
                     if (*nextRegionNode == nullptr)
                     {
-                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                        throw Exceptions::NPointerException("A memory region node is nullptr.");
                     }
 
                     UnregisterFreeRegion(previousRegionNode);
@@ -302,7 +302,7 @@ namespace NovelRT::Experimental::Graphics
             {
                 if (*regionNode == nullptr)
                 {
-                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                    throw Exceptions::NPointerException("A memory region node is nullptr.");
                 }
 
                 auto nextRegionNode = regionNode;
@@ -310,7 +310,7 @@ namespace NovelRT::Experimental::Graphics
 
                 if (*nextRegionNode == nullptr)
                 {
-                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                    throw Exceptions::NPointerException("A memory region node is nullptr.");
                 }
 
                 if (nextRegionNode.GetIsAllocated())
@@ -340,7 +340,7 @@ namespace NovelRT::Experimental::Graphics
                 }
 
                 // TODO: this is unsigned. I probably can get away with == but whatever.
-                if (regionNode->GetSize() <= 0ULL)
+                if (regionNode->GetSize() <= 0)
                 {
                     throw Exceptions::InvalidOperationException(
                         "A memory region of size 0 (or less) was provided as a free region to register.");
@@ -350,7 +350,7 @@ namespace NovelRT::Experimental::Graphics
 
                 if (regionNode->GetSize() >= GetMinimumFreeRegionSizeToRegister())
                 {
-                    if (_freeRegionsBySize.size() == 0ULL)
+                    if (_freeRegionsBySize.size() == 0)
                     {
                         _freeRegionsBySize.emplace_back(regionNode);
                     }
@@ -368,7 +368,7 @@ namespace NovelRT::Experimental::Graphics
                                                    size_t alignment,
                                                    typename std::list<GraphicsMemoryRegion<TSelf>>::iterator regionNode)
             {
-                if (size <= 0ULL)
+                if (size <= 0)
                 {
                     throw Exceptions::InvalidOperationException(
                         "An attempt to allocate a memory region of size 0 (or less) was made.");
@@ -394,7 +394,7 @@ namespace NovelRT::Experimental::Graphics
 
                 size_t offset = region.GetOffset();
 
-                if (GetMinimumAllocatedRegionMarginSize() > 0ULL)
+                if (GetMinimumAllocatedRegionMarginSize() > 0)
                 {
                     offset += GetMinimumAllocatedRegionMarginSize();
                 }
@@ -418,14 +418,14 @@ namespace NovelRT::Experimental::Graphics
                 {
                     auto iterator = _regions.insert(
                         std::next(regionNode),
-                        GraphicsMemoryRegion<TSelf>(1ULL, _collection, GetDevice(), false, offset + size, paddingEnd));
+                        GraphicsMemoryRegion<TSelf>(1, _collection, GetDevice(), false, offset + size, paddingEnd));
                     RegisterFreeRegion(iterator);
                 }
 
                 if (paddingBegin != 0)
                 {
                     auto iterator =
-                        _regions.insert(regionNode, GraphicsMemoryRegion<TSelf>(1ULL, _collection, GetDevice(), false,
+                        _regions.insert(regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, GetDevice(), false,
                                                                                 offset - paddingBegin, paddingBegin));
                     RegisterFreeRegion(iterator);
                 }
@@ -454,7 +454,7 @@ namespace NovelRT::Experimental::Graphics
                                                                 "the target region is currently allocated.");
                 }
 
-                if (regionNode->GetSize() <= 0ULL)
+                if (regionNode->GetSize() <= 0)
                 {
                     throw Exceptions::InvalidOperationException(
                         "An attempt was made to unregister an invalid region that has a size of 0 (or less).");
