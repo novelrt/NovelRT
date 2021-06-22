@@ -37,7 +37,7 @@ namespace NovelRT::Experimental::Graphics
                 _settings.MinimumBlockCountPerCollection >= 0 ? _settings.MinimumBlockCountPerCollection : 0;
 
             uint64_t minimumBlockSize = _settings.MinimumBlockSize != 0ULL ? _settings.MinimumBlockSize
-                                                                           : std::max(4096ULL, maximumSharedBlockSize);
+                                                                           : std::max(4096ULL, static_cast<size_t>(maximumSharedBlockSize));
 
             uint64_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
                                                             ? _settings.MinimumAllocatedRegionMarginSize.value()

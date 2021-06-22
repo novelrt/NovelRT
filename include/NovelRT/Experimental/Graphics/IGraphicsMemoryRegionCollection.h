@@ -322,9 +322,9 @@ namespace NovelRT::Experimental::Graphics
                 GraphicsMemoryRegion<TSelf>& region = *regionNode;
                 const GraphicsMemoryRegion<TSelf>& nextRegion = *nextRegionNode;
 
-                *region =
+                region =
                     GraphicsMemoryRegion<TSelf>(region.GetAlignment(), region.GetCollection(), region.GetIsAllocated(),
-                                                region.GetOffset(), region.GetSize() + nextregion.GetSize());
+                                                region.GetOffset(), region.GetSize() + nextRegion.GetSize());
 
                 --_freeRegionCount;
 
