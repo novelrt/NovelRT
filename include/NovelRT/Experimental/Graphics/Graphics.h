@@ -16,6 +16,7 @@
 #include <typeindex>
 #include <chrono>
 #include <mutex>
+#include <list>
 #include "../Threading/Threading.h"
 #include "../../Maths/Maths.h"
 #include "../../Graphics/RGBAConfig.h"
