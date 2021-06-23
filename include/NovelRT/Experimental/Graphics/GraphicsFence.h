@@ -1,3 +1,5 @@
+#include <utility>
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -13,7 +15,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsFence : public GraphicsDeviceObject
     {
     public:
-        GraphicsFence(std::shared_ptr<ILLGraphicsDevice> device) noexcept : GraphicsDeviceObject(device)
+        GraphicsFence(std::shared_ptr<ILLGraphicsDevice> device) noexcept : GraphicsDeviceObject(std::move(device))
         {
         }
 
@@ -26,7 +28,7 @@ namespace NovelRT::Experimental::Graphics
         {
             if (!TryWait(millisecondsTimeout))
             {
-                throw std::runtime_error("TODO: Replace me!");
+                throw Exceptions::TimeoutException(millisecondsTimeout);
             }
         }
 
@@ -34,7 +36,7 @@ namespace NovelRT::Experimental::Graphics
         {
             if (!TryWait(timeout))
             {
-                throw std::runtime_error("TODO: Replace me!");
+                throw Exceptions::TimeoutException(timeout.count());
             }
         }
     };

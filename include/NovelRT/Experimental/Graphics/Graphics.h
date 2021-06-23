@@ -59,7 +59,9 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryBudget;
 }
 
-//Graphics types
+// Graphics types
+// clang-format off
+
 #include "ShaderProgramKind.h"
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
@@ -92,5 +94,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineResource.h"
 #include "GraphicsPipelineResourceKind.h"
 #include "ShaderProgramVisibility.h"
+
+// clang-format on
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_H
