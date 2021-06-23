@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics
         GraphicsMemoryAllocatorSettings _settings;
 
     public:
-        GraphicsMemoryAllocator(std::shared_ptr<ILLGraphicsDevice> device,
+        GraphicsMemoryAllocator(std::shared_ptr<GraphicsDevice> device,
                                 GraphicsMemoryAllocatorSettings settings) noexcept
             : GraphicsDeviceObject(std::move(device)), _settings(settings)
         {
@@ -69,8 +69,8 @@ namespace NovelRT::Experimental::Graphics
             return _settings;
         }
 
-        [[nodiscard]] virtual std::shared_ptr<LLGraphicsTexture> CreateTexture(
-            std::shared_ptr<IGraphicsMemoryRegionCollection<LLGraphicsResource>::IMetadata> metadata,
+        [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
+            std::shared_ptr<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata> metadata,
             GraphicsTextureKind textureKind,
             GraphicsResourceCpuAccessKind cpuAccessKind,
             size_t size,

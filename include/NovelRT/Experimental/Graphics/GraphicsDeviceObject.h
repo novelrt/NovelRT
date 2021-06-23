@@ -13,15 +13,15 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsDeviceObject : public std::enable_shared_from_this<GraphicsDeviceObject>
     {
     private:
-        std::shared_ptr<ILLGraphicsDevice> _graphicsDevice;
+        std::shared_ptr<GraphicsDevice> _graphicsDevice;
 
     public:
-        explicit GraphicsDeviceObject(std::shared_ptr<ILLGraphicsDevice> graphicsDevice) noexcept
+        explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice> graphicsDevice) noexcept
             : _graphicsDevice(std::move(graphicsDevice))
         {
         }
 
-        [[nodiscard]] inline std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept
+        [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
         {
             return _graphicsDevice;
         }

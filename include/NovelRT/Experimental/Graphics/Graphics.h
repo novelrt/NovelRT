@@ -33,10 +33,10 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsResourceCpuAccessKind : uint32_t;
     enum class GraphicsSurfaceKind : uint32_t;
     class IGraphicsSurface;
-    class ILLGraphicsDevice;
-    class LLGraphicsResource;
-    class LLGraphicsBuffer;
-    class LLGraphicsTexture;
+    class GraphicsDevice;
+    class GraphicsResource;
+    class GraphicsBuffer;
+    class GraphicsTexture;
     class ShaderProgram;
     class GraphicsPipeline;
     class GraphicsPipelineSignature;
@@ -57,6 +57,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryBlock;
     enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
     class GraphicsMemoryBudget;
+    enum class GraphicsBufferKind : uint32_t;
 }
 
 // Graphics types
@@ -79,11 +80,11 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsSurfaceKind.h"
 #include "GraphicsTextureKind.h"
 #include "IGraphicsSurface.h"
-#include "ILLGraphicsDevice.h"
-#include "LLGraphicsResource.h"
-#include "LLGraphicsBuffer.h"
-#include "LLGraphicsResourceViewContainer.h"
-#include "LLGraphicsTexture.h"
+#include "GraphicsDevice.h"
+#include "GraphicsResource.h"
+#include "GraphicsBufferKind.h"
+#include "GraphicsBuffer.h"
+#include "GraphicsTexture.h"
 #include "ShaderProgram.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"

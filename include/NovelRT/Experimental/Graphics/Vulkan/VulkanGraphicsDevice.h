@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice : public ILLGraphicsDevice
+    class VulkanGraphicsDevice : public GraphicsDevice
     {
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";

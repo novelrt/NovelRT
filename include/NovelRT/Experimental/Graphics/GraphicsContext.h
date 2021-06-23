@@ -16,7 +16,7 @@ namespace NovelRT::Experimental::Graphics
         size_t _index;
 
     public:
-        GraphicsContext(std::shared_ptr<ILLGraphicsDevice> device, size_t index) noexcept
+        GraphicsContext(std::shared_ptr<GraphicsDevice> device, size_t index) noexcept
             : GraphicsDeviceObject(device), _index(index)
         {
         }
@@ -30,8 +30,8 @@ namespace NovelRT::Experimental::Graphics
 
         virtual void BeginDrawing(NovelRT::Graphics::RGBAConfig backgroundColour) = 0;
         virtual void BeginFrame() = 0;
-        virtual void Copy(std::shared_ptr<LLGraphicsBuffer> destination, std::shared_ptr<LLGraphicsBuffer> source) = 0;
-        virtual void Copy(std::shared_ptr<LLGraphicsTexture> destination, std::shared_ptr<LLGraphicsBuffer> source) = 0;
+        virtual void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
+        virtual void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
         virtual void Draw(std::shared_ptr<GraphicsPrimitive> primitive) = 0;
         virtual void EndDrawing() = 0;
         virtual void EndFrame() = 0;

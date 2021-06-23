@@ -15,7 +15,7 @@ namespace NovelRT::Experimental::Graphics
     private:
         size_t _alignment;
         std::shared_ptr<TCollection> _collection;
-        std::shared_ptr<ILLGraphicsDevice> _device;
+        std::shared_ptr<GraphicsDevice> _device;
         bool _isAllocated;
         size_t _offset;
         size_t _size;
@@ -23,7 +23,7 @@ namespace NovelRT::Experimental::Graphics
     public:
         GraphicsMemoryRegion(size_t alignment,
                              std::shared_ptr<TCollection> collection,
-                             std::shared_ptr<ILLGraphicsDevice> device,
+                             std::shared_ptr<GraphicsDevice> device,
                              bool isAllocated,
                              size_t offset,
                              size_t size) noexcept
@@ -51,7 +51,7 @@ namespace NovelRT::Experimental::Graphics
             return _collection;
         }
 
-        [[nodiscard]] std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept
+        [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
         {
             return _device;
         }

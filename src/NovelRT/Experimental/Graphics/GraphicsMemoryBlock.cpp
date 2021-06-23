@@ -6,7 +6,7 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    GraphicsMemoryBlock::GraphicsMemoryBlock(std::shared_ptr<ILLGraphicsDevice> device,
+    GraphicsMemoryBlock::GraphicsMemoryBlock(std::shared_ptr<GraphicsDevice> device,
                                              std::shared_ptr<GraphicsMemoryBlockCollection> collection)
         : GraphicsDeviceObject(std::move(device)), _collection(std::move(collection))
     {
@@ -23,7 +23,7 @@ namespace NovelRT::Experimental::Graphics
         }
     }
 
-    std::shared_ptr<ILLGraphicsDevice> GraphicsMemoryBlock::GetDevice() const noexcept
+    std::shared_ptr<GraphicsDevice> GraphicsMemoryBlock::GetDevice() const noexcept
     {
         return GraphicsDeviceObject::GetDevice();
     }

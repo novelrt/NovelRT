@@ -43,8 +43,13 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryBlock> CreateBlock(size_t size) = 0;
 
     public:
-        GraphicsMemoryBlockCollection(std::shared_ptr<ILLGraphicsDevice> device,
+        GraphicsMemoryBlockCollection(std::shared_ptr<GraphicsDevice> device,
                                       std::shared_ptr<GraphicsMemoryAllocator> allocator);
+
+        [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept
+        {
+            return _allocator;
+        }
 
         [[nodiscard]] inline int32_t GetMaximumBlockCount() const noexcept
         {

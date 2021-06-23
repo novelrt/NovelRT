@@ -8,7 +8,7 @@
 namespace NovelRT::Experimental::Graphics
 {
 
-    ShaderProgram::ShaderProgram(std::shared_ptr<ILLGraphicsDevice> device,
+    ShaderProgram::ShaderProgram(std::shared_ptr<GraphicsDevice> device,
                                  std::string entryPointName,
                                  ShaderProgramKind kind) noexcept
         : GraphicsDeviceObject(std::move(device)), _entryPointName(std::move(entryPointName)), _kind(kind)

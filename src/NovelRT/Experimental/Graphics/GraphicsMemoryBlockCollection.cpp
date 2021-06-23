@@ -201,7 +201,7 @@ namespace NovelRT::Experimental::Graphics
         return block->TryAllocate(size, alignment, region);
     }
 
-    GraphicsMemoryBlockCollection::GraphicsMemoryBlockCollection(std::shared_ptr<ILLGraphicsDevice> device,
+    GraphicsMemoryBlockCollection::GraphicsMemoryBlockCollection(std::shared_ptr<GraphicsDevice> device,
                                                                  std::shared_ptr<GraphicsMemoryAllocator> allocator)
         : GraphicsDeviceObject(std::move(device)),
           _allocator(std::move(allocator)),

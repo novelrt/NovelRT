@@ -17,7 +17,7 @@ namespace NovelRT::Experimental::Graphics
         std::vector<GraphicsPipelineResource> _resources;
 
     public:
-        GraphicsPipelineSignature(std::shared_ptr<ILLGraphicsDevice> device,
+        GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
                                   gsl::span<const GraphicsPipelineInput> inputs,
                                   gsl::span<const GraphicsPipelineResource> resources) noexcept;
 

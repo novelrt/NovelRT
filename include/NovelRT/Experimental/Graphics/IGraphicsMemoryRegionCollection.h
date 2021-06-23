@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics
     {
     public:
         [[nodiscard]] virtual int32_t GetAllocatedRegionCount() const noexcept = 0;
-        [[nodiscard]] virtual std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept = 0;
+        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> GetDevice() const noexcept = 0;
         [[nodiscard]] virtual bool GetIsEmpty() const noexcept = 0;
         [[nodiscard]] virtual size_t GetLargestFreeRegionSize() const noexcept = 0;
         [[nodiscard]] virtual size_t GetMinimumAllocatedRegionMarginSize() const noexcept = 0;
@@ -86,7 +86,7 @@ namespace NovelRT::Experimental::Graphics
                 return static_cast<int32_t>(_regions.size() - _freeRegionCount);
             }
 
-            [[nodiscard]] std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept final
+            [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept final
             {
                 return _collection->GetDevice();
             }

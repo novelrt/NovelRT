@@ -7,7 +7,7 @@
 namespace NovelRT::Experimental::Graphics
 {
 
-    GraphicsPipeline::GraphicsPipeline(std::shared_ptr<ILLGraphicsDevice> device,
+    GraphicsPipeline::GraphicsPipeline(std::shared_ptr<GraphicsDevice> device,
                                        std::shared_ptr<GraphicsPipelineSignature> signature,
                                        std::shared_ptr<ShaderProgram> vertexShader,
                                        std::shared_ptr<ShaderProgram> pixelShader) noexcept

@@ -15,7 +15,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsFence : public GraphicsDeviceObject
     {
     public:
-        GraphicsFence(std::shared_ptr<ILLGraphicsDevice> device) noexcept : GraphicsDeviceObject(std::move(device))
+        explicit GraphicsFence(std::shared_ptr<GraphicsDevice> device) noexcept : GraphicsDeviceObject(std::move(device))
         {
         }
 

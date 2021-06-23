@@ -6,7 +6,7 @@
 namespace NovelRT::Experimental::Graphics
 {
 
-    GraphicsPipelineSignature::GraphicsPipelineSignature(std::shared_ptr<ILLGraphicsDevice> device,
+    GraphicsPipelineSignature::GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
                                                          gsl::span<const GraphicsPipelineInput> inputs,
                                                          gsl::span<const GraphicsPipelineResource> resources) noexcept
         : GraphicsDeviceObject(std::move(device)),

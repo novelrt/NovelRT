@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics
         std::shared_ptr<GraphicsMemoryBlockCollection> _collection;
 
     public:
-        GraphicsMemoryBlock(std::shared_ptr<ILLGraphicsDevice> device,
+        GraphicsMemoryBlock(std::shared_ptr<GraphicsDevice> device,
                             std::shared_ptr<GraphicsMemoryBlockCollection> collection);
 
         [[nodiscard]] inline std::shared_ptr<GraphicsMemoryBlockCollection> GetCollection() const noexcept
@@ -26,7 +26,7 @@ namespace NovelRT::Experimental::Graphics
             return _collection;
         }
 
-        [[nodiscard]] std::shared_ptr<ILLGraphicsDevice> GetDevice() const noexcept override;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept override;
     };
 } // namespace NovelRT::Experimental::Graphics
 

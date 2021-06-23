@@ -36,7 +36,7 @@ int main()
     auto device = std::shared_ptr<IWindowingDevice>(new GlfwWindowingDevice());
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
-    auto gfxDevice = std::shared_ptr<ILLGraphicsDevice>(new VulkanGraphicsDevice());
+    auto gfxDevice = std::shared_ptr<GraphicsDevice>(new VulkanGraphicsDevice());
     gfxDevice->Initialise(device);
 
     auto vertShaderData = LoadSpv("vert.spv");
