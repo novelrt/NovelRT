@@ -116,7 +116,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsDevice();
 
-        [[nodiscard]] inline VkDevice GetVkDevice() const noexcept
+        [[nodiscard]] inline VkDevice GetVulkanDevice() const noexcept
         {
             return _device;
         }

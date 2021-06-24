@@ -17,7 +17,7 @@ namespace NovelRT::Experimental::Graphics
 
     public:
         GraphicsContext(std::shared_ptr<GraphicsDevice> device, size_t index) noexcept
-            : GraphicsDeviceObject(device), _index(index)
+            : GraphicsDeviceObject(std::move(device)), _index(index)
         {
         }
 

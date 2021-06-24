@@ -171,7 +171,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineVertexInputStateCreateInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
 
         VkResult createGraphicsPipelineResult = vkCreateGraphicsPipelines(
-            device->GetVkDevice(), VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, &vulkanPipeline);
+            device->GetVulkanDevice(), VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, &vulkanPipeline);
 
         if (createGraphicsPipelineResult != VK_SUCCESS)
         {

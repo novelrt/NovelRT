@@ -82,7 +82,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             descriptorPoolCreateInfo.pPoolSizes = vulkanDescriptorPoolSizes.data();
 
             VkResult descriptorPoolResult =
-                vkCreateDescriptorPool(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+                vkCreateDescriptorPool(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                        &descriptorPoolCreateInfo, nullptr, &returnDescriptorPool);
 
             if (descriptorPoolResult != VK_SUCCESS)
@@ -111,7 +111,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             descriptorSetAllocateInfo.pSetLayouts = &vulkanDescriptorSetLayout;
 
             VkResult allocatorDescriptorSetsResult =
-                vkAllocateDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+                vkAllocateDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                          &descriptorSetAllocateInfo, &returnDescriptorSet);
 
             if (allocatorDescriptorSetsResult != VK_SUCCESS)
@@ -185,7 +185,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             descriptorSetLayoutCreateInfo.pBindings = descriptorSetLayoutBindings.data();
 
             VkResult descriptorSetLayoutResult =
-                vkCreateDescriptorSetLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+                vkCreateDescriptorSetLayout(
+                std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                             &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
 
             if (descriptorSetLayoutResult != VK_SUCCESS)
@@ -214,7 +215,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         VkResult pipelineLayoutResult =
-            vkCreatePipelineLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+            vkCreatePipelineLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                    &pipelineLayoutCreateInfo, nullptr, &vulkanPipelineLayout);
 
         if (pipelineLayoutResult != VK_SUCCESS)
@@ -230,7 +231,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_vulkanDescriptorPool.isCreated())
         {
-            vkDestroyDescriptorPool(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+            vkDestroyDescriptorPool(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                     _vulkanDescriptorPool.getActual(), nullptr);
             _vulkanDescriptorPool.reset();
         }
@@ -240,7 +241,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_vulkanDescriptorSet.isCreated())
         {
-            vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+            vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                  _vulkanDescriptorPool.getActual(), 1, nullptr);
             _vulkanDescriptorSet.reset();
         }
@@ -250,7 +251,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_vulkanDescriptorSetLayout.isCreated())
         {
-            vkDestroyDescriptorSetLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+            vkDestroyDescriptorSetLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                          _vulkanDescriptorSetLayout.getActual(), nullptr);
             _vulkanDescriptorSetLayout.reset();
         }
@@ -260,7 +261,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_vulkanPipelineLayout.isCreated())
         {
-            vkDestroyPipelineLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVkDevice(),
+            vkDestroyPipelineLayout(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                                     _vulkanPipelineLayout.getActual(), nullptr);
             _vulkanPipelineLayout.reset();
         }

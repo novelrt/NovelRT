@@ -21,8 +21,14 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual bool GetIsSignalled() = 0;
         virtual void Reset() = 0;
-        [[nodiscard]] virtual bool TryWait(uint64_t millisecondsTimeout) noexcept = 0;
-        [[nodiscard]] virtual bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout) noexcept = 0;
+
+        [[nodiscard]] inline bool TryWait()
+        {
+            return TryWait(std::numeric_limits<uint64_t>::max());
+        }
+
+        [[nodiscard]] virtual bool TryWait(uint64_t millisecondsTimeout) = 0;
+        [[nodiscard]] virtual bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout) = 0;
 
         void Wait(uint64_t millisecondsTimeout)
         {

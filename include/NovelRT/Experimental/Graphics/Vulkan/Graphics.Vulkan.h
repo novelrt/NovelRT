@@ -16,6 +16,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanShaderProgram;
     class VulkanGraphicsPipeline;
     class VulkanGraphicsPipelineSignature;
+    class VulkanGraphicsContext;
+    class VulkanGraphicsFence;
+    class VulkanGraphicsBuffer;
+    class VulkanGraphicsTexture;
+    class VulkanGraphicsPrimitive;
 }
 
 //Graphics.Vulkan dependencies
@@ -30,12 +35,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "../../../Utilities/Misc.h"
 
 // Graphics.Vulkan types
+
+// clang-format off
+
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
-#include "VulkanShaderProgram.h"
 #include "VulkanGraphicsDevice.h"
+#include "VulkanGraphicsFence.h"
+#include "VulkanGraphicsContext.h"
+#include "VulkanShaderProgram.h"
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanGraphicsPipelineSignature.h"
 #include "VulkanShaderProgram.h"
+
+// clang-format on
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H
