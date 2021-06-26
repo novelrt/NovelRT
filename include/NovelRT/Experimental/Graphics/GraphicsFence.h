@@ -30,7 +30,12 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual bool TryWait(uint64_t millisecondsTimeout) = 0;
         [[nodiscard]] virtual bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout) = 0;
 
-        void Wait(uint64_t millisecondsTimeout)
+        inline void Wait()
+        {
+            Wait(std::numeric_limits<uint64_t>::max());
+        }
+
+        inline void Wait(uint64_t millisecondsTimeout)
         {
             if (!TryWait(millisecondsTimeout))
             {
@@ -38,7 +43,7 @@ namespace NovelRT::Experimental::Graphics
             }
         }
 
-        void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
+        inline oid Wait(std::chrono::duration<uint64_t, std::milli> timeout)
         {
             if (!TryWait(timeout))
             {

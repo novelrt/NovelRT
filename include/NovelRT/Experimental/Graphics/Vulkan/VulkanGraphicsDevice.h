@@ -121,7 +121,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _device;
         }
 
-        [[nodiscard]] inline VkRenderPass GetRenderPass()
+        [[nodiscard]] inline VkRenderPass GetVulkanRenderPass()
         {
             return _renderPass.getActual();
         }

@@ -91,7 +91,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
         pipelineCreateInfo.pDynamicState = &pipelineDynamicStateCreateInfo;
         pipelineCreateInfo.layout = signature->GetPipelineLayout();
-        pipelineCreateInfo.renderPass = device->GetRenderPass();
+        pipelineCreateInfo.renderPass = device->GetVulkanRenderPass();
 
         if (HasVertexShader())
         {
