@@ -46,6 +46,8 @@ namespace NovelRT::Graphics
         int32_t initialiseRendering();
         void tearDown() const;
 
+        DebugService* debugService;
+
         std::unique_ptr<ImageRect> createImageRect(Transform transform,
                                                    int32_t layer,
                                                    const std::string& filePath,

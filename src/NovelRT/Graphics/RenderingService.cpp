@@ -145,6 +145,10 @@ namespace NovelRT::Graphics
             _logger.logError(std::string(&vertexShaderErrorMessage[0]));
             throw Exceptions::CompilationErrorException(vertexFileName, std::string(&vertexShaderErrorMessage[0]));
         }
+        else if (debugService != nullptr)
+        {
+            debugService->increaseLoadedShaderCount(true);
+        }
 
         // Compile Fragment Shader
         _logger.logInfo("Compiling shader: {}...", fragmentFileName);
@@ -161,6 +165,10 @@ namespace NovelRT::Graphics
             glGetShaderInfoLog(fragmentShaderId, infoLogLength, nullptr, &fragmentShaderErrorMessage[0]);
             _logger.logError(std::string(&fragmentShaderErrorMessage[0]));
             throw Exceptions::CompilationErrorException(fragmentFileName, std::string(&fragmentShaderErrorMessage[0]));
+        }
+        else if (debugService != nullptr)
+        {
+            debugService->increaseLoadedShaderCount(false);
         }
 
         // Link the program

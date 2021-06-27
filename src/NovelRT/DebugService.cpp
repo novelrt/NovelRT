@@ -32,9 +32,11 @@ namespace NovelRT
                                std::shared_ptr<Graphics::RenderingService> renderingService) noexcept
         : _renderingService(renderingService),
           _fpsCounter(nullptr),
+          _shaderCounter(nullptr),
           _logging(LoggingService(Utilities::Misc::CONSOLE_LOG_STATS)),
           _framesPerSecond(0)
     {
+        renderingService->debugService = this;
         sceneConstructionEvent += std::bind(&DebugService::onSceneConstruction, this);
     }
 
@@ -51,7 +53,7 @@ namespace NovelRT
             {
                 auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
 
-                auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
+                auto transform = Transform(Maths::GeoVector2F(16, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
 
                 std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
                 std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
@@ -67,6 +69,7 @@ namespace NovelRT
             _fpsCounter->setActive(value);
         }
     }
+
     void DebugService::setFramesPerSecond(uint32_t framesPerSecond)
     {
         if (_framesPerSecond != framesPerSecond)
@@ -80,8 +83,8 @@ namespace NovelRT
             {
                 _maxFramesPerSecond = _framesPerSecond;
             }
-            updateFpsCounter();
         }
+        updateFpsCounter();
     }
 
     void DebugService::accumulateStatistics(uint32_t framesPerSecond, uint32_t totalSeconds, uint32_t totalFrames)
@@ -99,14 +102,72 @@ namespace NovelRT
             snprintf(fpsText, 64, "%u fps %u avg %u min %u max %u total", _framesPerSecond,
                      _totalFrames / _totalSeconds, _minFramesPerSecond, _maxFramesPerSecond, _totalFrames);
             _fpsCounter->setText(fpsText);
-            _logging.logInfo(fpsText);
+
+            if (_totalSeconds - _lastTimeFpsDiagnosticsLogged > 1)
+            {
+                _lastTimeFpsDiagnosticsLogged = _totalSeconds;
+                _logging.logInfo(fpsText);
+            }
         }
     }
+
     void DebugService::onSceneConstruction()
     {
-        if (_fpsCounter == nullptr)
-            return;
+        if (_fpsCounter != nullptr)
+             _fpsCounter->executeObjectBehaviour();
+        if (_shaderCounter != nullptr)
+            _shaderCounter->executeObjectBehaviour();
+    }
 
-        _fpsCounter->executeObjectBehaviour();
+    bool DebugService::getIsShaderCounterVisible() const
+    {
+        return (_shaderCounter != nullptr) && _shaderCounter->getActive();
+    }
+
+    void DebugService::setIsShaderCounterVisible(bool value)
+    {
+        if (_shaderCounter == nullptr)
+        {
+            if (value)
+            {
+                auto whiteRgbaConfig = Graphics::RGBAConfig(255, 255, 255, 255);
+
+                auto transform = Transform(Maths::GeoVector2F(16, 1080 - 32), 0, Maths::GeoVector2F(1.0f, 1.0f));
+
+                std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
+                std::filesystem::path fontsDirPath = executableDirPath / "Resources" / "Fonts";
+
+                std::string fontPath = (fontsDirPath / "Gayathri-Regular.ttf").string();
+
+                _shaderCounter = _renderingService->createTextRect(transform, 0, whiteRgbaConfig, 16, fontPath);
+                updateShaderCounter();
+            }
+        }
+        else
+        {
+            _shaderCounter->setActive(value);
+        }
+    }
+
+    void DebugService::increaseLoadedShaderCount(bool isVertexShader)
+    {
+        if (isVertexShader)
+            _vertexShadersLoaded++;
+        else
+            _fragmentShadersLoaded++;
+
+        updateShaderCounter();
+    }
+
+    void DebugService::updateShaderCounter()
+    {
+        if (_shaderCounter != nullptr)
+        {
+            char shaderText[128];
+            snprintf(shaderText, 128, "%u vertexShaders, %u fragmentShaders loaded into the RenderingService",
+              _vertexShadersLoaded, _fragmentShadersLoaded);
+            _shaderCounter->setText(shaderText);
+            _logging.logDebugLine(shaderText);
+        }
     }
 } // namespace NovelRT
