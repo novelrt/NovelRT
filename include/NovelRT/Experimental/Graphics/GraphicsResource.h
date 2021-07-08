@@ -19,8 +19,8 @@ namespace NovelRT::Experimental::Graphics
 
     public:
         GraphicsResource(std::shared_ptr<GraphicsDevice> device,
-                           GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                           GraphicsResourceCpuAccessKind cpuAccess)
+                         GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
+                         GraphicsResourceCpuAccessKind cpuAccess)
             : GraphicsDeviceObject(std::move(device)), _blockRegion(std::move(blockRegion)), _cpuAccess(cpuAccess)
         {
             if (_blockRegion.GetCollection() == nullptr)
@@ -75,16 +75,21 @@ namespace NovelRT::Experimental::Graphics
             return GetBlockRegion().GetSize();
         }
 
+        [[nodiscard]] virtual void* MapUntyped() = 0;
+
         [[nodiscard]] virtual void* MapUntyped(size_t rangeOffset, size_t rangeLength) = 0;
 
-        template<typename T>
-        [[nodiscard]] T* Map(const GraphicsMemoryRegion<GraphicsResource>& region)
+        template<typename T> [[nodiscard]] T* Map()
+        {
+            return reinterpret_cast<T*>(MapUntyped());
+        }
+
+        template<typename T> [[nodiscard]] T* Map(const GraphicsMemoryRegion<GraphicsResource>& region)
         {
             return Map<T>(region.GetOffset(), region.GetSize());
         }
 
-        template<typename T>
-        [[nodiscard]] T* Map(size_t rangeOffset, size_t rangeLength)
+        template<typename T> [[nodiscard]] T* Map(size_t rangeOffset, size_t rangeLength)
         {
             return reinterpret_cast<T*>(MapUntyped(rangeOffset, rangeLength));
         }
@@ -92,20 +97,17 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual const void* MapForReadUntyped() = 0;
         [[nodiscard]] virtual const void* MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) = 0;
 
-        template<typename T>
-        [[nodiscard]] const T* MapForRead()
+        template<typename T> [[nodiscard]] const T* MapForRead()
         {
             return reinterpret_cast<const T*>(MapForReadUntyped());
         }
 
-        template<typename T>
-        [[nodiscard]] const T* MapForRead(const GraphicsMemoryRegion<GraphicsResource>& readRegion)
+        template<typename T> [[nodiscard]] const T* MapForRead(const GraphicsMemoryRegion<GraphicsResource>& readRegion)
         {
             return MapForRead<T>(readRegion.GetOffset(), readRegion.GetSize());
         }
 
-        template<typename T>
-        [[nodiscard]] const T* MapForRead(size_t readRangeOffset, size_t readRangeLength)
+        template<typename T> [[nodiscard]] const T* MapForRead(size_t readRangeOffset, size_t readRangeLength)
         {
             return reinterpret_cast<const T*>(MapForReadUntyped(readRangeOffset, readRangeLength));
         }

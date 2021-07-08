@@ -16,9 +16,17 @@ namespace NovelRT::Experimental::Graphics
     template<typename TSelf, typename TIterator = typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>
     class IGraphicsMemoryRegionCollection
     {
+    protected:
+        [[nodiscard]] virtual GraphicsDevice* GetDeviceInternal() const noexcept = 0;
+
     public:
         [[nodiscard]] virtual int32_t GetAllocatedRegionCount() const noexcept = 0;
-        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> GetDevice() const noexcept = 0;
+
+        [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
+        {
+            return GetDeviceInternal().shared_from_this();
+        }
+
         [[nodiscard]] virtual bool GetIsEmpty() const noexcept = 0;
         [[nodiscard]] virtual size_t GetLargestFreeRegionSize() const noexcept = 0;
         [[nodiscard]] virtual size_t GetMinimumAllocatedRegionMarginSize() const noexcept = 0;

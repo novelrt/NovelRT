@@ -1,14 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
-#include <NovelRT/Utilities/Misc.h>
-#include <map>
-#include <numeric>
-#include <set>
-#include <utility>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -86,10 +79,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _surface(VK_NULL_HANDLE),
           _swapChain(VK_NULL_HANDLE),
           _swapChainImages(std::vector<VkImage>{}),
-          _swapChainImageFormat(VkFormat{}),
+          _vulkanSwapChainFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
           _swapChainImageViews(std::vector<VkImageView>{}),
-          _renderPass([&](){ return CreateRenderPass(); })
+          _renderPass([&](){ return CreateRenderPass(); }),
+          _indicesData{}
     {
     }
 
@@ -355,7 +349,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
         }
 
-        _logger.logInfoLine("VkInstance successfy created.");
+        _logger.logInfoLine("VkInstance successfully created.");
     }
 
     void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
@@ -377,7 +371,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                      funcResult);
                 }
 
-                _logger.logInfoLine("VkSurfaceKHR successfy created.");
+                _logger.logInfoLine("VkSurfaceKHR successfully created.");
                 break;
             }
             case GraphicsSurfaceKind::Unknown:
@@ -574,15 +568,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(_physicalDevice, &deviceProperties);
-        _logger.logInfoLine("GPU device successfy chosen: " + std::string(deviceProperties.deviceName));
+        _logger.logInfoLine("GPU device successfully chosen: " + std::string(deviceProperties.deviceName));
     }
 
     void VulkanGraphicsDevice::CreateLogicalDevice()
     {
-        QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+        _indicesData = FindQueueFamilies(_physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
-        std::set<uint32_t> uniqueQueueFamilies{indices.graphicsFamily.value(), indices.presentFamily.value()};
+        std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value()};
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies)
@@ -596,7 +590,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet();
-        auto physicalDeviceExtensionullptrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
+        auto physicalDeviceExtensionPtrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
@@ -605,8 +599,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionullptrs.size());
-        createInfo.ppEnabledExtensionNames = physicalDeviceExtensionullptrs.data();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
+        createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
         if (_debuggerWasCreated)
         {
@@ -626,10 +620,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to initialise the VkDevice.", deviceResult);
         }
 
-        vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
-        vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
+        vkGetDeviceQueue(_device, _indicesData.graphicsFamily.value(), 0, &_graphicsQueue);
+        vkGetDeviceQueue(_device, _indicesData.presentFamily.value(), 0, &_presentQueue);
 
-        _logger.logInfoLine("VkDevice successfy created.");
+        _logger.logInfoLine("VkDevice successfully created.");
     }
 
     VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
@@ -745,7 +739,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
         }
 
-        _logger.logInfoLine("VkSwapchainKHR successfy created. Retrieving VkImages...");
+        _logger.logInfoLine("VkSwapchainKHR successfully created. Retrieving VkImages...");
 
         VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, nullptr);
 
@@ -764,43 +758,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
-        _swapChainImageFormat = surfaceFormat.format;
+        _vulkanSwapChainFormat = surfaceFormat.format;
         _swapChainExtent = extent;
 
-        _logger.logInfoLine("VkImages successfy retrieved.");
-    }
-
-    void VulkanGraphicsDevice::CreateImageViews()
-    {
-        _swapChainImageViews.resize(_swapChainImages.size());
-
-        for (size_t i = 0; i < _swapChainImages.size(); i++)
-        {
-            VkImageViewCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = _swapChainImages[i];
-            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            createInfo.format = _swapChainImageFormat;
-            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            createInfo.subresourceRange.baseMipLevel = 0;
-            createInfo.subresourceRange.levelCount = 1;
-            createInfo.subresourceRange.baseArrayLayer = 0;
-            createInfo.subresourceRange.layerCount = 1;
-
-            VkResult imageViewResult = vkCreateImageView(_device, &createInfo, nullptr, &_swapChainImageViews[i]);
-
-            if (imageViewResult != VK_SUCCESS)
-            {
-                throw Exceptions::InitialisationFailureException(
-                    "Failed to initialise a VkImageView onto the provided VkImage.", imageViewResult);
-            }
-        }
-
-        _logger.logInfoLine("Successfy initialised VkImageViews.");
+        _logger.logInfoLine("VkImages successfully retrieved.");
     }
 
     void VulkanGraphicsDevice::Initialise(std::shared_ptr<IGraphicsSurface> targetSurface)
@@ -817,18 +778,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         PickPhysicalDevice();
         CreateLogicalDevice();
         CreateSwapChain();
-        CreateImageViews();
 
-        _logger.logInfoLine("Vulkan version 1.2 has been successfy initialised.");
+        _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
-        for (auto&& imageView : _swapChainImageViews)
-        {
-            vkDestroyImageView(_device, imageView, nullptr);
-        }
-
         vkDestroySwapchainKHR(_device, _swapChain, nullptr);
         vkDestroySurfaceKHR(_instance, _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
@@ -840,7 +795,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkDestroyInstance(_instance, nullptr);
 
-        _logger.logInfoLine("Vulkan version 1.2 instance successfy torn down.");
+        _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
     }
 
     std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
@@ -881,7 +836,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkRenderPass returnRenderPass;
 
         VkAttachmentDescription attachmentDescription{};
-        attachmentDescription.format = _swapChainImageFormat;
+        attachmentDescription.format = _vulkanSwapChainFormat;
         attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
         attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -910,7 +865,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.", renderPassResult);
         }
 
-        _logger.logInfoLine("Successfy created the VkRenderPass.");
+        _logger.logInfoLine("Successfully created the VkRenderPass.");
         return returnRenderPass;
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

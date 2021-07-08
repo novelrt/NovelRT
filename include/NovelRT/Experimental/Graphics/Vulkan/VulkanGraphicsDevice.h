@@ -33,7 +33,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkSwapchainKHR _swapChain;
         std::vector<VkImage> _swapChainImages;
-        VkFormat _swapChainImageFormat;
+        VkFormat _vulkanSwapChainFormat;
         VkExtent2D _swapChainExtent;
 
         std::vector<VkImageView> _swapChainImageViews;
@@ -41,6 +41,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<IGraphicsSurface> _nrtSurface;
 
         Utilities::Lazy<VkRenderPass> _renderPass;
+
+        QueueFamilyIndices _indicesData;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -90,8 +92,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void CreateSwapChain();
 
-        void CreateImageViews();
-
         VkRenderPass CreateRenderPass();
 
     public:
@@ -125,6 +125,32 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return _renderPass.getActual();
         }
+
+        [[nodiscard]] VkExtent2D GetSwapChainExtent() const noexcept
+        {
+            return _swapChainExtent;
+        }
+
+        [[nodiscard]] inline const QueueFamilyIndices& GetIndicesData() const noexcept
+        {
+            return _indicesData;
+        }
+
+        [[nodiscard]] inline const std::vector<VkImage>& GetVulkanSwapChainImages() const noexcept
+        {
+            return _swapChainImages;
+        }
+
+        [[nodiscard]] inline VkFormat GetVulkanSwapChainFormat() const noexcept
+        {
+            return _vulkanSwapChainFormat;
+        }
+    };
+
+    template<typename TMetadata>
+    class VulkanGraphicsBuffer final : VulkanGraphicsBuffer
+    {
+
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

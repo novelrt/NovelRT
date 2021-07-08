@@ -21,14 +21,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsBuffer;
     class VulkanGraphicsTexture;
     class VulkanGraphicsPrimitive;
+    class VulkanGraphicsMemoryAllocator;
+    class VulkanGraphicsMemoryBlock;
 }
 
 //Graphics.Vulkan dependencies
 #include <array>
 #include <optional>
+#include <set>
+#include <map>
 #include <vector>
 #include <vulkan/vulkan.h>
 #include "../Graphics.h"
+#include "../../EngineConfig.h"
 #include "../../../LoggingService.h"
 #include "../../../Utilities/Lazy.h"
 #include "../../../Exceptions/Exceptions.h"
@@ -43,6 +48,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "VulkanGraphicsDevice.h"
 #include "VulkanGraphicsFence.h"
 #include "VulkanGraphicsContext.h"
+#include "VulkanGraphicsBuffer.h"
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanGraphicsPipelineSignature.h"

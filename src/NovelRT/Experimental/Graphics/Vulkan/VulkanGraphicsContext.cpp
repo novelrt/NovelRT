@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsContext.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -54,7 +53,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkCommandPoolCreateInfo commandPoolCreateInfo{};
         commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-        commandPoolCreateInfo.queueFamilyIndex = GetDevice()->GetVulkanCommandQueueFamilyIndex();
+        commandPoolCreateInfo.queueFamilyIndex = GetDevice()->GetIndicesData().commandQueueFamily.value();
 
         VkResult result =
             vkCreateCommandPool(GetDevice()->GetVulkanDevice(), &commandPoolCreateInfo, nullptr, &vulkanCommandPool);
@@ -156,11 +155,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsContext::DisposeVulkanSwapChainImageView(VkImageView vulkanSwapchainImageView) noexcept
+    void VulkanGraphicsContext::DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) noexcept
     {
-        if (vulkanSwapchainImageView != VK_NULL_HANDLE)
+        if (vulkanSwapChainImageView != VK_NULL_HANDLE)
         {
-            vkDestroyImageView(GetDevice()->GetVulkanDevice(), vulkanSwapchainImageView, nullptr);
+            vkDestroyImageView(GetDevice()->GetVulkanDevice(), vulkanSwapChainImageView, nullptr);
         }
     }
 
