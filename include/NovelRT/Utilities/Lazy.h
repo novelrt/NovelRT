@@ -4,9 +4,7 @@
 #ifndef NOVELRT_UTILITIES_LAZY_H
 #define NOVELRT_UTILITIES_LAZY_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <functional>
 
 namespace NovelRT::Utilities
 {

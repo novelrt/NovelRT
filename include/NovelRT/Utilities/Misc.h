@@ -4,8 +4,13 @@
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#include <filesystem>
+#include <type_traits>
+
+#if defined(NDEBUG)
+#define unused(x)  (void)(x)
+#else
+#define unused(x)  (void)(0)
 #endif
 
 namespace NovelRT::Utilities
@@ -40,41 +45,41 @@ namespace NovelRT::Utilities
             return getExecutablePath().parent_path();
         }
     };
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T operator~(T a)
-    {
-        return static_cast<T>(~static_cast<U>(a));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T operator|(T a, T b)
-    {
-        return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T operator&(T a, T b)
-    {
-        return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T operator^(T a, T b)
-    {
-        return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator|=(T& a, T b)
-    {
-        return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator&=(T& a, T b)
-    {
-        return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
-    }
-
-    template<class T, class U = std::underlying_type_t<T>> constexpr T& operator^=(T& a, T b)
-    {
-        return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
-    }
 } // namespace NovelRT::Utilities
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T operator~(T a)
+{
+    return static_cast<T>(~static_cast<U>(a));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T operator|(T a, T b)
+{
+    return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T operator&(T a, T b)
+{
+    return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T operator^(T a, T b)
+{
+    return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T& operator|=(T& a, T b)
+{
+    return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T& operator&=(T& a, T b)
+{
+    return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
+}
+
+template<class T, class U = std::underlying_type_t<T>> constexpr T& operator^=(T& a, T b)
+{
+    return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
+}
 
 #endif //! NOVELRT_UTILITIES_MISC_H
