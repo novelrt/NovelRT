@@ -70,7 +70,7 @@ namespace NovelRT::Experimental::Graphics
             return GetBlockRegion().GetOffset();
         }
 
-        [[nodiscard]] inline size_t GetSize() const noexcept override
+        [[nodiscard]] inline size_t GetSize() const noexcept final
         {
             return GetBlockRegion().GetSize();
         }

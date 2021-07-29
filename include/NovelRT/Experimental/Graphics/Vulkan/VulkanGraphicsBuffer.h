@@ -6,13 +6,13 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    class VulkanGraphicsBuffer final : public GraphicsBuffer
+    class VulkanGraphicsBuffer : public GraphicsBuffer
     {
     private:
         VkBuffer _vulkanBuffer;
-        Threading::VolatileState _state;
 
     protected:
+        Threading::VolatileState _state;
         [[nodiscard]] VulkanGraphicsDevice* GetDeviceInternal() const noexcept final;
 
     public:
@@ -50,6 +50,102 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void UnmapAndWrite() final;
         void UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
         ~VulkanGraphicsBuffer() override;
+    };
+
+    template<typename TMetadata> class VulkanGraphicsBufferImpl final : public VulkanGraphicsBuffer
+    {
+    private:
+        TMetadata _metadata;
+
+    public:
+        VulkanGraphicsBufferImpl(std::shared_ptr<VulkanGraphicsDevice> device,
+                                 GraphicsBufferKind kind,
+                                 GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
+                                 GraphicsResourceCpuAccessKind cpuAccess,
+                                 VkBuffer vulkanBuffer)
+            : VulkanGraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess, vulkanBuffer)
+        {
+            static_assert(std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
+
+            std::shared_ptr<GraphicsMemoryBlock> block = blockRegion.GetCollection();
+
+            size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
+            size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
+
+            _metadata();
+            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl>(shared_from_this()),
+                                 blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
+                                 minimumFreeRegionSizeToRegister);
+
+            static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        }
+
+        int32_t GetAllocatedRegionCount() const noexcept final
+        {
+            return _metadata.GetAllocatedRegionCount();
+        }
+
+        int32_t GetCount() const noexcept final
+        {
+            return _metadata.GetCount();
+        }
+
+        bool GetIsEmpty() const noexcept final
+        {
+            return _metadata.GetIsEmpty();
+        }
+
+        size_t GetLargestFreeRegionSize() const noexcept final
+        {
+            return _metadata.GetLargestFreeRegionSize();
+        }
+
+        size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
+        {
+            return _metadata.GetMinimumAllocatedRegionMarginSize();
+        }
+
+        size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
+        {
+            return _metadata.GetMinimumFreeRegionSizeToRegister();
+        }
+
+        size_t GetTotalFreeRegionSize() const noexcept final
+        {
+            return _metadata.GetTotalFreeRegionSize();
+        }
+
+        GraphicsMemoryRegion<GraphicsResource> Allocate(size_t size, size_t alignment) final
+        {
+            return _metadata.Allocate(size, alignment);
+        }
+
+        void Clear() final
+        {
+            _metadata.Clear();
+        }
+
+        void Free(const GraphicsMemoryRegion<GraphicsResource>& region) final
+        {
+            _metadata.Free(region);
+        }
+
+        bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<GraphicsResource>& outRegion) final
+        {
+            return _metadata.TryAllocate(size, alignment, outRegion);
+        }
+
+        std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator begin() final
+        {
+            return _metadata.begin();
+        }
+
+        std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator end() override
+        {
+            return _metadata.end();
+        }
+
+        ~VulkanGraphicsBufferImpl() final = default;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

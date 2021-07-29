@@ -146,12 +146,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanSwapChainFormat;
         }
     };
-
-    template<typename TMetadata>
-    class VulkanGraphicsBuffer final : VulkanGraphicsBuffer
-    {
-
-    };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 
 #endif // NOVELRT_VULKANGRAPHICSDEVICE_H
