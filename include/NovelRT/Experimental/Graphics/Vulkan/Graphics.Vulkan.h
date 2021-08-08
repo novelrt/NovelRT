@@ -53,6 +53,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanGraphicsPipelineSignature.h"
 #include "VulkanShaderProgram.h"
+#include "VulkanGraphicsTexture.h"
 
 // clang-format on
 

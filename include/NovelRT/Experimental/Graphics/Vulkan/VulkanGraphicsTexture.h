@@ -1,45 +1,63 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSBUFFER_H
-#define NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSBUFFER_H
+#ifndef NOVELRT_VULKANGRAPHICSTEXTURE_H
+#define NOVELRT_VULKANGRAPHICSTEXTURE_H
+
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    class VulkanGraphicsBuffer : public GraphicsBuffer
+    class VulkanGraphicsTexture : public GraphicsTexture
     {
     private:
-        VkBuffer _vulkanBuffer;
+        static inline const int32_t Binding = 2;
+        static inline const int32_t Bound = 3;
+
+        VkImage _vulkanImage;
+        Utilities::Lazy<VkImageView> _vulkanImageView;
+        Utilities::Lazy<VkSampler> _vulkanSampler;
+
+        [[nodiscard]] VkImageView CreateVulkanImageView();
+        [[nodiscard]] VkSampler CreateVulkanSampler();
+        void DisposeVulkanImage() noexcept;
+        void DisposeVulkanImageView() noexcept;
+        void DisposeVulkanSampler() noexcept;
 
     protected:
         Threading::VolatileState _state;
         [[nodiscard]] VulkanGraphicsDevice* GetDeviceInternal() const noexcept final;
 
     public:
-        VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> device,
-                             GraphicsBufferKind kind,
-                             GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                             GraphicsResourceCpuAccessKind cpuAccess,
-                             VkBuffer buffer);
+        VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
+                              GraphicsTextureKind kind,
+                              GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
+                              GraphicsResourceCpuAccessKind cpuAccess,
+                              uint32_t width,
+                              uint32_t height,
+                              uint16_t depth,
+                              VkImage vulkanImage);
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsBuffer::GetAllocator());
+            return std::dynamic_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsTexture::GetAllocator());
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryBlock> GetBlock() const noexcept
+        [[nodiscard]] inline VkImage GetVulkanImage() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsMemoryBlock>(GraphicsBuffer::GetBlock());
+            return _vulkanImage;
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
+        [[nodiscard]] inline VkImageView GetVulkanImageView()
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GetDeviceInternal()->shared_from_this());
+            return _vulkanImageView.getActual();
         }
 
-        [[nodiscard]] inline VkBuffer GetVulkanBuffer() const noexcept
+        [[nodiscard]] inline VkSampler GetVulkanSampler()
         {
-            return _vulkanBuffer;
+            return _vulkanSampler.getActual();
         }
 
         [[nodiscard]] void* MapUntyped() final;
@@ -49,21 +67,32 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void Unmap() final;
         void UnmapAndWrite() final;
         void UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
-        ~VulkanGraphicsBuffer() override;
+
+        ~VulkanGraphicsTexture() override;
     };
 
-    template<typename TMetadata> class VulkanGraphicsBufferImpl final : public VulkanGraphicsBuffer
+    template<typename TMetadata> class VulkanGraphicsTextureImpl final : public VulkanGraphicsTexture
     {
     private:
         TMetadata _metadata;
 
     public:
-        VulkanGraphicsBufferImpl(std::shared_ptr<VulkanGraphicsDevice> device,
-                                 GraphicsBufferKind kind,
-                                 GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                                 GraphicsResourceCpuAccessKind cpuAccess,
-                                 VkBuffer vulkanBuffer)
-            : VulkanGraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess, vulkanBuffer),
+        VulkanGraphicsTextureImpl(std::shared_ptr<VulkanGraphicsDevice> device,
+                                  GraphicsTextureKind kind,
+                                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
+                                  GraphicsResourceCpuAccessKind cpuAccess,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  uint16_t depth,
+                                  VkImage vulkanImage)
+            : VulkanGraphicsTexture(std::move(device),
+                                    kind,
+                                    std::move(blockRegion),
+                                    cpuAccess,
+                                    width,
+                                    height,
+                                    depth,
+                                    vulkanImage),
               _metadata()
         {
             static_assert(std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
@@ -145,8 +174,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _metadata.end();
         }
 
-        ~VulkanGraphicsBufferImpl() final = default;
+        ~VulkanGraphicsTextureImpl() final = default;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 
-#endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSBUFFER_H
+#endif // !NOVELRT_VULKANGRAPHICSTEXTURE_H

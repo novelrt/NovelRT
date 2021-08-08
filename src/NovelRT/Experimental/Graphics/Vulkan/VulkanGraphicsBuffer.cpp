@@ -60,7 +60,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw std::runtime_error("Failed to map Vulkan memory to the CPU!");
         }
 
-        return pDestination;
+        return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
     }
 
     const void* VulkanGraphicsBuffer::MapForReadUntyped()

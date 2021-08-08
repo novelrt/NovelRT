@@ -57,6 +57,7 @@ set(SOURCES
   Experimental/Graphics/Vulkan/VulkanGraphicsFence.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Threading/VolatileState.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
