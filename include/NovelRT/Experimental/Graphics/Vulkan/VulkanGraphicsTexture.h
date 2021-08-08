@@ -109,37 +109,37 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         }
 
-        int32_t GetAllocatedRegionCount() const noexcept final
+        [[nodiscard]] int32_t GetAllocatedRegionCount() const noexcept final
         {
             return _metadata.GetAllocatedRegionCount();
         }
 
-        int32_t GetCount() const noexcept final
+        [[nodiscard]] int32_t GetCount() const noexcept final
         {
             return _metadata.GetCount();
         }
 
-        bool GetIsEmpty() const noexcept final
+        [[nodiscard]] bool GetIsEmpty() const noexcept final
         {
             return _metadata.GetIsEmpty();
         }
 
-        size_t GetLargestFreeRegionSize() const noexcept final
+        [[nodiscard]] size_t GetLargestFreeRegionSize() const noexcept final
         {
             return _metadata.GetLargestFreeRegionSize();
         }
 
-        size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
+        [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
         {
             return _metadata.GetMinimumAllocatedRegionMarginSize();
         }
 
-        size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
+        [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
         {
             return _metadata.GetMinimumFreeRegionSizeToRegister();
         }
 
-        size_t GetTotalFreeRegionSize() const noexcept final
+        [[nodiscard]] size_t GetTotalFreeRegionSize() const noexcept final
         {
             return _metadata.GetTotalFreeRegionSize();
         }
@@ -159,17 +159,17 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             _metadata.Free(region);
         }
 
-        bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<GraphicsResource>& outRegion) final
+        [[nodiscard]] bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<GraphicsResource>& outRegion) final
         {
             return _metadata.TryAllocate(size, alignment, outRegion);
         }
 
-        std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator begin() final
+        [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator begin() final
         {
             return _metadata.begin();
         }
 
-        std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator end() override
+        [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator end() override
         {
             return _metadata.end();
         }

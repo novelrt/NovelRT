@@ -52,6 +52,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanGraphicsPipelineSignature.h"
+#include "VulkanGraphicsPrimitive.h"
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsTexture.h"
 
