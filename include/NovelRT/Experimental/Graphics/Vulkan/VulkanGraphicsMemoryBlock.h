@@ -136,7 +136,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return _metadata.end();
         }
-        
+
         ~VulkanGraphicsMemoryBlockImpl() final = default;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
