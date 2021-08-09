@@ -4,8 +4,8 @@
 #ifndef NOVELRT_VULKANGRAPHICSPRIMITIVE_H
 #define NOVELRT_VULKANGRAPHICSPRIMITIVE_H
 
-#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
 #endif
 
 namespace NovelRT::Experimental::Graphics::Vulkan

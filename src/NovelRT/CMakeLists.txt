@@ -55,6 +55,7 @@ set(SOURCES
   Experimental/Graphics/Vulkan/VulkanGraphicsContext.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsFence.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp

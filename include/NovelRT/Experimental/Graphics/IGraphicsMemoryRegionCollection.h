@@ -24,7 +24,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
         {
-            return GetDeviceInternal().shared_from_this();
+            return GetDeviceInternal()->shared_from_this();
         }
 
         [[nodiscard]] virtual bool GetIsEmpty() const noexcept = 0;

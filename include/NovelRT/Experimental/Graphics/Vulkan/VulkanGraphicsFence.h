@@ -4,6 +4,10 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSFENCE_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSFENCE_H
 
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
+#endif
+
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
     class VulkanGraphicsFence final : public GraphicsFence

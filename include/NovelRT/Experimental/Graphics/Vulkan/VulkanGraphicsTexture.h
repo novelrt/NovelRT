@@ -13,6 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsTexture : public GraphicsTexture
     {
     private:
+        // TODO: These don't seem to be used anywhere? why? What is the point of these?
         static inline const int32_t Binding = 2;
         static inline const int32_t Bound = 3;
 
@@ -159,7 +160,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             _metadata.Free(region);
         }
 
-        [[nodiscard]] bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<GraphicsResource>& outRegion) final
+        [[nodiscard]] bool TryAllocate(size_t size,
+                                       size_t alignment,
+                                       GraphicsMemoryRegion<GraphicsResource>& outRegion) final
         {
             return _metadata.TryAllocate(size, alignment, outRegion);
         }
@@ -169,7 +172,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _metadata.begin();
         }
 
-        [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator end() override
+        [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator end() final
         {
             return _metadata.end();
         }

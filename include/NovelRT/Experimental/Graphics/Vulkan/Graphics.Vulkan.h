@@ -22,6 +22,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsTexture;
     class VulkanGraphicsPrimitive;
     class VulkanGraphicsMemoryAllocator;
+    class VulkanGraphicsMemoryBlockCollection;
     class VulkanGraphicsMemoryBlock;
 }
 
@@ -47,6 +48,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "SwapChainSupportDetails.h"
 #include "VulkanGraphicsDevice.h"
 #include "VulkanGraphicsFence.h"
+#include "VulkanGraphicsMemoryBlock.h"
+#include "VulkanGraphicsMemoryBlockCollection.h"
 #include "VulkanGraphicsContext.h"
 #include "VulkanGraphicsBuffer.h"
 #include "VulkanShaderProgram.h"

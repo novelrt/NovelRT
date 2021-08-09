@@ -22,10 +22,4 @@ namespace NovelRT::Experimental::Graphics
                                     "of range of one of the devices.");
         }
     }
-
-    std::shared_ptr<GraphicsDevice> GraphicsMemoryBlock::GetDevice() const noexcept
-    {
-        return GraphicsDeviceObject::GetDevice();
-    }
-
 } // namespace NovelRT::Experimental::Graphics

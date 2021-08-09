@@ -474,7 +474,7 @@ namespace NovelRT::Experimental::Graphics
         if (_size != size)
         {
             throw std::runtime_error("Sizes don't match!"); // TODO: Make this a real exception later maybe? or just
-            // put it in debug builds only?
+            //TODO: put it in debug builds only?
         }
         return true;
     }
