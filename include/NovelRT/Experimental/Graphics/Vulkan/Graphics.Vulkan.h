@@ -48,6 +48,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "SwapChainSupportDetails.h"
 #include "VulkanGraphicsDevice.h"
 #include "VulkanGraphicsFence.h"
+#include "VulkanGraphicsMemoryAllocator.h"
 #include "VulkanGraphicsMemoryBlock.h"
 #include "VulkanGraphicsMemoryBlockCollection.h"
 #include "VulkanGraphicsContext.h"

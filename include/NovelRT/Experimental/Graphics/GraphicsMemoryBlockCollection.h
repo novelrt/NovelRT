@@ -40,7 +40,7 @@ namespace NovelRT::Experimental::Graphics
                                GraphicsMemoryRegion<GraphicsMemoryBlock>& region);
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryBlock> CreateBlock(size_t size) = 0;
+        [[nodiscard]] virtual GraphicsMemoryBlock* CreateBlock(size_t size) = 0;
 
     public:
         GraphicsMemoryBlockCollection(std::shared_ptr<GraphicsDevice> device,

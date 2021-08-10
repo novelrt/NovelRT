@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Graphics
 {
     class GraphicsMemoryAllocator : public GraphicsDeviceObject
     {
-    private:
+    protected:
         GraphicsMemoryAllocatorSettings _settings;
 
     public:
@@ -46,11 +46,6 @@ namespace NovelRT::Experimental::Graphics
             size_t minimumFreeRegionSizeToRegister =
                 _settings.MinimumFreeRegionSizeToRegister != 0 ? _settings.MinimumFreeRegionSizeToRegister : 4096;
 
-            std::type_index regionCollectionMetadataType =
-                _settings.RegionCollectionMetadataType.has_value()
-                    ? _settings.RegionCollectionMetadataType.value()
-                    : typeid(IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::DefaultMetadata);
-
             _settings = GraphicsMemoryAllocatorSettings();
             _settings.IsExternallySynchronised = isExternallySynchronised;
             _settings.MaximumBlockCountPerCollection = maximumBlockCountPerCollection;
@@ -59,7 +54,6 @@ namespace NovelRT::Experimental::Graphics
             _settings.MinimumBlockSize = minimumBlockSize;
             _settings.MinimumAllocatedRegionMarginSize = minimumAllocatedRegionMarginSize;
             _settings.MinimumFreeRegionSizeToRegister = minimumFreeRegionSizeToRegister;
-            _settings.RegionCollectionMetadataType = regionCollectionMetadataType;
         }
 
         [[nodiscard]] inline virtual int32_t GetCount() const noexcept = 0;
