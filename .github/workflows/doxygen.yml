@@ -19,11 +19,15 @@ jobs:
         run: git checkout -b documentation/$GITHUB_SHA
 
       #Mandatory step it appears otherwise pushing the commit will fail
-      #Username and Email found from https://github.community/t/github-actions-bot-email-address/17204/3
+      #Switched username and e-mail to something identifiable?
       - name: Configure Git
         run: |
-          git config user.name "github-actions"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          gh auth login
+          git config user.name "Novel-chan"
+          git config user.email "admin@novelrt.dev"
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Documentation
         run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
@@ -36,11 +40,6 @@ jobs:
           git push origin documentation/$GITHUB_SHA
 
       - name: Create Pull Request
-        uses: thomaseizinger/create-pull-request@1.0.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          head: origin documentation/$GITHUB_SHA
-          base: gh-pages
-          title: $GITHUB_SHA into gh-pages
-          body: |
-              Updated the documentation from commit $GITHUB_SHA in main.
+        if: ${{ success() }}
+        run:
+          gh pr create --title "$GITHUB_SHA into gh-pages" --body "Updated documentation from commit $GITHUB_SHA in main." --base gh-pages --head documentation/$GITHUB_SHA
