@@ -58,6 +58,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
     class GraphicsMemoryBudget;
     enum class GraphicsBufferKind : uint32_t;
+    enum class TexelFormat : uint32_t;
 }
 
 // Graphics types
@@ -95,6 +96,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineResource.h"
 #include "GraphicsPipelineResourceKind.h"
 #include "ShaderProgramVisibility.h"
+#include "TexelFormat.h"
 
 // clang-format on
 

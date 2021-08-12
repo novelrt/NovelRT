@@ -8,7 +8,8 @@ namespace NovelRT::Experimental::Graphics
 {
     std::shared_ptr<GraphicsMemoryBlock> GraphicsMemoryBlockCollection::AddBlock(size_t size)
     {
-        std::shared_ptr<GraphicsMemoryBlock> block = CreateBlock(size);
+        std::shared_ptr<GraphicsMemoryBlock> block =
+            std::reinterpret_pointer_cast<GraphicsMemoryBlock>(CreateBlock(size)->shared_from_this());
 
         _blocks.push_back(block);
         _size += size;
@@ -474,7 +475,7 @@ namespace NovelRT::Experimental::Graphics
         if (_size != size)
         {
             throw std::runtime_error("Sizes don't match!"); // TODO: Make this a real exception later maybe? or just
-            //TODO: put it in debug builds only?
+            // TODO: put it in debug builds only?
         }
         return true;
     }

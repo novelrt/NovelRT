@@ -28,6 +28,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
 //Graphics.Vulkan dependencies
 #include <array>
+#include <bit>
 #include <optional>
 #include <set>
 #include <map>
@@ -44,6 +45,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
 // clang-format off
 
+#include "Utilities/Graphics.Vulkan.Utilities.h"
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
 #include "VulkanGraphicsDevice.h"

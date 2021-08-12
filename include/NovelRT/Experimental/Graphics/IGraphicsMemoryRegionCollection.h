@@ -76,6 +76,12 @@ namespace NovelRT::Experimental::Graphics
             size_t _totalFreeRegionSize;
             int32_t _freeRegionCount;
 
+        protected:
+            [[nodiscard]] GraphicsDevice* GetDeviceInternal() const noexcept override
+            {
+                return nullptr;
+            }
+
         public:
             DefaultMetadata() noexcept
                 : _collection(nullptr),
@@ -94,9 +100,9 @@ namespace NovelRT::Experimental::Graphics
                 return static_cast<int32_t>(_regions.size() - _freeRegionCount);
             }
 
-            [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept final
+            [[nodiscard]] size_t GetCount() const noexcept
             {
-                return _collection->GetDevice();
+                return _regions.size();
             }
 
             [[nodiscard]] bool GetIsEmpty() const noexcept override
@@ -159,6 +165,29 @@ namespace NovelRT::Experimental::Graphics
                 _freeRegionsBySize.emplace_back(iterator);
 
                 // TODO: implement debug validation here?
+            }
+
+            void Free(const GraphicsMemoryRegion<TSelf>& region) final
+            {
+                bool freedRegion = false;
+
+                for (auto it = _regions.begin(); it != _regions.end(); std::advance(it, 1))
+                {
+                    if (*it != region)
+                    {
+                        continue;
+                    }
+
+                    static_cast<void>(FreeRegionInternal(it));
+                    freedRegion = true;
+                    break;
+                }
+
+                if (!freedRegion)
+                {
+                    throw Exceptions::KeyNotFoundException();
+                }
+                // TODO: call validate
             }
 
             void Initialise(std::shared_ptr<TSelf> collection,
@@ -225,6 +254,16 @@ namespace NovelRT::Experimental::Graphics
                 return allocatedRegion;
             }
 
+            [[nodiscard]] typename std::list<GraphicsMemoryRegion<TSelf>>::iterator begin() override
+            {
+                return _regions.begin();
+            }
+
+            [[nodiscard]] typename std::list<GraphicsMemoryRegion<TSelf>>::iterator end() override
+            {
+                return _regions.end();
+            }
+
         private:
             [[nodiscard]] size_t BinarySearchFirstRegionNodeWithSizeNotLessThan(size_t size) const noexcept
             {
@@ -261,27 +300,29 @@ namespace NovelRT::Experimental::Graphics
                     return regionNode;
                 }
 
-                *region = GraphicsMemoryRegion<TSelf>(region.GetAlignment(), region.GetCollection(), false,
-                                                      region.GetOffset(), region.GetSize());
+                region = GraphicsMemoryRegion<TSelf>(region.GetAlignment(), region.GetCollection(), region.GetDevice(),
+                                                     false, region.GetOffset(), region.GetSize());
 
                 ++_freeRegionCount;
                 _totalFreeRegionSize += region.GetSize();
 
                 auto nextRegionNode = regionNode;
-                ++nextRegionNode;
-                bool mergeWithNext = *nextRegionNode != nullptr && !nextRegionNode.GetIsAllocated();
+                std::advance(nextRegionNode, 1);
+                bool mergeWithNext = nextRegionNode != _regions.end() && !nextRegionNode->GetIsAllocated();
 
                 auto previousRegionNode = regionNode;
-                ++previousRegionNode;
-                bool mergeWithPrevious = *previousRegionNode != nullptr && !previousRegionNode.GetIsAllocated();
+                std::advance(previousRegionNode, 1);
+                bool mergeWithPrevious = previousRegionNode != _regions.end() && !previousRegionNode->GetIsAllocated();
 
                 if (mergeWithNext)
                 {
+                    /*
                     // TODO: I suck at translating assertions.
                     if (*nextRegionNode == nullptr)
                     {
                         throw Exceptions::NullPointerException("A memory region node is nullptr.");
                     }
+                    */
 
                     UnregisterFreeRegion(nextRegionNode);
                     MergeFreeRegionWithNext(regionNode);
@@ -289,11 +330,14 @@ namespace NovelRT::Experimental::Graphics
 
                 if (mergeWithPrevious)
                 {
-                    // TODO: I suck at translating assertions.
-                    if (*nextRegionNode == nullptr)
-                    {
-                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                    }
+
+                    /*
+                                        // TODO: I suck at translating assertions.
+                                        if (*nextRegionNode == nullptr)
+                                        {
+                                            throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                                        }
+                    */
 
                     UnregisterFreeRegion(previousRegionNode);
                     MergeFreeRegionWithNext(previousRegionNode);
@@ -308,20 +352,24 @@ namespace NovelRT::Experimental::Graphics
 
             void MergeFreeRegionWithNext(typename std::list<GraphicsMemoryRegion<TSelf>>::iterator regionNode)
             {
-                if (*regionNode == nullptr)
-                {
-                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                }
+                /*
+                                if (*regionNode == nullptr)
+                                {
+                                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                                }
+                */
 
                 auto nextRegionNode = regionNode;
                 ++nextRegionNode;
 
-                if (*nextRegionNode == nullptr)
-                {
-                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                }
+                /*
+                                if (*nextRegionNode == nullptr)
+                                {
+                                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
+                                }
+                */
 
-                if (nextRegionNode.GetIsAllocated())
+                if (nextRegionNode->GetIsAllocated())
                 {
                     throw Exceptions::InvalidOperationException(
                         "An allocated memory region was designated to be merged with an unallocated one.");
@@ -330,9 +378,9 @@ namespace NovelRT::Experimental::Graphics
                 GraphicsMemoryRegion<TSelf>& region = *regionNode;
                 const GraphicsMemoryRegion<TSelf>& nextRegion = *nextRegionNode;
 
-                region =
-                    GraphicsMemoryRegion<TSelf>(region.GetAlignment(), region.GetCollection(), region.GetIsAllocated(),
-                                                region.GetOffset(), region.GetSize() + nextRegion.GetSize());
+                region = GraphicsMemoryRegion<TSelf>(region.GetAlignment(), region.GetCollection(), region.GetDevice(),
+                                                     region.GetIsAllocated(), region.GetOffset(),
+                                                     region.GetSize() + nextRegion.GetSize());
 
                 --_freeRegionCount;
 
@@ -490,16 +538,6 @@ namespace NovelRT::Experimental::Graphics
                 }
 
                 // TODO: Validate free regions by size list
-            }
-
-            [[nodiscard]] typename std::list<GraphicsMemoryRegion<TSelf>>::iterator begin() override
-            {
-                return _regions.begin();
-            }
-
-            [[nodiscard]] typename std::list<GraphicsMemoryRegion<TSelf>>::iterator end() override
-            {
-                return _regions.end();
             }
         };
     };

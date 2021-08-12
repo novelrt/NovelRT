@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_VULKANGRAPHICSTEXTURE_H
-#define NOVELRT_VULKANGRAPHICSTEXTURE_H
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSTEXTURE_H
+#define NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSTEXTURE_H
 
-#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
 #endif
 
 namespace NovelRT::Experimental::Graphics::Vulkan
@@ -18,8 +18,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         static inline const int32_t Bound = 3;
 
         VkImage _vulkanImage;
-        Utilities::Lazy<VkImageView> _vulkanImageView;
-        Utilities::Lazy<VkSampler> _vulkanSampler;
+
+        NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
+        NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
 
         [[nodiscard]] VkImageView CreateVulkanImageView();
         [[nodiscard]] VkSampler CreateVulkanSampler();
@@ -103,7 +104,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
             size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
-            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl>(shared_from_this()),
+            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl<TMetadata>>(shared_from_this()),
                                  blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
                                  minimumFreeRegionSizeToRegister);
 
@@ -181,4 +182,4 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 
-#endif // !NOVELRT_VULKANGRAPHICSTEXTURE_H
+#endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSTEXTURE_H

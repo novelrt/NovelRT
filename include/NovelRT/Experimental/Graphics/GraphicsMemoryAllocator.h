@@ -1,3 +1,4 @@
+#include "TexelFormat.h"
 #include <utility>
 
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
@@ -30,18 +31,19 @@ namespace NovelRT::Experimental::Graphics
                                                          : std::numeric_limits<int32_t>::max();
 
             size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.has_value()
-                                                  ? _settings.MaximumSharedBlockSize.value()
-                                                  : 256 * 1024 * 1024;
+                                                ? _settings.MaximumSharedBlockSize.value()
+                                                : 256 * 1024 * 1024;
 
             int32_t minimumBlockCountPerCollection =
                 _settings.MinimumBlockCountPerCollection >= 0 ? _settings.MinimumBlockCountPerCollection : 0;
 
-            size_t minimumBlockSize = _settings.MinimumBlockSize != 0 ? _settings.MinimumBlockSize
-                                                                           : std::max(static_cast<size_t>(4096), maximumSharedBlockSize);
+            size_t minimumBlockSize = _settings.MinimumBlockSize != 0
+                                          ? _settings.MinimumBlockSize
+                                          : std::max(static_cast<size_t>(4096), maximumSharedBlockSize);
 
             size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
-                                                            ? _settings.MinimumAllocatedRegionMarginSize.value()
-                                                            : 0;
+                                                          ? _settings.MinimumAllocatedRegionMarginSize.value()
+                                                          : 0;
 
             size_t minimumFreeRegionSizeToRegister =
                 _settings.MinimumFreeRegionSizeToRegister != 0 ? _settings.MinimumFreeRegionSizeToRegister : 4096;
@@ -63,14 +65,40 @@ namespace NovelRT::Experimental::Graphics
             return _settings;
         }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
-            std::shared_ptr<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata> metadata,
-            GraphicsTextureKind textureKind,
+        [[nodiscard]] virtual std::shared_ptr<GraphicsBuffer> CreateBuffer(
+            GraphicsBufferKind bufferKind,
             GraphicsResourceCpuAccessKind cpuAccessKind,
             size_t size,
-            GraphicsMemoryRegionAllocationFlags allocationFlags = GraphicsMemoryRegionAllocationFlags::None) = 0;
+            GraphicsMemoryRegionAllocationFlags allocationFlags) = 0;
 
-        [[nodiscard]] virtual GraphicsMemoryBudget GetBudget(std::shared_ptr<GraphicsMemoryBlockCollection> blockCollection) = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBufferWithDefaultArguments(
+            GraphicsBufferKind bufferKind,
+            GraphicsResourceCpuAccessKind cpuAccessKind,
+            size_t size)
+        {
+            return CreateBuffer(bufferKind, cpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None);
+        }
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
+            GraphicsTextureKind textureKind,
+            GraphicsResourceCpuAccessKind cpuAccessKind,
+            uint32_t width,
+            uint32_t height,
+            uint32_t depth,
+            GraphicsMemoryRegionAllocationFlags allocationFlags,
+            TexelFormat texelFormat) = 0;
+
+        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureKind textureKind,
+            GraphicsResourceCpuAccessKind cpuAccessKind,
+            uint32_t width)
+        {
+            return CreateTexture(textureKind, cpuAccessKind, width, 1, 1, GraphicsMemoryRegionAllocationFlags::None,
+                                 TexelFormat::R8G8B8A8_UNORM);
+        }
+
+        [[nodiscard]] virtual GraphicsMemoryBudget GetBudget(
+            std::shared_ptr<GraphicsMemoryBlockCollection> blockCollection) = 0;
 
         // TODO: maybe this should be std::list instead?
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator
@@ -85,6 +113,21 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator cend()
             const noexcept = 0;
     };
+
+    template<typename TMetadata> class GraphicsMemoryAllocatorImpl : public GraphicsMemoryAllocator
+    {
+    public:
+        using Metadata = TMetadata;
+
+        GraphicsMemoryAllocatorImpl(std::shared_ptr<GraphicsDevice> device,
+                                    GraphicsMemoryAllocatorSettings settings) noexcept
+            : GraphicsMemoryAllocator(std::move(device), std::move(settings))
+        {
+            static_assert(
+                std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
+        }
+    };
+
 } // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICSMEMORYALLOCATOR_H

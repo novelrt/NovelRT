@@ -47,6 +47,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     template<typename TMetadata> class VulkanGraphicsMemoryBlockImpl final : public VulkanGraphicsMemoryBlock
     {
+    public:
+
     private:
         TMetadata _metadata;
 
@@ -75,7 +77,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _metadata.GetAllocatedRegionCount();
         }
 
-        [[nodiscard]] int32_t GetCount() const noexcept final
+        [[nodiscard]] int32_t GetCount() const noexcept
         {
             return _metadata.GetCount();
         }
@@ -98,6 +100,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
         {
             return _metadata.GetMinimumFreeRegionSizeToRegister();
+        }
+
+        [[nodiscard]] size_t GetSize() const noexcept final
+        {
+            return _metadata.GetSize();
         }
 
         [[nodiscard]] size_t GetTotalFreeRegionSize() const noexcept final
