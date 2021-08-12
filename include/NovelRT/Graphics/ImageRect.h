@@ -50,12 +50,12 @@ namespace NovelRT::Graphics
             return _texture;
         }
 
-        inline RGBAConfig colourTint() const
+        inline RGBAConfig colourTint() const noexcept
         {
             return _colourTint;
         }
 
-        inline RGBAConfig& colourTint()
+        inline RGBAConfig& colourTint() noexcept
         {
             _isDirty = true;
             return _colourTint;

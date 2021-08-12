@@ -21,7 +21,7 @@ extern "C"
         if (object == nullptr || outputNode == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto ptr = reinterpret_cast<Graphics::RenderObject*>(object);
@@ -33,10 +33,16 @@ extern "C"
 
     NrtResult Nrt_RenderObjectNode_getRenderObject(NrtRenderObjectNodeHandle node, NrtRenderObjectHandle* outputObject)
     {
-        if (node == nullptr || outputObject == nullptr)
+        if (node == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputObject == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         SceneGraph::RenderObjectNode* cppNode = reinterpret_cast<SceneGraph::RenderObjectNode*>(node);
@@ -50,7 +56,7 @@ extern "C"
         if (node == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto cppNode = reinterpret_cast<SceneGraph::RenderObjectNode*>(node)->getRenderObject();

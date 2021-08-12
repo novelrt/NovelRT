@@ -34,28 +34,25 @@ protected:
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(int32_t), &intDeleteState,
-            [](auto lhs, auto rhs, auto) {
-                auto intLhs =
-                    reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
-                auto intRhs =
-                    reinterpret_cast<int32_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+            [](auto lhs, auto rhs, auto, auto) {
+                auto intLhs = reinterpret_cast<int32_t*>(lhs);
+                auto intRhs = reinterpret_cast<const int32_t*>(rhs);
                 *intLhs += *intRhs;
             },
-            &intComponentTypeId);
+            nullptr, &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(size_t), &sizeTDeleteState,
-            [](auto lhs, auto rhs, auto) {
-                auto sizeTLhs =
-                    reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(lhs));
-                auto sizeTRhs =
-                    reinterpret_cast<size_t*>(Nrt_SparseSetMemoryContainer_ByteIteratorView_GetDataHandle(rhs));
+            [](auto lhs, auto rhs, auto, auto) {
+                auto sizeTLhs = reinterpret_cast<size_t*>(lhs);
+                auto sizeTRhs = reinterpret_cast<const size_t*>(rhs);
                 *sizeTLhs += *sizeTRhs;
             },
-            &sizeTComponentTypeId);
+            nullptr, &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto) {}, &charComponentTypeId);
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, nullptr,
+            &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);
@@ -180,4 +177,11 @@ TEST_F(InteropCatalogueTest, CanHandleEntityDeletionInSameFrame)
     Nrt_UnsafeComponentView_Destroy(compViewInt);
     Nrt_UnsafeComponentView_Destroy(compViewChar);
     Nrt_UnsafeComponentView_Destroy(compViewSizeT);
+}
+
+TEST_F(InteropCatalogueTest, GetComponentViewByIdReturnsOutOfRangeFailureWhenOutOfRange)
+{
+    NrtUnsafeComponentViewHandle handleResult = nullptr;
+    auto result = Nrt_Catalogue_GetComponentViewById(catalogue, 5000, &handleResult);
+    ASSERT_EQ(result, NRT_FAILURE_ARGUMENT_OUT_OF_RANGE);
 }

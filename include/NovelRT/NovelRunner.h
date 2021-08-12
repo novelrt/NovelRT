@@ -58,17 +58,17 @@ namespace NovelRT
         int32_t runNovel();
 
         /// @brief Gets the Rendering Service associated with this Runner.
-        std::shared_ptr<Graphics::RenderingService> getRenderer() const;
+        std::shared_ptr<Graphics::RenderingService> getRenderer() const noexcept;
         /// @brief Gets the Interaction Service associated with this Runner
-        std::shared_ptr<Input::InteractionService> getInteractionService() const;
+        std::shared_ptr<Input::InteractionService> getInteractionService() const noexcept;
         /// @brief Gets the Debug Service associated with this Runner.
-        std::shared_ptr<DebugService> getDebugService() const;
+        std::shared_ptr<DebugService> getDebugService() const noexcept;
         /// @brief Gets the Audio Service associated with this Runner.
-        std::shared_ptr<Audio::AudioService> getAudioService() const;
+        std::shared_ptr<Audio::AudioService> getAudioService() const noexcept;
         /// @brief Gets the .NET Runtime Service associated with this Runner.
-        std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const;
+        std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const noexcept;
         /// @brief Gets the Windowing Service associated with this Runner.
-        std::shared_ptr<Windowing::WindowingService> getWindowingService() const;
+        std::shared_ptr<Windowing::WindowingService> getWindowingService() const noexcept;
 
         /**
          * @brief Terminates the game.

@@ -25,11 +25,9 @@ extern "C"
     typedef struct NrtSystemScheduler* NrtSystemSchedulerHandle;
     typedef struct NrtUnsafeComponentView* NrtUnsafeComponentViewHandle;
 
-    typedef void (*NrtComponentUpdateFnPtr)(NrtSparseSetMemoryContainer_ByteIteratorViewHandle,
-                                            NrtSparseSetMemoryContainer_ByteIteratorViewHandle,
-                                            size_t);
+    typedef void (*NrtComponentUpdateFnPtr)(void*, const void*, size_t, void*);
 
-    typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle);
+    typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle, void*);
 
     typedef NrtAtom NrtEntityId;
     typedef NrtAtom NrtComponentTypeId;

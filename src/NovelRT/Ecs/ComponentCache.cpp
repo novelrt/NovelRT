@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/ComponentCache.h>
+#include <NovelRT/Ecs/Ecs.h>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -17,9 +17,7 @@ namespace NovelRT::Ecs
     std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(
         size_t sizeOfDataType,
         const void* deleteInstructionState,
-        const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                                 SparseSetMemoryContainer::ByteIteratorView,
-                                 size_t)>& componentUpdateLogic) const
+        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic) const
     {
         return std::make_shared<ComponentBufferMemoryContainer>(_poolSize, deleteInstructionState, sizeOfDataType,
                                                                 componentUpdateLogic);
@@ -28,9 +26,7 @@ namespace NovelRT::Ecs
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
         const void* deleteInstructionState,
-        const std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                                 SparseSetMemoryContainer::ByteIteratorView,
-                                 size_t)>& componentUpdateLogic)
+        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic)
     {
         ComponentTypeId returnId = Atom::getNextComponentTypeId();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr =

@@ -169,7 +169,7 @@ namespace NovelRT::DotNet
         _exports.getActual().Initialise();
     }
 
-    void RuntimeService::tearDown()
+    void RuntimeService::tearDown() noexcept
     {
         if (_exports.isCreated())
         {

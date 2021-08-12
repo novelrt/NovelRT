@@ -42,7 +42,7 @@ namespace NovelRT::Graphics
         glBindVertexArray(0);
     }
 
-    RGBAConfig BasicFillRect::getColourConfig() const
+    RGBAConfig BasicFillRect::getColourConfig() const noexcept
     {
         return _colourConfig;
     }

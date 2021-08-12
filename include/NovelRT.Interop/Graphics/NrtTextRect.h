@@ -12,7 +12,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_TextRect_getTransform(NrtTextRectHandle rect, NrtTransform* outputTransform);
+    NrtTransform Nrt_TextRect_getTransform(NrtTextRectHandle rect);
     NrtResult Nrt_TextRect_setTransform(NrtTextRectHandle rect, NrtTransform inputTransform);
     int32_t Nrt_TextRect_getLayer(NrtTextRectHandle rect);
     NrtResult Nrt_TextRect_setLayer(NrtTextRectHandle rect, int32_t inputLayer);
@@ -27,6 +27,7 @@ extern "C"
     NrtResult Nrt_TextRect_setFontSet(NrtTextRectHandle rect, NrtFontSetHandle inputFontSet);
 
     NrtResult Nrt_TextRect_getAsRenderObjectPtr(NrtTextRectHandle rect, NrtRenderObjectHandle* outputRenderObject);
+    NrtResult Nrt_TextRect_destroy(NrtTextRectHandle rect);
 
 #ifdef __cplusplus
 }

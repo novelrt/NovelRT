@@ -9,11 +9,11 @@
 
 using namespace NovelRT;
 
-int32_t (*_depthFunction)(NrtSceneNodeHandle) = NULL;
-
-int32_t Internal_DepthFirstIteratorFunctionDelegate(const std::shared_ptr<SceneGraph::SceneNode>& node)
+int32_t Internal_DepthFirstIteratorFunctionDelegate(int32_t (*action)(NrtSceneNodeHandle, void*),
+                                                    void* context,
+                                                    const std::shared_ptr<SceneGraph::SceneNode>& node)
 {
-    return _depthFunction(reinterpret_cast<NrtSceneNodeHandle>(node.get()));
+    return action(reinterpret_cast<NrtSceneNodeHandle>(node.get()), context);
 }
 
 #ifdef __cplusplus
@@ -22,21 +22,21 @@ extern "C"
 #endif
 
     NrtResult Nrt_SceneNodeDepthFirstIterator_create(NrtSceneNodeHandle node,
-                                                     int32_t (*func)(NrtSceneNodeHandle),
+                                                     int32_t (*action)(NrtSceneNodeHandle, void* context),
+                                                     void* context,
                                                      NrtSceneNodeDepthFirstIteratorHandle* outputIterator)
     {
-        if (node == nullptr || func == nullptr)
+        if (node == nullptr || action == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
 
-        _depthFunction = func;
+        auto func = std::bind(Internal_DepthFirstIteratorFunctionDelegate, action, context, std::placeholders::_1);
         SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t> iterator =
-            SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(
-                nodePointer, Internal_DepthFirstIteratorFunctionDelegate);
+            SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>(nodePointer, func);
         *outputIterator = reinterpret_cast<NrtSceneNodeDepthFirstIteratorHandle>(&iterator);
 
         return NRT_SUCCESS;
@@ -47,7 +47,7 @@ extern "C"
         if (iterator == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto cppIterator =
@@ -61,7 +61,7 @@ extern "C"
         if (iterator == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto cppIterator =

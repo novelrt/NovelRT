@@ -20,7 +20,7 @@ namespace NovelRT::Timing
         {
         }
 
-        inline double getSecondsDouble() const
+        inline double getSecondsDouble() const noexcept
         {
             auto returnVal = static_cast<double>(ticks) / TicksPerSecond;
             assert((returnVal != 0.0 || ticks == 0) &&
@@ -28,7 +28,7 @@ namespace NovelRT::Timing
             return returnVal;
         }
 
-        inline float getSecondsFloat() const
+        inline float getSecondsFloat() const noexcept
         {
             auto returnVal = static_cast<float>(getSecondsDouble());
             assert((returnVal != 0.0f || ticks == 0) &&
@@ -36,86 +36,86 @@ namespace NovelRT::Timing
             return returnVal;
         }
 
-        inline static const Timestamp zero()
+        inline static const Timestamp zero() noexcept
         {
             return Timestamp(0ULL);
         }
 
-        inline static const Timestamp fromSeconds(double seconds)
+        inline static const Timestamp fromSeconds(double seconds) noexcept
         {
             return Timestamp(static_cast<uint64_t>(seconds * TicksPerSecond));
         }
 
-        inline Timestamp operator+(const Timestamp& other) const
+        inline Timestamp operator+(const Timestamp& other) const noexcept
         {
             return Timestamp(ticks + other.ticks);
         }
 
-        inline Timestamp operator-(const Timestamp& other) const
+        inline Timestamp operator-(const Timestamp& other) const noexcept
         {
             return Timestamp(ticks - other.ticks);
         }
 
-        inline Timestamp operator*(const Timestamp& other) const
+        inline Timestamp operator*(const Timestamp& other) const noexcept
         {
             return Timestamp(ticks * other.ticks);
         }
 
-        inline Timestamp operator/(const Timestamp& other) const
+        inline Timestamp operator/(const Timestamp& other) const noexcept
         {
             return Timestamp(ticks / other.ticks);
         }
 
-        inline Timestamp& operator+=(const Timestamp& other)
+        inline Timestamp& operator+=(const Timestamp& other) noexcept
         {
             ticks += other.ticks;
             return *this;
         }
 
-        inline Timestamp operator-=(const Timestamp& other)
+        inline Timestamp operator-=(const Timestamp& other) noexcept
         {
             ticks -= other.ticks;
             return *this;
         }
 
-        inline Timestamp operator*=(const Timestamp& other)
+        inline Timestamp operator*=(const Timestamp& other) noexcept
         {
             ticks *= other.ticks;
             return *this;
         }
 
-        inline Timestamp operator/=(const Timestamp& other)
+        inline Timestamp operator/=(const Timestamp& other) noexcept
         {
             ticks /= other.ticks;
             return *this;
         }
 
-        inline bool operator<(const Timestamp& other) const
+        inline bool operator<(const Timestamp& other) const noexcept
         {
             return ticks < other.ticks;
         }
 
-        inline bool operator>(const Timestamp& other) const
+        inline bool operator>(const Timestamp& other) const noexcept
         {
             return ticks > other.ticks;
         }
 
-        inline bool operator<=(const Timestamp& other) const
+        inline bool operator<=(const Timestamp& other) const noexcept
         {
             return ticks <= other.ticks;
         }
 
-        inline bool operator>=(const Timestamp& other) const
+        inline bool operator>=(const Timestamp& other) const noexcept
         {
             return ticks >= other.ticks;
         }
 
-        inline bool operator==(const Timestamp& other) const
+        inline bool operator==(const Timestamp& other) const noexcept
         {
             return ticks == other.ticks;
         }
 
-        inline bool operator!=(const Timestamp& other) const
+        inline bool operator!=(const Timestamp& other) const noexcept
         {
             return ticks != other.ticks;
         }

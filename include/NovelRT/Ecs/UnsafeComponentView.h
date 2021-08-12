@@ -4,8 +4,9 @@
 #ifndef NOVELRT_UNSAFECOMPONENTVIEW_H
 #define NOVELRT_UNSAFECOMPONENTVIEW_H
 
-#include "ComponentBufferMemoryContainer.h"
-#include <memory>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

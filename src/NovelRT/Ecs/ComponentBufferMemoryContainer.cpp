@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
+#include <NovelRT/Ecs/Ecs.h>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -10,12 +10,10 @@ namespace NovelRT::Ecs
         size_t poolSize,
         const void* deleteInstructionState,
         size_t sizeOfDataTypeInBytes,
-        std::function<void(SparseSetMemoryContainer::ByteIteratorView,
-                           SparseSetMemoryContainer::ByteIteratorView,
-                           size_t)> componentUpdateLogic) noexcept
+        std::function<void(void*, const void*, size_t)> componentUpdateLogic) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
-          _deleteInstructionState(std::vector<std::byte>(sizeOfDataTypeInBytes)),
+          _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
           _componentUpdateLogic(std::move(componentUpdateLogic))
     {
@@ -42,7 +40,8 @@ namespace NovelRT::Ecs
                 }
                 else
                 {
-                    _componentUpdateLogic(_rootSet[entity], component, _sizeOfDataTypeInBytes);
+                    _componentUpdateLogic(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
+                                          _sizeOfDataTypeInBytes);
                 }
             }
             updateSet.Clear();
@@ -65,7 +64,11 @@ namespace NovelRT::Ecs
                                                                         EntityId entity,
                                                                         const void* componentData)
     {
-        _updateSets.at(poolId).Insert(entity, componentData);
+        auto& set = _updateSets.at(poolId);
+        if (!set.TryInsert(entity, componentData))
+        {
+            _componentUpdateLogic(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
+        }
     }
 
     ComponentBufferMemoryContainer::ImmutableDataView ComponentBufferMemoryContainer::GetComponent(

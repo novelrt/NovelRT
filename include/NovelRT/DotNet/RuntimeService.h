@@ -37,7 +37,7 @@ namespace NovelRT::DotNet
         ~RuntimeService();
 
         void initialise();
-        void tearDown();
+        void tearDown() noexcept;
 
         void freeObject(intptr_t obj);
         void freeString(const char* str);

@@ -4,9 +4,9 @@
 #ifndef NOVELRT_ECS_COMPONENTBUFFER_H
 #define NOVELRT_ECS_COMPONENTBUFFER_H
 
-#include "ComponentBufferMemoryContainer.h"
-#include "EcsUtils.h"
-#include "SparseSet.h"
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {
@@ -46,8 +46,7 @@ namespace NovelRT::Ecs
                   &deleteInstructionState,
                   sizeof(T),
                   [](auto rootComponent, auto updateComponent, auto) {
-                      *reinterpret_cast<T*>(rootComponent.GetDataHandle()) +=
-                          *reinterpret_cast<T*>(updateComponent.GetDataHandle());
+                      *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
                   }))
         {
             static_assert(std::is_trivially_copyable<T>::value,

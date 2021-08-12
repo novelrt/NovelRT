@@ -14,7 +14,8 @@ extern "C"
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
-                                                                                      NrtComponentUpdateFnPtr fnPtr);
+                                                                                      NrtComponentUpdateFnPtr fnPtr,
+                                                                                      void* context);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
                                                                   NrtEntityIdVectorHandle entitiesToDelete);

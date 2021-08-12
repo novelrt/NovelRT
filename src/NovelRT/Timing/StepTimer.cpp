@@ -8,7 +8,7 @@
 
 namespace NovelRT::Timing
 {
-    StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta)
+    StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) noexcept
         : _frequency(glfwGetTimerFrequency()),
           _maxCounterDelta(static_cast<uint64_t>(_frequency * maxSecondDelta)),
           _lastCounter(glfwGetTimerValue()),
@@ -25,7 +25,7 @@ namespace NovelRT::Timing
     {
     }
 
-    void StepTimer::resetElapsedTime()
+    void StepTimer::resetElapsedTime() noexcept
     {
         _lastCounter = glfwGetTimerValue();
         _secondCounter = 0;

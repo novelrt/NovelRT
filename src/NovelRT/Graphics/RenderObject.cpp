@@ -75,14 +75,14 @@ namespace NovelRT::Graphics
         glDeleteVertexArrays(1, &vao);
     }
 
-    GLuint RenderObject::generateStandardBuffer()
+    GLuint RenderObject::generateStandardBuffer() noexcept
     {
         GLuint tempBuffer;
         glGenBuffers(1, &tempBuffer);
         return tempBuffer;
     }
 
-    Maths::GeoMatrix4x4F RenderObject::generateViewData()
+    Maths::GeoMatrix4x4F RenderObject::generateViewData() noexcept
     {
         auto position = *reinterpret_cast<glm::vec2*>(&(transform().position));
         auto defaultIdentity = Maths::GeoMatrix4x4F::getDefaultIdentity();

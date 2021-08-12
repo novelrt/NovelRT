@@ -12,7 +12,7 @@ extern "C"
 #endif
 
     // base type
-    NrtResult Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect, NrtTransform* outputTransform);
+    NrtTransform Nrt_BasicFillRect_getTransform(NrtBasicFillRectHandle rect);
     NrtResult Nrt_BasicFillRect_setTransform(NrtBasicFillRectHandle rect, NrtTransform inputTransform);
     int32_t Nrt_BasicFillRect_getLayer(NrtBasicFillRectHandle rect);
     NrtResult Nrt_BasicFillRect_setLayer(NrtBasicFillRectHandle rect, int32_t inputLayer);
@@ -26,6 +26,7 @@ extern "C"
 
     NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect,
                                                      NrtRenderObjectHandle* outputRenderObject);
+    NrtResult Nrt_BasicFillRect_destroy(NrtBasicFillRectHandle rect);
 
 #ifdef __cplusplus
 }

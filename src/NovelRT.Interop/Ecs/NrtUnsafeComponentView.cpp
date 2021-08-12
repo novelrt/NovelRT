@@ -2,17 +2,14 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/UnsafeComponentView.h>
-#include <NovelRT/Exceptions/Exceptions.h>
-
+#include <NovelRT/Ecs/Ecs.h>
 #include <vector>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTVectorComponentView;
-std::vector<std::byte> dummyByteVectorComponentView;
+std::vector<uint8_t> dummyByteVectorComponentView;
 
 extern "C"
 {
@@ -27,9 +24,14 @@ extern "C"
                                                                      NrtEntityId entity,
                                                                      void* instructionData)
     {
-        if (componentView == nullptr || instructionData == nullptr)
+        if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (instructionData == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -56,7 +58,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         try
@@ -83,9 +85,14 @@ extern "C"
         NrtEntityId entity,
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
-        if (componentView == nullptr || outputResult == nullptr)
+        if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -142,7 +149,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<UnsafeComponentView*>(componentView);

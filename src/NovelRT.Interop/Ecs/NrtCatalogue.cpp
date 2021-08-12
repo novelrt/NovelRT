@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtCatalogue.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/Catalogue.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
 
@@ -22,15 +21,28 @@ extern "C"
                                                  NrtComponentTypeId componentId,
                                                  NrtUnsafeComponentViewHandle* outputResult)
     {
-        if (catalogue == nullptr || outputResult == nullptr)
+        if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+        }
+
         auto returnPtr = new UnsafeComponentView(0, nullptr);
-        *returnPtr = actualCatalogue->GetComponentViewById(componentId);
-        *outputResult = reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
+        try
+        {
+            auto actualCatalogue = reinterpret_cast<Catalogue*>(catalogue);
+            *returnPtr = actualCatalogue->GetComponentViewById(componentId);
+            *outputResult = reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
+        }
+        catch (const std::out_of_range&)
+        {
+            delete returnPtr;
+            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+        }
 
         return NRT_SUCCESS;
     }
@@ -54,7 +66,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         reinterpret_cast<Catalogue*>(catalogue)->DeleteEntity(entity);
@@ -66,7 +78,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<Catalogue*>(catalogue);

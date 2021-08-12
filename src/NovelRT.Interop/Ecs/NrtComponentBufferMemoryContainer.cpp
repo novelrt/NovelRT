@@ -2,9 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 #include <vector>
 
@@ -12,20 +10,17 @@ using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
 
 std::vector<size_t> dummySizeTCollection{};
-std::vector<std::byte> dummyByteCollection{};
+std::vector<uint8_t> dummyByteCollection{};
 
 extern "C"
 {
     NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
-                                                                                      NrtComponentUpdateFnPtr fnPtr)
+                                                                                      NrtComponentUpdateFnPtr fnPtr,
+                                                                                      void* context)
     {
-        auto func = [=](SparseSetMemoryContainer::ByteIteratorView lhs, SparseSetMemoryContainer::ByteIteratorView rhs,
-                        size_t size) {
-            fnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
-                  reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs), size);
-        };
+        auto func = [=](void* lhs, const void* rhs, size_t size) { fnPtr(lhs, rhs, size, context); };
 
         return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
             new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func));
@@ -54,9 +49,14 @@ extern "C"
         NrtEntityId entity,
         const void* componentData)
     {
-        if (container == nullptr || componentData == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (componentData == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -80,9 +80,14 @@ extern "C"
         NrtEntityId entity,
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle* outputResult)
     {
-        if (container == nullptr || outputResult == nullptr)
+        if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputResult == nullptr)
+        {
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         try
@@ -145,7 +150,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer*>(container);
@@ -164,7 +169,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view);

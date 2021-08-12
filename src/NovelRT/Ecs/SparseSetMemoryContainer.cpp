@@ -1,16 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/SparseSetMemoryContainer.h>
-#include <NovelRT/Exceptions/DuplicateKeyException.h>
-#include <NovelRT/Exceptions/KeyNotFoundException.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 namespace NovelRT::Ecs
 {
     SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept
         : _dense(std::vector<size_t>{}),
           _sparse(std::vector<size_t>{}),
-          _data(std::vector<std::byte>{}),
+          _data(std::vector<uint8_t>{}),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
@@ -20,7 +18,7 @@ namespace NovelRT::Ecs
         return _sizeOfDataTypeInBytes * denseIndex;
     }
 
-    std::byte* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
+    uint8_t* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
     {
         return _data.data() + (location * _sizeOfDataTypeInBytes);
     }

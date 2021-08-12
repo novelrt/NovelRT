@@ -42,7 +42,7 @@ extern "C"
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -55,7 +55,7 @@ extern "C"
         if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -66,10 +66,16 @@ extern "C"
 
     NrtResult Nrt_NovelRunner_getAudioService(NrtNovelRunnerHandle runner, NrtAudioServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -78,7 +84,7 @@ extern "C"
         auto ptr = _audioCollection.back().get();
         if (ptr == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         *outputService = reinterpret_cast<NrtAudioServiceHandle>(ptr);
@@ -89,10 +95,16 @@ extern "C"
     NrtResult Nrt_NovelRunner_getInteractionService(NrtNovelRunnerHandle runner,
                                                     NrtInteractionServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -102,7 +114,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtInteractionServiceHandle>(ptr);
 
@@ -111,10 +123,16 @@ extern "C"
 
     NrtResult Nrt_NovelRunner_getWindowingService(NrtNovelRunnerHandle runner, NrtWindowingServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -124,7 +142,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtWindowingServiceHandle>(ptr);
 
@@ -133,10 +151,16 @@ extern "C"
 
     NrtResult Nrt_NovelRunner_getRuntimeService(NrtNovelRunnerHandle runner, NrtRuntimeServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -146,7 +170,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtRuntimeServiceHandle>(ptr);
 
@@ -155,10 +179,16 @@ extern "C"
 
     NrtResult Nrt_NovelRunner_getRenderer(NrtNovelRunnerHandle runner, NrtRenderingServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -168,7 +198,7 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtRenderingServiceHandle>(ptr);
 
@@ -177,10 +207,16 @@ extern "C"
 
     NrtResult Nrt_NovelRunner_getDebugService(NrtNovelRunnerHandle runner, NrtDebugServiceHandle* outputService)
     {
-        if (runner == nullptr || outputService == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputService == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -190,49 +226,119 @@ extern "C"
         if (ptr == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         *outputService = reinterpret_cast<NrtDebugServiceHandle>(ptr);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addUpdate(NrtNovelRunnerHandle runner, void (*func)(NrtTimestamp))
+    NrtResult Nrt_NovelRunner_SubscribeToUpdate(NrtNovelRunnerHandle runner,
+                                                void (*func)(NrtTimestamp, void*),
+                                                void* context,
+                                                NrtAtom* eventHandlerId)
     {
-        if (runner == nullptr || func == nullptr)
+        using namespace NovelRT::Utilities;
+
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (func == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->Update += [func](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta)); };
+        auto eventHandler = EventHandler<Timing::Timestamp>(
+            [func, context](Timing::Timestamp delta) { func(reinterpret_cast<NrtTimestamp&>(delta), context); });
+        if (eventHandlerId != nullptr)
+        {
+            *eventHandlerId = eventHandler.getId();
+        }
+        cRunner->Update += eventHandler;
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_NovelRunner_addSceneConstructionRequested(NrtNovelRunnerHandle runner, void (*func)())
+    NrtResult Nrt_NovelRunner_UnsubscribeFromUpdate(NrtNovelRunnerHandle runner, NrtAtom eventHandlerId)
     {
-        if (runner == nullptr || func == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
-        cRunner->SceneConstructionRequested += [func]() { func(); };
+        cRunner->Update -= Atom(eventHandlerId);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_NovelRunner_SubscribeToSceneConstructionRequested(NrtNovelRunnerHandle runner,
+                                                                    void (*func)(void*),
+                                                                    void* context,
+                                                                    NrtAtom* eventHandlerId)
+    {
+        using namespace NovelRT::Utilities;
+
+        if (runner == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (func == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+        }
+
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+        auto eventHandler = EventHandler<>([func, context]() { func(context); });
+        if (eventHandlerId != nullptr)
+        {
+            *eventHandlerId = eventHandler.getId();
+        }
+        cRunner->SceneConstructionRequested += eventHandler;
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_NovelRunner_UnsubscribeFromSceneConstructionRequested(NrtNovelRunnerHandle runner,
+                                                                        NrtAtom eventHandlerId)
+    {
+        if (runner == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
+
+        cRunner->SceneConstructionRequested -= Atom(eventHandlerId);
+
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_NovelRunner_getUpdateEvent(NrtNovelRunnerHandle runner,
                                              NrtUtilitiesEventWithTimestampHandle* outputEvent)
     {
-        if (runner == nullptr || outputEvent == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputEvent == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -243,10 +349,16 @@ extern "C"
     NrtResult Nrt_NovelRunner_getSceneConstructionEvent(NrtNovelRunnerHandle runner,
                                                         NrtUtilitiesEventHandle* outputEvent)
     {
-        if (runner == nullptr || outputEvent == nullptr)
+        if (runner == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputEvent == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);

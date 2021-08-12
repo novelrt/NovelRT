@@ -18,7 +18,7 @@ namespace NovelRT::Input
         KeyState _currentState = KeyState::Idle;
         uint32_t _changeCount = 0;
 
-        inline void pushNewState(KeyState newState)
+        inline void pushNewState(KeyState newState) noexcept
         {
             if (_currentState == newState)
             {
@@ -30,23 +30,23 @@ namespace NovelRT::Input
         }
 
     public:
-        inline KeyState getCurrentState() const
+        inline KeyState getCurrentState() const noexcept
         {
             return _currentState;
         }
 
-        inline uint32_t getChangeCount() const
+        inline uint32_t getChangeCount() const noexcept
         {
             return _changeCount;
         }
     };
 
-    inline bool operator==(const KeyStateFrameChangeLog& lhs, const KeyState& rhs)
+    inline bool operator==(const KeyStateFrameChangeLog& lhs, const KeyState& rhs) noexcept
     {
         return lhs.getCurrentState() == rhs;
     }
 
-    inline bool operator==(const KeyState& lhs, const KeyStateFrameChangeLog& rhs)
+    inline bool operator==(const KeyState& lhs, const KeyStateFrameChangeLog& rhs) noexcept
     {
         return rhs == lhs;
     }

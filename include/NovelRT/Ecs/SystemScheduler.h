@@ -4,18 +4,9 @@
 #ifndef NOVELRT_ECS_SYSTEMSCHEDULER_H
 #define NOVELRT_ECS_SYSTEMSCHEDULER_H
 
-#include "../Timing/Timestamp.h"
-#include "Catalogue.h"
-#include "ComponentCache.h"
-#include "EcsUtils.h"
-#include "EntityCache.h"
-#include <atomic>
-#include <functional>
-#include <memory>
-#include <mutex>
-#include <thread>
-#include <unordered_map>
-#include <vector>
+#ifndef NOVELRT_ECS_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
+#endif
 
 namespace NovelRT::Ecs
 {

@@ -14,19 +14,11 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_TextRect_getTransform(NrtTextRectHandle rect, NrtTransform* outputTransform)
+    NrtTransform Nrt_TextRect_getTransform(NrtTextRectHandle rect)
     {
-        if (rect == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
-        }
-
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
         Transform cppTransform = textRectPtr->transform();
-        *outputTransform = *reinterpret_cast<NrtTransform*>(&cppTransform);
-
-        return NRT_SUCCESS;
+        return *reinterpret_cast<NrtTransform*>(&cppTransform);
     }
 
     NrtResult Nrt_TextRect_setTransform(NrtTextRectHandle rect, NrtTransform inputTransform)
@@ -34,7 +26,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -54,7 +46,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -79,7 +71,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -101,7 +93,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -116,12 +108,19 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputColourConfig == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-        auto colourConfig = textRectPtr->getColourConfig();
-        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(&colourConfig);
+        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        *colourConfig = textRectPtr->getColourConfig();
+        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
 
         return NRT_SUCCESS;
     }
@@ -131,7 +130,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -152,7 +151,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -174,7 +173,13 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        if (outputFontSet == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -189,7 +194,7 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
@@ -203,10 +208,23 @@ extern "C"
         if (rect == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
         *outputRenderObject = reinterpret_cast<NrtRenderObjectHandle>(rect);
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_TextRect_destroy(NrtTextRectHandle rect)
+    {
+        if (rect == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        delete reinterpret_cast<TextRect*>(rect);
 
         return NRT_SUCCESS;
     }

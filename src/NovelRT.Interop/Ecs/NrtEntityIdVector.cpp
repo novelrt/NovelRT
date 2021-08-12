@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Ecs/EcsUtils.h>
+#include <NovelRT/Ecs/Ecs.h>
 
 #include <algorithm>
 #include <vector>
@@ -21,7 +20,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         reinterpret_cast<std::vector<EntityId>*>(vector)->emplace_back(entity);
@@ -33,7 +32,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         auto vecPtr = reinterpret_cast<std::vector<EntityId>*>(vector);
@@ -53,7 +52,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            return NRT_FAILURE_NULLPTR_PROVIDED;
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<std::vector<EntityId>*>(vector);

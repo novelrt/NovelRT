@@ -17,6 +17,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             void* context,
                                                              NrtComponentTypeId* outputResult);
 
     NrtResult Nrt_ComponentCache_GetComponentBufferById(NrtComponentCacheHandle componentCache,
