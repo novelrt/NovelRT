@@ -64,12 +64,6 @@ endif()
 
 add_subdirectory(src)
 
-if(NOVELRT_INCLUDE_INK)
-  message("Compiling with Ink support.")
-else()
-  message("Compiling without Ink support.")
-endif()
-
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()

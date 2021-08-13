@@ -151,6 +151,7 @@ int main(int /*argc*/, char* /*argv*/[])
     playAudioButtonTwoElectricBoogaloo =
         runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
+#ifdef NOVELRT_INK
     auto inkButtonTransform = NovelRT::Transform(
         NovelRT::Maths::GeoVector2F(novelChanTransform.position.x - 500, novelChanTransform.position.y - 200), 0,
         NovelRT::Maths::GeoVector2F(200, 200));
@@ -166,6 +167,7 @@ int main(int /*argc*/, char* /*argv*/[])
     inkText->setText("Ink!");
     inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);
     inkInteractionRect->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+#endif
 
     runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -231,12 +233,16 @@ int main(int /*argc*/, char* /*argv*/[])
         playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
         playAudioText->executeObjectBehaviour();
 
+#ifdef NOVELRT_INK
         inkButton->executeObjectBehaviour();
         inkText->executeObjectBehaviour();
+#endif
 
         memeInteractionRect->executeObjectBehaviour();
         interactionRect->executeObjectBehaviour();
+#ifdef NOVELRT_INK
         inkInteractionRect->executeObjectBehaviour();
+#endif
 
         novelChanRect->executeObjectBehaviour();
 
@@ -249,6 +255,7 @@ int main(int /*argc*/, char* /*argv*/[])
         lineRect->executeObjectBehaviour();
     };
 
+#ifdef NOVELRT_INK
     auto dotnetRuntimeService = runner.getDotNetRuntimeService();
     dotnetRuntimeService->initialise();
 
@@ -280,7 +287,7 @@ int main(int /*argc*/, char* /*argv*/[])
         console.logDebug(result);
         dotnetRuntimeService->freeString(result);
     };
-
+#endif
     audio->playMusic(bgm, -1);
     runner.runNovel();
 

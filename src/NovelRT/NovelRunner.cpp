@@ -3,10 +3,6 @@
 
 #include <NovelRT.h>
 
-#if !defined(NOVELRT_INK)
-#pragma message("Ink not being compiled with NovelRT.")
-#endif
-
 namespace NovelRT
 {
     NovelRunner::NovelRunner(int32_t displayNumber,

@@ -69,8 +69,26 @@ set(SOURCES
   WorldObject.cpp
 )
 
+if(NOVELRT_INCLUDE_INK)
+  message("NovelRT is compiling with Ink / C# Support.")
+  set(SOURCES
+    DotNet/RuntimeService.cpp
+    Ink/InkService.cpp
+    Ink/Story.cpp
+    ${SOURCES}
+  )
+endif()
+
 add_library(Engine SHARED ${SOURCES})
-add_dependencies(Engine Dotnet)
+
+if(NOVELRT_INCLUDE_INK)
+  add_dependencies(Engine Dotnet)
+  target_compile_definitions(Engine PRIVATE NOVELRT_INK)
+  target_link_libraries(Engine PUBLIC
+    CoreCLR::nethost
+  )
+  find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
+endif()
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
 
@@ -138,20 +156,6 @@ target_link_libraries(Engine
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
 )
-
-if(NOVELRT_INCLUDE_INK)
-  find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
-  set(SOURCES
-    ${SOURCES}
-    DotNet/RuntimeService.cpp
-    Ink/InkService.cpp
-    Ink/Story.cpp
-  )
-  target_compile_definitions(Engine PRIVATE NOVELRT_INK)
-  target_link_libraries(Engine PUBLIC
-    CoreCLR::nethost
-  )
-endif()
 
 if(WIN32)
   target_link_libraries(Engine

@@ -56,6 +56,15 @@ set(SOURCES
   Windowing/NrtWindowingService.cpp
 )
 
+if(NOVELRT_INCLUDE_INK)
+  set(SOURCES
+    ${SOURCES}
+    DotNet/NrtRuntimeService.cpp
+    Ink/NrtInkService.cpp
+    Ink/NrtStory.cpp
+  )
+endif()
+
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
 
@@ -109,11 +118,5 @@ target_link_libraries(Interop
     Engine)
 
 if(NOVELRT_INCLUDE_INK)
-  set(SOURCES
-    ${SOURCES}
-    DotNet/NrtRuntimeService.cpp
-    Ink/NrtInkService.cpp
-    Ink/NrtStory.cpp
-  )
   target_compile_definitions(Interop PRIVATE NOVELRT_INK)
 endif()
