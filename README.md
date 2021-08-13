@@ -20,7 +20,6 @@ Currently, NovelRT supports the following in its base form:
 
 Current features in development include:
 - C++ HLAPI
-- Lua 5.3 LLAPI
 - CoreCLR hosting
 - Ink narrative scripting language support
 
@@ -43,7 +42,6 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - gtest/gmock 1.10.0
 - libpng 1.6.34
 - libsndfile 1.0.28
-- Lua 5.3
 - OpenAL 1.19.1
 - spdlog 1.4.2
 - Microsoft GSL 3.1.0
@@ -88,7 +86,7 @@ _Prerequisites:_
 - Windows 10 x64
 
 (32-bit installation _may_ be covered in the future.)
-  
+
 Please download [Python 3 (x64) from here](https://www.python.org/downloads/) or from the Microsoft Store. Once that is done,
 install conan and our configurations should you require them:
 ```
