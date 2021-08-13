@@ -24,9 +24,9 @@ extern "C"
                                                     NrtInteractionServiceHandle* outputService);
     NrtResult Nrt_NovelRunner_getWindowingService(NrtNovelRunnerHandle runner,
                                                   NrtWindowingServiceHandle* outputService);
-    #ifdef NOVELRT_INK
+#ifdef NOVELRT_INK
     NrtResult Nrt_NovelRunner_getRuntimeService(NrtNovelRunnerHandle runner, NrtRuntimeServiceHandle* outputService);
-    #endif
+#endif
     NrtResult Nrt_NovelRunner_getRenderer(NrtNovelRunnerHandle runner, NrtRenderingServiceHandle* outputService);
     NrtResult Nrt_NovelRunner_getDebugService(NrtNovelRunnerHandle runner, NrtDebugServiceHandle* outputService);
 

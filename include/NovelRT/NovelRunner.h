@@ -33,9 +33,9 @@ namespace NovelRT
         std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
         std::shared_ptr<Input::InteractionService> _novelInteractionService;
         std::shared_ptr<Audio::AudioService> _novelAudioService;
-        #ifdef NOVELRT_INK
+#ifdef NOVELRT_INK
         std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
-        #endif
+#endif
         std::shared_ptr<Graphics::RenderingService> _novelRenderer;
         std::shared_ptr<DebugService> _novelDebugService;
         LoggingService _loggingService;
@@ -67,10 +67,10 @@ namespace NovelRT
         std::shared_ptr<DebugService> getDebugService() const noexcept;
         /// @brief Gets the Audio Service associated with this Runner.
         std::shared_ptr<Audio::AudioService> getAudioService() const noexcept;
-        #ifdef NOVELRT_INK
+#ifdef NOVELRT_INK
         /// @brief Gets the .NET Runtime Service associated with this Runner.
         std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const noexcept;
-        #endif
+#endif
         /// @brief Gets the Windowing Service associated with this Runner.
         std::shared_ptr<Windowing::WindowingService> getWindowingService() const noexcept;
 

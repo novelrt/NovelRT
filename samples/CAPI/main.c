@@ -222,7 +222,7 @@ int main()
         return -1;
     }
 
-    #ifdef NOVELRT_INK
+#ifdef NOVELRT_INK
     // Getting & Initialising RuntimeService / InkService
     res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
     if (res != NRT_SUCCESS)
@@ -250,7 +250,7 @@ int main()
             }
         }
     }
-    #endif
+#endif
 
     // Changing Background Colour
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
