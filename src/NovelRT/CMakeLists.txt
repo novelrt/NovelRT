@@ -1,5 +1,4 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
-find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
@@ -29,8 +28,6 @@ set(SOURCES
 
   DebugService.cpp
 
-  DotNet/RuntimeService.cpp
-
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
@@ -49,9 +46,6 @@ set(SOURCES
   Graphics/RGBAConfig.cpp
   Graphics/TextRect.cpp
   Graphics/Texture.cpp
-
-  Ink/InkService.cpp
-  Ink/Story.cpp
 
   Input/BasicInteractionRect.cpp
   Input/InteractionObject.cpp
@@ -130,7 +124,6 @@ endif()
 target_link_libraries(Engine
   PUBLIC
     BZip2::BZip2
-    CoreCLR::nethost
     FLAC::FLAC
     Freetype::Freetype
     glad::glad
@@ -145,6 +138,20 @@ target_link_libraries(Engine
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
 )
+
+if(NOVELRT_INCLUDE_INK)
+  find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
+  set(SOURCES
+    ${SOURCES}
+    DotNet/RuntimeService.cpp
+    Ink/InkService.cpp
+    Ink/Story.cpp
+  )
+  target_compile_definitions(Engine PRIVATE NOVELRT_INK)
+  target_link_libraries(Engine PUBLIC
+    CoreCLR::nethost
+  )
+endif()
 
 if(WIN32)
   target_link_libraries(Engine

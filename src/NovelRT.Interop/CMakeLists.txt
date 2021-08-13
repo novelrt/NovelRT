@@ -10,8 +10,6 @@ set(SOURCES
 
   Audio/NrtAudioService.cpp
 
-  DotNet/NrtRuntimeService.cpp
-
   Ecs/NrtCatalogue.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
   Ecs/NrtComponentCache.cpp
@@ -29,9 +27,6 @@ set(SOURCES
   Graphics/NrtRGBAConfig.cpp
   Graphics/NrtTextRect.cpp
   Graphics/NrtTexture.cpp
-
-  Ink/NrtInkService.cpp
-  Ink/NrtStory.cpp
 
   Input/NrtBasicInteractionRect.cpp
   Input/NrtInteractionService.cpp
@@ -112,3 +107,13 @@ endif()
 target_link_libraries(Interop
   PUBLIC
     Engine)
+
+if(NOVELRT_INCLUDE_INK)
+  set(SOURCES
+    ${SOURCES}
+    DotNet/NrtRuntimeService.cpp
+    Ink/NrtInkService.cpp
+    Ink/NrtStory.cpp
+  )
+  target_compile_definitions(Interop PRIVATE NOVELRT_INK)
+endif()

@@ -29,6 +29,7 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_INCLUDE_CONAN_PATHS "Include conan_paths toolchain" ON)
+option(NOVELRT_INCLUDE_INK "Include Ink functionality in the build" ON)
 
 set(NOVELRT_BZIP2_VERSION "1.0.8" CACHE STRING "BZip2 version")
 set(NOVELRT_DOTNET_VERSION "5.0.100" CACHE STRING "Dotnet version")
@@ -62,6 +63,12 @@ if(NOT DOXYGEN_FOUND)
 endif()
 
 add_subdirectory(src)
+
+if(NOVELRT_INCLUDE_INK)
+  message("Compiling with Ink support.")
+else()
+  message("Compiling without Ink support.")
+endif()
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
