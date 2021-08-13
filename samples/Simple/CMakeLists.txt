@@ -9,7 +9,6 @@ add_dependencies(Simple Dotnet Resources)
 target_link_libraries(Simple
   PRIVATE
     Engine
-    lua::lua
 )
 
 add_custom_command(
