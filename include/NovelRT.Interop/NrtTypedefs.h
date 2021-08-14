@@ -69,10 +69,14 @@ extern "C"
 
 #include "Animation/NrtAnimationTypedefs.h"
 #include "Audio/NrtAudioTypedefs.h"
+#ifdef NOVELRT_INK
 #include "DotNet/NrtDotNetTypedefs.h"
+#endif
 #include "Ecs/NrtEcsTypedefs.h"
 #include "Graphics/NrtGraphicsTypedefs.h"
+#ifdef NOVELRT_INK
 #include "Ink/NrtInkTypedefs.h"
+#endif
 #include "Input/NrtInputTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 #include "Windowing/NrtWindowingTypedefs.h"

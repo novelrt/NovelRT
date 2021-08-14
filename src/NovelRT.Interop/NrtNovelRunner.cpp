@@ -12,7 +12,9 @@ using namespace NovelRT;
 std::list<std::shared_ptr<Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<Input::InteractionService>> _interactionCollection;
 std::list<std::shared_ptr<Windowing::WindowingService>> _windowingCollection;
+#ifdef NOVELRT_INK
 std::list<std::shared_ptr<DotNet::RuntimeService>> _runtimeCollection;
+#endif
 std::list<std::shared_ptr<Graphics::RenderingService>> _rendererCollection;
 std::list<std::shared_ptr<DebugService>> _debugServiceCollection;
 
@@ -149,6 +151,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
+#ifdef NOVELRT_INK
     NrtResult Nrt_NovelRunner_getRuntimeService(NrtNovelRunnerHandle runner, NrtRuntimeServiceHandle* outputService)
     {
         if (runner == nullptr)
@@ -176,6 +179,7 @@ extern "C"
 
         return NRT_SUCCESS;
     }
+#endif
 
     NrtResult Nrt_NovelRunner_getRenderer(NrtNovelRunnerHandle runner, NrtRenderingServiceHandle* outputService)
     {
