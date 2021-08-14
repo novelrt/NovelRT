@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake
+from conans import ConanFile, CMake, tools
 import sys
 
 class NovelRTConan(ConanFile):
@@ -22,7 +22,7 @@ class NovelRTConan(ConanFile):
         #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
-    options = {"inksupport": [True, False], "documentation": [True, False], "buildtests": [True, False], "buildsamples": [True, False]}
+    options = {"inksupport": [True, False], "documentation": [True, False], "buildtests": [True, False], "buildsamples": [True, False], "packagemode": [True, False]}
     default_options = {
         "freetype:shared":True,
         "glfw:shared":True,
@@ -43,7 +43,8 @@ class NovelRTConan(ConanFile):
         "inksupport": True,
         "documentation": False,
         "buildtests":True,
-        "buildsamples":True
+        "buildsamples":True,
+        "packagemode": False
     }
     cmake = None
 
@@ -72,12 +73,25 @@ class NovelRTConan(ConanFile):
             cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "On"
         else:
             cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "Off"
-        cmake.configure(source_folder="NovelRT")
+
+        #This caused crashes when running NovelRT.Tests - to investigate later.
+        # if(self.settings.build_type == "Debug" and self.settings.os == "Windows"):
+        #     cmake.definitions["CMAKE_MSVC_RUNTIME_LIBRARY"] = "MultiThreadedDebugDLL"
+        # elif(self.settings.os == "Windows"):
+        #     cmake.definitions["CMAKE_MSVC_RUNTIME_LIBRARY"] = "MultiThreadedDLL"
+
+        #Leave this for last so that configuration is launched properly in package or in build mode
+        if(self.options.packagemode):
+            cmake.configure(source_folder="NovelRT")
+        else:
+            cmake.configure()
         return cmake
 
     def build(self):
         self.cmake = self.configure_cmake()
         self.cmake.build()
+        if(self.options.packagemode):
+            self.cmake.test()
 
     def package(self):
         self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")

@@ -103,11 +103,16 @@ cd build
 conan install .. --build=missing --profile windows-vs2019-amd64
 ```
 
-Then you should be able to configure and build, like so:
+Then you should be able to configure and build the default setup, like so:
 ```
-cmake ..
-cmake --build . -j
+conan build .. --build-folder .
 ```
+
+If you would like to change any of the settings prior to building, pass them in like so:
+```
+conan build .. --build-folder . -o NovelRT:inksupport=False -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
+```
+(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 
 #### Visual studio 2019 specific instructions
 
