@@ -82,6 +82,11 @@ class NovelRTConan(ConanFile):
 
         #Leave this for last so that configuration is launched properly in package or in build mode
         if(self.options.packagemode):
+            cmake.definitions["NOVELRT_INCLUDE_INK"] = "Off"
+            cmake.definitions["NOVELRT_BUILD_DOCUMENTATION"] = "Off"
+            cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "Off"
+            cmake.definitions["NOVELRT_BUILD_TESTS"] = "Off"
+            self.options.buildtests = False
             cmake.configure(source_folder="NovelRT")
         else:
             cmake.configure()
@@ -90,12 +95,13 @@ class NovelRTConan(ConanFile):
     def build(self):
         self.cmake = self.configure_cmake()
         self.cmake.build()
-        if(self.options.packagemode):
+        if(self.options.buildtests):
             self.cmake.test()
 
     def package(self):
-        self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")
-        self.copy("*.h", dst="include/NovelRT.Interop", src="NovelRT/include/NovelRT.Interop")
+        self.copy("*.h", dst="include", src="NovelRT/include")
+        # self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")
+        # self.copy("*.h", dst="include/NovelRT.Interop", src="NovelRT/include/NovelRT.Interop")
         if sys.platform.startswith('win32'):
             self.copy("*NovelRT.lib", dst="lib", keep_path=False)
             self.copy("*NovelRT.Interop.lib", dst="lib", keep_path=False)
