@@ -18,7 +18,9 @@ namespace NovelRT
           _novelWindowingService(std::make_shared<Windowing::WindowingService>()),
           _novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
           _novelAudioService(std::make_shared<Audio::AudioService>()),
+#if NOVELRT_INK
           _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
+#endif
           _novelRenderer(std::make_shared<Graphics::RenderingService>(getWindowingService())),
           _novelDebugService(std::make_shared<DebugService>(SceneConstructionRequested, getRenderer()))
     {
@@ -75,12 +77,12 @@ namespace NovelRT
     {
         return _novelAudioService;
     }
-
+#if NOVELRT_INK
     std::shared_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const noexcept
     {
         return _novelDotNetRuntimeService;
     }
-
+#endif
     std::shared_ptr<Windowing::WindowingService> NovelRunner::getWindowingService() const noexcept
     {
         return _novelWindowingService;

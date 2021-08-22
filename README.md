@@ -20,7 +20,6 @@ Currently, NovelRT supports the following in its base form:
 
 Current features in development include:
 - C++ HLAPI
-- Lua 5.3 LLAPI
 - CoreCLR hosting
 - Ink narrative scripting language support
 
@@ -43,7 +42,6 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - gtest/gmock 1.10.0
 - libpng 1.6.34
 - libsndfile 1.0.28
-- Lua 5.3
 - OpenAL 1.19.1
 - spdlog 1.4.2
 - Microsoft GSL 3.1.0
@@ -76,7 +74,18 @@ cd NovelRT/build
 conan install .. --build=missing --build=bison --profile linux-clang10-amd64
 ```
 
-Then you should be able to configure and build, like so:
+Then you should be able to configure and build the default setup, like so:
+```
+conan build .. --build-folder .
+```
+
+If you would like to change any of the settings prior to building, pass them in like so:
+```
+conan build .. --build-folder . -o NovelRT:inksupport=False -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
+```
+(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
+
+If you would like to build using CMake instead, you can configure and build, like so:
 ```
 cmake ..
 cmake --build . -j
@@ -88,7 +97,7 @@ _Prerequisites:_
 - Windows 10 x64
 
 (32-bit installation _may_ be covered in the future.)
-  
+
 Please download [Python 3 (x64) from here](https://www.python.org/downloads/) or from the Microsoft Store. Once that is done,
 install conan and our configurations should you require them:
 ```
@@ -105,7 +114,18 @@ cd build
 conan install .. --build=missing --profile windows-vs2019-amd64
 ```
 
-Then you should be able to configure and build, like so:
+Then you should be able to configure and build the default setup, like so:
+```
+conan build .. --build-folder .
+```
+
+If you would like to change any of the settings prior to building, pass them in like so:
+```
+conan build .. --build-folder . -o NovelRT:inksupport=False -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
+```
+(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
+
+If you would like to build using CMake instead, you can configure and build, like so:
 ```
 cmake ..
 cmake --build . -j

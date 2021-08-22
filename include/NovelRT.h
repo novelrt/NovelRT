@@ -59,9 +59,11 @@
 // LibSndfile
 #include <sndfile.h>
 
+#ifdef NOVELRT_INK
 // nethost
 #include "NovelRT/DotNet/coreclr_delegates.h"
 #include "NovelRT/DotNet/hostfxr.h"
+#endif
 
 // libpng
 #include <png.h>
@@ -94,14 +96,14 @@
     typedef std::vector<ALuint> MusicBank;
     typedef class AudioService AudioService;
   }
-
+#ifdef NOVELRT_INK
   /**
    * @brief Contains features to interop with the .NET Core runtime.
    */
   namespace NovelRT::DotNet {
     typedef class RuntimeService RuntimeService;
   }
-
+#endif
   /**
    * @brief Contains graphics features, such as rendering, textures, cameras, etc.
    */
@@ -114,7 +116,7 @@
     typedef class RenderObject RenderObject;
     typedef class TextRect TextRect;
   }
-
+#ifdef NOVELRT_INK
   /**
    * @brief Contains bindings for Ink.
    */
@@ -122,7 +124,7 @@
     typedef class InkService InkService;
     typedef class Story Story;
   }
-
+#endif
   /**
    * @brief Contains input features, such as keyboard and mouse interactivity.
    */
@@ -219,9 +221,11 @@
   #include "NovelRT/Experimental/Windowing/Windowing.h"
   #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
 
+#ifdef NOVELRT_INK
   // Ink types
   #include "NovelRT/Ink/Story.h"
   #include "NovelRT/Ink/InkService.h"
+#endif
 
   // Input types
   #include "NovelRT/Input/InteractionObject.h"
@@ -231,7 +235,9 @@
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
   #include "NovelRT/DebugService.h"
+#ifdef NOVELRT_INK
   #include "NovelRT/DotNet/RuntimeService.h"
+#endif
   #include "NovelRT/Input/InteractionService.h"
   #include "NovelRT/Windowing/WindowingService.h"
   #include "NovelRT/Graphics/RenderingService.h"
@@ -262,8 +268,10 @@
   // Audio
   #include "NovelRT.Interop/Audio/NrtAudioService.h"
 
+#ifdef NOVELRT_INK
   // DotNet
   #include "NovelRT.Interop/DotNet/NrtRuntimeService.h"
+#endif
 
   // Ecs
   #include "NovelRT.Interop/Ecs/NrtCatalogue.h"
@@ -285,9 +293,11 @@
   #include "NovelRT.Interop/Graphics/NrtTextRect.h"
   #include "NovelRT.Interop/Graphics/NrtTexture.h"
 
+#ifdef NOVELRT_INK
   // Ink
   #include "NovelRT.Interop/Ink/NrtInkService.h"
   #include "NovelRT.Interop/Ink/NrtStory.h"
+#endif
 
   // Input
   #include "NovelRT.Interop/Input/NrtBasicInteractionRect.h"

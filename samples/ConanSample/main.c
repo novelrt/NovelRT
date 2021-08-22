@@ -8,35 +8,28 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Preset vars
 int32_t res = NRT_SUCCESS;
 int32_t booleanResult = NRT_TRUE;
-int32_t inkServiceProvided = NRT_FALSE;
 int32_t hMove = 1; // 1 == move right, 0 == move left
 int32_t vMove = 1; // 1 == move up, 0 == move down
 
 char flippedAxisTempBuffer[1024];
 
 // Services
-NrtAudioServiceHandle audio = NULL;
 NrtInteractionServiceHandle input = NULL;
 NrtLoggingServiceHandle console = NULL;
-#ifdef NOVELRT_INK
-NrtRuntimeServiceHandle dotnet = NULL;
-NrtInkServiceHandle ink = NULL;
-#endif
 NrtStepTimerHandle timer = NULL;
 NrtRenderingServiceHandle renderer = NULL;
 NrtUtilitiesEventWithTimestampHandle updateEvent = NULL;
 NrtRGBAConfigHandle colourChange = NULL;
+NrtWindowingServiceHandle window = NULL;
 
 // Objects
 NrtImageRectHandle nChanRect = NULL;
 NrtBasicInteractionRectHandle interactRect = NULL;
-#ifdef NOVELRT_INK
-NrtStoryHandle story = NULL;
-#endif
 
 // Function to render NovelChan
 void RenderNovelChan(void* context)
@@ -149,21 +142,6 @@ void MoveNovelChan(NrtTimestamp delta, void* context)
     Nrt_Input_BasicInteractionRect_setTransform(interactRect, transform);
 }
 
-#ifdef NOVELRT_INK
-// Function to interact with Ink
-void InteractWithNovelChan(void* context)
-{
-    if (Nrt_Story_canContinue(story) == NRT_FALSE)
-    {
-        Nrt_Story_resetState(story);
-    }
-
-    const char* cSharpResult = Nrt_Story_continue(story);
-    Nrt_LoggingService_logDebugLine(console, cSharpResult);
-    Nrt_RuntimeService_freeString(dotnet, cSharpResult);
-}
-#endif
-
 int main()
 {
     res = NRT_SUCCESS;
@@ -171,7 +149,8 @@ int main()
 
     // Creating NovelRunner
     NrtNovelRunnerHandle runner = Nrt_NovelRunner_create(0);
-
+    Nrt_NovelRunner_getWindowingService(runner, &window);
+    Nrt_WindowingService_setWindowTitle(window, "I'm a snek");
     // Starting LoggingService
     console = Nrt_LoggingService_createCustomTitle("Interop");
 
@@ -187,27 +166,6 @@ int main()
     const char* const pathParts[2] = {execPath, "Resources"};
     const char* path = Nrt_appendFilePath(2, pathParts);
 
-    // Getting & Initialising AudioService
-    res = Nrt_NovelRunner_getAudioService(runner, &audio);
-    if (res != NRT_SUCCESS)
-    {
-        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
-        const char* errMsg = Nrt_appendText(2, textParts);
-        Nrt_LoggingService_logErrorLine(console, errMsg);
-        return -1;
-    }
-    else
-    {
-        booleanResult = Nrt_AudioService_initialiseAudio(audio);
-        if (booleanResult != NRT_TRUE)
-        {
-            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
-            const char* errMsg = Nrt_appendText(2, textParts);
-            Nrt_LoggingService_logErrorLine(console, errMsg);
-            return -1;
-        }
-    }
-
     // Getting InteractionService
     res = Nrt_NovelRunner_getInteractionService(runner, &input);
     if (res == NRT_SUCCESS)
@@ -221,36 +179,6 @@ int main()
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
-
-#ifdef NOVELRT_INK
-    // Getting & Initialising RuntimeService / InkService
-    res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
-    if (res != NRT_SUCCESS)
-    {
-        const char* const textParts[2] = {"Error getting RuntimeService: ", Nrt_getLastError()};
-        const char* errMsg = Nrt_appendText(2, textParts);
-        Nrt_LoggingService_logErrorLine(console, errMsg);
-        return -1;
-    }
-    else
-    {
-        Nrt_LoggingService_logInfoLine(console, "Received .NET RuntimeService from C API!");
-        res = Nrt_RuntimeService_initialise(dotnet);
-        if (res == NRT_SUCCESS)
-        {
-            if (Nrt_RuntimeService_getInkService(dotnet, &ink) == NRT_SUCCESS)
-            {
-                Nrt_LoggingService_logInfoLine(console, "Received Ink Service from C API!");
-                inkServiceProvided = NRT_TRUE;
-                Nrt_InkService_initialise(ink);
-            }
-            else
-            {
-                Nrt_LoggingService_logErrorLine(console, "Failed to receive Ink Service!");
-            }
-        }
-    }
-#endif
 
     // Changing Background Colour
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
@@ -268,12 +196,12 @@ int main()
 
     // Creating ImageRect
     NrtGeoVector2F nChanPosition = {1920 / 2, 1080 / 2};
-    NrtGeoVector2F nChanSize = {762, 881};
+    NrtGeoVector2F nChanSize = {514, 512};
     NrtTransform nChanTransform = {nChanPosition, nChanSize, 0};
     NrtRGBAConfigHandle nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
 
     {
-        const char* const pathParts[3] = {path, "Images", "novel-chan.png"};
+        const char* const pathParts[3] = {path, "Images", "pylogo.png"};
         const char* nChanFileLocation = Nrt_appendFilePath(3, pathParts);
         res = Nrt_RenderingService_createImageRectWithFile(renderer, &nChanRect, nChanTransform, 3, nChanFileLocation,
                                                            nChanColours);
@@ -283,44 +211,11 @@ int main()
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
     res = Nrt_InteractionService_createBasicInteractionRect(input, interactTransform, 3, &interactRect);
 
-#ifdef NOVELRT_INK
-    // Creating Ink Story
-    if (inkServiceProvided == NRT_TRUE)
-    {
-        const char* const pathParts[3] = {path, "Scripts", "story.json"};
-        const char* storyLocation = Nrt_appendFilePath(3, pathParts);
-        Nrt_LoggingService_logInfoLine(console, storyLocation);
-
-        FILE* json = fopen(storyLocation, "rb");
-        char* buffer = 0;
-        long length;
-        if (json != NULL)
-        {
-            fseek(json, 0, SEEK_END);
-            length = ftell(json);
-            fseek(json, 0, SEEK_SET);
-            buffer = malloc(length + 1);
-            if (buffer)
-            {
-                fread(buffer, 1, length, json);
-            }
-            fclose(json);
-            buffer[length] = 0;
-        }
-
-        if (Nrt_InkService_createStory(ink, buffer, &story) == NRT_SUCCESS)
-        {
-            Nrt_Story_resetState(story);
-        }
-        Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &InteractWithNovelChan, NULL);
-    }
-#endif
-
     // Setting up Scene Construction
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
-    struct MoveContext moveContext;
+    struct MoveContext moveContext = {0, 0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
 
     // Run the novel!
