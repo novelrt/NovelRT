@@ -18,11 +18,17 @@ class NovelRTConan(ConanFile):
         ("openal/1.19.1"),
         ("spdlog/1.8.2"),
         ("ms-gsl/3.1.0"),
+        # Commented until Vulkan support is introduced.
         #("vulkan-loader/1.2.172"),
         #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
-    options = {"inksupport": [True, False], "documentation": [True, False], "buildtests": [True, False], "buildsamples": [True, False], "packagemode": [True, False]}
+    options = {
+        "inksupport": [True, False],
+        "documentation": [True, False],
+        "buildtests": [True, False],
+        "buildsamples": [True, False]
+    }
     default_options = {
         "freetype:shared":True,
         "glfw:shared":True,
@@ -43,8 +49,7 @@ class NovelRTConan(ConanFile):
         "inksupport": True,
         "documentation": False,
         "buildtests":True,
-        "buildsamples":True,
-        "packagemode": False
+        "buildsamples":True
     }
     cmake = None
 
@@ -74,22 +79,7 @@ class NovelRTConan(ConanFile):
         else:
             cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "Off"
 
-        #This caused crashes when running NovelRT.Tests - to investigate later.
-        # if(self.settings.build_type == "Debug" and self.settings.os == "Windows"):
-        #     cmake.definitions["CMAKE_MSVC_RUNTIME_LIBRARY"] = "MultiThreadedDebugDLL"
-        # elif(self.settings.os == "Windows"):
-        #     cmake.definitions["CMAKE_MSVC_RUNTIME_LIBRARY"] = "MultiThreadedDLL"
-
-        #Leave this for last so that configuration is launched properly in package or in build mode
-        if(self.options.packagemode):
-            cmake.definitions["NOVELRT_INCLUDE_INK"] = "Off"
-            cmake.definitions["NOVELRT_BUILD_DOCUMENTATION"] = "Off"
-            cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "Off"
-            cmake.definitions["NOVELRT_BUILD_TESTS"] = "Off"
-            self.options.buildtests = False
-            cmake.configure(source_folder="NovelRT")
-        else:
-            cmake.configure()
+        cmake.configure()
         return cmake
 
     def build(self):
@@ -98,28 +88,28 @@ class NovelRTConan(ConanFile):
         if(self.options.buildtests):
             self.cmake.test()
 
-    def package(self):
-        self.copy("*.h", dst="include", src="NovelRT/include")
-        # self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")
-        # self.copy("*.h", dst="include/NovelRT.Interop", src="NovelRT/include/NovelRT.Interop")
-        if sys.platform.startswith('win32'):
-            self.copy("*NovelRT.lib", dst="lib", keep_path=False)
-            self.copy("*NovelRT.Interop.lib", dst="lib", keep_path=False)
-            self.copy("*NovelRT.dll", dst="bin", keep_path=False)
-            self.copy("*NovelRT.Interop.dll", dst="bin", keep_path=False)
-            self.copy("*bz2.dll", dst="bin", keep_path=False)
-            self.copy("*FLAC.dll", dst="bin", keep_path=False)
-            self.copy("*FLAC++.dll", dst="bin", keep_path=False)
-            self.copy("*fmt.dll", dst="bin", keep_path=False)
-            self.copy("*freetype.dll", dst="bin", keep_path=False)
-            self.copy("*glfw3.dll", dst="bin", keep_path=False)
-            self.copy("*ogg.dll", dst="bin", keep_path=False)
-            self.copy("*OpenAL32.dll", dst="bin", keep_path=False)
-            self.copy("*opus.dll", dst="bin", keep_path=False)
-            self.copy("*sndfile.dll", dst="bin", keep_path=False)
-            self.copy("*vorbis.dll", dst="bin", keep_path=False)
-            self.copy("*vorbisenc.dll", dst="bin", keep_path=False)
-            self.copy("*vorbisfile.dll", dst="bin", keep_path=False)
+    # def package(self):
+    #    self.copy("*.h", dst="include", src="NovelRT/include")
+    #     # self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")
+    #     # self.copy("*.h", dst="include/NovelRT.Interop", src="NovelRT/include/NovelRT.Interop")
+    #     if sys.platform.startswith('win32'):
+    #         self.copy("*NovelRT.lib", dst="lib", keep_path=False)
+    #         self.copy("*NovelRT.Interop.lib", dst="lib", keep_path=False)
+    #         self.copy("*NovelRT.dll", dst="bin", keep_path=False)
+    #         self.copy("*NovelRT.Interop.dll", dst="bin", keep_path=False)
+    #         self.copy("*bz2.dll", dst="bin", keep_path=False)
+    #         self.copy("*FLAC.dll", dst="bin", keep_path=False)
+    #         self.copy("*FLAC++.dll", dst="bin", keep_path=False)
+    #         self.copy("*fmt.dll", dst="bin", keep_path=False)
+    #         self.copy("*freetype.dll", dst="bin", keep_path=False)
+    #         self.copy("*glfw3.dll", dst="bin", keep_path=False)
+    #         self.copy("*ogg.dll", dst="bin", keep_path=False)
+    #         self.copy("*OpenAL32.dll", dst="bin", keep_path=False)
+    #         self.copy("*opus.dll", dst="bin", keep_path=False)
+    #         self.copy("*sndfile.dll", dst="bin", keep_path=False)
+    #         self.copy("*vorbis.dll", dst="bin", keep_path=False)
+    #         self.copy("*vorbisenc.dll", dst="bin", keep_path=False)
+    #         self.copy("*vorbisfile.dll", dst="bin", keep_path=False)
 
 
     def package_info(self):
