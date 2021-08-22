@@ -180,7 +180,6 @@ int main()
         return -1;
     }
 
-
     // Changing Background Colour
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
     if (res != NRT_SUCCESS)
@@ -194,7 +193,6 @@ int main()
 
     NrtRGBAConfigHandle background = Nrt_RGBAConfig_Create(0, 0, 0, 0);
     Nrt_RenderingService_setBackgroundColour(renderer, background);
-
 
     // Creating ImageRect
     NrtGeoVector2F nChanPosition = {1920 / 2, 1080 / 2};
@@ -217,7 +215,7 @@ int main()
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
-    struct MoveContext moveContext = {0,0};
+    struct MoveContext moveContext = {0, 0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
 
     // Run the novel!
