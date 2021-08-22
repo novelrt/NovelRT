@@ -5,7 +5,6 @@ glfw/3.3.2
 glm/0.9.9.7
 gtest/1.10.0
 libsndfile/1.0.30
-lua/5.3.5
 openal/1.19.1
 spdlog/1.8.2
 ms-gsl/3.1.0
@@ -18,7 +17,6 @@ cmake_paths
 freetype:shared=True
 glfw:shared=True
 libsndfile:shared=True
-lua:shared=True
 openal:shared=True
 PNG:shared=True
 BZip2:shared=True

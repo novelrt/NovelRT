@@ -1,5 +1,4 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
-find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
@@ -29,8 +28,6 @@ set(SOURCES
 
   DebugService.cpp
 
-  DotNet/RuntimeService.cpp
-
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
@@ -49,9 +46,6 @@ set(SOURCES
   Graphics/RGBAConfig.cpp
   Graphics/TextRect.cpp
   Graphics/Texture.cpp
-
-  Ink/InkService.cpp
-  Ink/Story.cpp
 
   Input/BasicInteractionRect.cpp
   Input/InteractionObject.cpp
@@ -75,8 +69,26 @@ set(SOURCES
   WorldObject.cpp
 )
 
+if(NOVELRT_INCLUDE_INK)
+  message("NovelRT is compiling with Ink / C# Support.")
+  set(SOURCES
+    DotNet/RuntimeService.cpp
+    Ink/InkService.cpp
+    Ink/Story.cpp
+    ${SOURCES}
+  )
+endif()
+
 add_library(Engine SHARED ${SOURCES})
-add_dependencies(Engine Dotnet)
+
+if(NOVELRT_INCLUDE_INK)
+  add_dependencies(Engine Dotnet)
+  target_compile_definitions(Engine PRIVATE NOVELRT_INK)
+  target_link_libraries(Engine PUBLIC
+    CoreCLR::nethost
+  )
+  find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
+endif()
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
 
@@ -130,7 +142,6 @@ endif()
 target_link_libraries(Engine
   PUBLIC
     BZip2::BZip2
-    CoreCLR::nethost
     FLAC::FLAC
     Freetype::Freetype
     glad::glad

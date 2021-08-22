@@ -22,8 +22,10 @@ char flippedAxisTempBuffer[1024];
 NrtAudioServiceHandle audio = NULL;
 NrtInteractionServiceHandle input = NULL;
 NrtLoggingServiceHandle console = NULL;
+#ifdef NOVELRT_INK
 NrtRuntimeServiceHandle dotnet = NULL;
 NrtInkServiceHandle ink = NULL;
+#endif
 NrtStepTimerHandle timer = NULL;
 NrtRenderingServiceHandle renderer = NULL;
 NrtUtilitiesEventWithTimestampHandle updateEvent = NULL;
@@ -32,7 +34,9 @@ NrtRGBAConfigHandle colourChange = NULL;
 // Objects
 NrtImageRectHandle nChanRect = NULL;
 NrtBasicInteractionRectHandle interactRect = NULL;
+#ifdef NOVELRT_INK
 NrtStoryHandle story = NULL;
+#endif
 
 // Function to render NovelChan
 void RenderNovelChan(void* context)
@@ -145,6 +149,7 @@ void MoveNovelChan(NrtTimestamp delta, void* context)
     Nrt_Input_BasicInteractionRect_setTransform(interactRect, transform);
 }
 
+#ifdef NOVELRT_INK
 // Function to interact with Ink
 void InteractWithNovelChan(void* context)
 {
@@ -157,6 +162,7 @@ void InteractWithNovelChan(void* context)
     Nrt_LoggingService_logDebugLine(console, cSharpResult);
     Nrt_RuntimeService_freeString(dotnet, cSharpResult);
 }
+#endif
 
 int main()
 {
@@ -216,6 +222,7 @@ int main()
         return -1;
     }
 
+#ifdef NOVELRT_INK
     // Getting & Initialising RuntimeService / InkService
     res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
     if (res != NRT_SUCCESS)
@@ -243,6 +250,7 @@ int main()
             }
         }
     }
+#endif
 
     // Changing Background Colour
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
@@ -275,6 +283,7 @@ int main()
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
     res = Nrt_InteractionService_createBasicInteractionRect(input, interactTransform, 3, &interactRect);
 
+#ifdef NOVELRT_INK
     // Creating Ink Story
     if (inkServiceProvided == NRT_TRUE)
     {
@@ -305,6 +314,7 @@ int main()
         }
         Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &InteractWithNovelChan, NULL);
     }
+#endif
 
     // Setting up Scene Construction
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);

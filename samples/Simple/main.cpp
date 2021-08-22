@@ -3,27 +3,6 @@
 
 #include <NovelRT.h>
 
-// TODO: What do I do with these?
-extern "C"
-{
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-}
-
-static int average(lua_State* luaState)
-{
-    int n = lua_gettop(luaState);
-    double sum = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        sum += lua_tonumber(luaState, i);
-    }
-    lua_pushnumber(luaState, sum / n);
-    lua_pushnumber(luaState, sum);
-    return 2;
-}
-
 // TODO: Do we really need this anymore? No real reason to run this in WSL these days.
 #ifdef WIN32
 #define setenv(name, value, overwrite)                                                                                 \
@@ -33,8 +12,6 @@ static int average(lua_State* luaState)
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-    lua_State* L;
-
     std::unique_ptr<NovelRT::Graphics::ImageRect> novelChanRect;
     std::unique_ptr<NovelRT::Graphics::TextRect> textRect;
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> lineRect;
@@ -64,11 +41,6 @@ int main(int /*argc*/, char* /*argv*/[])
     std::filesystem::path soundsDirPath = resourcesDirPath / "Sounds";
 
     // setenv("DISPLAY", "localhost:0", true);
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    lua_register(L, "average", average);
-    luaL_dofile(L, (scriptsDirPath / "avg.lua").string().c_str());
-    lua_close(L);
 
     auto runner = NovelRT::NovelRunner(0, "NovelRTTest", NovelRT::Windowing::WindowMode::Windowed);
     auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
@@ -179,6 +151,7 @@ int main(int /*argc*/, char* /*argv*/[])
     playAudioButtonTwoElectricBoogaloo =
         runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
 
+#ifdef NOVELRT_INK
     auto inkButtonTransform = NovelRT::Transform(
         NovelRT::Maths::GeoVector2F(novelChanTransform.position.x - 500, novelChanTransform.position.y - 200), 0,
         NovelRT::Maths::GeoVector2F(200, 200));
@@ -194,6 +167,7 @@ int main(int /*argc*/, char* /*argv*/[])
     inkText->setText("Ink!");
     inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);
     inkInteractionRect->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+#endif
 
     runner.getDebugService()->setIsFpsCounterVisible(true);
 
@@ -259,12 +233,16 @@ int main(int /*argc*/, char* /*argv*/[])
         playAudioButtonTwoElectricBoogaloo->executeObjectBehaviour();
         playAudioText->executeObjectBehaviour();
 
+#ifdef NOVELRT_INK
         inkButton->executeObjectBehaviour();
         inkText->executeObjectBehaviour();
+#endif
 
         memeInteractionRect->executeObjectBehaviour();
         interactionRect->executeObjectBehaviour();
+#ifdef NOVELRT_INK
         inkInteractionRect->executeObjectBehaviour();
+#endif
 
         novelChanRect->executeObjectBehaviour();
 
@@ -277,6 +255,7 @@ int main(int /*argc*/, char* /*argv*/[])
         lineRect->executeObjectBehaviour();
     };
 
+#ifdef NOVELRT_INK
     auto dotnetRuntimeService = runner.getDotNetRuntimeService();
     dotnetRuntimeService->initialise();
 
@@ -308,7 +287,7 @@ int main(int /*argc*/, char* /*argv*/[])
         console.logDebug(result);
         dotnetRuntimeService->freeString(result);
     };
-
+#endif
     audio->playMusic(bgm, -1);
     runner.runNovel();
 
