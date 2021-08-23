@@ -13,6 +13,7 @@ ci=false
 configuration='Debug'
 dotnetInstallDirectory="$HOME/dotnet"
 generate=false
+documentation=false
 help=false
 install=false
 test=false
@@ -41,6 +42,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --generate)
       generate=true
+      shift 1
+      ;;
+    --documentation)
+      documentation=true
       shift 1
       ;;
     --help)
@@ -104,6 +109,16 @@ function Generate {
   fi
 }
 
+function BuildDocumentation {
+    cmake --build "$BuildDir" --config "$configuration" --target Doxygen
+  LASTEXITCODE=$?
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    echo "'Build Documentation' failed"
+    return "$LASTEXITCODE"
+  fi
+}
+
 function Help {
   echo "Common settings:"
   echo "  --configuration <value>             Build configuration (Debug, MinSizeRel, Release, RelWithDebInfo)"
@@ -113,6 +128,7 @@ function Help {
   echo "Actions:"
   echo "  --build                             Build repository"
   echo "  --generate                          Generate CMake cache"
+  echo "  --documentation                     Generate CMake cache and Build Doxygen documentation"
   echo "  --install                           Install repository"
   echo "  --test                              Test repository"
   echo ""
@@ -161,10 +177,16 @@ if $help; then
 fi
 
 if $ci; then
-  build=true
   generate=true
-  install=true
-  test=true
+  if $documentation; then
+    build=false
+    install=false
+    test=false
+  else
+    build=true
+    install=true
+    test=true
+  fi
 fi
 
 RepoRoot="$ScriptRoot/.."
@@ -185,6 +207,14 @@ export PATH="$dotnetInstallDirectory:$PATH:"
 
 if $generate; then
   Generate
+
+  if [ "$LASTEXITCODE" != 0 ]; then
+    return "$LASTEXITCODE"
+  fi
+fi
+
+if $documentation; then
+  BuildDocumentation
 
   if [ "$LASTEXITCODE" != 0 ]; then
     return "$LASTEXITCODE"
