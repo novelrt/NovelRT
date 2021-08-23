@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Build and Publish Documentation:
+  Build_and_Publish_Documentation:
     name: Build and Publish Documentation
     runs-on: ubuntu-latest
     container:
