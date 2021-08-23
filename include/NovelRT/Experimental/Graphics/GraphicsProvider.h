@@ -15,21 +15,10 @@ namespace NovelRT::Experimental::Graphics
     private:
         bool _debugModeEnabled;
 
-        [[nodiscard]] inline static bool GetDebugModeEnabled() noexcept
-        {
-            bool& debugModeEnabled = EngineConfig::EnableDebugOutputFromEngineInternals();
-            if (!debugModeEnabled)
-            {
-                debugModeEnabled = true;
-            }
-
-            return debugModeEnabled;
-        }
-
     public:
         static inline const std::string EnableDebugModeSwitchName = "NovelRT::Experimental::Graphics::GraphicsProvider::EnableDebugMode";
 
-        GraphicsProvider() noexcept : _debugModeEnabled(GetDebugModeEnabled())
+        GraphicsProvider() noexcept : _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
         {
         }
 
