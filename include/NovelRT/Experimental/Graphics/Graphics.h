@@ -33,6 +33,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsResourceCpuAccessKind : uint32_t;
     enum class GraphicsSurfaceKind : uint32_t;
     class IGraphicsSurface;
+    class GraphicsAdapter;
     class GraphicsDevice;
     class GraphicsResource;
     class GraphicsBuffer;
@@ -49,6 +50,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsContext;
     class GraphicsFence;
     class GraphicsPrimitive;
+    class GraphicsProvider;
     class GraphicsMemoryAllocator;
     struct GraphicsMemoryAllocatorSettings;
     enum class GraphicsTextureKind : uint32_t;
@@ -67,6 +69,7 @@ namespace NovelRT::Experimental::Graphics
 #include "ShaderProgramKind.h"
 #include "EcsDefaultRenderingComponentTypes.h"
 #include "EcsDefaultRenderingSystem.h"
+#include "GraphicsAdapter.h"
 #include "GraphicsDeviceObject.h"
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
@@ -90,6 +93,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"
 #include "GraphicsPrimitive.h"
+#include "GraphicsProvider.h"
 #include "GraphicsPipelineInput.h"
 #include "GraphicsPipelineInputElement.h"
 #include "GraphicsPipelineInputElementKind.h"

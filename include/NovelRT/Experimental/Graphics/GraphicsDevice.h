@@ -24,12 +24,26 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsPipeline> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature> signature,
-            std::shared_ptr<ShaderProgram> vertexShader = nullptr,
-            std::shared_ptr<ShaderProgram> pixelShader = nullptr) = 0;
+            std::shared_ptr<ShaderProgram> vertexShader,
+            std::shared_ptr<ShaderProgram> pixelShader) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
-            gsl::span<GraphicsPipelineInput> inputs = gsl::span<GraphicsPipelineInput>{},
-            gsl::span<GraphicsPipelineResource> resources = gsl::span<GraphicsPipelineResource>{}) = 0;
+            gsl::span<GraphicsPipelineInput> inputs,
+            gsl::span<GraphicsPipelineResource> resources) = 0;
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
+            std::shared_ptr<GraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            uint32_t vertexBufferStride,
+            GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
+            uint32_t indexBufferStride,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
+
+        virtual void PresentFrame() = 0;
+        virtual void Signal(std::shared_ptr<GraphicsFence> fence) = 0;
+        virtual void WaitForIdle() = 0;
+
+        virtual ~GraphicsDevice = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 
