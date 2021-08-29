@@ -57,6 +57,7 @@ set(SOURCES
   Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Threading/VolatileState.cpp

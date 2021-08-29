@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    class GraphicsProvider
+    class GraphicsProvider : public std::enable_shared_from_this<GraphicsProvider>
     {
     private:
         bool _debugModeEnabled;
@@ -20,6 +20,11 @@ namespace NovelRT::Experimental::Graphics
 
         GraphicsProvider() noexcept : _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
         {
+        }
+
+        [[nodiscard]] inline bool GetDebugModeEnabled() const noexcept
+        {
+            return _debugModeEnabled;
         }
 
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept = 0;
