@@ -308,7 +308,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& physicalDevice : devices)
         {
-            adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(weak_from_this(), physicalDevice));
+            adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(
+                std::dynamic_pointer_cast<VulkanGraphicsProvider>(shared_from_this()), physicalDevice));
         }
     }
 
@@ -337,10 +338,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_debugLogger != VK_NULL_HANDLE)
         {
-            DestroyDebugUtilsMessengerEXT(_vulkanInstance.getActual(), _debugLogger, nullptr);
+            DestroyDebugUtilsMessengerEXT(_vulkanInstance, _debugLogger, nullptr);
         }
 
-        vkDestroyInstance(_vulkanInstance.getActual(), nullptr);
+        vkDestroyInstance(_vulkanInstance, nullptr);
     }
 
     std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept

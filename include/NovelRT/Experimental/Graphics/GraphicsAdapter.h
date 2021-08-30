@@ -13,26 +13,36 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsAdapter
     {
     private:
-        std::shared_ptr<GraphicsProvider> _provider;
+        std::weak_ptr<GraphicsProvider> _provider;
 
     public:
-        explicit GraphicsAdapter(std::shared_ptr<GraphicsProvider> provider) :
-        _provider(std::move(provider))
+        explicit GraphicsAdapter(std::weak_ptr<GraphicsProvider> provider) : _provider(std::move(provider))
         {
-            if (_provider == nullptr)
+            if (!_provider.expired())
             {
-                throw Exceptions::NullPointerException("The provided GraphicsProvider pointer is nullptr.");
+                throw Exceptions::NullPointerException(
+                    "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
             }
         }
 
-        [[nodiscard]] virtual uint32_t GetDeviceId() const noexcept = 0;
+        [[nodiscard]] virtual uint32_t GetDeviceId() = 0;
 
-        [[nodiscard]] virtual const std::string& GetName() const noexcept = 0;
+        [[nodiscard]] virtual const std::string& GetName() = 0;
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsProvider> GetProvider() const noexcept
+        [[nodiscard]] inline std::shared_ptr<GraphicsProvider> GetProvider() const
         {
-            return _provider;
+            if (_provider.expired())
+            {
+                throw std::runtime_error("Provider has expired.");
+            }
+
+            return _provider.lock();
         }
+
+        [[nodiscard]] virtual uint32_t GetVendorId() = 0;
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> CreateDevice(std::shared_ptr<IGraphicsSurface> surface,
+                                                                           int32_t contextCount) = 0;
 
         virtual ~GraphicsAdapter() = default;
     };

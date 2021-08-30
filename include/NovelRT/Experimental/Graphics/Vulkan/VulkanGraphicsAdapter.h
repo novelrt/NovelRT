@@ -12,10 +12,62 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 {
     class VulkanGraphicsAdapter final : public GraphicsAdapter
     {
+    private:
+        VkPhysicalDevice _vulkanPhysicalDevice;
+        NovelRT::Utilities::Lazy<VkPhysicalDeviceProperties> _vulkanPhysicalDeviceProperties;
+        NovelRT::Utilities::Lazy<VkPhysicalDeviceMemoryProperties> _vulkanPhysicalDeviceMemoryProperties;
+        NovelRT::Utilities::Lazy<std::string> _name;
+
+        Threading::VolatileState _state;
+
+        [[nodiscard]] std::string GetNameInternal();
+        [[nodiscard]] VkPhysicalDeviceProperties GetVulkanPhysicalDevicePropertiesInternal();
+        [[nodiscard]] VkPhysicalDeviceMemoryProperties GetVulkanPhysicalDeviceMemoryPropertiesInternal();
+
     public:
-        VulkanGraphicsAdapter(std::weak_ptr<GraphicsProvider> provider, VkPhysicalDevice physicalDevice);
-        uint32_t GetDeviceId() const noexcept final;
-        const std::string& GetName() const noexcept final;
+        VulkanGraphicsAdapter(const std::shared_ptr<VulkanGraphicsProvider>& provider, VkPhysicalDevice physicalDevice);
+
+        [[nodiscard]] inline VkPhysicalDevice GetVulkanPhysicalDevice() const noexcept
+        {
+            return _vulkanPhysicalDevice;
+        }
+
+        [[nodiscard]] inline const VkPhysicalDeviceProperties& GetVulkanPhysicalDeviceProperties()
+        {
+            return _vulkanPhysicalDeviceProperties.getActual();
+        }
+
+        [[nodiscard]] inline const VkPhysicalDeviceMemoryProperties& GetVulkanPhysicalDeviceMemoryProperties()
+        {
+            return _vulkanPhysicalDeviceMemoryProperties.getActual();
+        }
+
+        [[nodiscard]] uint32_t GetDeviceId() final
+        {
+            return GetVulkanPhysicalDeviceProperties().deviceID;
+        }
+
+        [[nodiscard]] const std::string& GetName() final
+        {
+            return _name.getActual();
+        }
+
+        [[nodiscard]] inline uint32_t GetVendorId() final
+        {
+            return GetVulkanPhysicalDeviceProperties().vendorID;
+        }
+
+        [[nodiscard]] std::shared_ptr<GraphicsDevice> CreateDevice(std::shared_ptr<IGraphicsSurface> surface,
+                                                     int32_t contextCount) final
+        {
+            return std::shared_ptr<GraphicsDevice>();
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsProvider>(GraphicsAdapter::GetProvider());
+        }
+
         ~VulkanGraphicsAdapter() final = default;
     };
 }
