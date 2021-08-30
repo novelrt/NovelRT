@@ -16,10 +16,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsFence> _fence;
         std::shared_ptr<VulkanGraphicsFence> _waitForExecuteCompletionFence;
 
-        Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
-        Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
-        Utilities::Lazy<VkFramebuffer> _vulkanFramebuffer;
-        Utilities::Lazy<VkImageView> _vulkanSwapChainImageView;
+        NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
+        NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
+        NovelRT::Utilities::Lazy<VkFramebuffer> _vulkanFramebuffer;
+        NovelRT::Utilities::Lazy<VkImageView> _vulkanSwapChainImageView;
 
         Threading::VolatileState _state;
 

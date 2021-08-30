@@ -2,36 +2,62 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    VulkanGraphicsDevice::VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter, std::shared_ptr<IGraphicsSurface> surface)
+    VulkanGraphicsDevice::VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
+                                               std::shared_ptr<IGraphicsSurface> surface,
+                                               int32_t contextCount)
         : GraphicsDevice(std::move(adapter), std::move(surface)),
+          _fence(VulkanGraphicsFence(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))),
+          _contexts(CreateGraphicsContexts(contextCount)),
+          _contextPtrs{},
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
-          _debuggerWasCreated(false),
-          _physicalDevice(VK_NULL_HANDLE),
           _device(VK_NULL_HANDLE),
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
           _surface(VK_NULL_HANDLE),
           _swapChain(VK_NULL_HANDLE),
           _swapChainImages(std::vector<VkImage>{}),
+          _contextIndex(0),
           _vulkanSwapChainFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
-          _swapChainImageViews(std::vector<VkImageView>{}),
-          _renderPass([&](){ return CreateRenderPass(); }),
-          _indicesData{}
+          _renderPass([&]() { return CreateRenderPass(); }),
+          _indicesData{},
+          _state()
     {
+        _contextPtrs.reserve(_contexts.size());
+
+        for (auto&& context : _contexts)
+        {
+            _contextPtrs.emplace_back(context.shared_from_this());
+        }
+
         Initialise();
+        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
+    std::vector<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContexts(int32_t contextCount) const
+    {
+        std::vector<VulkanGraphicsContext> contexts(contextCount);
+
+        for (int32_t i = 0; i < contextCount; i++)
+        {
+            contexts[i] = VulkanGraphicsContext(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
+        }
+
+        return contexts;
+    }
 
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet() const
     {
         uint32_t extensionCount = 0;
-        vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, nullptr);
+        vkEnumerateDeviceExtensionProperties(GetAdapter()->GetVulkanPhysicalDevice(), nullptr, &extensionCount,
+                                             nullptr);
         std::vector<VkExtensionProperties> extensionProperties(extensionCount);
-        vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, extensionProperties.data());
+        vkEnumerateDeviceExtensionProperties(GetAdapter()->GetVulkanPhysicalDevice(), nullptr, &extensionCount,
+                                             extensionProperties.data());
 
         _logger.logInfoLine("Found the following available physical device extensions:");
 
@@ -77,8 +103,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return allExtensions;
     }
 
-
-
     void VulkanGraphicsDevice::ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface)
     {
         switch (targetSurface->GetKind())
@@ -89,7 +113,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                     reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
                         targetSurface->GetContextHandle());
 
-                VkResult funcResult = func(_instance, targetSurface->GetHandle(), nullptr, &_surface);
+                VkResult funcResult = func(GetAdapter()->GetProvider()->GetVulkanInstance(), targetSurface->GetHandle(),
+                                           nullptr, &_surface);
                 if (funcResult != VK_SUCCESS)
                 {
                     throw Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
@@ -255,35 +280,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return score;
     }
 
-    void VulkanGraphicsDevice::PickPhysicalDevice()
-    {
-
-        std::multimap<int32_t, VkPhysicalDevice> candidates{};
-
-        for (const auto& device : devices)
-        {
-            candidates.emplace(RateDeviceSuitability(device), device);
-        }
-
-        if (candidates.rbegin()->first <= 0)
-        {
-            throw Exceptions::NotSupportedException(
-                _defaultFailureMessage +
-                "None of the supplied Vulkan-compatible GPUs were deemed suitable for the NovelRT render pipeline. "
-                "Please refer to the NovelRT documentation and your GPU manufacturer's documentation for more "
-                "information.");
-        }
-
-        _physicalDevice = candidates.rbegin()->second;
-
-        VkPhysicalDeviceProperties deviceProperties;
-        vkGetPhysicalDeviceProperties(_physicalDevice, &deviceProperties);
-        _logger.logInfoLine("GPU device successfully chosen: " + std::string(deviceProperties.deviceName));
-    }
-
     void VulkanGraphicsDevice::CreateLogicalDevice()
     {
-        _indicesData = FindQueueFamilies(_physicalDevice);
+        _indicesData = FindQueueFamilies(GetAdapter()->GetVulkanPhysicalDevice());
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
         std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value()};
@@ -300,7 +299,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet();
-        auto physicalDeviceExtensionPtrs = GetStringVectorAsCharPtrVector(physicalDeviceExtensions);
+        auto physicalDeviceExtensionPtrs =
+            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
@@ -312,10 +312,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
         createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
-        if (_debuggerWasCreated)
+        if (GetAdapter()->GetProvider()->GetDebugModeEnabled())
         {
-            createInfo.enabledLayerCount = static_cast<uint32_t>(_finalValidationLayerSet.size());
-            std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(_finalValidationLayerSet);
+            auto validationLayers = GetAdapter()->GetProvider()->GetValidationLayers();
+            createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+            std::vector<const char*> allValidationLayerPtrs =
+                NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(validationLayers);
             createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         }
         else
@@ -323,7 +325,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             createInfo.enabledLayerCount = 0;
         }
 
-        VkResult deviceResult = vkCreateDevice(_physicalDevice, &createInfo, nullptr, &_device);
+        VkResult deviceResult = vkCreateDevice(GetAdapter()->GetVulkanPhysicalDevice(), &createInfo, nullptr, &_device);
 
         if (deviceResult != VK_SUCCESS)
         {
@@ -398,7 +400,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::CreateSwapChain()
     {
-        SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(_physicalDevice);
+        SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(GetAdapter()->GetVulkanPhysicalDevice());
 
         VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
@@ -421,7 +423,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+        QueueFamilyIndices indices = FindQueueFamilies(GetAdapter()->GetVulkanPhysicalDevice());
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily)
@@ -476,36 +478,21 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::Initialise()
     {
-        CreateInstance();
-
-        if (EngineConfig::EnableDebugOutputFromEngineInternals())
-        {
-            ConfigureDebugLogger();
-        }
-
         ConfigureOutputSurface(GetSurface());
 
-        PickPhysicalDevice();
         CreateLogicalDevice();
         CreateSwapChain();
 
-        _logger.logInfoLine("Vulkan version 1.2 has been successfully initialised.");
+        _logger.logInfoLine("Vulkan logical device version 1.2 has been successfully initialised.");
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
         vkDestroySwapchainKHR(_device, _swapChain, nullptr);
-        vkDestroySurfaceKHR(_instance, _surface, nullptr);
+        vkDestroySurfaceKHR(GetAdapter()->GetProvider()->GetVulkanInstance(), _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
 
-        if (_debuggerWasCreated)
-        {
-            DestroyDebugUtilsMessengerEXT(_instance, _debugLogger, nullptr);
-        }
-
-        vkDestroyInstance(_instance, nullptr);
-
-        _logger.logInfoLine("Vulkan version 1.2 instance successfully torn down.");
+        _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
 
     std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
@@ -513,7 +500,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                              gsl::span<uint8_t> byteData)
     {
         return std::shared_ptr<ShaderProgram>(
-            new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), std::move(entryPointName), kind, byteData));
+            new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
+                                    std::move(entryPointName), kind, byteData));
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
@@ -572,5 +560,87 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         _logger.logInfoLine("Successfully created the VkRenderPass.");
         return returnRenderPass;
+    }
+
+    size_t VulkanGraphicsDevice::GetContextIndex() const noexcept
+    {
+        return _contextIndex;
+    }
+
+    std::shared_ptr<GraphicsPrimitive> VulkanGraphicsDevice::CreatePrimitive(
+        std::shared_ptr<GraphicsPipeline> pipeline,
+        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+        uint32_t vertexBufferStride,
+        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+        uint32_t indexBufferStride,
+        gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+    {
+        return std::static_pointer_cast<GraphicsPrimitive>(
+            CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion,
+                                  vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions));
+    }
+
+    std::shared_ptr<VulkanGraphicsPrimitive> VulkanGraphicsDevice::CreateVulkanPrimitive(
+        std::shared_ptr<VulkanGraphicsPipeline> pipeline,
+        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+        uint32_t vertexBufferStride,
+        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+        uint32_t indexBufferStride,
+        gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+    {
+        return std::make_shared<VulkanGraphicsPrimitive>(
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,
+            vertexBufferStride, indexBufferRegion, vertexBufferStride, inputResourceRegions);
+    }
+
+    void VulkanGraphicsDevice::PresentFrame()
+    {
+        uint32_t contextIndex = static_cast<uint32_t>(GetContextIndex());
+        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
+
+        VkPresentInfoKHR presentInfo{};
+        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.swapchainCount = 1;
+        presentInfo.pSwapchains = &vulkanSwapchain;
+        presentInfo.pImageIndices = &contextIndex;
+
+        VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
+
+        if (presentResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to present the data within the present queue!");
+        }
+
+        Signal(GetCurrentContext()->GetFence());
+
+        auto presentCompletionGraphicsFence = GetPresentCompletionFence();
+        VkResult acquireNextImageResult =
+            vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
+                                  VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
+        presentCompletionGraphicsFence->Wait();
+        presentCompletionGraphicsFence->Reset();
+
+        _contextIndex = contextIndex;
+    }
+
+    void VulkanGraphicsDevice::Signal(std::shared_ptr<GraphicsFence> fence)
+    {
+        SignalVulkan(std::dynamic_pointer_cast<VulkanGraphicsFence>(fence));
+    }
+
+    void VulkanGraphicsDevice::WaitForIdle()
+    {
+        VkResult waitForIdleResult = vkDeviceWaitIdle(_device);
+
+        if (waitForIdleResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("The VkDevice did not idle correctly! Reason: " +
+                                     std::to_string(waitForIdleResult));
+        }
+    }
+
+    VulkanGraphicsMemoryAllocator* VulkanGraphicsDevice::GetMemoryAllocatorInternal()
+    {
+        return &_memoryAllocator.getActual();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

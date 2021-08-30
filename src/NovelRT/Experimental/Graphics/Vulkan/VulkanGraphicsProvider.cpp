@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsProvider.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -66,21 +65,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             func(instance, debugMessenger, pAllocator);
         }
-    }
-
-    std::vector<const char*> VulkanGraphicsProvider::GetStringVectorAsCharPtrVector(
-        const std::vector<std::string>& target) noexcept
-    {
-        size_t extensionLength = target.size();
-        std::vector<const char*> targetPtrs{};
-        targetPtrs.reserve(extensionLength);
-
-        for (auto&& extension : target)
-        {
-            targetPtrs.emplace_back(extension.c_str());
-        }
-
-        return targetPtrs;
     }
 
     std::vector<std::string> VulkanGraphicsProvider::GetFinalInstanceExtensionSet() const
@@ -240,11 +224,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
-        std::vector<const char*> allExtensionullptrs = GetStringVectorAsCharPtrVector(_finalExtensionSet);
+        std::vector<const char*> allExtensionullptrs =
+            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionullptrs.size();
 
         _finalValidationLayerSet = GetFinalValidationLayerSet();
-        std::vector<const char*> allValidationLayerPtrs = GetStringVectorAsCharPtrVector(_finalValidationLayerSet);
+        std::vector<const char*> allValidationLayerPtrs =
+            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
         size_t validationLayerLength = allValidationLayerPtrs.size();
 
         VkInstanceCreateInfo createInfo{};

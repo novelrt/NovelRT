@@ -58,9 +58,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     VulkanGraphicsFence::VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device) noexcept
-        : GraphicsFence(std::move(device)), _vulkanFence([&]() { return CreateVulkanFence(); }), _state()
+        : GraphicsFence(device->weak_from_this()), _vulkanFence([&]() { return CreateVulkanFence(); }), _state()
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+    }
+
+    bool VulkanGraphicsFence::GetIsSignalled()
+    {
+        return vkGetFenceStatus(GetDevice()->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
     }
 
     void VulkanGraphicsFence::Reset()

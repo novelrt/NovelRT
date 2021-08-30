@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsFence final : public GraphicsFence
     {
     private:
-        Utilities::Lazy<VkFence> _vulkanFence;
+        NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
         Threading::VolatileState _state;
 
         [[nodiscard]] VkFence CreateVulkanFence();
@@ -33,10 +33,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanFence.getActual();
         }
 
-        [[nodiscard]] inline bool GetIsSignalled() final
-        {
-            return vkGetFenceStatus(GetDevice()->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
-        }
+        [[nodiscard]] bool GetIsSignalled() final;
 
         void Reset() final;
 

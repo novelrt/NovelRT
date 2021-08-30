@@ -23,14 +23,14 @@ namespace NovelRT::Experimental::Graphics
         uint32_t _indexBufferStride;
 
     public:
-        GraphicsPrimitive(std::shared_ptr<GraphicsDevice> device,
+        GraphicsPrimitive(const std::shared_ptr<GraphicsDevice>& device,
                           std::shared_ptr<GraphicsPipeline> pipeline,
                           GraphicsMemoryRegion<GraphicsResource> vertexBufferRegion,
                           uint32_t vertexBufferStride,
                           GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
                           uint32_t indexBufferStride,
                           gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
-            : GraphicsDeviceObject(std::move(device)),
+            : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)),
               _pipeline(std::move(pipeline)),
               _vertexBufferRegion(std::move(vertexBufferRegion)),
               _indexBufferRegion(std::move(indexBufferRegion)),

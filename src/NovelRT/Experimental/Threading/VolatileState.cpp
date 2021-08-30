@@ -2,11 +2,18 @@
 // for more information.
 
 #include <NovelRT/Experimental/Threading/Threading.h>
+#include <NovelRT/Experimental/Threading/VolatileState.h>
 
 namespace NovelRT::Experimental::Threading
 {
     VolatileState::VolatileState() noexcept : _value(Uninitialised)
     {
+    }
+
+    VolatileState::VolatileState(const VolatileState& other) noexcept
+    {
+        uint32_t value = other._value;
+        _value = value;
     }
 
     void VolatileState::Transition(uint32_t from, uint32_t to)

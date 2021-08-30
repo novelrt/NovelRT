@@ -39,9 +39,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                   VkDebugUtilsMessengerEXT debugMessenger,
                                                   const VkAllocationCallbacks* pAllocator) noexcept;
 
-        [[nodiscard]] static std::vector<const char*> GetStringVectorAsCharPtrVector(
-            const std::vector<std::string>& target) noexcept;
-
         [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet() const;
         [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet() const;
         void CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept;
@@ -53,9 +50,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     public:
         VulkanGraphicsProvider();
 
-        [[nodiscard]] inline VkInstance GetVulkanInstance()
+        [[nodiscard]] inline VkInstance GetVulkanInstance() const noexcept
         {
             return _vulkanInstance;
+        }
+
+        [[nodiscard]] inline gsl::span<const std::string> GetValidationLayers() const noexcept
+        {
+            return gsl::span<const std::string>(&(*_finalValidationLayerSet.begin()), _finalValidationLayerSet.size());
         }
 
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;

@@ -13,17 +13,17 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
     {
     private:
-        std::shared_ptr<GraphicsAdapter> _adapter;
+        std::weak_ptr<GraphicsAdapter> _adapter;
         std::shared_ptr<IGraphicsSurface> _surface;
 
     protected:
-        [[nodiscard]] virtual GraphicsMemoryAllocator* GetMemoryAllocatorInternal() const noexcept = 0;
+        [[nodiscard]] virtual GraphicsMemoryAllocator* GetMemoryAllocatorInternal() = 0;
 
     public:
-        GraphicsDevice(std::shared_ptr<GraphicsAdapter> adapter, std::shared_ptr<IGraphicsSurface> surface)
+        GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<IGraphicsSurface> surface)
             : _adapter(std::move(adapter)), _surface(std::move(surface))
         {
-            if (_adapter == nullptr)
+            if (_adapter.expired())
             {
                 throw Exceptions::NullPointerException("The supplied GraphicsAdapter is nullptr.");
             }
@@ -36,17 +36,22 @@ namespace NovelRT::Experimental::Graphics
 
         virtual void TearDown() = 0;
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsAdapter> GetAdapter() const noexcept
+        [[nodiscard]] inline std::shared_ptr<GraphicsAdapter> GetAdapter() const
         {
-            return _adapter;
+            if (_adapter.expired())
+            {
+                throw std::runtime_error("Adapter has expired!");
+            }
+
+            return _adapter.lock();
         }
 
         [[nodiscard]] virtual size_t GetContextIndex() const noexcept = 0;
 
-        [[nodiscard]] virtual gsl::span<const std::shared_ptr<GraphicsContext>> GetContexts() const noexcept = 0;
+        [[nodiscard]] virtual gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() = 0;
 
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext() const noexcept
+        [[nodiscard]] inline std::shared_ptr<const GraphicsContext> GetCurrentContext()
         {
             return GetContexts()[GetContextIndex()];
         }
@@ -74,7 +79,7 @@ namespace NovelRT::Experimental::Graphics
             std::shared_ptr<GraphicsPipeline> pipeline,
             GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
             uint32_t vertexBufferStride,
-            GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
 

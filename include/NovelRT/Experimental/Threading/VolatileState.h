@@ -14,12 +14,18 @@ namespace NovelRT::Experimental::Threading
     {
     private:
         std::atomic_uint32_t _value;
+        inline void Swap(const VolatileState& swapTarget)
+        {
+            uint32_t value = swapTarget._value;
+            _value = value;
+        }
 
     public:
         static inline const uint32_t Uninitialised = 0;
         static inline const uint32_t Initialised = 1;
 
         VolatileState() noexcept;
+        VolatileState(const VolatileState& other) noexcept;
 
         [[nodiscard]] inline bool IsInitialised() const noexcept
         {
@@ -40,6 +46,12 @@ namespace NovelRT::Experimental::Threading
         [[nodiscard]] inline operator uint32_t() const noexcept
         {
             return _value;
+        }
+
+        inline VolatileState& operator=(const VolatileState& other) noexcept
+        {
+            Swap(other);
+            return *this;
         }
     };
 } // namespace NovelRT::Experimental::Threading

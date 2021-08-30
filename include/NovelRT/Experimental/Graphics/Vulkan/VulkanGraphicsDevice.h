@@ -10,13 +10,15 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice : public GraphicsDevice
+    class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
-        LoggingService _logger;
-        bool _debuggerWasCreated;
+        std::vector<VulkanGraphicsContext> _contexts;
+        std::vector<std::shared_ptr<const GraphicsContext>> _contextPtrs;
+        VulkanGraphicsFence _fence;
 
-        VkPhysicalDevice _physicalDevice;
+        LoggingService _logger;
+
         VkDevice _device;
 
         VkQueue _graphicsQueue;
@@ -26,14 +28,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkSwapchainKHR _swapChain;
         std::vector<VkImage> _swapChainImages;
+        size_t _contextIndex;
         VkFormat _vulkanSwapChainFormat;
         VkExtent2D _swapChainExtent;
 
-        std::vector<VkImageView> _swapChainImageViews;
-
         NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
+        NovelRT::Utilities::Lazy<VulkanGraphicsMemoryAllocator> _memoryAllocator;
 
         QueueFamilyIndices _indicesData;
+
+        Threading::VolatileState _state;
+
+        [[nodiscard]] std::vector<VulkanGraphicsContext> CreateGraphicsContexts(int32_t contextCount) const;
 
         void Initialise();
 
@@ -42,15 +48,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
             VkPhysicalDevice physicalDevice) const noexcept;
 
-
-        void CreateInstance();
-
         void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface);
 
         [[nodiscard]] QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice) const noexcept;
         [[nodiscard]] SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice) const noexcept;
         [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice physicalDevice) const noexcept;
-        void PickPhysicalDevice();
 
         void CreateLogicalDevice();
 
@@ -65,9 +67,51 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkRenderPass CreateRenderPass();
 
+    protected:
+        VulkanGraphicsMemoryAllocator* GetMemoryAllocatorInternal() final;
+
     public:
-        VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter, std::shared_ptr<IGraphicsSurface> surface);
+        VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
+                             std::shared_ptr<IGraphicsSurface> surface,
+                             int32_t contextCount);
         void TearDown() final;
+
+        size_t GetContextIndex() const noexcept override;
+
+        std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
+            std::shared_ptr<GraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            uint32_t vertexBufferStride,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t indexBufferStride,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
+            std::shared_ptr<VulkanGraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            uint32_t vertexBufferStride,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t indexBufferStride,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
+
+        void PresentFrame() final;
+        void Signal(std::shared_ptr<GraphicsFence> fence) final;
+        void WaitForIdle() final;
+
+        [[nodiscard]] inline gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() final
+        {
+            return gsl::span<std::shared_ptr<const GraphicsContext>>(&(*_contextPtrs.begin()), _contextPtrs.size());
+        }
+
+        [[nodiscard]] std::shared_ptr<const VulkanGraphicsContext> GetCurrentContext()
+        {
+            return std::dynamic_pointer_cast<const VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
+        }
 
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
                                                                          ShaderProgramKind kind,

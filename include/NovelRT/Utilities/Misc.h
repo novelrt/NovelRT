@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #include <type_traits>
+#include <gsl/span>
 
 #if defined(NDEBUG)
 #define unused(x)  (void)(x)
@@ -43,6 +44,21 @@ namespace NovelRT::Utilities
         static std::filesystem::path getExecutableDirPath()
         {
             return getExecutablePath().parent_path();
+        }
+
+        [[nodiscard]] static std::vector<const char*> GetStringSpanAsCharPtrVector(
+            const gsl::span<const std::string>& target) noexcept
+        {
+            size_t extensionLength = target.size();
+            std::vector<const char*> targetPtrs{};
+            targetPtrs.reserve(extensionLength);
+
+            for (auto&& extension : target)
+            {
+                targetPtrs.emplace_back(extension.c_str());
+            }
+
+            return targetPtrs;
         }
     };
 } // namespace NovelRT::Utilities

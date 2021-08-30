@@ -18,10 +18,10 @@ namespace NovelRT::Experimental::Graphics
         GraphicsResourceCpuAccessKind _cpuAccess;
 
     public:
-        GraphicsResource(std::shared_ptr<GraphicsDevice> device,
+        GraphicsResource(const std::shared_ptr<GraphicsDevice>& device,
                          GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                          GraphicsResourceCpuAccessKind cpuAccess)
-            : GraphicsDeviceObject(std::move(device)), _blockRegion(std::move(blockRegion)), _cpuAccess(cpuAccess)
+            : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)), _blockRegion(std::move(blockRegion)), _cpuAccess(cpuAccess)
         {
             if (_blockRegion.GetCollection() == nullptr)
             {
