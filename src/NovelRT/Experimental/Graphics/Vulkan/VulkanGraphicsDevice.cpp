@@ -10,7 +10,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                std::shared_ptr<IGraphicsSurface> surface,
                                                int32_t contextCount)
         : GraphicsDevice(std::move(adapter), std::move(surface)),
-          _fence(VulkanGraphicsFence(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))),
+          _presentCompletionFence(std::make_shared<VulkanGraphicsFence>(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))),
           _contexts(CreateGraphicsContexts(contextCount)),
           _contextPtrs{},
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
@@ -18,12 +18,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
           _surface(VK_NULL_HANDLE),
-          _swapChain(VK_NULL_HANDLE),
+          _vulkanSwapchain(VK_NULL_HANDLE),
           _swapChainImages(std::vector<VkImage>{}),
           _contextIndex(0),
           _vulkanSwapChainFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
           _renderPass([&]() { return CreateRenderPass(); }),
+          _memoryAllocator([&]() { return CreateMemoryAllocator(); }),
           _indicesData{},
           _state()
     {
@@ -36,6 +37,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         Initialise();
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        GetPresentCompletionFence()->Reset();
+        //TODO: This gonna be an issue...?
+        GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
     }
 
     std::vector<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContexts(int32_t contextCount) const
@@ -48,6 +52,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         return contexts;
+    }
+
+    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsDevice::CreateMemoryAllocator()
+    {
+        GraphicsMemoryAllocatorSettings allocatorSettings{};
+        return std::make_shared<VulkanGraphicsMemoryAllocator>(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), allocatorSettings);
     }
 
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet() const
@@ -445,7 +455,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.clipped = VK_TRUE;
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        VkResult swapChainResult = vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_swapChain);
+        VkResult swapChainResult = vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_vulkanSwapchain);
         if (swapChainResult != VK_SUCCESS)
         {
             throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
@@ -453,7 +463,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         _logger.logInfoLine("VkSwapchainKHR successfully created. Retrieving VkImages...");
 
-        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, nullptr);
+        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _vulkanSwapchain, &imageCount, nullptr);
 
         if (imagesKHRQuery != VK_SUCCESS)
         {
@@ -462,7 +472,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         _swapChainImages.resize(imageCount);
-        imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, _swapChainImages.data());
+        imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _vulkanSwapchain, &imageCount, _swapChainImages.data());
 
         if (imagesKHRQuery != VK_SUCCESS)
         {
@@ -488,7 +498,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::TearDown()
     {
-        vkDestroySwapchainKHR(_device, _swapChain, nullptr);
+        vkDestroySwapchainKHR(_device, _vulkanSwapchain, nullptr);
         vkDestroySurfaceKHR(GetAdapter()->GetProvider()->GetVulkanInstance(), _surface, nullptr);
         vkDestroyDevice(_device, nullptr);
 
@@ -641,6 +651,26 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsMemoryAllocator* VulkanGraphicsDevice::GetMemoryAllocatorInternal()
     {
-        return &_memoryAllocator.getActual();
+        return _memoryAllocator.getActual().get();
+    }
+
+    void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)
+    {
+        WaitForIdle();
+
+        _swapChainImages = GetVulkanSwapChainImages();
+        vkDestroySwapchainKHR(GetVulkanDevice(), _vulkanSwapchain, nullptr);
+        CreateSwapChain();
+        _contextIndex = 0;
+
+        for (auto&& context : _contexts)
+        {
+            context.OnGraphicsSurfaceSizeChanged(newSize);
+        }
+    }
+
+    void VulkanGraphicsDevice::SignalVulkan(std::shared_ptr<VulkanGraphicsFence> fence)
+    {
+        //VkResult result = vkQueueSubmit
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

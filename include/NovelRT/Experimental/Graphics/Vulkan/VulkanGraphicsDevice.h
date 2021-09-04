@@ -15,7 +15,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     private:
         std::vector<VulkanGraphicsContext> _contexts;
         std::vector<std::shared_ptr<const GraphicsContext>> _contextPtrs;
-        VulkanGraphicsFence _fence;
+        std::shared_ptr<VulkanGraphicsFence> _presentCompletionFence;
 
         LoggingService _logger;
 
@@ -26,20 +26,22 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkSurfaceKHR _surface;
 
-        VkSwapchainKHR _swapChain;
+        VkSwapchainKHR _vulkanSwapchain;
         std::vector<VkImage> _swapChainImages;
         size_t _contextIndex;
         VkFormat _vulkanSwapChainFormat;
         VkExtent2D _swapChainExtent;
 
         NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
-        NovelRT::Utilities::Lazy<VulkanGraphicsMemoryAllocator> _memoryAllocator;
+        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsMemoryAllocator>> _memoryAllocator;
 
         QueueFamilyIndices _indicesData;
 
         Threading::VolatileState _state;
 
         [[nodiscard]] std::vector<VulkanGraphicsContext> CreateGraphicsContexts(int32_t contextCount) const;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> CreateMemoryAllocator();
+        void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
         void Initialise();
 
@@ -96,6 +98,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void PresentFrame() final;
         void Signal(std::shared_ptr<GraphicsFence> fence) final;
+        void SignalVulkan(std::shared_ptr<VulkanGraphicsFence> fence);
         void WaitForIdle() final;
 
         [[nodiscard]] inline gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() final
@@ -125,6 +128,21 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
             gsl::span<GraphicsPipelineInput> inputs = gsl::span<GraphicsPipelineInput>{},
             gsl::span<GraphicsPipelineResource> resources = gsl::span<GraphicsPipelineResource>{}) final;
+
+        [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain() const noexcept
+        {
+            return _vulkanSwapchain;
+        }
+
+        [[nodiscard]] inline VkQueue GetVulkanPresentQueue() const noexcept
+        {
+            return _presentQueue;
+        }
+
+        [[nodiscard]] inline VkQueue GetVulkanGraphicsQueue() const noexcept
+        {
+            return _graphicsQueue;
+        }
 
         ~VulkanGraphicsDevice();
 
@@ -156,6 +174,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] inline VkFormat GetVulkanSwapChainFormat() const noexcept
         {
             return _vulkanSwapChainFormat;
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetPresentCompletionFence() noexcept
+        {
+            return _presentCompletionFence;
+        }
+
+        [[nodiscard]] inline const std::shared_ptr<const VulkanGraphicsFence> GetPresentCompletionFence() const noexcept
+        {
+            return _presentCompletionFence;
         }
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
