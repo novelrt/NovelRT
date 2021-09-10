@@ -36,15 +36,23 @@ int main()
     auto device = std::shared_ptr<IWindowingDevice>(new GlfwWindowingDevice());
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
-    auto gfxDevice = std::shared_ptr<GraphicsDevice>(new VulkanGraphicsDevice());
-    gfxDevice->Initialise(device);
+
+    auto vulkanProvider = std::make_shared<VulkanGraphicsProvider>();
+
+
+    VulkanGraphicsAdapterSelector selector;
+    std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext = std::make_shared<VulkanGraphicsSurfaceContext>(device, vulkanProvider);
+
+    std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
+
+    auto gfxDevice = adapter->CreateDevice(surfaceContext, 1);
 
     auto vertShaderData = LoadSpv("vert.spv");
     auto pixelShaderData = LoadSpv("frag.spv");
 
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto signature = gfxDevice->CreatePipelineSignature();
+    auto signature = gfxDevice->CreatePipelineSignature(gsl::span<GraphicsPipelineInput>{}, gsl::span<GraphicsPipelineResource>{});
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
 
     return 0;

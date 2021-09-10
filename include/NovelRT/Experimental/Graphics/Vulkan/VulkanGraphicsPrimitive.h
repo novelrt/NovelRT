@@ -35,6 +35,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         }
 
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsPrimitive::GetDevice());
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsPipeline> GetPipeline() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsPipeline>(GraphicsPrimitive::GetPipeline());
+        }
+
         //TODO: potential bug later...?
         ~VulkanGraphicsPrimitive() final
         {

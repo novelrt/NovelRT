@@ -49,6 +49,7 @@ set(SOURCES
   Experimental/Graphics/GraphicsPipelineSignature.cpp
   Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsBuffer.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsContext.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
@@ -59,6 +60,7 @@ set(SOURCES
   Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Threading/VolatileState.cpp

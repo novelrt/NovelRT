@@ -90,7 +90,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineCreateInfo.pDepthStencilState = &pipelineDepthStencilStateCreateInfo;
         pipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
         pipelineCreateInfo.pDynamicState = &pipelineDynamicStateCreateInfo;
-        pipelineCreateInfo.layout = signature->GetPipelineLayout();
+        pipelineCreateInfo.layout = signature->GetVulkanPipelineLayout();
         pipelineCreateInfo.renderPass = device->GetVulkanRenderPass();
 
         if (HasVertexShader())

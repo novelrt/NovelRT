@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsMemoryBlock : public GraphicsMemoryBlock
     {
     private:
-        Utilities::Lazy<VkDeviceMemory> _vulkanDeviceMemory;
+        NovelRT::Utilities::Lazy<VkDeviceMemory> _vulkanDeviceMemory;
 
         VkDeviceMemory CreateVulkanDeviceMemory();
         void DisposeVulkanDeviceMemory() noexcept;
@@ -24,8 +24,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsDevice* GetDeviceInternal() const noexcept final;
 
     public:
-        VulkanGraphicsMemoryBlock(std::shared_ptr<VulkanGraphicsDevice> device,
-                                  std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection);
+        VulkanGraphicsMemoryBlock(const std::shared_ptr<VulkanGraphicsDevice>& device,
+                                  const std::shared_ptr<VulkanGraphicsMemoryBlockCollection>& collection);
 
         ~VulkanGraphicsMemoryBlock() override;
 
@@ -66,7 +66,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             size_t minimumAllocatedRegionSize = allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
             size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
 
-            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), GetSize(),
+            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
                                  minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
 
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));

@@ -15,7 +15,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkMemoryAllocateInfo memoryAllocateInfo{};
         memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         memoryAllocateInfo.allocationSize = GetSize();
-        memoryAllocateInfo.memoryTypeIndex = collection->GetVulkanMemoryTypeIndex;
+        memoryAllocateInfo.memoryTypeIndex = collection->GetVulkanMemoryTypeIndex();
 
         VkResult result = vkAllocateMemory(vulkanDevice, &memoryAllocateInfo, nullptr, &vulkanDeviceMemory);
 
@@ -42,9 +42,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     VulkanGraphicsMemoryBlock::VulkanGraphicsMemoryBlock(
-        std::shared_ptr<VulkanGraphicsDevice> device,
-        std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection)
-        : GraphicsMemoryBlock(std::move(device), std::move(collection)),
+        const std::shared_ptr<VulkanGraphicsDevice>& device,
+        const std::shared_ptr<VulkanGraphicsMemoryBlockCollection>& collection)
+        : GraphicsMemoryBlock(std::static_pointer_cast<GraphicsDevice>(device), std::static_pointer_cast<GraphicsMemoryBlockCollection>(collection)),
           _vulkanDeviceMemory([&]() { return CreateVulkanDeviceMemory(); })
     {
     }

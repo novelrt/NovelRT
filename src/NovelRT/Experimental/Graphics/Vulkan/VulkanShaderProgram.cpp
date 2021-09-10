@@ -11,7 +11,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                              ShaderProgramKind kind,
                                              gsl::span<uint8_t> bytecode) noexcept
         : ShaderProgram(device, std::move(entryPointName), kind),
-          _shaderModule(Utilities::Lazy<VkShaderModule>(
+          _shaderModule(NovelRT::Utilities::Lazy<VkShaderModule>(
               std::function<VkShaderModule()>([this]() { return CreateShaderModule(); }))),
           _bytecode(bytecode),
           _shaderModuleCreateInfo(VkShaderModuleCreateInfo{})

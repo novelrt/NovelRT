@@ -26,7 +26,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         void* pDestination = nullptr;
 
@@ -47,7 +47,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         void* pDestination = nullptr;
 
@@ -68,7 +68,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         void* pDestination = nullptr;
 
@@ -108,7 +108,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         void* pDestination = nullptr;
 
@@ -148,7 +148,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
     }
@@ -158,7 +158,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
@@ -187,7 +187,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = device->GetVulkanDeviceMemory();
+        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 

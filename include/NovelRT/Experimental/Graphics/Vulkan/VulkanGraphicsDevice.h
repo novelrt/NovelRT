@@ -13,18 +13,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
-        std::vector<VulkanGraphicsContext> _contexts;
+        std::vector<std::shared_ptr<VulkanGraphicsContext>> _contexts;
         std::vector<std::shared_ptr<const GraphicsContext>> _contextPtrs;
         std::shared_ptr<VulkanGraphicsFence> _presentCompletionFence;
 
         LoggingService _logger;
 
+        VkSurfaceKHR _surface;
+
         VkDevice _device;
 
         VkQueue _graphicsQueue;
         VkQueue _presentQueue;
-
-        VkSurfaceKHR _surface;
 
         VkSwapchainKHR _vulkanSwapchain;
         std::vector<VkImage> _swapChainImages;
@@ -39,22 +39,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         Threading::VolatileState _state;
 
-        [[nodiscard]] std::vector<VulkanGraphicsContext> CreateGraphicsContexts(int32_t contextCount) const;
+        [[nodiscard]] std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContexts(int32_t contextCount);
         [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> CreateMemoryAllocator();
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
         void Initialise();
 
         [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
-        [[nodiscard]] bool CheckPhysicalDeviceRequiredExtensionSupport(VkPhysicalDevice physicalDevice) const noexcept;
-        [[nodiscard]] int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
-            VkPhysicalDevice physicalDevice) const noexcept;
 
-        void ConfigureOutputSurface(std::shared_ptr<IGraphicsSurface> targetSurface);
-
-        [[nodiscard]] QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice) const noexcept;
-        [[nodiscard]] SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice) const noexcept;
-        [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice physicalDevice) const noexcept;
 
         void CreateLogicalDevice();
 
@@ -73,11 +65,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsMemoryAllocator* GetMemoryAllocatorInternal() final;
 
     public:
-        VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
-                             std::shared_ptr<IGraphicsSurface> surface,
+        VulkanGraphicsDevice(const std::shared_ptr<VulkanGraphicsAdapter>& adapter,
+                             const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                              int32_t contextCount);
-        void TearDown() final;
 
+        void TearDown() final;
         size_t GetContextIndex() const noexcept override;
 
         std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
@@ -97,8 +89,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 
         void PresentFrame() final;
+
         void Signal(std::shared_ptr<GraphicsFence> fence) final;
-        void SignalVulkan(std::shared_ptr<VulkanGraphicsFence> fence);
+        void SignalVulkan(const std::shared_ptr<VulkanGraphicsFence>& fence) const;
+
         void WaitForIdle() final;
 
         [[nodiscard]] inline gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() final
@@ -114,6 +108,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept
         {
             return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
         }
 
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
@@ -143,8 +142,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return _graphicsQueue;
         }
-
-        ~VulkanGraphicsDevice();
 
         [[nodiscard]] inline VkDevice GetVulkanDevice() const noexcept
         {
@@ -185,6 +182,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return _presentCompletionFence;
         }
+
+        ~VulkanGraphicsDevice();
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

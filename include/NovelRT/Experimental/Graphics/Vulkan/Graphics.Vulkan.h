@@ -26,11 +26,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsMemoryBlockCollection;
     class VulkanGraphicsMemoryBlock;
     class VulkanGraphicsAdapter;
+    class VulkanGraphicsAdapterSelector;
+    class VulkanGraphicsSurfaceContext;
 }
 
 //Graphics.Vulkan dependencies
 #include <array>
-#include <bit>
 #include <optional>
 #include <set>
 #include <map>
@@ -47,10 +48,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
 // clang-format off
 
-#include "Utilities/Graphics.Vulkan.Utilities.h"
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
+#include "Utilities/Graphics.Vulkan.Utilities.h"
 #include "VulkanGraphicsAdapter.h"
+#include "VulkanGraphicsSurfaceContext.h"
+#include "VulkanGraphicsAdapterSelector.h"
 #include "VulkanGraphicsFence.h"
 #include "VulkanGraphicsMemoryAllocator.h"
 #include "VulkanGraphicsDevice.h"

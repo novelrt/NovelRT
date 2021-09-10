@@ -54,7 +54,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(vulkanBufferUsageKind);
     }
 
-    [[nodiscard]] inline uint32_t GetVulkanImageUsageKind(GraphicsTextureKind kind, GraphicsResourceCpuAccessKind cpuAccess) noexcept
+    [[nodiscard]] inline uint32_t GetVulkanImageUsageKind(GraphicsTextureKind /*kind*/, GraphicsResourceCpuAccessKind cpuAccess) noexcept
     {
         VkBufferUsageFlagBits cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 

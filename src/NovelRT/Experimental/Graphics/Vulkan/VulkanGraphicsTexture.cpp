@@ -48,7 +48,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return pDestination;
     }
 
-    void* VulkanGraphicsTexture::MapUntyped(size_t rangeOffset, size_t rangeLength)
+    void* VulkanGraphicsTexture::MapUntyped(size_t rangeOffset, size_t /*rangeLength*/)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
@@ -58,6 +58,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void* pDestination = nullptr;
 
         VkResult result = vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
+
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to map VkDeviceMemory! Reason: " + std::to_string(result));
+        }
+
         return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
     }
 
@@ -78,7 +84,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
         }
 
-        uint32_t nonCoherentAtomSize =
+        size_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
         size_t offset = GetOffset();
         size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -120,7 +126,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (readRangeLength != 0)
         {
-            uint32_t nonCoherentAtomSize =
+            size_t nonCoherentAtomSize =
                 device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
             size_t offset = GetOffset() + readRangeOffset;
             size_t size = (readRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -161,7 +167,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDevice vulkanDevice = device->GetVulkanDevice();
         VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
-        uint32_t nonCoherentAtomSize =
+        size_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
         size_t offset = GetOffset();
         size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -193,7 +199,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (writtenRangeLength != 0)
         {
-            uint32_t nonCoherentAtomSize =
+            size_t nonCoherentAtomSize =
                 device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
             size_t offset = GetOffset() + writtenRangeOffset;
             size_t size = (writtenRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -237,7 +243,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
+        //VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkImageViewType viewType;
         switch (GetKind())
@@ -293,7 +299,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
+        //VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkSamplerCreateInfo samplerCreateInfo{};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -317,7 +323,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         if (_vulkanImage != VK_NULL_HANDLE)
         {
-            vkDestroyImage(GetAllocator()->GetDevice()->GetVulkanDevice(), vulkanImage, nullptr);
+            vkDestroyImage(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanImage, nullptr);
         }
     }
 

@@ -98,11 +98,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VkDescriptorSet VulkanGraphicsPipelineSignature::CreateDescriptorSet()
     {
         VkDescriptorSet returnDescriptorSet = VK_NULL_HANDLE;
-        VkDescriptorPool vulkanDescriptorPool = GetDescriptorPool();
+        VkDescriptorPool vulkanDescriptorPool = GetVulkanDescriptorPool();
 
         if (vulkanDescriptorPool != VK_NULL_HANDLE)
         {
-            VkDescriptorSetLayout vulkanDescriptorSetLayout = GetDescriptorSetLayout();
+            VkDescriptorSetLayout vulkanDescriptorSetLayout = GetVulkanDescriptorSetLayout();
 
             VkDescriptorSetAllocateInfo descriptorSetAllocateInfo{};
             descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -206,7 +206,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
         pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-        VkDescriptorSetLayout descriptorSetLayout = GetDescriptorSetLayout();
+        VkDescriptorSetLayout descriptorSetLayout = GetVulkanDescriptorSetLayout();
 
         if (descriptorSetLayout != VK_NULL_HANDLE)
         {

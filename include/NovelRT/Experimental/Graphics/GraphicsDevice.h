@@ -14,23 +14,23 @@ namespace NovelRT::Experimental::Graphics
     {
     private:
         std::weak_ptr<GraphicsAdapter> _adapter;
-        std::shared_ptr<IGraphicsSurface> _surface;
+        std::shared_ptr<GraphicsSurfaceContext> _surfaceContext;
 
     protected:
         [[nodiscard]] virtual GraphicsMemoryAllocator* GetMemoryAllocatorInternal() = 0;
 
     public:
-        GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<IGraphicsSurface> surface)
-            : _adapter(std::move(adapter)), _surface(std::move(surface))
+        GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<GraphicsSurfaceContext> surfaceContext)
+            : _adapter(std::move(adapter)),  _surfaceContext(std::move(surfaceContext))
         {
             if (_adapter.expired())
             {
                 throw Exceptions::NullPointerException("The supplied GraphicsAdapter is nullptr.");
             }
 
-            if (surface == nullptr)
+            if (_surfaceContext == nullptr)
             {
-                throw Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
+                throw Exceptions::NullPointerException("The supplied GraphicsSurfaceContext is nullptr.");
             }
         }
 
@@ -56,14 +56,19 @@ namespace NovelRT::Experimental::Graphics
             return GetContexts()[GetContextIndex()];
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetMemoryAllocator() const noexcept
+        [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetMemoryAllocator()
         {
             return std::dynamic_pointer_cast<GraphicsMemoryAllocator>(GetMemoryAllocatorInternal()->shared_from_this());
         }
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
         {
-            return _surface;
+            return _surfaceContext->GetSurface();
+        }
+
+        [[nodiscard]] inline std::shared_ptr<GraphicsSurfaceContext> GetSurfaceContext() const noexcept
+        {
+            return _surfaceContext;
         }
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsPipeline> CreatePipeline(

@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsPipeline : public GraphicsPipeline
     {
     private:
-        Utilities::Lazy<VkPipeline> _vulkanPipeline;
+        NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
         [[nodiscard]] VkPipeline CreateVulkanPipeline();
         [[nodiscard]] size_t GetInputElementsCount(gsl::span<const GraphicsPipelineInput> inputs) const noexcept;
         [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index) const noexcept;
@@ -23,6 +23,31 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
                                std::shared_ptr<VulkanShaderProgram> vertexShader,
                                std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept;
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsPipeline::GetDevice());
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetPixelShader() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanShaderProgram>(GraphicsPipeline::GetPixelShader());
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetVertexShader() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanShaderProgram>(GraphicsPipeline::GetVertexShader());
+        }
+
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsPipelineSignature> GetSignature() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsPipelineSignature>(GraphicsPipeline::GetSignature());
+        }
+
+        [[nodiscard]] inline VkPipeline GetVulkanPipeline()
+        {
+            return _vulkanPipeline.getActual();
+        }
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

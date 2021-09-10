@@ -13,10 +13,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature final : public GraphicsPipelineSignature
     {
 
-        Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
-        Utilities::Lazy<VkDescriptorSet> _vulkanDescriptorSet;
-        Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
-        Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
+        NovelRT::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
+        NovelRT::Utilities::Lazy<VkDescriptorSet> _vulkanDescriptorSet;
+        NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
+        NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
 
         [[nodiscard]] VkDescriptorPool CreateDescriptorPool();
         [[nodiscard]] VkDescriptorSet CreateDescriptorSet();
@@ -35,22 +35,27 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                         gsl::span<const GraphicsPipelineInput> inputs,
                                         gsl::span<const GraphicsPipelineResource> resources) noexcept;
 
-        [[nodiscard]] inline VkDescriptorPool GetDescriptorPool()
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsPipelineSignature::GetDevice());
+        }
+
+        [[nodiscard]] inline VkDescriptorPool GetVulkanDescriptorPool()
         {
             return _vulkanDescriptorPool.getActual();
         }
 
-        [[nodiscard]] inline VkDescriptorSet GetDescriptorSet()
+        [[nodiscard]] inline VkDescriptorSet GetVulkanDescriptorSet()
         {
             return _vulkanDescriptorSet.getActual();
         }
 
-        [[nodiscard]] inline VkDescriptorSetLayout GetDescriptorSetLayout()
+        [[nodiscard]] inline VkDescriptorSetLayout GetVulkanDescriptorSetLayout()
         {
             return _vulkanDescriptorSetLayout.getActual();
         }
 
-        [[nodiscard]] inline VkPipelineLayout GetPipelineLayout()
+        [[nodiscard]] inline VkPipelineLayout GetVulkanPipelineLayout()
         {
             return _vulkanPipelineLayout.getActual();
         }

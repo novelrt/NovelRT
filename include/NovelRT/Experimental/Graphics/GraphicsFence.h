@@ -43,7 +43,7 @@ namespace NovelRT::Experimental::Graphics
             }
         }
 
-        inline oid Wait(std::chrono::duration<uint64_t, std::milli> timeout)
+        inline void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
         {
             if (!TryWait(timeout))
             {

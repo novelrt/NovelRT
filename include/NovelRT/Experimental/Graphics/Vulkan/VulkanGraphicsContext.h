@@ -100,7 +100,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             Draw(std::static_pointer_cast<VulkanGraphicsPrimitive>(primitive));
         }
 
-        void Draw(std::shared_ptr<VulkanGraphicsPrimitive> primitive);
+        void Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive);
         void EndDrawing() final;
         void EndFrame() final;
 

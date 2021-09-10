@@ -62,6 +62,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanSampler.getActual();
         }
 
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryBlock> GetBlock() const noexcept
+        {
+            return std::dynamic_pointer_cast<VulkanGraphicsMemoryBlock>(GraphicsTexture::GetBlock());
+        }
+
         [[nodiscard]] void* MapUntyped() final;
         [[nodiscard]] void* MapUntyped(size_t rangeOffset, size_t rangeLength) final;
         [[nodiscard]] const void* MapForReadUntyped() final;
@@ -118,7 +123,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         [[nodiscard]] int32_t GetCount() const noexcept final
         {
-            return _metadata.GetCount();
+            return static_cast<int32_t>(_metadata.GetCount());
         }
 
         [[nodiscard]] bool GetIsEmpty() const noexcept final

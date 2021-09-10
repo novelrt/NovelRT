@@ -9,6 +9,7 @@
 #endif
 
 #include "BufferUsageKind.h"
-#include "TexelUtilities.h"
+#include "Support.h"
+#include "Texel.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_H

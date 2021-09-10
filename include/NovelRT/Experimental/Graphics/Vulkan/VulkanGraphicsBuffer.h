@@ -91,7 +91,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         [[nodiscard]] int32_t GetCount() const noexcept final
         {
-            return _metadata.GetCount();
+            return static_cast<int32_t>(_metadata.GetCount());
         }
 
         [[nodiscard]] bool GetIsEmpty() const noexcept final

@@ -6,7 +6,7 @@
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
 
-    void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize)
+    void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
     {
         if (_vulkanFramebuffer.isCreated())
         {
@@ -337,7 +337,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         EndCopy();
     }
 
-    void VulkanGraphicsContext::Draw(std::shared_ptr<VulkanGraphicsPrimitive> primitive)
+    void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive)
     {
         if (primitive == nullptr)
         {
@@ -346,7 +346,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkCommandBuffer vulkanCommandBuffer = GetVulkanCommandBuffer();
         std::shared_ptr<VulkanGraphicsPipeline> pipeline = primitive->GetPipeline();
-        std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature = primitive->GetPipelineSignature();
+        std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature = pipeline->GetSignature();
         VkPipeline vulkanPipeline = pipeline->GetVulkanPipeline();
 
         vkCmdBindPipeline(vulkanCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanPipeline);
@@ -359,7 +359,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
 
-        VkDescriptorSet vulkanDescriptorSet = pipelineSignature.GetVulkanDescriptorSet();
+        VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GetVulkanDescriptorSet();
 
         if (vulkanDescriptorSet != VK_NULL_HANDLE)
         {
@@ -413,7 +413,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             }
 
             vkCmdBindDescriptorSets(vulkanCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    pipeline.GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0, nullptr);
+                                    pipelineSignature->GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0, nullptr);
         }
 
         const GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion = primitive->GetIndexBufferRegion();
@@ -475,8 +475,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::shared_ptr<VulkanGraphicsFence> executeGraphicsFence = GetWaitForExecuteCompletionFence();
 
+        //TODO: Might need a fence here? Not sure yet.
         VkResult queueSubmitResult =
-            vkQueueSubmit(GetDevice()->GetVulkanCommandQueue(), 1, &submitInfo, executeGraphicsFence->GetVulkanFence());
+            vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo, executeGraphicsFence->GetVulkanFence());
+
+        if (queueSubmitResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
+        }
 
         executeGraphicsFence->Wait();
         executeGraphicsFence->Reset();

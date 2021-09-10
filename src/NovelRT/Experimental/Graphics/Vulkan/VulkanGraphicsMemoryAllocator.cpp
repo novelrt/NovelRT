@@ -211,7 +211,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
 
         return std::static_pointer_cast<GraphicsTexture>(std::make_shared<VulkanGraphicsTextureImpl<Metadata>>(
-            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height, depth, vulkanImage));
+            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height, static_cast<uint16_t>(depth), vulkanImage));
     }
 
     std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::

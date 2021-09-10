@@ -297,6 +297,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(
                 std::dynamic_pointer_cast<VulkanGraphicsProvider>(shared_from_this()), physicalDevice));
         }
+
+        return adapters;
     }
 
     VulkanGraphicsProvider::VulkanGraphicsProvider()
@@ -317,7 +319,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         _vulkanInstance = CreateInstance();
         _adapters = GetGraphicsAdapters();
 
-        _state.Transition(Threading::VolatileState::Initialised);
+        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
     VulkanGraphicsProvider::~VulkanGraphicsProvider()

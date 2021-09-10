@@ -15,7 +15,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 "No memory block creation method has been specified for the default Vulkan render pipeline.");
         }
 
-        return reinterpret_cast<VulkanGraphicsMemoryBlock*>(settings.BlockCreationLogicDelegate.value()(size));
+        return reinterpret_cast<VulkanGraphicsMemoryBlock*>(settings.BlockCreationLogicDelegate.value()(
+            GetDevice(), std::static_pointer_cast<GraphicsMemoryBlockCollection>(shared_from_this()), size));
     }
 
     VulkanGraphicsMemoryBlockCollection::VulkanGraphicsMemoryBlockCollection(

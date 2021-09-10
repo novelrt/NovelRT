@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    class GraphicsAdapter
+    class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter>
     {
     private:
         std::weak_ptr<GraphicsProvider> _provider;
@@ -41,8 +41,9 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual uint32_t GetVendorId() = 0;
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> CreateDevice(std::shared_ptr<IGraphicsSurface> surface,
-                                                                           int32_t contextCount) = 0;
+        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> CreateDevice(
+            std::shared_ptr<GraphicsSurfaceContext> surfaceContext,
+            int32_t contextCount) = 0;
 
         virtual ~GraphicsAdapter() = default;
     };

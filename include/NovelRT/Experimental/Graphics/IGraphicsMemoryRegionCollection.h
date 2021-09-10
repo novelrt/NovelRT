@@ -87,10 +87,10 @@ namespace NovelRT::Experimental::Graphics
                 : _collection(nullptr),
                   _freeRegionsBySize(std::vector<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>{}),
                   _regions(std::list<GraphicsMemoryRegion<TSelf>>{}),
-                  _minimumFreeRegionSizeToRegister(-1),
-                  _minimumAllocatedRegionMarginSize(-1),
-                  _size(-1),
-                  _totalFreeRegionSize(-1),
+                  _minimumFreeRegionSizeToRegister(static_cast<size_t>(-1)),
+                  _minimumAllocatedRegionMarginSize(static_cast<size_t>(-1)),
+                  _size(static_cast<size_t>(-1)),
+                  _totalFreeRegionSize(static_cast<size_t>(-1)),
                   _freeRegionCount(-1)
             {
             }
@@ -342,6 +342,7 @@ namespace NovelRT::Experimental::Graphics
                     UnregisterFreeRegion(previousRegionNode);
                     MergeFreeRegionWithNext(previousRegionNode);
                     RegisterFreeRegion(previousRegionNode);
+                    return previousRegionNode;
                 }
                 else
                 {

@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -34,5 +35,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _state()
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+    }
+
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateVulkanGraphicsDevice(
+        std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
+        int32_t contextCount)
+    {
+        return std::make_shared<VulkanGraphicsDevice>(
+            std::dynamic_pointer_cast<VulkanGraphicsAdapter>(shared_from_this()), std::move(surfaceContext), contextCount);
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

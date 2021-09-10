@@ -22,6 +22,7 @@
 #include "../../Graphics/RGBAConfig.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"
+#include "../EngineConfig.h"
 
 /**
  * @brief The experimental Graphics plugin API. Comes with built-in support for the ECS.
@@ -54,6 +55,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryAllocator;
     struct GraphicsMemoryAllocatorSettings;
     enum class GraphicsTextureKind : uint32_t;
+    class IGraphicsAdapterSelector;
     enum class GraphicsMemoryRegionAllocationFlags : uint32_t;
     class GraphicsMemoryBlockCollection;
     class GraphicsMemoryBlock;
@@ -61,6 +63,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsMemoryBudget;
     enum class GraphicsBufferKind : uint32_t;
     enum class TexelFormat : uint32_t;
+    class GraphicsSurfaceContext;
 }
 
 // Graphics types
@@ -84,11 +87,13 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsSurfaceKind.h"
 #include "GraphicsTextureKind.h"
 #include "IGraphicsSurface.h"
+#include "GraphicsSurfaceContext.h"
 #include "GraphicsDevice.h"
 #include "GraphicsResource.h"
 #include "GraphicsBufferKind.h"
 #include "GraphicsBuffer.h"
 #include "GraphicsTexture.h"
+#include "IGraphicsAdapterSelector.h"
 #include "ShaderProgram.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"

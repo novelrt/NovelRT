@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanShaderProgram : public ShaderProgram
     {
     private:
-        Utilities::Lazy<VkShaderModule> _shaderModule;
+        NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
         gsl::span<uint8_t> _bytecode;
         VkShaderModuleCreateInfo _shaderModuleCreateInfo;
 
