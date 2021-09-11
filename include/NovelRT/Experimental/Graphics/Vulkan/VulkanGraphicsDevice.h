@@ -14,8 +14,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
-        std::vector<std::shared_ptr<const GraphicsContext>> _contextPtrs;
-        std::shared_ptr<VulkanGraphicsFence> _presentCompletionFence;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<const GraphicsContext>>> _contextPtrs;
+        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
 
         LoggingService _logger;
 
@@ -46,7 +46,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void Initialise();
 
         [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
-
 
         void CreateLogicalDevice();
 
@@ -97,7 +96,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         [[nodiscard]] inline gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() final
         {
-            return gsl::span<std::shared_ptr<const GraphicsContext>>(&(*_contextPtrs.begin()), _contextPtrs.size());
+            return gsl::span<std::shared_ptr<const GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
+                                                                     _contextPtrs.getActual().size());
         }
 
         [[nodiscard]] std::shared_ptr<const VulkanGraphicsContext> GetCurrentContext()
@@ -173,14 +173,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanSwapChainFormat;
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetPresentCompletionFence() noexcept
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetPresentCompletionFence()
         {
-            return _presentCompletionFence;
-        }
-
-        [[nodiscard]] inline const std::shared_ptr<const VulkanGraphicsFence> GetPresentCompletionFence() const noexcept
-        {
-            return _presentCompletionFence;
+            return _presentCompletionFence.getActual();
         }
 
         ~VulkanGraphicsDevice();

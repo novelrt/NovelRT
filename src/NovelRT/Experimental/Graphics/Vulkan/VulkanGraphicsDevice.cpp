@@ -8,12 +8,29 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VulkanGraphicsDevice::VulkanGraphicsDevice(const std::shared_ptr<VulkanGraphicsAdapter>& adapter,
                                                const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                                                int32_t contextCount)
-        : GraphicsDevice(adapter,
-                         std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence(std::make_shared<VulkanGraphicsFence>(
-              std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))), //TODO: Fix this next. Can't do this lol.
-          _contexts([&](){ return CreateGraphicsContexts(contextCount); }),
-          _contextPtrs{},
+        : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
+          _presentCompletionFence(
+              [&]() {
+                  std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
+                      std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
+                  ptr->Reset();
+                  return ptr;
+              }),
+          _contexts([&]() { return CreateGraphicsContexts(contextCount); }),
+          _contextPtrs(
+              [&]()
+              {
+                  std::vector<std::shared_ptr<const GraphicsContext>> ptrs{};
+                  ptrs.reserve(_contexts.getActual().size());
+
+                  for (auto&& context : _contexts.getActual())
+                  {
+                      ptrs.emplace_back(
+                          std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+                  }
+
+                  return ptrs;
+              }),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
           _device(VK_NULL_HANDLE),
@@ -29,27 +46,22 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _indicesData{},
           _state()
     {
-        _contextPtrs.reserve(_contexts.getActual().size());
-
-        for (auto&& context : _contexts.getActual())
-        {
-            _contextPtrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
-        }
-
+        _logger.logInfoLine("Provided GPU device: " + GetAdapter()->GetName());
         Initialise();
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
-        GetPresentCompletionFence()->Reset();
         // TODO: This gonna be an issue...?
         GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
     }
 
-    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContexts(int32_t contextCount)
+    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContexts(
+        int32_t contextCount)
     {
         std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
 
         for (int32_t i = 0; i < contextCount; i++)
         {
-            contexts[i] = std::make_shared<VulkanGraphicsContext>(std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
+            contexts[i] = std::make_shared<VulkanGraphicsContext>(
+                std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
         }
 
         return contexts;
@@ -235,8 +247,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::CreateSwapChain()
     {
-        SwapChainSupportDetails swapChainSupport =
-            Utilities::QuerySwapChainSupport(GetAdapter()->GetVulkanPhysicalDevice(), GetSurfaceContext()->GetVulkanSurfaceContextHandle());
+        SwapChainSupportDetails swapChainSupport = Utilities::QuerySwapChainSupport(
+            GetAdapter()->GetVulkanPhysicalDevice(), GetSurfaceContext()->GetVulkanSurfaceContextHandle());
 
         VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
