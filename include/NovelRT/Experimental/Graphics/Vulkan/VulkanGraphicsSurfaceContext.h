@@ -34,6 +34,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return std::dynamic_pointer_cast<VulkanGraphicsProvider>(GraphicsSurfaceContext::GetProvider());
         }
+
+        ~VulkanGraphicsSurfaceContext() final;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
 

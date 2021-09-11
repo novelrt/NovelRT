@@ -44,4 +44,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                     "The specified graphics surface kind is not supported by this graphics implementation.");
         }
     }
+
+    VulkanGraphicsSurfaceContext::~VulkanGraphicsSurfaceContext()
+    {
+        vkDestroySurfaceKHR(GetProvider()->GetVulkanInstance(), _vulkanSurface, nullptr);
+        _logger.logInfoLine("VkSurface successfully destroyed.");
+    }
 } // namespace NovelRT::Experimental::Graphics::Vulkan
