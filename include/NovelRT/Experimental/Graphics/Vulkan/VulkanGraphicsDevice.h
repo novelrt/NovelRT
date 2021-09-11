@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<const GraphicsContext>>> _contextPtrs;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
         NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
 
         LoggingService _logger;
@@ -94,15 +94,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         void WaitForIdle() final;
 
-        [[nodiscard]] inline gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() final
+        [[nodiscard]] inline gsl::span<std::shared_ptr<GraphicsContext>> GetContexts() final
         {
-            return gsl::span<std::shared_ptr<const GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
+            return gsl::span<std::shared_ptr<GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
                                                                      _contextPtrs.getActual().size());
         }
 
-        [[nodiscard]] std::shared_ptr<const VulkanGraphicsContext> GetCurrentContext()
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext()
         {
-            return std::dynamic_pointer_cast<const VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
+            return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept

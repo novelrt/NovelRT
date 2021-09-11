@@ -46,6 +46,7 @@ int main()
     std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
 
     auto gfxDevice = adapter->CreateDevice(surfaceContext, 1);
+    auto gfxContext = gfxDevice->GetCurrentContext();
 
     auto vertShaderData = LoadSpv("vert.spv");
     auto pixelShaderData = LoadSpv("frag.spv");
@@ -54,6 +55,16 @@ int main()
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto signature = gfxDevice->CreatePipelineSignature(gsl::span<GraphicsPipelineInput>{}, gsl::span<GraphicsPipelineResource>{});
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
+    auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false,0, 0);
 
+    gfxContext->BeginFrame();
+    auto primitive = gfxDevice->CreatePrimitive(pipeline, dummyRegion, 0, dummyRegion, 0, gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
+    gfxContext->EndFrame();
+
+    gfxDevice->Signal(gfxContext->GetFence());
+    gfxDevice->WaitForIdle();
+
+    int fuck = 0;
+    std::cin >> fuck;
     return 0;
 }

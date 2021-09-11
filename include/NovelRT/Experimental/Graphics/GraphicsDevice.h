@@ -48,10 +48,10 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual size_t GetContextIndex() const noexcept = 0;
 
-        [[nodiscard]] virtual gsl::span<std::shared_ptr<const GraphicsContext>> GetContexts() = 0;
+        [[nodiscard]] virtual gsl::span<std::shared_ptr<GraphicsContext>> GetContexts() = 0;
 
 
-        [[nodiscard]] inline std::shared_ptr<const GraphicsContext> GetCurrentContext()
+        [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext()
         {
             return GetContexts()[GetContextIndex()];
         }

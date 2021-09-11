@@ -14,7 +14,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         std::optional<uint32_t> graphicsFamily;
         std::optional<uint32_t> presentFamily;
-        std::optional<uint32_t> commandQueueFamily;
 
         [[nodiscard]] inline bool IsComplete() const noexcept
         {

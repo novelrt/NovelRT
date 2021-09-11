@@ -10,23 +10,23 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                int32_t contextCount)
         : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
           _presentCompletionFence(
-              [&]() {
+              [&]()
+              {
                   std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
                       std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
                   ptr->Reset();
                   return ptr;
               }),
-          _contexts([&]() { return CreateGraphicsContexts(contextCount); }),
+          _contexts([&, contextCount]() { return CreateGraphicsContexts(contextCount); }),
           _contextPtrs(
               [&]()
               {
-                  std::vector<std::shared_ptr<const GraphicsContext>> ptrs{};
+                  std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
                   ptrs.reserve(_contexts.getActual().size());
 
                   for (auto&& context : _contexts.getActual())
                   {
-                      ptrs.emplace_back(
-                          std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+                      ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
                   }
 
                   return ptrs;
@@ -359,14 +359,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<ShaderProgram> vertexShader,
         std::shared_ptr<ShaderProgram> pixelShader)
     {
-        return std::make_shared<GraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader);
+        return std::static_pointer_cast<GraphicsPipeline>(std::make_shared<VulkanGraphicsPipeline>(
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
+            std::dynamic_pointer_cast<VulkanGraphicsPipelineSignature>(signature),
+            std::dynamic_pointer_cast<VulkanShaderProgram>(vertexShader),
+            std::dynamic_pointer_cast<VulkanShaderProgram>(pixelShader)));
     }
 
     std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
         gsl::span<GraphicsPipelineInput> inputs,
         gsl::span<GraphicsPipelineResource> resources)
     {
-        return std::make_shared<GraphicsPipelineSignature>(shared_from_this(), inputs, resources);
+        return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), inputs, resources));
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
