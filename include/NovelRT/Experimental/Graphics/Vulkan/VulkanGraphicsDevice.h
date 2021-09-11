@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
-        std::vector<std::shared_ptr<VulkanGraphicsContext>> _contexts;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
         std::vector<std::shared_ptr<const GraphicsContext>> _contextPtrs;
         std::shared_ptr<VulkanGraphicsFence> _presentCompletionFence;
 

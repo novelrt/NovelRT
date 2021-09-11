@@ -11,8 +11,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         : GraphicsDevice(adapter,
                          std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
           _presentCompletionFence(std::make_shared<VulkanGraphicsFence>(
-              std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))),
-          _contexts(CreateGraphicsContexts(contextCount)),
+              std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()))), //TODO: Fix this next. Can't do this lol.
+          _contexts([&](){ return CreateGraphicsContexts(contextCount); }),
           _contextPtrs{},
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
@@ -29,9 +29,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _indicesData{},
           _state()
     {
-        _contextPtrs.reserve(_contexts.size());
+        _contextPtrs.reserve(_contexts.getActual().size());
 
-        for (auto&& context : _contexts)
+        for (auto&& context : _contexts.getActual())
         {
             _contextPtrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
         }
@@ -493,7 +493,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         CreateSwapChain();
         _contextIndex = 0;
 
-        for (auto&& context : _contexts)
+        for (auto&& context : _contexts.getActual())
         {
             context->OnGraphicsSurfaceSizeChanged(newSize);
         }

@@ -28,11 +28,7 @@ namespace NovelRT::Experimental::Graphics
         }
 
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator begin() const noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator cbegin() const noexcept = 0;
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator end() const noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator cend() const noexcept = 0;
 
         virtual ~GraphicsProvider() = default;
     };

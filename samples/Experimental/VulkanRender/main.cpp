@@ -45,6 +45,11 @@ int main()
 
     std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
 
+    if (adapter == nullptr)
+    {
+        throw std::runtime_error("REEEEEEEEEE");
+    }
+
     auto gfxDevice = adapter->CreateDevice(surfaceContext, 1);
 
     auto vertShaderData = LoadSpv("vert.spv");

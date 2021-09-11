@@ -290,7 +290,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-        std::vector<std::shared_ptr<GraphicsAdapter>> adapters(devices.size());
+        std::vector<std::shared_ptr<GraphicsAdapter>> adapters{};
+        adapters.reserve(devices.size());
 
         for (auto&& physicalDevice : devices)
         {
@@ -307,6 +308,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _finalValidationLayerSet{},
           _debugLogger(VK_NULL_HANDLE),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
+          _adapters([&](){ return GetGraphicsAdapters(); }),
           _engineName(EngineConfig::EngineName()),
           _state(Threading::VolatileState())
     {
@@ -317,7 +319,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         _vulkanInstance = CreateInstance();
-        _adapters = GetGraphicsAdapters();
 
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -334,32 +335,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept
     {
-        return _adapters.begin();
-    }
-
-    std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator VulkanGraphicsProvider::begin() const noexcept
-    {
-        return _adapters.begin();
-    }
-
-    std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator VulkanGraphicsProvider::cbegin() const noexcept
-    {
-        return _adapters.cbegin();
+        return _adapters.getActual().begin();
     }
 
     std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::end() noexcept
     {
-        return _adapters.end();
+        return _adapters.getActual().end();
     }
-
-    std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator VulkanGraphicsProvider::end() const noexcept
-    {
-        return _adapters.end();
-    }
-
-    std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator VulkanGraphicsProvider::cend() const noexcept
-    {
-        return _adapters.cend();
-    }
-
 } // namespace NovelRT::Experimental::Graphics::Vulkan

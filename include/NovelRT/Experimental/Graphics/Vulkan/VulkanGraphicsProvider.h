@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
         VkInstance _vulkanInstance;
-        std::vector<std::shared_ptr<GraphicsAdapter>> _adapters;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter>>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
@@ -61,11 +61,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;
-        std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator begin() const noexcept final;
-        std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator cbegin() const noexcept final;
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept final;
-        std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator end() const noexcept final;
-        std::vector<std::shared_ptr<GraphicsAdapter>>::const_iterator cend() const noexcept final;
 
         ~VulkanGraphicsProvider() final;
     };

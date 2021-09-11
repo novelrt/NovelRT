@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics
     public:
         explicit GraphicsAdapter(std::weak_ptr<GraphicsProvider> provider) : _provider(std::move(provider))
         {
-            if (!_provider.expired())
+            if (_provider.expired())
             {
                 throw Exceptions::NullPointerException(
                     "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
