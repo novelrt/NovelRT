@@ -58,7 +58,7 @@ namespace NovelRT::Experimental::Graphics
             _settings.MinimumFreeRegionSizeToRegister = minimumFreeRegionSizeToRegister;
         }
 
-        [[nodiscard]] inline virtual int32_t GetCount() const noexcept = 0;
+        [[nodiscard]] inline virtual int32_t GetCount() = 0;
 
         [[nodiscard]] inline const GraphicsMemoryAllocatorSettings& GetSettings() const noexcept
         {
@@ -102,16 +102,8 @@ namespace NovelRT::Experimental::Graphics
 
         // TODO: maybe this should be std::list instead?
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator
-        begin() noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator begin()
-            const noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator cbegin()
-            const noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator end()
-            const noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator cend()
-            const noexcept = 0;
+        begin() = 0;
+        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() = 0;
     };
 
     template<typename TMetadata> class GraphicsMemoryAllocatorImpl : public GraphicsMemoryAllocator

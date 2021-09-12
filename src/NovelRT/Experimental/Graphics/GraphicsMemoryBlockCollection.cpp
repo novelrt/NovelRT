@@ -8,8 +8,7 @@ namespace NovelRT::Experimental::Graphics
 {
     std::shared_ptr<GraphicsMemoryBlock> GraphicsMemoryBlockCollection::AddBlock(size_t size)
     {
-        std::shared_ptr<GraphicsMemoryBlock> block =
-            std::reinterpret_pointer_cast<GraphicsMemoryBlock>(CreateBlock(size)->shared_from_this());
+        std::shared_ptr<GraphicsMemoryBlock> block = std::shared_ptr<GraphicsMemoryBlock>(CreateBlock(size));
 
         _blocks.push_back(block);
         _size += size;

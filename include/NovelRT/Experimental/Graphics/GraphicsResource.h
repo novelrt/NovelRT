@@ -58,7 +58,7 @@ namespace NovelRT::Experimental::Graphics
             return _blockRegion;
         }
 
-        [[nodiscard]] virtual int32_t GetCount() const noexcept = 0;
+        [[nodiscard]] virtual int32_t GetCount() = 0;
 
         [[nodiscard]] inline GraphicsResourceCpuAccessKind GetCpuAccess() const noexcept
         {
@@ -70,7 +70,7 @@ namespace NovelRT::Experimental::Graphics
             return GetBlockRegion().GetOffset();
         }
 
-        [[nodiscard]] inline size_t GetSize() const noexcept final
+        [[nodiscard]] inline size_t GetSize() final
         {
             return GetBlockRegion().GetSize();
         }

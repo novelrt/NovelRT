@@ -20,19 +20,19 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual GraphicsDevice* GetDeviceInternal() const noexcept = 0;
 
     public:
-        [[nodiscard]] virtual int32_t GetAllocatedRegionCount() const noexcept = 0;
+        [[nodiscard]] virtual int32_t GetAllocatedRegionCount() = 0;
 
         [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
         {
             return GetDeviceInternal()->shared_from_this();
         }
 
-        [[nodiscard]] virtual bool GetIsEmpty() const noexcept = 0;
-        [[nodiscard]] virtual size_t GetLargestFreeRegionSize() const noexcept = 0;
-        [[nodiscard]] virtual size_t GetMinimumAllocatedRegionMarginSize() const noexcept = 0;
-        [[nodiscard]] virtual size_t GetMinimumFreeRegionSizeToRegister() const noexcept = 0;
-        [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
-        [[nodiscard]] virtual size_t GetTotalFreeRegionSize() const noexcept = 0;
+        [[nodiscard]] virtual bool GetIsEmpty() = 0;
+        [[nodiscard]] virtual size_t GetLargestFreeRegionSize() = 0;
+        [[nodiscard]] virtual size_t GetMinimumAllocatedRegionMarginSize() = 0;
+        [[nodiscard]] virtual size_t GetMinimumFreeRegionSizeToRegister() = 0;
+        [[nodiscard]] virtual size_t GetSize() = 0;
+        [[nodiscard]] virtual size_t GetTotalFreeRegionSize() = 0;
         [[nodiscard]] virtual GraphicsMemoryRegion<TSelf> Allocate(size_t size, size_t alignment) = 0;
         virtual void Clear() = 0;
 
@@ -95,7 +95,7 @@ namespace NovelRT::Experimental::Graphics
             {
             }
 
-            [[nodiscard]] int32_t GetAllocatedRegionCount() const noexcept final
+            [[nodiscard]] int32_t GetAllocatedRegionCount() final
             {
                 return static_cast<int32_t>(_regions.size() - _freeRegionCount);
             }
@@ -105,32 +105,32 @@ namespace NovelRT::Experimental::Graphics
                 return _regions.size();
             }
 
-            [[nodiscard]] bool GetIsEmpty() const noexcept override
+            [[nodiscard]] bool GetIsEmpty() final
             {
                 return _regions.size() == 1 && _freeRegionCount == 1;
             }
 
-            [[nodiscard]] size_t GetLargestFreeRegionSize() const noexcept final
+            [[nodiscard]] size_t GetLargestFreeRegionSize() final
             {
                 return _freeRegionsBySize.size() != 0 ? _freeRegionsBySize.back()->GetSize() : 0;
             }
 
-            [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
+            [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() final
             {
                 return _minimumAllocatedRegionMarginSize;
             }
 
-            [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
+            [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() final
             {
                 return _minimumFreeRegionSizeToRegister;
             }
 
-            [[nodiscard]] size_t GetSize() const noexcept final
+            [[nodiscard]] size_t GetSize() final
             {
                 return _size;
             }
 
-            [[nodiscard]] size_t GetTotalFreeRegionSize() const noexcept final
+            [[nodiscard]] size_t GetTotalFreeRegionSize() final
             {
                 return _totalFreeRegionSize;
             }

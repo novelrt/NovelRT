@@ -14,19 +14,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         : public GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>
     {
     private:
-        std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>> _blockCollections;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>> _blockCollections;
         Threading::VolatileState _state;
 
-        [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceCpuAccessKind cpuAccess, uint32_t memoryTypeBits) const noexcept;
+        [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceCpuAccessKind cpuAccess, uint32_t memoryTypeBits);
 
     public:
         VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
                                       GraphicsMemoryAllocatorSettings settings);
 
-        [[nodiscard]] inline int32_t GetCount() const noexcept final
+        [[nodiscard]] inline int32_t GetCount() final
         {
             // TODO: Cursed.
-            return static_cast<int32_t>(_blockCollections.size());
+            return static_cast<int32_t>(_blockCollections.getActual().size());
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
@@ -60,21 +60,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return GetBudget(std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(blockCollection));
         }
 
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator begin() noexcept final;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator begin()
-            const noexcept final;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator cbegin()
-            const noexcept final;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() noexcept final;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator end()
-            const noexcept final;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator cend()
-            const noexcept final;
+        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator begin() final;
+        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() final;
 
         //TODO: I don't know if I'm supposed to do anything here based on the TerraFX code.
         ~VulkanGraphicsMemoryAllocator() final = default;

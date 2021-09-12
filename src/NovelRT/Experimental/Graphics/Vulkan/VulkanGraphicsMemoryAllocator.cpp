@@ -6,16 +6,16 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-    //TODO: I have no idea if this works. Lol.
+    // TODO: I have no idea if this works. Lol.
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4996)
+#pragma warning(disable : 4996)
 #elif defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
     size_t VulkanGraphicsMemoryAllocator::GetBlockCollectionIndex(GraphicsResourceCpuAccessKind cpuAccess,
-                                                                  uint32_t memoryTypeBits) const noexcept
+                                                                  uint32_t memoryTypeBits)
     {
         bool isIntegratedGpu = GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceProperties().deviceType ==
                                VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU;
@@ -50,7 +50,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         const VkPhysicalDeviceMemoryProperties& memoryProperties =
             GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties();
 
-        for (int32_t i = 0; i < _blockCollections.size(); i++)
+        for (int32_t i = 0; i < _blockCollections.getActual().size(); i++)
         {
             if ((memoryTypeBits & (i << i)) == 0)
             {
@@ -64,9 +64,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 continue;
             }
 
-            int32_t cost = Maths::Utilities::PopCount(static_cast<uint32_t>(preferredMemoryPropertyFlags) & ~memoryPropertyFlags) +
-                Maths::Utilities::PopCount(
-                    static_cast<uint32_t>(unpreferredMemoryPropertyFlags) & ~memoryPropertyFlags);
+            int32_t cost =
+                Maths::Utilities::PopCount(static_cast<uint32_t>(preferredMemoryPropertyFlags) & ~memoryPropertyFlags) +
+                Maths::Utilities::PopCount(static_cast<uint32_t>(unpreferredMemoryPropertyFlags) &
+                                           ~memoryPropertyFlags);
 
             if (cost >= lowestCost)
             {
@@ -95,7 +96,24 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                                  GraphicsMemoryAllocatorSettings settings)
         : GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>(
               std::move(device),
-              std::move(settings))
+              std::move(settings)),
+          _blockCollections(
+              [&]()
+              {
+                  std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>> returnVec{};
+                  uint32_t memoryTypeCount =
+                      GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties().memoryTypeCount;
+                  returnVec.reserve(memoryTypeCount);
+
+                  for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < memoryTypeCount; memoryTypeIndex++)
+                  {
+                      returnVec.emplace_back(std::static_pointer_cast<GraphicsMemoryBlockCollection>(std::make_shared<VulkanGraphicsMemoryBlockCollection>(
+                          GetDevice(), std::dynamic_pointer_cast<VulkanGraphicsMemoryAllocator>(shared_from_this()),
+                          memoryTypeIndex)));
+                  }
+
+                  return returnVec;
+              })
     {
         if (!_settings.BlockCreationLogicDelegate.has_value())
         {
@@ -138,7 +156,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         size_t index = GetBlockCollectionIndex(cpuAccessKind, memoryRequirements.memoryTypeBits);
         std::shared_ptr<VulkanGraphicsMemoryBlockCollection> blockCollection =
-            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.at(index));
+            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.getActual().at(index));
 
         GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion =
             blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
@@ -205,47 +223,24 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         size_t index = GetBlockCollectionIndex(cpuAccessKind, memoryRequirements.memoryTypeBits);
         std::shared_ptr<VulkanGraphicsMemoryBlockCollection> blockCollection =
-            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.at(index));
+            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.getActual().at(index));
 
         GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion =
             blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
 
         return std::static_pointer_cast<GraphicsTexture>(std::make_shared<VulkanGraphicsTextureImpl<Metadata>>(
-            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height, static_cast<uint16_t>(depth), vulkanImage));
+            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height,
+            static_cast<uint16_t>(depth), vulkanImage));
     }
 
     std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::
-        begin() noexcept
+        begin()
     {
-        return _blockCollections.begin();
+        return _blockCollections.getActual().begin();
     }
 
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator VulkanGraphicsMemoryAllocator::begin()
-        const noexcept
+    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::end()
     {
-        return _blockCollections.begin();
-    }
-
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator VulkanGraphicsMemoryAllocator::cbegin()
-        const noexcept
-    {
-        return _blockCollections.cbegin();
-    }
-
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::end() noexcept
-    {
-        return _blockCollections.end();
-    }
-
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator VulkanGraphicsMemoryAllocator::end()
-        const noexcept
-    {
-        return _blockCollections.end();
-    }
-
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::const_iterator VulkanGraphicsMemoryAllocator::cend()
-        const noexcept
-    {
-        return _blockCollections.cend();
+        return _blockCollections.getActual().end();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

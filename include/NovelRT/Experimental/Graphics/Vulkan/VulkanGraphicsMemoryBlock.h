@@ -29,12 +29,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsMemoryBlock() override;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryBlockCollection> GetCollection() const noexcept
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryBlockCollection> GetCollection()
         {
             return std::static_pointer_cast<VulkanGraphicsMemoryBlockCollection>(GraphicsMemoryBlock::GetCollection());
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice()
         {
             return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GetDeviceInternal()->shared_from_this());
         }
@@ -47,101 +47,106 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     template<typename TMetadata> class VulkanGraphicsMemoryBlockImpl final : public VulkanGraphicsMemoryBlock
     {
-    public:
-
     private:
-        TMetadata _metadata;
+        NovelRT::Utilities::Lazy<TMetadata> _metadata;
 
     public:
         VulkanGraphicsMemoryBlockImpl(std::shared_ptr<VulkanGraphicsDevice> device,
                                       std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection,
                                       size_t size)
-            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)), _metadata()
+            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)),
+              _metadata(
+                  [&]()
+                  {
+                      TMetadata metadata;
+                      const GraphicsMemoryAllocatorSettings& allocatorSettings =
+                          GetCollection()->GetAllocator()->GetSettings();
+
+                      size_t minimumAllocatedRegionSize =
+                          allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
+                      size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
+                      metadata.Initialise(
+                          std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
+                          minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
+                      return metadata;
+                  })
         {
             static_assert(
                 std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::IMetadata, TMetadata>);
 
-            const GraphicsMemoryAllocatorSettings& allocatorSettings = GetCollection()->GetAllocator()->GetSettings();
-
-            size_t minimumAllocatedRegionSize = allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
-            size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
-
-            _metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
-                                 minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
-
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         }
 
-        [[nodiscard]] int32_t GetAllocatedRegionCount() const noexcept final
+        [[nodiscard]] int32_t GetAllocatedRegionCount() final
         {
-            return _metadata.GetAllocatedRegionCount();
+            return _metadata.getActual().GetAllocatedRegionCount();
         }
 
-        [[nodiscard]] int32_t GetCount() const noexcept
+        [[nodiscard]] int32_t GetCount()
         {
-            return _metadata.GetCount();
+            return _metadata.getActual().GetCount();
         }
 
-        [[nodiscard]] bool GetIsEmpty() const noexcept final
+        [[nodiscard]] bool GetIsEmpty() final
         {
-            return _metadata.GetIsEmpty();
+            return _metadata.getActual().GetIsEmpty();
         }
 
-        [[nodiscard]] size_t GetLargestFreeRegionSize() const noexcept final
+        [[nodiscard]] size_t GetLargestFreeRegionSize() final
         {
-            return _metadata.GetLargestFreeRegionSize();
+            return _metadata.getActual().GetLargestFreeRegionSize();
         }
 
-        [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() const noexcept final
+        [[nodiscard]] size_t GetMinimumAllocatedRegionMarginSize() final
         {
-            return _metadata.GetMinimumAllocatedRegionMarginSize();
+            return _metadata.getActual().GetMinimumAllocatedRegionMarginSize();
         }
 
-        [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() const noexcept final
+        [[nodiscard]] size_t GetMinimumFreeRegionSizeToRegister() final
         {
-            return _metadata.GetMinimumFreeRegionSizeToRegister();
+            return _metadata.getActual().GetMinimumFreeRegionSizeToRegister();
         }
 
-        [[nodiscard]] size_t GetSize() const noexcept final
+        [[nodiscard]] size_t GetSize() final
         {
-            return _metadata.GetSize();
+            return _metadata.getActual().GetSize();
         }
 
-        [[nodiscard]] size_t GetTotalFreeRegionSize() const noexcept final
+        [[nodiscard]] size_t GetTotalFreeRegionSize() final
         {
-            return _metadata.GetTotalFreeRegionSize();
+            return _metadata.getActual().GetTotalFreeRegionSize();
         }
 
         GraphicsMemoryRegion<GraphicsMemoryBlock> Allocate(size_t size, size_t alignment) final
         {
-            return _metadata.Allocate(size, alignment);
+            return _metadata.getActual().Allocate(size, alignment);
         }
 
         void Clear() final
         {
-            _metadata.Clear();
+            _metadata.getActual().Clear();
         }
 
         void Free(const GraphicsMemoryRegion<GraphicsMemoryBlock>& region) final
         {
-            _metadata.Free(region);
+            _metadata.getActual().Free(region);
         }
 
         [[nodiscard]] bool TryAllocate(size_t size,
                                        size_t alignment,
                                        GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion) final
         {
-            return _metadata.TryAllocate(size, alignment, outRegion);
+            return _metadata.getActual().TryAllocate(size, alignment, outRegion);
         }
 
         [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsMemoryBlock>>::iterator begin() final
         {
-            return _metadata.begin();
+            return _metadata.getActual().begin();
         }
 
         [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsMemoryBlock>>::iterator end() final
         {
-            return _metadata.end();
+            return _metadata.getActual().end();
         }
 
         ~VulkanGraphicsMemoryBlockImpl() final = default;
