@@ -35,7 +35,10 @@ function Generate() {
   if ($ci) {
   conan config install https://github.com/novelrt/ConanConfig.git
   conan install . -if "$BuildDir" --build=missing --profile windows-vs2019-amd64
-    $remaining = ,"-DNOVELRT_BUILD_DOCUMENTATION=OFF", "-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
+      $remaining = ,"-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
+      if ($documentation -eq $false) {
+        $remaining = ,"-DNOVELRT_BUILD_DOCUMENTATION=OFF" + $remaining
+      }
   }
 
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
