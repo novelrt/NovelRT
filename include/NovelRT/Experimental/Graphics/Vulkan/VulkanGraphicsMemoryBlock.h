@@ -58,7 +58,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
               _metadata(
                   [&]()
                   {
-                      TMetadata metadata;
+                      TMetadata metadata(GetDevice());
                       const GraphicsMemoryAllocatorSettings& allocatorSettings =
                           GetCollection()->GetAllocator()->GetSettings();
 

@@ -103,7 +103,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
               _metadata(
                   [&]()
                   {
-                      TMetadata metadata;
+                      TMetadata metadata(GraphicsDeviceObject::GetDevice());
                       std::shared_ptr<GraphicsMemoryBlock> block = GetBlockRegion().GetCollection();
 
                       size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();

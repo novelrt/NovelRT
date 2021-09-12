@@ -75,15 +75,16 @@ namespace NovelRT::Experimental::Graphics
             size_t _size;
             size_t _totalFreeRegionSize;
             int32_t _freeRegionCount;
+            std::shared_ptr<GraphicsDevice> _device;
 
         protected:
             [[nodiscard]] GraphicsDevice* GetDeviceInternal() const noexcept override
             {
-                return nullptr;
+                return _device.get();
             }
 
         public:
-            DefaultMetadata() noexcept
+            explicit DefaultMetadata(std::shared_ptr<GraphicsDevice> device) noexcept
                 : _collection(nullptr),
                   _freeRegionsBySize(std::vector<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>{}),
                   _regions(std::list<GraphicsMemoryRegion<TSelf>>{}),
@@ -91,7 +92,8 @@ namespace NovelRT::Experimental::Graphics
                   _minimumAllocatedRegionMarginSize(static_cast<size_t>(-1)),
                   _size(static_cast<size_t>(-1)),
                   _totalFreeRegionSize(static_cast<size_t>(-1)),
-                  _freeRegionCount(-1)
+                  _freeRegionCount(-1),
+                  _device(std::move(device))
             {
             }
 
