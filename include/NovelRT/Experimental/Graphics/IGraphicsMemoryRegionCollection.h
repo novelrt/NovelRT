@@ -208,6 +208,7 @@ namespace NovelRT::Experimental::Graphics
                         "The size parameter was set to 0. This is not a valid size and is out of range.");
                 }
 
+                _collection = collection;
                 _minimumAllocatedRegionMarginSize = minimumAllocatedRegionMarginSize;
                 _minimumFreeRegionSizeToRegister = minimumFreeRegionSizeToRegister;
                 _size = size;

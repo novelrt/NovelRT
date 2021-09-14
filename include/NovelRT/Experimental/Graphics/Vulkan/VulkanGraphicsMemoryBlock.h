@@ -56,7 +56,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                       size_t size)
             : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)),
               _metadata(
-                  [&]()
+                  [&, size]()
                   {
                       TMetadata metadata(GetDevice());
                       const GraphicsMemoryAllocatorSettings& allocatorSettings =

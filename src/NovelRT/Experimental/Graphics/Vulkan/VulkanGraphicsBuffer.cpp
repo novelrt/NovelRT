@@ -57,7 +57,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (mapMemoryResult != VK_SUCCESS)
         {
             // TODO: Make a real exception.
-            throw std::runtime_error("Failed to map Vulkan memory to the CPU!");
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " + std::to_string(mapMemoryResult));
         }
 
         return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
@@ -78,7 +78,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (mapMemoryResult != VK_SUCCESS)
         {
             // TODO: Make a real exception.
-            throw std::runtime_error("Failed to map Vulkan memory to the CPU!");
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " + std::to_string(mapMemoryResult));
         }
 
         uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
