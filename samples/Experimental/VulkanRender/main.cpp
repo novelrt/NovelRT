@@ -58,7 +58,7 @@ int main()
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false,0, 0);
 
     auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
-    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::GpuOnly, 64 * 1024);
+    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(NovelRT::Maths::GeoVector3F) * 3, 16);
     auto pVertexBuffer = vertexStagingBuffer->Map<NovelRT::Maths::GeoVector3F>(vertexBufferRegion);
 

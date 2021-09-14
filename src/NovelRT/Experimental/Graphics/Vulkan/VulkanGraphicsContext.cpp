@@ -291,7 +291,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             throw Exceptions::NullPointerException("The source graphics buffer is null.");
         }
-
         VkBufferCopy vulkanBufferCopy{};
         vulkanBufferCopy.srcOffset = 0;
         vulkanBufferCopy.dstOffset = 0;
