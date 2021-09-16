@@ -19,6 +19,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                VkBuffer buffer)
         : GraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess), _vulkanBuffer(buffer)
     {
+        VkResult bindResult = vkBindBufferMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanBuffer, GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
+
+        if (bindResult != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to bind the VkBuffer!", bindResult);
+        }
     }
 
     void* VulkanGraphicsBuffer::MapUntyped()
@@ -42,7 +48,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return pDestination;
     }
 
-    void* VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t rangeLength)
+    void* VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t /*rangeLength*/)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
@@ -52,7 +58,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void* pDestination = nullptr;
 
         VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, rangeOffset, rangeLength, 0, &pDestination);
+            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
 
         if (mapMemoryResult != VK_SUCCESS)
         {
