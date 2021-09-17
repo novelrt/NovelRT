@@ -57,9 +57,11 @@ int main()
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false,0, 0);
 
-    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
+    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::GpuToCpu, 64 * 1024);
     auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(NovelRT::Maths::GeoVector3F) * 3, 16);
+
+    gfxContext->BeginFrame();
     auto pVertexBuffer = vertexStagingBuffer->Map<NovelRT::Maths::GeoVector3F>(vertexBufferRegion);
 
     pVertexBuffer[0] = NovelRT::Maths::GeoVector3F(0, 1, 0);
@@ -69,7 +71,6 @@ int main()
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
 
-    gfxContext->BeginFrame();
     auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F), dummyRegion, 0, gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
     gfxContext->EndFrame();
 

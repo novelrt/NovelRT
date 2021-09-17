@@ -43,13 +43,13 @@ namespace NovelRT::Experimental::Graphics
                 throw Exceptions::NullPointerException("Parameter name: pipeline.");
             }
 
-            if (vertexBufferRegion.GetCollection() == nullptr)
+            if (GetVertexBufferRegion().GetCollection() == nullptr)
             {
                 throw Exceptions::NullPointerException(
                     "The vertex buffer region's memory resource collection is nullptr.");
             }
 
-            if (pipeline->GetDevice() != GetDevice())
+            if (GetPipeline()->GetDevice() != GetDevice())
             {
                 throw Exceptions::InvalidOperationException(
                     "The supplied graphics devices for the primitive and the pipeline do not match.");
