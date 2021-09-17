@@ -17,7 +17,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         Threading::VolatileState _state;
 
         [[nodiscard]] VkFence CreateVulkanFence();
-        [[nodiscard]] void DisposeVulkanFence(VkFence vulkanFence) noexcept;
+        void DisposeVulkanFence(VkFence vulkanFence) noexcept;
         [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
 
     public:
