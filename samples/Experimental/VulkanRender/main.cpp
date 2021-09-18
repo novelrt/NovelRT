@@ -85,7 +85,7 @@ int main()
     auto primitive =
         gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F), dummyRegion, 0,
                                    gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
-    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 255, 0, 255));
+    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 0, 255, 255));
     gfxContext->Draw(primitive);
     gfxContext->EndDrawing();
     gfxContext->EndFrame();
