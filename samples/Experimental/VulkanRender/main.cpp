@@ -11,7 +11,8 @@ using namespace NovelRT::Experimental::Graphics;
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
-    std::filesystem::path finalPath = NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
+    std::filesystem::path finalPath =
+        NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
     std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
 
     if (!file.is_open())
@@ -39,9 +40,9 @@ int main()
 
     auto vulkanProvider = std::make_shared<VulkanGraphicsProvider>();
 
-
     VulkanGraphicsAdapterSelector selector;
-    std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext = std::make_shared<VulkanGraphicsSurfaceContext>(device, vulkanProvider);
+    std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext =
+        std::make_shared<VulkanGraphicsSurfaceContext>(device, vulkanProvider);
 
     std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
 
@@ -51,14 +52,25 @@ int main()
     auto vertShaderData = LoadSpv("vert.spv");
     auto pixelShaderData = LoadSpv("frag.spv");
 
+    std::vector<GraphicsPipelineInputElement> elements{
+        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position, 12)
+    };
+
+    std::vector<GraphicsPipelineInput> inputs{
+        GraphicsPipelineInput(elements)
+    };
+
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto signature = gfxDevice->CreatePipelineSignature(gsl::span<GraphicsPipelineInput>{}, gsl::span<GraphicsPipelineResource>{});
+    auto signature =
+        gfxDevice->CreatePipelineSignature(gsl::span<GraphicsPipelineInput>{inputs}, gsl::span<GraphicsPipelineResource>{});
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
-    auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false,0, 0);
+    auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false, 0, 0);
 
-    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::GpuToCpu, 64 * 1024);
-    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
+    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::GpuToCpu, 64 * 1024);
+    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(NovelRT::Maths::GeoVector3F) * 3, 16);
 
     gfxContext->BeginFrame();
@@ -70,9 +82,14 @@ int main()
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
-
-    auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F), dummyRegion, 0, gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
+    auto primitive =
+        gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F), dummyRegion, 0,
+                                   gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
+    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 255, 0, 255));
+    gfxContext->Draw(primitive);
+    gfxContext->EndDrawing();
     gfxContext->EndFrame();
+    gfxDevice->PresentFrame();
 
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();

@@ -13,7 +13,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkFenceCreateInfo fenceCreateInfo{};
         fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.pNext = nullptr;
-        //fenceCreateInfo.flags = VK_FENCE_CREATE_;
 
         VkResult result = vkCreateFence(GetDevice()->GetVulkanDevice(), &fenceCreateInfo, nullptr, &vulkanFence);
 
@@ -83,6 +82,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     bool VulkanGraphicsFence::TryWait(uint64_t millisecondsTimeout)
     {
+        if (!GetIsSignalled())
+        {
+            return true;
+        }
+
         return TryWaitInternal(millisecondsTimeout);
     }
 
