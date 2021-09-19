@@ -73,6 +73,7 @@ int main()
         GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(NovelRT::Maths::GeoVector3F) * 3, 16);
 
+    gfxDevice->Signal(gfxContext->GetFence());
     gfxContext->BeginFrame();
     auto pVertexBuffer = vertexStagingBuffer->Map<NovelRT::Maths::GeoVector3F>(vertexBufferRegion);
 
@@ -91,7 +92,6 @@ int main()
     gfxContext->EndFrame();
     gfxDevice->PresentFrame();
 
-    gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
 
     int fuck = 0;

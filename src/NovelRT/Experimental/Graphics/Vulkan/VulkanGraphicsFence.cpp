@@ -82,11 +82,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     bool VulkanGraphicsFence::TryWait(uint64_t millisecondsTimeout)
     {
-        if (!GetIsSignalled())
-        {
-            return true;
-        }
-
         return TryWaitInternal(millisecondsTimeout);
     }
 
