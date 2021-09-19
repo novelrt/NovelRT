@@ -101,7 +101,7 @@ int main()
     uint32_t cellHeight = textureHeight / 8;
 
     auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-        GraphicsTextureKind::TwoDimensional, GraphicsResourceCpuAccessKind::Read, textureWidth, textureHeight);
+        GraphicsTextureKind::TwoDimensional, GraphicsResourceCpuAccessKind::ReadWrite, textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
@@ -110,7 +110,7 @@ int main()
         auto x = n % textureWidth;
         auto y = n / textureWidth;
 
-        pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF0000FF : 0xFFFFFFFF;
+        pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
     }
 
     textureStagingBuffer->UnmapAndWrite(texture2DRegion);
@@ -118,7 +118,7 @@ int main()
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
 
     gfxContext->Copy(texture2D, textureStagingBuffer);
-    auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F),
+    auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
                                                 dummyRegion, 0, inputResourceRegions);
     gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 0, 255, 255));
     gfxContext->Draw(primitive);
