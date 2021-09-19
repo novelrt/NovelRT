@@ -94,7 +94,7 @@ int main()
 
     gfxDevice->WaitForIdle();
 
-    int fuck = 0;
-    std::cin >> fuck;
+    int dummy = 0;
+    std::cin >> dummy;
     return 0;
 }
