@@ -39,7 +39,7 @@ namespace NovelRT::Experimental::Graphics
 
             size_t minimumBlockSize = _settings.MinimumBlockSize != 0
                                           ? _settings.MinimumBlockSize
-                                          : std::max(static_cast<size_t>(4096), maximumSharedBlockSize);
+                                          : std::max(static_cast<size_t>(4096), maximumSharedBlockSize / 8);
 
             size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
                                                           ? _settings.MinimumAllocatedRegionMarginSize.value()
@@ -93,7 +93,16 @@ namespace NovelRT::Experimental::Graphics
             GraphicsResourceCpuAccessKind cpuAccessKind,
             uint32_t width)
         {
-            return CreateTexture(textureKind, cpuAccessKind, width, 1, 1, GraphicsMemoryRegionAllocationFlags::None,
+            return CreateTextureWithDefaultArguments(textureKind, cpuAccessKind, width, 1);
+        }
+
+        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureKind textureKind,
+            GraphicsResourceCpuAccessKind cpuAccessKind,
+            uint32_t width,
+            uint32_t height)
+        {
+            return CreateTexture(textureKind, cpuAccessKind, width, height, 1, GraphicsMemoryRegionAllocationFlags::None,
                                  TexelFormat::R8G8B8A8_UNORM);
         }
 

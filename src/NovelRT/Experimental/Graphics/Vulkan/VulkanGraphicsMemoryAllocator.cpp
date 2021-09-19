@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -52,14 +51,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (int32_t i = 0; i < _blockCollections.getActual().size(); i++)
         {
-            if ((memoryTypeBits & (i << i)) == 0)
+            if ((memoryTypeBits & (1 << i)) == 0)
             {
                 continue;
             }
 
             VkMemoryPropertyFlags memoryPropertyFlags = memoryProperties.memoryTypes[i].propertyFlags;
 
-            if ((requiredMemoryPropertyFlags & ~memoryPropertyFlags) != 0)
+            if ((requiredMemoryPropertyFlags & memoryPropertyFlags) != static_cast<VkMemoryPropertyFlags>(requiredMemoryPropertyFlags))
             {
                 continue;
             }

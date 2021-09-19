@@ -29,6 +29,12 @@ std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
     return buffer;
 }
 
+struct TexturedVertex
+{
+    NovelRT::Maths::GeoVector3F Position;
+    NovelRT::Maths::GeoVector2F UV;
+};
+
 int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
@@ -53,17 +59,18 @@ int main()
     auto pixelShaderData = LoadSpv("frag.spv");
 
     std::vector<GraphicsPipelineInputElement> elements{
-        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position, 12)
-    };
+        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
+                                     12),
+        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                     GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
-    std::vector<GraphicsPipelineInput> inputs{
-        GraphicsPipelineInput(elements)
-    };
+    std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+    std::vector<GraphicsPipelineResource> resources{
+        GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto signature =
-        gfxDevice->CreatePipelineSignature(gsl::span<GraphicsPipelineInput>{inputs}, gsl::span<GraphicsPipelineResource>{});
+    auto signature = gfxDevice->CreatePipelineSignature(inputs, resources);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false, 0, 0);
 
@@ -71,21 +78,48 @@ int main()
         GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::GpuToCpu, 64 * 1024);
     auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
         GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
-    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(NovelRT::Maths::GeoVector3F) * 3, 16);
+    auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024 * 4);
+
+    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex), 16);
 
     gfxDevice->Signal(gfxContext->GetFence());
     gfxContext->BeginFrame();
-    auto pVertexBuffer = vertexStagingBuffer->Map<NovelRT::Maths::GeoVector3F>(vertexBufferRegion);
+    auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
-    pVertexBuffer[0] = NovelRT::Maths::GeoVector3F(0, 1, 0);
-    pVertexBuffer[1] = NovelRT::Maths::GeoVector3F(1, -1, 0);
-    pVertexBuffer[2] = NovelRT::Maths::GeoVector3F(-1, -1, 0);
+    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
+    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
-    auto primitive =
-        gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F), dummyRegion, 0,
-                                   gsl::span<const GraphicsMemoryRegion<GraphicsResource>>{});
+
+    uint32_t textureWidth = 256;
+    uint32_t textureHeight = 256;
+    uint32_t texturePixels = textureWidth * textureHeight;
+    uint32_t cellWidth = textureWidth / 8;
+    uint32_t cellHeight = textureHeight / 8;
+
+    auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
+        GraphicsTextureKind::TwoDimensional, GraphicsResourceCpuAccessKind::Read, textureWidth, textureHeight);
+    auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+    auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+
+    for (uint32_t n = 0; n < texturePixels; n++)
+    {
+        auto x = n % textureWidth;
+        auto y = n / textureWidth;
+
+        pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF0000FF : 0xFFFFFFFF;
+    }
+
+    textureStagingBuffer->UnmapAndWrite(texture2DRegion);
+
+    std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
+
+    gfxContext->Copy(texture2D, textureStagingBuffer);
+    auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(NovelRT::Maths::GeoVector3F),
+                                                dummyRegion, 0, inputResourceRegions);
     gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 0, 255, 255));
     gfxContext->Draw(primitive);
     gfxContext->EndDrawing();

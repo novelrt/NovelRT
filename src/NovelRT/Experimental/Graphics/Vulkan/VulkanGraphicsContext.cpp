@@ -163,7 +163,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsContext::BeginCopy() noexcept
+    void VulkanGraphicsContext::BeginCopy(VkImage vulkanImage) noexcept
     {
         VkImageSubresourceRange subresourceRange{};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -176,12 +176,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
+        vulkanImageMemoryBarrier.image = vulkanImage;
 
         vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
                              nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
     }
 
-    void VulkanGraphicsContext::EndCopy() noexcept
+    void VulkanGraphicsContext::EndCopy(VkImage vulkanImage) noexcept
     {
         VkImageSubresourceRange subresourceRange{};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -195,6 +196,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
+        vulkanImageMemoryBarrier.image = vulkanImage;
 
         vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT,
                              VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
@@ -315,7 +317,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkCommandBuffer vulkanCommandBuffer = GetVulkanCommandBuffer();
         VkImage vulkanImage = destination->GetVulkanImage();
 
-        BeginCopy();
+        BeginCopy(vulkanImage);
 
         VkImageSubresourceLayers imageSubresourceLayers{};
         imageSubresourceLayers.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -333,7 +335,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vkCmdCopyBufferToImage(vulkanCommandBuffer, source->GetVulkanBuffer(), vulkanImage,
                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
 
-        EndCopy();
+        EndCopy(vulkanImage);
     }
 
     void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive)

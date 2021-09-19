@@ -31,8 +31,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void DisposeVulkanCommandPool(VkCommandPool vulkanCommandPool) noexcept;
         void DisposeVulkanFramebuffer(VkFramebuffer vulkanFramebuffer) noexcept;
         void DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) noexcept;
-        void BeginCopy() noexcept;
-        void EndCopy() noexcept;
+        void BeginCopy(VkImage vulkanImage) noexcept;
+        void EndCopy(VkImage vulkanImage) noexcept;
 
     public:
         VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept;

@@ -10,6 +10,7 @@ namespace NovelRT::Experimental::Graphics
     {
         return _kind;
     }
+
     ShaderProgramVisibility GraphicsPipelineResource::GetShaderProgramVisibility() const noexcept
     {
        return _visibility;

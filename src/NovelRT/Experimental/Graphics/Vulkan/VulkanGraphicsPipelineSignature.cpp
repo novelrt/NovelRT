@@ -286,11 +286,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (shaderVisibility != ShaderProgramVisibility::All)
         {
-            if ((shaderVisibility & ShaderProgramVisibility::Vertex) != ShaderProgramVisibility::NoneOrUnknown)
+            if ((shaderVisibility & ShaderProgramVisibility::Vertex) == ShaderProgramVisibility::NoneOrUnknown)
             {
                 stageFlags &= ~VK_SHADER_STAGE_VERTEX_BIT;
             }
-            if ((shaderVisibility & ShaderProgramVisibility::Pixel) != ShaderProgramVisibility::NoneOrUnknown)
+            if ((shaderVisibility & ShaderProgramVisibility::Pixel) == ShaderProgramVisibility::NoneOrUnknown)
             {
                 stageFlags &= ~VK_SHADER_STAGE_FRAGMENT_BIT;
             }

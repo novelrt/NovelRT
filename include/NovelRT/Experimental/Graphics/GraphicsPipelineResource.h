@@ -17,11 +17,14 @@ namespace NovelRT::Experimental::Graphics
         ShaderProgramVisibility _visibility;
 
     public:
-        GraphicsPipelineResource(GraphicsResourceCpuAccessKind kind, ShaderProgramVisibility visibility) noexcept;
+        GraphicsPipelineResource(GraphicsPipelineResourceKind kind, ShaderProgramVisibility visibility) noexcept
+            : _kind(kind), _visibility(visibility)
+        {
+        }
 
         [[nodiscard]] GraphicsPipelineResourceKind GetKind() const noexcept;
         [[nodiscard]] ShaderProgramVisibility GetShaderProgramVisibility() const noexcept;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICSPIPELINERESOURCE_H
