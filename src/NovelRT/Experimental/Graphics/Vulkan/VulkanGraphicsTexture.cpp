@@ -9,7 +9,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                                                  GraphicsTextureKind kind,
                                                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                                                 GraphicsResourceCpuAccessKind cpuAccess,
+                                                 GraphicsResourceAccess cpuAccess,
                                                  uint32_t width,
                                                  uint32_t height,
                                                  uint16_t depth,

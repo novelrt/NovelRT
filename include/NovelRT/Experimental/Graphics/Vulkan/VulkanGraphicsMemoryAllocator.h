@@ -17,7 +17,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>> _blockCollections;
         Threading::VolatileState _state;
 
-        [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceCpuAccessKind cpuAccess, uint32_t memoryTypeBits);
+        [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceAccess cpuAccess, uint32_t memoryTypeBits);
 
     public:
         VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
@@ -35,13 +35,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         std::shared_ptr<GraphicsBuffer> CreateBuffer(GraphicsBufferKind bufferKind,
-                                                     GraphicsResourceCpuAccessKind cpuAccessKind,
+                                                     GraphicsResourceAccess cpuAccessKind,
+                                                     GraphicsResourceAccess gpuAccessKind,
                                                      size_t size,
                                                      GraphicsMemoryRegionAllocationFlags allocationFlags) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
             GraphicsTextureKind textureKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             uint32_t width,
             uint32_t height,
             uint32_t depth,

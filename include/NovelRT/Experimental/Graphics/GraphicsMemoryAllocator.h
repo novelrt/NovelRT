@@ -67,21 +67,24 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsBuffer> CreateBuffer(
             GraphicsBufferKind bufferKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             size_t size,
             GraphicsMemoryRegionAllocationFlags allocationFlags) = 0;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBufferWithDefaultArguments(
             GraphicsBufferKind bufferKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             size_t size)
         {
-            return CreateBuffer(bufferKind, cpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None);
+            return CreateBuffer(bufferKind, cpuAccessKind, gpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None);
         }
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
             GraphicsTextureKind textureKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             uint32_t width,
             uint32_t height,
             uint32_t depth,
@@ -90,19 +93,21 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
             GraphicsTextureKind textureKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             uint32_t width)
         {
-            return CreateTextureWithDefaultArguments(textureKind, cpuAccessKind, width, 1);
+            return CreateTextureWithDefaultArguments(textureKind, cpuAccessKind, gpuAccessKind, width, 1);
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
             GraphicsTextureKind textureKind,
-            GraphicsResourceCpuAccessKind cpuAccessKind,
+            GraphicsResourceAccess cpuAccessKind,
+            GraphicsResourceAccess gpuAccessKind,
             uint32_t width,
             uint32_t height)
         {
-            return CreateTexture(textureKind, cpuAccessKind, width, height, 1, GraphicsMemoryRegionAllocationFlags::None,
+            return CreateTexture(textureKind, cpuAccessKind, gpuAccessKind, width, height, 1, GraphicsMemoryRegionAllocationFlags::None,
                                  TexelFormat::R8G8B8A8_UNORM);
         }
 

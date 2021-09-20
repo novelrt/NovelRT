@@ -75,11 +75,11 @@ int main()
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false, 0, 0);
 
     auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Vertex, GraphicsResourceCpuAccessKind::GpuToCpu, 64 * 1024);
+        GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, 64 * 1024);
     auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024);
+        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024);
     auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Default, GraphicsResourceCpuAccessKind::CpuToGpu, 64 * 1024 * 4);
+        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024 * 4);
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex), 16);
 
@@ -101,7 +101,7 @@ int main()
     uint32_t cellHeight = textureHeight / 8;
 
     auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-        GraphicsTextureKind::TwoDimensional, GraphicsResourceCpuAccessKind::ReadWrite, textureWidth, textureHeight);
+        GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 

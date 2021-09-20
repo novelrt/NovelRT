@@ -19,7 +19,7 @@ namespace NovelRT::Experimental::Graphics
         GraphicsBuffer(std::shared_ptr<GraphicsDevice> device,
                          GraphicsBufferKind kind,
                          GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                         GraphicsResourceCpuAccessKind cpuAccess)
+                       GraphicsResourceAccess cpuAccess)
             : GraphicsResource(std::move(device), std::move(blockRegion), cpuAccess), _kind(kind)
         {
         }

@@ -22,7 +22,7 @@ namespace NovelRT::Experimental::Graphics
         GraphicsTexture(std::shared_ptr<GraphicsDevice> device,
                           GraphicsTextureKind kind,
                           GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                          GraphicsResourceCpuAccessKind cpuAccess,
+                        GraphicsResourceAccess cpuAccess,
                           uint32_t width,
                           uint32_t height,
                           uint16_t depth)

@@ -13,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
-    size_t VulkanGraphicsMemoryAllocator::GetBlockCollectionIndex(GraphicsResourceCpuAccessKind cpuAccess,
+    size_t VulkanGraphicsMemoryAllocator::GetBlockCollectionIndex(GraphicsResourceAccess cpuAccess,
                                                                   uint32_t memoryTypeBits)
     {
         bool isIntegratedGpu = GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceProperties().deviceType ==
@@ -25,19 +25,23 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         switch (cpuAccess)
         {
-            case GraphicsResourceCpuAccessKind::GpuToCpu:
+            case GraphicsResourceAccess::Read:
                 requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-                requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+                preferredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
                 break;
-            case GraphicsResourceCpuAccessKind::CpuToGpu:
+            case GraphicsResourceAccess::Write:
                 requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
                 preferredMemoryPropertyFlags |=
                     isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
                 break;
-            case GraphicsResourceCpuAccessKind::GpuToCpuToGpu:
+            case GraphicsResourceAccess::ReadWrite:
+                requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+                preferredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+                preferredMemoryPropertyFlags |=
+                    isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
                 break;
             default:
-            case GraphicsResourceCpuAccessKind::GpuOnly:
+            case GraphicsResourceAccess::None:
                 preferredMemoryPropertyFlags |=
                     isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
                 break;
@@ -81,6 +85,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             }
 
             lowestCost = cost;
+        }
+
+        if (index == -1)
+        {
+            throw std::out_of_range("Requested memory type unavailable on this physical device.");
         }
 
         return index;
@@ -130,7 +139,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     std::shared_ptr<GraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
         GraphicsBufferKind bufferKind,
-        GraphicsResourceCpuAccessKind cpuAccessKind,
+        GraphicsResourceAccess cpuAccessKind,
+        GraphicsResourceAccess gpuAccessKind,
         size_t size,
         GraphicsMemoryRegionAllocationFlags allocationFlags)
     {
@@ -139,7 +149,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkBufferCreateInfo bufferCreateInfo{};
         bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.size = size;
-        bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(bufferKind, cpuAccessKind);
+        bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(bufferKind, gpuAccessKind);
 
         VkBuffer vulkanBuffer = VK_NULL_HANDLE;
 
@@ -166,7 +176,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
         GraphicsTextureKind textureKind,
-        GraphicsResourceCpuAccessKind cpuAccessKind,
+        GraphicsResourceAccess cpuAccessKind,
+        GraphicsResourceAccess gpuAccessKind,
         uint32_t width,
         uint32_t height,
         uint32_t depth,
@@ -206,7 +217,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         imageCreateInfo.mipLevels = 1;
         imageCreateInfo.arrayLayers = 1;
         imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageCreateInfo.usage = Utilities::GetVulkanImageUsageKind(textureKind, cpuAccessKind);
+        imageCreateInfo.usage = Utilities::GetVulkanImageUsageKind(textureKind, gpuAccessKind);
 
         VkImage vulkanImage = VK_NULL_HANDLE;
 

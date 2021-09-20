@@ -10,7 +10,8 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 {
-    [[nodiscard]] inline uint32_t GetVulkanBufferUsageKind(GraphicsBufferKind kind, GraphicsResourceCpuAccessKind cpuAccess) noexcept
+    [[nodiscard]] inline uint32_t GetVulkanBufferUsageKind(GraphicsBufferKind kind,
+                                                           GraphicsResourceAccess gpuAccess) noexcept
     {
         VkBufferUsageFlagBits vulkanBufferUsageKind = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
@@ -33,19 +34,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
         VkBufferUsageFlagBits cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-        switch (cpuAccess)
+        switch (gpuAccess)
         {
-            case GraphicsResourceCpuAccessKind::Read:
-                cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-                break;
-            case GraphicsResourceCpuAccessKind::Write:
+            case GraphicsResourceAccess::Read:
                 cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
                 break;
-            case GraphicsResourceCpuAccessKind::ReadWrite:
+            case GraphicsResourceAccess::Write:
+                cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                break;
+            case GraphicsResourceAccess::ReadWrite:
                 cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
                 break;
             default:
-            case GraphicsResourceCpuAccessKind::None:
+            case GraphicsResourceAccess::None:
                 cpuAccessBit = static_cast<VkBufferUsageFlagBits>(0);
                 break;
         }
@@ -54,23 +55,24 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(vulkanBufferUsageKind);
     }
 
-    [[nodiscard]] inline uint32_t GetVulkanImageUsageKind(GraphicsTextureKind /*kind*/, GraphicsResourceCpuAccessKind cpuAccess) noexcept
+    [[nodiscard]] inline uint32_t GetVulkanImageUsageKind(GraphicsTextureKind /*kind*/,
+                                                          GraphicsResourceAccess gpuAccess) noexcept
     {
         VkImageUsageFlagBits cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-        switch (cpuAccess)
+        switch (gpuAccess)
         {
-            case GraphicsResourceCpuAccessKind::Read:
-                cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-                break;
-            case GraphicsResourceCpuAccessKind::Write:
+            case GraphicsResourceAccess::Read:
                 cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
                 break;
-            case GraphicsResourceCpuAccessKind::ReadWrite:
+            case GraphicsResourceAccess::Write:
+                cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+                break;
+            case GraphicsResourceAccess::ReadWrite:
                 cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
                 break;
             default:
-            case GraphicsResourceCpuAccessKind::None:
+            case GraphicsResourceAccess::None:
                 cpuAccessBit = static_cast<VkImageUsageFlagBits>(0);
                 break;
         }

@@ -15,7 +15,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VulkanGraphicsBuffer::VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> device,
                                                GraphicsBufferKind kind,
                                                GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                                               GraphicsResourceCpuAccessKind cpuAccess,
+                                               GraphicsResourceAccess cpuAccess,
                                                VkBuffer buffer)
         : GraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess), _vulkanBuffer(buffer)
     {

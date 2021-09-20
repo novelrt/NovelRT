@@ -23,7 +23,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> device,
                              GraphicsBufferKind kind,
                              GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                             GraphicsResourceCpuAccessKind cpuAccess,
+                             GraphicsResourceAccess cpuAccess,
                              VkBuffer buffer);
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept
@@ -65,7 +65,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsBufferImpl(std::shared_ptr<VulkanGraphicsDevice> device,
                                  GraphicsBufferKind kind,
                                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                                 GraphicsResourceCpuAccessKind cpuAccess,
+                                 GraphicsResourceAccess cpuAccess,
                                  VkBuffer vulkanBuffer)
             : VulkanGraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess, vulkanBuffer),
               _metadata(

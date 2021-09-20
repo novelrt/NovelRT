@@ -15,12 +15,12 @@ namespace NovelRT::Experimental::Graphics
     private:
         GraphicsMemoryRegion<GraphicsMemoryBlock> _blockRegion;
         std::shared_ptr<GraphicsMemoryAllocator> _allocator;
-        GraphicsResourceCpuAccessKind _cpuAccess;
+        GraphicsResourceAccess _cpuAccess;
 
     public:
         GraphicsResource(const std::shared_ptr<GraphicsDevice>& device,
                          GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                         GraphicsResourceCpuAccessKind cpuAccess)
+                         GraphicsResourceAccess cpuAccess)
             : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)), _blockRegion(std::move(blockRegion)), _cpuAccess(cpuAccess)
         {
             if (_blockRegion.GetCollection() == nullptr)
@@ -60,7 +60,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual int32_t GetCount() = 0;
 
-        [[nodiscard]] inline GraphicsResourceCpuAccessKind GetCpuAccess() const noexcept
+        [[nodiscard]] inline GraphicsResourceAccess GetCpuAccess() const noexcept
         {
             return _cpuAccess;
         }

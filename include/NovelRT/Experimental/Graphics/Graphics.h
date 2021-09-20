@@ -31,7 +31,7 @@ namespace NovelRT::Experimental::Graphics
 {
     enum class ShaderProgramKind : uint32_t;
     class GraphicsDeviceObject;
-    enum class GraphicsResourceCpuAccessKind : uint32_t;
+    enum class GraphicsResourceAccess : uint32_t;
     enum class GraphicsSurfaceKind : uint32_t;
     class IGraphicsSurface;
     class GraphicsAdapter;
@@ -83,7 +83,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsMemoryBlockCollection.h"
 #include "GraphicsMemoryBudget.h"
 #include "GraphicsMemoryBlock.h"
-#include "GraphicsResourceCpuAccessKind.h"
+#include "GraphicsResourceAccess.h"
 #include "GraphicsSurfaceKind.h"
 #include "GraphicsTextureKind.h"
 #include "IGraphicsSurface.h"
