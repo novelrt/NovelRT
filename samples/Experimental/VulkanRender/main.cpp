@@ -81,7 +81,7 @@ int main()
     auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
         GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024 * 4);
 
-    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex), 16);
+    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
     gfxDevice->Signal(gfxContext->GetFence());
     gfxContext->BeginFrame();
