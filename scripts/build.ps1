@@ -3,6 +3,7 @@ Param(
   [switch] $build,
   [switch] $ci,
   [ValidateSet("Debug", "MinSizeRel", "Release", "RelWithDebInfo")][string] $configuration = "Debug",
+  [switch] $documentation,
   [switch] $generate,
   [switch] $help,
   [switch] $install,
@@ -34,13 +35,24 @@ function Generate() {
   if ($ci) {
   conan config install https://github.com/novelrt/ConanConfig.git
   conan install . -if "$BuildDir" --build=missing --profile windows-vs2019-amd64
-    $remaining = ,"-DNOVELRT_BUILD_DOCUMENTATION=OFF", "-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
+      $remaining = ,"-DPython_FIND_REGISTRY=NEVER", "-DPython_FIND_STRATEGY=LOCATION" + $remaining
+      if ($documentation -eq $false) {
+        $remaining = ,"-DNOVELRT_BUILD_DOCUMENTATION=OFF" + $remaining
+      }
   }
 
   & cmake -S $RepoRoot -B $BuildDir -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -A x64 -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
 
   if ($LastExitCode -ne 0) {
     throw "'Generate' failed"
+  }
+}
+
+function BuildDocumentation() {
+  & cmake --build $BuildDir --config $configuration --target Doxygen
+
+  if ($LastExitCode -ne 0) {
+    throw "'Build Documentation' failed"
   }
 }
 
@@ -53,6 +65,7 @@ function Help() {
   Write-Host -Object "Actions:"
   Write-Host -Object "  -build                            Build repository"
   Write-Host -Object "  -generate                         Generate CMake cache"
+  Write-Host -Object "  -documentation                    Generate CMake cache and Build Doxygen documentation"
   Write-Host -Object "  -install                          Install repository"
   Write-Host -Object "  -test                             Test repository"
   Write-Host -Object ""
@@ -123,10 +136,20 @@ try {
   }
 
   if ($ci) {
-    $build = $true
     $generate = $true
-    $install = $true
-    $test = $true
+    if ($documentation)
+    {
+      $build = $false
+      $install = $false
+      $test = $false
+    }
+    else
+    {
+      $build = $true
+      $install = $true
+      $test = $true
+    }
+
   }
 
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
@@ -151,6 +174,10 @@ try {
 
   if ($generate) {
     Generate
+  }
+
+  if ($documentation) {
+    BuildDocumentation
   }
 
   if ($build) {
