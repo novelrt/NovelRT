@@ -267,6 +267,8 @@ namespace NovelRT::Experimental::Graphics
                 return _regions.end();
             }
 
+            ~DefaultMetadata() override = default;
+
         private:
             [[nodiscard]] size_t BinarySearchFirstRegionNodeWithSizeNotLessThan(size_t size) const noexcept
             {

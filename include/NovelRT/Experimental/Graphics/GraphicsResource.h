@@ -120,6 +120,8 @@ namespace NovelRT::Experimental::Graphics
         {
             UnmapAndWrite(writtenRegion.GetOffset(), writtenRegion.GetSize());
         }
+
+        ~GraphicsResource() override = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 
