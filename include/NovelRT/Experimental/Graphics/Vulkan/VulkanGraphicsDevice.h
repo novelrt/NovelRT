@@ -13,9 +13,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
+        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
 
         LoggingService _logger;
 
