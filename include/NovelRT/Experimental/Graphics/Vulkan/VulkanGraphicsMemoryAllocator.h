@@ -51,7 +51,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             TexelFormat texelFormat) final;
 
         [[nodiscard]] inline GraphicsMemoryBudget GetBudget(
-            std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection)
+            std::shared_ptr<VulkanGraphicsMemoryBlockCollection> /*collection*/)
         {
             return GraphicsMemoryBudget(std::numeric_limits<uint64_t>::max(), 0, 0, 0);
         }
