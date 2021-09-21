@@ -308,8 +308,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _finalValidationLayerSet{},
           _adapters([&](){ return GetGraphicsAdapters(); }),
           _engineName(EngineConfig::EngineName()),
-          _debugLogger(VK_NULL_HANDLE),
           _state(Threading::VolatileState()),
+          _debugLogger(VK_NULL_HANDLE),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX))
     {
         if (GetDebugModeEnabled())
