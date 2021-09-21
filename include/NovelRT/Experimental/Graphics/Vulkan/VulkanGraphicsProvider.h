@@ -15,9 +15,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
 
+        VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        VkInstance _vulkanInstance;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter>>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
