@@ -43,7 +43,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual void* GetSurfaceContextHandleUntyped() = 0;
 
-        template<typename THandleType> [[nodiscard]] THandleType GetSurfaceContextHandleAs()
+        template<typename THandleType>[[nodiscard]] THandleType GetSurfaceContextHandleAs()
         {
             return *reinterpret_cast<THandleType*>(GetSurfaceContextHandleUntyped());
         }

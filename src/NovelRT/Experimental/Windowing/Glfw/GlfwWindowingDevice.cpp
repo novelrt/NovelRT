@@ -42,9 +42,9 @@ namespace NovelRT::Experimental::Windowing::Glfw
                     "The specified window mode is either not valid or not supported.");
         }
 
-        auto window =
-            glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
-                             static_cast<int32_t>(floor(desiredWindowSize.y)), EngineConfig::ApplicationName().c_str(), monitor, nullptr);
+        auto window = glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
+                                       static_cast<int32_t>(floor(desiredWindowSize.y)),
+                                       EngineConfig::ApplicationName().c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {

@@ -13,6 +13,6 @@ namespace NovelRT::Experimental::Graphics
 
     ShaderProgramVisibility GraphicsPipelineResource::GetShaderProgramVisibility() const noexcept
     {
-       return _visibility;
+        return _visibility;
     }
-}
+} // namespace NovelRT::Experimental::Graphics

@@ -42,6 +42,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         int32_t contextCount)
     {
         return std::make_shared<VulkanGraphicsDevice>(
-            std::dynamic_pointer_cast<VulkanGraphicsAdapter>(shared_from_this()), std::move(surfaceContext), contextCount);
+            std::dynamic_pointer_cast<VulkanGraphicsAdapter>(shared_from_this()), std::move(surfaceContext),
+            contextCount);
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

@@ -84,12 +84,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) final
         {
-            Copy(std::static_pointer_cast<VulkanGraphicsBuffer>(destination), std::static_pointer_cast<VulkanGraphicsBuffer>(source));
+            Copy(std::static_pointer_cast<VulkanGraphicsBuffer>(destination),
+                 std::static_pointer_cast<VulkanGraphicsBuffer>(source));
         }
 
         inline void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) final
         {
-            Copy(std::static_pointer_cast<VulkanGraphicsTexture>(destination), std::static_pointer_cast<VulkanGraphicsBuffer>(source));
+            Copy(std::static_pointer_cast<VulkanGraphicsTexture>(destination),
+                 std::static_pointer_cast<VulkanGraphicsBuffer>(source));
         }
 
         void Copy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
@@ -106,6 +108,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsContext() final;
     };
-}
+} // namespace NovelRT::Experimental::Graphics::Vulkan
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSCONTEXT_H

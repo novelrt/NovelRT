@@ -9,28 +9,24 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                                                int32_t contextCount)
         : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence(
-              [&]()
-              {
-                  std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
-                      std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
-                  ptr->Reset();
-                  return ptr;
-              }),
+          _presentCompletionFence([&]() {
+              std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
+                  std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
+              ptr->Reset();
+              return ptr;
+          }),
           _contexts([&, contextCount]() { return CreateGraphicsContexts(contextCount); }),
-          _contextPtrs(
-              [&]()
+          _contextPtrs([&]() {
+              std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
+              ptrs.reserve(_contexts.getActual().size());
+
+              for (auto&& context : _contexts.getActual())
               {
-                  std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
-                  ptrs.reserve(_contexts.getActual().size());
+                  ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+              }
 
-                  for (auto&& context : _contexts.getActual())
-                  {
-                      ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
-                  }
-
-                  return ptrs;
-              }),
+              return ptrs;
+          }),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
           _device(VK_NULL_HANDLE),
@@ -93,9 +89,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -108,9 +104,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -473,7 +469,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         Signal(GetCurrentContext()->GetFence());
-
 
         presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();

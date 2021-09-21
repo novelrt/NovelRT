@@ -62,7 +62,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
             VkMemoryPropertyFlags memoryPropertyFlags = memoryProperties.memoryTypes[i].propertyFlags;
 
-            if ((requiredMemoryPropertyFlags & memoryPropertyFlags) != static_cast<VkMemoryPropertyFlags>(requiredMemoryPropertyFlags))
+            if ((requiredMemoryPropertyFlags & memoryPropertyFlags) !=
+                static_cast<VkMemoryPropertyFlags>(requiredMemoryPropertyFlags))
             {
                 continue;
             }
@@ -105,30 +106,28 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         : GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>(
               std::move(device),
               std::move(settings)),
-          _blockCollections(
-              [&]()
-              {
-                  std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>> returnVec{};
-                  uint32_t memoryTypeCount =
-                      GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties().memoryTypeCount;
-                  returnVec.reserve(memoryTypeCount);
+          _blockCollections([&]() {
+              std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>> returnVec{};
+              uint32_t memoryTypeCount =
+                  GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties().memoryTypeCount;
+              returnVec.reserve(memoryTypeCount);
 
-                  for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < memoryTypeCount; memoryTypeIndex++)
-                  {
-                      returnVec.emplace_back(std::static_pointer_cast<GraphicsMemoryBlockCollection>(std::make_shared<VulkanGraphicsMemoryBlockCollection>(
+              for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < memoryTypeCount; memoryTypeIndex++)
+              {
+                  returnVec.emplace_back(std::static_pointer_cast<GraphicsMemoryBlockCollection>(
+                      std::make_shared<VulkanGraphicsMemoryBlockCollection>(
                           GetDevice(), std::dynamic_pointer_cast<VulkanGraphicsMemoryAllocator>(shared_from_this()),
                           memoryTypeIndex)));
-                  }
+              }
 
-                  return returnVec;
-              })
+              return returnVec;
+          })
     {
         if (!_settings.BlockCreationLogicDelegate.has_value())
         {
             _settings.BlockCreationLogicDelegate = std::function<GraphicsMemoryBlock*(
                 std::shared_ptr<GraphicsDevice>, std::shared_ptr<GraphicsMemoryBlockCollection>, size_t)>(
-                [](auto device, auto collection, auto size)
-                {
+                [](auto device, auto collection, auto size) {
                     return new VulkanGraphicsMemoryBlockImpl<
                         IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::DefaultMetadata>(
                         std::dynamic_pointer_cast<VulkanGraphicsDevice>(device),
@@ -243,8 +242,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             static_cast<uint16_t>(depth), vulkanImage));
     }
 
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::
-        begin()
+    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::begin()
     {
         return _blockCollections.getActual().begin();
     }

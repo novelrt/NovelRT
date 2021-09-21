@@ -64,4 +64,4 @@ namespace NovelRT
         static bool enableDebugOutputFromEngineInternals = false;
         return enableDebugOutputFromEngineInternals;
     }
-}
+} // namespace NovelRT

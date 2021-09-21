@@ -414,7 +414,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             }
 
             vkCmdBindDescriptorSets(vulkanCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    pipelineSignature->GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0, nullptr);
+                                    pipelineSignature->GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0,
+                                    nullptr);
         }
 
         const GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion = primitive->GetIndexBufferRegion();
@@ -476,9 +477,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::shared_ptr<VulkanGraphicsFence> executeGraphicsFence = GetWaitForExecuteCompletionFence();
 
-        //TODO: Might need a fence here? Not sure yet.
-        VkResult queueSubmitResult =
-            vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo, executeGraphicsFence->GetVulkanFence());
+        // TODO: Might need a fence here? Not sure yet.
+        VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
+                                                   executeGraphicsFence->GetVulkanFence());
 
         if (queueSubmitResult != VK_SUCCESS)
         {

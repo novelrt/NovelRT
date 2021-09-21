@@ -80,6 +80,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
         cpuAccessBit |= static_cast<VkImageUsageFlagBits>(VK_IMAGE_USAGE_SAMPLED_BIT);
         return static_cast<uint32_t>(cpuAccessBit);
     }
-}
+} // namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H

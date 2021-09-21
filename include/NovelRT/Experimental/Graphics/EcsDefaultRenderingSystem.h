@@ -13,10 +13,8 @@ namespace NovelRT::Experimental::Graphics
     class EcsDefaultRenderingSystem
     {
     private:
-
-
     public:
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_ECSDEFAULTRENDERINGSYSTEM_H

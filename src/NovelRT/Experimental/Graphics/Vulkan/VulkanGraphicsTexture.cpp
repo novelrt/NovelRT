@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _vulkanImage(vulkanImage),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
           _vulkanSampler([&]() { return CreateVulkanSampler(); })
-{
+    {
         VkResult result = vkBindImageMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), vulkanImage,
                                             GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
 
@@ -243,7 +243,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        //VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
+        // VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkImageViewType viewType;
         switch (GetKind())
@@ -286,7 +286,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (imageViewResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create VkImageView for texture!", imageViewResult);
+            throw Exceptions::InitialisationFailureException("Failed to create VkImageView for texture!",
+                                                             imageViewResult);
         }
 
         return vulkanImageView;
@@ -299,7 +300,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        //VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
+        // VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkSamplerCreateInfo samplerCreateInfo{};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;

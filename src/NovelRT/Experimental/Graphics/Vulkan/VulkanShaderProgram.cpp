@@ -26,8 +26,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         VkShaderModule returnShaderModule = VK_NULL_HANDLE;
 
-        VkResult moduleCreationResult = vkCreateShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
-                                                             &_shaderModuleCreateInfo, nullptr, &returnShaderModule);
+        VkResult moduleCreationResult =
+            vkCreateShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
+                                 &_shaderModuleCreateInfo, nullptr, &returnShaderModule);
 
         if (moduleCreationResult != VK_SUCCESS)
         {
@@ -40,7 +41,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanShaderProgram::~VulkanShaderProgram()
     {
-        vkDestroyShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(), _shaderModule.getActual(), nullptr);
+        vkDestroyShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
+                              _shaderModule.getActual(), nullptr);
     }
 
     gsl::span<uint8_t> VulkanShaderProgram::GetBytecode() const noexcept

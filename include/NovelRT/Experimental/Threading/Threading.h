@@ -5,8 +5,8 @@
 #define NOVELRT_EXPERIMENTAL_THREADING_H
 
 // Threading dependencies.
-#include <atomic>
 #include "../../Exceptions/Exceptions.h"
+#include <atomic>
 
 /**
  * @brief The experimental Threading API.

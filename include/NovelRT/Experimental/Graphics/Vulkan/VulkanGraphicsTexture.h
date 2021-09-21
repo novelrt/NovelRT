@@ -100,21 +100,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                     height,
                                     depth,
                                     vulkanImage),
-              _metadata(
-                  [&]()
-                  {
-                      TMetadata metadata(GraphicsDeviceObject::GetDevice());
-                      std::shared_ptr<GraphicsMemoryBlock> block = GetBlockRegion().GetCollection();
+              _metadata([&]() {
+                  TMetadata metadata(GraphicsDeviceObject::GetDevice());
+                  std::shared_ptr<GraphicsMemoryBlock> block = GetBlockRegion().GetCollection();
 
-                      size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
-                      size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
+                  size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
+                  size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
-                      metadata.Initialise(
-                          std::static_pointer_cast<VulkanGraphicsBufferImpl<TMetadata>>(shared_from_this()),
-                          blockRegion.GetSize(), minimumAllocatedRegionMarginSize, minimumFreeRegionSizeToRegister);
-                      
-                      return metadata;
-                  })
+                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl<TMetadata>>(shared_from_this()),
+                                      blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
+                                      minimumFreeRegionSizeToRegister);
+
+                  return metadata;
+              })
         {
             static_assert(std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
 

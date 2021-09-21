@@ -54,22 +54,17 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsMemoryBlockImpl(std::shared_ptr<VulkanGraphicsDevice> device,
                                       std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection,
                                       size_t size)
-            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)),
-              _metadata(
-                  [&, size]()
-                  {
-                      TMetadata metadata(GetDevice());
-                      const GraphicsMemoryAllocatorSettings& allocatorSettings =
-                          GetCollection()->GetAllocator()->GetSettings();
+            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)), _metadata([&, size]() {
+                  TMetadata metadata(GetDevice());
+                  const GraphicsMemoryAllocatorSettings& allocatorSettings =
+                      GetCollection()->GetAllocator()->GetSettings();
 
-                      size_t minimumAllocatedRegionSize =
-                          allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
-                      size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
-                      metadata.Initialise(
-                          std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
-                          minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
-                      return metadata;
-                  })
+                  size_t minimumAllocatedRegionSize = allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
+                  size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
+                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
+                                      minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
+                  return metadata;
+              })
         {
             static_assert(
                 std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::IMetadata, TMetadata>);

@@ -20,12 +20,12 @@ namespace NovelRT::Experimental::Graphics
 
     public:
         GraphicsTexture(std::shared_ptr<GraphicsDevice> device,
-                          GraphicsTextureKind kind,
-                          GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
+                        GraphicsTextureKind kind,
+                        GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                         GraphicsResourceAccess cpuAccess,
-                          uint32_t width,
-                          uint32_t height,
-                          uint16_t depth)
+                        uint32_t width,
+                        uint32_t height,
+                        uint16_t depth)
             : GraphicsResource(std::move(device), std::move(blockRegion), cpuAccess),
               _kind(kind),
               _width(width),

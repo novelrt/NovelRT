@@ -4,7 +4,6 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR2_H
 #define NOVELRT_MATHS_GEOVECTOR2_H
 
-
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
@@ -16,7 +15,7 @@ namespace NovelRT::Graphics
     class TextRect;
     class RenderingService;
     class Camera;
-}
+} // namespace NovelRT::Graphics
 
 namespace NovelRT::Input
 {

@@ -19,7 +19,8 @@ namespace NovelRT::Exceptions
         InitialisationFailureException() : std::runtime_error(defaultMessage)
         {
         }
-        InitialisationFailureException(const std::string& message) : std::runtime_error(defaultMessage + " Reason: " + message)
+        InitialisationFailureException(const std::string& message)
+            : std::runtime_error(defaultMessage + " Reason: " + message)
         {
         }
         InitialisationFailureException(const std::string& message, const std::string& arguments)

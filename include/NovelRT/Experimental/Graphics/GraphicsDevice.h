@@ -21,7 +21,7 @@ namespace NovelRT::Experimental::Graphics
 
     public:
         GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<GraphicsSurfaceContext> surfaceContext)
-            : _adapter(std::move(adapter)),  _surfaceContext(std::move(surfaceContext))
+            : _adapter(std::move(adapter)), _surfaceContext(std::move(surfaceContext))
         {
             if (_adapter.expired())
             {
@@ -49,7 +49,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual size_t GetContextIndex() const noexcept = 0;
 
         [[nodiscard]] virtual gsl::span<std::shared_ptr<GraphicsContext>> GetContexts() = 0;
-
 
         [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext()
         {

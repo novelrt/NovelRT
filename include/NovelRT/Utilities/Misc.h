@@ -5,13 +5,13 @@
 #define NOVELRT_UTILITIES_MISC_H
 
 #include <filesystem>
-#include <type_traits>
 #include <gsl/span>
+#include <type_traits>
 
 #if defined(NDEBUG)
-#define unused(x)  (void)(x)
+#define unused(x) (void)(x)
 #else
-#define unused(x)  (void)(0)
+#define unused(x) (void)(0)
 #endif
 
 namespace NovelRT::Utilities

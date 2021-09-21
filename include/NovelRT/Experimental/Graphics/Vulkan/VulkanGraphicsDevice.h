@@ -97,7 +97,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] inline gsl::span<std::shared_ptr<GraphicsContext>> GetContexts() final
         {
             return gsl::span<std::shared_ptr<GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
-                                                                     _contextPtrs.getActual().size());
+                                                               _contextPtrs.getActual().size());
         }
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext()

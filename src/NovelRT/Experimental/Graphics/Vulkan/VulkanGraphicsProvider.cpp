@@ -84,9 +84,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanInstanceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -99,9 +99,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanInstanceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -141,9 +141,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
-            auto result =
-                std::find_if(layerProperties.begin(), layerProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
+            auto result = std::find_if(layerProperties.begin(), layerProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0;
+            });
 
             if (result == layerProperties.end())
             {
@@ -306,7 +306,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         : _vulkanInstance(VK_NULL_HANDLE),
           _finalExtensionSet{},
           _finalValidationLayerSet{},
-          _adapters([&](){ return GetGraphicsAdapters(); }),
+          _adapters([&]() { return GetGraphicsAdapters(); }),
           _engineName(EngineConfig::EngineName()),
           _state(Threading::VolatileState()),
           _debugLogger(VK_NULL_HANDLE),

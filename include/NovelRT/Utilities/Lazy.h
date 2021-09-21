@@ -19,8 +19,7 @@ namespace NovelRT::Utilities
         Lazy(std::function<T()> delegate) : _delegate(delegate), _actual()
         {
         }
-        Lazy(T eagerStartValue, std::function<T()> delegate)
-            : _delegate(delegate), _actual(eagerStartValue)
+        Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(eagerStartValue)
         {
         }
 

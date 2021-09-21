@@ -17,7 +17,8 @@ namespace NovelRT::Experimental::Graphics
         size_t MinimumBlockSize = 0;
         size_t MinimumFreeRegionSizeToRegister = 0;
         std::optional<std::function<GraphicsMemoryBlock*(std::shared_ptr<GraphicsDevice>,
-                                                         std::shared_ptr<GraphicsMemoryBlockCollection>, size_t)>>
+                                                         std::shared_ptr<GraphicsMemoryBlockCollection>,
+                                                         size_t)>>
             BlockCreationLogicDelegate;
         std::optional<bool> IsExternallySynchronised;
         std::optional<size_t> MaximumSharedBlockSize;

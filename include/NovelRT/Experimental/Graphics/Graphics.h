@@ -4,25 +4,25 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_H
 
-//Graphics dependencies
-#include <cstdint>
-#include <vector>
-#include <memory>
-#include <optional>
-#include <filesystem>
-#include <gsl/span>
-#include <string>
-#include <utility>
-#include <typeindex>
-#include <chrono>
-#include <mutex>
-#include <list>
-#include "../Threading/Threading.h"
-#include "../../Maths/Maths.h"
+// Graphics dependencies
 #include "../../Graphics/RGBAConfig.h"
+#include "../../Maths/Maths.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"
 #include "../EngineConfig.h"
+#include "../Threading/Threading.h"
+#include <chrono>
+#include <cstdint>
+#include <filesystem>
+#include <gsl/span>
+#include <list>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <string>
+#include <typeindex>
+#include <utility>
+#include <vector>
 
 /**
  * @brief The experimental Graphics plugin API. Comes with built-in support for the ECS.
@@ -64,7 +64,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsBufferKind : uint32_t;
     enum class TexelFormat : uint32_t;
     class GraphicsSurfaceContext;
-}
+} // namespace NovelRT::Experimental::Graphics
 
 // Graphics types
 // clang-format off

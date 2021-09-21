@@ -5,8 +5,8 @@
 
 namespace NovelRT::Experimental::Graphics
 {
-    GraphicsPipelineInput::GraphicsPipelineInput(gsl::span<const GraphicsPipelineInputElement> elements) noexcept :
-    _elements(std::vector<GraphicsPipelineInputElement>(elements.begin(), elements.end()))
+    GraphicsPipelineInput::GraphicsPipelineInput(gsl::span<const GraphicsPipelineInputElement> elements) noexcept
+        : _elements(std::vector<GraphicsPipelineInputElement>(elements.begin(), elements.end()))
     {
     }
 
@@ -14,4 +14,4 @@ namespace NovelRT::Experimental::Graphics
     {
         return gsl::span<const GraphicsPipelineInputElement>(&(*_elements.begin()), _elements.size());
     }
-}
+} // namespace NovelRT::Experimental::Graphics

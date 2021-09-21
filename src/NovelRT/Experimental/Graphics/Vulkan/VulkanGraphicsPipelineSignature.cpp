@@ -184,10 +184,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(descriptorSetLayoutBindings.size());
             descriptorSetLayoutCreateInfo.pBindings = descriptorSetLayoutBindings.data();
 
-            VkResult descriptorSetLayoutResult =
-                vkCreateDescriptorSetLayout(
+            VkResult descriptorSetLayoutResult = vkCreateDescriptorSetLayout(
                 std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
-                                            &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
+                &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
 
             if (descriptorSetLayoutResult != VK_SUCCESS)
             {

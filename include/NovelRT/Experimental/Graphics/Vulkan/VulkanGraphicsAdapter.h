@@ -57,11 +57,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return GetVulkanPhysicalDeviceProperties().vendorID;
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsDevice> CreateDevice(std::shared_ptr<GraphicsSurfaceContext> surfaceContext,
-                                                                   int32_t contextCount) final
+        [[nodiscard]] std::shared_ptr<GraphicsDevice> CreateDevice(
+            std::shared_ptr<GraphicsSurfaceContext> surfaceContext,
+            int32_t contextCount) final
         {
-            return std::static_pointer_cast<GraphicsDevice>(
-                CreateVulkanGraphicsDevice(std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext), contextCount));
+            return std::static_pointer_cast<GraphicsDevice>(CreateVulkanGraphicsDevice(
+                std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext), contextCount));
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const

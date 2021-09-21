@@ -63,7 +63,7 @@ namespace NovelRT::Experimental::Graphics
                                     size_t minimumAllocatedRegionMarginSize,
                                     size_t minimumFreeRegionSizeToRegister) = 0;
 
-             ~IMetadata() override = default;
+            ~IMetadata() override = default;
         };
 
         class DefaultMetadata : public IMetadata

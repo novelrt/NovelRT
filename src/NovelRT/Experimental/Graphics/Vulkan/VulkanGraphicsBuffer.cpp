@@ -19,7 +19,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                VkBuffer buffer)
         : GraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess), _vulkanBuffer(buffer)
     {
-        VkResult bindResult = vkBindBufferMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanBuffer, GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
+        VkResult bindResult = vkBindBufferMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanBuffer,
+                                                 GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
 
         if (bindResult != VK_SUCCESS)
         {
@@ -63,7 +64,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (mapMemoryResult != VK_SUCCESS)
         {
             // TODO: Make a real exception.
-            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " + std::to_string(mapMemoryResult));
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " +
+                                     std::to_string(mapMemoryResult));
         }
 
         return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
@@ -84,10 +86,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (mapMemoryResult != VK_SUCCESS)
         {
             // TODO: Make a real exception.
-            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " + std::to_string(mapMemoryResult));
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU! Reason: " +
+                                     std::to_string(mapMemoryResult));
         }
 
-        uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
+        uint64_t nonCoherentAtomSize =
+            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
         size_t offset = GetOffset();
         size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -98,11 +102,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         mappedMemoryRange.offset = offset;
         mappedMemoryRange.size = size;
 
-        VkResult invalidateMappedMemoryRangesResult = vkInvalidateMappedMemoryRanges(device->GetVulkanDevice(), 1, &mappedMemoryRange);
+        VkResult invalidateMappedMemoryRangesResult =
+            vkInvalidateMappedMemoryRanges(device->GetVulkanDevice(), 1, &mappedMemoryRange);
 
         if (invalidateMappedMemoryRangesResult != VK_SUCCESS)
         {
-            //TODO: Make a real exception.
+            // TODO: Make a real exception.
             throw std::runtime_error("Failed to map the Vulkan memory for read only!");
         }
 
@@ -127,7 +132,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw std::runtime_error("Failed to map Vulkan memory to the CPU!");
         }
 
-        uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
+        uint64_t nonCoherentAtomSize =
+            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
         size_t offset = GetOffset() + readRangeOffset;
         size_t size = (readRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -138,11 +144,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         mappedMemoryRange.offset = offset;
         mappedMemoryRange.size = size;
 
-        VkResult invalidateMappedMemoryRangesResult = vkInvalidateMappedMemoryRanges(device->GetVulkanDevice(), 1, &mappedMemoryRange);
+        VkResult invalidateMappedMemoryRangesResult =
+            vkInvalidateMappedMemoryRanges(device->GetVulkanDevice(), 1, &mappedMemoryRange);
 
         if (invalidateMappedMemoryRangesResult != VK_SUCCESS)
         {
-            //TODO: Make a real exception.
+            // TODO: Make a real exception.
             throw std::runtime_error("Failed to map the Vulkan memory for read only!");
         }
 
@@ -166,7 +173,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDevice vulkanDevice = device->GetVulkanDevice();
         VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
-        uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
+        uint64_t nonCoherentAtomSize =
+            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
         size_t offset = GetOffset();
         size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -181,7 +189,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (flushMappedMemoryRangesResult != VK_SUCCESS)
         {
-            //TODO: Make a real exception.
+            // TODO: Make a real exception.
             throw std::runtime_error("Failed to flush the written changes to the Vulkan memory!");
         }
 
@@ -195,7 +203,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDevice vulkanDevice = device->GetVulkanDevice();
         VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
-        uint64_t nonCoherentAtomSize = device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
+        uint64_t nonCoherentAtomSize =
+            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
         size_t offset = GetOffset() + writtenRangeOffset;
         size_t size = (writtenRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
@@ -210,7 +219,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (flushMappedMemoryRangesResult != VK_SUCCESS)
         {
-            //TODO: Make a real exception.
+            // TODO: Make a real exception.
             throw std::runtime_error("Failed to flush the written changes to the Vulkan memory!");
         }
 

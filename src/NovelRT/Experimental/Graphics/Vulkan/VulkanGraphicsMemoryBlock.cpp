@@ -44,7 +44,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     VulkanGraphicsMemoryBlock::VulkanGraphicsMemoryBlock(
         const std::shared_ptr<VulkanGraphicsDevice>& device,
         const std::shared_ptr<VulkanGraphicsMemoryBlockCollection>& collection)
-        : GraphicsMemoryBlock(std::static_pointer_cast<GraphicsDevice>(device), std::static_pointer_cast<GraphicsMemoryBlockCollection>(collection)),
+        : GraphicsMemoryBlock(std::static_pointer_cast<GraphicsDevice>(device),
+                              std::static_pointer_cast<GraphicsMemoryBlockCollection>(collection)),
           _vulkanDeviceMemory([&]() { return CreateVulkanDeviceMemory(); })
     {
     }

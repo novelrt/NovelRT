@@ -45,7 +45,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return std::dynamic_pointer_cast<VulkanGraphicsPipeline>(GraphicsPrimitive::GetPipeline());
         }
 
-        //TODO: potential bug later...?
+        // TODO: potential bug later...?
         ~VulkanGraphicsPrimitive() final
         {
             for (auto&& inputResourceRegion : GetInputResourceRegions())

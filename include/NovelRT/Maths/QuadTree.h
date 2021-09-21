@@ -3,8 +3,8 @@
 
 #include "GeoBounds.h"
 #include "QuadTreePoint.h"
-#include <memory>
 #include <array>
+#include <memory>
 #include <vector>
 
 namespace NovelRT::Maths

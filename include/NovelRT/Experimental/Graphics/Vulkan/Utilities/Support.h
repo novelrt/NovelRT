@@ -10,7 +10,8 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 {
-    [[nodiscard]] inline QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface) noexcept
+    [[nodiscard]] inline QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice,
+                                                              VkSurfaceKHR surface) noexcept
     {
         QueueFamilyIndices returnObject{};
 
@@ -47,7 +48,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
         return returnObject;
     }
 
-    [[nodiscard]] inline SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface) noexcept
+    [[nodiscard]] inline SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice,
+                                                                       VkSurfaceKHR surface) noexcept
     {
         SwapChainSupportDetails returnDetails;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &returnDetails.capabilities);
@@ -73,6 +75,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
         return returnDetails;
     }
-}
+} // namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_SUPPORT_H

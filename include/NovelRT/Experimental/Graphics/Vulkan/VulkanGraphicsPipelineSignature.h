@@ -28,7 +28,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void DestroyDescriptorSetLayout();
         void DestroyPipelineLayout();
 
-        [[nodiscard]] VkShaderStageFlags GetVulkanShaderStageFlags(ShaderProgramVisibility shaderVisibility) const noexcept;
+        [[nodiscard]] VkShaderStageFlags GetVulkanShaderStageFlags(
+            ShaderProgramVisibility shaderVisibility) const noexcept;
 
     public:
         VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,

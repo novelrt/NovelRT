@@ -28,21 +28,21 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsAdapter;
     class VulkanGraphicsAdapterSelector;
     class VulkanGraphicsSurfaceContext;
-}
+} // namespace NovelRT::Experimental::Graphics::Vulkan
 
-//Graphics.Vulkan dependencies
-#include <array>
-#include <optional>
-#include <set>
-#include <map>
-#include <vector>
-#include <vulkan/vulkan.h>
-#include "../Graphics.h"
-#include "../../EngineConfig.h"
+// Graphics.Vulkan dependencies
+#include "../../../Exceptions/Exceptions.h"
 #include "../../../LoggingService.h"
 #include "../../../Utilities/Lazy.h"
-#include "../../../Exceptions/Exceptions.h"
 #include "../../../Utilities/Misc.h"
+#include "../../EngineConfig.h"
+#include "../Graphics.h"
+#include <array>
+#include <map>
+#include <optional>
+#include <set>
+#include <vector>
+#include <vulkan/vulkan.h>
 
 // Graphics.Vulkan types
 

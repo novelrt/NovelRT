@@ -49,7 +49,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             else if (result != VK_TIMEOUT)
             {
                 throw Exceptions::InvalidOperationException(
-                    "VkFence instance failed to either succeed or time out correctly. Reason: " + std::to_string(result));
+                    "VkFence instance failed to either succeed or time out correctly. Reason: " +
+                    std::to_string(result));
             }
         }
 
@@ -75,8 +76,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InvalidOperationException(
-                "VkFence instance failed to reset correctly. Reason: " + std::to_string(result));
+            throw Exceptions::InvalidOperationException("VkFence instance failed to reset correctly. Reason: " +
+                                                        std::to_string(result));
         }
     }
 

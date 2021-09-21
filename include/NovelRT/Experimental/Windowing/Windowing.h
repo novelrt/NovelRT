@@ -13,9 +13,9 @@ namespace NovelRT::Experimental::Windowing
 }
 
 // Windowing dependencies
-#include "../Graphics/Graphics.h"
 #include "../../Maths/GeoVector2F.h"
 #include "../../Windowing/WindowMode.h"
+#include "../Graphics/Graphics.h"
 
 // Windowing types
 #include "IWindowingDevice.h"

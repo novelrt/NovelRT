@@ -17,7 +17,9 @@ namespace NovelRT::Experimental::Graphics
         ShaderProgramKind _kind;
 
     public:
-        ShaderProgram(std::shared_ptr<GraphicsDevice> device, std::string entryPointName, ShaderProgramKind kind) noexcept;
+        ShaderProgram(std::shared_ptr<GraphicsDevice> device,
+                      std::string entryPointName,
+                      ShaderProgramKind kind) noexcept;
 
         [[nodiscard]] inline const std::string& GetEntryPointName() const noexcept
         {

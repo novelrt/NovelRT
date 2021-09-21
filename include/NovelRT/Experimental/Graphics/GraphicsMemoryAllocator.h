@@ -78,7 +78,8 @@ namespace NovelRT::Experimental::Graphics
             GraphicsResourceAccess gpuAccessKind,
             size_t size)
         {
-            return CreateBuffer(bufferKind, cpuAccessKind, gpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None);
+            return CreateBuffer(bufferKind, cpuAccessKind, gpuAccessKind, size,
+                                GraphicsMemoryRegionAllocationFlags::None);
         }
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
@@ -107,16 +108,15 @@ namespace NovelRT::Experimental::Graphics
             uint32_t width,
             uint32_t height)
         {
-            return CreateTexture(textureKind, cpuAccessKind, gpuAccessKind, width, height, 1, GraphicsMemoryRegionAllocationFlags::None,
-                                 TexelFormat::R8G8B8A8_UNORM);
+            return CreateTexture(textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
+                                 GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
         }
 
         [[nodiscard]] virtual GraphicsMemoryBudget GetBudget(
             std::shared_ptr<GraphicsMemoryBlockCollection> blockCollection) = 0;
 
         // TODO: maybe this should be std::list instead?
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator
-        begin() = 0;
+        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator begin() = 0;
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() = 0;
     };
 
@@ -129,8 +129,7 @@ namespace NovelRT::Experimental::Graphics
                                     GraphicsMemoryAllocatorSettings settings) noexcept
             : GraphicsMemoryAllocator(std::move(device), std::move(settings))
         {
-            static_assert(
-                std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
+            static_assert(std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
         }
     };
 

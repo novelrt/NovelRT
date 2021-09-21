@@ -16,7 +16,8 @@ namespace NovelRT::Experimental::Graphics
         bool _debugModeEnabled;
 
     public:
-        static inline const std::string EnableDebugModeSwitchName = "NovelRT::Experimental::Graphics::GraphicsProvider::EnableDebugMode";
+        static inline const std::string EnableDebugModeSwitchName =
+            "NovelRT::Experimental::Graphics::GraphicsProvider::EnableDebugMode";
 
         GraphicsProvider() noexcept : _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
         {
@@ -32,6 +33,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsProvider() = default;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPROVIDER_H
