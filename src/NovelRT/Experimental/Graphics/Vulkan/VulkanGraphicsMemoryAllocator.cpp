@@ -53,7 +53,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         const VkPhysicalDeviceMemoryProperties& memoryProperties =
             GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties();
 
-        for (int32_t i = 0; i < _blockCollections.getActual().size(); i++)
+        for (int32_t i = 0; i < static_cast<int32_t>(_blockCollections.getActual().size()); i++)
         {
             if ((memoryTypeBits & (1 << i)) == 0)
             {

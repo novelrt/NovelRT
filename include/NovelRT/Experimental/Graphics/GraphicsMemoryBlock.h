@@ -23,6 +23,8 @@ namespace NovelRT::Experimental::Graphics
         {
             return _collection;
         }
+
+        ~GraphicsMemoryBlock() override = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 
