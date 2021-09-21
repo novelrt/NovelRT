@@ -62,6 +62,8 @@ namespace NovelRT::Experimental::Graphics
                                     size_t size,
                                     size_t minimumAllocatedRegionMarginSize,
                                     size_t minimumFreeRegionSizeToRegister) = 0;
+
+             ~IMetadata() override = default;
         };
 
         class DefaultMetadata : public IMetadata
@@ -546,6 +548,8 @@ namespace NovelRT::Experimental::Graphics
                 // TODO: Validate free regions by size list
             }
         };
+
+        virtual ~IGraphicsMemoryRegionCollection() = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 
