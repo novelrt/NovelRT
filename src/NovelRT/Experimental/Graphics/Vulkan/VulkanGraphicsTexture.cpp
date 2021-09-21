@@ -15,10 +15,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                  uint16_t depth,
                                                  VkImage vulkanImage)
         : GraphicsTexture(std::move(device), kind, std::move(blockRegion), cpuAccess, width, height, depth),
+          _vulkanImage(vulkanImage),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
-          _vulkanSampler([&]() { return CreateVulkanSampler(); }),
-          _vulkanImage(vulkanImage)
-    {
+          _vulkanSampler([&]() { return CreateVulkanSampler(); })
+{
         VkResult result = vkBindImageMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), vulkanImage,
                                             GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
 
