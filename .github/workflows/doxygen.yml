@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: novelrt/novelrt-build:latest
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -25,9 +27,6 @@ jobs:
           gh auth login
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Documentation
         run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
