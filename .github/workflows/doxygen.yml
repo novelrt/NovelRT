@@ -8,12 +8,9 @@ on:
 jobs:
   Build_and_Publish_Documentation:
     name: Build and Publish Documentation
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: cmd
-
+    runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -28,19 +25,17 @@ jobs:
           gh auth login
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Windows Setup
-        run: scripts\machine-setup.cmd
-
       - name: Generate Documentation
-        run: scripts\cibuild.cmd -documentation -DDOXYGEN_OUTPUT_DIRECTORY='$GITHUB_WORKSPACE\novelrt\docs'
+        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
         run: |
-          git add docs/*
+          git add ./docs/*
           git commit -m "Updated documentation - $GITHUB_SHA"
           git push origin documentation/$GITHUB_SHA
 
