@@ -3,7 +3,7 @@
   "tasks": [
     {
       "taskLabel": "conan install windows-vs2019-amd64",
-      "appliesTo": "conanfile.txt",
+      "appliesTo": "conanfile.py",
       "type": "launch",
       "command": "${env.COMSPEC}",
       "args": [
