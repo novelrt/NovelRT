@@ -136,7 +136,7 @@ cmake --build . -j
 When you open the NovelRT folder in VS2019 for the first time the CMakeSettings.json file will contain incorrect values.
 Change the buildRoot value to `${projectDir}\\build` and the installRoot to `${projectDir}\\install` and restart Visual Studio this will make sure that it uses the same build path as the CLI commands.
 You can delete the `out` folder in the NovelRT root as well as we won't use it anymore.
-Afterwards right click on the `conanfile.txt` file in the root and click the `Run conan install windows-vs2019-amd64` option.
+Afterwards right click on the `conanfile.py` file in the root and click the `Run conan install windows-vs2019-amd64` option.
 This runs the conan install command from the section above to regenerate the files we need to build with cmake as Visual Studio wiped the output from earlier.
 Then regenerate the cmake by clicking regenerate on the yellow warning ribbon on the top of Visual Studio.
 
