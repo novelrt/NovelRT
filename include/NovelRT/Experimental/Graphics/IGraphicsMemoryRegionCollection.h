@@ -323,29 +323,12 @@ namespace NovelRT::Experimental::Graphics
 
                 if (mergeWithNext)
                 {
-                    /*
-                    // TODO: I suck at translating assertions.
-                    if (*nextRegionNode == nullptr)
-                    {
-                        throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                    }
-                    */
-
                     UnregisterFreeRegion(nextRegionNode);
                     MergeFreeRegionWithNext(regionNode);
                 }
 
                 if (mergeWithPrevious)
                 {
-
-                    /*
-                                        // TODO: I suck at translating assertions.
-                                        if (*nextRegionNode == nullptr)
-                                        {
-                                            throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                                        }
-                    */
-
                     UnregisterFreeRegion(previousRegionNode);
                     MergeFreeRegionWithNext(previousRegionNode);
                     RegisterFreeRegion(previousRegionNode);
@@ -360,22 +343,8 @@ namespace NovelRT::Experimental::Graphics
 
             void MergeFreeRegionWithNext(typename std::list<GraphicsMemoryRegion<TSelf>>::iterator regionNode)
             {
-                /*
-                                if (*regionNode == nullptr)
-                                {
-                                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                                }
-                */
-
                 auto nextRegionNode = regionNode;
                 ++nextRegionNode;
-
-                /*
-                                if (*nextRegionNode == nullptr)
-                                {
-                                    throw Exceptions::NullPointerException("A memory region node is nullptr.");
-                                }
-                */
 
                 if (nextRegionNode->GetIsAllocated())
                 {
