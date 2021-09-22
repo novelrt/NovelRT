@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_IWINDOWINGDEVICE_H
-#define NOVELRT_IWINDOWINGDEVICE_H
+#ifndef NOVELRT_EXPERIMENTAL_WINDOWING_IWINDOWINGDEVICE_H
+#define NOVELRT_EXPERIMENTAL_WINDOWING_IWINDOWINGDEVICE_H
 
 #ifndef NOVELRT_EXPERIMENTAL_WINDOWING_H
 #error NovelRT does not support including types explicitly by default. Please include Windowing.h instead for the Windowing namespace subset.
@@ -18,4 +18,4 @@ namespace NovelRT::Experimental::Windowing
     };
 } // namespace NovelRT::Experimental::Windowing
 
-#endif // NOVELRT_IWINDOWINGDEVICE_H
+#endif // NOVELRT_EXPERIMENTAL_WINDOWING_IWINDOWINGDEVICE_H

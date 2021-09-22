@@ -79,6 +79,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsMemoryAllocatorSettings.h"
 #include "IGraphicsMemoryRegionCollection.h"
 #include "GraphicsMemoryRegionAllocationFlags.h"
+#include "TexelFormat.h"
 #include "GraphicsMemoryAllocator.h"
 #include "GraphicsMemoryBlockCollection.h"
 #include "GraphicsMemoryBudget.h"
@@ -105,7 +106,6 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineResource.h"
 #include "GraphicsPipelineResourceKind.h"
 #include "ShaderProgramVisibility.h"
-#include "TexelFormat.h"
 
 // clang-format on
 

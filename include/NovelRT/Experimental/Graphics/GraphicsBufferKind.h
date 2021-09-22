@@ -4,6 +4,10 @@
 #ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSBUFFERKIND_H
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSBUFFERKIND_H
 
+#ifndef NOVELRT_EXPERIMENTAL_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
+#endif
+
 namespace NovelRT::Experimental::Graphics
 {
     enum class GraphicsBufferKind : uint32_t

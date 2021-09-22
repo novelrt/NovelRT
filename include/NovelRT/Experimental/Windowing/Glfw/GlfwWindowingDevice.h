@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GLFWWINDOWINGDEVICE_H
-#define NOVELRT_GLFWWINDOWINGDEVICE_H
+#ifndef NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H
+#define NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H
 
 #ifndef NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_H
 #error NovelRT does not support including types explicitly by default. Please include Windowing.Glfw.h instead for the Windowing::Glfw namespace subset.
@@ -36,4 +36,4 @@ namespace NovelRT::Experimental::Windowing::Glfw
     };
 } // namespace NovelRT::Experimental::Windowing::Glfw
 
-#endif // NOVELRT_GLFWWINDOWINGDEVICE_H
+#endif // NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H
