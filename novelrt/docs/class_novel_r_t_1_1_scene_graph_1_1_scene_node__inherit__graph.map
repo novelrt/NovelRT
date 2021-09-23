@@ -1,0 +1,6 @@
+<map id="NovelRT::SceneGraph::SceneNode" name="NovelRT::SceneGraph::SceneNode">
+<area shape="rect" id="node1" title=" " alt="" coords="97,95,259,136"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_scene_graph_1_1_quad_tree_node.html" title=" " alt="" coords="5,184,167,225"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_scene_graph_1_1_render_object_node.html" title=" " alt="" coords="191,184,352,225"/>
+<area shape="rect" id="node2" title=" " alt="" coords="81,5,275,47"/>
+</map>
