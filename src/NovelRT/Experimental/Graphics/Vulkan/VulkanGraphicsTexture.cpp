@@ -242,7 +242,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        // VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkImageViewType viewType;
         switch (GetKind())
@@ -299,7 +298,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
-        // VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         VkSamplerCreateInfo samplerCreateInfo{};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
