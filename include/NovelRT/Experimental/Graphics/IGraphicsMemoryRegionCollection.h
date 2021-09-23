@@ -466,7 +466,7 @@ namespace NovelRT::Experimental::Graphics
                         "A memory region of size 0 (or less) was provided as a free region to register.");
                 }
 
-                // TODO: validate free regions by size list
+                assert(ValidateFreeRegionsBySizeList());
 
                 if (regionNode->GetSize() >= GetMinimumFreeRegionSizeToRegister())
                 {
@@ -481,7 +481,7 @@ namespace NovelRT::Experimental::Graphics
                     }
                 }
 
-                // TODO: validate free regions by size list
+                assert(ValidateFreeRegionsBySizeList());
             }
 
             [[nodiscard]] bool TryAllocateInternal(size_t size,
@@ -580,7 +580,7 @@ namespace NovelRT::Experimental::Graphics
                         "An attempt was made to unregister an invalid region that has a size of 0 (or less).");
                 }
 
-                // TODO: validate free regions by size list
+                assert(ValidateFreeRegionsBySizeList());
 
                 if (regionNode->GetSize() >= GetMinimumFreeRegionSizeToRegister())
                 {
@@ -601,7 +601,7 @@ namespace NovelRT::Experimental::Graphics
                     }
                 }
 
-                // TODO: Validate free regions by size list
+                assert(ValidateFreeRegionsBySizeList());
             }
         };
 
