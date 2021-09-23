@@ -143,8 +143,7 @@ namespace NovelRT::Experimental::Graphics
 
                 if (!result)
                 {
-                    // TODO: figure out how to return the size...?
-                    throw Exceptions::OutOfMemoryException();
+                    throw Exceptions::OutOfMemoryException("A size of " + std::to_string(result) + " bytes was requested, but this size is too large.");
                 }
 
                 return region;
