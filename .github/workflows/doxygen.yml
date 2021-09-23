@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: novelrt/novelrt-build:latest
+      env:
+        GITHUB_SHA: $GITHUB_SHA
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -41,5 +43,5 @@ jobs:
 
       - name: Create Pull Request
         if: ${{ success() }}
-        run:
-          gh pr create --title "$GITHUB_SHA into gh-pages" --body "Updated documentation from commit $GITHUB_SHA in main." --base gh-pages --head documentation/$GITHUB_SHA
+        run: |
+          gh pr create --title "${GITHUB_SHA} into gh-pages" --body "Updated documentation from commit ${GITHUB_SHA} in main." --base gh-pages --head documentation/$GITHUB_SHA
