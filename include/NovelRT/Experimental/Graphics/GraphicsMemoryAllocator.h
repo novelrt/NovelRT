@@ -55,7 +55,7 @@ namespace NovelRT::Experimental::Graphics
             _settings.MinimumFreeRegionSizeToRegister = minimumFreeRegionSizeToRegister;
         }
 
-        [[nodiscard]] inline virtual int32_t GetCount() = 0;
+        [[nodiscard]] inline virtual size_t GetCount() = 0;
 
         [[nodiscard]] inline const GraphicsMemoryAllocatorSettings& GetSettings() const noexcept
         {

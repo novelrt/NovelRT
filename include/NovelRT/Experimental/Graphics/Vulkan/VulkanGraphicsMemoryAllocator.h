@@ -23,10 +23,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
                                       GraphicsMemoryAllocatorSettings settings);
 
-        [[nodiscard]] inline int32_t GetCount() final
+        [[nodiscard]] inline size_t GetCount() final
         {
-            // TODO: Cursed.
-            return static_cast<int32_t>(_blockCollections.getActual().size());
+            return _blockCollections.getActual().size();
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept

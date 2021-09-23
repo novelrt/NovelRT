@@ -348,12 +348,12 @@ namespace NovelRT::Experimental::Graphics
 
                 for (auto&& region : _freeRegionsBySize)
                 {
-                    if (region.GetIsAllocated() || region.GetSize() < GetMinimumFreeRegionSizeToRegister() || region.GetSize() < lastRegionSize)
+                    if (region->GetIsAllocated() || region->GetSize() < GetMinimumFreeRegionSizeToRegister() || region->GetSize() < lastRegionSize)
                     {
                         return false;
                     }
 
-                    lastRegionSize = region.GetSize();
+                    lastRegionSize = region->GetSize();
                 }
 
                 return true;
