@@ -42,4 +42,4 @@ jobs:
       - name: Create Pull Request
         if: ${{ success() }}
         run: |
-          gh pr create --title "${{ GITHUB_SHA }} into gh-pages" --body "Updated documentation from commit ${{ GITHUB_SHA }} in main." --base gh-pages --head documentation/${{ GITHUB_SHA }}
+          gh pr create --title "${{ github.sha }} into gh-pages" --body "Updated documentation from commit ${{ github.sha }} in main." --base gh-pages --head documentation/${{ github.sha }}
