@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: novelrt/novelrt-build:latest
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -21,7 +19,7 @@ jobs:
         run: git checkout -b documentation/$GITHUB_SHA
         
       - name: Prepare Secrets
-        run: echo "$GITHUB_TOKEN" >> $GITHUB_WORKSPACE/secret.txt
+        run: echo "${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_WORKSPACE/secret.txt
 
       #Mandatory step it appears otherwise pushing the commit will fail
       #Switched username and e-mail to something identifiable?
@@ -30,8 +28,6 @@ jobs:
           gh auth login --with-token < $GITHUB_WORKSPACE/secret.txt
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Documentation
         run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIR=$GITHUB_WORKSPACE/novelrt/docs
