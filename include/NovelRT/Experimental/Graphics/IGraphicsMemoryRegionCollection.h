@@ -164,7 +164,7 @@ namespace NovelRT::Experimental::Graphics
                 _freeRegionsBySize.clear();
                 _freeRegionsBySize.emplace_back(iterator);
 
-                // TODO: implement debug validation here?
+                assert(Validate());
             }
 
             void Free(const GraphicsMemoryRegion<TSelf>& region) final
@@ -187,7 +187,8 @@ namespace NovelRT::Experimental::Graphics
                 {
                     throw Exceptions::KeyNotFoundException();
                 }
-                // TODO: call validate
+
+                assert(Validate());
             }
 
             void Initialise(std::shared_ptr<TSelf> collection,
@@ -252,6 +253,13 @@ namespace NovelRT::Experimental::Graphics
                     }
                 }
 
+                if (!allocatedRegion)
+                {
+                    outRegion = GraphicsMemoryRegion<TSelf>();
+                }
+
+                assert(Validate());
+
                 return allocatedRegion;
             }
 
@@ -265,9 +273,92 @@ namespace NovelRT::Experimental::Graphics
                 return _regions.end();
             }
 
+            /**
+             * THIS IS ONLY USED BY DEBUG BUILDS
+             */
+            [[nodiscard]] bool Validate()
+            {
+                if (_regions.size() == 0)
+                {
+                    return false;
+                }
+
+                size_t calculatedSize = 0ULL;
+                size_t calculatedTotalFreeRegionSize = 0ULL;
+
+                int32_t calculatedFreeRegionCount = 0;
+                int32_t calculatedFreeRegionsToRegisterCount = 0;
+
+                bool isPreviousRegionFree = false;
+
+                for (auto&& region : _regions)
+                {
+                    if (region.GetOffset() != calculatedSize)
+                    {
+                        return false;
+                    }
+
+                    bool isCurrentRegionFree = !region.GetIsAllocated();
+
+                    if (isPreviousRegionFree && isCurrentRegionFree)
+                    {
+                        return false;
+                    }
+
+                    if (isCurrentRegionFree)
+                    {
+                        calculatedTotalFreeRegionSize += region.GetSize();
+                        ++calculatedFreeRegionCount;
+
+                        if (region.GetSize() >= GetMinimumFreeRegionSizeToRegister())
+                        {
+                            ++calculatedFreeRegionsToRegisterCount;
+                        }
+
+                        if (region.GetSize() < GetMinimumAllocatedRegionMarginSize())
+                        {
+                            return false;
+                        }
+                    }
+                    else if (GetMinimumAllocatedRegionMarginSize() != 0 && !isPreviousRegionFree)
+                    {
+                        return false;
+                    }
+
+                    calculatedSize += region.GetSize();
+                    isPreviousRegionFree = isCurrentRegionFree;
+                }
+
+                if(!ValidateFreeRegionsBySizeList())
+                {
+                    return false;
+                }
+
+                return calculatedSize == GetSize() && calculatedTotalFreeRegionSize == _totalFreeRegionSize && calculatedFreeRegionCount == _freeRegionCount && calculatedFreeRegionsToRegisterCount == _freeRegionsBySize.size();
+            }
+
+
+
             ~DefaultMetadata() override = default;
 
         private:
+            [[nodiscard]] bool ValidateFreeRegionsBySizeList()
+            {
+                size_t lastRegionSize = 0ULL;
+
+                for (auto&& region : _freeRegionsBySize)
+                {
+                    if (region.GetIsAllocated() || region.GetSize() < GetMinimumFreeRegionSizeToRegister() || region.GetSize() < lastRegionSize)
+                    {
+                        return false;
+                    }
+
+                    lastRegionSize = region.GetSize();
+                }
+
+                return true;
+            }
+
             [[nodiscard]] size_t BinarySearchFirstRegionNodeWithSizeNotLessThan(size_t size) const noexcept
             {
                 gsl::span<const typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
