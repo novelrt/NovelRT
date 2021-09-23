@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {

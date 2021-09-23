@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Graphics.h>
-#include <NovelRT/Experimental/Graphics/GraphicsPipeline.h>
 
 namespace NovelRT::Experimental::Graphics
 {

@@ -1,11 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/InitialisationFailureException.h>
-#include <NovelRT/Exceptions/NotSupportedException.h>
-#include <NovelRT/Experimental/EngineConfig.h>
 #include <NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h>
-#include <cmath>
 
 namespace NovelRT::Experimental::Windowing::Glfw
 {

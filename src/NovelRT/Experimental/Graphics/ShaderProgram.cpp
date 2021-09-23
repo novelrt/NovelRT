@@ -3,8 +3,6 @@
 
 #include <NovelRT/Experimental/Graphics/Graphics.h>
 
-#include <utility>
-
 namespace NovelRT::Experimental::Graphics
 {
 
