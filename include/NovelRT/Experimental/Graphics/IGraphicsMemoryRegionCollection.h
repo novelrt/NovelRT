@@ -459,11 +459,10 @@ namespace NovelRT::Experimental::Graphics
                         "An allocated memory region was designated to be registered as free.");
                 }
 
-                // TODO: this is unsigned. I probably can get away with == but whatever.
-                if (regionNode->GetSize() <= 0)
+                if (regionNode->GetSize() == 0)
                 {
                     throw Exceptions::InvalidOperationException(
-                        "A memory region of size 0 (or less) was provided as a free region to register.");
+                        "A memory region of size 0 was provided as a free region to register.");
                 }
 
                 assert(ValidateFreeRegionsBySizeList());
