@@ -8,9 +8,6 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
 #endif
 
-// TODO: Figure out why putting this in Graphics.h didn't work.
-#include "GraphicsMemoryRegion.h"
-
 namespace NovelRT::Experimental::Graphics
 {
     template<typename TSelf, typename TIterator = typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>
