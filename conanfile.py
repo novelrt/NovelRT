@@ -55,6 +55,8 @@ class NovelRTConan(ConanFile):
     def imports(self):
         self.copy("*.dll", dst="thirdparty", src="bin")
         self.copy("*.dll", dst="thirdparty", src="lib")
+        self.copy("*.json", dst="thirdparty", src="bin")
+        self.copy("*.json", dst="thirdparty", src="lib")
 
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
