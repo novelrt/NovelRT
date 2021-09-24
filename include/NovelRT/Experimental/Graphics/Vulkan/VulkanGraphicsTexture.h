@@ -124,9 +124,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _metadata.getActual().GetAllocatedRegionCount();
         }
 
-        [[nodiscard]] int32_t GetCount() final
+        [[nodiscard]] size_t GetCount() final
         {
-            return static_cast<int32_t>(_metadata.getActual().GetCount());
+            return _metadata.getActual().GetCount();
         }
 
         [[nodiscard]] bool GetIsEmpty() final

@@ -60,7 +60,7 @@ namespace NovelRT::Experimental::Graphics
             return _blockRegion;
         }
 
-        [[nodiscard]] virtual int32_t GetCount() = 0;
+        [[nodiscard]] virtual size_t GetCount() = 0;
 
         [[nodiscard]] inline GraphicsResourceAccess GetCpuAccess() const noexcept
         {
