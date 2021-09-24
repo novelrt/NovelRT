@@ -8,6 +8,8 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
 #endif
 
+#include <iostream>
+
 namespace NovelRT::Experimental::Graphics
 {
     template<typename TSelf, typename TIterator = typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>
@@ -59,8 +61,6 @@ namespace NovelRT::Experimental::Graphics
                                     size_t size,
                                     size_t minimumAllocatedRegionMarginSize,
                                     size_t minimumFreeRegionSizeToRegister) = 0;
-
-            ~IMetadata() override = default;
         };
 
         class DefaultMetadata : public IMetadata
@@ -336,10 +336,6 @@ namespace NovelRT::Experimental::Graphics
 
                 return calculatedSize == GetSize() && calculatedTotalFreeRegionSize == _totalFreeRegionSize && calculatedFreeRegionCount == _freeRegionCount && calculatedFreeRegionsToRegisterCount == _freeRegionsBySize.size();
             }
-
-
-
-            ~DefaultMetadata() override = default;
 
         private:
             [[nodiscard]] bool ValidateFreeRegionsBySizeList()
