@@ -286,8 +286,8 @@ namespace NovelRT::Experimental::Graphics
                 size_t calculatedSize = 0ULL;
                 size_t calculatedTotalFreeRegionSize = 0ULL;
 
-                int32_t calculatedFreeRegionCount = 0;
-                int32_t calculatedFreeRegionsToRegisterCount = 0;
+                size_t calculatedFreeRegionCount = 0;
+                size_t calculatedFreeRegionsToRegisterCount = 0;
 
                 bool isPreviousRegionFree = false;
 
