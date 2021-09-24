@@ -30,12 +30,12 @@ jobs:
           git config user.email "admin@novelrt.dev"
 
       - name: Generate Documentation
-        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/novelrt/docs
+        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
         run: |
-          git add $GITHUB_WORKSPACE/novelrt/docs/*
+          git add $GITHUB_WORKSPACE/docs/*
           git commit -m "Updated documentation - $GITHUB_SHA"
           git push origin documentation/$GITHUB_SHA
 
