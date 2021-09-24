@@ -17,6 +17,15 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual GraphicsDevice* GetDeviceInternal() const noexcept = 0;
 
     public:
+        IGraphicsMemoryRegionCollection() noexcept = default;
+        IGraphicsMemoryRegionCollection(const IGraphicsMemoryRegionCollection<TSelf, TIterator>&) noexcept = delete;
+        IGraphicsMemoryRegionCollection(IGraphicsMemoryRegionCollection<TSelf, TIterator>&&) noexcept = delete;
+        IGraphicsMemoryRegionCollection<TSelf, TIterator>& operator=(
+            const IGraphicsMemoryRegionCollection<TSelf, TIterator>&) noexcept = delete;
+        IGraphicsMemoryRegionCollection<TSelf, TIterator>& operator=(
+            IGraphicsMemoryRegionCollection<TSelf, TIterator>&&) noexcept = delete;
+        virtual ~IGraphicsMemoryRegionCollection() = default;
+
         [[nodiscard]] virtual int32_t GetAllocatedRegionCount() = 0;
 
         [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const noexcept
@@ -60,14 +69,12 @@ namespace NovelRT::Experimental::Graphics
                                     size_t minimumAllocatedRegionMarginSize,
                                     size_t minimumFreeRegionSizeToRegister) = 0;
 
-
-            /*
+            IMetadata() noexcept = default;
             IMetadata(const IMetadata&) noexcept = delete;
             IMetadata(IMetadata&&) noexcept = delete;
             IMetadata& operator=(const IMetadata&) noexcept = delete;
             IMetadata& operator=(IMetadata&&) noexcept = delete;
             virtual ~IMetadata() = default;
-            */
         };
 
         class DefaultMetadata final : public IMetadata
@@ -92,7 +99,8 @@ namespace NovelRT::Experimental::Graphics
         public:
             explicit DefaultMetadata(std::shared_ptr<GraphicsDevice> device) noexcept
                 : _collection(nullptr),
-                  _freeRegionsBySize(std::make_shared<std::vector<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>>()),
+                  _freeRegionsBySize(
+                      std::make_shared<std::vector<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator>>()),
                   _regions(std::make_shared<std::list<GraphicsMemoryRegion<TSelf>>>()),
                   _minimumFreeRegionSizeToRegister(static_cast<size_t>(-1)),
                   _minimumAllocatedRegionMarginSize(static_cast<size_t>(-1)),
@@ -103,15 +111,58 @@ namespace NovelRT::Experimental::Graphics
             {
             }
 
-            /*
-            DefaultMetadata(const DefaultMetadata&) noexcept = default;
-            DefaultMetadata(DefaultMetadata&&) noexcept = default;
-            DefaultMetadata& operator=(const DefaultMetadata&) noexcept = default;
-            DefaultMetadata& operator=(DefaultMetadata&&) noexcept = default;
+            DefaultMetadata(const DefaultMetadata& other) noexcept
+                : _collection(other._collection),
+                  _freeRegionsBySize(other._freeRegionsBySize),
+                  _regions(other._regions),
+                  _minimumFreeRegionSizeToRegister(other._minimumFreeRegionSizeToRegister),
+                  _minimumAllocatedRegionMarginSize(other._minimumAllocatedRegionMarginSize),
+                  _size(other._size),
+                  _totalFreeRegionSize(other._totalFreeRegionSize),
+                  _freeRegionCount(other._freeRegionCount),
+                  _device(other._device)
+            {
+            }
+
+            DefaultMetadata(DefaultMetadata&& other) noexcept
+                : _collection(std::move(other._collection)),
+                  _freeRegionsBySize(std::move(other._freeRegionsBySize)),
+                  _regions(std::move(other._regions)),
+                  _minimumFreeRegionSizeToRegister(other._minimumFreeRegionSizeToRegister),
+                  _minimumAllocatedRegionMarginSize(other._minimumAllocatedRegionMarginSize),
+                  _size(other._size),
+                  _totalFreeRegionSize(other._totalFreeRegionSize),
+                  _freeRegionCount(other._freeRegionCount),
+                  _device(std::move(other._device))
+            {
+                other._minimumFreeRegionSizeToRegister = static_cast<size_t>(-1);
+                other._minimumAllocatedRegionMarginSize = static_cast<size_t>(-1);
+                other._size = static_cast<size_t>(-1);
+                other._totalFreeRegionSize = static_cast<size_t>(-1);
+                other._freeRegionCount = -1;
+            }
+
+            DefaultMetadata& operator=(DefaultMetadata other) noexcept
+            {
+                std::swap(_collection, other._collection);
+                std::swap(_freeRegionsBySize, other._freeRegionsBySize);
+                std::swap(_regions, other._regions);
+                std::swap(_minimumFreeRegionSizeToRegister, other._minimumFreeRegionSizeToRegister);
+                std::swap(_minimumAllocatedRegionMarginSize, other._minimumAllocatedRegionMarginSize);
+                std::swap(_size, other._size);
+                std::swap(_totalFreeRegionSize, other._totalFreeRegionSize);
+                std::swap(_freeRegionCount, other._freeRegionCount);
+                std::swap(_device, other._device);
+
+                return *this;
+            }
+
+            DefaultMetadata& operator=(DefaultMetadata&& other) noexcept
+            {
+                *this = std::move(other);
+            }
+
             ~DefaultMetadata() final = default;
-            */
-
-
 
             [[nodiscard]] int32_t GetAllocatedRegionCount() final
             {
@@ -562,7 +613,7 @@ namespace NovelRT::Experimental::Graphics
                 {
                     auto iterator =
                         _regions->insert(regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, GetDevice(), false,
-                                                                                offset - paddingBegin, paddingBegin));
+                                                                                 offset - paddingBegin, paddingBegin));
                     RegisterFreeRegion(iterator);
                 }
 
@@ -620,16 +671,6 @@ namespace NovelRT::Experimental::Graphics
                 assert(ValidateFreeRegionsBySizeList());
             }
         };
-
-
-        /*
-        IGraphicsMemoryRegionCollection() noexcept = delete;
-        IGraphicsMemoryRegionCollection(const IGraphicsMemoryRegionCollection<TSelf, TIterator>&) noexcept = delete;
-        IGraphicsMemoryRegionCollection(IMetadata&&) noexcept = delete;
-        IGraphicsMemoryRegionCollection<TSelf, TIterator>& operator=(const IGraphicsMemoryRegionCollection<TSelf, TIterator>&) noexcept = delete;
-        IGraphicsMemoryRegionCollection<TSelf, TIterator>& operator=(IGraphicsMemoryRegionCollection<TSelf, TIterator>&&) noexcept = delete;
-        virtual ~IGraphicsMemoryRegionCollection() = default;
-         */
     };
 } // namespace NovelRT::Experimental::Graphics
 
