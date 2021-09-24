@@ -101,7 +101,7 @@ namespace NovelRT::Experimental::Graphics
             return _vertexBufferStride;
         }
 
-        ~GraphicsPrimitive() override = default;
+        virtual ~GraphicsPrimitive() = default;
     };
 } // namespace NovelRT::Experimental::Graphics
 
