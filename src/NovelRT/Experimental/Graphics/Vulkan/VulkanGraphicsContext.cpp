@@ -477,7 +477,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         std::shared_ptr<VulkanGraphicsFence> executeGraphicsFence = GetWaitForExecuteCompletionFence();
 
-        // TODO: Might need a fence here? Not sure yet.
         VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
                                                    executeGraphicsFence->GetVulkanFence());
 
