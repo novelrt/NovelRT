@@ -59,6 +59,8 @@ namespace NovelRT::Experimental::Graphics
                                     size_t size,
                                     size_t minimumAllocatedRegionMarginSize,
                                     size_t minimumFreeRegionSizeToRegister) = 0;
+
+            virtual ~IMetadata() = default;
         };
 
         class DefaultMetadata : public IMetadata
@@ -93,6 +95,8 @@ namespace NovelRT::Experimental::Graphics
                   _device(std::move(device))
             {
             }
+
+            virtual ~DefaultMetadata() = default;
 
             [[nodiscard]] int32_t GetAllocatedRegionCount() final
             {
@@ -334,6 +338,7 @@ namespace NovelRT::Experimental::Graphics
 
                 return calculatedSize == GetSize() && calculatedTotalFreeRegionSize == _totalFreeRegionSize && calculatedFreeRegionCount == _freeRegionCount && calculatedFreeRegionsToRegisterCount == _freeRegionsBySize.size();
             }
+
 
         private:
             [[nodiscard]] bool ValidateFreeRegionsBySizeList()
