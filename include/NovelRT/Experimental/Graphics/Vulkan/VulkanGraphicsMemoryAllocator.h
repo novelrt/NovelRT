@@ -64,7 +64,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator begin() final;
         [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() final;
 
-        // TODO: I don't know if I'm supposed to do anything here based on the TerraFX code.
         ~VulkanGraphicsMemoryAllocator() final = default;
     };
 } // namespace NovelRT::Experimental::Graphics::Vulkan
