@@ -269,7 +269,8 @@ namespace NovelRT::Experimental::Graphics
 
         if (blockIndex == _blocks.end())
         {
-            throw Exceptions::KeyNotFoundException("The memory block associated with the supplied region was not found in the block collection.");
+            throw Exceptions::KeyNotFoundException(
+                "The memory block associated with the supplied region was not found in the block collection.");
         }
 
         block->Free(region);
