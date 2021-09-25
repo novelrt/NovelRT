@@ -263,13 +263,13 @@ namespace NovelRT::Experimental::Graphics
             throw Exceptions::NullPointerException("The supplied memory region's collection is nullptr.");
         }
 
-        std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
+        std::lock_guard<std::mutex> guard(_mutex);
 
         auto blockIndex = std::find(_blocks.begin(), _blocks.end(), block);
 
         if (blockIndex == _blocks.end())
         {
-            throw Exceptions::KeyNotFoundException(); // TODO: custom message maybe?
+            throw Exceptions::KeyNotFoundException("The memory block associated with the supplied region was not found in the block collection.");
         }
 
         block->Free(region);
@@ -346,7 +346,7 @@ namespace NovelRT::Experimental::Graphics
                                                     GraphicsMemoryRegionAllocationFlags flags,
                                                     GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion)
     {
-        std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
+        std::lock_guard<std::mutex> guard(_mutex);
         return TryAllocateRegion(size, alignment, flags, outRegion);
     }
 
@@ -365,7 +365,7 @@ namespace NovelRT::Experimental::Graphics
 
         // This scope is needed for the lock guard.
         {
-            std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
+            std::lock_guard<std::mutex> guard(_mutex);
 
             for (index = 0; index < regions.size(); ++index)
             {
@@ -398,7 +398,7 @@ namespace NovelRT::Experimental::Graphics
 
     bool GraphicsMemoryBlockCollection::TrySetMinimumSize(size_t minimumSize)
     {
-        std::lock_guard<std::mutex> guard(_mutex); // TODO: come back to this when Tanner gets back to you
+        std::lock_guard<std::mutex> guard(_mutex);
 
         size_t currentMinimumSize = GetMinimumSize();
 
