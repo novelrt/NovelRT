@@ -470,11 +470,8 @@ namespace NovelRT::Experimental::Graphics
         }
 
         _minimumSize = minimumSize;
-        if (_size != size)
-        {
-            throw std::runtime_error("Sizes don't match!"); // TODO: Make this a real exception later maybe? or just
-            // TODO: put it in debug builds only?
-        }
+
+        assert(_size == size && "Sizes don't match!");
         return true;
     }
 } // namespace NovelRT::Experimental::Graphics
