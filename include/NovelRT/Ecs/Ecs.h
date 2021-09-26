@@ -36,6 +36,8 @@ namespace NovelRT::Ecs
 #include <iterator>
 #include <memory>
 #include <mutex>
+#include <optional>
+#include <queue>
 #include <thread>
 #include <tuple>
 #include <typeindex>
