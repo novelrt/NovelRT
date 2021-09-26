@@ -10,6 +10,7 @@
  */
 namespace NovelRT::Ecs
 {
+    class Builder;
     class Catalogue;
     class ComponentBufferMemoryContainer;
     class ComponentCache;
@@ -63,6 +64,7 @@ namespace NovelRT::Ecs
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
+#include "Builder.h"
 
 // clang-format on
 
