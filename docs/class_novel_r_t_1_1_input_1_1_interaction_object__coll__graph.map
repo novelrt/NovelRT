@@ -1,0 +1,5 @@
+<map id="NovelRT::Input::InteractionObject" name="NovelRT::Input::InteractionObject">
+<area shape="rect" id="node1" title=" " alt="" coords="76,109,271,151"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_world_object.html" title="Represents an object in the game world." alt="" coords="5,13,168,39"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="193,5,327,47"/>
+</map>

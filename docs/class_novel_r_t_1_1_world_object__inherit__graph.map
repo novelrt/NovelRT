@@ -1,0 +1,9 @@
+<map id="NovelRT::WorldObject" name="NovelRT::WorldObject">
+<area shape="rect" id="node1" title="Represents an object in the game world." alt="" coords="5,141,168,167"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_graphics_1_1_render_object.html" title=" " alt="" coords="239,85,387,127"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_input_1_1_interaction_object.html" title=" " alt="" coords="216,165,411,207"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_graphics_1_1_basic_fill_rect.html" title=" " alt="" coords="514,5,662,47"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_graphics_1_1_image_rect.html" title=" " alt="" coords="514,71,662,112"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_graphics_1_1_text_rect.html" title=" " alt="" coords="514,136,662,177"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_input_1_1_basic_interaction_rect.html" title=" " alt="" coords="459,202,717,229"/>
+</map>
