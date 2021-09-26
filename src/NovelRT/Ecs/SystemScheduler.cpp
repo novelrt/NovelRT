@@ -89,7 +89,7 @@ namespace NovelRT::Ecs
     {
         while (!systemIds.empty())
         {
-            for(size_t workerIndex = 0; workerIndex < _threadWorkQueues.size(); workerIndex++)
+            for (size_t workerIndex = 0; workerIndex < _threadWorkQueues.size(); workerIndex++)
             {
                 auto& pair = _threadWorkQueues[workerIndex];
 
