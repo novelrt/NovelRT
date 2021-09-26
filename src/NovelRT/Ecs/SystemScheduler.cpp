@@ -113,6 +113,8 @@ namespace NovelRT::Ecs
                     _threadAvailabilityMap ^= 1ULL << workerIndex;
                 }
             }
+
+            std::this_thread::yield();
         }
 
         while (_threadAvailabilityMap != 0)
