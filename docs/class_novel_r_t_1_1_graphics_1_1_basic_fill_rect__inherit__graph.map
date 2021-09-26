@@ -1,0 +1,5 @@
+<map id="NovelRT::Graphics::BasicFillRect" name="NovelRT::Graphics::BasicFillRect">
+<area shape="rect" id="node1" title=" " alt="" coords="13,169,161,211"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_graphics_1_1_render_object.html" title=" " alt="" coords="13,80,161,121"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_world_object.html" title="Represents an object in the game world." alt="" coords="5,5,168,32"/>
+</map>

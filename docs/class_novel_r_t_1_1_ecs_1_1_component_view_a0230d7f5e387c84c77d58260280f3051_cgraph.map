@@ -1,0 +1,8 @@
+<map id="NovelRT::Ecs::ComponentView::TryRemoveComponent" name="NovelRT::Ecs::ComponentView::TryRemoveComponent">
+<area shape="rect" id="node1" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="5,39,225,80"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a5e0afee7bdd935cab3669c46ee65ea1a" title="Verifies if a given entity has a component." alt="" coords="273,5,500,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#affa086e04bd8bf538ab315b69b8818bb" title="Removes the specified component type from a given entity." alt="" coords="277,71,497,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a2b00ffe758e18df83bd1b20dd460ae3a" title="Gets the delete instruction state for type T." alt="" coords="561,37,787,79"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a2fd2a2e8141357fd203f78c15a6b05f5" title="Pushes a new Component state as an update instruction into the ComponentBuffer with the current threa..." alt="" coords="548,103,800,144"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a1d37e7e1e1f4396902ffbcf52dd760ff" title="Pushes in an update instruction for the given entity, component and thread pool ID." alt="" coords="848,103,1100,144"/>
+</map>
