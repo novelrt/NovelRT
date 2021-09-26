@@ -204,7 +204,7 @@ TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexReturnsCorrectKey)
 TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexThrowsOutOfRangeWhenKeyDoesNotExist)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
-    EXPECT_THROW(container.CopyKeyBasedOnDenseIndex(0), std::out_of_range);
+    EXPECT_THROW((void)container.CopyKeyBasedOnDenseIndex(0), std::out_of_range);
 }
 
 TEST(SparseSetMemoryContainerTest, CopyKeyBasedOnDenseIndexUnsafeReturnsCorrectKey)

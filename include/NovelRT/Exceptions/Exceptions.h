@@ -20,5 +20,6 @@
 #include "OpenGLLinkageFailureException.h"
 #include "OutOfMemoryException.h"
 #include "RuntimeNotFoundException.h"
+#include "TimeoutException.h"
 
 #endif // NOVELRT_EXCEPTIONS_H

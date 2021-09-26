@@ -4,9 +4,8 @@
 #ifndef NOVELRT_UTILITIES_LAZY_H
 #define NOVELRT_UTILITIES_LAZY_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <functional>
+#include <optional>
 
 namespace NovelRT::Utilities
 {
@@ -14,15 +13,13 @@ namespace NovelRT::Utilities
     {
     private:
         std::function<T()> _delegate;
-        T _actual;
-        bool _isCreated;
+        std::optional<T> _actual;
 
     public:
-        Lazy(std::function<T()> delegate) : _delegate(delegate), _actual(), _isCreated(false)
+        Lazy(std::function<T()> delegate) : _delegate(delegate), _actual()
         {
         }
-        Lazy(T eagerStartValue, std::function<T()> delegate)
-            : _delegate(delegate), _actual(eagerStartValue), _isCreated(true)
+        Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(eagerStartValue)
         {
         }
 
@@ -31,26 +28,24 @@ namespace NovelRT::Utilities
             if (!isCreated())
             {
                 _actual = _delegate();
-                _isCreated = true;
             }
 
-            return _actual;
+            return _actual.value();
         }
 
         void reset() noexcept
         {
-            _isCreated = false;
+            _actual.reset();
         }
 
         void reset(T newExplicitValue) noexcept
         {
-            _isCreated = true;
             _actual = newExplicitValue;
         }
 
-        bool isCreated() const noexcept
+        [[nodiscard]] bool isCreated() const noexcept
         {
-            return _isCreated;
+            return _actual.has_value();
         }
     };
 
@@ -61,7 +56,7 @@ namespace NovelRT::Utilities
         std::unique_ptr<T> _actual;
 
     public:
-        Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr))
+        explicit Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr))
         {
         }
 
