@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/SystemScheduler.h>
 
 namespace NovelRT::Ecs
 {
@@ -11,9 +12,7 @@ namespace NovelRT::Ecs
           _workerThreadCount(maximumThreadCount),
           _currentDelta(0),
           _threadAvailabilityMap(0),
-          _threadShutDownStatus(0),
-          _shouldShutDown(false),
-          _ecsDataBufferIndex(0)
+          _shouldShutDown(false)
     {
         if (_workerThreadCount == 0)
         {
@@ -42,7 +41,8 @@ namespace NovelRT::Ecs
     {
         QueueLockPair& pair = _threadWorkQueues[poolId];
         pair.threadLock.lock();
-        if (pair.systemUpdateIds.size() > 0)
+
+        if (pair.systemUpdateId.has_value())
         {
             return true;
         }
@@ -59,7 +59,10 @@ namespace NovelRT::Ecs
             {
                 if (_shouldShutDown)
                 {
-                    _threadShutDownStatus ^= 1ULL << poolId;
+                    if ((_threadAvailabilityMap & 1ULL << poolId) != 0)
+                    {
+                        _threadAvailabilityMap ^= 1ULL << poolId;
+                    }
                     return;
                 }
 
@@ -71,134 +74,43 @@ namespace NovelRT::Ecs
                 std::this_thread::yield();
             }
 
-            bool firstIteration = true;
+            QueueLockPair& pair = _threadWorkQueues[poolId];
 
-            while (true)
-            {
-                QueueLockPair& pair = _threadWorkQueues[poolId];
-                if (!firstIteration)
-                {
-                    pair.threadLock.lock();
-                }
-                else
-                {
-                    firstIteration = false;
-                }
+            Atom workItem = pair.systemUpdateId.value();
 
-                if (pair.systemUpdateIds.size() == 0)
-                {
-                    pair.threadLock.unlock();
-                    break;
-                }
+            pair.systemUpdateId.reset();
+            pair.threadLock.unlock();
 
-                Atom workItem = pair.systemUpdateIds[0];
-                pair.systemUpdateIds.erase(pair.systemUpdateIds.begin());
-
-                pair.threadLock.unlock();
-
-                _systems[workItem](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
-            }
-            _threadAvailabilityMap ^= 1ULL << poolId;
+            _systems[workItem](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
         }
     }
 
-    void SystemScheduler::ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork)
+    void SystemScheduler::ScheduleUpdateWork(std::queue<Atom>& systemIds)
     {
-        if (_systemIds.empty())
+        while (!systemIds.empty())
         {
-            return;
-        }
-
-        int32_t sizeOfProcessedWork = 0;
-
-        for (size_t i = 0; i < workersToAssign; i++)
-        {
-            size_t offset = i * amountOfWork;
-            QueueLockPair& pair = _threadWorkQueues[i];
-
-            pair.threadLock.lock();
-
-            _threadAvailabilityMap ^= 1ULL << i;
-            for (size_t j = 0; j < amountOfWork; j++)
+            for(size_t workerIndex = 0; workerIndex < _threadWorkQueues.size(); workerIndex++)
             {
-                size_t currentWorkIndex = offset + j;
-                pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
-                ++sizeOfProcessedWork;
-            }
+                auto& pair = _threadWorkQueues[workerIndex];
 
-            pair.threadLock.unlock();
-        }
-
-        size_t remainder = _systemIds.size() % sizeOfProcessedWork;
-
-        if (remainder != 0)
-        {
-            if (remainder <= amountOfWork)
-            {
-                QueueLockPair& pair = _threadWorkQueues[0];
-                size_t startIndex = _systemIds.size() - remainder;
-
-                pair.threadLock.lock();
-
-                if ((_threadAvailabilityMap & 1ULL << (0)) == 0)
+                if (systemIds.empty())
                 {
-                    _threadAvailabilityMap ^= 1ULL << (0);
+                    break;
                 }
 
-                for (size_t i = startIndex; i < _systemIds.size(); i++)
+                const std::lock_guard<std::mutex> lock(pair.threadLock);
+
+                if (pair.systemUpdateId.has_value())
                 {
-                    pair.systemUpdateIds.push_back(_systemIds[i]);
+                    continue;
                 }
 
-                pair.threadLock.unlock();
-            }
-            else
-            {
-                size_t startIndex = _systemIds.size() - remainder;
+                pair.systemUpdateId = systemIds.front();
+                systemIds.pop();
 
-                for (size_t i = 0; i < remainder / amountOfWork; i++)
+                if ((_threadAvailabilityMap & 1ULL << workerIndex) == 0)
                 {
-                    size_t offset = startIndex + (i * amountOfWork);
-                    QueueLockPair& pair = _threadWorkQueues[i];
-
-                    pair.threadLock.lock();
-
-                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
-                    {
-                        _threadAvailabilityMap ^= 1ULL << i;
-                    }
-
-                    for (size_t j = 0; j < amountOfWork; j++)
-                    {
-                        size_t currentWorkIndex = offset + j;
-                        pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
-                        ++sizeOfProcessedWork;
-                    }
-
-                    pair.threadLock.unlock();
-                }
-
-                if (_systemIds.size() - sizeOfProcessedWork != 0)
-                {
-                    size_t threadWorkIndex =
-                        (remainder / amountOfWork) < _threadWorkQueues.size() ? (remainder / amountOfWork) : 0;
-
-                    QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
-                    size_t startingIndex = _systemIds.size() - (_systemIds.size() - sizeOfProcessedWork);
-
-                    pair.threadLock.lock();
-
-                    if ((_threadAvailabilityMap & 1ULL << threadWorkIndex) == 0)
-                    {
-                        _threadAvailabilityMap ^= 1ULL << threadWorkIndex;
-                    }
-
-                    for (size_t i = startingIndex; i < _systemIds.size(); i++)
-                    {
-                        pair.systemUpdateIds.push_back(_systemIds[i]);
-                    }
-
-                    pair.threadLock.unlock();
+                    _threadAvailabilityMap ^= 1ULL << workerIndex;
                 }
             }
         }
@@ -213,9 +125,9 @@ namespace NovelRT::Ecs
     {
         std::vector<QueueLockPair> vec2(_workerThreadCount);
         _threadWorkQueues.swap(vec2);
+
         for (size_t i = 0; i < _workerThreadCount; i++)
         {
-            _threadShutDownStatus ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
         }
     }
@@ -225,12 +137,14 @@ namespace NovelRT::Ecs
 
         _currentDelta = delta;
 
-        size_t independentSystemChunkSize = _systemIds.size() / _workerThreadCount;
+        std::queue<Atom> workQueue;
 
-        size_t workersToAssign = _workerThreadCount > _systemIds.size() ? _systemIds.size() : _workerThreadCount;
-        size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
+        for (Atom id : _systemIds)
+        {
+            workQueue.push(id);
+        }
 
-        ScheduleUpdateWork(workersToAssign, amountOfWork);
+        ScheduleUpdateWork(workQueue);
         _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
 
         _entityCache.ProcessEntityDeletionRequestsFromThreads();

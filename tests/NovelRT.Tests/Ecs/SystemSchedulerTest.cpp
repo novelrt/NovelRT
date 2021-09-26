@@ -92,7 +92,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 30);
 }
 
-TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
+TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads)
 {
     TearDown();
 
