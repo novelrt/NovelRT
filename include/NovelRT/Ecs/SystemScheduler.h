@@ -20,7 +20,7 @@ namespace NovelRT::Ecs
     private:
         struct QueueLockPair
         {
-            std::vector<Atom> systemUpdateIds;
+            std::optional<Atom> systemUpdateId;
             std::mutex threadLock;
         };
 
@@ -39,16 +39,13 @@ namespace NovelRT::Ecs
         std::vector<std::thread> _threadCache;
 
         Timing::Timestamp _currentDelta;
-
         std::atomic_uint64_t _threadAvailabilityMap;
-        std::atomic_uint64_t _threadShutDownStatus;
-        std::atomic_bool _shouldShutDown;
 
-        std::atomic_size_t _ecsDataBufferIndex;
+        std::atomic_bool _shouldShutDown;
 
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
-        void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
+        void ScheduleUpdateWork(std::queue<Atom>& systemIds);
 
     public:
         /**
@@ -57,7 +54,7 @@ namespace NovelRT::Ecs
          * @param maximumThreadCount An optional parameter should the developer know in advance how many threads they
          * wish to dedicate to this SystemScheduler.
          */
-        SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
+        explicit SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
 
         /**
          * @brief Registers a function to the SystemScheduler instance.

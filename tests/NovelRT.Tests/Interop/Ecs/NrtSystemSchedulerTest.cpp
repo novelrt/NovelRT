@@ -110,7 +110,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
         30);
 }
 
-TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
+TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads)
 {
     TearDown();
 
