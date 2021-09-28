@@ -15,7 +15,8 @@ namespace NovelRT::Exceptions
         OutOfMemoryException() : std::runtime_error("Insufficient memory to continue the execution of the program.")
         {
         }
-        OutOfMemoryException(const std::string& message) : std::runtime_error(message)
+
+        explicit OutOfMemoryException(const std::string& message) : std::runtime_error(message)
         {
         }
     };

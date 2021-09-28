@@ -4,8 +4,17 @@
 #ifndef NOVELRT_LOGGINGSERVICE_H
 #define NOVELRT_LOGGINGSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#endif
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
 #endif
 
 namespace NovelRT
@@ -40,28 +49,28 @@ namespace NovelRT
         LoggingService(const std::string& core) noexcept;
         LoggingService(const std::string& core, LogLevel level) noexcept;
         void log(const std::string& message, LogLevel level);
-        void logInfoLine(const std::string& message);
-        void logErrorLine(const std::string& message);
-        void logWarningLine(const std::string& message);
-        void logDebugLine(const std::string& message);
+        void logInfoLine(const std::string& message) const;
+        void logErrorLine(const std::string& message) const;
+        void logWarningLine(const std::string& message) const;
+        void logDebugLine(const std::string& message) const;
         void logInternal(const std::string& message, LogLevel level);
         void setLogLevel(LogLevel level);
         void throwIfNullPtr(const void* const object, const std::string& exceptionMessage);
         void throwIfNotZero(int32_t error, const std::string& exceptionMessage);
 
-        template<typename I, typename... IRest> void logInfo(I current, IRest... next)
+        template<typename I, typename... IRest> void logInfo(I current, IRest... next) const
         {
             _logger->info(current, std::forward<IRest>(next)...);
         }
-        template<typename E, typename... ERest> void logError(E current, ERest... next)
+        template<typename E, typename... ERest> void logError(E current, ERest... next) const
         {
             _logger->error(current, std::forward<ERest>(next)...);
         }
-        template<typename W, typename... WRest> void logWarning(W current, WRest... next)
+        template<typename W, typename... WRest> void logWarning(W current, WRest... next) const
         {
             _logger->warn(current, std::forward<WRest>(next)...);
         }
-        template<typename D, typename... DRest> void logDebug(D current, DRest... next)
+        template<typename D, typename... DRest> void logDebug(D current, DRest... next) const
         {
             _logger->debug(current, std::forward<DRest>(next)...);
         }

@@ -18,9 +18,8 @@ class NovelRTConan(ConanFile):
         ("openal/1.19.1"),
         ("spdlog/1.8.2"),
         ("ms-gsl/3.1.0"),
-        # Commented until Vulkan support is introduced.
-        #("vulkan-loader/1.2.172"),
-        #("vulkan-memory-allocator/2.3.0")
+        ("vulkan-loader/1.2.182"),
+        ("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
@@ -45,7 +44,7 @@ class NovelRTConan(ConanFile):
         "glad:gl_version":4.0,
         "glad:gles2_version":3.0,
         "spdlog:header_only":True,
-        #"vulkan-loader:shared":True,
+        "vulkan-loader:shared":True,
         "inksupport": True,
         "documentation": False,
         "buildtests":True,
@@ -56,6 +55,8 @@ class NovelRTConan(ConanFile):
     def imports(self):
         self.copy("*.dll", dst="thirdparty", src="bin")
         self.copy("*.dll", dst="thirdparty", src="lib")
+        self.copy("*.json", dst="thirdparty", src="bin")
+        self.copy("*.json", dst="thirdparty", src="lib")
 
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
