@@ -35,7 +35,6 @@ extern "C"
 
     NrtResult Nrt_SystemScheduler_Destroy(NrtSystemSchedulerHandle systemScheduler);
 
-
 #ifdef __cplusplus
 }
 #endif

@@ -32,7 +32,7 @@ namespace NovelRT::Ecs
          * @param threadCount The amount of threads.
          * @returns Configurator& A reference to this to allow method chaining.
          */
-       [[nodiscard]] inline Configurator& WithThreadCount(uint32_t threadCount) noexcept
+        [[nodiscard]] inline Configurator& WithThreadCount(uint32_t threadCount) noexcept
         {
             _threadCount = threadCount;
             return *this;
@@ -44,9 +44,10 @@ namespace NovelRT::Ecs
          * @param functions collection of std::function<void(Timing::Timestamp, Catalogue)> instances to attach.
          * @returns Configurator& A reference to this to allow method chaining.
          */
-       [[nodiscard]] inline Configurator& WithSystems(std::initializer_list<std::function<void(Timing::Timestamp, Catalogue)>>&& functions) noexcept
+        [[nodiscard]] inline Configurator& WithSystems(
+            std::initializer_list<std::function<void(Timing::Timestamp, Catalogue)>>&& functions) noexcept
         {
-            for(auto&& fnptr : functions)
+            for (auto&& fnptr : functions)
             {
                 _systems.emplace_back(fnptr);
             }
@@ -99,8 +100,7 @@ namespace NovelRT::Ecs
          *
          * @returns SystemScheduler an instance of the ECS based on the provided configuration.
          */
-        template<>
-        [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
@@ -119,6 +119,6 @@ namespace NovelRT::Ecs
             return scheduler;
         }
     };
-}
+} // namespace NovelRT::Ecs
 
 #endif // NOVELRT_ECS_CONFIGURATOR_H

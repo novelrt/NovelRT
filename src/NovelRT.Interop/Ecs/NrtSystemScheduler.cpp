@@ -31,7 +31,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle systemScheduler,
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle systemScheduler,
                                             NrtSystemUpdateFnPtr systemUpdatePtr,
                                             void* context)
     {

@@ -21,8 +21,7 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithDefaultSystems)
 
 TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentAndSystem)
 {
-    auto lambda = [](Timestamp delta, Catalogue catalogue)
-    {
+    auto lambda = [](Timestamp delta, Catalogue catalogue) {
         auto intComponents = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intComponents)
         {
@@ -39,16 +38,17 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentA
 
 TEST(ConfiguratorTest, ConfiguratorCanHandleBothCustomAndDefaultSystemsAndComponents)
 {
-    auto lambda = [](Timestamp delta, Catalogue catalogue)
-    {
-      auto intComponents = catalogue.GetComponentView<int32_t>();
-      for (auto [entity, component] : intComponents)
-      {
-          intComponents.PushComponentUpdateInstruction(entity, 10);
-      }
+    auto lambda = [](Timestamp delta, Catalogue catalogue) {
+        auto intComponents = catalogue.GetComponentView<int32_t>();
+        for (auto [entity, component] : intComponents)
+        {
+            intComponents.PushComponentUpdateInstruction(entity, 10);
+        }
     };
 
-    auto scheduler = Configurator().WithSystems({lambda}).WithDefaultSystemsAndComponents().InitialiseAndRegisterComponents<int32_t>(-1);
+    auto scheduler =
+        Configurator().WithSystems({lambda}).WithDefaultSystemsAndComponents().InitialiseAndRegisterComponents<int32_t>(
+            -1);
     scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(1, 1, 10);
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
