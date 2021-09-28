@@ -15,7 +15,9 @@ extern "C"
 
     NrtSystemSchedulerHandle Nrt_SystemScheduler_Create(uint32_t maximumThreadCount);
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler,
+    NrtBool Nrt_SystemScheduler_GetThreadsAreSpinning(NrtSystemSchedulerHandle systemScheduler);
+
+    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle systemScheduler,
                                             NrtSystemUpdateFnPtr systemUpdatePtr,
                                             void* context);
 
@@ -29,7 +31,10 @@ extern "C"
 
     NrtResult Nrt_SystemScheduler_ExecuteIteration(NrtSystemSchedulerHandle systemScheduler, NrtTimestamp delta);
 
+    NrtResult Nrt_SystemScheduler_ShutDown(NrtSystemSchedulerHandle systemScheduler);
+
     NrtResult Nrt_SystemScheduler_Destroy(NrtSystemSchedulerHandle systemScheduler);
+
 
 #ifdef __cplusplus
 }

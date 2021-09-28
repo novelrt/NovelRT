@@ -217,3 +217,15 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 86);
 }
+
+TEST_F(SystemSchedulerTest, ThreadsAreSpinningReturnsCorrectValue)
+{
+    EXPECT_TRUE(scheduler->GetThreadsAreSpinning());
+}
+
+TEST_F(SystemSchedulerTest, ShutDownForcesSchedulerIntoCorrectState)
+{
+    ASSERT_TRUE(scheduler->GetThreadsAreSpinning());
+    scheduler->ShutDown();
+    EXPECT_FALSE(scheduler->GetThreadsAreSpinning());
+}

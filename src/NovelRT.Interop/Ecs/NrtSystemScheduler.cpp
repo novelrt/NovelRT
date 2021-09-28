@@ -19,11 +19,23 @@ extern "C"
         return reinterpret_cast<NrtSystemSchedulerHandle>(new SystemScheduler(maximumThreadCount));
     }
 
-    void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle scheduler,
+    NrtBool Nrt_SystemScheduler_GetThreadsAreSpinning(NrtSystemSchedulerHandle systemScheduler)
+    {
+        auto schedulerPtr = reinterpret_cast<SystemScheduler*>(systemScheduler);
+
+        if (schedulerPtr->GetThreadsAreSpinning())
+        {
+            return NRT_TRUE;
+        }
+
+        return NRT_FALSE;
+    }
+
+void Nrt_SystemScheduler_RegisterSystem(NrtSystemSchedulerHandle systemScheduler,
                                             NrtSystemUpdateFnPtr systemUpdatePtr,
                                             void* context)
     {
-        auto schedulerPtr = reinterpret_cast<SystemScheduler*>(scheduler);
+        auto schedulerPtr = reinterpret_cast<SystemScheduler*>(systemScheduler);
         schedulerPtr->RegisterSystem([=](auto timestamp, auto catalogue) {
             systemUpdatePtr(timestamp.ticks, reinterpret_cast<NrtCatalogueHandle>(&catalogue), context);
         });
@@ -127,6 +139,19 @@ extern "C"
         {
             return NRT_FAILURE_UNKNOWN;
         }
+    }
+
+    NrtResult Nrt_SystemScheduler_ShutDown(NrtSystemSchedulerHandle systemScheduler)
+    {
+        if (systemScheduler == nullptr)
+        {
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto schedulerPtr = reinterpret_cast<SystemScheduler*>(systemScheduler);
+        schedulerPtr->ShutDown();
+
+        return NRT_SUCCESS;
     }
 
     NrtResult Nrt_SystemScheduler_Destroy(NrtSystemSchedulerHandle systemScheduler)

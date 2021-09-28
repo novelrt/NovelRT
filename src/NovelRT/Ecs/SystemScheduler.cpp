@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Ecs/SystemScheduler.h>
 
 namespace NovelRT::Ecs
 {
@@ -12,7 +11,8 @@ namespace NovelRT::Ecs
           _workerThreadCount(maximumThreadCount),
           _currentDelta(0),
           _threadAvailabilityMap(0),
-          _shouldShutDown(false)
+          _shouldShutDown(false),
+          _threadsAreSpinning(false)
     {
         if (_workerThreadCount == 0)
         {
@@ -28,6 +28,46 @@ namespace NovelRT::Ecs
 
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
+    }
+
+    SystemScheduler::SystemScheduler(SystemScheduler&& other) noexcept
+        : _systemIds(std::move(other._systemIds)),
+          _systems(std::move(other._systems)),
+          _entityCache(std::move(other._entityCache)),
+          _componentCache(std::move(other._componentCache)),
+          _workerThreadCount(other._workerThreadCount),
+          _currentDelta(other._currentDelta),
+          _threadAvailabilityMap(0),
+          _shouldShutDown(false),
+          _threadsAreSpinning(false)
+    {
+        if (other.GetThreadsAreSpinning())
+        {
+            other.ShutDown();
+            SpinThreads();
+        }
+    }
+
+    SystemScheduler& SystemScheduler::operator=(SystemScheduler&& other) noexcept
+    {
+        _systemIds = std::move(other._systemIds);
+        _systems = std::move(other._systems);
+        _entityCache = std::move(other._entityCache);
+        _componentCache = std::move(other._componentCache);
+        _workerThreadCount = other._workerThreadCount;
+        _threadWorkQueues = std::move(other._threadWorkQueues);
+        _threadCache = std::move(other._threadCache);
+        _currentDelta = other._currentDelta;
+        _shouldShutDown = false;
+        _threadsAreSpinning = false;
+
+        if (other.GetThreadsAreSpinning())
+        {
+            other.ShutDown();
+            SpinThreads();
+        }
+
+        return *this;
     }
 
     void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
@@ -125,6 +165,7 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::SpinThreads() noexcept
     {
+        _shouldShutDown = false;
         std::vector<QueueLockPair> vec2(_workerThreadCount);
         _threadWorkQueues.swap(vec2);
 
@@ -132,6 +173,8 @@ namespace NovelRT::Ecs
         {
             _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
         }
+
+        _threadsAreSpinning = true;
     }
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
@@ -152,7 +195,7 @@ namespace NovelRT::Ecs
         _entityCache.ProcessEntityDeletionRequestsFromThreads();
     }
 
-    SystemScheduler::~SystemScheduler() noexcept
+    void SystemScheduler::ShutDown() noexcept
     {
         _shouldShutDown = true;
 
@@ -162,6 +205,18 @@ namespace NovelRT::Ecs
             {
                 _threadCache[i].join();
             }
+        }
+
+        _threadCache.clear();
+        _threadWorkQueues.clear();
+        _threadsAreSpinning = false;
+    }
+
+    SystemScheduler::~SystemScheduler() noexcept
+    {
+        if (GetThreadsAreSpinning())
+        {
+            ShutDown();
         }
     }
 } // namespace NovelRT::Ecs

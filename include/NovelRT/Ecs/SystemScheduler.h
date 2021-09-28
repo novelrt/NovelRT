@@ -42,6 +42,7 @@ namespace NovelRT::Ecs
         std::atomic_uint64_t _threadAvailabilityMap;
 
         std::atomic_bool _shouldShutDown;
+        bool _threadsAreSpinning;
 
         bool JobAvailable(size_t poolId) noexcept;
         void CycleForJob(size_t poolId);
@@ -55,6 +56,34 @@ namespace NovelRT::Ecs
          * wish to dedicate to this SystemScheduler.
          */
         explicit SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
+
+        SystemScheduler(const SystemScheduler& other) = delete;
+        SystemScheduler& operator=(const SystemScheduler& other) = delete;
+
+        /**
+         * @brief Move constructor for moving instances of SystemScheduler.
+         *
+         * @param other The move target.
+         */
+        SystemScheduler(SystemScheduler&& other) noexcept;
+
+        /**
+         * @brief Move assignment operator for move assigning instances of SystemScheduler.
+         *
+         * @param other The move target.
+         * @return The moved instance of SystemScheduler.
+         */
+        SystemScheduler& operator=(SystemScheduler&& other) noexcept;
+
+        /**
+         * @brief Gets the current state of the threads.
+         *
+         * @returns true if the threads are spinning, false if they aren't.
+         */
+        [[nodiscard]] inline bool GetThreadsAreSpinning() const noexcept
+        {
+            return _threadsAreSpinning;
+        }
 
         /**
          * @brief Registers a function to the SystemScheduler instance.
@@ -147,6 +176,11 @@ namespace NovelRT::Ecs
          * @exception Any and all exceptions that might possibly propagate from any given system.
          */
         void ExecuteIteration(Timing::Timestamp delta);
+
+        /**
+         * @brief Shuts down the ECS instance and terminates threads.
+         */
+        void ShutDown() noexcept;
 
         /**
          * @brief Destroys the SystemScheduler.
