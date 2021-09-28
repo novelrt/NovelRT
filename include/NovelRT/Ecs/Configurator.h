@@ -71,6 +71,8 @@ namespace NovelRT::Ecs
          * This is the final method you should call to obtain the ECS instance.
          *
          * @tparam TComponentTypes List of component types to register with this ECS instance.
+         * @param deleteInstructionStates The state of the given component type that signals this component is to be
+         * deleted to the ECS.
          * @returns SystemScheduler an instance of the ECS based on the provided configuration.
          */
         template<typename... TComponentTypes>
