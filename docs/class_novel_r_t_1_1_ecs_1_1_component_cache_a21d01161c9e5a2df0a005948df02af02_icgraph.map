@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentCache::RegisterComponentType" name="NovelRT::Ecs::ComponentCache::RegisterComponentType">
+<area shape="rect" id="node1" title="Registers a new component type to the cache." alt="" coords="300,5,528,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_configurator.html#a37601dc5c40e4a0f908294164eed7d98" title="Creates the ECS instance and registers component types to it." alt="" coords="5,5,252,47"/>
+</map>

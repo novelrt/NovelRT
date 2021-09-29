@@ -1,0 +1,5 @@
+<map id="NovelRT::NovelRunner" name="NovelRT::NovelRunner">
+<area shape="rect" id="node1" title="The base class for creating a visual novel." alt="" coords="436,57,603,84"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="5,5,193,61"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="32,86,167,127"/>
+</map>
