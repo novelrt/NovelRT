@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
 
         Timing::Timestamp _currentDelta;
         std::atomic_uint64_t _threadAvailabilityMap;
-        //std::atomic_uint64_t _threadShutDownStatus;
+        // std::atomic_uint64_t _threadShutDownStatus;
 
         std::atomic_bool _shouldShutDown;
         bool _threadsAreSpinning;
