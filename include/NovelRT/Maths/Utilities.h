@@ -57,9 +57,7 @@ namespace NovelRT::Maths
             value |= value >> 8;
             value |= value >> 16;
 
-            auto index = (value * 0x07C4ACDCu) >> 27;
-            auto result = Log2DeBruijin()[index];
-            return result;
+            return Log2DeBruijin()[(value * 0x07C4ACDCu) >> 27];
         }
 
         [[nodiscard]] inline static uint32_t LeadingZeroCount32(uint32_t value) noexcept
