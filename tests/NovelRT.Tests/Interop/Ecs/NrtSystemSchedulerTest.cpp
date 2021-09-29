@@ -303,3 +303,15 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
             entity),
         86);
 }
+
+TEST_F(InteropSystemSchedulerTest, ThreadsAreSpinningReturnsCorrectValue)
+{
+    EXPECT_TRUE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
+}
+
+TEST_F(InteropSystemSchedulerTest, ShutDownForcesSchedulerIntoCorrectState)
+{
+    ASSERT_TRUE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
+    ASSERT_EQ(Nrt_SystemScheduler_ShutDown(scheduler), NRT_SUCCESS);
+    EXPECT_FALSE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
+}
