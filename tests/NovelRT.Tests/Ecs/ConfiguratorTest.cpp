@@ -30,7 +30,7 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentA
     };
 
     auto scheduler = Configurator().WithSystems({lambda}).InitialiseAndRegisterComponents<int32_t>(-1);
-    scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(1, 1, 10);
+    scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
     EXPECT_EQ(scheduler.GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(1), 20);
@@ -49,7 +49,7 @@ TEST(ConfiguratorTest, ConfiguratorCanHandleBothCustomAndDefaultSystemsAndCompon
     auto scheduler =
         Configurator().WithSystems({lambda}).WithDefaultSystemsAndComponents().InitialiseAndRegisterComponents<int32_t>(
             -1);
-    scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(1, 1, 10);
+    scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
     EXPECT_EQ(scheduler.GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(1), 20);
