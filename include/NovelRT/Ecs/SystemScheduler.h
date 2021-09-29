@@ -18,12 +18,6 @@ namespace NovelRT::Ecs
     class SystemScheduler
     {
     private:
-        struct QueueLockPair
-        {
-            std::optional<Atom> systemUpdateId;
-            std::mutex threadLock;
-        };
-
         std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
@@ -35,18 +29,19 @@ namespace NovelRT::Ecs
 
         uint32_t _workerThreadCount;
 
-        std::vector<QueueLockPair> _threadWorkQueues;
+        std::vector<Atom> _threadWorkItem;
         std::vector<std::thread> _threadCache;
 
         Timing::Timestamp _currentDelta;
         std::atomic_uint64_t _threadAvailabilityMap;
+        //std::atomic_uint64_t _threadShutDownStatus;
 
         std::atomic_bool _shouldShutDown;
         bool _threadsAreSpinning;
 
-        bool JobAvailable(size_t poolId) noexcept;
+        bool JobAvailable(size_t poolId) const noexcept;
         void CycleForJob(size_t poolId);
-        void ScheduleUpdateWork(std::queue<Atom>& systemIds);
+        void ScheduleUpdateWork();
 
     public:
         /**
