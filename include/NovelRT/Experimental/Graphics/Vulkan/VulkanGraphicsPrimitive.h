@@ -47,6 +47,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsPrimitive() final = default;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+} 
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSPRIMITIVE_H

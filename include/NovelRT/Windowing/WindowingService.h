@@ -86,6 +86,6 @@ namespace NovelRT::Windowing
             return _windowSize;
         }
     };
-} // namespace NovelRT::Windowing
+}
 
 #endif // !NOVELRT_NOVELWINDOWSERVICE_H

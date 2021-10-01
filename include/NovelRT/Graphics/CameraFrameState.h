@@ -15,6 +15,6 @@ namespace NovelRT::Graphics
         ModifiedInCurrent,
         ModifiedInLast
     };
-} // namespace NovelRT::Graphics
+}
 
 #endif // !NOVELRT_GRAPHICS_CAMERAFRAMESTATE_H

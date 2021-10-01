@@ -79,6 +79,6 @@ namespace NovelRT
          */
         ~NovelRunner();
     };
-} // namespace NovelRT
+} 
 
 #endif // NOVELRT_NOVELRUNNER_H

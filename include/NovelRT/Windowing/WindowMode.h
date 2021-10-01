@@ -12,6 +12,6 @@ namespace NovelRT::Windowing
         Borderless,
         Fullscreen
     };
-} // namespace NovelRT::Windowing
+}
 
 #endif // NOVELRT_WINDOWMODE_H

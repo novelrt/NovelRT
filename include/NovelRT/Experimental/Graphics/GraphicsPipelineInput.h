@@ -20,6 +20,6 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] gsl::span<const GraphicsPipelineInputElement> GetElements() const noexcept;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPIPELINEINPUT_H

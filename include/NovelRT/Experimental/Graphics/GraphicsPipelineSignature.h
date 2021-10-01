@@ -24,6 +24,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] gsl::span<const GraphicsPipelineInput> GetInputs() const noexcept;
         [[nodiscard]] gsl::span<const GraphicsPipelineResource> GetResources() const noexcept;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPIPELINESIGNATURE_H

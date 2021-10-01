@@ -31,6 +31,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] virtual void* GetContextHandle() const noexcept = 0;
         [[nodiscard]] virtual GraphicsSurfaceKind GetKind() const noexcept = 0;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_IGRAPHICSSURFACE_H

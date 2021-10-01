@@ -15,6 +15,6 @@ namespace NovelRT::Experimental::Graphics
     private:
     public:
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_ECSDEFAULTRENDERINGSYSTEM_H

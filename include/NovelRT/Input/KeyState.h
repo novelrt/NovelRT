@@ -20,6 +20,6 @@ namespace NovelRT::Input
         KeyDown = GLFW_PRESS,      // 1
         KeyDownHeld = GLFW_REPEAT, // 2
     };
-} // namespace NovelRT::Input
+}
 
 #endif // !NOVELRT_INPUT_KEYSTATE_H

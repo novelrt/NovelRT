@@ -50,6 +50,6 @@ namespace NovelRT::Maths
             return GeoBounds(transform.position, transform.scale, transform.rotation);
         }
     };
-} // namespace NovelRT::Maths
+} 
 
 #endif //! NOVELRT_MATHS_GEOBOUNDS_H

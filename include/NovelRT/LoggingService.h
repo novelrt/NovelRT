@@ -76,6 +76,6 @@ namespace NovelRT
         }
     };
 
-} // namespace NovelRT
+}
 
 #endif

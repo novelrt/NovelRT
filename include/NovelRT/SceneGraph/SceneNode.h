@@ -294,6 +294,6 @@ namespace NovelRT::SceneGraph
             }
         };
     };
-} // namespace NovelRT::SceneGraph
+} 
 
 #endif

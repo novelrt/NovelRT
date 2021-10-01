@@ -75,6 +75,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
         return returnDetails;
     }
-} // namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
+} 
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_SUPPORT_H

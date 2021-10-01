@@ -47,6 +47,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsAdapter() = default;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSADAPTER_H

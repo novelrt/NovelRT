@@ -120,6 +120,6 @@ namespace NovelRT::Timing
             return ticks != other.ticks;
         }
     };
-} // namespace NovelRT::Timing
+} 
 
 #endif //! NOVELRT_TIMING_DELTATIMESTAMP_H

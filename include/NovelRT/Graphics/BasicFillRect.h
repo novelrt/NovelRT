@@ -32,6 +32,6 @@ namespace NovelRT::Graphics
         RGBAConfig getColourConfig() const noexcept;
         void setColourConfig(RGBAConfig value);
     };
-} // namespace NovelRT::Graphics
+} 
 
 #endif // NOVELRT_GRAPHICS_BASICFILLRECT_H

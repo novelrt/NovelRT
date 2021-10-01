@@ -36,6 +36,6 @@ namespace NovelRT::Ink
 
         friend class NovelRT::DotNet::RuntimeService;
     };
-} // namespace NovelRT::Ink
+} 
 
 #endif // NOVELRT_TIMING_STEPTIMER_H

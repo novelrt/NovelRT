@@ -59,6 +59,6 @@ namespace NovelRT
 
         virtual void executeObjectBehaviour() = 0;
     };
-} // namespace NovelRT
+} 
 
 #endif // NOVELRT_WORLDOBJECT_H

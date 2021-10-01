@@ -130,6 +130,6 @@ namespace NovelRT::Experimental::Graphics
         }
     };
 
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYALLOCATOR_H

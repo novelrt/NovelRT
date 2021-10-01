@@ -125,6 +125,6 @@ namespace NovelRT::Maths
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }
     };
-} // namespace NovelRT::Maths
+} 
 
 #endif // NOVELRT_MATHS_GEOMATRIX4_H

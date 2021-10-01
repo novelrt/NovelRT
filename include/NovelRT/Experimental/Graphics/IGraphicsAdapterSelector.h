@@ -19,6 +19,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~IGraphicsAdapterSelector() = default;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSADAPTERSELECTOR_H

@@ -34,6 +34,6 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;
     };
-} // namespace NovelRT::Ecs
+} 
 
 #endif // !NOVELRT_UNSAFECOMPONENTVIEW_H

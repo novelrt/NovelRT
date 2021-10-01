@@ -25,6 +25,6 @@ namespace NovelRT::Maths
             return _position;
         }
     };
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_QUADTREENODE_H

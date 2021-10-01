@@ -146,6 +146,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsMemoryBlockImpl() final = default;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+} 
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSMEMORYBLOCK_H

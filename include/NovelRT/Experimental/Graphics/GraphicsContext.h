@@ -36,6 +36,6 @@ namespace NovelRT::Experimental::Graphics
         virtual void EndDrawing() = 0;
         virtual void EndFrame() = 0;
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSCONTEXT_H

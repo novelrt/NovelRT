@@ -185,6 +185,6 @@ namespace NovelRT::Ecs
          */
         ~SystemScheduler() noexcept;
     };
-} // namespace NovelRT::Ecs
+}
 
 #endif //! NOVELRT_ECS_SYSTEMSCHEDULER_H

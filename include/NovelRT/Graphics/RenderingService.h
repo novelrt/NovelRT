@@ -73,6 +73,6 @@ namespace NovelRT::Graphics
         std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
         std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);
     };
-} // namespace NovelRT::Graphics
+} 
 
 #endif // NOVELRT_GRAPHICS_RENDERINGSERVICE_H

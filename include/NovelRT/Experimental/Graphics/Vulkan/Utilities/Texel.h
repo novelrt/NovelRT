@@ -32,6 +32,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
 
         return returnFormat;
     }
-} // namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_TEXELUTILITIES_H

@@ -419,6 +419,6 @@ namespace NovelRT::Ecs
             return SparseSet<TKey, TValue>::ConstIterator(_innerContainer.cend());
         }
     };
-} // namespace NovelRT::Ecs
+} 
 
 #endif //! NOVELRT_ECS_SPARSESET_H

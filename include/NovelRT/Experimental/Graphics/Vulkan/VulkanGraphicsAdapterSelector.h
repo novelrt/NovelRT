@@ -28,6 +28,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsAdapterSelector() final = default;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSADAPTERSELECTOR_H
