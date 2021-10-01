@@ -70,6 +70,11 @@ namespace NovelRT::Maths
             return Log2DeBruijn()[(value * 0x07C4ACDCu) >> 27];
         }
 
+        /**
+         * @brief Count the preceeding zeroes of a given 32 bits unsigned integer
+         * @param value Then given integer to count the preceeding zeroes
+         * @return Number of zeroes proceeding the given value
+         */
         [[nodiscard]] inline static uint32_t LeadingZeroCount32(uint32_t value) noexcept
         {
             if (value == 0)
@@ -82,6 +87,11 @@ namespace NovelRT::Maths
             }
         }
 
+        /**
+         * @brief Count the preceeding zeroes of a given 64 bits unsigned integer
+         * @param value Then given integer to count the preceeding zeroes
+         * @return Number of zeroes proceeding the given value
+         */
         [[nodiscard]] inline static uint64_t LeadingZeroCount64(uint64_t value) noexcept
         {
             uint32_t hi = static_cast<uint32_t>(value >> 32);

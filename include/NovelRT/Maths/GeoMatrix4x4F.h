@@ -148,6 +148,7 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
+         * @returns Returns an Identity 4x4 Matrix
          */
         static GeoMatrix4x4F getDefaultIdentity() noexcept
         {
