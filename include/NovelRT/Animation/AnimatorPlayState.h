@@ -16,6 +16,6 @@ namespace NovelRT::Animation
         Playing,
         Paused
     };
-} 
+}
 
 #endif //! NOVELRT_ANIMATION_ANIMATORPLAYSTATE_H

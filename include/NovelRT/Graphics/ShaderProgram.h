@@ -19,6 +19,6 @@ namespace NovelRT::Graphics
 
         ShaderProgram() = default;
     };
-}
+} // namespace NovelRT::Graphics
 
 #endif

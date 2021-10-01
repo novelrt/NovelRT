@@ -33,6 +33,6 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] virtual gsl::span<uint8_t> GetBytecode() const noexcept = 0;
     };
-} 
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_SHADERPROGRAM_H

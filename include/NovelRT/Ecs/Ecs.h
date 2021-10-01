@@ -18,7 +18,7 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer;
     class SystemScheduler;
     class UnsafeComponentView;
-}
+} // namespace NovelRT::Ecs
 
 // dependencies for ECS
 // clang-format off

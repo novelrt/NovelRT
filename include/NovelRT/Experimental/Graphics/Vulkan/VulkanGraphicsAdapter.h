@@ -76,6 +76,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsAdapter() final = default;
     };
-} 
+} // namespace NovelRT::Experimental::Graphics::Vulkan
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSADAPTER_H

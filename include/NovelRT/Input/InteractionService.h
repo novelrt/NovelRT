@@ -58,6 +58,6 @@ namespace NovelRT::Input
             return KeyStateFrameChangeLog{};
         }
     };
-} 
+} // namespace NovelRT::Input
 
 #endif // NOVELRT_INPUT_INTERACTIONSERVICE_H

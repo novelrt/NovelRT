@@ -12,6 +12,6 @@ namespace NovelRT::Utilities
         TKey key;
         TValueType value;
     };
-} 
+} // namespace NovelRT::Utilities
 
 #endif //! NOVELRT_UTILITIES_KEYVALUEPAIR_H

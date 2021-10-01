@@ -66,6 +66,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsMemoryAllocator() final = default;
     };
-}
+} // namespace NovelRT::Experimental::Graphics::Vulkan
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSMEMORYALLOCATOR_H

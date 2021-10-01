@@ -111,5 +111,5 @@ namespace NovelRT::Utilities
             }
         }
     };
-} 
+} // namespace NovelRT::Utilities
 #endif // NOVELRT_UTILITIES_EVENT_H

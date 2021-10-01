@@ -19,6 +19,6 @@ namespace NovelRT::Input
 
         bool validateInteractionPerimeter(Maths::GeoVector2F mousePosition) const noexcept override;
     };
-} 
+} // namespace NovelRT::Input
 
 #endif // NOVELRT_INPUT_BASICINTERACTIONRECT_H

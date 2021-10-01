@@ -24,6 +24,6 @@ namespace NovelRT::Experimental::Graphics
         std::optional<size_t> MaximumSharedBlockSize;
         std::optional<size_t> MinimumAllocatedRegionMarginSize;
     };
-}
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYALLOCATORSETTINGS_H

@@ -34,6 +34,6 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         ~GlfwWindowingDevice();
     };
-} 
+} // namespace NovelRT::Experimental::Windowing::Glfw
 
 #endif // NOVELRT_EXPERIMENTAL_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H

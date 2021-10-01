@@ -20,6 +20,6 @@ namespace NovelRT::EngineConfig
     std::vector<std::string>& OptionalVulkanLayers() noexcept;
     LogLevel& MinimumInternalLoggingLevel() noexcept;
     bool& EnableDebugOutputFromEngineInternals() noexcept;
-} 
+} // namespace NovelRT::EngineConfig
 
 #endif // NOVELRT_ENGINECONFIG_H

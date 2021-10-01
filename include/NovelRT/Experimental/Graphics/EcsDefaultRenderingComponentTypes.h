@@ -79,6 +79,6 @@ namespace NovelRT::Experimental::Graphics
         Maths::GeoMatrix4x4F value = Maths::GeoMatrix4x4F::getDefaultIdentity();
     };
 
-} 
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_ECSDEFAULTRENDERINGCOMPONENTTYPES_H

@@ -45,6 +45,6 @@ namespace NovelRT::Animation
             return _duration;
         }
     };
-} 
+} // namespace NovelRT::Animation
 
 #endif //! NOVELRT_ANIMATION_SPRITEANIMATORFRAME_H

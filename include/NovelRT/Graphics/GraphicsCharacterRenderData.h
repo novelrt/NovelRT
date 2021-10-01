@@ -20,6 +20,6 @@ namespace NovelRT::Graphics
         int32_t bearingY;                 // Offset from baseline to left/top of glyph
         int32_t advance;                  // Offset to advance to next glyph
     };
-} 
+} // namespace NovelRT::Graphics
 
 #endif // NOVELRT_GRAPHICS_CHARACTERRENDERDATA_H

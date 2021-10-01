@@ -26,6 +26,6 @@ namespace NovelRT::Experimental::Graphics
 
         ~GraphicsMemoryBlock() override = default;
     };
-} 
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYBLOCK_H

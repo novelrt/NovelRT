@@ -25,6 +25,6 @@ namespace NovelRT::SceneGraph
             return _renderObject;
         }
     };
-}
+} // namespace NovelRT::SceneGraph
 
 #endif

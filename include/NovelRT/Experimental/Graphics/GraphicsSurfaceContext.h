@@ -50,6 +50,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsSurfaceContext() = default;
     };
-} 
+} // namespace NovelRT::Experimental::Graphics
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSSURFACECONTEXT_H

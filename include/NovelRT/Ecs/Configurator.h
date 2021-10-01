@@ -121,6 +121,6 @@ namespace NovelRT::Ecs
             return scheduler;
         }
     };
-}
+} // namespace NovelRT::Ecs
 
 #endif // NOVELRT_ECS_CONFIGURATOR_H

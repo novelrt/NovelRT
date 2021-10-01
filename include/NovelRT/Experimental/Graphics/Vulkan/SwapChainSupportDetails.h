@@ -16,6 +16,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         std::vector<VkSurfaceFormatKHR> formats;
         std::vector<VkPresentModeKHR> presentModes;
     };
-} 
+} // namespace NovelRT::Experimental::Graphics::Vulkan
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_SWAPCHAINSUPPORTDETAILS_H
