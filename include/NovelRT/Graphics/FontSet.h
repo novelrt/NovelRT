@@ -68,6 +68,6 @@ namespace NovelRT::Graphics
 
         ~FontSet();
     };
-} 
+}
 
 #endif //! NOVELRT_GRAPHICS_FONTSET_H

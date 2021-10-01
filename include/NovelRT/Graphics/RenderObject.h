@@ -33,6 +33,6 @@ namespace NovelRT::Graphics
         void executeObjectBehaviour() final;
         virtual ~RenderObject();
     };
-} 
+}
 
 #endif // NOVELRT_GRAPHICS_RENDEROBJECT_H

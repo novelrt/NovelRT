@@ -129,6 +129,6 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] bool TrySetMinimumSize(size_t minimumSize);
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYBLOCKCOLLECTION_H

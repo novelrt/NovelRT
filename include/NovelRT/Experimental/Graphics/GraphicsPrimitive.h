@@ -103,6 +103,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsPrimitive() = default;
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPRIMITIVE_H

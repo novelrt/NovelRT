@@ -211,6 +211,6 @@ namespace NovelRT::Maths
     {
         return rhs * lhs;
     }
-} 
+}
 
 #endif //! NOVELRT_MATHS_GEOVECTOR3_H

@@ -49,6 +49,6 @@ namespace NovelRT::Experimental::Graphics
             }
         }
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSFENCE_H

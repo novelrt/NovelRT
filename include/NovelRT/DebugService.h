@@ -42,5 +42,5 @@ namespace NovelRT
 
         void setFramesPerSecond(uint32_t framesPerSecond);
     };
-} 
+}
 #endif // NOVELRT_NOVELDEBUGSERVICE_H

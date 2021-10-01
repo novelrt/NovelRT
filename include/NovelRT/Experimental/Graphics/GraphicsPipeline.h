@@ -29,6 +29,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] std::shared_ptr<ShaderProgram> GetPixelShader() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> GetSignature() const noexcept;
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPIPELINE_H

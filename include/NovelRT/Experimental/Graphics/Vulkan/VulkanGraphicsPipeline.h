@@ -49,6 +49,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanPipeline.getActual();
         }
     };
-} 
+}
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSPIPELINE_H

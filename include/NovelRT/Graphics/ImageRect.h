@@ -61,6 +61,6 @@ namespace NovelRT::Graphics
             return _colourTint;
         }
     };
-} 
+}
 
 #endif // NOVELRT_GRAPHICS_IMAGERECT_H

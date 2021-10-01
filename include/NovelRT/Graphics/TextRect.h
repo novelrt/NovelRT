@@ -58,6 +58,6 @@ namespace NovelRT::Graphics
             _fontSet = value;
         }
     };
-} 
+}
 
 #endif // NOVELRT_GRAPHICS_TEXTRECT_H

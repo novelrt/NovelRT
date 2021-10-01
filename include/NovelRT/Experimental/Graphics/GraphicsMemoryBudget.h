@@ -50,6 +50,6 @@ namespace NovelRT::Experimental::Graphics
             return _totalBlocksSize;
         }
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYBUDGET_H

@@ -33,6 +33,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsDeviceObject() = default;
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSDEVICEOBJECT_H

@@ -39,6 +39,6 @@ namespace NovelRT::Input
             return _subscribedKey;
         }
     };
-} 
+}
 
 #endif //! NOVELRT_INPUT_INTERACTIONOBJECT_H

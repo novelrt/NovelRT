@@ -18,6 +18,6 @@ namespace NovelRT::Graphics
         png_byte bitDepth;
         png_bytep* rowPointers = nullptr; // just following the example here
     };
-} 
+}
 
 #endif // !NOVELRT_GRAPHICS_IMAGEDATA_H

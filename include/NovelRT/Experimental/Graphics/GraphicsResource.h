@@ -125,6 +125,6 @@ namespace NovelRT::Experimental::Graphics
 
         ~GraphicsResource() override = default;
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSRESOURCE_H

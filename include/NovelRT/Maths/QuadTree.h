@@ -178,6 +178,6 @@ namespace NovelRT::Maths
             return intersectingPoints;
         }
     };
-} 
+}
 
 #endif //! NOVELRT_MATHS_QUADTREE_H

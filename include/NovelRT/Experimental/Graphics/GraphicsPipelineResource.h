@@ -25,6 +25,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] GraphicsPipelineResourceKind GetKind() const noexcept;
         [[nodiscard]] ShaderProgramVisibility GetShaderProgramVisibility() const noexcept;
     };
-} 
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPIPELINERESOURCE_H

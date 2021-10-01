@@ -96,6 +96,6 @@ namespace NovelRT::Timing
         void resetElapsedTime() noexcept;
         void tick(const Utilities::Event<Timestamp>& update);
     };
-} 
+}
 
 #endif // NOVELRT_TIMING_STEPTIMER_H
