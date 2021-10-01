@@ -82,6 +82,6 @@ namespace NovelRT::Graphics
          */
         static std::unique_ptr<Camera> createDefaultPerspectiveProjection(Maths::GeoVector2F windowSize);
     };
-} // namespace NovelRT::Graphics
+}
 
 #endif // NOVELRT_GRAPHICS_CAMERA_H

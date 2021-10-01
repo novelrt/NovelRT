@@ -14,7 +14,7 @@ namespace NovelRT::Maths
     class QuadTree;
     class QuadTreePoint;
     class Utilities;
-} // namespace NovelRT::Maths
+}
 
 #include "GeoBounds.h"
 #include "GeoMatrix4x4F.h"

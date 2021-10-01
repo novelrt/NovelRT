@@ -65,6 +65,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsProvider() final;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSPROVIDER_H

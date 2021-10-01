@@ -23,6 +23,6 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] GraphicsPipelineInputElementKind GetKind() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;
     };
-} // namespace NovelRT::Experimental::Graphics
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPIPELINEINPUTELEMENT_H

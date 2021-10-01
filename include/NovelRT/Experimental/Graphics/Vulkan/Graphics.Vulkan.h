@@ -28,7 +28,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsAdapter;
     class VulkanGraphicsAdapterSelector;
     class VulkanGraphicsSurfaceContext;
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+}
 
 // Graphics.Vulkan dependencies
 #include "../../../Exceptions/Exceptions.h"

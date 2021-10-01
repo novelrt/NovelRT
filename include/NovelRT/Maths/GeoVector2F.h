@@ -15,7 +15,7 @@ namespace NovelRT::Graphics
     class TextRect;
     class RenderingService;
     class Camera;
-} // namespace NovelRT::Graphics
+}
 
 namespace NovelRT::Input
 {
@@ -225,6 +225,6 @@ namespace NovelRT::Maths
         return rhs * lhs;
     }
 
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_GEOVECTOR2_H

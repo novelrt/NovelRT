@@ -33,6 +33,6 @@ namespace NovelRT::Experimental::Graphics
 
         virtual ~GraphicsProvider() = default;
     };
-} // namespace NovelRT::Experimental::Graphics
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSPROVIDER_H

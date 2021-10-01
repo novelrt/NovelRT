@@ -54,6 +54,6 @@ namespace NovelRT::Experimental::Threading
             return *this;
         }
     };
-} // namespace NovelRT::Experimental::Threading
+}
 
 #endif // !NOVELRT_EXPERIMENTAL_VOLATILESTATE_H

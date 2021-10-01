@@ -64,7 +64,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsBufferKind : uint32_t;
     enum class TexelFormat : uint32_t;
     class GraphicsSurfaceContext;
-} // namespace NovelRT::Experimental::Graphics
+}
 
 // Graphics types
 // clang-format off

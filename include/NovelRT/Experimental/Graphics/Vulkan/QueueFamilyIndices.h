@@ -20,6 +20,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return graphicsFamily.has_value() && presentFamily.has_value();
         }
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+}
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_QUEUEFAMILYINDICES_H

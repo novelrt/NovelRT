@@ -58,6 +58,6 @@ namespace NovelRT::Audio
         void stopSound(ALuint handle);
         void tearDown();
     };
-} // namespace NovelRT::Audio
+}
 
 #endif

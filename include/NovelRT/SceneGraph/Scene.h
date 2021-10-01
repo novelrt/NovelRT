@@ -33,6 +33,6 @@ namespace NovelRT::SceneGraph
             return numErased != 0;
         }
     };
-} // namespace NovelRT::SceneGraph
+}
 
 #endif
