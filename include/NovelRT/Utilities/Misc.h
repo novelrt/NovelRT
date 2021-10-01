@@ -61,7 +61,7 @@ namespace NovelRT::Utilities
             return targetPtrs;
         }
     };
-} // namespace NovelRT::Utilities
+} 
 
 template<class T, class U = std::underlying_type_t<T>> constexpr T operator~(T a)
 {

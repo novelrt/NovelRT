@@ -54,6 +54,6 @@ namespace NovelRT::Experimental::Graphics
             return _width;
         }
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSTEXTURE_H

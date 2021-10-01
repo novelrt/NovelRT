@@ -83,6 +83,6 @@ namespace NovelRT::Experimental::Graphics
             return !(*this == rhs);
         }
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSMEMORYREGION_H

@@ -29,6 +29,6 @@ namespace NovelRT::Experimental::Graphics
             return _kind;
         }
     };
-} // namespace NovelRT::Experimental::Graphics
+} 
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_GRAPHICSBUFFER_H

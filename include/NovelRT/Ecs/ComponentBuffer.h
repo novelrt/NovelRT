@@ -216,6 +216,6 @@ namespace NovelRT::Ecs
             return typename SparseSet<EntityId, T>::ConstIterator(_innerContainer->end());
         }
     };
-} 
+}
 
 #endif //! NOVELRT_ECS_COMPONENTBUFFER_H

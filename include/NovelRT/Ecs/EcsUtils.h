@@ -41,6 +41,6 @@ namespace NovelRT::Ecs
         }
         return componentTypeId;
     }
-} 
+}
 
 #endif //! NOVELRT_ECS_ECSUTILS_H

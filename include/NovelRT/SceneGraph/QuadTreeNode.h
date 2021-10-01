@@ -46,6 +46,6 @@ namespace NovelRT::SceneGraph
             return _quadTreePoints[BOTTOM_RIGHT];
         }
     };
-} // namespace NovelRT::SceneGraph
+} 
 
 #endif

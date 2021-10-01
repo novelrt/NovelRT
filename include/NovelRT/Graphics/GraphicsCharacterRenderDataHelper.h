@@ -14,6 +14,6 @@ namespace NovelRT::Graphics
             return static_cast<int32_t>(rawAdvanceDistance);
         }
     };
-} // namespace NovelRT::Graphics
+} 
 
 #endif // !NOVELRT_GRAPHICS_GRAPHICSCHARACTERRENDERDATAHELPER_H

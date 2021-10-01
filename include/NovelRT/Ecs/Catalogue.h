@@ -99,6 +99,6 @@ namespace NovelRT::Ecs
          */
         void DeleteEntity(EntityId entity) noexcept;
     };
-} 
+}
 
 #endif //! NOVELRT_ECS_CATALOGUE_H

@@ -83,6 +83,6 @@ namespace NovelRT
             return static_cast<size_t>(atom._value);
         }
     };
-} // namespace NovelRT
+} 
 
 #endif // NOVELRT_ATOM_H

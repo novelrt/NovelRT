@@ -36,6 +36,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] float getAScalar() const noexcept;
         void setA(int32_t value) noexcept;
     };
-} // namespace NovelRT::Graphics
+}
 
 #endif // NOVELRT_GRAPHICS_RGBACONFIG_H

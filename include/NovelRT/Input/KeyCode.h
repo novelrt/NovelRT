@@ -149,6 +149,6 @@ namespace NovelRT::Input
         FirstMouseButton = LeftMouseButton,
         LastMouseButton = GLFW_MOUSE_BUTTON_LAST
     };
-} // namespace NovelRT::Input
+} 
 
 #endif // NOVELRT_INPUT_KEYCODE_H

@@ -31,6 +31,6 @@ namespace NovelRT
          */
         Transform() noexcept;
     };
-} // namespace NovelRT
+} 
 
 #endif // NOVELRT_NOVELWORLDOBJECT_H

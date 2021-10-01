@@ -63,6 +63,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanGraphicsPipelineSignature() final;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+} 
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANGRAPHICSPIPELINESIGNATURE_H

@@ -65,6 +65,6 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;
     };
-} 
+}
 
 #endif // NOVELRT_ECS_COMPONENTBUFFERMEMORYCONTAINER_H

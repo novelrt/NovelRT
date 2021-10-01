@@ -17,6 +17,6 @@ namespace NovelRT::Exceptions
         {
         }
     };
-} 
+}
 
 #endif //! NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H

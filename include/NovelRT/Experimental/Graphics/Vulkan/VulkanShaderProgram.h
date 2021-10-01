@@ -30,6 +30,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         ~VulkanShaderProgram() override;
     };
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+} 
 
 #endif // NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_VULKANSHADERPROGRAM_H

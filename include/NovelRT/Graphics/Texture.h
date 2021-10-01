@@ -53,6 +53,6 @@ namespace NovelRT::Graphics
 
         ~Texture();
     };
-} // namespace NovelRT::Graphics
+} 
 
 #endif //! NOVELRT_GRAPHICS_TEXTURE_H

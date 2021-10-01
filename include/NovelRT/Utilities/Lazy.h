@@ -123,5 +123,5 @@ namespace NovelRT::Utilities
             return _actual != nullptr;
         }
     };
-} // namespace NovelRT::Utilities
+}
 #endif // NOVELRT_UTILITIES_LAZY_H

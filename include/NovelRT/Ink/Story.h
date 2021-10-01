@@ -43,6 +43,6 @@ namespace NovelRT::Ink
 
         friend class InkService;
     };
-} // namespace NovelRT::Ink
+} 
 
 #endif // NOVELRT_INK_STORY_H

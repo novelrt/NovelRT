@@ -20,6 +20,6 @@ namespace NovelRT::Exceptions
         {
         }
     };
-} 
+}
 
 #endif //! NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H

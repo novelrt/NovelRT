@@ -96,6 +96,6 @@ namespace NovelRT::Maths
             }
         }
     };
-} // namespace NovelRT::Maths
+}
 
 #endif // NOVELRT_UTILITIES_H

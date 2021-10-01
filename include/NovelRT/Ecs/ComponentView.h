@@ -206,6 +206,6 @@ namespace NovelRT::Ecs
             return _componentBuffer.end();
         }
     };
-} 
+}
 
 #endif //! NOVELRT_ECS_COMPONENTVIEW_H

@@ -21,6 +21,6 @@ namespace NovelRT::Exceptions
         {
         }
     };
-} 
+}
 
 #endif //! NOVELRT_EXCEPTIONS_FILENOTFOUNDEXCEPTION_H

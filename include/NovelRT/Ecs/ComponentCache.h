@@ -120,6 +120,6 @@ namespace NovelRT::Ecs
          */
         void PrepAllBuffersForNextFrame(const std::vector<EntityId>& entitiesToDelete) noexcept;
     };
-} 
+}
 
 #endif //! NOVELRT_ECS_COMPONENTCACHE_H
