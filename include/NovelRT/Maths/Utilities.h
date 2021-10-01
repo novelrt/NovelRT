@@ -22,17 +22,30 @@ namespace NovelRT::Maths
     class Utilities
     {
     public:
+        /**
+         * @brief Returns the de Bruijn Sequences to Index a 1 in a Word
+         * @details To learn more about the de Bruijn Sequences, refer to this documentation: http://supertech.csail.mit.edu/papers/debruijn.pdf
+         * @returns A 32 items array of 8 bits integer containing the de Bruijn Sequences
+         */
         [[nodiscard]] inline constexpr static std::array<uint8_t, 32> Log2DeBruijn() noexcept
         {
             return std::array<uint8_t, 32>{0, 9,  1,  10, 13, 21, 2,  29, 11, 14, 16, 18, 22, 25, 3, 30,
                                            8, 12, 20, 28, 15, 17, 24, 7,  19, 27, 23, 6,  26, 5,  4, 31};
         }
 
+        /**
+         * @brief Check if a given integer is an integral power of two.
+         * @return Returns true if a given integer is an integral power of two, otherwise false
+         */
         [[nodiscard]] inline static bool IsPow2(size_t value) noexcept
         {
             return ((value & (value - 1ULL)) == 0ULL) && (value != 0ULL);
         }
 
+        /**
+         * @brief 
+         * 
+         */
         [[nodiscard]] inline static size_t AlignUp(size_t address, size_t alignment)
         {
             if (!IsPow2(alignment))
@@ -43,9 +56,14 @@ namespace NovelRT::Maths
             return (address + (alignment - 1ULL)) & ~(alignment - 1ULL);
         }
 
+        /**
+         * @brief Popcount is used to count the number of ones in a given word
+         * @param value A 32 bits unsigned integer to evaluate by counting the ones in bits of a given word
+         * @returns Number of ones in a given word value
+         */
         [[nodiscard]] [[deprecated("This implementation of PopCount is superseeded by std::popcount in C++20. This "
-                                   "will be removed when the language version is updated.")]] inline static int32_t
-        PopCount(uint32_t value) noexcept
+                                   "will be removed when the language version is updated.")]]
+        inline static int32_t PopCount(uint32_t value) noexcept
         {
             const uint32_t c1 = 0x55555555u;
             const uint32_t c2 = 0x33333333u;
@@ -59,6 +77,11 @@ namespace NovelRT::Maths
             return static_cast<int32_t>(value);
         }
 
+        /**
+         * @brief Evaluate Logarithm function on a given value
+         * @param value Integer to be evaluated with logarithm function
+         * @return Returns the result of a logarithm function on value
+         */
         [[nodiscard]] inline static uint32_t Log2(uint32_t value) noexcept
         {
             value |= value >> 1;
