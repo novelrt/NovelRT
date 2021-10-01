@@ -1,0 +1,7 @@
+<map id="NovelRT::Ecs::Configurator::InitialiseAndRegisterComponents" name="NovelRT::Ecs::Configurator::InitialiseAndRegisterComponents">
+<area shape="rect" id="node1" title="Creates the ECS instance and registers component types to it." alt="" coords="5,104,252,145"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_system_scheduler.html#a29753b1820d4982c21d4c9ba14c1bf5b" title="Gets a mutable reference to the ComponentCache instance associated with this SystemScheduler." alt="" coords="301,5,527,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_cache.html#a21d01161c9e5a2df0a005948df02af02" title="Registers a new component type to the cache." alt="" coords="300,71,528,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_system_scheduler.html#a821d952a233307031fc36e167b135c1b" title="Registers a function to the SystemScheduler instance." alt="" coords="301,136,527,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_ecs_1_1_system_scheduler.html#a925731a3cb032e7497c8457ad4e3fc9f" title="Initialises the allocated worker threads for ECS processing." alt="" coords="301,201,527,243"/>
+</map>

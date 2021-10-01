@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::Catalogue::GetComponentViews" name="NovelRT::Ecs::Catalogue::GetComponentViews">
+<area shape="rect" id="node1" title="Gets a variadic tuple of views into the ComponentCache for the specified component types based on the..." alt="" coords="5,5,184,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_cache.html#a521529d761b34fd344d7bc1689a41585" title="Get the ComponentBuffer instance that manages the specified component type." alt="" coords="232,5,460,47"/>
+</map>

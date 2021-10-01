@@ -1,0 +1,8 @@
+<map id="NovelRT::Windowing::WindowingService" name="NovelRT::Windowing::WindowingService">
+<area shape="rect" id="node1" title="Manages the game window and window events such as resizing." alt="" coords="489,167,644,208"/>
+<area shape="rect" id="node2" title=" " alt="" coords="20,5,261,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="49,71,232,127"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="9,152,272,223"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="73,247,208,288"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="5,312,276,383"/>
+</map>
