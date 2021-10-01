@@ -8,6 +8,9 @@
 
 namespace NovelRT::Maths
 {
+    /**
+     * @brief 4x4 Components Matrix, usually to represent the coordination systems
+     */
     class GeoMatrix4x4F
     {
         friend class Graphics::RenderObject;
@@ -32,20 +35,36 @@ namespace NovelRT::Maths
         GeoVector4F z;
         GeoVector4F w;
 
+        /**
+         * @brief Construct 4x4 Matrix with all components being set to zero
+         * @returns Newly constructed GeoMatrix4x4F object
+         */
         GeoMatrix4x4F() noexcept
             : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
         {
         }
 
+        /**
+         * @brief Construct 4x4 Matrix by providing a 4D Vector for X, Y, Z, W components of 4x4 Matrix
+         * @returns Newly constructed GeoMatrix4x4F object
+         */
         GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
+        /**
+         * @brief Evaluates this 4x4 Matrix with another 4x4 Matrix to determine if all components matches
+         * @returns Return true if all components matched, otherwise false
+         */
         inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
         }
 
+        /**
+         * @brief Evaluates this 4x4 Matrix with another 4x4 Matrix to determine if any or all components doesn't match
+         * @returns Return true any of the component does not match, otherwise false
+         */
         inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) != *reinterpret_cast<const glm::mat4*>(&other);
