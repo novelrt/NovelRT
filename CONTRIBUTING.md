@@ -25,7 +25,7 @@ If you need help / information - please ask for help! Especially if you're a ```
 
 
 #### If you contribute to the development, remember to keep this in mind.
-[How you build NovelRT](README.md)
+[How you can build NovelRT](README.md) :)
 We use a code formatter named ```clang-format```, so our codestyle is similar to Microsoft's. 
 If you find it hard to adhere to the code style, our CI process will produce a patch for you when neededm so that you can apply it and make your code adherent.
 
@@ -55,8 +55,8 @@ If you find an assigned issue that haven't been worked on for some time, then yo
   - Etc. 
 
 
-### You can always reach us on [Discord](https://camo.githubusercontent.com/0912384154686aae2ca109266fb033dea65bfc0a5200cb1175e86de06bf68e23/68747470733a2f2f646973636f72646170702e636f6d2f6170692f6775696c64732f3534333839383936383338303134353637352f7769646765742e706e673f7374796c653d62616e6e657232) if
-you want to ask about a ticket, make a suggestion, show off how you're using NovelRT, if you need assistance with the project or even just chat. :) 
+### You can always reach us on [Discord](https://camo.githubusercontent.com/0912384154686aae2ca109266fb033dea65bfc0a5200cb1175e86de06bf68e23/68747470733a2f2f646973636f72646170702e636f6d2f6170692f6775696c64732f3534333839383936383338303134353637352f7769646765742e706e673f7374796c653d62616e6e657232) if you want to ask about a ticket, make a suggestion, show off how you're using NovelRT, if you need assistance with the project or even just chat. :) 
+
 
 ## Volunteer
 
