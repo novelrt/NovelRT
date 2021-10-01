@@ -138,7 +138,17 @@ namespace NovelRT::Maths
             *reinterpret_cast<glm::mat4*>(this) *= other;
             return *this;
         }
-
+        /**
+         * @brief Get Identity Matrix
+         * @details An identity matrix that is as followed: \f[
+         *      \begin{bmatrix}
+         *      1 & 0 & 0 & 0\\
+         *      0 & 1 & 0 & 0\\
+         *      0 & 0 & 1 & 0\\
+         *      0 & 0 & 0 & 1
+         *      \end{bmatrix}
+         * \f]
+         */
         static GeoMatrix4x4F getDefaultIdentity() noexcept
         {
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
