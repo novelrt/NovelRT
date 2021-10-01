@@ -44,6 +44,6 @@ namespace NovelRT::DotNet
 
         std::shared_ptr<Ink::InkService> getInkService();
     };
-} // namespace NovelRT::DotNet
+} 
 
 #endif

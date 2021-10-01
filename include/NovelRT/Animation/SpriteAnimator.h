@@ -43,6 +43,6 @@ namespace NovelRT::Animation
             _states.push_back(state);
         }
     };
-} // namespace NovelRT::Animation
+} 
 
 #endif //! NOVELRT_ANIMATION_SPRITEANIMATOR_H

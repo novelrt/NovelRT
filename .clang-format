@@ -18,5 +18,6 @@ SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
 SpaceBeforeAssignmentOperators: true
 Standard: c++17
+FixNamespaceComments: 'false'
 ...
 
