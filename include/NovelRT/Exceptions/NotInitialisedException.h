@@ -22,6 +22,6 @@ namespace NovelRT::Exceptions
         {
         }
     };
-} // namespace NovelRT::Exceptions
+} 
 
 #endif //! NOVELRT_EXCEPTIONS_NOTINITIALISEDEXCEPTION_H
