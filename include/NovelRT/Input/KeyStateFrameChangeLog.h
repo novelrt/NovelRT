@@ -50,5 +50,5 @@ namespace NovelRT::Input
     {
         return rhs == lhs;
     }
-} // namespace NovelRT::Input
+}
 #endif //! NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H

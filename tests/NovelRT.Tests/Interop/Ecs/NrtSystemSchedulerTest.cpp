@@ -110,7 +110,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
         30);
 }
 
-TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithFourThreads)
+TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads)
 {
     TearDown();
 
@@ -302,4 +302,16 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
         reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(
             entity),
         86);
+}
+
+TEST_F(InteropSystemSchedulerTest, ThreadsAreSpinningReturnsCorrectValue)
+{
+    EXPECT_TRUE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
+}
+
+TEST_F(InteropSystemSchedulerTest, ShutDownForcesSchedulerIntoCorrectState)
+{
+    ASSERT_TRUE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
+    ASSERT_EQ(Nrt_SystemScheduler_ShutDown(scheduler), NRT_SUCCESS);
+    EXPECT_FALSE(Nrt_SystemScheduler_GetThreadsAreSpinning(scheduler));
 }

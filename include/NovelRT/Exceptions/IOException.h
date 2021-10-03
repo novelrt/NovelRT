@@ -21,6 +21,6 @@ namespace NovelRT::Exceptions
         {
         }
     };
-} // namespace NovelRT::Exceptions
+}
 
 #endif //! NOVELRT_EXCEPTIONS_IOEXCEPTION_H

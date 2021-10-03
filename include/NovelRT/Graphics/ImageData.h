@@ -2,6 +2,7 @@
 // for more information.
 
 #ifndef NOVELRT_GRAPHICS_IMAGEDATA_H
+#define NOVELRT_GRAPHICS_IMAGEDATA_H
 
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
@@ -17,6 +18,6 @@ namespace NovelRT::Graphics
         png_byte bitDepth;
         png_bytep* rowPointers = nullptr; // just following the example here
     };
-} // namespace NovelRT::Graphics
+}
 
 #endif // !NOVELRT_GRAPHICS_IMAGEDATA_H

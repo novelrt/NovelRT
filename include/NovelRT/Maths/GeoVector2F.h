@@ -4,9 +4,23 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR2_H
 #define NOVELRT_MATHS_GEOVECTOR2_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+
+namespace NovelRT::Graphics
+{
+    class RenderObject;
+    class ImageRect;
+    class BasicFillRect;
+    class TextRect;
+    class RenderingService;
+    class Camera;
+}
+
+namespace NovelRT::Input
+{
+    class InteractionService;
+}
 
 namespace NovelRT::Maths
 {
@@ -18,7 +32,7 @@ namespace NovelRT::Maths
         friend class GeoVector4F;
 
     private:
-        GeoVector2F(glm::vec2 value) noexcept : x(value.x), y(value.y)
+        explicit GeoVector2F(glm::vec2 value) noexcept : x(value.x), y(value.y)
         {
         }
 
@@ -211,6 +225,6 @@ namespace NovelRT::Maths
         return rhs * lhs;
     }
 
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_GEOVECTOR2_H

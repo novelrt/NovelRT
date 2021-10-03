@@ -4,9 +4,7 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR4_H
 #define NOVELRT_MATHS_GEOVECTOR4_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "GeoVector3F.h"
 
 namespace NovelRT::Maths
 {
@@ -221,6 +219,6 @@ namespace NovelRT::Maths
     {
         return rhs * lhs;
     }
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_GEOVECTOR4_H

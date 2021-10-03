@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Maths/Utilities.h>
 
 namespace NovelRT::Ecs
 {
@@ -11,24 +12,64 @@ namespace NovelRT::Ecs
           _workerThreadCount(maximumThreadCount),
           _currentDelta(0),
           _threadAvailabilityMap(0),
-          _threadShutDownStatus(0),
           _shouldShutDown(false),
-          _ecsDataBufferIndex(0)
+          _threadsAreSpinning(false)
     {
         if (_workerThreadCount == 0)
         {
             _workerThreadCount = std::thread::hardware_concurrency() - 1;
         }
 
+        // in case the previous call doesn't work
         if (_workerThreadCount == 0)
         {
             _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
         }
 
-        // in case the previous call doesn't work
+        _threadAvailabilityMap = (1ULL << _workerThreadCount) - 1;
 
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
+    }
+
+    SystemScheduler::SystemScheduler(SystemScheduler&& other) noexcept
+        : _systemIds(std::move(other._systemIds)),
+          _systems(std::move(other._systems)),
+          _entityCache(std::move(other._entityCache)),
+          _componentCache(std::move(other._componentCache)),
+          _workerThreadCount(other._workerThreadCount),
+          _currentDelta(other._currentDelta),
+          _threadAvailabilityMap((1ULL << other._workerThreadCount) - 1),
+          _shouldShutDown(false),
+          _threadsAreSpinning(false)
+    {
+        if (other.GetThreadsAreSpinning())
+        {
+            other.ShutDown();
+            SpinThreads();
+        }
+    }
+
+    SystemScheduler& SystemScheduler::operator=(SystemScheduler&& other) noexcept
+    {
+        _systemIds = std::move(other._systemIds);
+        _systems = std::move(other._systems);
+        _entityCache = std::move(other._entityCache);
+        _componentCache = std::move(other._componentCache);
+        _workerThreadCount = other._workerThreadCount;
+        _threadWorkItem = std::move(other._threadWorkItem);
+        _threadCache = std::move(other._threadCache);
+        _currentDelta = other._currentDelta;
+        _shouldShutDown = false;
+        _threadsAreSpinning = false;
+
+        if (other.GetThreadsAreSpinning())
+        {
+            other.ShutDown();
+            SpinThreads();
+        }
+
+        return *this;
     }
 
     void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
@@ -38,17 +79,9 @@ namespace NovelRT::Ecs
         _systemIds.emplace_back(id);
     }
 
-    bool SystemScheduler::JobAvailable(size_t poolId) noexcept
+    bool SystemScheduler::JobAvailable(size_t poolId) const noexcept
     {
-        QueueLockPair& pair = _threadWorkQueues[poolId];
-        pair.threadLock.lock();
-        if (pair.systemUpdateIds.size() > 0)
-        {
-            return true;
-        }
-        pair.threadLock.unlock();
-
-        return false;
+        return (_threadAvailabilityMap & (1ULL << poolId)) == 0;
     }
 
     void SystemScheduler::CycleForJob(size_t poolId)
@@ -57,153 +90,54 @@ namespace NovelRT::Ecs
         {
             while (!JobAvailable(poolId))
             {
-                if (_shouldShutDown)
-                {
-                    _threadShutDownStatus ^= 1ULL << poolId;
-                    return;
-                }
-
-                if ((_threadAvailabilityMap & 1ULL << poolId) != 0)
-                {
-                    _threadAvailabilityMap ^= 1ULL << poolId;
-                }
-
                 std::this_thread::yield();
             }
 
-            bool firstIteration = true;
+            Atom workItem = _threadWorkItem[poolId];
 
-            while (true)
+            if (workItem == std::numeric_limits<Atom>::max())
             {
-                QueueLockPair& pair = _threadWorkQueues[poolId];
-                if (!firstIteration)
-                {
-                    pair.threadLock.lock();
-                }
-                else
-                {
-                    firstIteration = false;
-                }
-
-                if (pair.systemUpdateIds.size() == 0)
-                {
-                    pair.threadLock.unlock();
-                    break;
-                }
-
-                Atom workItem = pair.systemUpdateIds[0];
-                pair.systemUpdateIds.erase(pair.systemUpdateIds.begin());
-
-                pair.threadLock.unlock();
-
-                _systems[workItem](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
+                return;
             }
-            _threadAvailabilityMap ^= 1ULL << poolId;
+
+            _systems[workItem](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
+
+            assert(((_threadAvailabilityMap & (1ULL << poolId)) == 0) && "Thread marked as available while working!");
+            _threadAvailabilityMap ^= (1ULL << poolId);
+            assert(((_threadAvailabilityMap & (1ULL << poolId)) == (1ULL << poolId)) &&
+                   "Thread marked as busy while available!");
         }
     }
 
-    void SystemScheduler::ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork)
+    void SystemScheduler::ScheduleUpdateWork()
     {
-        if (_systemIds.empty())
+        uint64_t threadAvailabilityMap = _threadAvailabilityMap;
+        assert((threadAvailabilityMap == ((1ULL << _workerThreadCount) - 1)) &&
+               "Some threads are busy while new work is attempted to be scheduled!");
+        for (auto&& systemId : _systemIds)
         {
-            return;
-        }
+            uint64_t workerIndex;
 
-        int32_t sizeOfProcessedWork = 0;
-
-        for (size_t i = 0; i < workersToAssign; i++)
-        {
-            size_t offset = i * amountOfWork;
-            QueueLockPair& pair = _threadWorkQueues[i];
-
-            pair.threadLock.lock();
-
-            _threadAvailabilityMap ^= 1ULL << i;
-            for (size_t j = 0; j < amountOfWork; j++)
+            while ((workerIndex = NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap)) == 64)
             {
-                size_t currentWorkIndex = offset + j;
-                pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
-                ++sizeOfProcessedWork;
+                std::this_thread::yield();
             }
 
-            pair.threadLock.unlock();
+            workerIndex = 63 - workerIndex;
+
+            assert((workerIndex <= (_workerThreadCount)) &&
+                   "Returned worker index does not exist! Index out of range.");
+
+            _threadWorkItem[workerIndex] = systemId;
+
+            assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
+                   "Thread marked as busy while available!");
+            _threadAvailabilityMap ^= (1ULL << workerIndex);
+            assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == 0) &&
+                   "Thread marked as available while working!");
         }
 
-        size_t remainder = _systemIds.size() % sizeOfProcessedWork;
-
-        if (remainder != 0)
-        {
-            if (remainder <= amountOfWork)
-            {
-                QueueLockPair& pair = _threadWorkQueues[0];
-                size_t startIndex = _systemIds.size() - remainder;
-
-                pair.threadLock.lock();
-
-                if ((_threadAvailabilityMap & 1ULL << (0)) == 0)
-                {
-                    _threadAvailabilityMap ^= 1ULL << (0);
-                }
-
-                for (size_t i = startIndex; i < _systemIds.size(); i++)
-                {
-                    pair.systemUpdateIds.push_back(_systemIds[i]);
-                }
-
-                pair.threadLock.unlock();
-            }
-            else
-            {
-                size_t startIndex = _systemIds.size() - remainder;
-
-                for (size_t i = 0; i < remainder / amountOfWork; i++)
-                {
-                    size_t offset = startIndex + (i * amountOfWork);
-                    QueueLockPair& pair = _threadWorkQueues[i];
-
-                    pair.threadLock.lock();
-
-                    if ((_threadAvailabilityMap & 1ULL << i) == 0)
-                    {
-                        _threadAvailabilityMap ^= 1ULL << i;
-                    }
-
-                    for (size_t j = 0; j < amountOfWork; j++)
-                    {
-                        size_t currentWorkIndex = offset + j;
-                        pair.systemUpdateIds.push_back(_systemIds[currentWorkIndex]);
-                        ++sizeOfProcessedWork;
-                    }
-
-                    pair.threadLock.unlock();
-                }
-
-                if (_systemIds.size() - sizeOfProcessedWork != 0)
-                {
-                    size_t threadWorkIndex =
-                        (remainder / amountOfWork) < _threadWorkQueues.size() ? (remainder / amountOfWork) : 0;
-
-                    QueueLockPair& pair = _threadWorkQueues[threadWorkIndex];
-                    size_t startingIndex = _systemIds.size() - (_systemIds.size() - sizeOfProcessedWork);
-
-                    pair.threadLock.lock();
-
-                    if ((_threadAvailabilityMap & 1ULL << threadWorkIndex) == 0)
-                    {
-                        _threadAvailabilityMap ^= 1ULL << threadWorkIndex;
-                    }
-
-                    for (size_t i = startingIndex; i < _systemIds.size(); i++)
-                    {
-                        pair.systemUpdateIds.push_back(_systemIds[i]);
-                    }
-
-                    pair.threadLock.unlock();
-                }
-            }
-        }
-
-        while (_threadAvailabilityMap != 0)
+        while (_threadAvailabilityMap != threadAvailabilityMap)
         {
             std::this_thread::yield();
         }
@@ -211,13 +145,16 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::SpinThreads() noexcept
     {
-        std::vector<QueueLockPair> vec2(_workerThreadCount);
-        _threadWorkQueues.swap(vec2);
+        _shouldShutDown = false;
+        std::vector<Atom> vec2(_workerThreadCount);
+        _threadWorkItem.swap(vec2);
+
         for (size_t i = 0; i < _workerThreadCount; i++)
         {
-            _threadShutDownStatus ^= 1ULL << i;
             _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
         }
+
+        _threadsAreSpinning = true;
     }
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
@@ -225,27 +162,40 @@ namespace NovelRT::Ecs
 
         _currentDelta = delta;
 
-        size_t independentSystemChunkSize = _systemIds.size() / _workerThreadCount;
-
-        size_t workersToAssign = _workerThreadCount > _systemIds.size() ? _systemIds.size() : _workerThreadCount;
-        size_t amountOfWork = independentSystemChunkSize > 0 ? independentSystemChunkSize : 1;
-
-        ScheduleUpdateWork(workersToAssign, amountOfWork);
+        ScheduleUpdateWork();
         _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
-
         _entityCache.ProcessEntityDeletionRequestsFromThreads();
+    }
+
+    void SystemScheduler::ShutDown() noexcept
+    {
+        assert((_threadAvailabilityMap == ((1ULL << _workerThreadCount) - 1)) &&
+               "Work was scheduled while the SystemScheduler is shutting down!");
+        for (auto&& workItem : _threadWorkItem)
+        {
+            workItem = std::numeric_limits<Atom>::max();
+        }
+
+        _threadAvailabilityMap = 0;
+
+        for (auto&& i : _threadCache)
+        {
+            if (i.joinable())
+            {
+                i.join();
+            }
+        }
+
+        _threadCache.clear();
+        _threadWorkItem.clear();
+        _threadsAreSpinning = false;
     }
 
     SystemScheduler::~SystemScheduler() noexcept
     {
-        _shouldShutDown = true;
-
-        for (size_t i = 0; i < _threadCache.size(); i++)
+        if (GetThreadsAreSpinning())
         {
-            if (_threadCache[i].joinable())
-            {
-                _threadCache[i].join();
-            }
+            ShutDown();
         }
     }
 } // namespace NovelRT::Ecs

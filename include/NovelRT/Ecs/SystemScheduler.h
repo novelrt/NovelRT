@@ -18,12 +18,6 @@ namespace NovelRT::Ecs
     class SystemScheduler
     {
     private:
-        struct QueueLockPair
-        {
-            std::vector<Atom> systemUpdateIds;
-            std::mutex threadLock;
-        };
-
         std::vector<Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
@@ -35,20 +29,19 @@ namespace NovelRT::Ecs
 
         uint32_t _workerThreadCount;
 
-        std::vector<QueueLockPair> _threadWorkQueues;
+        std::vector<Atom> _threadWorkItem;
         std::vector<std::thread> _threadCache;
 
         Timing::Timestamp _currentDelta;
-
         std::atomic_uint64_t _threadAvailabilityMap;
-        std::atomic_uint64_t _threadShutDownStatus;
+        // std::atomic_uint64_t _threadShutDownStatus;
+
         std::atomic_bool _shouldShutDown;
+        bool _threadsAreSpinning;
 
-        std::atomic_size_t _ecsDataBufferIndex;
-
-        bool JobAvailable(size_t poolId) noexcept;
+        bool JobAvailable(size_t poolId) const noexcept;
         void CycleForJob(size_t poolId);
-        void ScheduleUpdateWork(size_t workersToAssign, size_t amountOfWork);
+        void ScheduleUpdateWork();
 
     public:
         /**
@@ -57,7 +50,35 @@ namespace NovelRT::Ecs
          * @param maximumThreadCount An optional parameter should the developer know in advance how many threads they
          * wish to dedicate to this SystemScheduler.
          */
-        SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
+        explicit SystemScheduler(uint32_t maximumThreadCount = 0) noexcept;
+
+        SystemScheduler(const SystemScheduler& other) = delete;
+        SystemScheduler& operator=(const SystemScheduler& other) = delete;
+
+        /**
+         * @brief Move constructor for moving instances of SystemScheduler.
+         *
+         * @param other The move target.
+         */
+        SystemScheduler(SystemScheduler&& other) noexcept;
+
+        /**
+         * @brief Move assignment operator for move assigning instances of SystemScheduler.
+         *
+         * @param other The move target.
+         * @return The moved instance of SystemScheduler.
+         */
+        SystemScheduler& operator=(SystemScheduler&& other) noexcept;
+
+        /**
+         * @brief Gets the current state of the threads.
+         *
+         * @returns true if the threads are spinning, false if they aren't.
+         */
+        [[nodiscard]] inline bool GetThreadsAreSpinning() const noexcept
+        {
+            return _threadsAreSpinning;
+        }
 
         /**
          * @brief Registers a function to the SystemScheduler instance.
@@ -152,6 +173,11 @@ namespace NovelRT::Ecs
         void ExecuteIteration(Timing::Timestamp delta);
 
         /**
+         * @brief Shuts down the ECS instance and terminates threads.
+         */
+        void ShutDown() noexcept;
+
+        /**
          * @brief Destroys the SystemScheduler.
          *
          * The destructor also implicitly shuts down all threads being used by this scheduler.
@@ -159,6 +185,6 @@ namespace NovelRT::Ecs
          */
         ~SystemScheduler() noexcept;
     };
-} // namespace NovelRT::Ecs
+}
 
 #endif //! NOVELRT_ECS_SYSTEMSCHEDULER_H

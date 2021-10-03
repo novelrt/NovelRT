@@ -1,9 +1,8 @@
 #ifndef NOVELRT_MATHS_QUADTREENODE_H
 #define NOVELRT_MATHS_QUADTREENODE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "GeoVector2F.h"
+#include <memory>
 
 namespace NovelRT::Maths
 {
@@ -26,6 +25,6 @@ namespace NovelRT::Maths
             return _position;
         }
     };
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_QUADTREENODE_H

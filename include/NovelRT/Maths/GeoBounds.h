@@ -4,9 +4,8 @@
 #ifndef NOVELRT_MATHS_GEOBOUNDS_H
 #define NOVELRT_MATHS_GEOBOUNDS_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "GeoVector2F.h"
+#include "NovelRT/Transform.h"
 
 namespace NovelRT::Maths
 {
@@ -18,11 +17,11 @@ namespace NovelRT::Maths
         float rotation;
 
         GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
-        bool pointIsWithinBounds(GeoVector2F point) const noexcept;
-        bool intersectsWith(GeoBounds otherBounds) const;
-        GeoVector2F getCornerInLocalSpace(int32_t index) const noexcept;
-        GeoVector2F getCornerInWorldSpace(int32_t index) const noexcept;
-        GeoVector2F getExtents() const noexcept;
+        [[nodiscard]] bool pointIsWithinBounds(GeoVector2F point) const noexcept;
+        [[nodiscard]] bool intersectsWith(GeoBounds otherBounds) const;
+        [[nodiscard]] GeoVector2F getCornerInLocalSpace(int32_t index) const noexcept;
+        [[nodiscard]] GeoVector2F getCornerInWorldSpace(int32_t index) const noexcept;
+        [[nodiscard]] GeoVector2F getExtents() const noexcept;
 
         inline bool operator==(GeoBounds other) const noexcept
         {
@@ -51,6 +50,6 @@ namespace NovelRT::Maths
             return GeoBounds(transform.position, transform.scale, transform.rotation);
         }
     };
-} // namespace NovelRT::Maths
+}
 
 #endif //! NOVELRT_MATHS_GEOBOUNDS_H

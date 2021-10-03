@@ -8,43 +8,33 @@ on:
 jobs:
   Build_and_Publish_Documentation:
     name: Build and Publish Documentation
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: cmd
-
+    runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Create documentation branch
-        run: git checkout -b documentation/$GITHUB_SHA
+        run: git checkout -b gh-pages
+        
+      - name: Prepare Secrets
+        run: echo "${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_WORKSPACE/secret.txt
 
       #Mandatory step it appears otherwise pushing the commit will fail
       #Switched username and e-mail to something identifiable?
       - name: Configure Git
         run: |
-          gh auth login
+          gh auth login --with-token < $GITHUB_WORKSPACE/secret.txt
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Windows Setup
-        run: scripts\machine-setup.cmd
 
       - name: Generate Documentation
-        run: scripts\cibuild.cmd -documentation -DDOXYGEN_OUTPUT_DIRECTORY='$GITHUB_WORKSPACE\novelrt\docs'
+        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
         run: |
-          git add docs/*
-          git commit -m "Updated documentation - $GITHUB_SHA"
-          git push origin documentation/$GITHUB_SHA
-
-      - name: Create Pull Request
-        if: ${{ success() }}
-        run:
-          gh pr create --title "$GITHUB_SHA into gh-pages" --body "Updated documentation from commit $GITHUB_SHA in main." --base gh-pages --head documentation/$GITHUB_SHA
+          git add $GITHUB_WORKSPACE/docs/*
+          git commit -m "Updated documentation - $GITHUB_SHA from main"
+          git push origin gh-pages --force

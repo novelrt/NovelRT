@@ -31,6 +31,6 @@ namespace NovelRT::SceneGraph
             return _sceneNode;
         }
     };
-} // namespace NovelRT::SceneGraph
+}
 
 #endif

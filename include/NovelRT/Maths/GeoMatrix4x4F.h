@@ -4,13 +4,10 @@
 #ifndef NOVELRT_MATHS_GEOMATRIX4_H
 #define NOVELRT_MATHS_GEOMATRIX4_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#include "GeoVector4F.h"
 
 namespace NovelRT::Maths
 {
-
     class GeoMatrix4x4F
     {
         friend class Graphics::RenderObject;
@@ -128,6 +125,6 @@ namespace NovelRT::Maths
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }
     };
-} // namespace NovelRT::Maths
+}
 
 #endif // NOVELRT_MATHS_GEOMATRIX4_H

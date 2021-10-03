@@ -14,7 +14,11 @@ namespace NovelRT::Exceptions
         explicit KeyNotFoundException() : std::runtime_error("The specified key was not found in the collection.")
         {
         }
+
+        explicit KeyNotFoundException(const std::string& message) : std::runtime_error(message)
+        {
+        }
     };
-} // namespace NovelRT::Exceptions
+}
 
 #endif //! NOVELRT_EXCEPTIONS_KEYNOTFOUNDEXCEPTION_H

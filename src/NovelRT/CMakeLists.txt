@@ -18,6 +18,8 @@ find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
+find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
+find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
 
 set(SOURCES
   Animation/SpriteAnimator.cpp
@@ -36,6 +38,33 @@ set(SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
+
+  Experimental/EngineConfig.cpp
+  Experimental/Graphics/GraphicsMemoryBlock.cpp
+  Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
+  Experimental/Graphics/GraphicsPipeline.cpp
+  Experimental/Graphics/GraphicsPipelineInput.cpp
+  Experimental/Graphics/GraphicsPipelineInputElement.cpp
+  Experimental/Graphics/GraphicsPipelineResource.cpp
+  Experimental/Graphics/GraphicsPipelineSignature.cpp
+  Experimental/Graphics/ShaderProgram.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsBuffer.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsContext.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsFence.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
+  Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
+  Experimental/Threading/VolatileState.cpp
+  Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
 
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
@@ -155,6 +184,8 @@ target_link_libraries(Engine
     spdlog::spdlog
     Vorbis::Vorbis
     Microsoft.GSL::Microsoft.GSL
+    Vulkan::Vulkan
+    vulkan-memory-allocator::vulkan-memory-allocator
 )
 
 if(WIN32)

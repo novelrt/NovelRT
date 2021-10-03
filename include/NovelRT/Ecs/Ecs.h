@@ -10,6 +10,7 @@
  */
 namespace NovelRT::Ecs
 {
+    class Configurator;
     class Catalogue;
     class ComponentBufferMemoryContainer;
     class ComponentCache;
@@ -17,7 +18,7 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer;
     class SystemScheduler;
     class UnsafeComponentView;
-} // namespace NovelRT::Ecs
+}
 
 // dependencies for ECS
 // clang-format off
@@ -36,6 +37,8 @@ namespace NovelRT::Ecs
 #include <iterator>
 #include <memory>
 #include <mutex>
+#include <optional>
+#include <queue>
 #include <thread>
 #include <tuple>
 #include <typeindex>
@@ -61,6 +64,7 @@ namespace NovelRT::Ecs
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
+#include "Configurator.h"
 
 // clang-format on
 

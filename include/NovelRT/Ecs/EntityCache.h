@@ -59,6 +59,6 @@ namespace NovelRT::Ecs
          */
         void ProcessEntityDeletionRequestsFromThreads() noexcept;
     };
-} // namespace NovelRT::Ecs
+}
 
 #endif //! NOVELRT_ECS_ENTITYCACHE_H

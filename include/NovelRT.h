@@ -10,12 +10,6 @@
   #define NOVELRT_C_API 1
 #endif // !__cplusplus
 
-#if defined(NDEBUG)
-#define unused(x)  (void)(x)
-#else
-#define unused(x)  (void)(0)
-#endif
-
 #if defined(_WIN32) || defined(_WIN64)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -58,10 +52,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// GLM
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
 // OpenAL
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -73,20 +63,6 @@
 // nethost
 #include "NovelRT/DotNet/coreclr_delegates.h"
 #include "NovelRT/DotNet/hostfxr.h"
-#endif
-
-// spdlog
-#if defined(_MSC_VER)
-  #pragma warning(push)
-  #pragma warning(disable:4275)
-#endif
-
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/async.h>
-
-#if defined(_MSC_VER)
-  #pragma warning(pop)
 #endif
 
 // libpng
@@ -183,6 +159,9 @@
     typedef class WindowingService WindowingService;
   }
 
+  //generic experimental files in root namespace
+  #include "NovelRT/Experimental/EngineConfig.h"
+
   //enums
   #include "NovelRT/Input/KeyCode.h"
   #include "NovelRT/Input/KeyState.h"
@@ -196,20 +175,18 @@
   #include "NovelRT/Utilities/Lazy.h"
   #include "NovelRT/Utilities/Misc.h"
 
+  #include "NovelRT/Transform.h"
+
   #include "NovelRT/Animation/AnimatorPlayState.h"
   #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-  #include "NovelRT/Maths/GeoVector2F.h"
-  #include "NovelRT/Maths/GeoVector3F.h"
-  #include "NovelRT/Maths/GeoVector4F.h"
-  #include "NovelRT/Maths/GeoMatrix4x4F.h"
-  #include "NovelRT/Transform.h"
-  #include "NovelRT/Maths/GeoBounds.h"
-  #include "NovelRT/Maths/QuadTreePoint.h"
-  #include "NovelRT/Maths/QuadTree.h"
+
   #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
   #include "NovelRT/Graphics/ImageData.h"
   #include "NovelRT/Graphics/ShaderProgram.h"
   #include "NovelRT/Graphics/RGBAConfig.h"
+
+  //Maths types
+  #include "NovelRT/Maths/Maths.h"
 
   // Base Types
   #include "NovelRT/LoggingService.h" // this isn't in the services section due to include order/dependencies.
@@ -228,14 +205,21 @@
   #include "NovelRT/Exceptions/Exceptions.h"
 
   // Graphics types
+  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
   #include "NovelRT/Graphics/Camera.h"
   #include "NovelRT/Graphics/Texture.h"
   #include "NovelRT/Graphics/FontSet.h"
   #include "NovelRT/Graphics/RenderObject.h"
   #include "NovelRT/Graphics/BasicFillRect.h"
-  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
   #include "NovelRT/Graphics/ImageRect.h"
   #include "NovelRT/Graphics/TextRect.h"
+
+  // Experimental types
+  #include "NovelRT/Experimental/Graphics/Graphics.h"
+  #include "NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h"
+  #include "NovelRT/Experimental/Threading/Threading.h"
+  #include "NovelRT/Experimental/Windowing/Windowing.h"
+  #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
 
 #ifdef NOVELRT_INK
   // Ink types
