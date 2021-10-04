@@ -21,7 +21,7 @@ namespace NovelRT::Graphics
         std::string _text;
         std::vector<std::unique_ptr<ImageRect>> _letterRects;
         LoggingService _logger;
-        RGBAConfig _colourConfig;
+        RGBAColour _colourConfig;
         std::shared_ptr<FontSet> _fontSet;
 
     protected:
@@ -34,14 +34,14 @@ namespace NovelRT::Graphics
                  ShaderProgram programId,
                  std::shared_ptr<Camera> camera,
                  std::shared_ptr<FontSet> fontSet,
-                 RGBAConfig colourConfig);
+                 RGBAColour colourConfig);
 
-        inline RGBAConfig getColourConfig() const noexcept
+        inline RGBAColour getColourConfig() const noexcept
         {
             return _colourConfig;
         }
 
-        void setColourConfig(RGBAConfig value);
+        void setColourConfig(RGBAColour value);
 
         std::string getText() const noexcept;
         void setText(const std::string& value);

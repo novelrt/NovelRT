@@ -101,7 +101,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle* outputColourConfig)
+    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRectHandle rect, NrtRGBAColourHandle* outputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -110,14 +110,14 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        auto colourConfig = new RGBAColour(0, 0, 0, 0);
         *colourConfig = cppRect->getColourConfig();
-        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
+        *outputColourConfig = reinterpret_cast<NrtRGBAColourHandle>(colourConfig);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle inputColourConfig)
+    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRectHandle rect, NrtRGBAColourHandle inputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -126,7 +126,7 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        cppRect->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
+        cppRect->setColourConfig(*reinterpret_cast<RGBAColour*>(inputColourConfig));
 
         return NRT_SUCCESS;
     }

@@ -15,7 +15,7 @@
 #include <Windows.h>
 #endif
 
-#if defined(__cplusplus)
+#if defined(__cplusplus) && !defined(NOVELRT_C_API)
 #define __STDC_WANT_LIB_EXT1__ 1
 
 // stdlib
@@ -69,7 +69,7 @@
 #include <png.h>
 #endif // __cplusplus
 
-#if defined(__cplusplus)
+#if defined(__cplusplus) && !defined(NOVELRT_C_API)
   /**
    * @brief NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
    * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
@@ -135,17 +135,6 @@
   }
 
   /**
-   * @brief Contains scene graph features.
-   */
-  namespace NovelRT::SceneGraph {
-    typedef class QuadTreeNode QuadTreeNode;
-    typedef class QuadTreeScenePoint QuadTreeScenePoint;
-    typedef class RenderObjectNode RenderObjectNode;
-    typedef class Scene Scene;
-    typedef class SceneNode SceneNode;
-  }
-
-  /**
    * @brief Contains timing features, such as timers.
    */
   namespace NovelRT::Timing {
@@ -183,7 +172,7 @@
   #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
   #include "NovelRT/Graphics/ImageData.h"
   #include "NovelRT/Graphics/ShaderProgram.h"
-  #include "NovelRT/Graphics/RGBAConfig.h"
+  #include "NovelRT/Graphics/RGBAColour.h"
 
   //Maths types
   #include "NovelRT/Maths/Maths.h"
@@ -243,11 +232,7 @@
   #include "NovelRT/Graphics/RenderingService.h"
 
   // Scene Graph types
-  #include "NovelRT/SceneGraph/SceneNode.h"
-  #include "NovelRT/SceneGraph/RenderObjectNode.h"
-  #include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
-  #include "NovelRT/SceneGraph/QuadTreeNode.h"
-  #include "NovelRT/SceneGraph/Scene.h"
+  #include "NovelRT/SceneGraph/SceneGraph.h"
 #endif // __cplusplus
 
 #if defined(NOVELRT_C_API)
@@ -289,7 +274,7 @@
   #include "NovelRT.Interop/Graphics/NrtFontSet.h"
   #include "NovelRT.Interop/Graphics/NrtImageRect.h"
   #include "NovelRT.Interop/Graphics/NrtRenderingService.h"
-  #include "NovelRT.Interop/Graphics/NrtRGBAConfig.h"
+  #include "NovelRT.Interop/Graphics/NrtRGBAColour.h"
   #include "NovelRT.Interop/Graphics/NrtTextRect.h"
   #include "NovelRT.Interop/Graphics/NrtTexture.h"
 

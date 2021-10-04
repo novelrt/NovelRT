@@ -135,7 +135,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_getColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle* outputColourTint)
+    NrtResult Nrt_ImageRect_getColourTint(NrtImageRectHandle rect, NrtRGBAColourHandle* outputColourTint)
     {
         if (rect == nullptr)
         {
@@ -144,14 +144,14 @@ extern "C"
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
-        auto colourTint = new RGBAConfig(0, 0, 0, 0);
+        auto colourTint = new RGBAColour(0, 0, 0, 0);
         *colourTint = imageRectPtr->colourTint();
-        *outputColourTint = reinterpret_cast<NrtRGBAConfigHandle>(colourTint);
+        *outputColourTint = reinterpret_cast<NrtRGBAColourHandle>(colourTint);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle inputColourTint)
+    NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAColourHandle inputColourTint)
     {
         if (rect == nullptr)
         {
@@ -160,7 +160,7 @@ extern "C"
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
-        imageRectPtr->colourTint() = *reinterpret_cast<RGBAConfig*>(inputColourTint);
+        imageRectPtr->colourTint() = *reinterpret_cast<RGBAColour*>(inputColourTint);
 
         return NRT_SUCCESS;
     }

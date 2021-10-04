@@ -93,7 +93,7 @@ int main(int /*argc*/, char* /*argv*/[])
     auto animTransform =
         NovelRT::Transform(NovelRT::Maths::GeoVector2(1500, 900), 2, NovelRT::Maths::GeoVector2(95 * 2, 98 * 2));
     animRect =
-        runner.getRenderer()->createImageRect(animTransform, 3, NovelRT::Graphics::RGBAConfig(255, 255, 255, 255));
+        runner.getRenderer()->createImageRect(animTransform, 3, NovelRT::Graphics::RGBAColour(255, 255, 255, 255));
     testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
     testAnim->insertNewState(idleState);
 
@@ -104,14 +104,14 @@ int main(int /*argc*/, char* /*argv*/[])
 
     novelChanRect =
         runner.getRenderer()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(),
-                                              NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+                                              NovelRT::Graphics::RGBAColour(255, 0, 255, 255));
 
     auto rubyGnomerTextTransform = NovelRT::Transform(
         NovelRT::Maths::GeoVector2F(novelChanTransform.position.x + 400, novelChanTransform.position.y), 0,
         NovelRT::Maths::GeoVector2F(1.0f, 1.0f));
 
     textRect =
-        runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 255),
+        runner.getRenderer()->createTextRect(rubyGnomerTextTransform, 2, NovelRT::Graphics::RGBAColour(0, 255, 0, 255),
                                              70, (fontsDirPath / "Gayathri-Regular.ttf").string());
     textRect->setText("RubyGnomer");
 
@@ -119,25 +119,25 @@ int main(int /*argc*/, char* /*argv*/[])
         NovelRT::Transform(rubyGnomerTextTransform.position, 0, NovelRT::Maths::GeoVector2F(1000.0f, 2.0f));
 
     lineRect =
-        runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+        runner.getRenderer()->createBasicFillRect(lineTransform, 1, NovelRT::Graphics::RGBAColour(255, 0, 0, 255));
 
     auto myTransform =
         NovelRT::Transform(NovelRT::Maths::GeoVector2F(1, 1), 0.0f, NovelRT::Maths::GeoVector2F(200, 300));
     myBasicFillRect =
-        runner.getRenderer()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAConfig(255, 0, 0, 255));
+        runner.getRenderer()->createBasicFillRect(myTransform, 1, NovelRT::Graphics::RGBAColour(255, 0, 0, 255));
 
     auto playButtonTransform = NovelRT::Transform(
         NovelRT::Maths::GeoVector2F(novelChanTransform.position.x - 500, novelChanTransform.position.y), 0,
         NovelRT::Maths::GeoVector2F(200, 200));
     playAudioButton =
-        runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAConfig(255, 0, 0, 70));
+        runner.getRenderer()->createBasicFillRect(playButtonTransform, 3, NovelRT::Graphics::RGBAColour(255, 0, 0, 70));
     auto playAudioTextTransform = playButtonTransform;
     playAudioTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
     auto vec = playButtonTransform.position;
     vec.x = playButtonTransform.position.x - 75;
     playAudioTextTransform.position = vec;
     playAudioText =
-        runner.getRenderer()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36,
+        runner.getRenderer()->createTextRect(playAudioTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
                                              (fontsDirPath / "Gayathri-Regular.ttf").string());
     playAudioText->setText("Play Audio");
 
@@ -149,20 +149,20 @@ int main(int /*argc*/, char* /*argv*/[])
     memeInteractionRect = runner.getInteractionService()->createBasicInteractionRect(theRealMvpTransform, -1);
 
     playAudioButtonTwoElectricBoogaloo =
-        runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAConfig(0, 255, 0, 70));
+        runner.getRenderer()->createBasicFillRect(theRealMvpTransform, 2, NovelRT::Graphics::RGBAColour(0, 255, 0, 70));
 
 #ifdef NOVELRT_INK
     auto inkButtonTransform = NovelRT::Transform(
         NovelRT::Maths::GeoVector2F(novelChanTransform.position.x - 500, novelChanTransform.position.y - 200), 0,
         NovelRT::Maths::GeoVector2F(200, 200));
     inkButton = runner.getRenderer()->createBasicFillRect(inkButtonTransform, 3,
-                                                          NovelRT::Graphics::RGBAConfig(255, 0, 255, 255));
+                                                          NovelRT::Graphics::RGBAColour(255, 0, 255, 255));
     auto inkTextTransform = inkButtonTransform;
     inkTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
     auto inkTextTransformPosition = inkButtonTransform.position;
     inkTextTransformPosition.x = inkButtonTransform.position.x - 75;
     inkTextTransform.position = inkTextTransformPosition;
-    inkText = runner.getRenderer()->createTextRect(inkTextTransform, 1, NovelRT::Graphics::RGBAConfig(0, 0, 0, 255), 36,
+    inkText = runner.getRenderer()->createTextRect(inkTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
                                                    (fontsDirPath / "Gayathri-Regular.ttf").string());
     inkText->setText("Ink!");
     inkInteractionRect = runner.getInteractionService()->createBasicInteractionRect(inkButtonTransform, -1);

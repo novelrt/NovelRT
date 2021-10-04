@@ -15,7 +15,7 @@ extern "C"
     typedef struct NrtImageRect* NrtImageRectHandle;
     typedef struct NrtRenderObject* NrtRenderObjectHandle;
     typedef struct NrtRenderingService* NrtRenderingServiceHandle;
-    typedef struct NrtRGBAConfig* NrtRGBAConfigHandle;
+    typedef struct NrtRGBAColour* NrtRGBAColourHandle;
     typedef struct NrtTextRect* NrtTextRectHandle;
     typedef struct NrtTexture* NrtTextureHandle;
 

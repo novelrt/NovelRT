@@ -121,7 +121,7 @@ int main()
     gfxContext->Copy(texture2D, textureStagingBuffer);
     auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
                                                 inputResourceRegions);
-    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAConfig(0, 0, 255, 255));
+    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
     gfxContext->Draw(primitive);
     gfxContext->EndDrawing();
     gfxContext->EndFrame();

@@ -24,7 +24,7 @@ set(SOURCES
   Graphics/NrtFontSet.cpp
   Graphics/NrtImageRect.cpp
   Graphics/NrtRenderingService.cpp
-  Graphics/NrtRGBAConfig.cpp
+        Graphics/NrtRGBAColour.cpp
   Graphics/NrtTextRect.cpp
   Graphics/NrtTexture.cpp
 

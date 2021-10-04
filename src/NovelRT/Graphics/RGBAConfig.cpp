@@ -5,16 +5,16 @@
 
 namespace NovelRT::Graphics
 {
-    RGBAConfig::RGBAConfig(int32_t r, int32_t g, int32_t b, int32_t a) noexcept : _r(r), _g(g), _b(b), _a(a)
+    RGBAColour::RGBAColour(int32_t r, int32_t g, int32_t b, int32_t a) noexcept : _r(r), _g(g), _b(b), _a(a)
     {
     }
 
-    int32_t RGBAConfig::getR() const noexcept
+    int32_t RGBAColour::getR() const noexcept
     {
         return _r;
     }
 
-    void RGBAConfig::setR(int32_t value) noexcept
+    void RGBAColour::setR(int32_t value) noexcept
     {
         if (value < 0)
         {
@@ -30,12 +30,12 @@ namespace NovelRT::Graphics
         }
     }
 
-    int32_t RGBAConfig::getG() const noexcept
+    int32_t RGBAColour::getG() const noexcept
     {
         return _g;
     }
 
-    void RGBAConfig::setG(int32_t value) noexcept
+    void RGBAColour::setG(int32_t value) noexcept
     {
         if (value < 0)
         {
@@ -51,12 +51,12 @@ namespace NovelRT::Graphics
         }
     }
 
-    int32_t RGBAConfig::getB() const noexcept
+    int32_t RGBAColour::getB() const noexcept
     {
         return _b;
     }
 
-    void RGBAConfig::setB(int32_t value) noexcept
+    void RGBAColour::setB(int32_t value) noexcept
     {
         if (value < 0)
         {
@@ -72,12 +72,12 @@ namespace NovelRT::Graphics
         }
     }
 
-    int32_t RGBAConfig::getA() const noexcept
+    int32_t RGBAColour::getA() const noexcept
     {
         return _a;
     }
 
-    void RGBAConfig::setA(int32_t value) noexcept
+    void RGBAColour::setA(int32_t value) noexcept
     {
         if (value < 0)
         {
@@ -92,19 +92,19 @@ namespace NovelRT::Graphics
             _a = value;
         }
     }
-    float RGBAConfig::getRScalar() const noexcept
+    float RGBAColour::getRScalar() const noexcept
     {
         return getR() / 255.0f;
     }
-    float RGBAConfig::getGScalar() const noexcept
+    float RGBAColour::getGScalar() const noexcept
     {
         return getG() / 255.0f;
     }
-    float RGBAConfig::getBScalar() const noexcept
+    float RGBAColour::getBScalar() const noexcept
     {
         return getB() / 255.0f;
     }
-    float RGBAConfig::getAScalar() const noexcept
+    float RGBAColour::getAScalar() const noexcept
     {
         return getA() / 255.0f;
     }

@@ -14,7 +14,7 @@ namespace NovelRT::Graphics
     {
 
     private:
-        RGBAConfig _colourConfig;
+        RGBAColour _colourConfig;
         Utilities::Lazy<GLuint> _colourBuffer;
         std::vector<GLfloat> _colourData;
 
@@ -27,10 +27,10 @@ namespace NovelRT::Graphics
                       int32_t layer,
                       std::shared_ptr<Camera> camera,
                       ShaderProgram shaderProgram,
-                      RGBAConfig fillColour);
+                      RGBAColour fillColour);
 
-        RGBAConfig getColourConfig() const noexcept;
-        void setColourConfig(RGBAConfig value);
+        RGBAColour getColourConfig() const noexcept;
+        void setColourConfig(RGBAColour value);
     };
 }
 

@@ -18,6 +18,7 @@ generate-tests-nunit
 multi-file
 --define-macro
 NOVELRT_C_API
+NOVELRT_INK
 UNICODE
 --headerFile
 header.txt

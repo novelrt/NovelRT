@@ -4,8 +4,8 @@
 #ifndef NOVELRT_SCENE_H
 #define NOVELRT_SCENE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#ifndef NOVELRT_SCENEGRAPH_H
+#error NovelRT does not support including types explicitly by default. Please include SceneGraph.h instead for the Graphics namespace subset.
 #endif
 
 namespace NovelRT::SceneGraph
