@@ -49,7 +49,7 @@ namespace NovelRT
         {
             if (value)
             {
-                auto yellow = Graphics::RGBAConfig(255, 255, 0, 255);
+                auto yellow = Graphics::RGBAColour(255, 255, 0, 255);
 
                 auto transform = Transform(Maths::GeoVector2F(0, 1080 - 16), 0, Maths::GeoVector2F(1.0f, 1.0f));
 

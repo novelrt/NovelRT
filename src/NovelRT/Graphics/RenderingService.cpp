@@ -18,7 +18,7 @@ namespace NovelRT::Graphics
               return tempHandle;
           })),
           _camera(nullptr),
-          _framebufferColour(RGBAConfig(0, 0, 102, 255))
+          _framebufferColour(RGBAColour(0, 0, 102, 255))
     {
         _windowingService->WindowResized += ([this](auto input) { initialiseRenderPipeline(false, &input); });
     }
@@ -229,7 +229,7 @@ namespace NovelRT::Graphics
     std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
                                                                  int32_t layer,
                                                                  const std::string& filePath,
-                                                                 RGBAConfig colourTint)
+                                                                 RGBAColour colourTint)
     {
         return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), getTexture(filePath),
                                            colourTint);
@@ -237,14 +237,14 @@ namespace NovelRT::Graphics
 
     std::unique_ptr<ImageRect> RenderingService::createImageRect(Transform transform,
                                                                  int32_t layer,
-                                                                 RGBAConfig colourTint)
+                                                                 RGBAColour colourTint)
     {
         return std::make_unique<ImageRect>(transform, layer, _texturedRectProgram, getCamera(), colourTint);
     }
 
     std::unique_ptr<TextRect> RenderingService::createTextRect(Transform transform,
                                                                int32_t layer,
-                                                               RGBAConfig colourConfig,
+                                                               RGBAColour colourConfig,
                                                                float fontSize,
                                                                const std::string& fontFilePath)
     {
@@ -254,7 +254,7 @@ namespace NovelRT::Graphics
 
     std::unique_ptr<BasicFillRect> RenderingService::createBasicFillRect(Transform transform,
                                                                          int32_t layer,
-                                                                         RGBAConfig colourConfig)
+                                                                         RGBAColour colourConfig)
     {
         return std::make_unique<BasicFillRect>(transform, layer, getCamera(), _basicFillRectProgram, colourConfig);
     }
@@ -328,7 +328,7 @@ namespace NovelRT::Graphics
         return returnValue;
     }
 
-    void RenderingService::setBackgroundColour(RGBAConfig colour) noexcept
+    void RenderingService::setBackgroundColour(RGBAColour colour) noexcept
     {
         _framebufferColour = colour;
     }

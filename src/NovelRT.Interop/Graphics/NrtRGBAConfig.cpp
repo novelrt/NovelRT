@@ -16,14 +16,14 @@ extern "C"
 
     NrtRGBAConfigHandle Nrt_RGBAConfig_Create(int32_t r, int32_t g, int32_t b, int32_t a)
     {
-        RGBAConfig* newColour = new RGBAConfig(r, g, b, a);
+        RGBAColour* newColour = new RGBAColour(r, g, b, a);
 
         return reinterpret_cast<NrtRGBAConfigHandle>(newColour);
     }
 
     int32_t Nrt_RGBAConfig_getR(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getR();
     }
 
@@ -35,7 +35,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         colourConfigPtr->setR(inputValue);
 
         return NRT_SUCCESS;
@@ -43,7 +43,7 @@ extern "C"
 
     int32_t Nrt_RGBAConfig_getG(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getG();
     }
 
@@ -55,7 +55,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         colourConfigPtr->setG(inputValue);
 
         return NRT_SUCCESS;
@@ -63,7 +63,7 @@ extern "C"
 
     int32_t Nrt_RGBAConfig_getB(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getB();
     }
 
@@ -75,7 +75,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         colourConfigPtr->setB(inputValue);
 
         return NRT_SUCCESS;
@@ -83,7 +83,7 @@ extern "C"
 
     int32_t Nrt_RGBAConfig_getA(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getA();
     }
 
@@ -95,7 +95,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         colourConfigPtr->setA(inputValue);
 
         return NRT_SUCCESS;
@@ -103,25 +103,25 @@ extern "C"
 
     float Nrt_RGBAConfig_getRScalar(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getRScalar();
     }
 
     float Nrt_RGBAConfig_getGScalar(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getGScalar();
     }
 
     float Nrt_RGBAConfig_getBScalar(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getBScalar();
     }
 
     float Nrt_RGBAConfig_getAScalar(NrtRGBAConfigHandle colourConfig)
     {
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
         return colourConfigPtr->getAScalar();
     }
 
@@ -133,7 +133,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        RGBAConfig* colourConfigPtr = reinterpret_cast<RGBAConfig*>(colourConfig);
+        RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
 
         delete colourConfigPtr;
 

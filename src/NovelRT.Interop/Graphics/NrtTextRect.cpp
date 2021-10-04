@@ -118,7 +118,7 @@ extern "C"
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        auto colourConfig = new RGBAColour(0, 0, 0, 0);
         *colourConfig = textRectPtr->getColourConfig();
         *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
 
@@ -134,7 +134,7 @@ extern "C"
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-        textRectPtr->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
+        textRectPtr->setColourConfig(*reinterpret_cast<RGBAColour*>(inputColourConfig));
 
         return NRT_SUCCESS;
     }

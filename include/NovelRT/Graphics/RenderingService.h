@@ -34,7 +34,7 @@ namespace NovelRT::Graphics
         std::map<Atom, std::weak_ptr<Texture>> _textureCache;
         std::map<Atom, std::weak_ptr<FontSet>> _fontCache;
 
-        RGBAConfig _framebufferColour;
+        RGBAColour _framebufferColour;
 
         void bindCameraUboForProgram(GLuint shaderProgramId);
 
@@ -49,17 +49,17 @@ namespace NovelRT::Graphics
         std::unique_ptr<ImageRect> createImageRect(Transform transform,
                                                    int32_t layer,
                                                    const std::string& filePath,
-                                                   RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+                                                   RGBAColour colourTint = RGBAColour(255, 255, 255, 255));
 
         std::unique_ptr<ImageRect> createImageRect(Transform transform,
                                                    int32_t layer,
-                                                   RGBAConfig colourTint = RGBAConfig(255, 255, 255, 255));
+                                                   RGBAColour colourTint = RGBAColour(255, 255, 255, 255));
 
-        std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAConfig colourConfig);
+        std::unique_ptr<BasicFillRect> createBasicFillRect(Transform transform, int32_t layer, RGBAColour colourConfig);
 
         std::unique_ptr<TextRect> createTextRect(Transform transform,
                                                  int32_t layer,
-                                                 RGBAConfig colourConfig,
+                                                 RGBAColour colourConfig,
                                                  float fontSize,
                                                  const std::string& fontFilePath);
 
@@ -68,7 +68,7 @@ namespace NovelRT::Graphics
         void beginFrame() const;
         void endFrame() const;
 
-        void setBackgroundColour(RGBAConfig colour) noexcept;
+        void setBackgroundColour(RGBAColour colour) noexcept;
 
         std::shared_ptr<Texture> getTexture(const std::string& fileTarget = "");
         std::shared_ptr<FontSet> getFontSet(const std::string& fileTarget, float fontSize);

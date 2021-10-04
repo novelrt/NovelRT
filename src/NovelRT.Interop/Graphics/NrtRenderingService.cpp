@@ -101,7 +101,7 @@ extern "C"
 
         _imageRectCollection.push_back(
             renderingServicePtr->createImageRect(*reinterpret_cast<Transform*>(&transform), layer,
-                                                 std::string(filePath), *reinterpret_cast<RGBAConfig*>(colourTint)));
+                                                 std::string(filePath), *reinterpret_cast<RGBAColour*>(colourTint)));
         *outputImageRect = reinterpret_cast<NrtImageRectHandle>(_imageRectCollection.back().get());
 
         return NRT_SUCCESS;
@@ -128,7 +128,7 @@ extern "C"
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
         _imageRectCollection.push_back(renderingServicePtr->createImageRect(
-            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourTint)));
+            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAColour*>(colourTint)));
         *outputImageRect = reinterpret_cast<NrtImageRectHandle>(_imageRectCollection.back().get());
 
         return NRT_SUCCESS;
@@ -155,7 +155,7 @@ extern "C"
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
 
         _basicFillRectCollection.push_back(renderingServicePtr->createBasicFillRect(
-            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig)));
+            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAColour*>(colourConfig)));
         *outputBasicFillRect = reinterpret_cast<NrtBasicFillRectHandle>(_basicFillRectCollection.back().get());
 
         return NRT_SUCCESS;
@@ -185,7 +185,7 @@ extern "C"
 
         // DEFINITELY DO NOT DO THIS I AM AWFUL
         _textRectCollection.push_back(renderingServicePtr->createTextRect(
-            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAConfig*>(colourConfig), fontSize,
+            *reinterpret_cast<Transform*>(&transform), layer, *reinterpret_cast<RGBAColour*>(colourConfig), fontSize,
             std::string(fontFilePath)));
         *outputTextRect = reinterpret_cast<NrtTextRectHandle>(_textRectCollection.back().get());
 
@@ -256,7 +256,7 @@ extern "C"
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
-        renderingServicePtr->setBackgroundColour(*reinterpret_cast<RGBAConfig*>(colour));
+        renderingServicePtr->setBackgroundColour(*reinterpret_cast<RGBAColour*>(colour));
 
         return NRT_SUCCESS;
     }

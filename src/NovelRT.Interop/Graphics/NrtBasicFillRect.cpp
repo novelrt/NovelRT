@@ -110,7 +110,7 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        auto colourConfig = new RGBAColour(0, 0, 0, 0);
         *colourConfig = cppRect->getColourConfig();
         *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
 
@@ -126,7 +126,7 @@ extern "C"
         }
 
         BasicFillRect* cppRect = reinterpret_cast<BasicFillRect*>(rect);
-        cppRect->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
+        cppRect->setColourConfig(*reinterpret_cast<RGBAColour*>(inputColourConfig));
 
         return NRT_SUCCESS;
     }

@@ -18,7 +18,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<Texture> _texture;
         Utilities::Lazy<GLuint> _uvBuffer;
         Utilities::Lazy<GLuint> _colourTintBuffer;
-        RGBAConfig _colourTint;
+        RGBAColour _colourTint;
         std::vector<GLfloat> _colourTintData;
         LoggingService _logger;
 
@@ -32,13 +32,13 @@ namespace NovelRT::Graphics
                   ShaderProgram shaderProgram,
                   std::shared_ptr<Camera> camera,
                   std::shared_ptr<Texture> texture,
-                  RGBAConfig colourTint);
+                  RGBAColour colourTint);
 
         ImageRect(Transform transform,
                   int32_t layer,
                   ShaderProgram shaderProgram,
                   std::shared_ptr<Camera> camera,
-                  RGBAConfig colourTint);
+                  RGBAColour colourTint);
 
         const std::shared_ptr<Texture>& texture() const noexcept
         {
@@ -50,12 +50,12 @@ namespace NovelRT::Graphics
             return _texture;
         }
 
-        inline RGBAConfig colourTint() const noexcept
+        inline RGBAColour colourTint() const noexcept
         {
             return _colourTint;
         }
 
-        inline RGBAConfig& colourTint() noexcept
+        inline RGBAColour& colourTint() noexcept
         {
             _isDirty = true;
             return _colourTint;

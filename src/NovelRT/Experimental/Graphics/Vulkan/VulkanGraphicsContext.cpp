@@ -215,7 +215,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
-    void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAConfig backgroundColour)
+    void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
     {
         VkClearValue clearValue{};
         clearValue.color.float32[0] = backgroundColour.getRScalar();
