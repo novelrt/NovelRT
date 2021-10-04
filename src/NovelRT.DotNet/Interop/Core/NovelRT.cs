@@ -133,19 +133,22 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_NovelRunner_getWindowingService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtWindowingServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_NovelRunner_getRuntimeService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtRuntimeServiceHandle *")] IntPtr* outputService);
-
-        [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_NovelRunner_getRenderer([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtRenderingServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_NovelRunner_getDebugService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtDebugServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_NovelRunner_addUpdate([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("void (*)(NrtTimestamp, void *)")] delegate* unmanaged<ulong, void*, void> func, void* context);
+        public static extern NrtResult Nrt_NovelRunner_SubscribeToUpdate([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("void (*)(NrtTimestamp, void *)")] delegate* unmanaged<ulong, void*, void> func, void* context, [NativeTypeName("NrtAtom *")] nuint* eventHandlerId);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_NovelRunner_addSceneConstructionRequested([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("void (*)(void *)")] delegate* unmanaged<void*, void> func, void* context);
+        public static extern NrtResult Nrt_NovelRunner_UnsubscribeFromUpdate([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtAtom")] nuint eventHandlerId);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_NovelRunner_SubscribeToSceneConstructionRequested([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("void (*)(void *)")] delegate* unmanaged<void*, void> func, void* context, [NativeTypeName("NrtAtom *")] nuint* eventHandlerId);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_NovelRunner_UnsubscribeFromSceneConstructionRequested([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtAtom")] nuint eventHandlerId);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_NovelRunner_getUpdateEvent([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtUtilitiesEventWithTimestampHandle *")] IntPtr* outputEvent);

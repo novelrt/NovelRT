@@ -30,13 +30,16 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_BasicFillRect_executeObjectBehaviour([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_BasicFillRect_getColourConfig([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] IntPtr* outputColourConfig);
+        public static extern NrtResult Nrt_BasicFillRect_getColourConfig([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] NrtRGBAColour** outputColourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_BasicFillRect_setColourConfig([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] IntPtr inputColourConfig);
+        public static extern NrtResult Nrt_BasicFillRect_setColourConfig([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* inputColourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect, [NativeTypeName("NrtRenderObjectHandle *")] IntPtr* outputRenderObject);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_BasicFillRect_destroy([NativeTypeName("NrtBasicFillRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtCameraHandle")]
@@ -112,13 +115,16 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_ImageRect_setTexture([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtTextureHandle")] IntPtr inputTexture);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_ImageRect_getColourTint([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] IntPtr* outputColourTint);
+        public static extern NrtResult Nrt_ImageRect_getColourTint([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] NrtRGBAColour** outputColourTint);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_ImageRect_setColourTint([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] IntPtr inputColourTint);
+        public static extern NrtResult Nrt_ImageRect_setColourTint([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* inputColourTint);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_ImageRect_getAsRenderObjectPtr([NativeTypeName("NrtImageRectHandle")] IntPtr rect, [NativeTypeName("NrtRenderObjectHandle *")] IntPtr* outputRenderObject);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_ImageRect_destroy([NativeTypeName("NrtImageRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_RenderingService_create([NativeTypeName("NrtWindowingServiceHandle")] IntPtr windowingService, [NativeTypeName("NrtRenderingServiceHandle *")] IntPtr* outputRenderingService);
@@ -130,16 +136,16 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_RenderingService_tearDown([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RenderingService_createImageRectWithFile([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtImageRectHandle *")] IntPtr* outputImageRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("const char *")] sbyte* filePath, [NativeTypeName("NrtRGBAColourHandle")] IntPtr colourTint);
+        public static extern NrtResult Nrt_RenderingService_createImageRectWithFile([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtImageRectHandle *")] IntPtr* outputImageRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("const char *")] sbyte* filePath, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourTint);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RenderingService_createImageRectWithNothing([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtImageRectHandle *")] IntPtr* outputImageRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] IntPtr colourTint);
+        public static extern NrtResult Nrt_RenderingService_createImageRectWithNothing([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtImageRectHandle *")] IntPtr* outputImageRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourTint);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RenderingService_createBasicFillRect([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtBasicFillRectHandle *")] IntPtr* outputBasicFillRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern NrtResult Nrt_RenderingService_createBasicFillRect([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtBasicFillRectHandle *")] IntPtr* outputBasicFillRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RenderingService_createTextRect([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtTextRectHandle *")] IntPtr* outputTextRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig, float fontSize, [NativeTypeName("const char *")] sbyte* fontFilePath);
+        public static extern NrtResult Nrt_RenderingService_createTextRect([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtTextRectHandle *")] IntPtr* outputTextRect, NrtTransform transform, [NativeTypeName("int32_t")] int layer, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig, float fontSize, [NativeTypeName("const char *")] sbyte* fontFilePath);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_RenderingService_getCamera([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtCameraHandle *")] IntPtr* outputCamera);
@@ -151,7 +157,7 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_RenderingService_endFrame([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RenderingService_setBackgroundColour([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtRGBAColourHandle")] IntPtr colour);
+        public static extern NrtResult Nrt_RenderingService_setBackgroundColour([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colour);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_RenderingService_getTextureWithNothing([NativeTypeName("NrtRenderingServiceHandle")] IntPtr renderingService, [NativeTypeName("NrtTextureHandle *")] IntPtr* outputTexture);
@@ -167,50 +173,50 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtRGBAColourHandle")]
-        public static extern IntPtr Nrt_RGBAColour_Create([NativeTypeName("int32_t")] int r, [NativeTypeName("int32_t")] int g, [NativeTypeName("int32_t")] int b, [NativeTypeName("int32_t")] int a);
+        public static extern NrtRGBAColour* Nrt_RGBAColour_Create([NativeTypeName("int32_t")] int r, [NativeTypeName("int32_t")] int g, [NativeTypeName("int32_t")] int b, [NativeTypeName("int32_t")] int a);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int Nrt_RGBAColour_getR([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern int Nrt_RGBAColour_getR([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RGBAColour_setR([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig, [NativeTypeName("int32_t")] int inputValue);
-
-        [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        [return: NativeTypeName("int32_t")]
-        public static extern int Nrt_RGBAColour_getG([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
-
-        [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RGBAColour_setG([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig, [NativeTypeName("int32_t")] int inputValue);
+        public static extern NrtResult Nrt_RGBAColour_setR([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig, [NativeTypeName("int32_t")] int inputValue);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int Nrt_RGBAColour_getB([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern int Nrt_RGBAColour_getG([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RGBAColour_setB([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig, [NativeTypeName("int32_t")] int inputValue);
+        public static extern NrtResult Nrt_RGBAColour_setG([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig, [NativeTypeName("int32_t")] int inputValue);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int Nrt_RGBAColour_getA([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern int Nrt_RGBAColour_getB([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RGBAColour_setA([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig, [NativeTypeName("int32_t")] int inputValue);
+        public static extern NrtResult Nrt_RGBAColour_setB([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig, [NativeTypeName("int32_t")] int inputValue);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern float Nrt_RGBAColour_getRScalar([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        [return: NativeTypeName("int32_t")]
+        public static extern int Nrt_RGBAColour_getA([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern float Nrt_RGBAColour_getGScalar([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern NrtResult Nrt_RGBAColour_setA([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig, [NativeTypeName("int32_t")] int inputValue);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern float Nrt_RGBAColour_getBScalar([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern float Nrt_RGBAColour_getRScalar([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern float Nrt_RGBAColour_getAScalar([NativeTypeName("NrtRGBAColourHandle")] IntPtr colourConfig);
+        public static extern float Nrt_RGBAColour_getGScalar([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_RGBAColour_destroy([NativeTypeName("NrtRGBAColourHandle")] IntPtr param0);
+        public static extern float Nrt_RGBAColour_getBScalar([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern float Nrt_RGBAColour_getAScalar([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* colourConfig);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_RGBAColour_destroy([NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* param0);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtTransform Nrt_TextRect_getTransform([NativeTypeName("NrtTextRectHandle")] IntPtr rect);
@@ -235,10 +241,10 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_TextRect_executeObjectBehaviour([NativeTypeName("NrtTextRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_TextRect_getColourConfig([NativeTypeName("NrtTextRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] IntPtr* outputColourConfig);
+        public static extern NrtResult Nrt_TextRect_getColourConfig([NativeTypeName("NrtTextRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle *")] NrtRGBAColour** outputColourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_TextRect_setColourConfig([NativeTypeName("NrtTextRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] IntPtr inputColourConfig);
+        public static extern NrtResult Nrt_TextRect_setColourConfig([NativeTypeName("NrtTextRectHandle")] IntPtr rect, [NativeTypeName("NrtRGBAColourHandle")] NrtRGBAColour* inputColourConfig);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
@@ -255,6 +261,9 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_TextRect_getAsRenderObjectPtr([NativeTypeName("NrtTextRectHandle")] IntPtr rect, [NativeTypeName("NrtRenderObjectHandle *")] IntPtr* outputRenderObject);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_TextRect_destroy([NativeTypeName("NrtTextRectHandle")] IntPtr rect);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_Texture_loadPngAsTexture([NativeTypeName("NrtTextureHandle")] IntPtr targetTexture, [NativeTypeName("const char *")] sbyte* file);
