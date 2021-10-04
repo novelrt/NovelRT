@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_RENDEROBJECTNODE_H
-#define NOVELRT_RENDEROBJECTNODE_H
+#ifndef NOVELRT_SCENEGRAPH_RENDEROBJECTNODE_H
+#define NOVELRT_SCENEGRAPH_RENDEROBJECTNODE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#ifndef NOVELRT_SCENEGRAPH_H
+#error NovelRT does not support including types explicitly by default. Please include SceneGraph.h instead for the Graphics namespace subset.
 #endif
 
 namespace NovelRT::SceneGraph

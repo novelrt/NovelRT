@@ -135,17 +135,6 @@
   }
 
   /**
-   * @brief Contains scene graph features.
-   */
-  namespace NovelRT::SceneGraph {
-    typedef class QuadTreeNode QuadTreeNode;
-    typedef class QuadTreeScenePoint QuadTreeScenePoint;
-    typedef class RenderObjectNode RenderObjectNode;
-    typedef class Scene Scene;
-    typedef class SceneNode SceneNode;
-  }
-
-  /**
    * @brief Contains timing features, such as timers.
    */
   namespace NovelRT::Timing {
@@ -243,11 +232,7 @@
   #include "NovelRT/Graphics/RenderingService.h"
 
   // Scene Graph types
-  #include "NovelRT/SceneGraph/SceneNode.h"
-  #include "NovelRT/SceneGraph/RenderObjectNode.h"
-  #include "NovelRT/SceneGraph/QuadTreeScenePoint.h"
-  #include "NovelRT/SceneGraph/QuadTreeNode.h"
-  #include "NovelRT/SceneGraph/Scene.h"
+  #include "NovelRT/SceneGraph/SceneGraph.h"
 #endif // __cplusplus
 
 #if defined(NOVELRT_C_API)
