@@ -257,10 +257,10 @@ namespace NovelRT.DotNet.Sample
             }
 
             // Setting up Scene Construction
-            Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan, null);
+            Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &renderNovelChan, null, null);
 
             // Setting up Update methods
-            Nrt_NovelRunner_addUpdate(runner, &moveNovelChan, null);
+            Nrt_NovelRunner_SubscribeToUpdate(runner, &moveNovelChan, null, null);
 
             // Run the novel!
             Nrt_NovelRunner_runNovel(runner);

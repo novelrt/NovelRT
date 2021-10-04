@@ -133,6 +133,9 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_NovelRunner_getWindowingService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtWindowingServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_NovelRunner_getRuntimeService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtRuntimeServiceHandle *")] IntPtr* outputService);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_NovelRunner_getRenderer([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtRenderingServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
