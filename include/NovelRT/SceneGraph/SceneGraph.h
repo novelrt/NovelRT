@@ -5,9 +5,9 @@
 #define NOVELRT_SCENEGRAPH_H
 
 // dependencies
-#include <memory>
-#include <array>
 #include "../Maths/Maths.h"
+#include <array>
+#include <memory>
 
 /**
  * @brief Provides Scene Graph features for a variety of purposes, such as rendering or input.
