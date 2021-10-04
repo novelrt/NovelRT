@@ -2,8 +2,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
-#define NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
+#ifndef NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
+#define NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
 
 #include "../NrtTypedefs.h"
 
@@ -32,4 +32,4 @@ extern "C"
 }
 #endif
 
-#endif // NOVELRT_INTEROP_GRAPHICS_RGBACONFIG_H
+#endif // NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
