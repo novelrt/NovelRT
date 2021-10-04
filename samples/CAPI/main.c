@@ -29,7 +29,7 @@ NrtInkServiceHandle ink = NULL;
 NrtStepTimerHandle timer = NULL;
 NrtRenderingServiceHandle renderer = NULL;
 NrtUtilitiesEventWithTimestampHandle updateEvent = NULL;
-NrtRGBAConfigHandle colourChange = NULL;
+NrtRGBAColourHandle colourChange = NULL;
 
 // Objects
 NrtImageRectHandle nChanRect = NULL;
@@ -139,9 +139,9 @@ void MoveNovelChan(NrtTimestamp delta, void* context)
     if (bounced == 1)
     {
         bounced = 0;
-        Nrt_RGBAConfig_setR(colourChange, (rand() % 256));
-        Nrt_RGBAConfig_setG(colourChange, (rand() % 256));
-        Nrt_RGBAConfig_setB(colourChange, (rand() % 256));
+        Nrt_RGBAColour_setR(colourChange, (rand() % 256));
+        Nrt_RGBAColour_setG(colourChange, (rand() % 256));
+        Nrt_RGBAColour_setB(colourChange, (rand() % 256));
         Nrt_ImageRect_setColourTint(nChanRect, colourChange);
     }
 
@@ -261,16 +261,16 @@ int main()
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
-    colourChange = Nrt_RGBAConfig_Create(0, 0, 0, 255);
+    colourChange = Nrt_RGBAColour_Create(0, 0, 0, 255);
 
-    NrtRGBAConfigHandle background = Nrt_RGBAConfig_Create(0, 0, 0, 0);
+    NrtRGBAColourHandle background = Nrt_RGBAColour_Create(0, 0, 0, 0);
     Nrt_RenderingService_setBackgroundColour(renderer, background);
 
     // Creating ImageRect
     NrtGeoVector2F nChanPosition = {1920 / 2, 1080 / 2};
     NrtGeoVector2F nChanSize = {762, 881};
     NrtTransform nChanTransform = {nChanPosition, nChanSize, 0};
-    NrtRGBAConfigHandle nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
+    NrtRGBAColourHandle nChanColours = Nrt_RGBAColour_Create(255, 255, 255, 255);
 
     {
         const char* const pathParts[3] = {path, "Images", "novel-chan.png"};

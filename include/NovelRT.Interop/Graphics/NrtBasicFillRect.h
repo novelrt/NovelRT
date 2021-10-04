@@ -21,8 +21,8 @@ extern "C"
     NrtResult Nrt_BasicFillRect_executeObjectBehaviour(NrtBasicFillRectHandle rect);
 
     // actual type
-    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle* outputColourConfig);
-    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRectHandle rect, NrtRGBAConfigHandle inputColourConfig);
+    NrtResult Nrt_BasicFillRect_getColourConfig(NrtBasicFillRectHandle rect, NrtRGBAColourHandle* outputColourConfig);
+    NrtResult Nrt_BasicFillRect_setColourConfig(NrtBasicFillRectHandle rect, NrtRGBAColourHandle inputColourConfig);
 
     NrtResult Nrt_BasicFillRect_getAsRenderObjectPtr(NrtBasicFillRectHandle rect,
                                                      NrtRenderObjectHandle* outputRenderObject);

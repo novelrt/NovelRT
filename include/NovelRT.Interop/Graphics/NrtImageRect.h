@@ -20,8 +20,8 @@ extern "C"
     NrtResult Nrt_ImageRect_executeObjectBehaviour(NrtImageRectHandle rect);
     NrtResult Nrt_ImageRect_getTexture(NrtImageRectHandle rect, NrtTextureHandle* outputTexture);
     NrtResult Nrt_ImageRect_setTexture(NrtImageRectHandle rect, NrtTextureHandle inputTexture);
-    NrtResult Nrt_ImageRect_getColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle* outputColourTint);
-    NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAConfigHandle inputColourTint);
+    NrtResult Nrt_ImageRect_getColourTint(NrtImageRectHandle rect, NrtRGBAColourHandle* outputColourTint);
+    NrtResult Nrt_ImageRect_setColourTint(NrtImageRectHandle rect, NrtRGBAColourHandle inputColourTint);
 
     NrtResult Nrt_ImageRect_getAsRenderObjectPtr(NrtImageRectHandle rect, NrtRenderObjectHandle* outputRenderObject);
     NrtResult Nrt_ImageRect_destroy(NrtImageRectHandle rect);

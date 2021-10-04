@@ -289,7 +289,7 @@
   #include "NovelRT.Interop/Graphics/NrtFontSet.h"
   #include "NovelRT.Interop/Graphics/NrtImageRect.h"
   #include "NovelRT.Interop/Graphics/NrtRenderingService.h"
-  #include "NovelRT.Interop/Graphics/NrtRGBAConfig.h"
+  #include "NovelRT.Interop/Graphics/NrtRGBAColour.h"
   #include "NovelRT.Interop/Graphics/NrtTextRect.h"
   #include "NovelRT.Interop/Graphics/NrtTexture.h"
 

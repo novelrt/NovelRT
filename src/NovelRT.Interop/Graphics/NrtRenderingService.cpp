@@ -83,7 +83,7 @@ extern "C"
                                                            NrtTransform transform,
                                                            int32_t layer,
                                                            const char* filePath,
-                                                           NrtRGBAConfigHandle colourTint)
+                                                           NrtRGBAColourHandle colourTint)
     {
         if (renderingService == nullptr)
         {
@@ -111,7 +111,7 @@ extern "C"
                                                               NrtImageRectHandle* outputImageRect,
                                                               NrtTransform transform,
                                                               int32_t layer,
-                                                              NrtRGBAConfigHandle colourTint)
+                                                              NrtRGBAColourHandle colourTint)
     {
         if (renderingService == nullptr)
         {
@@ -138,7 +138,7 @@ extern "C"
                                                        NrtBasicFillRectHandle* outputBasicFillRect,
                                                        NrtTransform transform,
                                                        int32_t layer,
-                                                       NrtRGBAConfigHandle colourConfig)
+                                                       NrtRGBAColourHandle colourConfig)
     {
         if (renderingService == nullptr)
         {
@@ -165,7 +165,7 @@ extern "C"
                                                   NrtTextRectHandle* outputTextRect,
                                                   NrtTransform transform,
                                                   int32_t layer,
-                                                  NrtRGBAConfigHandle colourConfig,
+                                                  NrtRGBAColourHandle colourConfig,
                                                   float fontSize,
                                                   const char* fontFilePath)
     {
@@ -241,7 +241,7 @@ extern "C"
     }
 
     NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService,
-                                                       NrtRGBAConfigHandle colour)
+                                                       NrtRGBAColourHandle colour)
     {
         if (renderingService == nullptr)
         {
