@@ -32,7 +32,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- .NET SDK 6.0.100
+- .NET SDK 6.0.100-rc.1
 - CMake 3.13
 - Doxygen 1.8.8 (if building docs)
 - Freetype 2.8.1
