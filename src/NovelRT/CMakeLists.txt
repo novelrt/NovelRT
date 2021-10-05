@@ -40,6 +40,7 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
 
   Experimental/EngineConfig.cpp
+  Experimental/Graphics/EcsDefaultRenderingSystem.cpp
   Experimental/Graphics/GraphicsMemoryBlock.cpp
   Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
   Experimental/Graphics/GraphicsPipeline.cpp

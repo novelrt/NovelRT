@@ -13,7 +13,12 @@ namespace NovelRT::Experimental::Graphics
     class EcsDefaultRenderingSystem
     {
     private:
+        SceneGraph::Scene _renderScene;
+
     public:
+        EcsDefaultRenderingSystem();
+
+        void RenderUpdate(Timing::Timestamp delta, Ecs::Catalogue catalogue);
     };
 }
 

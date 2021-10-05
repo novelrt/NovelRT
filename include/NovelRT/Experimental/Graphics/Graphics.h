@@ -11,6 +11,7 @@
 #include "../../Utilities/Misc.h"
 #include "../EngineConfig.h"
 #include "../Threading/Threading.h"
+#include "../../SceneGraph/SceneGraph.h"
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
