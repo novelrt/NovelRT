@@ -5,7 +5,7 @@
 #define NOVELRT_EXPERIMENTAL_GRAPHICS_H
 
 // Graphics dependencies
-#include "../../Graphics/RGBAConfig.h"
+#include "../../Graphics/RGBAColour.h"
 #include "../../Maths/Maths.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"

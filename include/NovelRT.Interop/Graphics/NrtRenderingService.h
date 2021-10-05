@@ -22,29 +22,29 @@ extern "C"
                                                            NrtTransform transform,
                                                            int32_t layer,
                                                            const char* filePath,
-                                                           NrtRGBAConfigHandle colourTint);
+                                                           NrtRGBAColourHandle colourTint);
     NrtResult Nrt_RenderingService_createImageRectWithNothing(NrtRenderingServiceHandle renderingService,
                                                               NrtImageRectHandle* outputImageRect,
                                                               NrtTransform transform,
                                                               int32_t layer,
-                                                              NrtRGBAConfigHandle colourTint);
+                                                              NrtRGBAColourHandle colourTint);
     NrtResult Nrt_RenderingService_createBasicFillRect(NrtRenderingServiceHandle renderingService,
                                                        NrtBasicFillRectHandle* outputBasicFillRect,
                                                        NrtTransform transform,
                                                        int32_t layer,
-                                                       NrtRGBAConfigHandle colourConfig);
+                                                       NrtRGBAColourHandle colourConfig);
     NrtResult Nrt_RenderingService_createTextRect(NrtRenderingServiceHandle renderingService,
                                                   NrtTextRectHandle* outputTextRect,
                                                   NrtTransform transform,
                                                   int32_t layer,
-                                                  NrtRGBAConfigHandle colourConfig,
+                                                  NrtRGBAColourHandle colourConfig,
                                                   float fontSize,
                                                   const char* fontFilePath);
     NrtResult Nrt_RenderingService_getCamera(NrtRenderingServiceHandle renderingService, NrtCameraHandle* outputCamera);
     NrtResult Nrt_RenderingService_beginFrame(NrtRenderingServiceHandle renderingService);
     NrtResult Nrt_RenderingService_endFrame(NrtRenderingServiceHandle renderingService);
     NrtResult Nrt_RenderingService_setBackgroundColour(NrtRenderingServiceHandle renderingService,
-                                                       NrtRGBAConfigHandle colour);
+                                                       NrtRGBAColourHandle colour);
     NrtResult Nrt_RenderingService_getTextureWithNothing(NrtRenderingServiceHandle renderingService,
                                                          NrtTextureHandle* outputTexture);
     NrtResult Nrt_RenderingService_getTextureWithFile(NrtRenderingServiceHandle renderingService,

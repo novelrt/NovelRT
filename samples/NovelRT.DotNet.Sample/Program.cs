@@ -195,16 +195,16 @@ namespace NovelRT.DotNet.Sample
                 return -1;
             }
 
-            colourChange = Nrt_RGBAConfig_Create(0, 0, 0, 255);
+            colourChange = Nrt_RGBAColour_Create(0, 0, 0, 255);
 
-            IntPtr background = Nrt_RGBAConfig_Create(0, 0, 0, 0);
+            IntPtr background = Nrt_RGBAColour_Create(0, 0, 0, 0);
             Nrt_RenderingService_setBackgroundColour(renderer, background);
 
             // Creating ImageRect
             NrtGeoVector2F nChanPosition = new NrtGeoVector2F { x = 1920 / 2, y = 1080 / 2 };
             NrtGeoVector2F nChanSize = new NrtGeoVector2F { x = 762, y = 881 };
             NrtTransform nChanTransform = new NrtTransform { position = nChanPosition, scale = nChanSize, rotation = 0 };
-            IntPtr nChanColours = Nrt_RGBAConfig_Create(255, 255, 255, 255);
+            IntPtr nChanColours = Nrt_RGBAColour_Create(255, 255, 255, 255);
 
             sbyte* nChanFileLocation;
 
@@ -257,10 +257,10 @@ namespace NovelRT.DotNet.Sample
             }
 
             // Setting up Scene Construction
-            Nrt_NovelRunner_addSceneConstructionRequested(runner, &renderNovelChan, null);
+            Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &renderNovelChan, null, null);
 
             // Setting up Update methods
-            Nrt_NovelRunner_addUpdate(runner, &moveNovelChan, null);
+            Nrt_NovelRunner_SubscribeToUpdate(runner, &moveNovelChan, null, null);
 
             // Run the novel!
             Nrt_NovelRunner_runNovel(runner);
@@ -364,9 +364,9 @@ namespace NovelRT.DotNet.Sample
             if (bounced == 1)
             {
                 bounced = 0;
-                Nrt_RGBAConfig_setR(colourChange, (rand.Next() % 256));
-                Nrt_RGBAConfig_setG(colourChange, (rand.Next() % 256));
-                Nrt_RGBAConfig_setB(colourChange, (rand.Next() % 256));
+                Nrt_RGBAColour_setR(colourChange, (rand.Next() % 256));
+                Nrt_RGBAColour_setG(colourChange, (rand.Next() % 256));
+                Nrt_RGBAColour_setB(colourChange, (rand.Next() % 256));
                 Nrt_ImageRect_setColourTint(nChanRect, colourChange);
             }
 

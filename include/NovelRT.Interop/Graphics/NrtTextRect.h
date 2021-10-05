@@ -19,8 +19,8 @@ extern "C"
     NrtBool Nrt_TextRect_getActive(NrtTextRectHandle rect);
     NrtResult Nrt_TextRect_setActive(NrtTextRectHandle rect, NrtBool inputBool);
     NrtResult Nrt_TextRect_executeObjectBehaviour(NrtTextRectHandle rect);
-    NrtResult Nrt_TextRect_getColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle* outputColourConfig);
-    NrtResult Nrt_TextRect_setColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle inputColourConfig);
+    NrtResult Nrt_TextRect_getColourConfig(NrtTextRectHandle rect, NrtRGBAColourHandle* outputColourConfig);
+    NrtResult Nrt_TextRect_setColourConfig(NrtTextRectHandle rect, NrtRGBAColourHandle inputColourConfig);
     const char* Nrt_TextRect_getText(NrtTextRectHandle rect);
     NrtResult Nrt_TextRect_setText(NrtTextRectHandle rect, const char* inputText);
     NrtResult Nrt_TextRect_getFontSet(NrtTextRectHandle rect, NrtFontSetHandle* outputFontSet);

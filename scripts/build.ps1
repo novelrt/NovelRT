@@ -110,7 +110,7 @@ function Update-CSharp() {
       "$HOME/.conan/data/glfw/3.3.2/_/_/package/bbccade5442fcfbbf624bac852a93d4485409c0f/include"
       "$HOME/.conan/data/glm/0.9.9.7/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
       "$HOME/.conan/data/gtest/1.10.0/_/_/package/5ad274d83035c78ba2b205e6cf4f1b317aee8e05/include"
-      "$HOME/.conan/data/libpng/1.6.37/_/_/package/d140711d95cc16a85766a8fc3a551dfafe84cf63/include"
+      "$HOME/.conan/data/libpng/1.6.37/_/_/package/ce650d9f1f1c1c0839cf0694a55c1351ddbed859/include"
       "$HOME/.conan/data/libsndfile/1.0.30/_/_/package/0556be7ad73b556f90040e7e7a680a076aa21856/include"
       "$HOME/.conan/data/lua/5.3.5/_/_/package/127af201a4cdf8111e2e08540525c245c9b3b99e/include"
       "$HOME/.conan/data/ms-gsl/3.1.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
@@ -121,6 +121,8 @@ function Update-CSharp() {
       "$HOME/.conan/data/spdlog/1.8.2/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
       "$HOME/.conan/data/vorbis/1.3.7/_/_/package/840741e0c2fe086ebeae5ebab1d812f6f8a24eea/include"
       "$HOME/.conan/data/zlib/1.2.11/_/_/package/3fb49604f9c2f729b85ba3115852006824e72cab/include"
+      "$HOME/.conan/data/vulkan-headers/1.2.182/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
+      "$HOME/.conan/data/vulkan-memory-allocator/2.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
     )
 
     Push-Location -Path $_.DirectoryName

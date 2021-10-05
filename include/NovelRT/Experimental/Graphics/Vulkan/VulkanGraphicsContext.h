@@ -79,7 +79,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _waitForExecuteCompletionFence;
         }
 
-        void BeginDrawing(NovelRT::Graphics::RGBAConfig backgroundColour) final;
+        void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) final;
         void BeginFrame() final;
 
         inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) final

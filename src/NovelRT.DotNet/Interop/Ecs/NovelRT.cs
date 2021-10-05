@@ -30,7 +30,7 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtComponentBufferMemoryContainerHandle")]
-        public static extern IntPtr Nrt_ComponentBufferMemoryContainer_Create([NativeTypeName("size_t")] nuint poolSize, void* deleteInstructionState, [NativeTypeName("size_t")] nuint sizeOfDataTypeInBytes, [NativeTypeName("NrtComponentUpdateFnPtr")] delegate* unmanaged<IntPtr, IntPtr, nuint, void*, void> fnPtr, void* context);
+        public static extern IntPtr Nrt_ComponentBufferMemoryContainer_Create([NativeTypeName("size_t")] nuint poolSize, void* deleteInstructionState, [NativeTypeName("size_t")] nuint sizeOfDataTypeInBytes, [NativeTypeName("NrtComponentUpdateFnPtr")] delegate* unmanaged<void*, void*, nuint, void*, void> fnPtr, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame([NativeTypeName("NrtComponentBufferMemoryContainerHandle")] IntPtr container, [NativeTypeName("NrtEntityIdVectorHandle")] IntPtr entitiesToDelete);
@@ -79,7 +79,7 @@ namespace NovelRT.Interop
         public static extern IntPtr Nrt_ComponentCache_Create([NativeTypeName("size_t")] nuint poolSize);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_ComponentCache_RegisterComponentTypeUnsafe([NativeTypeName("NrtComponentCacheHandle")] IntPtr componentCache, [NativeTypeName("size_t")] nuint sizeOfDataType, [NativeTypeName("const void *")] void* deleteInstructionState, [NativeTypeName("NrtComponentUpdateFnPtr")] delegate* unmanaged<IntPtr, IntPtr, nuint, void*, void> updateFnPtr, void* context, [NativeTypeName("NrtComponentTypeId *")] nuint* outputResult);
+        public static extern NrtResult Nrt_ComponentCache_RegisterComponentTypeUnsafe([NativeTypeName("NrtComponentCacheHandle")] IntPtr componentCache, [NativeTypeName("size_t")] nuint sizeOfDataType, [NativeTypeName("const void *")] void* deleteInstructionState, [NativeTypeName("NrtComponentUpdateFnPtr")] delegate* unmanaged<void*, void*, nuint, void*, void> updateFnPtr, void* context, [NativeTypeName("NrtComponentTypeId *")] nuint* outputResult);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_ComponentCache_GetComponentBufferById([NativeTypeName("NrtComponentCacheHandle")] IntPtr componentCache, [NativeTypeName("NrtComponentTypeId")] nuint id, [NativeTypeName("NrtComponentBufferMemoryContainerHandle *")] IntPtr* outputResult);
@@ -261,7 +261,10 @@ namespace NovelRT.Interop
         public static extern IntPtr Nrt_SystemScheduler_Create([NativeTypeName("uint32_t")] uint maximumThreadCount);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern void Nrt_SystemScheduler_RegisterSystem([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr scheduler, [NativeTypeName("NrtSystemUpdateFnPtr")] delegate* unmanaged<ulong, IntPtr, void*, void> systemUpdatePtr, void* context);
+        public static extern NrtBool Nrt_SystemScheduler_GetThreadsAreSpinning([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr systemScheduler);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern void Nrt_SystemScheduler_RegisterSystem([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr systemScheduler, [NativeTypeName("NrtSystemUpdateFnPtr")] delegate* unmanaged<ulong, IntPtr, void*, void> systemUpdatePtr, void* context);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("uint32_t")]
@@ -280,6 +283,9 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_SystemScheduler_ExecuteIteration([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr systemScheduler, [NativeTypeName("NrtTimestamp")] ulong delta);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_SystemScheduler_ShutDown([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr systemScheduler);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_SystemScheduler_Destroy([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr systemScheduler);

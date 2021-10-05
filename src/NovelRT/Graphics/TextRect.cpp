@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    void TextRect::setColourConfig(RGBAConfig value)
+    void TextRect::setColourConfig(RGBAColour value)
     {
         _colourConfig = value;
         configureObjectBuffers();
@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
                        ShaderProgram shaderProgram,
                        std::shared_ptr<Camera> camera,
                        std::shared_ptr<FontSet> fontSet,
-                       RGBAConfig colourConfig)
+                       RGBAColour colourConfig)
         : RenderObject(transform, layer, shaderProgram, camera),
           _text(""),
           _logger(Utilities::Misc::CONSOLE_LOG_GFX),

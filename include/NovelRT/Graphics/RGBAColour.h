@@ -1,14 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_RGBACONFIG_H
-#define NOVELRT_GRAPHICS_RGBACONFIG_H
+#ifndef NOVELRT_GRAPHICS_RGBACOLOUR_H
+#define NOVELRT_GRAPHICS_RGBACOLOUR_H
 
 #include <cstdint>
 
 namespace NovelRT::Graphics
 {
-    class RGBAConfig
+    class RGBAColour
     {
 
     private:
@@ -18,7 +18,7 @@ namespace NovelRT::Graphics
         int32_t _a;
 
     public:
-        RGBAConfig(int32_t r, int32_t g, int32_t b, int32_t a) noexcept;
+        RGBAColour(int32_t r, int32_t g, int32_t b, int32_t a) noexcept;
 
         [[nodiscard]] int32_t getR() const noexcept;
         [[nodiscard]] float getRScalar() const noexcept;
@@ -38,4 +38,4 @@ namespace NovelRT::Graphics
     };
 }
 
-#endif // NOVELRT_GRAPHICS_RGBACONFIG_H
+#endif // NOVELRT_GRAPHICS_RGBACOLOUR_H

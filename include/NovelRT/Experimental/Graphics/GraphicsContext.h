@@ -28,7 +28,7 @@ namespace NovelRT::Experimental::Graphics
             return _index;
         }
 
-        virtual void BeginDrawing(NovelRT::Graphics::RGBAConfig backgroundColour) = 0;
+        virtual void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) = 0;
         virtual void BeginFrame() = 0;
         virtual void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
         virtual void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) = 0;

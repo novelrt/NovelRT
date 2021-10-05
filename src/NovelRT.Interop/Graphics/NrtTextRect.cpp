@@ -103,7 +103,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_getColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle* outputColourConfig)
+    NrtResult Nrt_TextRect_getColourConfig(NrtTextRectHandle rect, NrtRGBAColourHandle* outputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -118,14 +118,14 @@ extern "C"
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-        auto colourConfig = new RGBAConfig(0, 0, 0, 0);
+        auto colourConfig = new RGBAColour(0, 0, 0, 0);
         *colourConfig = textRectPtr->getColourConfig();
-        *outputColourConfig = reinterpret_cast<NrtRGBAConfigHandle>(colourConfig);
+        *outputColourConfig = reinterpret_cast<NrtRGBAColourHandle>(colourConfig);
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_TextRect_setColourConfig(NrtTextRectHandle rect, NrtRGBAConfigHandle inputColourConfig)
+    NrtResult Nrt_TextRect_setColourConfig(NrtTextRectHandle rect, NrtRGBAColourHandle inputColourConfig)
     {
         if (rect == nullptr)
         {
@@ -134,7 +134,7 @@ extern "C"
         }
 
         TextRect* textRectPtr = reinterpret_cast<TextRect*>(rect);
-        textRectPtr->setColourConfig(*reinterpret_cast<RGBAConfig*>(inputColourConfig));
+        textRectPtr->setColourConfig(*reinterpret_cast<RGBAColour*>(inputColourConfig));
 
         return NRT_SUCCESS;
     }
