@@ -28,6 +28,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsAdapter;
     class VulkanGraphicsAdapterSelector;
     class VulkanGraphicsSurfaceContext;
+    class VulkanGraphicsPluginProvider;
 }
 
 // Graphics.Vulkan dependencies
@@ -37,6 +38,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "../../../Utilities/Misc.h"
 #include "../../EngineConfig.h"
 #include "../Graphics.h"
+#include "../../../PluginManagement/PluginManagement.h"
 #include <array>
 #include <map>
 #include <optional>
@@ -68,6 +70,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 #include "VulkanGraphicsProvider.h"
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsTexture.h"
+#include "VulkanGraphicsPluginProvider.h"
 
 // clang-format on
 

@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -90,6 +91,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         const std::shared_ptr<GraphicsProvider>& provider,
         const std::shared_ptr<GraphicsSurfaceContext>& surfaceContext) const
     {
+        return std::static_pointer_cast<GraphicsAdapter>(
+            GetDefaultRecommendedAdapterVulkan(std::dynamic_pointer_cast<VulkanGraphicsProvider>(provider),
+                                               std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext)));
+    }
+
+    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapterVulkan(
+        const std::shared_ptr<VulkanGraphicsProvider>& provider,
+        const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const
+    {
         std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContextVulkan =
             std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext);
 
@@ -99,7 +109,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 "The type of surface context that has been provided is not supported by this graphics implementation.");
         }
 
-        std::shared_ptr<GraphicsAdapter> adapter = nullptr;
+        std::shared_ptr<VulkanGraphicsAdapter> adapter = nullptr;
         int32_t highestScore = 0;
 
         for (auto&& currentAdapter : *provider)
@@ -110,7 +120,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
             if (score > highestScore)
             {
-                adapter = currentAdapter;
+                adapter = std::dynamic_pointer_cast<VulkanGraphicsAdapter>(currentAdapter);
                 highestScore = score;
             }
         }

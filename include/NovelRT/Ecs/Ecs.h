@@ -27,6 +27,7 @@ namespace NovelRT::Ecs
 #include "../Timing/Timestamp.h"
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
+#include "../PluginManagement/PluginManagement.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>

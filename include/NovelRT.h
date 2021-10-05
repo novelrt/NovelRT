@@ -221,6 +221,9 @@
   #include "NovelRT/Input/BasicInteractionRect.h"
   #include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
+  // Plugin Management types
+  #include "NovelRT/PluginManagement/PluginManagement.h"
+
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
   #include "NovelRT/DebugService.h"
