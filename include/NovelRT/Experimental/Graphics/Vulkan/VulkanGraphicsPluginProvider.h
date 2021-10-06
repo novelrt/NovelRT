@@ -22,7 +22,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContext(
             std::shared_ptr<GraphicsSurfaceContext> context) override;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContextVulkan(std::shared_ptr<VulkanGraphicsSurfaceContext> context);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContextVulkan(
+            std::shared_ptr<VulkanGraphicsSurfaceContext> context);
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetGraphicsProvider()
         {
@@ -32,7 +33,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext> CreateSurfaceContext(
             std::shared_ptr<IGraphicsSurface> surface) override;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> CreateSurfaceContextVulkan(std::shared_ptr<IGraphicsSurface> surface);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> CreateSurfaceContextVulkan(
+            std::shared_ptr<IGraphicsSurface> surface);
     };
 }
 

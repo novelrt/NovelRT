@@ -17,5 +17,4 @@ namespace NovelRT::PluginManagement
     [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetGlfwPluginProvider() noexcept;
 }
 
-
 #endif // NOVELRT_PLUGINMANAGEMENT_TEMPORARYFNPTRS_H

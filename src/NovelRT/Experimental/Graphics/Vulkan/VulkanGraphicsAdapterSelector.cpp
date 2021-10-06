@@ -91,9 +91,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         const std::shared_ptr<GraphicsProvider>& provider,
         const std::shared_ptr<GraphicsSurfaceContext>& surfaceContext) const
     {
-        return std::static_pointer_cast<GraphicsAdapter>(
-            GetDefaultRecommendedAdapterVulkan(std::dynamic_pointer_cast<VulkanGraphicsProvider>(provider),
-                                               std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext)));
+        return std::static_pointer_cast<GraphicsAdapter>(GetDefaultRecommendedAdapterVulkan(
+            std::dynamic_pointer_cast<VulkanGraphicsProvider>(provider),
+            std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext)));
     }
 
     std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapterVulkan(

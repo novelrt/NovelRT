@@ -16,13 +16,14 @@ namespace NovelRT::PluginManagement
         [[nodiscard]] virtual Experimental::Graphics::GraphicsProvider* GetGraphicsProviderInternal() = 0;
 
     public:
-
         [[nodiscard]] inline std::shared_ptr<Experimental::Graphics::GraphicsProvider> GetGraphicsProvider()
         {
             return GetGraphicsProviderInternal()->shared_from_this();
         }
 
-        [[nodiscard]] virtual std::shared_ptr<Experimental::Graphics::GraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContext(std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> context) = 0;
+        [[nodiscard]] virtual std::shared_ptr<Experimental::Graphics::GraphicsAdapter>
+        GetDefaultSelectedGraphicsAdapterForContext(
+            std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> context) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> CreateSurfaceContext(
             std::shared_ptr<Experimental::Graphics::IGraphicsSurface> windowingDevice) = 0;

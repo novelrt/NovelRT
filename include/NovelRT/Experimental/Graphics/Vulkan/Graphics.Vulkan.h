@@ -34,11 +34,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 // Graphics.Vulkan dependencies
 #include "../../../Exceptions/Exceptions.h"
 #include "../../../LoggingService.h"
+#include "../../../PluginManagement/PluginManagement.h"
 #include "../../../Utilities/Lazy.h"
 #include "../../../Utilities/Misc.h"
 #include "../../EngineConfig.h"
 #include "../Graphics.h"
-#include "../../../PluginManagement/PluginManagement.h"
 #include <array>
 #include <map>
 #include <optional>

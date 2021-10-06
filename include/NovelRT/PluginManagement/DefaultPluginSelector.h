@@ -20,13 +20,15 @@ namespace NovelRT::PluginManagement
         }
 
         template<>
-        [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>()
+        [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
+            IGraphicsPluginProvider>()
         {
             return std::static_pointer_cast<IGraphicsPluginProvider>(GetVulkanPluginProvider());
         }
 
         template<>
-        [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>()
+        [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
+            IWindowingPluginProvider>()
         {
             return std::static_pointer_cast<IWindowingPluginProvider>(GetGlfwPluginProvider());
         }

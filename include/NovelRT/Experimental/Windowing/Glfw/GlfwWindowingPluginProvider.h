@@ -16,6 +16,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
         std::shared_ptr<GlfwWindowingDevice> _windowingDevice;
 
         [[nodiscard]] GlfwWindowingDevice* GetWindowingDeviceInternal() override;
+
     public:
         GlfwWindowingPluginProvider() noexcept;
 
