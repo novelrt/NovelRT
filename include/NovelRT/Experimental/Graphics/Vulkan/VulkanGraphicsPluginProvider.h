@@ -17,7 +17,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsPluginProvider() noexcept;
-        virtual ~VulkanGraphicsPluginProvider() = default;
+        ~VulkanGraphicsPluginProvider() final = default;
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContext(
             std::shared_ptr<GraphicsSurfaceContext> context) override;

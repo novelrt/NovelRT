@@ -19,6 +19,8 @@ namespace NovelRT::Ecs
         bool _shouldAddDefaultSystems = false;
         std::optional<uint32_t> _threadCount;
         std::vector<std::function<void(Timing::Timestamp, Catalogue)>> _systems;
+        std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
+        std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& /*target*/)
         {
@@ -66,6 +68,24 @@ namespace NovelRT::Ecs
             return *this;
         }
 
+        template<typename TPluginProvider> [[nodiscard]] inline Configurator& WithPluginProvider()
+        {
+            if constexpr (std::is_base_of_v<PluginManagement::IGraphicsPluginProvider, TPluginProvider>)
+            {
+                _graphicsPluginProvider = std::make_shared<TPluginProvider>();
+            }
+            else if constexpr (std::is_base_of_v<PluginManagement::IWindowingPluginProvider, TPluginProvider>)
+            {
+                _windowingPluginProvider = std::make_shared<TPluginProvider>();
+            }
+            else
+            {
+                throw Exceptions::NotSupportedException(
+                    "This plugin provider type is invalid or not supported at this time.");
+            }
+        }
+
+
         /**
          * @brief Creates the ECS instance and registers component types to it.
          * This is the final method you should call to obtain the ECS instance.
@@ -102,7 +122,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
