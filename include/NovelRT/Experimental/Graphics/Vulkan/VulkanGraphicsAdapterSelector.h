@@ -26,6 +26,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             const std::shared_ptr<GraphicsProvider>& provider,
             const std::shared_ptr<GraphicsSurfaceContext>& surfaceContext) const final;
 
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultRecommendedAdapterVulkan(
+            const std::shared_ptr<VulkanGraphicsProvider>& provider,
+            const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const;
+
         ~VulkanGraphicsAdapterSelector() final = default;
     };
 }

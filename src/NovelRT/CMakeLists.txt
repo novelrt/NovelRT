@@ -59,12 +59,14 @@ set(SOURCES
   Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Experimental/Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
   Experimental/Threading/VolatileState.cpp
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
+  Experimental/Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
@@ -84,6 +86,8 @@ set(SOURCES
 
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
+
+  PluginManagement/TemporaryFnPtrs.cpp
 
   NovelRunner.cpp
 
