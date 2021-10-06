@@ -15,6 +15,7 @@ namespace NovelRT::Ecs
     class ComponentBufferMemoryContainer;
     class ComponentCache;
     class EntityCache;
+    class IEcsSystem;
     class SparseSetMemoryContainer;
     class SystemScheduler;
     class UnsafeComponentView;
@@ -62,6 +63,7 @@ namespace NovelRT::Ecs
 #include "ComponentView.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
+#include "IEcsSystem.h"
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"

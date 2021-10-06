@@ -36,7 +36,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return const std::vector<EntityId>& The collection of EntityId instances to delete.
+         * @return The collection of EntityId instances to delete, by reference.
          */
         [[nodiscard]] inline std::vector<EntityId>& GetEntitiesToRemoveThisFrame() noexcept
         {

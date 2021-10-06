@@ -22,6 +22,7 @@ namespace NovelRT::Ecs
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
+        std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
         std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>, AtomHashFunction> _systems;
 
         EntityCache _entityCache;
@@ -88,12 +89,19 @@ namespace NovelRT::Ecs
         void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept;
 
         /**
+         * @brief Registers an IEcsSystem instance to the SystemScheduler instance.
+         *
+         * @param targetSystem a valid std::function object that points to the system function in question.
+         */
+        void RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem) noexcept;
+
+        /**
          * @brief Gets the amount of worker threads associated with this SystemScheduler.
          *
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return uint32_t The total count of worker threads.
+         * @return The total count of worker threads.
          */
         [[nodiscard]] inline uint32_t GetWorkerThreadCount() const noexcept
         {
@@ -106,7 +114,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return EntityCache& A mutable reference to the EntityCache instance associated with this SystemScheduler.
+         * @return A mutable reference to the EntityCache instance associated with this SystemScheduler.
          */
         [[nodiscard]] inline EntityCache& GetEntityCache() noexcept
         {
@@ -119,7 +127,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return const EntityCache& A const reference to the EntityCache instance associated with this
+         * @return A const reference to the EntityCache instance associated with this
          * SystemScheduler.
          */
         [[nodiscard]] inline const EntityCache& GetEntityCache() const noexcept
@@ -133,7 +141,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return ComponentCache& A mutable reference to the ComponentCache instance associated with this
+         * @return A mutable reference to the ComponentCache instance associated with this
          * SystemScheduler.
          */
         [[nodiscard]] inline ComponentCache& GetComponentCache() noexcept
@@ -147,13 +155,43 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return const ComponentCache& A const reference to the ComponentCache instance associated with this
+         * @return A const reference to the ComponentCache instance associated with this
          * SystemScheduler.
          */
         [[nodiscard]] inline const ComponentCache& GetComponentCache() const noexcept
         {
             return _componentCache;
         }
+
+        /**
+         * @brief Searches for a registered instance of a system of the specified type. Only works with IEcsSystem implementations.
+         *
+         * @tparam TSystemType The type of IEcsSystem to search for.
+         * @return A shared pointer to a system of the specified type.
+         *
+         * @exception Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
+         */
+         template<typename TSystemType> [[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
+         {
+             std::shared_ptr<TSystemType> returnPtr = nullptr;
+
+             for (auto&& ptr : _typedSystemCache)
+             {
+                 returnPtr = std::dynamic_pointer_cast<TSystemType>(ptr);
+
+                 if (returnPtr != nullptr)
+                 {
+                     break;
+                 }
+             }
+
+             if (returnPtr == nullptr)
+             {
+                 throw Exceptions::KeyNotFoundException();
+             }
+
+             return returnPtr;
+         }
 
         /**
          * @brief Initialises the allocated worker threads for ECS processing.

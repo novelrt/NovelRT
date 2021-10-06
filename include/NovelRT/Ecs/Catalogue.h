@@ -45,7 +45,7 @@ namespace NovelRT::Ecs
          * method without actively using the returned view has no effect and introduces overhead.
          *
          * @tparam TComponent The component type the view should be exposing.
-         * @return ComponentView<TComponent>
+         * @return A ComponentView<TComponent> instance that has its threading context set to the current thread.
          */
         template<typename TComponent>[[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
@@ -61,7 +61,7 @@ namespace NovelRT::Ecs
          * the returned tuple has no effect and introduces overhead.
          *
          * @tparam TComponents The component types the views should be exposing.
-         * @return std::tuple<ComponentView<TComponents>...>
+         * @return A std::tuple<ComponentView<TComponents>...> containing multiple ComponentView<TComponent> instances that has their threading contexts set to the current thread.
          */
         template<typename... TComponents>
         [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() const noexcept
@@ -77,7 +77,7 @@ namespace NovelRT::Ecs
          * where interop is required.
          *
          * @param componentTypeId The component ID to search for
-         * @return UnsafeComponentView a typeless component view into the ComponentBuffer's inner memory container.
+         * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an UnsafeComponentView.
          * @exceptions std::out_of_range if the supplied ID is not present within the container.
          */
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
@@ -87,7 +87,7 @@ namespace NovelRT::Ecs
          *
          * If you discard the returned EntityId, the entity will simply be lost to the ECS and will have no effect.
          *
-         * @return EntityId
+         * @return The newly created entity.
          */
         [[nodiscard]] EntityId CreateEntity() noexcept;
 

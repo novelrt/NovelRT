@@ -30,7 +30,7 @@ namespace NovelRT::Ecs
          * @brief Defines how many worker threads should be configured for this ECS instance.
          *
          * @param threadCount The amount of threads.
-         * @returns Configurator& A reference to this to allow method chaining.
+         * @returns A reference to this to allow method chaining.
          */
         [[nodiscard]] inline Configurator& WithThreadCount(uint32_t threadCount) noexcept
         {
@@ -42,7 +42,7 @@ namespace NovelRT::Ecs
          * @brief Configures systems for registration for this ECS instance.
          *
          * @param functions collection of std::function<void(Timing::Timestamp, Catalogue)> instances to attach.
-         * @returns Configurator& A reference to this to allow method chaining.
+         * @returns A reference to this to allow method chaining.
          */
         [[nodiscard]] inline Configurator& WithSystems(
             std::initializer_list<std::function<void(Timing::Timestamp, Catalogue)>>&& functions) noexcept
@@ -58,7 +58,7 @@ namespace NovelRT::Ecs
         /**
          * @brief enables the default core system implementations that are used by NovelRT by default.
          *
-         * @returns Configurator& A reference to this to allow method chaining.
+         * @returns A reference to this to allow method chaining.
          */
         [[nodiscard]] inline Configurator& WithDefaultSystemsAndComponents() noexcept
         {
@@ -73,7 +73,7 @@ namespace NovelRT::Ecs
          * @tparam TComponentTypes List of component types to register with this ECS instance.
          * @param deleteInstructionStates The state of the given component type that signals this component is to be
          * deleted to the ECS.
-         * @returns SystemScheduler an instance of the ECS based on the provided configuration.
+         * @returns An instance of the ECS SystemScheduler root object based on the provided configuration.
          */
         template<typename... TComponentTypes>
         [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents(TComponentTypes... deleteInstructionStates)
@@ -100,7 +100,7 @@ namespace NovelRT::Ecs
          * @brief Creates the ECS instance and registers component types to it.
          * This is the final method you should call to obtain the ECS instance.
          *
-         * @returns SystemScheduler an instance of the ECS based on the provided configuration.
+         * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
         template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
