@@ -156,7 +156,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
