@@ -1,3 +1,5 @@
+#include <utility>
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -68,22 +70,53 @@ namespace NovelRT::Ecs
             return *this;
         }
 
-        template<typename TPluginProvider>[[nodiscard]] inline Configurator& WithPluginProvider()
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<typename TPluginProvider>
+        [[nodiscard]] Configurator& WithPluginProvider(std::shared_ptr<TPluginProvider> /*pluginInstance*/)
         {
-            if constexpr (std::is_base_of_v<PluginManagement::IGraphicsPluginProvider, TPluginProvider>)
-            {
-                _graphicsPluginProvider = std::make_shared<TPluginProvider>();
-            }
-            else if constexpr (std::is_base_of_v<PluginManagement::IWindowingPluginProvider, TPluginProvider>)
-            {
-                _windowingPluginProvider = std::make_shared<TPluginProvider>();
-            }
-            else
-            {
-                throw Exceptions::NotSupportedException(
-                    "This plugin provider type is invalid or not supported at this time.");
-            }
+            throw Exceptions::NotSupportedException(
+                "This plugin provider type is invalid or not supported at this time.");
+        }
 
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IGraphicsPluginProvider>(
+            std::shared_ptr<PluginManagement::IGraphicsPluginProvider> pluginInstance)
+        {
+            _graphicsPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IWindowingPluginProvider>(
+            std::shared_ptr<PluginManagement::IWindowingPluginProvider> pluginInstance)
+        {
+            _windowingPluginProvider = std::move(pluginInstance);
             return *this;
         }
 
@@ -123,7 +156,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
