@@ -61,7 +61,8 @@ namespace NovelRT::Ecs
          * the returned tuple has no effect and introduces overhead.
          *
          * @tparam TComponents The component types the views should be exposing.
-         * @return A std::tuple<ComponentView<TComponents>...> containing multiple ComponentView<TComponent> instances that has their threading contexts set to the current thread.
+         * @return A std::tuple<ComponentView<TComponents>...> containing multiple ComponentView<TComponent> instances
+         * that has their threading contexts set to the current thread.
          */
         template<typename... TComponents>
         [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() const noexcept
@@ -77,7 +78,8 @@ namespace NovelRT::Ecs
          * where interop is required.
          *
          * @param componentTypeId The component ID to search for
-         * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an UnsafeComponentView.
+         * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an
+         * UnsafeComponentView.
          * @exceptions std::out_of_range if the supplied ID is not present within the container.
          */
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);

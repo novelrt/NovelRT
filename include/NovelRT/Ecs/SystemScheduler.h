@@ -164,34 +164,35 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Searches for a registered instance of a system of the specified type. Only works with IEcsSystem implementations.
+         * @brief Searches for a registered instance of a system of the specified type. Only works with IEcsSystem
+         * implementations.
          *
          * @tparam TSystemType The type of IEcsSystem to search for.
          * @return A shared pointer to a system of the specified type.
          *
          * @exception Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
          */
-         template<typename TSystemType> [[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
-         {
-             std::shared_ptr<TSystemType> returnPtr = nullptr;
+        template<typename TSystemType>[[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
+        {
+            std::shared_ptr<TSystemType> returnPtr = nullptr;
 
-             for (auto&& ptr : _typedSystemCache)
-             {
-                 returnPtr = std::dynamic_pointer_cast<TSystemType>(ptr);
+            for (auto&& ptr : _typedSystemCache)
+            {
+                returnPtr = std::dynamic_pointer_cast<TSystemType>(ptr);
 
-                 if (returnPtr != nullptr)
-                 {
-                     break;
-                 }
-             }
+                if (returnPtr != nullptr)
+                {
+                    break;
+                }
+            }
 
-             if (returnPtr == nullptr)
-             {
-                 throw Exceptions::KeyNotFoundException();
-             }
+            if (returnPtr == nullptr)
+            {
+                throw Exceptions::KeyNotFoundException();
+            }
 
-             return returnPtr;
-         }
+            return returnPtr;
+        }
 
         /**
          * @brief Initialises the allocated worker threads for ECS processing.

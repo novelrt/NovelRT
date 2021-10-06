@@ -68,7 +68,7 @@ namespace NovelRT::Ecs
             return *this;
         }
 
-        template<typename TPluginProvider> [[nodiscard]] inline Configurator& WithPluginProvider()
+        template<typename TPluginProvider>[[nodiscard]] inline Configurator& WithPluginProvider()
         {
             if constexpr (std::is_base_of_v<PluginManagement::IGraphicsPluginProvider, TPluginProvider>)
             {
@@ -86,7 +86,6 @@ namespace NovelRT::Ecs
 
             return *this;
         }
-
 
         /**
          * @brief Creates the ECS instance and registers component types to it.
@@ -124,7 +123,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
