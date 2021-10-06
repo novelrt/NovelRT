@@ -83,7 +83,7 @@ namespace NovelRT::Ecs
                 throw Exceptions::NotSupportedException(
                     "This plugin provider type is invalid or not supported at this time.");
             }
-            
+
             return *this;
         }
 
