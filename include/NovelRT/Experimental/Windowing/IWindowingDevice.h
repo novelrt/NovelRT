@@ -15,6 +15,8 @@ namespace NovelRT::Experimental::Windowing
     public:
         virtual void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) = 0;
         virtual void TearDown() noexcept = 0;
+
+        virtual ~IWindowingDevice() = default;
     };
 }
 

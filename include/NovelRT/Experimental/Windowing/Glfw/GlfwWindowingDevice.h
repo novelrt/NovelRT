@@ -10,7 +10,7 @@
 
 namespace NovelRT::Experimental::Windowing::Glfw
 {
-    class GlfwWindowingDevice : public IWindowingDevice
+    class GlfwWindowingDevice final : public IWindowingDevice
     {
     private:
         std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
@@ -32,7 +32,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 
         void TearDown() noexcept final;
 
-        ~GlfwWindowingDevice();
+        ~GlfwWindowingDevice() final;
     };
 }
 
