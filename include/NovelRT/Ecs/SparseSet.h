@@ -297,7 +297,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return The lenGth of the SparseSet<TKey, TValue>.
+         * @return The length of the SparseSet<TKey, TValue>.
          */
         [[nodiscard]] size_t Length() const noexcept
         {
