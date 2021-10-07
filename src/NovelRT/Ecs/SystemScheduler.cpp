@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/SystemScheduler.h>
 #include <NovelRT/Maths/Utilities.h>
 
 namespace NovelRT::Ecs
@@ -77,6 +78,12 @@ namespace NovelRT::Ecs
         Atom id = Atom::getNextSystemId();
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
+    }
+
+    void SystemScheduler::RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem) noexcept
+    {
+        _typedSystemCache.emplace_back(targetSystem);
+        RegisterSystem([targetSystem](auto delta, auto catalogue) { targetSystem->Update(delta, catalogue); });
     }
 
     bool SystemScheduler::JobAvailable(size_t poolId) const noexcept

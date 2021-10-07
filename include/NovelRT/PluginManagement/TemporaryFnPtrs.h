@@ -9,7 +9,7 @@
 #endif
 
 /**
- * @brief This whole namespace is a hack. It won't be here post-MVP.
+ * @brief This whole header is a hack. It won't be here post-MVP.
  */
 namespace NovelRT::PluginManagement
 {

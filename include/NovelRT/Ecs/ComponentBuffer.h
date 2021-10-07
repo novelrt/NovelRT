@@ -76,7 +76,7 @@ namespace NovelRT::Ecs
          * should not need to access it. This is a pure method. Calling this without using the result has no effect and
          * introduces the overhead for calling a method.
          *
-         * @return std::shared_ptr<ComponentBufferMemoryContainer> The underlying container.
+         * @return The underlying container.
          */
         [[nodiscard]] std::shared_ptr<ComponentBufferMemoryContainer> GetUnderlyingContainer() const noexcept
         {
@@ -135,8 +135,8 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @param entity
-         * @return T A copy of the current state of the component attached to the given entity.
+         * @param entity The entity to use for fetching the component.
+         * @return A copy of the current state of the component of type T attached to the given entity.
          * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the set.
          */
         [[nodiscard]] T GetComponent(EntityId entity) const
@@ -152,8 +152,8 @@ namespace NovelRT::Ecs
          * provided entity exists in the read-only portion of the underlying buffer. Please see
          * ComponentBuffer::HasComponent for more information.
          *
-         * @param entity
-         * @return T A copy of the current state of the component attached to the given entity.
+         * @param entity The entity to use for fetching the component.
+         * @return A copy of the current state of the component of type T attached to the given entity.
          */
         [[nodiscard]] T GetComponentUnsafe(EntityId entity) const noexcept
         {
@@ -181,7 +181,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return size_t The length of the data.
+         * @return The length of the data.
          */
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept
         {

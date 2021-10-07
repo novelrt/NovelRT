@@ -232,7 +232,7 @@ namespace NovelRT::Ecs
          * calling a method.
          *
          * @param denseIndex The location in the dense data to copy from.
-         * @return TKey The key at the specified dense location.
+         * @return The key at the specified dense location.
          *
          * @exception std::out_of_range if the specified dense index does not exist within the SparseSet.
          */
@@ -250,7 +250,7 @@ namespace NovelRT::Ecs
          * used to the length of the SparseSet. See SparseSet::Length for more information.
          *
          * @param denseIndex The location in the dense data to copy from.
-         * @return TKey The key at the specified dense location.
+         * @return The key at the specified dense location.
          */
         [[nodiscard]] TKey CopyKeyBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
         {
@@ -264,7 +264,7 @@ namespace NovelRT::Ecs
          * calling a method.
          *
          * @param denseIndex The location in the dense data to copy from.
-         * @return TValue The value at the specified dense location.
+         * @return The value at the specified dense location.
          *
          * @exception std::out_of_range if the specified dense index does not exist within the SparseSet.
          */
@@ -283,7 +283,7 @@ namespace NovelRT::Ecs
          * used to the length of the SparseSet. See SparseSet::Length for more information.
          *
          * @param denseIndex The location in the dense data to copy from.
-         * @return TValue The value at the specified dense location.
+         * @return The value at the specified dense location.
          */
         [[nodiscard]] TValue CopyValueBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
         {
@@ -297,7 +297,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return size_t
+         * @return The length of the SparseSet<TKey, TValue>.
          */
         [[nodiscard]] size_t Length() const noexcept
         {
@@ -308,7 +308,7 @@ namespace NovelRT::Ecs
          * @brief Fetches the value associated with the provided key.
          *
          * @param key The target key to search for.
-         * @return TValue& The value as a mutable reference.
+         * @return The value as a mutable reference.
          *
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
@@ -327,7 +327,7 @@ namespace NovelRT::Ecs
          * Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @param key The target key to search for.
-         * @return TValue& The value as a const reference.
+         * @return The value as a const reference.
          *
          * @exception std::out_of_range if the specified key does not exist within the SparseSet.
          */

@@ -118,8 +118,8 @@ namespace NovelRT::Ecs
          * this frame. If an update instruction was pushed on this thread previously, this will segfault.
          *
          * @param entity The EntityId
-         * @return true
-         * @return false
+         * @return true if the component was successfully removed.
+         * @return false otherwise.
          */
         bool TryRemoveComponent(EntityId entity)
         {
@@ -139,7 +139,7 @@ namespace NovelRT::Ecs
          * calling a method.
          *
          * @param entity The EntityId of retrieve the component from.
-         * @return TComponent A copy of the current state of the component attached to the given entity.
+         * @return A copy of the current state of the component of type TComponent attached to the given entity.
          * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the immutable buffer
          * data for this update cycle.
          */
@@ -157,7 +157,7 @@ namespace NovelRT::Ecs
          * ComponentView::HasComponent for more information.
          *
          * @param entity The EntityId to retrieve the component from.
-         * @return TComponent A copy of the current state of the component attached to the given entity.
+         * @return A copy of the current state of the component of type TComponent attached to the given entity.
          */
         [[nodiscard]] TComponent GetComponentUnsafe(EntityId entity) const noexcept
         {
@@ -170,7 +170,7 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return size_t The length of the data.
+         * @return The length of the data.
          */
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept
         {
