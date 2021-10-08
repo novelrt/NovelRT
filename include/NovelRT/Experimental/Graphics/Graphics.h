@@ -71,8 +71,6 @@ namespace NovelRT::Experimental::Graphics
 // clang-format off
 
 #include "ShaderProgramKind.h"
-#include "EcsDefaultRenderingComponentTypes.h"
-#include "EcsDefaultRenderingSystem.h"
 #include "GraphicsAdapter.h"
 #include "GraphicsDeviceObject.h"
 #include "GraphicsContext.h"

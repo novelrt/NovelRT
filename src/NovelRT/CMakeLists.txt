@@ -38,9 +38,9 @@ set(SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
+  Ecs/Graphics/DefaultRenderingSystem.cpp
 
   Experimental/EngineConfig.cpp
-  Experimental/Graphics/EcsDefaultRenderingSystem.cpp
   Experimental/Graphics/GraphicsMemoryBlock.cpp
   Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
   Experimental/Graphics/GraphicsPipeline.cpp
