@@ -49,7 +49,7 @@ namespace NovelRT::Ecs
          * @param sizeOfDataType The size of the object type, in bytes.
          * @param deleteInstructionState The object state that indicates that the component should be deleted.
          * @param componentUpdateLogic The function to use for concurrent update consolidation.
-         * @return ComponentTypeId the ID of the new component type and associated ComponentBufferMemoryContainer
+         * @return the ID of the new component type and associated ComponentBufferMemoryContainer
          * instance.
          *
          * @exception std::bad_alloc when a ComponentBuffer could not be allocated in memory for the given component
@@ -101,7 +101,7 @@ namespace NovelRT::Ecs
          * overhead of a method call.
          *
          * @tparam T The component type that the returned ComponentBuffer manages.
-         * @return ComponentBuffer<T> The ComponentBuffer for T by reference.
+         * @return The ComponentBuffer for type T mapped to the correct memory container.
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */

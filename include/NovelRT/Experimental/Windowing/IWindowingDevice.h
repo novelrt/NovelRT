@@ -10,11 +10,13 @@
 
 namespace NovelRT::Experimental::Windowing
 {
-    class IWindowingDevice : public Graphics::IGraphicsSurface
+    class IWindowingDevice : public Graphics::IGraphicsSurface, public std::enable_shared_from_this<IWindowingDevice>
     {
     public:
         virtual void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) = 0;
         virtual void TearDown() noexcept = 0;
+
+        virtual ~IWindowingDevice() = default;
     };
 }
 
