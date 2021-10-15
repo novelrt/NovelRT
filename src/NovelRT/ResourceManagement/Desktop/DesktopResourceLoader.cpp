@@ -14,7 +14,7 @@ namespace NovelRT::ResourceManagement::Desktop
             fopen_s(&cFile, reinterpret_cast<const char*>(filePath.c_str()), "rb"),
             "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #else
-        cFile = fopen(file.c_str(), "rb");
+        cFile = fopen(filePath.c_str(), "rb");
 #endif
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,
                                           nullptr); // TODO: Figure out how the error function ptr works
