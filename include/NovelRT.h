@@ -224,6 +224,10 @@
   // Plugin Management types
   #include "NovelRT/PluginManagement/PluginManagement.h"
 
+ // ResourceManagement types
+  #include "NovelRT/ResourceManagement/ResourceManagement.h"
+  #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
+
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
   #include "NovelRT/DebugService.h"

@@ -89,6 +89,9 @@ set(SOURCES
 
   PluginManagement/TemporaryFnPtrs.cpp
 
+  ResourceManagement/Desktop/DesktopResourceLoader.cpp
+  ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
+
   NovelRunner.cpp
 
   Timing/StepTimer.cpp

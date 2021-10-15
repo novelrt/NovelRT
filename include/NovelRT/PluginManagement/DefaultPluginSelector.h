@@ -32,6 +32,13 @@ namespace NovelRT::PluginManagement
         {
             return std::static_pointer_cast<IWindowingPluginProvider>(GetGlfwPluginProvider());
         }
+
+        template<>
+        [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()
+        {
+            return std::static_pointer_cast<IResourceManagementPluginProvider>(
+                GetDesktopResourceManagementPluginProvider());
+        }
     };
 }
 
