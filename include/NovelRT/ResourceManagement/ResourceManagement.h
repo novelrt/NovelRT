@@ -5,11 +5,11 @@
 #define NOVELRT_RESOURCEMANAGEMENT_H
 
 // ResourceManagement Dependencies
-#include <filesystem>
 #include "../Utilities/Misc.h"
 #include <cstdint>
-#include <vector>
+#include <filesystem>
 #include <memory>
+#include <vector>
 
 /**
  * @brief The APIs for managing assets and other resources that reside in persisted storage.

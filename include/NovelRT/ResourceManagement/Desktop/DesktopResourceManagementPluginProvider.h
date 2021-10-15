@@ -21,7 +21,6 @@ namespace NovelRT::ResourceManagement::Desktop
     public:
         DesktopResourceManagementPluginProvider() noexcept;
         ~DesktopResourceManagementPluginProvider() final = default;
-
     };
 }
 

@@ -3,11 +3,10 @@
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
-
 namespace NovelRT::ResourceManagement::Desktop
 {
-    DesktopResourceManagementPluginProvider::DesktopResourceManagementPluginProvider() noexcept :
-    _resourceLoader(std::make_shared<DesktopResourceLoader>())
+    DesktopResourceManagementPluginProvider::DesktopResourceManagementPluginProvider() noexcept
+        : _resourceLoader(std::make_shared<DesktopResourceLoader>())
     {
     }
 

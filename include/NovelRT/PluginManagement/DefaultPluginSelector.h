@@ -34,7 +34,8 @@ namespace NovelRT::PluginManagement
         }
 
         template<>
-        [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()
+        [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
+            IResourceManagementPluginProvider>()
         {
             return std::static_pointer_cast<IResourceManagementPluginProvider>(
                 GetDesktopResourceManagementPluginProvider());

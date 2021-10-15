@@ -33,7 +33,8 @@ namespace NovelRT::ResourceManagement::Desktop
         if (info == nullptr)
         {
             _logger.logError("Image at path {} failed to provide an info struct! Aborting...", filePath.string());
-            throw Exceptions::IOException(filePath.string(), "Unable to continue! File failed to provide an info struct.");
+            throw Exceptions::IOException(filePath.string(),
+                                          "Unable to continue! File failed to provide an info struct.");
         }
 
         if (setjmp(png_jmpbuf(png)))
@@ -99,8 +100,9 @@ namespace NovelRT::ResourceManagement::Desktop
         if (data.rowPointers == nullptr)
         {
             _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-            throw Exceptions::OutOfMemoryException(
-                std::string("Could not allocate memory for pixel data from \"").append(filePath.string()).append("\"."));
+            throw Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"")
+                                                       .append(filePath.string())
+                                                       .append("\"."));
         }
 
         for (uint32_t i = 0; i < data.height; i++)
@@ -144,7 +146,8 @@ namespace NovelRT::ResourceManagement::Desktop
         size_t fileSize = static_cast<size_t>(file.tellg());
         std::vector<uint8_t> buffer(fileSize);
         file.seekg(0);
-        file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize)); // TODO: Why on earth do we have to cast to char*?!
+        file.read(reinterpret_cast<char*>(buffer.data()),
+                  std::streamsize(fileSize)); // TODO: Why on earth do we have to cast to char*?!
         file.close();
 
         return buffer;

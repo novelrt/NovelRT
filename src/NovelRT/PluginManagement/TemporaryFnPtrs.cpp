@@ -4,8 +4,8 @@
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
 #include <NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/PluginManagement/PluginManagement.h>
-#include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
+#include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
 namespace NovelRT::PluginManagement
 {

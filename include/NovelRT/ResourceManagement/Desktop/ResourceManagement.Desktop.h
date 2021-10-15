@@ -5,13 +5,13 @@
 #define NOVELRT_RESOURCEMANAGEMENT_DESKTOP_H
 
 // ResourceManagement Dependencies
-#include "../ResourceManagement.h"
-#include <png.h>
-#include "../../LoggingService.h"
 #include "../../Exceptions/Exceptions.h"
-#include <fstream>
-#include <cstdio>
+#include "../../LoggingService.h"
 #include "../../PluginManagement/PluginManagement.h"
+#include "../ResourceManagement.h"
+#include <cstdio>
+#include <fstream>
+#include <png.h>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -25,6 +25,5 @@ namespace NovelRT::ResourceManagement::Desktop
 #include "DesktopResourceManagementPluginProvider.h"
 #include "ImageData.h"
 // clang-format on
-
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_DESKTOP_H
