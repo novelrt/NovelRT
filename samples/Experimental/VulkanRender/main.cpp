@@ -119,6 +119,9 @@ int main()
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
 
     gfxContext->Copy(texture2D, textureStagingBuffer);
+    gfxContext->EndFrame();
+    gfxDevice->Signal(gfxContext->GetFence());
+    gfxContext->BeginFrame();
     auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
                                                 inputResourceRegions);
     gfxContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));

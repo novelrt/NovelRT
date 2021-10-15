@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -12,10 +11,10 @@ namespace NovelRT::Ecs::Graphics
         : _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider))
     {
-        
+
     }
 
-    void DefaultRenderingSystem::RenderUpdate(Timing::Timestamp delta, Ecs::Catalogue catalogue)
+    void DefaultRenderingSystem::RenderUpdate(Timing::Timestamp /*delta*/, Ecs::Catalogue /*catalogue*/)
     {
     }
 }
