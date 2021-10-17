@@ -4,9 +4,10 @@
 #ifndef NOVELRT_PLUGINMANAGEMENT_H
 #define NOVELRT_PLUGINMANAGEMENT_H
 
-// PluginManagementDependencies
+// PluginManagement Dependencies
 #include "../Experimental/Graphics/Graphics.h"
 #include "../Experimental/Windowing/Windowing.h"
+#include "../ResourceManagement/ResourceManagement.h"
 
 /**
  * @brief The NovelRT engine plugin system for loading modules such as Vulkan, GLFW3, OpenAL, and more.
@@ -14,11 +15,13 @@
 namespace NovelRT::PluginManagement
 {
     class DefaultPluginSelector;
+    class IResourceManagementPluginProvider;
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
 }
 
 // clang-format off
+#include "IResourceManagementPluginProvider.h"
 #include "IGraphicsPluginProvider.h"
 #include "IWindowingPluginProvider.h"
 #include "TemporaryFnPtrs.h" //TODO: THIS HEADER IS A HACK - DELETE AFTER MVP
