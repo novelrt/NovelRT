@@ -23,10 +23,11 @@ namespace NovelRT::Ecs
         std::vector<std::function<void(Timing::Timestamp, Catalogue)>> _systems;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
 
-        inline void AddDefaultComponentsAndSystems(SystemScheduler& /*target*/)
+        inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
-            // Add default components and systems here when they exist. Uncomment parameter when you do.
+            target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(_graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
         }
 
     public:
@@ -119,6 +120,25 @@ namespace NovelRT::Ecs
             _windowingPluginProvider = std::move(pluginInstance);
             return *this;
         }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IResourceManagementPluginProvider>(
+            std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> pluginInstance)
+        {
+            _resourceManagementPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+
 
         /**
          * @brief Creates the ECS instance and registers component types to it.

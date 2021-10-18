@@ -8,6 +8,8 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
+#include "../../Graphics/RGBAColour.h"
+
 namespace NovelRT::Ecs::Graphics
 {
     class DefaultEcsRenderingSystem;

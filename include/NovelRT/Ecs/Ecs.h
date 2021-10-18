@@ -67,8 +67,8 @@ namespace NovelRT::Ecs
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
-#include "Configurator.h"
 #include "Graphics/Ecs.Graphics.h"
+#include "Configurator.h"
 
 // clang-format on
 
