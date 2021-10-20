@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
-        gsl::span<uint8_t> _bytecode;
+        std::vector<uint8_t> _bytecode;
         VkShaderModuleCreateInfo _shaderModuleCreateInfo;
 
         VkShaderModule CreateShaderModule();
@@ -25,7 +25,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                             ShaderProgramKind kind,
                             gsl::span<uint8_t> bytecode) noexcept;
 
-        [[nodiscard]] gsl::span<uint8_t> GetBytecode() const noexcept final;
+        [[nodiscard]] gsl::span<const uint8_t> GetBytecode() const noexcept final;
         [[nodiscard]] VkShaderModule GetShaderModule();
 
         ~VulkanShaderProgram() override;

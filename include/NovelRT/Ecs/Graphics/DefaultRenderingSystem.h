@@ -30,6 +30,10 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _textureStagingBuffer;
         std::shared_ptr<Experimental::Graphics::GraphicsTexture> _texture2D;
         std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> _primitive;
+        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> _elements;
+        std::vector<Experimental::Graphics::GraphicsPipelineInput> _inputs;
+        std::vector<Experimental::Graphics::GraphicsPipelineResource> _resources;
+        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> _inputResourceRegions;
         SceneGraph::Scene _renderScene;
 
     public:

@@ -12,7 +12,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         : ShaderProgram(device, std::move(entryPointName), kind),
           _shaderModule(NovelRT::Utilities::Lazy<VkShaderModule>(
               std::function<VkShaderModule()>([this]() { return CreateShaderModule(); }))),
-          _bytecode(bytecode),
+          _bytecode(std::vector<uint8_t>(bytecode.begin(), bytecode.end())),
           _shaderModuleCreateInfo(VkShaderModuleCreateInfo{})
     {
         size_t length = _bytecode.size();
@@ -44,12 +44,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                               _shaderModule.getActual(), nullptr);
     }
 
-    gsl::span<uint8_t> VulkanShaderProgram::GetBytecode() const noexcept
+    gsl::span<const uint8_t> VulkanShaderProgram::GetBytecode() const noexcept
     {
-        return _bytecode;
+        return gsl::span<const uint8_t>(&(*_bytecode.begin()), _bytecode.size());
     }
+
     VkShaderModule VulkanShaderProgram::GetShaderModule()
     {
         return _shaderModule.getActual();
     }
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+}

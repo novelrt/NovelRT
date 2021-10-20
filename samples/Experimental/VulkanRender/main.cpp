@@ -37,7 +37,7 @@ struct TexturedVertex
 
 int main()
 {
-    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
+    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
     auto device = std::shared_ptr<IWindowingDevice>(new GlfwWindowingDevice());
@@ -119,18 +119,19 @@ int main()
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
 
     gfxContext->Copy(texture2D, textureStagingBuffer);
-    gfxContext->EndFrame();
-    gfxDevice->Signal(gfxContext->GetFence());
-    gfxContext->BeginFrame();
     auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
                                                 inputResourceRegions);
-    gfxContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
-    gfxContext->Draw(primitive);
-    gfxContext->EndDrawing();
     gfxContext->EndFrame();
-    gfxDevice->PresentFrame();
 
-    gfxDevice->WaitForIdle();
+        gfxDevice->Signal(gfxContext->GetFence());
+        gfxContext->BeginFrame();
+        gfxContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
+        gfxContext->Draw(primitive);
+        gfxContext->EndDrawing();
+        gfxContext->EndFrame();
+        gfxDevice->PresentFrame();
+
+        gfxDevice->WaitForIdle();
 
     int dummy = 0;
     std::cin >> dummy;

@@ -17,18 +17,18 @@ namespace NovelRT::Ecs::Graphics
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
                                                                    Maths::GeoVector2F(400, 400));
 
-        EngineConfig::EnableDebugOutputFromEngineInternals() = false;
+        EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Warn;
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
-        _graphicsDevice = _graphicsAdapter->CreateDevice(_surfaceContext, 2);
+        _graphicsDevice = _graphicsAdapter->CreateDevice(_surfaceContext, 1);
 
         auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
         auto vertShaderData = resourceLoader->LoadShaderSource("vert.spv");
         auto pixelShaderData = resourceLoader->LoadShaderSource("frag.spv");
 
-        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> elements{
+        _elements = {
             Experimental::Graphics::GraphicsPipelineInputElement(
                 typeid(NovelRT::Maths::GeoVector3F), Experimental::Graphics::GraphicsPipelineInputElementKind::Position,
                 12),
@@ -36,9 +36,10 @@ namespace NovelRT::Ecs::Graphics
                 typeid(NovelRT::Maths::GeoVector2F),
                 Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
-        std::vector<Experimental::Graphics::GraphicsPipelineInput> inputs{
-            Experimental::Graphics::GraphicsPipelineInput(elements)};
-        std::vector<Experimental::Graphics::GraphicsPipelineResource> resources{
+        _inputs = {
+            Experimental::Graphics::GraphicsPipelineInput(_elements)};
+
+        _resources = {
             Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
                 Experimental::Graphics::ShaderProgramVisibility::Pixel)};
@@ -47,7 +48,7 @@ namespace NovelRT::Ecs::Graphics
             "main", Experimental::Graphics::ShaderProgramKind::Vertex, vertShaderData);
         auto pixelShaderProgram = _graphicsDevice->CreateShaderProgram(
             "main", Experimental::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
-        auto signature = _graphicsDevice->CreatePipelineSignature(inputs, resources);
+        auto signature = _graphicsDevice->CreatePipelineSignature(_inputs, _resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
         _vertexBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Experimental::Graphics::GraphicsBufferKind::Vertex, Experimental::Graphics::GraphicsResourceAccess::None,
@@ -97,13 +98,12 @@ namespace NovelRT::Ecs::Graphics
 
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
-        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-            inputResourceRegions{texture2DRegion};
+        _inputResourceRegions = {texture2DRegion};
 
         graphicsContext->Copy(_texture2D, _textureStagingBuffer);
         auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(0, nullptr, _graphicsDevice, false, 0, 0);
         _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest), dummyRegion, 0,
-                                                    inputResourceRegions);
+                                                    _inputResourceRegions);
         graphicsContext->EndFrame();
         //_graphicsDevice->Signal(graphicsContext->GetFence());
     }
@@ -116,6 +116,9 @@ namespace NovelRT::Ecs::Graphics
         graphicsContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
         graphicsContext->Draw(_primitive);
         graphicsContext->EndDrawing();
+        graphicsContext->EndFrame();
         _graphicsDevice->PresentFrame();
+        _graphicsDevice->WaitForIdle();
+        graphicsContext->GetFence()->Reset();
     }
 }
