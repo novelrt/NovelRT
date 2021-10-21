@@ -22,7 +22,7 @@ namespace NovelRT::Ecs::Graphics
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
-        _graphicsDevice = _graphicsAdapter->CreateDevice(_surfaceContext, 1);
+        _graphicsDevice = _graphicsAdapter->CreateDevice(_surfaceContext, 2);
 
         auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
         auto vertShaderData = resourceLoader->LoadShaderSource("vert.spv");
@@ -119,6 +119,7 @@ namespace NovelRT::Ecs::Graphics
         graphicsContext->EndFrame();
         _graphicsDevice->PresentFrame();
         _graphicsDevice->WaitForIdle();
+        graphicsContext->GetFence()->Wait();
         graphicsContext->GetFence()->Reset();
     }
 }
