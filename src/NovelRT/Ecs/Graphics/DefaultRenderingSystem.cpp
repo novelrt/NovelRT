@@ -105,13 +105,14 @@ namespace NovelRT::Ecs::Graphics
         _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest), dummyRegion, 0,
                                                     _inputResourceRegions);
         graphicsContext->EndFrame();
+        graphicsContext->GetFence()->Wait();
+
         //_graphicsDevice->Signal(graphicsContext->GetFence());
     }
 
     void DefaultRenderingSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue /*catalogue*/)
     {
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
-        _graphicsDevice->Signal(graphicsContext->GetFence());
         graphicsContext->BeginFrame();
         graphicsContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
         graphicsContext->Draw(_primitive);

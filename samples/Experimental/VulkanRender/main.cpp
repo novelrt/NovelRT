@@ -83,7 +83,6 @@ int main()
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    gfxDevice->Signal(gfxContext->GetFence());
     gfxContext->BeginFrame();
     auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
@@ -121,10 +120,7 @@ int main()
     gfxContext->Copy(texture2D, textureStagingBuffer);
     auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
                                                 inputResourceRegions);
-    gfxContext->EndFrame();
 
-        gfxDevice->Signal(gfxContext->GetFence());
-        gfxContext->BeginFrame();
         gfxContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
         gfxContext->Draw(primitive);
         gfxContext->EndDrawing();
@@ -132,6 +128,19 @@ int main()
         gfxDevice->PresentFrame();
 
         gfxDevice->WaitForIdle();
+
+        while(true)
+        {
+            auto context = gfxDevice->GetCurrentContext();
+            context->BeginFrame();
+            context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
+            context->Draw(primitive);
+            context->EndDrawing();
+            context->EndFrame();
+            gfxDevice->PresentFrame();
+            gfxDevice->WaitForIdle();
+            std::cout << "RENDER FRAME" << std::endl;
+        }
 
     int dummy = 0;
     std::cin >> dummy;
