@@ -68,6 +68,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 continue;
             }
 
+            if (memoryProperties.memoryHeaps[memoryProperties.memoryTypes[i].heapIndex].flags &
+                VK_MEMORY_HEAP_MULTI_INSTANCE_BIT)
+            {
+                continue;
+            }
+
             int32_t cost =
                 Maths::Utilities::PopCount(static_cast<uint32_t>(preferredMemoryPropertyFlags) & ~memoryPropertyFlags) +
                 Maths::Utilities::PopCount(static_cast<uint32_t>(unpreferredMemoryPropertyFlags) &

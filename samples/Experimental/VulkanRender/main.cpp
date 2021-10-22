@@ -38,7 +38,7 @@ struct TexturedVertex
 int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
 
     auto device = std::shared_ptr<IWindowingDevice>(new GlfwWindowingDevice());
 
@@ -52,7 +52,7 @@ int main()
 
     std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
 
-    auto gfxDevice = adapter->CreateDevice(surfaceContext, 1);
+    auto gfxDevice = adapter->CreateDevice(surfaceContext, 2);
     auto gfxContext = gfxDevice->GetCurrentContext();
 
     auto vertShaderData = LoadSpv("vert.spv");

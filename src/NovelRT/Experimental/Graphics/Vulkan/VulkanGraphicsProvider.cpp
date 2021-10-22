@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <iostream>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -34,6 +35,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             reinterpret_cast<VulkanGraphicsProvider*>(pUserData)->_logger.log(std::string(pCallbackData->pMessage),
                                                                               logLevel);
+        }
+        else
+        {
+            std::cout << std::string(pCallbackData->pMessage) << std::endl;
         }
 
         return VK_FALSE;
@@ -180,6 +185,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         outputResult = {};
         outputResult.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         outputResult.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+                                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
         outputResult.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
@@ -262,11 +268,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         _logger.logInfoLine("VkInstance successfully created.");
 
-        if (GetDebugModeEnabled())
-        {
-            ConfigureDebugLogger();
-        }
-
         return returnInstance;
     }
 
@@ -319,6 +320,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         _vulkanInstance = CreateInstance();
+
+        if (GetDebugModeEnabled())
+        {
+            ConfigureDebugLogger();
+        }
 
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }

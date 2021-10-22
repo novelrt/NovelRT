@@ -213,7 +213,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _vulkanSwapChainImageView([&]() { return CreateVulkanSwapChainImageView(); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
-        _waitForExecuteCompletionFence->Reset();
     }
 
     void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
