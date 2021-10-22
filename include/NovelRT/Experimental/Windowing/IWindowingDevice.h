@@ -15,6 +15,9 @@ namespace NovelRT::Experimental::Windowing
     public:
         virtual void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) = 0;
         virtual void TearDown() noexcept = 0;
+        virtual void ProcessAllMessages() = 0;
+        [[nodiscard]] virtual bool GetIsVisible() const noexcept = 0;
+        [[nodiscard]] virtual bool GetShouldClose() const noexcept = 0;
 
         virtual ~IWindowingDevice() = default;
     };

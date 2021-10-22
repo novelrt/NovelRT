@@ -213,6 +213,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _vulkanSwapChainImageView([&]() { return CreateVulkanSwapChainImageView(); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        _waitForExecuteCompletionFence->Reset();
     }
 
     void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
@@ -476,8 +477,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         submitInfo.pCommandBuffers = &commandBuffer;
 
         std::shared_ptr<VulkanGraphicsFence> executeGraphicsFence = GetWaitForExecuteCompletionFence();
-        executeGraphicsFence->Wait();
-        executeGraphicsFence->Reset();
 
         VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
                                                    executeGraphicsFence->GetVulkanFence());
