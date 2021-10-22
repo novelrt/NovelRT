@@ -476,6 +476,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         submitInfo.pCommandBuffers = &commandBuffer;
 
         std::shared_ptr<VulkanGraphicsFence> executeGraphicsFence = GetWaitForExecuteCompletionFence();
+        executeGraphicsFence->Wait();
+        executeGraphicsFence->Reset();
 
         VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
                                                    executeGraphicsFence->GetVulkanFence());
