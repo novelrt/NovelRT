@@ -16,12 +16,20 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
         Threading::VolatileState _state;
 
-        [[nodiscard]] VkFence CreateVulkanFence();
+        [[nodiscard]] VkFence CreateVulkanFenceSignaled()
+        {
+            return CreateVulkanFence(VK_FENCE_CREATE_SIGNALED_BIT);
+        }
+        [[nodiscard]] VkFence CreateVulkanFenceUnsignaled()
+        {
+            return CreateVulkanFence(static_cast<VkFenceCreateFlagBits>(0));
+        }
+        [[nodiscard]] VkFence CreateVulkanFence(VkFenceCreateFlagBits flags);
         void DisposeVulkanFence(VkFence vulkanFence) noexcept;
         [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
 
     public:
-        explicit VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device) noexcept;
+        explicit VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {

@@ -40,7 +40,8 @@ int main()
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
 
-    auto device = std::shared_ptr<IWindowingDevice>(new GlfwWindowingDevice());
+    auto window = new GlfwWindowingDevice();
+    auto device = std::shared_ptr<IWindowingDevice>(window);
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
@@ -55,9 +56,17 @@ int main()
     auto gfxDevice = adapter->CreateDevice(surfaceContext, 2);
     auto gfxContext = gfxDevice->GetCurrentContext();
 
+    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024);
+    auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024 * 4);
+    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, 64 * 1024);
+
     auto vertShaderData = LoadSpv("vert.spv");
     auto pixelShaderData = LoadSpv("frag.spv");
 
+    gfxContext->BeginFrame();
     std::vector<GraphicsPipelineInputElement> elements{
         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
                                      12),
@@ -68,22 +77,14 @@ int main()
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
+    auto signature = gfxDevice->CreatePipelineSignature(inputs, resources);
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto signature = gfxDevice->CreatePipelineSignature(inputs, resources);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false, 0, 0);
 
-    auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, 64 * 1024);
-    auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024);
-    auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-        GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024 * 4);
-
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    gfxContext->BeginFrame();
     auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
     pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
@@ -137,7 +138,6 @@ int main()
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
-            std::cout << "RENDER FRAME" << std::endl;
         }
     }
 

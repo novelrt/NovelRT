@@ -6,14 +6,14 @@
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
 
-    VkFence VulkanGraphicsFence::CreateVulkanFence()
+    VkFence VulkanGraphicsFence::CreateVulkanFence(VkFenceCreateFlagBits flags)
     {
         VkFence vulkanFence = VK_NULL_HANDLE;
 
         VkFenceCreateInfo fenceCreateInfo{};
         fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.pNext = nullptr;
-        fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+        fenceCreateInfo.flags = flags;
 
         VkResult result = vkCreateFence(GetDevice()->GetVulkanDevice(), &fenceCreateInfo, nullptr, &vulkanFence);
 
@@ -58,8 +58,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return fenceSignalled;
     }
 
-    VulkanGraphicsFence::VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device) noexcept
-        : GraphicsFence(device->weak_from_this()), _vulkanFence([&]() { return CreateVulkanFence(); }), _state()
+    VulkanGraphicsFence::VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept
+        : GraphicsFence(device->weak_from_this()),
+          _vulkanFence([=]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); }),
+          _state()
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }

@@ -9,12 +9,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                                                int32_t contextCount)
         : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence([&]() {
-              std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
-                  std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
-              ptr->Reset();
-              return ptr;
-          }),
+          _presentCompletionFence(
+              [&]()
+              {
+                  return std::make_shared<VulkanGraphicsFence>(
+                      std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
+              }),
           _contexts([&, contextCount]() { return CreateGraphicsContexts(contextCount); }),
           _contextPtrs([&]() {
               std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
