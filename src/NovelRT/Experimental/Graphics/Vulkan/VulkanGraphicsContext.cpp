@@ -205,8 +205,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : GraphicsContext(std::move(device), index),
-          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice())),
-          _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice())),
+          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ true)),
+          _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _vulkanCommandBuffer([&]() { return CreateVulkanCommandBuffer(); }),
           _vulkanCommandPool([&]() { return CreateVulkanCommandPool(); }),
           _vulkanFramebuffer([&]() { return CreateVulkanFramebuffer(); }),
@@ -265,7 +265,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsContext::BeginFrame()
     {
-        std::shared_ptr<GraphicsFence> fence = GetFence();
+        std::shared_ptr<VulkanGraphicsFence> fence = GetVulkanFence();
         fence->Wait();
         fence->Reset();
 

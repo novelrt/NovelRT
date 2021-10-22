@@ -115,4 +115,19 @@ namespace NovelRT::Experimental::Windowing::Glfw
         return Graphics::GraphicsSurfaceKind::Glfw;
     }
 
+    bool GlfwWindowingDevice::GetIsVisible() const noexcept
+    {
+        return glfwGetWindowAttrib(GetRawGLFWwindowHandle(), GLFW_VISIBLE) != 0;
+    }
+
+    bool GlfwWindowingDevice::GetShouldClose() const noexcept
+    {
+        return glfwWindowShouldClose(GetRawGLFWwindowHandle());
+    }
+
+    void GlfwWindowingDevice::ProcessPendingEvents()
+    {
+        glfwPollEvents();
+    }
+
 } // namespace NovelRT::Experimental::Windowing::Glfw

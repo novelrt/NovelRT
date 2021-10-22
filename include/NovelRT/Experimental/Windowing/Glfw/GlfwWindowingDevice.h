@@ -22,6 +22,10 @@ namespace NovelRT::Experimental::Windowing::Glfw
         [[nodiscard]] void* GetHandle() const noexcept final;
         [[nodiscard]] void* GetContextHandle() const noexcept final;
         [[nodiscard]] Graphics::GraphicsSurfaceKind GetKind() const noexcept final;
+        [[nodiscard]] bool GetIsVisible() const noexcept;
+        [[nodiscard]] bool GetShouldClose() const noexcept;
+
+        void ProcessPendingEvents();
 
         [[nodiscard]] inline GLFWwindow* GetRawGLFWwindowHandle() const noexcept
         {
