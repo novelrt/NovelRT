@@ -362,11 +362,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (_vulkanSwapchain.isCreated())
         {
             vkDestroySwapchainKHR(GetVulkanDevice(), GetVulkanSwapchain(), nullptr);
+            _vulkanSwapchain.reset();
         }
 
         if (_device.isCreated())
         {
             vkDestroyDevice(GetVulkanDevice(), nullptr);
+            _device.reset();
         }
 
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
@@ -581,6 +583,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             {
                 static_cast<void>(_contextPtrs.getActual());
             }
+            _logger.logDebugLine("RECREATED CONTEXTS!");
             return;
         }
 
@@ -596,6 +599,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             uint32_t amountToRemove = static_cast<uint32_t>(contexts.size()) - newContextCount;
             contexts.resize(contexts.size() - amountToRemove);
             _contextPtrs.reset();
+            _logger.logDebugLine("SHRUNK CONTEXTS!");
             return;
         }
 
@@ -610,6 +614,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             }
 
             _contextPtrs.reset();
+            _logger.logDebugLine("GREW CONTEXTS!");
             return; // safety guard in case this method is ever expanded (probably won't be but still)
         }
     }
