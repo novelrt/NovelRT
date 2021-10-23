@@ -473,7 +473,7 @@ namespace NovelRT::Experimental::Graphics
                 bool mergeWithNext = nextRegionNode != _regions->end() && !nextRegionNode->GetIsAllocated();
 
                 auto previousRegionNode = regionNode;
-                std::advance(previousRegionNode, 1);
+                std::advance(previousRegionNode, -1);
                 bool mergeWithPrevious = previousRegionNode != _regions->end() && !previousRegionNode->GetIsAllocated();
 
                 if (mergeWithNext)

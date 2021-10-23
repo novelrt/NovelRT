@@ -240,7 +240,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (_vulkanDescriptorSet.isCreated())
         {
             vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
-                                 _vulkanDescriptorPool.getActual(), 1, nullptr);
+                                 _vulkanDescriptorPool.getActual(), 1, &_vulkanDescriptorSet.getActual());
             _vulkanDescriptorSet.reset();
         }
     }

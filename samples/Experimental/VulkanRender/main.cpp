@@ -141,7 +141,5 @@ int main()
         }
     }
 
-    int dummy = 0;
-    std::cin >> dummy;
     return 0;
 }
