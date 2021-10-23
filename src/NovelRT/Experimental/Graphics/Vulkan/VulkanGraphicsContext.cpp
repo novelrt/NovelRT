@@ -492,18 +492,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsContext::ResetContext()
     {
-        if (_vulkanCommandBuffer.isCreated())
-        {
-            DisposeVulkanCommandBuffer(_vulkanCommandBuffer.getActual());
-            _vulkanCommandBuffer.reset();
-        }
-
-        if (_vulkanCommandPool.isCreated())
-        {
-            DisposeVulkanCommandPool(_vulkanCommandPool.getActual());
-            _vulkanCommandPool.reset();
-        }
-
         if (_vulkanFramebuffer.isCreated())
         {
             DisposeVulkanFramebuffer(_vulkanFramebuffer.getActual());
@@ -519,6 +507,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsContext::~VulkanGraphicsContext()
     {
+        if (_vulkanCommandBuffer.isCreated())
+        {
+            DisposeVulkanCommandBuffer(_vulkanCommandBuffer.getActual());
+            _vulkanCommandBuffer.reset();
+        }
+
+        if (_vulkanCommandPool.isCreated())
+        {
+            DisposeVulkanCommandPool(_vulkanCommandPool.getActual());
+            _vulkanCommandPool.reset();
+        }
+
         ResetContext();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan
