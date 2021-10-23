@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
-        int32_t _contextCount;
+        uint32_t _contextCount;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
 
@@ -40,7 +40,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         Threading::VolatileState _state;
 
-        [[nodiscard]] std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContexts(int32_t contextCount);
+        [[nodiscard]] std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContexts(uint32_t contextCount);
         [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> CreateMemoryAllocator();
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 

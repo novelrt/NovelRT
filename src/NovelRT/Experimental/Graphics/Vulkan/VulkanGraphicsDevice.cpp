@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -54,11 +53,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContexts(
-        int32_t contextCount)
+        uint32_t contextCount)
     {
         std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
 
-        for (int32_t i = 0; i < contextCount; i++)
+        for (uint32_t i = 0; i < contextCount; i++)
         {
             contexts[i] = std::make_shared<VulkanGraphicsContext>(
                 std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
@@ -93,9 +92,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -108,9 +107,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -325,7 +324,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
-        ResizeGraphicsContexts(imageCount); //TODO: This making vulkan angry for some reason.
+        ResizeGraphicsContexts(imageCount); // TODO: This making vulkan angry for some reason.
 
         std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
         imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
@@ -574,48 +573,22 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::ResizeGraphicsContexts(uint32_t newContextCount)
     {
-        if (!_contexts.isCreated())
-        {
-            static_cast<void>(_contexts.getActual());
-
-            // this is probably redundant but I wanted the safety.
-            if (!_contextPtrs.isCreated())
-            {
-                static_cast<void>(_contextPtrs.getActual());
-            }
-            _logger.logDebugLine("RECREATED CONTEXTS!");
-            return;
-        }
-
+        _contextCount = newContextCount;
         auto& contexts = _contexts.getActual();
-
         if (contexts.size() == newContextCount)
         {
             return;
         }
 
-        if (contexts.size() > newContextCount)
+        size_t oldSize = contexts.size();
+        contexts.resize(newContextCount);
+
+        for (size_t i = oldSize; i < newContextCount; i++)
         {
-            uint32_t amountToRemove = static_cast<uint32_t>(contexts.size()) - newContextCount;
-            contexts.resize(contexts.size() - amountToRemove);
-            _contextPtrs.reset();
-            _logger.logDebugLine("SHRUNK CONTEXTS!");
-            return;
+            contexts[i] = std::make_shared<VulkanGraphicsContext>(
+                std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
         }
 
-        if (contexts.size() < newContextCount)
-        {
-            uint32_t amountToAdd = newContextCount - static_cast<uint32_t>((contexts.size()));
-
-            for (uint32_t i = 0; i < amountToAdd; i++)
-            {
-                contexts.emplace_back(std::make_shared<VulkanGraphicsContext>(
-                    std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i));
-            }
-
-            _contextPtrs.reset();
-            _logger.logDebugLine("GREW CONTEXTS!");
-            return; // safety guard in case this method is ever expanded (probably won't be but still)
-        }
+        _contextPtrs.reset();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

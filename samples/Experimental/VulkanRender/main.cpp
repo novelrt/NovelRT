@@ -37,7 +37,7 @@ struct TexturedVertex
 
 int main()
 {
-    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
     auto window = new GlfwWindowingDevice();
@@ -87,9 +87,9 @@ int main()
 
     auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
-    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
-    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
-    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)};
+    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
