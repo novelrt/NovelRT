@@ -8,6 +8,7 @@
 #include "../Experimental/Graphics/Graphics.h"
 #include "../Experimental/Windowing/Windowing.h"
 #include "../ResourceManagement/ResourceManagement.h"
+#include "../Audio/Audio.h"
 
 /**
  * @brief The NovelRT engine plugin system for loading modules such as Vulkan, GLFW3, OpenAL, and more.
@@ -18,12 +19,14 @@ namespace NovelRT::PluginManagement
     class IResourceManagementPluginProvider;
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
+    class IAudioPluginProvider;
 }
 
 // clang-format off
 #include "IResourceManagementPluginProvider.h"
 #include "IGraphicsPluginProvider.h"
 #include "IWindowingPluginProvider.h"
+#include "IAudioPluginProvider.h"
 #include "TemporaryFnPtrs.h" //TODO: THIS HEADER IS A HACK - DELETE AFTER MVP
 #include "DefaultPluginSelector.h"
 // clang-format on

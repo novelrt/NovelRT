@@ -52,12 +52,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// OpenAL
-#include <AL/al.h>
-#include <AL/alc.h>
-
-// LibSndfile
-#include <sndfile.h>
 
 #ifdef NOVELRT_INK
 // nethost
@@ -88,14 +82,6 @@
     typedef class SpriteAnimator SpriteAnimator;
   }
 
-  /***
-   * @brief Contains audio features, such as playing audio, and managing audio resources.
-   */
-  namespace NovelRT::Audio {
-    typedef std::vector<ALuint> SoundBank;
-    typedef std::vector<ALuint> MusicBank;
-    typedef class AudioService AudioService;
-  }
 #ifdef NOVELRT_INK
   /**
    * @brief Contains features to interop with the .NET Core runtime.
@@ -227,6 +213,9 @@
  // ResourceManagement types
   #include "NovelRT/ResourceManagement/ResourceManagement.h"
   #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
+
+ // Audio types
+  #include "NovelRT/Audio/Audio.h"
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"

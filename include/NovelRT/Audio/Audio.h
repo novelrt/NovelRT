@@ -1,0 +1,37 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
+
+#ifndef NOVELRT_AUDIO_H
+#define NOVELRT_AUDIO_H
+
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <sndfile.h>
+#include "../Utilities/Lazy.h"
+#include "../LoggingService.h"
+#include "../Maths/GeoVector2F.h"
+#include "../PluginManagement/PluginManagement.h"
+
+namespace NovelRT::Audio
+{
+    class AudioService;
+    struct AudioEmitterComponent;
+    class OpenALPluginProvider;
+}
+
+#if defined(__cplusplus) && !defined(NOVELRT_C_API)
+/***
+   * @brief Contains audio features, such as playing audio, and managing audio resources.
+ */
+namespace NovelRT::Audio {
+    typedef std::vector<ALuint> SoundBank;
+    typedef std::vector<ALuint> MusicBank;
+    typedef class AudioService AudioService;
+}
+#endif
+
+#include "AudioEmitterComponent.h"
+#include "AudioService.h"
+#include "OpenALPluginProvider.h"
+
+#endif // NOVELRT_AUDIO_H

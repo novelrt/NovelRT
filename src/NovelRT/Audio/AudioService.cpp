@@ -193,7 +193,7 @@ namespace NovelRT::Audio
         }
 
         alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-        if (_soundSourceState == AL_PLAYING)
+        if (_musicSourceState == AL_PLAYING)
         {
             alSourceStop(_musicSource);
             alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);

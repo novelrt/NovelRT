@@ -1,12 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_AUDIOSERVICE_H
-#define NOVELRT_AUDIOSERVICE_H
-
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
-#endif
+#ifndef NOVELRT_AUDIO_AUDIOSERVICE_H
+#define NOVELRT_AUDIO_AUDIOSERVICE_H
 
 namespace NovelRT::Audio
 {
@@ -60,4 +56,4 @@ namespace NovelRT::Audio
     };
 }
 
-#endif
+#endif  //NOVELRT_AUDIO_AUDIOSERVICE_H
