@@ -106,6 +106,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void EndDrawing() final;
         void EndFrame() final;
 
+        void ResetContext();
+
         ~VulkanGraphicsContext() final;
     };
 }

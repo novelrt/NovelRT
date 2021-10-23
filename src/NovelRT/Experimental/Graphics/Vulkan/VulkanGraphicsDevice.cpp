@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsDevice.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -15,18 +16,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                   return std::make_shared<VulkanGraphicsFence>(
                       std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
               }),
-          _contexts([&, contextCount]() { return CreateGraphicsContexts(contextCount); }),
-          _contextPtrs([&]() {
-              std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
-              ptrs.reserve(_contexts.getActual().size());
-
-              for (auto&& context : _contexts.getActual())
-              {
-                  ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
-              }
-
-              return ptrs;
-          }),
+          _contextCount(contextCount),
+          _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
+          _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
           _device([&]() { return CreateLogicalDevice(); }),
@@ -46,6 +38,19 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         // TODO: This gonna be an issue...?
         GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
+    }
+
+    std::vector<std::shared_ptr<GraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContextPointers()
+    {
+        std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
+        ptrs.reserve(_contexts.getActual().size());
+
+        for (auto&& context : _contexts.getActual())
+        {
+            ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+        }
+
+        return ptrs;
     }
 
     std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContexts(
@@ -320,6 +325,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
+        ResizeGraphicsContexts(imageCount);
+
         std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
         imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
 
@@ -560,6 +567,50 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         if (result != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to signal VkQueue PresentQueue! Reason: " + std::to_string(result));
+        }
+    }
+
+    void VulkanGraphicsDevice::ResizeGraphicsContexts(uint32_t newContextCount)
+    {
+        if (!_contexts.isCreated())
+        {
+            static_cast<void>(_contexts.getActual());
+
+            // this is probably redundant but I wanted the safety.
+            if (!_contextPtrs.isCreated())
+            {
+                static_cast<void>(_contextPtrs.getActual());
+            }
+            return;
+        }
+
+        auto& contexts = _contexts.getActual();
+
+        if (contexts.size() == newContextCount)
+        {
+            return;
+        }
+
+        if (contexts.size() > newContextCount)
+        {
+            uint32_t amountToRemove = newContextCount - static_cast<uint32_t>((contexts.size()));
+            contexts.resize(contexts.size() - amountToRemove);
+            _contextPtrs.reset();
+            return;
+        }
+
+        if (contexts.size() < newContextCount)
+        {
+            uint32_t amountToAdd = static_cast<uint32_t>(contexts.size()) - newContextCount;
+
+            for (uint32_t i = 0; i < amountToAdd; i++)
+            {
+                contexts.emplace_back(std::make_shared<VulkanGraphicsContext>(
+                    std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i));
+            }
+
+            _contextPtrs.reset();
+            return; // safety guard in case this method is ever expanded (probably won't be but still)
         }
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

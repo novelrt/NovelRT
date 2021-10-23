@@ -36,10 +36,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             reinterpret_cast<VulkanGraphicsProvider*>(pUserData)->_logger.log(std::string(pCallbackData->pMessage),
                                                                               logLevel);
         }
-        else
-        {
-            std::cout << std::string(pCallbackData->pMessage) << std::endl;
-        }
 
         return VK_FALSE;
     }

@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Experimental/Graphics/Vulkan/VulkanGraphicsContext.h>
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
@@ -490,7 +491,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         executeGraphicsFence->Reset();
     }
 
-    VulkanGraphicsContext::~VulkanGraphicsContext()
+    void VulkanGraphicsContext::ResetContext()
     {
         if (_vulkanCommandBuffer.isCreated())
         {
@@ -515,5 +516,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             DisposeVulkanSwapChainImageView(_vulkanSwapChainImageView.getActual());
             _vulkanSwapChainImageView.reset();
         }
+    }
+
+    VulkanGraphicsContext::~VulkanGraphicsContext()
+    {
+        ResetContext();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

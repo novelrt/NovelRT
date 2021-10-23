@@ -14,6 +14,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
     private:
         NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
+        int32_t _contextCount;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
 
@@ -120,12 +121,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature> signature,
-            std::shared_ptr<ShaderProgram> vertexShader = nullptr,
-            std::shared_ptr<ShaderProgram> pixelShader = nullptr) final;
+            std::shared_ptr<ShaderProgram> vertexShader,
+            std::shared_ptr<ShaderProgram> pixelShader) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
-            gsl::span<GraphicsPipelineInput> inputs = gsl::span<GraphicsPipelineInput>{},
-            gsl::span<GraphicsPipelineResource> resources = gsl::span<GraphicsPipelineResource>{}) final;
+            gsl::span<GraphicsPipelineInput> inputs,
+            gsl::span<GraphicsPipelineResource> resources) final;
 
         [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
         {
@@ -177,7 +178,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _presentCompletionFence.getActual();
         }
 
-        ~VulkanGraphicsDevice();
+        std::vector<std::shared_ptr<GraphicsContext>> CreateGraphicsContextPointers();
+        void ResizeGraphicsContexts(uint32_t newContextCount);
+
+        ~VulkanGraphicsDevice() final;
     };
 }
 

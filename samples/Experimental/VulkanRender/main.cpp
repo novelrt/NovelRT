@@ -38,7 +38,7 @@ struct TexturedVertex
 int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
+    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
