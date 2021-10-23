@@ -325,7 +325,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
-        ResizeGraphicsContexts(imageCount);
+        ResizeGraphicsContexts(imageCount); //TODO: This making vulkan angry for some reason.
 
         std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
         imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
@@ -593,7 +593,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (contexts.size() > newContextCount)
         {
-            uint32_t amountToRemove = newContextCount - static_cast<uint32_t>((contexts.size()));
+            uint32_t amountToRemove = static_cast<uint32_t>(contexts.size()) - newContextCount;
             contexts.resize(contexts.size() - amountToRemove);
             _contextPtrs.reset();
             return;
@@ -601,7 +601,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         if (contexts.size() < newContextCount)
         {
-            uint32_t amountToAdd = static_cast<uint32_t>(contexts.size()) - newContextCount;
+            uint32_t amountToAdd = newContextCount - static_cast<uint32_t>((contexts.size()));
 
             for (uint32_t i = 0; i < amountToAdd; i++)
             {
