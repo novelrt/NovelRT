@@ -52,10 +52,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext()
         {
-            auto contexts = GetContexts();
-            auto index = GetContextIndex();
-            auto returnPtr = contexts[index];
-            return returnPtr;
+            return GetContexts()[GetContextIndex()];
         }
 
         [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetMemoryAllocator()
