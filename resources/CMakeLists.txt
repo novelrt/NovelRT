@@ -19,7 +19,6 @@ set(RESOURCES_FILES
 
   Sounds/waltz.ogg
   Sounds/lazer.ogg
-  Sounds/nani.ogg
   Sounds/goat.ogg
 )
 
