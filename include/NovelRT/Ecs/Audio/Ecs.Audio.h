@@ -8,8 +8,8 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
-#include <map>
 #include "../../Audio/Audio.h"
+#include <map>
 
 namespace NovelRT::Ecs::Audio
 {
@@ -18,8 +18,8 @@ namespace NovelRT::Ecs::Audio
     class AudioSystem;
 }
 
-#include "EmitterState.h"
 #include "AudioEmitterComponent.h"
 #include "AudioSystem.h"
+#include "EmitterState.h"
 
 #endif // NOVELRT_ECS_AUDIO_H

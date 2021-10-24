@@ -58,4 +58,4 @@ namespace NovelRT::Audio
     };
 }
 
-#endif  //NOVELRT_AUDIO_AUDIOSERVICE_H
+#endif // NOVELRT_AUDIO_AUDIOSERVICE_H

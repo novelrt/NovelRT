@@ -4,7 +4,6 @@
 #ifndef NOVELRT_ECS_AUDIO_EMITTERSTATE_H
 #define NOVELRT_ECS_AUDIO_EMITTERSTATE_H
 
-
 namespace NovelRT::Ecs::Audio
 {
     enum class EmitterState : int32_t
