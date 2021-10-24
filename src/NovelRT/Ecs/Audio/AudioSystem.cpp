@@ -17,13 +17,15 @@ namespace NovelRT::Ecs::Audio
 
     void AudioSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue catalogue)
     {
-        auto emitters = catalogue.GetComponentView<AudioEmitterComponent>();
+        auto [emitters, states] = catalogue.GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
 
-        for (auto [entity, emitter] : emitters)
+        for (auto [entity, emitterState] : states)
         {
-            switch (emitter.state)
+            auto emitter = emitters.GetComponent(entity);
+
+            switch (emitterState.state)
             {
-                case EmitterState::ToPlay:
+                case AudioEmitterState::ToPlay:
                 {
                     if (emitter.isMusic)
                     {
@@ -34,12 +36,11 @@ namespace NovelRT::Ecs::Audio
                         _service->playSound(_soundCache.at(emitter.handle), emitter.numberOfLoops);
                     }
                     _logger.logDebug("Entity ID {} - EmitterState ToPlay -> Playing", entity);
-                    emitters.PushComponentUpdateInstruction(
-                        entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
-                                                      emitter.position, emitter.volume, EmitterState::Playing});
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Playing});
                     break;
                 }
-                case EmitterState::ToStop:
+                case AudioEmitterState::ToStop:
                 {
                     if (emitter.isMusic)
                     {
@@ -50,43 +51,40 @@ namespace NovelRT::Ecs::Audio
                         _service->stopSound(_soundCache.at(emitter.handle));
                     }
                     _logger.logDebug("Entity ID {} - EmitterState ToStop -> Stopped", entity);
-                    emitters.PushComponentUpdateInstruction(
-                        entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
-                                                      emitter.position, emitter.volume, EmitterState::Stopped});
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Stopped});
                     break;
                 }
-                case EmitterState::ToPause:
+                case AudioEmitterState::ToPause:
                 {
                     // Sounds can't be paused so we just ignore that state.
                     if (emitter.isMusic)
                     {
                         _service->pauseMusic();
                         _logger.logDebug("Entity ID {} - EmitterState ToPause -> Paused", entity);
-                        emitters.PushComponentUpdateInstruction(
-                            entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
-                                                          emitter.position, emitter.volume, EmitterState::Paused});
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Paused});
                     }
                     break;
                 }
-                case EmitterState::ToResume:
+                case AudioEmitterState::ToResume:
                 {
                     if (emitter.isMusic)
                     {
                         _service->resumeMusic();
                         _logger.logDebug("Entity ID {} - EmitterState ToResume -> Playing", entity);
-                        emitters.PushComponentUpdateInstruction(
-                            entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
-                                                          emitter.position, emitter.volume, EmitterState::Playing});
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing});
                     }
                     break;
                 }
-                case EmitterState::Playing:
+                case AudioEmitterState::Playing:
                 {
                     // check for volume changes
                     break;
                 }
-                case EmitterState::Stopped:
-                case EmitterState::Paused:
+                case AudioEmitterState::Stopped:
+                case AudioEmitterState::Paused:
                 default:
                 {
                     break;

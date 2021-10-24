@@ -18,9 +18,6 @@ int main(int /*argc*/, char* /*argv*/[])
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playMusicInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playMusicText;
 
-    std::unique_ptr<NovelRT::Graphics::BasicFillRect> playNaniButton;
-    std::unique_ptr<NovelRT::Input::BasicInteractionRect> playNaniInteraction;
-    std::unique_ptr<NovelRT::Graphics::TextRect> playNaniText;
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> playLazerButton;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playLazerInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playLazerText;
@@ -32,7 +29,7 @@ int main(int /*argc*/, char* /*argv*/[])
     auto runner = NovelRT::NovelRunner(0, "NovelRT - Audio ECS Sample", NovelRT::Windowing::WindowMode::Windowed);
     auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
     auto loggingLevel = NovelRT::LogLevel::Debug;
-    runner.getDebugService()->setIsFpsCounterVisible(true);
+    runner.getDebugService()->setIsFpsCounterVisible(false);
     runner.getRenderer()->setBackgroundColour(NovelRT::Graphics::RGBAColour(103, 128, 159, 255));
 
     // Creating the UI
@@ -52,21 +49,6 @@ int main(int /*argc*/, char* /*argv*/[])
     playMusicInteraction = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
     playMusicInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
     bool paused = false;
-
-    auto naniButtonTransform = playButtonTransform;
-    naniButtonTransform.position.x -= (1920 / 4);
-    naniButtonTransform.position.y += (1080 / 3);
-    playNaniButton = runner.getRenderer()->createBasicFillRect(naniButtonTransform, 3,
-                                                               NovelRT::Graphics::RGBAColour(160, 0, 0, 255));
-    auto playNaniTextTransform = naniButtonTransform;
-    playNaniTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
-    playNaniTextTransform.position.x -= 50;
-    playNaniText =
-        runner.getRenderer()->createTextRect(playNaniTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
-                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
-    playNaniText->setText("Nani!?");
-    playNaniInteraction = runner.getInteractionService()->createBasicInteractionRect(naniButtonTransform, 2);
-    playNaniInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
     auto lazerButtonTransform = playButtonTransform;
     lazerButtonTransform.position.y += (1080 / 3);
@@ -101,100 +83,81 @@ int main(int /*argc*/, char* /*argv*/[])
     auto scheduler = NovelRT::Ecs::Configurator().InitialiseAndRegisterComponents();
     scheduler.RegisterSystem(audioSystem);
     auto deleteState = AudioEmitterComponent();
-    deleteState.state = EmitterState::Done;
     scheduler.GetComponentCache().RegisterComponentType(deleteState);
+    scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done});
 
     // Setup of entities and components
     std::string waltzPath = (soundsDirPath / "waltz.ogg").string();
-    std::string naniPath = (soundsDirPath / "nani.ogg").string();
     std::string lazerPath = (soundsDirPath / "lazer.ogg").string();
     std::string goatPath = (soundsDirPath / "goat.ogg").string();
     auto waltzHandle = audioSystem->CreateAudio(waltzPath, true);
-    auto naniHandle = audioSystem->CreateAudio(naniPath, false);
     auto lazerHandle = audioSystem->CreateAudio(lazerPath, false);
     auto goatHandle = audioSystem->CreateAudio(goatPath, false);
     AudioEmitterComponent waltzComponent =
-        AudioEmitterComponent{waltzHandle, true, -1, NovelRT::Maths::GeoVector2F::zero(), 0.75f, EmitterState::ToPlay};
-    // Creating two components to update the music component properly.
-    AudioEmitterComponent pauseComponent = waltzComponent;
-    pauseComponent.state = EmitterState::ToPause;
-    AudioEmitterComponent resumeComponent = waltzComponent;
-    resumeComponent.state = EmitterState::ToResume;
+        AudioEmitterComponent{waltzHandle, true, -1, NovelRT::Maths::GeoVector2F::zero(), 0.75f};
+    AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::ToPlay};
     // Now the sound components
-    AudioEmitterComponent nani =
-        AudioEmitterComponent{naniHandle, false, 0, NovelRT::Maths::GeoVector2F::zero(), 0.75f, EmitterState::Stopped};
-    AudioEmitterComponent lazer = nani;
-    AudioEmitterComponent goat = nani;
-    lazer.handle = lazerHandle;
+    AudioEmitterComponent lazer =
+        AudioEmitterComponent{lazerHandle, false, 0, NovelRT::Maths::GeoVector2F::zero(), 0.75f};
+    AudioEmitterComponent goat = lazer;
     goat.handle = goatHandle;
     goat.volume = 1.0f; // o no
-    // TODO - separate state from emitter so this is not so bad.
-    AudioEmitterComponent naniPlay = nani;
-    naniPlay.state = EmitterState::ToPlay;
-    AudioEmitterComponent lazerPlay = lazer;
-    lazerPlay.state = EmitterState::ToPlay;
-    AudioEmitterComponent goatPlay = goat;
-    goatPlay.state = EmitterState::ToPlay;
 
     // Setup of entities and components
-    auto entities = NovelRT::Ecs::EntityCache(4);
+    auto entities = NovelRT::Ecs::EntityCache(3);
     scheduler.GetEntityCache() = entities;
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
         0, 0, waltzComponent);
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+        0, 0, waltzState);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(0, 1,
-                                                                                                             nani);
-    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(0, 2,
                                                                                                              lazer);
-    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(0, 3,
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+        0, 1, AudioEmitterStateComponent{AudioEmitterState::Stopped});
+
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(0, 2,
                                                                                                              goat);
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+        0, 2, AudioEmitterStateComponent{AudioEmitterState::Stopped});
 
     playMusicInteraction->Interacted += [&] {
         paused = !paused;
         if (paused)
         {
-            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-                0, 0, pauseComponent);
+            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+                0, 0, AudioEmitterStateComponent{AudioEmitterState::ToPause});
             console.logDebugLine("Pausing!");
         }
         else
         {
-            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-                0, 0, resumeComponent);
+            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+                0, 0, AudioEmitterStateComponent{AudioEmitterState::ToResume});
             console.logDebugLine("Resuming!");
         }
     };
 
-    playNaniInteraction->Interacted += [&] {
-        console.logInfoLine("Entity Id: 1 - NANI!?");
-        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-            0, 1, naniPlay);
-    };
-
     playLazerInteraction->Interacted += [&] {
-        console.logInfoLine("Entity Id: 2 - I'ma firin' mah lazar!");
-        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-            0, 2, lazerPlay);
+        console.logInfoLine("Entity Id: 1 - I'ma firin' mah lazar!");
+        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+            0, 1, AudioEmitterStateComponent{AudioEmitterState::ToPlay});
     };
 
     playGoatInteraction->Interacted += [&] {
-        console.logInfoLine("Entity Id: 3 - AHHHHHHHHHHHHHHHHHHHHHHHH");
-        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-            0, 3, goatPlay);
+        console.logInfoLine("Entity Id: 2 - AHHHHHHHHHHHHHHHHHHHHHHHH");
+        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+            0, 2, AudioEmitterStateComponent{AudioEmitterState::ToPlay});
     };
 
     runner.Update += [&](NovelRT::Timing::Timestamp delta) { scheduler.ExecuteIteration(delta); };
 
     runner.SceneConstructionRequested += [&] {
         playMusicButton->executeObjectBehaviour();
-        playNaniButton->executeObjectBehaviour();
         playLazerButton->executeObjectBehaviour();
         playGoatButton->executeObjectBehaviour();
         playMusicText->executeObjectBehaviour();
-        playNaniText->executeObjectBehaviour();
         playLazerText->executeObjectBehaviour();
         playGoatText->executeObjectBehaviour();
         playMusicInteraction->executeObjectBehaviour();
-        playNaniInteraction->executeObjectBehaviour();
         playLazerInteraction->executeObjectBehaviour();
         playGoatInteraction->executeObjectBehaviour();
     };

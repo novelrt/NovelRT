@@ -13,13 +13,14 @@
 
 namespace NovelRT::Ecs::Audio
 {
-    enum class EmitterState : int32_t;
+    enum class AudioEmitterState : int32_t;
     struct AudioEmitterComponent;
     class AudioSystem;
 }
 
 #include "AudioEmitterComponent.h"
+#include "AudioEmitterState.h"
+#include "AudioEmitterStateComponent.h"
 #include "AudioSystem.h"
-#include "EmitterState.h"
 
 #endif // NOVELRT_ECS_AUDIO_H
