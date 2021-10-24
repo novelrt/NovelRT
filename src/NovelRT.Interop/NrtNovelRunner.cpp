@@ -9,7 +9,6 @@
 
 using namespace NovelRT;
 
-std::list<std::shared_ptr<Audio::AudioService>> _audioCollection;
 std::list<std::shared_ptr<Input::InteractionService>> _interactionCollection;
 std::list<std::shared_ptr<Windowing::WindowingService>> _windowingCollection;
 #ifdef NOVELRT_INK
@@ -63,34 +62,6 @@ extern "C"
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
 
         cRunner->~NovelRunner();
-        return NRT_SUCCESS;
-    }
-
-    NrtResult Nrt_NovelRunner_getAudioService(NrtNovelRunnerHandle runner, NrtAudioServiceHandle* outputService)
-    {
-        if (runner == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
-        }
-
-        if (outputService == nullptr)
-        {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
-        }
-
-        NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
-        _audioCollection.push_back(cRunner->getAudioService());
-
-        auto ptr = _audioCollection.back().get();
-        if (ptr == nullptr)
-        {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
-        }
-
-        *outputService = reinterpret_cast<NrtAudioServiceHandle>(ptr);
-
         return NRT_SUCCESS;
     }
 

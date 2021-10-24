@@ -187,27 +187,6 @@ int main()
     const char* const pathParts[2] = {execPath, "Resources"};
     const char* path = Nrt_appendFilePath(2, pathParts);
 
-    // Getting & Initialising AudioService
-    res = Nrt_NovelRunner_getAudioService(runner, &audio);
-    if (res != NRT_SUCCESS)
-    {
-        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
-        const char* errMsg = Nrt_appendText(2, textParts);
-        Nrt_LoggingService_logErrorLine(console, errMsg);
-        return -1;
-    }
-    else
-    {
-        booleanResult = Nrt_AudioService_initialiseAudio(audio);
-        if (booleanResult != NRT_TRUE)
-        {
-            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
-            const char* errMsg = Nrt_appendText(2, textParts);
-            Nrt_LoggingService_logErrorLine(console, errMsg);
-            return -1;
-        }
-    }
-
     // Getting InteractionService
     res = Nrt_NovelRunner_getInteractionService(runner, &input);
     if (res == NRT_SUCCESS)
