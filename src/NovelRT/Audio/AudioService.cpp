@@ -401,6 +401,16 @@ namespace NovelRT::Audio
         alSourceStop(handle);
     }
 
+    bool AudioService::isLoaded(std::vector<ALuint>::iterator handle)
+    {
+        return (handle != _music.end());
+    }
+
+    bool AudioService::isLoaded(ALuint handle)
+    {
+        return (handle != _noBuffer);
+    }
+
     void AudioService::tearDown()
     {
         if (!_context.isCreated())

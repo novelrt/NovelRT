@@ -17,7 +17,6 @@ namespace NovelRT::PluginManagement
     [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetGlfwPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider>
     GetDesktopResourceManagementPluginProvider() noexcept;
-    [[nodiscard]] std::shared_ptr<IAudioPluginProvider> GetOpenALPluginProvider() noexcept;
 }
 
 #endif // NOVELRT_PLUGINMANAGEMENT_TEMPORARYFNPTRS_H

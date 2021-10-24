@@ -16,6 +16,11 @@ set(RESOURCES_FILES
   Shaders/TexturedVertexShader.glsl
   Shaders/frag.spv
   Shaders/vert.spv
+
+  Sounds/waltz.ogg
+  Sounds/lazer.ogg
+  Sounds/nani.ogg
+  Sounds/goat.ogg
 )
 
 foreach(resource ${RESOURCES_FILES})

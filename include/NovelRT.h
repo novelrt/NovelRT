@@ -173,6 +173,9 @@
   #include "NovelRT/Animation/SpriteAnimatorState.h"
   #include "NovelRT/Animation/SpriteAnimator.h"
 
+// Audio types
+ #include "NovelRT/Audio/Audio.h"
+
   // ECS types
   #include "NovelRT/Ecs/Ecs.h"
 
@@ -214,8 +217,6 @@
   #include "NovelRT/ResourceManagement/ResourceManagement.h"
   #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
 
- // Audio types
-  #include "NovelRT/Audio/Audio.h"
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"

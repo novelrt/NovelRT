@@ -9,14 +9,11 @@
 #include <sndfile.h>
 #include "../Utilities/Lazy.h"
 #include "../LoggingService.h"
-#include "../Maths/GeoVector2F.h"
-#include "../PluginManagement/PluginManagement.h"
+//#include "../Maths/GeoVector2F.h"
 
 namespace NovelRT::Audio
 {
     class AudioService;
-    struct AudioEmitterComponent;
-    class OpenALPluginProvider;
 }
 
 #if defined(__cplusplus) && !defined(NOVELRT_C_API)
@@ -30,8 +27,6 @@ namespace NovelRT::Audio {
 }
 #endif
 
-#include "AudioEmitterComponent.h"
 #include "AudioService.h"
-#include "OpenALPluginProvider.h"
 
 #endif // NOVELRT_AUDIO_H

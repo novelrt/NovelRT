@@ -21,8 +21,4 @@ namespace NovelRT::PluginManagement
     {
         return std::make_shared<ResourceManagement::Desktop::DesktopResourceManagementPluginProvider>();
     }
-    std::shared_ptr<Audio::OpenALPluginProvider> GetOpenALPluginProvider() noexcept
-    {
-        return std::make_shared<Audio::OpenALPluginProvider>();
-    }
 }

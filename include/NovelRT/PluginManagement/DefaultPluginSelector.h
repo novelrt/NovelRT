@@ -40,13 +40,6 @@ namespace NovelRT::PluginManagement
             return std::static_pointer_cast<IResourceManagementPluginProvider>(
                 GetDesktopResourceManagementPluginProvider());
         }
-
-        template<>
-        [[nodiscard]] std::shared_ptr<IAudioPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
-            IAudioPluginProvider>()
-        {
-            return std::static_pointer_cast<IAudioPluginProvider>(GetOpenALPluginProvider());
-        }
     };
 }
 
