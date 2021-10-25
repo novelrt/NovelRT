@@ -153,6 +153,67 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 90);
 }
 
+TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThreads)
+{
+    TearDown();
+
+    scheduler = new SystemScheduler(32);
+    scheduler->SpinThreads();
+
+    EntityId entity = Atom::getNextEntityId();
+
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
+    scheduler->ExecuteIteration(Timestamp(0));
+
+    scheduler->RegisterSystem(sysOne);
+    scheduler->RegisterSystem(sysTwo);
+    scheduler->RegisterSystem(sysThree);
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+      auto intSystem = catalogue.GetComponentView<int32_t>();
+      for (auto [entity, component] : intSystem)
+      {
+          intSystem.PushComponentUpdateInstruction(entity, 9);
+      }
+    });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 19);
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+      auto intSystem = catalogue.GetComponentView<int32_t>();
+      for (auto [entity, component] : intSystem)
+      {
+          intSystem.PushComponentUpdateInstruction(entity, 8);
+      }
+    });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 36);
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+      auto intSystem = catalogue.GetComponentView<int32_t>();
+      for (auto [entity, component] : intSystem)
+      {
+          intSystem.PushComponentUpdateInstruction(entity, 7);
+      }
+    });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
+
+    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+                                  auto intSystem = catalogue.GetComponentView<int32_t>();
+                                  for (auto [entity, component] : intSystem)
+                                  {
+                                      intSystem.PushComponentUpdateInstruction(entity, 6);
+                                  }
+                              });
+
+    scheduler->ExecuteIteration(Timestamp(0));
+    EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 90);
+}
+
 TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
     EntityId entity = Atom::getNextEntityId();

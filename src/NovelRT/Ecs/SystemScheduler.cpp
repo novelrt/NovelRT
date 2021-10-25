@@ -2,8 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Ecs/SystemScheduler.h>
-#include <NovelRT/Maths/Utilities.h>
+#include <iostream>
 
 namespace NovelRT::Ecs
 {
@@ -137,6 +136,7 @@ namespace NovelRT::Ecs
 
             _threadWorkItem[workerIndex] = systemId;
 
+            std::cerr << workerIndex << std::endl;
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
             _threadAvailabilityMap ^= (1ULL << workerIndex);
