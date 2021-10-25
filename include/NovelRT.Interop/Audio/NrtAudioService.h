@@ -37,6 +37,8 @@ extern "C"
     NrtResult Nrt_AudioService_playSound(NrtAudioServiceHandle service, unsigned int handle, int loops);
     NrtResult Nrt_AudioService_stopSound(NrtAudioServiceHandle service, unsigned int handle);
     NrtResult Nrt_AudioService_tearDown(NrtAudioServiceHandle service);
+    NrtBool Nrt_AudioService_isMusicLoaded(NrtAudioServiceHandle service, NrtAudioServiceIteratorHandle handle);
+    NrtBool Nrt_AudioService_isSoundLoaded(NrtAudioServiceHandle service, unsigned int handle);
 
 #ifdef __cplusplus
 }

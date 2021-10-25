@@ -19,12 +19,14 @@ set(SOURCES
   Ecs/NrtSystemScheduler.cpp
   Ecs/NrtUnsafeComponentView.cpp
 
+  Ecs/Audio/NrtEcsAudioSystem.cpp
+
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
   Graphics/NrtFontSet.cpp
   Graphics/NrtImageRect.cpp
   Graphics/NrtRenderingService.cpp
-        Graphics/NrtRGBAColour.cpp
+  Graphics/NrtRGBAColour.cpp
   Graphics/NrtTextRect.cpp
   Graphics/NrtTexture.cpp
 

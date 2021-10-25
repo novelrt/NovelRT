@@ -337,6 +337,32 @@ extern "C"
         return NRT_SUCCESS;
     }
 
+    NrtBool Nrt_AudioService_isMusicLoaded(NrtAudioServiceHandle service, NrtAudioServiceIteratorHandle handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->isLoaded(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle)) ? NRT_TRUE : NRT_FALSE;
+    }
+
+    NrtBool Nrt_AudioService_isSoundLoaded(NrtAudioServiceHandle service, unsigned int handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->isLoaded(handle) ? NRT_TRUE : NRT_FALSE;
+    }
+
 #ifdef __cplusplus
 }
 #endif

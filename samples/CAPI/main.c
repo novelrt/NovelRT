@@ -23,6 +23,7 @@ NrtAudioServiceHandle audio = NULL;
 NrtInteractionServiceHandle input = NULL;
 NrtLoggingServiceHandle console = NULL;
 #ifdef NOVELRT_INK
+
 NrtRuntimeServiceHandle dotnet = NULL;
 NrtInkServiceHandle ink = NULL;
 #endif
@@ -187,6 +188,37 @@ int main()
     const char* const pathParts[2] = {execPath, "Resources"};
     const char* path = Nrt_appendFilePath(2, pathParts);
 
+    // Getting & Initialising AudioService
+    audio = Nrt_AudioService_create();
+    if (audio == NULL)
+    {
+        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
+        const char* errMsg = Nrt_appendText(2, textParts);
+        Nrt_LoggingService_logErrorLine(console, errMsg);
+        return -1;
+    }
+    else
+    {
+        booleanResult = Nrt_AudioService_initialiseAudio(audio);
+        if (booleanResult != NRT_TRUE)
+        {
+            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
+            const char* errMsg = Nrt_appendText(2, textParts);
+            Nrt_LoggingService_logErrorLine(console, errMsg);
+            return -1;
+        }
+
+        NrtAudioServiceIteratorHandle waltz = NULL;
+        const char* const soundParts[3] = {path, "Sounds", "waltz.ogg"};
+        const char* waltzFile = Nrt_appendFilePath(3, soundParts);
+        res = Nrt_AudioService_loadMusic(audio, waltzFile, &waltz);
+
+        if(res == NRT_SUCCESS)
+        {
+            Nrt_AudioService_playMusic(audio, waltz, -1);
+        }
+    }
+
     // Getting InteractionService
     res = Nrt_NovelRunner_getInteractionService(runner, &input);
     if (res == NRT_SUCCESS)
@@ -200,6 +232,8 @@ int main()
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
+
+
 
 #ifdef NOVELRT_INK
     // Getting & Initialising RuntimeService / InkService
