@@ -95,7 +95,7 @@ namespace NovelRT::Ecs::Audio
         _service->checkSources();
     }
 
-    uint32_t AudioSystem::CreateAudio(std::string& fileName, bool isMusic)
+    uint32_t AudioSystem::CreateAudio(std::string fileName, bool isMusic)
     {
         if (_counter == UINT32_MAX)
         {

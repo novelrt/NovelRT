@@ -19,7 +19,7 @@ namespace NovelRT::Ecs::Audio
         AudioSystem();
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
-        uint32_t CreateAudio(std::string& fileName, bool isMusic);
+        uint32_t CreateAudio(std::string fileName, bool isMusic);
     };
 }
 

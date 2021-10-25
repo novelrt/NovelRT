@@ -94,11 +94,11 @@ int main(int /*argc*/, char* /*argv*/[])
     auto lazerHandle = audioSystem->CreateAudio(lazerPath, false);
     auto goatHandle = audioSystem->CreateAudio(goatPath, false);
     AudioEmitterComponent waltzComponent =
-        AudioEmitterComponent{waltzHandle, true, -1, NovelRT::Maths::GeoVector2F::zero(), 0.75f};
+        AudioEmitterComponent{waltzHandle, true, -1, 0.75f};
     AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::ToPlay};
     // Now the sound components
     AudioEmitterComponent lazer =
-        AudioEmitterComponent{lazerHandle, false, 0, NovelRT::Maths::GeoVector2F::zero(), 0.75f};
+        AudioEmitterComponent{lazerHandle, false, 0, 0.75f};
     AudioEmitterComponent goat = lazer;
     goat.handle = goatHandle;
     goat.volume = 1.0f; // o no

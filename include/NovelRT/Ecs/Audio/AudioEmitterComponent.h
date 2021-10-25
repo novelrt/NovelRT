@@ -11,7 +11,6 @@ namespace NovelRT::Ecs::Audio
         uint32_t handle;
         bool isMusic;
         int32_t numberOfLoops;
-        Maths::GeoVector2F position;
         float volume;
 
         inline AudioEmitterComponent& operator+=(const AudioEmitterComponent& other) noexcept
@@ -20,7 +19,6 @@ namespace NovelRT::Ecs::Audio
             handle = handleChanged ? other.handle : handle;
             // isMusic should never change otherwise the component may be being abused.
             numberOfLoops = handleChanged ? other.numberOfLoops : numberOfLoops + other.numberOfLoops;
-            position = handleChanged ? other.position : position + other.position;
             volume = handleChanged ? other.volume : volume + other.volume;
             return *this;
         };
