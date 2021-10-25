@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT.h>
-#include <iostream>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -11,15 +10,15 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    /*
+
     DefaultPluginSelector selector;
+    auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
+
     auto scheduler =
         Configurator()
-            //.WithDefaultSystemsAndComponents()
-            .WithSystems({[&](auto, auto){ std::cout << "system" << std::endl; }})
-            .WithThreadCount(32)
+            .WithDefaultSystemsAndComponents()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>())
+            .WithPluginProvider(windowingProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
 
@@ -27,19 +26,14 @@ int main()
 
     NovelRT::Timing::StepTimer timer;
 
-    while (true)
+    auto windowPtr = windowingProvider->GetWindowingDevice();
+
+    while (!windowPtr->GetShouldClose())
     {
+        windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
     }
-     */
 
-    std::atomic_uint64_t test = 0;
-
-    test ^= (1ULL << 30);
-
-    auto result = NovelRT::Maths::Utilities::LeadingZeroCount64(test);
-
-    std::cout << result << std::endl;
 
     return 0;
 }

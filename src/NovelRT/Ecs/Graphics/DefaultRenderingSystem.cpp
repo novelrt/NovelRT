@@ -64,7 +64,6 @@ namespace NovelRT::Ecs::Graphics
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
-        _graphicsDevice->Signal(graphicsContext->GetFence());
         graphicsContext->BeginFrame();
         auto pVertexBuffer = _vertexStagingBuffer->Map<TexturedVertexTest>(vertexBufferRegion);
 
@@ -98,29 +97,26 @@ namespace NovelRT::Ecs::Graphics
 
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
-        _inputResourceRegions = {texture2DRegion};
+        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> inputResourceRegions{texture2DRegion};
 
-        graphicsContext->Copy(_texture2D, _textureStagingBuffer);
         auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(0, nullptr, _graphicsDevice, false, 0, 0);
+        graphicsContext->Copy(_texture2D, _textureStagingBuffer);
         _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest), dummyRegion, 0,
-                                                    _inputResourceRegions);
+                                                    inputResourceRegions);
         graphicsContext->EndFrame();
-        graphicsContext->GetFence()->Wait();
-
-        //_graphicsDevice->Signal(graphicsContext->GetFence());
+        _graphicsDevice->Signal(graphicsContext->GetFence());
+        _graphicsDevice->WaitForIdle();
     }
 
     void DefaultRenderingSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue /*catalogue*/)
     {
-        auto graphicsContext = _graphicsDevice->GetCurrentContext();
-        graphicsContext->BeginFrame();
-        graphicsContext->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
-        graphicsContext->Draw(_primitive);
-        graphicsContext->EndDrawing();
-        graphicsContext->EndFrame();
+        auto context = _graphicsDevice->GetCurrentContext();
+        context->BeginFrame();
+        context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
+        context->Draw(_primitive);
+        context->EndDrawing();
+        context->EndFrame();
         _graphicsDevice->PresentFrame();
         _graphicsDevice->WaitForIdle();
-        graphicsContext->GetFence()->Wait();
-        graphicsContext->GetFence()->Reset();
     }
 }

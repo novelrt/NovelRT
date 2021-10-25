@@ -33,6 +33,7 @@ namespace NovelRT::Ecs
 
     SystemScheduler::SystemScheduler(SystemScheduler&& other) noexcept
         : _systemIds(std::move(other._systemIds)),
+          _typedSystemCache(std::move(other._typedSystemCache)),
           _systems(std::move(other._systems)),
           _entityCache(std::move(other._entityCache)),
           _componentCache(std::move(other._componentCache)),
@@ -52,6 +53,7 @@ namespace NovelRT::Ecs
     SystemScheduler& SystemScheduler::operator=(SystemScheduler&& other) noexcept
     {
         _systemIds = std::move(other._systemIds);
+        _typedSystemCache = std::move(other._typedSystemCache);
         _systems = std::move(other._systems);
         _entityCache = std::move(other._entityCache);
         _componentCache = std::move(other._componentCache);
