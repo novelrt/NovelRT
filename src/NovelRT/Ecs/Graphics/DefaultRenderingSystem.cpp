@@ -62,16 +62,19 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsBufferKind::Default, Experimental::Graphics::GraphicsResourceAccess::Write,
             Experimental::Graphics::GraphicsResourceAccess::Read, 2818048);
 
-        auto vertexBufferRegion = _vertexBuffer->Allocate(sizeof(TexturedVertexTest) * 3, 16);
+        auto vertexBufferRegion = _vertexBuffer->Allocate(sizeof(TexturedVertexTest) * 6, 16);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
         graphicsContext->BeginFrame();
         auto pVertexBuffer = _vertexStagingBuffer->Map<TexturedVertexTest>(vertexBufferRegion);
 
-        pVertexBuffer[0] = TexturedVertexTest{Maths::GeoVector3F(0, 1, 0), Maths::GeoVector2F(0.0f, -1.0f)};
-        pVertexBuffer[1] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[2] = TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(-1.0f, 1.0f)};
+        pVertexBuffer[0] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(-1.0f, -1.0f)};
+        pVertexBuffer[1] = TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, -1.0f)};
+        pVertexBuffer[2] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
+        pVertexBuffer[3] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
+        pVertexBuffer[4] = TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(-1.0f, 1.0f)};
+        pVertexBuffer[5] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(-1.0f, -1.0f)};
 
         _vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
         graphicsContext->Copy(_vertexBuffer, _vertexStagingBuffer);
