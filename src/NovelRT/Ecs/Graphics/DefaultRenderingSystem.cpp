@@ -17,8 +17,10 @@ namespace NovelRT::Ecs::Graphics
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
                                                                    Maths::GeoVector2F(400, 400));
 
+
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Warn;
+
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
@@ -74,19 +76,35 @@ namespace NovelRT::Ecs::Graphics
         _vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
         graphicsContext->Copy(_vertexBuffer, _vertexStagingBuffer);
 
+        /*
         uint32_t textureWidth = 256;
         uint32_t textureHeight = 256;
         uint32_t texturePixels = textureWidth * textureHeight;
         uint32_t cellWidth = textureWidth / 8;
         uint32_t cellHeight = textureHeight / 8;
+         */
+
+        auto texture = resourceLoader->LoadTexture("novel-chan.png");
 
         _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
             Experimental::Graphics::GraphicsTextureKind::TwoDimensional,
             Experimental::Graphics::GraphicsResourceAccess::None, Experimental::Graphics::GraphicsResourceAccess::Write,
-            textureWidth, textureHeight);
+            texture.width, texture.height);
         auto texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
-        auto pTextureData = _textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+        auto pTextureData = _textureStagingBuffer->Map<uint8_t>(texture2DRegion);
+        auto test = _texture2D->GetSize();
+        unused(test);
+        memcpy_s(pTextureData, texture.data.size(), texture.data.data(), texture.data.size());
 
+        /*
+        for (int32_t i = 0; i < ; ++i)
+        {
+
+        }
+         */
+
+
+        /*
         for (uint32_t n = 0; n < texturePixels; n++)
         {
             auto x = n % textureWidth;
@@ -94,6 +112,7 @@ namespace NovelRT::Ecs::Graphics
 
             pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
         }
+         */
 
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
