@@ -107,7 +107,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                   size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
                   size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
-                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl<TMetadata>>(shared_from_this()),
+                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsTextureImpl<TMetadata>>(shared_from_this()),
                                       blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
                                       minimumFreeRegionSizeToRegister);
 
