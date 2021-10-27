@@ -76,14 +76,6 @@ namespace NovelRT::Ecs::Graphics
         _vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
         graphicsContext->Copy(_vertexBuffer, _vertexStagingBuffer);
 
-        /*
-        uint32_t textureWidth = 256;
-        uint32_t textureHeight = 256;
-        uint32_t texturePixels = textureWidth * textureHeight;
-        uint32_t cellWidth = textureWidth / 8;
-        uint32_t cellHeight = textureHeight / 8;
-         */
-
         auto texture = resourceLoader->LoadTexture("novel-chan.png");
 
         _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
@@ -95,25 +87,6 @@ namespace NovelRT::Ecs::Graphics
         auto test = _texture2D->GetSize();
         unused(test);
         memcpy_s(pTextureData, texture.data.size(), texture.data.data(), texture.data.size());
-
-        /*
-        for (int32_t i = 0; i < ; ++i)
-        {
-
-        }
-         */
-
-
-        /*
-        for (uint32_t n = 0; n < texturePixels; n++)
-        {
-            auto x = n % textureWidth;
-            auto y = n / textureWidth;
-
-            pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
-        }
-         */
-
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> inputResourceRegions{texture2DRegion};
