@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <iostream>
 
 namespace NovelRT::Ecs
 {
