@@ -146,10 +146,9 @@ namespace NovelRT::Ecs
 
             _threadWorkItem[workerIndex] = systemId;
 
-            /*
+
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
-            */
             _threadAvailabilityMap ^= (1ULL << workerIndex);
             /*
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == 0) &&
