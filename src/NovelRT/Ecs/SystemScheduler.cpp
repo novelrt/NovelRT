@@ -128,16 +128,10 @@ namespace NovelRT::Ecs
         {
             uint64_t workerIndex;
 
-            if (NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap) != __lzcnt64(_threadAvailabilityMap))
-            {
-                throw std::runtime_error("ROAD ROLLER DA");
-            }
-
             while ((workerIndex = NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap)) == 64)
             {
                 std::this_thread::yield();
             }
-
 
             workerIndex = 63 - workerIndex;
 
