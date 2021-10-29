@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <iostream>
 
 namespace NovelRT::Ecs
 {
@@ -97,7 +98,7 @@ namespace NovelRT::Ecs
         {
             while (!JobAvailable(poolId))
             {
-                std::this_thread::yield();
+               std::this_thread::yield();
             }
 
             Atom workItem = _threadWorkItem[poolId];
@@ -111,8 +112,10 @@ namespace NovelRT::Ecs
 
             assert(((_threadAvailabilityMap & (1ULL << poolId)) == 0) && "Thread marked as available while working!");
             _threadAvailabilityMap ^= (1ULL << poolId);
+            /*
             assert(((_threadAvailabilityMap & (1ULL << poolId)) == (1ULL << poolId)) &&
                    "Thread marked as busy while available!");
+            */
         }
     }
 
@@ -125,10 +128,16 @@ namespace NovelRT::Ecs
         {
             uint64_t workerIndex;
 
+            if (NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap) != __lzcnt64(_threadAvailabilityMap))
+            {
+                throw std::runtime_error("ROAD ROLLER DA");
+            }
+
             while ((workerIndex = NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap)) == 64)
             {
                 std::this_thread::yield();
             }
+
 
             workerIndex = 63 - workerIndex;
 
@@ -137,11 +146,15 @@ namespace NovelRT::Ecs
 
             _threadWorkItem[workerIndex] = systemId;
 
+            /*
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
+            */
             _threadAvailabilityMap ^= (1ULL << workerIndex);
+            /*
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == 0) &&
                    "Thread marked as available while working!");
+            */
         }
 
         while (_threadAvailabilityMap != threadAvailabilityMap)

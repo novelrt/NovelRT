@@ -42,6 +42,7 @@ set(SOURCES
   Maths/GeoVector3Test.cpp
   Maths/GeoVector4Test.cpp
   Maths/QuadTreeTest.cpp
+  Maths/UtilitiesTest.cpp
 
   SceneGraph/SceneNodeTest.cpp
 

@@ -67,7 +67,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineDepthStencilStateCreateInfo.back = backState;
 
         VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState{};
+        pipelineColorBlendAttachmentState.blendEnable = true;
         pipelineColorBlendAttachmentState.colorWriteMask = 0xF;
+        pipelineColorBlendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+        pipelineColorBlendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        //pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
 
         VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo{};
         pipelineColorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
