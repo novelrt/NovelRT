@@ -400,11 +400,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
+        GraphicsPipelineBlendFactor srcBlendFactor,
+        GraphicsPipelineBlendFactor dstBlendFactor,
         gsl::span<GraphicsPipelineInput> inputs,
         gsl::span<GraphicsPipelineResource> resources)
     {
         return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), inputs, resources));
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs, resources));
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()

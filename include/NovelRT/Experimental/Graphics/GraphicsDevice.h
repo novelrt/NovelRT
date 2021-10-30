@@ -76,6 +76,8 @@ namespace NovelRT::Experimental::Graphics
             std::shared_ptr<ShaderProgram> pixelShader) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
+            GraphicsPipelineBlendFactor srcBlendFactor,
+            GraphicsPipelineBlendFactor dstBlendFactor,
             gsl::span<GraphicsPipelineInput> inputs,
             gsl::span<GraphicsPipelineResource> resources) = 0;
 

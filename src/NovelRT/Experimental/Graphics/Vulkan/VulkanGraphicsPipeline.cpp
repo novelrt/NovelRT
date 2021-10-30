@@ -66,13 +66,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineDepthStencilStateCreateInfo.front = frontState;
         pipelineDepthStencilStateCreateInfo.back = backState;
 
+        VkBlendFactor srcBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetSrcBlendFactor());
+        VkBlendFactor dstBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetDstBlendFactor());
+
         VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState{};
         pipelineColorBlendAttachmentState.blendEnable = true;
         pipelineColorBlendAttachmentState.colorWriteMask = 0xF;
-        pipelineColorBlendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-        pipelineColorBlendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        pipelineColorBlendAttachmentState.srcColorBlendFactor = srcBlendFactor;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = srcBlendFactor;
+        pipelineColorBlendAttachmentState.dstColorBlendFactor = dstBlendFactor;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = dstBlendFactor;
         //pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
 
         VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo{};

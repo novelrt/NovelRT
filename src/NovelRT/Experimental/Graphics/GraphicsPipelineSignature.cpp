@@ -7,9 +7,13 @@ namespace NovelRT::Experimental::Graphics
 {
 
     GraphicsPipelineSignature::GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
+                                                         GraphicsPipelineBlendFactor srcBlendFactor,
+                                                         GraphicsPipelineBlendFactor dstBlendFactor,
                                                          gsl::span<const GraphicsPipelineInput> inputs,
                                                          gsl::span<const GraphicsPipelineResource> resources) noexcept
         : GraphicsDeviceObject(std::move(device)),
+          _srcBlendFactor(srcBlendFactor),
+          _dstBlendFactor(dstBlendFactor),
           _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
           _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end()))
     {

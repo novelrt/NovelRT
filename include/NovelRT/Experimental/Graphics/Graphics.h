@@ -43,6 +43,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsTextureAddressMode: uint32_t;
     class ShaderProgram;
     class GraphicsPipeline;
+    enum class GraphicsPipelineBlendFactor : uint32_t;
     class GraphicsPipelineSignature;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
@@ -98,6 +99,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsTexture.h"
 #include "IGraphicsAdapterSelector.h"
 #include "ShaderProgram.h"
+#include "GraphicsPipelineBlendFactor.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"
 #include "GraphicsPrimitive.h"

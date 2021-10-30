@@ -17,10 +17,8 @@ namespace NovelRT::Ecs::Graphics
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
                                                                    Maths::GeoVector2F(400, 400));
 
-
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Warn;
-
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
@@ -30,27 +28,26 @@ namespace NovelRT::Ecs::Graphics
         auto vertShaderData = resourceLoader->LoadShaderSource("vert.spv");
         auto pixelShaderData = resourceLoader->LoadShaderSource("frag.spv");
 
-        _elements = {
-            Experimental::Graphics::GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector3F), Experimental::Graphics::GraphicsPipelineInputElementKind::Position,
-                12),
-            Experimental::Graphics::GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector2F),
-                Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+        _elements = {Experimental::Graphics::GraphicsPipelineInputElement(
+                         typeid(NovelRT::Maths::GeoVector3F),
+                         Experimental::Graphics::GraphicsPipelineInputElementKind::Position, 12),
+                     Experimental::Graphics::GraphicsPipelineInputElement(
+                         typeid(NovelRT::Maths::GeoVector2F),
+                         Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
-        _inputs = {
-            Experimental::Graphics::GraphicsPipelineInput(_elements)};
+        _inputs = {Experimental::Graphics::GraphicsPipelineInput(_elements)};
 
-        _resources = {
-            Experimental::Graphics::GraphicsPipelineResource(
-                Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
-                Experimental::Graphics::ShaderProgramVisibility::Pixel)};
+        _resources = {Experimental::Graphics::GraphicsPipelineResource(
+            Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
+            Experimental::Graphics::ShaderProgramVisibility::Pixel)};
 
         auto vertexShaderProgram = _graphicsDevice->CreateShaderProgram(
             "main", Experimental::Graphics::ShaderProgramKind::Vertex, vertShaderData);
         auto pixelShaderProgram = _graphicsDevice->CreateShaderProgram(
             "main", Experimental::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
-        auto signature = _graphicsDevice->CreatePipelineSignature(_inputs, _resources);
+        auto signature = _graphicsDevice->CreatePipelineSignature(
+            Experimental::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
+            Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, _inputs, _resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
         _vertexBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Experimental::Graphics::GraphicsBufferKind::Vertex, Experimental::Graphics::GraphicsResourceAccess::None,
@@ -93,12 +90,14 @@ namespace NovelRT::Ecs::Graphics
         memcpy_s(pTextureData, texture.data.size(), texture.data.data(), texture.data.size());
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
-        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> inputResourceRegions{texture2DRegion};
+        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
+            inputResourceRegions{texture2DRegion};
 
-        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(0, nullptr, _graphicsDevice, false, 0, 0);
+        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
+            0, nullptr, _graphicsDevice, false, 0, 0);
         graphicsContext->Copy(_texture2D, _textureStagingBuffer);
-        _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest), dummyRegion, 0,
-                                                    inputResourceRegions);
+        _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest),
+                                                      dummyRegion, 0, inputResourceRegions);
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();

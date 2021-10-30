@@ -125,6 +125,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             std::shared_ptr<ShaderProgram> pixelShader) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
+            GraphicsPipelineBlendFactor srcBlendFactor,
+            GraphicsPipelineBlendFactor dstBlendFactor,
             gsl::span<GraphicsPipelineInput> inputs,
             gsl::span<GraphicsPipelineResource> resources) final;
 

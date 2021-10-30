@@ -33,6 +33,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,
+                                        GraphicsPipelineBlendFactor srcBlendFactor,
+                                        GraphicsPipelineBlendFactor dstBlendFactor,
                                         gsl::span<const GraphicsPipelineInput> inputs,
                                         gsl::span<const GraphicsPipelineResource> resources) noexcept;
 

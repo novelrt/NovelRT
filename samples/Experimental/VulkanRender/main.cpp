@@ -77,7 +77,8 @@ int main()
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
-    auto signature = gfxDevice->CreatePipelineSignature(inputs, resources);
+    auto signature = gfxDevice->CreatePipelineSignature(
+        GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
@@ -101,8 +102,8 @@ int main()
     uint32_t cellHeight = textureHeight / 8;
 
     auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-        GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, textureWidth,
-        textureHeight);
+        GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None,
+        GraphicsResourceAccess::Write, textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 

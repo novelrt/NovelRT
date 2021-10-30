@@ -267,9 +267,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsPipelineSignature::VulkanGraphicsPipelineSignature(
         std::shared_ptr<VulkanGraphicsDevice> device,
+        GraphicsPipelineBlendFactor srcBlendFactor,
+        GraphicsPipelineBlendFactor dstBlendFactor,
         gsl::span<const GraphicsPipelineInput> inputs,
         gsl::span<const GraphicsPipelineResource> resources) noexcept
-        : GraphicsPipelineSignature(device, inputs, resources),
+        : GraphicsPipelineSignature(device, srcBlendFactor, dstBlendFactor, inputs, resources),
           _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
           _vulkanDescriptorSet([&]() { return CreateDescriptorSet(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),
