@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_ECS_AUDIO_AUDIOSYSTEM_H
 #define NOVELRT_INTEROP_ECS_AUDIO_AUDIOSYSTEM_H
 
-#include "../NrtTypedefs.h"
+#include "../../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"

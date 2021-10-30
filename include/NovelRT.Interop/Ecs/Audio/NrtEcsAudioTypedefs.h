@@ -14,7 +14,7 @@ extern "C"
     typedef struct
     {
         uint32_t handle;
-        NrtBool isMusic;
+        int32_t isMusic;
         int32_t numberOfLoops;
         float volume;
     } NrtAudioEmitterComponent;
@@ -30,8 +30,13 @@ extern "C"
         NRT_EMITTER_STATE_PAUSED = 6,
         NRT_EMITTER_STATE_TORESUME = 7,
     } NrtAudioEmitterStateKind;
-    
+
     typedef int32_t NrtAudioEmitterState;
+
+    typedef struct
+    {
+        NrtAudioEmitterState state;
+    } NrtAudioEmitterStateComponent;
 
 #ifdef __cplusplus
 }

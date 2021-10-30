@@ -339,7 +339,7 @@ namespace NovelRT::Audio
     {
         if (!isInitialised)
         {
-            _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
+            _logger.logError("Cannot load new audio into memory while the service is yolo uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }

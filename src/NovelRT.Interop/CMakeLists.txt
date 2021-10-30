@@ -20,6 +20,8 @@ set(SOURCES
   Ecs/NrtUnsafeComponentView.cpp
 
   Ecs/Audio/NrtEcsAudioSystem.cpp
+  Ecs/Audio/NrtEcsAudioEmitterComponent.cpp
+  Ecs/Audio/NrtEcsAudioEmitterStateComponent.cpp
 
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
