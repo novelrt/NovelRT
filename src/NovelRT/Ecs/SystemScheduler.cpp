@@ -111,8 +111,6 @@ namespace NovelRT::Ecs
 
             assert(((_threadAvailabilityMap & (1ULL << poolId)) == 0) && "Thread marked as available while working!");
             _threadAvailabilityMap ^= (1ULL << poolId);
-            assert(((_threadAvailabilityMap & (1ULL << poolId)) == (1ULL << poolId)) &&
-                   "Thread marked as busy while available!");
         }
     }
 
@@ -140,8 +138,6 @@ namespace NovelRT::Ecs
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
             _threadAvailabilityMap ^= (1ULL << workerIndex);
-            assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == 0) &&
-                   "Thread marked as available while working!");
         }
 
         while (_threadAvailabilityMap != threadAvailabilityMap)
