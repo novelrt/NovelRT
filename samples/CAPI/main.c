@@ -333,7 +333,7 @@ int main()
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
-    struct MoveContext moveContext;
+    struct MoveContext moveContext = {0,0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
 
     // Run the novel!
