@@ -180,6 +180,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
+        GraphicsTextureAddressMode addressMode,
         GraphicsTextureKind textureKind,
         GraphicsResourceAccess cpuAccessKind,
         GraphicsResourceAccess gpuAccessKind,
@@ -244,7 +245,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
 
         return std::static_pointer_cast<GraphicsTexture>(std::make_shared<VulkanGraphicsTextureImpl<Metadata>>(
-            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height,
+            GetDevice(), addressMode, textureKind, std::move(blockRegion), cpuAccessKind, width, height,
             static_cast<uint16_t>(depth), vulkanImage));
     }
 

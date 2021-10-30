@@ -40,6 +40,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsResource;
     class GraphicsBuffer;
     class GraphicsTexture;
+    enum class GraphicsTextureAddressMode: uint32_t;
     class ShaderProgram;
     class GraphicsPipeline;
     class GraphicsPipelineSignature;
@@ -93,6 +94,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsResource.h"
 #include "GraphicsBufferKind.h"
 #include "GraphicsBuffer.h"
+#include "GraphicsTextureAddressMode.h"
 #include "GraphicsTexture.h"
 #include "IGraphicsAdapterSelector.h"
 #include "ShaderProgram.h"

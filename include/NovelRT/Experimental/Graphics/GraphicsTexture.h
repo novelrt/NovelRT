@@ -13,6 +13,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsTexture : public GraphicsResource
     {
     private:
+        GraphicsTextureAddressMode _addressMode;
         GraphicsTextureKind _kind;
         uint32_t _width;
         uint32_t _height;
@@ -20,6 +21,7 @@ namespace NovelRT::Experimental::Graphics
 
     public:
         GraphicsTexture(std::shared_ptr<GraphicsDevice> device,
+                        GraphicsTextureAddressMode addressMode,
                         GraphicsTextureKind kind,
                         GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                         GraphicsResourceAccess cpuAccess,
@@ -27,6 +29,7 @@ namespace NovelRT::Experimental::Graphics
                         uint32_t height,
                         uint16_t depth)
             : GraphicsResource(std::move(device), std::move(blockRegion), cpuAccess),
+              _addressMode(addressMode),
               _kind(kind),
               _width(width),
               _height(height),
@@ -47,6 +50,11 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] inline GraphicsTextureKind GetKind() const noexcept
         {
             return _kind;
+        }
+
+        [[nodiscard]] inline GraphicsTextureAddressMode GetAddressMode() const noexcept
+        {
+            return _addressMode;
         }
 
         [[nodiscard]] inline uint32_t GetWidth() const noexcept

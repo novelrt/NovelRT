@@ -69,12 +69,12 @@ namespace NovelRT::Ecs::Graphics
         graphicsContext->BeginFrame();
         auto pVertexBuffer = _vertexStagingBuffer->Map<TexturedVertexTest>(vertexBufferRegion);
 
-        pVertexBuffer[0] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(-1.0f, -1.0f)};
-        pVertexBuffer[1] = TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, -1.0f)};
+        pVertexBuffer[0] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)};
+        pVertexBuffer[1] = TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, 0.0f)};
         pVertexBuffer[2] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
         pVertexBuffer[3] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[4] = TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(-1.0f, 1.0f)};
-        pVertexBuffer[5] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(-1.0f, -1.0f)};
+        pVertexBuffer[4] = TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)};
+        pVertexBuffer[5] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)};
 
         _vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
         graphicsContext->Copy(_vertexBuffer, _vertexStagingBuffer);
@@ -82,6 +82,7 @@ namespace NovelRT::Ecs::Graphics
         auto texture = resourceLoader->LoadTexture("novel-chan.png");
 
         _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
+            Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
             Experimental::Graphics::GraphicsTextureKind::TwoDimensional,
             Experimental::Graphics::GraphicsResourceAccess::None, Experimental::Graphics::GraphicsResourceAccess::Write,
             texture.width, texture.height);

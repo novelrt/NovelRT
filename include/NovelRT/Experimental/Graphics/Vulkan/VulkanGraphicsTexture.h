@@ -34,6 +34,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
+                              GraphicsTextureAddressMode addressMode,
                               GraphicsTextureKind kind,
                               GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                               GraphicsResourceAccess cpuAccess,
@@ -85,6 +86,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsTextureImpl(std::shared_ptr<VulkanGraphicsDevice> device,
+                                  GraphicsTextureAddressMode addressMode,
                                   GraphicsTextureKind kind,
                                   GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                                   GraphicsResourceAccess cpuAccess,
@@ -93,6 +95,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                   uint16_t depth,
                                   VkImage vulkanImage)
             : VulkanGraphicsTexture(std::move(device),
+                                    addressMode,
                                     kind,
                                     std::move(blockRegion),
                                     cpuAccess,

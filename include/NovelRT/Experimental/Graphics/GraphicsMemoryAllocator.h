@@ -80,6 +80,7 @@ namespace NovelRT::Experimental::Graphics
         }
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
@@ -90,22 +91,24 @@ namespace NovelRT::Experimental::Graphics
             TexelFormat texelFormat) = 0;
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
             uint32_t width)
         {
-            return CreateTextureWithDefaultArguments(textureKind, cpuAccessKind, gpuAccessKind, width, 1);
+            return CreateTextureWithDefaultArguments(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, 1);
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
             uint32_t width,
             uint32_t height)
         {
-            return CreateTexture(textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
+            return CreateTexture( addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
                                  GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
         }
 
