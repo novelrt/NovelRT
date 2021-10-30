@@ -67,7 +67,7 @@ namespace NovelRT::Maths
             value |= value >> 8;
             value |= value >> 16;
 
-            return Log2DeBruijn()[(value * 0x07C4ACDCu) >> 27];
+            return Log2DeBruijn()[(value * 0x07C4ACDDu) >> 27];
         }
 
         [[nodiscard]] inline static uint32_t LeadingZeroCount32(uint32_t value) noexcept
