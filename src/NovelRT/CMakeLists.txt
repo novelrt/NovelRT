@@ -20,7 +20,7 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
-
+find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 set(SOURCES
   Animation/SpriteAnimator.cpp
 
@@ -193,6 +193,7 @@ target_link_libraries(Engine
     Microsoft.GSL::Microsoft.GSL
     Vulkan::Vulkan
     vulkan-memory-allocator::vulkan-memory-allocator
+    TBB::TBB
 )
 
 if(WIN32)

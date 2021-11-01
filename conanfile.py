@@ -19,7 +19,8 @@ class NovelRTConan(ConanFile):
         ("spdlog/1.8.2"),
         ("ms-gsl/3.1.0"),
         ("vulkan-loader/1.2.182"),
-        ("vulkan-memory-allocator/2.3.0")
+        ("vulkan-memory-allocator/2.3.0"),
+        ("onetbb/2021.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
