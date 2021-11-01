@@ -10,17 +10,17 @@ find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
 )
 find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
+find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
+find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
-
 set(SOURCES
   Animation/SpriteAnimator.cpp
 
@@ -183,14 +183,15 @@ target_link_libraries(Engine
     glad::glad
     glfw::glfw
     glm::glm
+    Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
     OpenAL::OpenAL
     Opus::Opus
     PNG::PNG
     SndFile::SndFile
     spdlog::spdlog
+    TBB::TBB
     Vorbis::Vorbis
-    Microsoft.GSL::Microsoft.GSL
     Vulkan::Vulkan
     vulkan-memory-allocator::vulkan-memory-allocator
 )
