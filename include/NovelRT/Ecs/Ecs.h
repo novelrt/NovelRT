@@ -47,6 +47,8 @@ namespace NovelRT::Ecs
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#define __TBB_PREVIEW_MUTEXES 1
+#include <oneapi/tbb/mutex.h>
 
 // clang-format on
 

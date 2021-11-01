@@ -91,19 +91,23 @@ namespace NovelRT::Ecs
         return (_threadAvailabilityMap & (1ULL << poolId)) == 0;
     }
 
+    void SystemScheduler::WaitForJob(size_t poolId)
+    {
+        _mutexCache[poolId]->lock();
+        assert(JobAvailable(poolId) && "Lock acquired on mutex when no job is available!");
+    }
+
     void SystemScheduler::CycleForJob(size_t poolId)
     {
         while (true)
         {
-            while (!JobAvailable(poolId))
-            {
-               std::this_thread::yield();
-            }
+            WaitForJob(poolId);
 
             Atom workItem = _threadWorkItem[poolId];
 
             if (workItem == std::numeric_limits<Atom>::max())
             {
+                _mutexCache[poolId]->unlock();
                 return;
             }
 
@@ -111,10 +115,6 @@ namespace NovelRT::Ecs
 
             assert(((_threadAvailabilityMap & (1ULL << poolId)) == 0) && "Thread marked as available while working!");
             _threadAvailabilityMap ^= (1ULL << poolId);
-            /*
-            assert(((_threadAvailabilityMap & (1ULL << poolId)) == (1ULL << poolId)) &&
-                   "Thread marked as busy while available!");
-            */
         }
     }
 
@@ -143,10 +143,8 @@ namespace NovelRT::Ecs
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
             _threadAvailabilityMap ^= (1ULL << workerIndex);
-            /*
-            assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == 0) &&
-                   "Thread marked as available while working!");
-            */
+
+            _mutexCache[workerIndex]->unlock();
         }
 
         while (_threadAvailabilityMap != threadAvailabilityMap)
@@ -158,6 +156,15 @@ namespace NovelRT::Ecs
     void SystemScheduler::SpinThreads() noexcept
     {
         _shouldShutDown = false;
+
+        _mutexCache.reserve(_workerThreadCount);
+
+        for (size_t i = 0; i < _workerThreadCount; i++)
+        {
+            _mutexCache.emplace_back(std::make_unique<tbb::mutex>());
+            _mutexCache.back()->lock();
+        }
+
         std::vector<Atom> vec2(_workerThreadCount);
         _threadWorkItem.swap(vec2);
 
@@ -190,6 +197,11 @@ namespace NovelRT::Ecs
 
         _threadAvailabilityMap = 0;
 
+        for (auto&& mutex : _mutexCache)
+        {
+            mutex->unlock();
+        }
+
         for (auto&& i : _threadCache)
         {
             if (i.joinable())
@@ -200,6 +212,7 @@ namespace NovelRT::Ecs
 
         _threadCache.clear();
         _threadWorkItem.clear();
+        _mutexCache.clear();
         _threadsAreSpinning = false;
     }
 
