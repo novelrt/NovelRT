@@ -57,7 +57,7 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsResourceAccess::Read, 64 * 1024);
         _textureStagingBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Experimental::Graphics::GraphicsBufferKind::Default, Experimental::Graphics::GraphicsResourceAccess::Write,
-            Experimental::Graphics::GraphicsResourceAccess::Read, 2818048);
+            Experimental::Graphics::GraphicsResourceAccess::Read, 32 * 1024 * 1024);
 
         auto vertexBufferRegion = _vertexBuffer->Allocate(sizeof(TexturedVertexTest) * 6, 16);
 
@@ -85,8 +85,6 @@ namespace NovelRT::Ecs::Graphics
             texture.width, texture.height);
         auto texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
         auto pTextureData = _textureStagingBuffer->Map<uint8_t>(texture2DRegion);
-        auto test = _texture2D->GetSize();
-        unused(test);
         memcpy_s(pTextureData, texture.data.size(), texture.data.data(), texture.data.size());
         _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
