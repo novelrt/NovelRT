@@ -32,6 +32,7 @@ namespace NovelRT::Ecs
 
         std::vector<Atom> _threadWorkItem;
         std::vector<std::thread> _threadCache;
+        std::vector<std::unique_ptr<tbb::mutex>> _mutexCache;
 
         Timing::Timestamp _currentDelta;
         std::atomic_uint64_t _threadAvailabilityMap;
@@ -41,6 +42,7 @@ namespace NovelRT::Ecs
         bool _threadsAreSpinning;
 
         bool JobAvailable(size_t poolId) const noexcept;
+        void WaitForJob(size_t poolId);
         void CycleForJob(size_t poolId);
         void ScheduleUpdateWork();
 
