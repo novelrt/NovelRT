@@ -3,7 +3,7 @@
 
 #define NOVELRT_C_API 1
 #include <NovelRT.h>
-
+#include <NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h>
 #include <memory.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -15,18 +15,23 @@ int32_t booleanResult = NRT_TRUE;
 int32_t inkServiceProvided = NRT_FALSE;
 int32_t hMove = 1; // 1 == move right, 0 == move left
 int32_t vMove = 1; // 1 == move up, 0 == move down
+int32_t playAudio = 0;
+NrtAudioEmitterStateComponent toPlayState = { NRT_EMITTER_STATE_TOPLAY };
 
 char flippedAxisTempBuffer[1024];
 
-// Services
-NrtAudioServiceHandle audio = NULL;
+//ECS
+NrtAudioSystemHandle audio = NULL;
+NrtSystemSchedulerHandle scheduler = NULL;
+NrtComponentCacheHandle componentCache = NULL;
+NrtEntityCacheHandle entityCache = NULL;
+NrtEntityId singleEntity = 0;
+NrtComponentTypeId audioEmitterId = 0;
+NrtComponentTypeId emitterStateId = 0;
+
+    // Services
 NrtInteractionServiceHandle input = NULL;
 NrtLoggingServiceHandle console = NULL;
-#ifdef NOVELRT_INK
-
-NrtRuntimeServiceHandle dotnet = NULL;
-NrtInkServiceHandle ink = NULL;
-#endif
 NrtStepTimerHandle timer = NULL;
 NrtRenderingServiceHandle renderer = NULL;
 NrtUtilitiesEventWithTimestampHandle updateEvent = NULL;
@@ -35,9 +40,7 @@ NrtRGBAColourHandle colourChange = NULL;
 // Objects
 NrtImageRectHandle nChanRect = NULL;
 NrtBasicInteractionRectHandle interactRect = NULL;
-#ifdef NOVELRT_INK
-NrtStoryHandle story = NULL;
-#endif
+uint32_t goatHandle = 0;
 
 // Function to render NovelChan
 void RenderNovelChan(void* context)
@@ -139,6 +142,7 @@ void MoveNovelChan(NrtTimestamp delta, void* context)
 
     if (bounced == 1)
     {
+        playAudio = 1;
         bounced = 0;
         Nrt_RGBAColour_setR(colourChange, (rand() % 256));
         Nrt_RGBAColour_setG(colourChange, (rand() % 256));
@@ -150,20 +154,19 @@ void MoveNovelChan(NrtTimestamp delta, void* context)
     Nrt_Input_BasicInteractionRect_setTransform(interactRect, transform);
 }
 
-#ifdef NOVELRT_INK
-// Function to interact with Ink
-void InteractWithNovelChan(void* context)
+void UpdateAudio(NrtTimestamp delta, void* context)
 {
-    if (Nrt_Story_canContinue(story) == NRT_FALSE)
+    if (scheduler == NULL)
+        return;
+
+    if(playAudio == 1)
     {
-        Nrt_Story_resetState(story);
+        playAudio = 0;
+        Nrt_AudioSystem_PushEmitterStateComponentUpdate(scheduler, singleEntity, toPlayState);
     }
 
-    const char* cSharpResult = Nrt_Story_continue(story);
-    Nrt_LoggingService_logDebugLine(console, cSharpResult);
-    Nrt_RuntimeService_freeString(dotnet, cSharpResult);
+    Nrt_SystemScheduler_ExecuteIteration(scheduler, delta);
 }
-#endif
 
 int main()
 {
@@ -188,37 +191,6 @@ int main()
     const char* const pathParts[2] = {execPath, "Resources"};
     const char* path = Nrt_appendFilePath(2, pathParts);
 
-    // Getting & Initialising AudioService
-    audio = Nrt_AudioService_create();
-    if (audio == NULL)
-    {
-        const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
-        const char* errMsg = Nrt_appendText(2, textParts);
-        Nrt_LoggingService_logErrorLine(console, errMsg);
-        return -1;
-    }
-    else
-    {
-        booleanResult = Nrt_AudioService_initialiseAudio(audio);
-        if (booleanResult != NRT_TRUE)
-        {
-            const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
-            const char* errMsg = Nrt_appendText(2, textParts);
-            Nrt_LoggingService_logErrorLine(console, errMsg);
-            return -1;
-        }
-
-        NrtAudioServiceIteratorHandle waltz = NULL;
-        const char* const soundParts[3] = {path, "Sounds", "waltz.ogg"};
-        const char* waltzFile = Nrt_appendFilePath(3, soundParts);
-        res = Nrt_AudioService_loadMusic(audio, waltzFile, &waltz);
-
-        if(res == NRT_SUCCESS)
-        {
-            Nrt_AudioService_playMusic(audio, waltz, -1);
-        }
-    }
-
     // Getting InteractionService
     res = Nrt_NovelRunner_getInteractionService(runner, &input);
     if (res == NRT_SUCCESS)
@@ -232,36 +204,6 @@ int main()
         Nrt_LoggingService_logErrorLine(console, errMsg);
         return -1;
     }
-
-#ifdef NOVELRT_INK
-    // Getting & Initialising RuntimeService / InkService
-    res = Nrt_NovelRunner_getRuntimeService(runner, &dotnet);
-    if (res != NRT_SUCCESS)
-    {
-        const char* const textParts[2] = {"Error getting RuntimeService: ", Nrt_getLastError()};
-        const char* errMsg = Nrt_appendText(2, textParts);
-        Nrt_LoggingService_logErrorLine(console, errMsg);
-        return -1;
-    }
-    else
-    {
-        Nrt_LoggingService_logInfoLine(console, "Received .NET RuntimeService from C API!");
-        res = Nrt_RuntimeService_initialise(dotnet);
-        if (res == NRT_SUCCESS)
-        {
-            if (Nrt_RuntimeService_getInkService(dotnet, &ink) == NRT_SUCCESS)
-            {
-                Nrt_LoggingService_logInfoLine(console, "Received Ink Service from C API!");
-                inkServiceProvided = NRT_TRUE;
-                Nrt_InkService_initialise(ink);
-            }
-            else
-            {
-                Nrt_LoggingService_logErrorLine(console, "Failed to receive Ink Service!");
-            }
-        }
-    }
-#endif
 
     // Changing Background Colour
     res = Nrt_NovelRunner_getRenderer(runner, &renderer);
@@ -294,38 +236,38 @@ int main()
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
     res = Nrt_InteractionService_createBasicInteractionRect(input, interactTransform, 3, &interactRect);
 
-#ifdef NOVELRT_INK
-    // Creating Ink Story
-    if (inkServiceProvided == NRT_TRUE)
+    //Setting up ECS & Audio
+    scheduler = Nrt_SystemScheduler_Create(4);
+    componentCache = Nrt_SystemScheduler_GetComponentCache(scheduler);
+    entityCache = Nrt_SystemScheduler_GetEntityCache(scheduler);
+    audio = Nrt_AudioSystem_Create();
     {
-        const char* const pathParts[3] = {path, "Scripts", "story.json"};
-        const char* storyLocation = Nrt_appendFilePath(3, pathParts);
-        Nrt_LoggingService_logInfoLine(console, storyLocation);
-
-        FILE* json = fopen(storyLocation, "rb");
-        char* buffer = 0;
-        long length;
-        if (json != NULL)
-        {
-            fseek(json, 0, SEEK_END);
-            length = ftell(json);
-            fseek(json, 0, SEEK_SET);
-            buffer = malloc(length + 1);
-            if (buffer)
-            {
-                fread(buffer, 1, length, json);
-            }
-            fclose(json);
-            buffer[length] = 0;
-        }
-
-        if (Nrt_InkService_createStory(ink, buffer, &story) == NRT_SUCCESS)
-        {
-            Nrt_Story_resetState(story);
-        }
-        Nrt_Input_BasicInteractionRect_addInteraction(interactRect, &InteractWithNovelChan, NULL);
+        const char* const audioPathParts[3] = {path, "Sounds", "goat.ogg"};
+        const char* goatFileLocation = Nrt_appendFilePath(3, audioPathParts);
+        res = Nrt_AudioSystem_CreateAudio(audio, goatFileLocation, NRT_FALSE, &goatHandle);
     }
-#endif
+
+    //Create the components
+    NrtAudioEmitterComponent goat = { goatHandle, 0, 0, 1.0};
+    NrtAudioEmitterComponent deleted = { -1, 0, 0, 0};
+    NrtAudioEmitterStateComponent goatState = { NRT_EMITTER_STATE_STOPPED };
+    NrtAudioEmitterStateComponent deletedState = { NRT_EMITTER_STATE_DONE };
+
+    //Create the system's update function pointer
+    NrtCatalogueHandle catalogue = Nrt_Catalogue_Create(0,componentCache, entityCache);
+    void(*updateAudio)(NrtTimestamp, NrtCatalogueHandle, void*) = Nrt_AudioSystem_Update;
+    NrtSystemUpdateFnPtr updateAudioPtr = updateAudio;
+
+    //Create the entity
+    singleEntity = Nrt_Catalogue_CreateEntity(catalogue);
+
+    //Register the System & Component
+    Nrt_SystemScheduler_RegisterSystem(scheduler, updateAudioPtr, audio);
+    Nrt_AudioSystem_RegisterDefaultAudioComponents(scheduler);
+
+    //Add the components
+    Nrt_AudioSystem_PushEmitterComponentUpdate(scheduler, singleEntity, goat);
+    Nrt_AudioSystem_PushEmitterStateComponentUpdate(scheduler, singleEntity, goatState);
 
     // Setting up Scene Construction
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
@@ -333,6 +275,10 @@ int main()
     // Setting up Update methods
     struct MoveContext moveContext = {0,0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
+    Nrt_NovelRunner_SubscribeToUpdate(runner, UpdateAudio, NULL, NULL);
+
+    //Spin Threads
+    Nrt_SystemScheduler_SpinThreads(scheduler);
 
     // Run the novel!
     Nrt_NovelRunner_runNovel(runner);

@@ -9,7 +9,7 @@ extern "C"
 {
 #endif
 
-    typedef struct NrtEcsAudioSystem* NrtEcsAudioSystemHandle;
+    typedef struct NrtAudioSystem* NrtAudioSystemHandle;
 
     typedef struct
     {

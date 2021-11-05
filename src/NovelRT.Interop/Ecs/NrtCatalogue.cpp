@@ -57,7 +57,7 @@ extern "C"
         return reinterpret_cast<NrtUnsafeComponentViewHandle>(returnPtr);
     }
 
-    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogueHandle catalogue)
+    NrtEntityId Nrt_Catalogue_CreateEntity(NrtCatalogueHandle catalogue)
     {
         return reinterpret_cast<Catalogue*>(catalogue)->CreateEntity();
     }
