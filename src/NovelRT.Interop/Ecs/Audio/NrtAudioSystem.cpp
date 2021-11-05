@@ -32,7 +32,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioSystem_update(NrtTimestamp delta, NrtCatalogueHandle catalogue, void* context)
+    NrtResult Nrt_AudioSystem_Update(NrtTimestamp delta, NrtCatalogueHandle catalogue, void* context)
     {
 
         if (context == nullptr || catalogue == nullptr)

@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    void Nrt_AudioEmitterComponent_Update(void* lhs, const void* rhs, size_t /*size*/ size, void* context /*context*/)
+    void Nrt_AudioEmitterComponent_Update(void* lhs, const void* rhs, size_t /*size*/, void* /*context*/)
     {
         *reinterpret_cast<Audio::AudioEmitterComponent*>(reinterpret_cast<SparseSetMemoryContainer::ByteIteratorView*>(lhs)->GetDataHandle()) += *reinterpret_cast<const Audio::AudioEmitterComponent*>(reinterpret_cast<const SparseSetMemoryContainer::ByteIteratorView*>(rhs)->GetDataHandle());
     }

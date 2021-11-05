@@ -15,7 +15,9 @@ if(MSVC)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  #May need to set the DEBUG version of these as well if someone uses the VS Generator
   set(CMAKE_SHARED_LINKER_FLAGS "/INCREMENTAL:YES ${CMAKE_SHARED_LINKER_FLAGS}")
+  set(CMAKE_EXE_LINKER_FLAGS  "/INCREMENTAL:YES ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 if(WIN32)
