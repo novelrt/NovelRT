@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    void Nrt_Ecs_AudioEmitterStateComponent_update(NrtAudioEmitterStateComponent* lhs, NrtAudioEmitterStateComponent rhs, size_t /*size*/ size, void* context /*context*/)
+    void Nrt_Ecs_AudioEmitterStateComponent_update(NrtAudioEmitterStateComponent* lhs, NrtAudioEmitterStateComponent rhs, size_t /*size*/, void* /*context*/)
     {
         *reinterpret_cast<Audio::AudioEmitterStateComponent*>(lhs) += *reinterpret_cast<const Audio::AudioEmitterStateComponent*>(&rhs);
     }
