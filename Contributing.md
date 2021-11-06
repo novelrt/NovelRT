@@ -118,7 +118,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 * **Provide specific examples to demonstrate the steps**. Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
 * **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of NovelRT which the suggestion is related to, if possible. (We understand that sometimes code changes can't be shown with a screenshot :sweat_smile:)
-* **Explain why this enhancement would be useful** to most NovelRT users and isn't something that can or should be implemented as a [community plugin].
+* **Explain why this enhancement would be useful** to most NovelRT users as core functionality and isn't something that can or should be implemented as a community plugin.
 * **List some other game engines / examples where this enhancement exists (_if applicable_).**
 * **Specify the name and version of the OS you're using.**
 
