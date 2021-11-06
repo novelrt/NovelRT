@@ -95,7 +95,7 @@ While we understand that not every issue may get resolved, we have a zero-tolera
 * Hateful/discriminatory language
 * Repeatedly reported non-issue
 
-Please note that while we will do our best to filter out these types of submissions, they may still pop up from time to time. If you notice that one of these types of issues are opened in _any_ of the NovelRT organisation's repositories, please e-mail admin@novelrt.dev or message one of the maintainers in Discord. _Furthermore, any attempt to open an issue that falls under the above categories may result in disiplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation)_.
+Please note that while we will do our best to filter out these types of submissions, they may still pop up from time to time. If you notice that one of these types of issues are opened in _any_ of the NovelRT organisation's repositories, please e-mail [admin@novelrt.dev](mailto:admin@novelrt.dev) or message one of the maintainers in Discord. _Furthermore, any attempt to open an issue that falls under the above categories may result in disiplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation)_.
 
 ### Suggesting Enhancements
 

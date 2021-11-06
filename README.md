@@ -144,7 +144,10 @@ Then regenerate the cmake by clicking regenerate on the yellow warning ribbon on
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
 
 ## Contributing
-First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on.
+First off, if you want to contribute, thanks!
+
+If you would like to contribute to the development of NovelRT, please see our [contribution guide here](Contributing.md).
+If this doesn't answer any questions that you have, feel free to reach out to us on Discord to discuss what you can work on - we greatly appreciate it!
 
 **NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Developer via direct message on Discord or by contacting us via [email](mailto:admin%40novelrt.dev).**
 
