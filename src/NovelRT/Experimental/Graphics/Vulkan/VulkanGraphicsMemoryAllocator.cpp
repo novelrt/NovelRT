@@ -161,7 +161,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkResult bufferCreationResult = vkCreateBuffer(vulkanDevice, &bufferCreateInfo, nullptr, &vulkanBuffer);
         if (bufferCreationResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create requested VkBufferInstance.",
+            throw Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
                                                              bufferCreationResult);
         }
 

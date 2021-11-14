@@ -9,6 +9,7 @@
 #include "../../Maths/Maths.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"
+#include "../../Utilities/Lazy.h"
 #include "../EngineConfig.h"
 #include "../Threading/Threading.h"
 #include "../../SceneGraph/SceneGraph.h"
@@ -67,6 +68,7 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsBufferKind : uint32_t;
     enum class TexelFormat : uint32_t;
     class GraphicsSurfaceContext;
+    class GraphicsResourceManager;
 }
 
 // Graphics types
@@ -110,6 +112,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineResource.h"
 #include "GraphicsPipelineResourceKind.h"
 #include "ShaderProgramVisibility.h"
+#include "GraphicsResourceManager.h"
 
 // clang-format on
 

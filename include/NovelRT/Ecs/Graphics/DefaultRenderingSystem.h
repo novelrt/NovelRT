@@ -19,14 +19,13 @@ namespace NovelRT::Ecs::Graphics
     class DefaultRenderingSystem : public IEcsSystem
     {
     private:
+        Utilities::Lazy<Experimental::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<Experimental::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
-        std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _vertexBuffer;
-        std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _vertexStagingBuffer;
         std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _textureStagingBuffer;
         std::shared_ptr<Experimental::Graphics::GraphicsTexture> _texture2D;
         std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> _primitive;

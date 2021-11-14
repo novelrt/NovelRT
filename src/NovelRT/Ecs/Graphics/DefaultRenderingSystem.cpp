@@ -10,7 +10,10 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider)
-        : _graphicsPluginProvider(std::move(graphicsPluginProvider)),
+        : _resourceManager([&]() {
+                               return Experimental::Graphics::GraphicsResourceManager(_graphicsDevice);
+                           }),
+          _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider)),
           _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider))
     {
@@ -49,32 +52,25 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
             Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, _inputs, _resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
-        _vertexBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Experimental::Graphics::GraphicsBufferKind::Vertex, Experimental::Graphics::GraphicsResourceAccess::None,
-            Experimental::Graphics::GraphicsResourceAccess::Write, 64 * 1024);
-        _vertexStagingBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Experimental::Graphics::GraphicsBufferKind::Default, Experimental::Graphics::GraphicsResourceAccess::Write,
-            Experimental::Graphics::GraphicsResourceAccess::Read, 64 * 1024);
         _textureStagingBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Experimental::Graphics::GraphicsBufferKind::Default, Experimental::Graphics::GraphicsResourceAccess::Write,
             Experimental::Graphics::GraphicsResourceAccess::Read, 32 * 1024 * 1024);
 
-        auto vertexBufferRegion = _vertexBuffer->Allocate(sizeof(TexturedVertexTest) * 6, 16);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
         graphicsContext->BeginFrame();
-        auto pVertexBuffer = _vertexStagingBuffer->Map<TexturedVertexTest>(vertexBufferRegion);
+        auto pVertexBuffer = std::vector<TexturedVertexTest> {
+            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, 0.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)}
+        };
 
-        pVertexBuffer[0] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)};
-        pVertexBuffer[1] = TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, 0.0f)};
-        pVertexBuffer[2] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[3] = TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[4] = TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)};
-        pVertexBuffer[5] = TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)};
-
-        _vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-        graphicsContext->Copy(_vertexBuffer, _vertexStagingBuffer);
+        auto& resourceManager = _resourceManager.getActual();
+        auto vertexBufferRegion = resourceManager.LoadVertexData(gsl::span<TexturedVertexTest>(pVertexBuffer));
 
         auto texture = resourceLoader->LoadTexture("novel-chan.png");
 

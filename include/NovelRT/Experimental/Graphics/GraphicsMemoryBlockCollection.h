@@ -53,7 +53,7 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] inline size_t GetMaximumSharedBlockSize() const noexcept
         {
-            return _allocator->GetSettings().MaximumSharedBlockSize.value_or(0);
+            return _allocator->GetSettings().MaximumSharedBlockSize.value_or(256 * 1024 * 1024);
         }
 
         [[nodiscard]] inline int32_t GetMinimumBlockCount() const noexcept
