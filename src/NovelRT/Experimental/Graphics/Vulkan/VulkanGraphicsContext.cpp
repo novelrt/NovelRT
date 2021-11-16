@@ -298,10 +298,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         vulkanBufferCopy.srcOffset = 0;
         vulkanBufferCopy.dstOffset = 0;
         vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
-        auto bla = destination->GetSize();
-        auto blabla = source->GetSize();
-        unused(bla);
-        unused(blabla);
         vkCmdCopyBuffer(GetVulkanCommandBuffer(), source->GetVulkanBuffer(), destination->GetVulkanBuffer(), 1,
                         &vulkanBufferCopy);
     }
