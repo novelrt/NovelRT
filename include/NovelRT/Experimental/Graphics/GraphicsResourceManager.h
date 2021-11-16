@@ -15,6 +15,7 @@ namespace NovelRT::Experimental::Graphics
     private:
         Utilities::Lazy<std::shared_ptr<GraphicsBuffer>> _stagingBuffer;
         std::vector<std::shared_ptr<GraphicsBuffer>> _vertexBuffers;
+        std::vector<std::shared_ptr<GraphicsTexture>> _textures;
         std::shared_ptr<GraphicsDevice> _graphicsDevice;
         size_t _stagingBufferSize;
 
@@ -22,7 +23,7 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(size_t allocationSize);
 
     public:
-        GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice, size_t startingSize = 33554432ULL);
+        GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice, size_t startingStagingBufferSize = 0);
         GraphicsResourceManager(const GraphicsResourceManager& other);
         GraphicsResourceManager(GraphicsResourceManager&& other) noexcept;
 
@@ -32,12 +33,25 @@ namespace NovelRT::Experimental::Graphics
         ~GraphicsResourceManager() = default;
 
         template<typename TData>
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data, size_t alignment = 16)
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data,
+                                                                            size_t alignment = 16)
         {
             return LoadVertexDataUntyped(&(*data.begin()), sizeof(TData), data.size(), alignment);
         }
 
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexDataUntyped(void* data, size_t dataTypeSize, size_t dataLength, size_t alignment);
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexDataUntyped(void* data,
+                                                                                   size_t dataTypeSize,
+                                                                                   size_t dataLength,
+                                                                                   size_t alignment);
+
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
+            const ResourceManagement::TextureMetadata& metadata,
+            GraphicsTextureAddressMode addressMode,
+            GraphicsTextureKind textureKind);
+
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetStagingBufferWithProperSizeHandling(
+            size_t sizeToStage,
+            std::shared_ptr<GraphicsContext>& currentContext);
     };
 }
 

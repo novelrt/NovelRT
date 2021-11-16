@@ -27,9 +27,7 @@ namespace NovelRT::Experimental::Graphics
                                                          ? _settings.MaximumBlockCountPerCollection
                                                          : std::numeric_limits<int32_t>::max();
 
-            size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.has_value()
-                                                ? _settings.MaximumSharedBlockSize.value()
-                                                : 256 * 1024 * 1024;
+            size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.value_or(256 * 1024 * 1024);
 
             int32_t minimumBlockCountPerCollection =
                 _settings.MinimumBlockCountPerCollection >= 0 ? _settings.MinimumBlockCountPerCollection : 0;
@@ -38,9 +36,7 @@ namespace NovelRT::Experimental::Graphics
                                           ? _settings.MinimumBlockSize
                                           : std::max(static_cast<size_t>(4096), maximumSharedBlockSize / 8);
 
-            size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
-                                                          ? _settings.MinimumAllocatedRegionMarginSize.value()
-                                                          : 0;
+            size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.value_or(0);
 
             size_t minimumFreeRegionSizeToRegister =
                 _settings.MinimumFreeRegionSizeToRegister != 0 ? _settings.MinimumFreeRegionSizeToRegister : 4096;

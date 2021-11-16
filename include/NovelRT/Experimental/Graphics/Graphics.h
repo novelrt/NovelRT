@@ -13,6 +13,7 @@
 #include "../EngineConfig.h"
 #include "../Threading/Threading.h"
 #include "../../SceneGraph/SceneGraph.h"
+#include "../../ResourceManagement/ResourceManagement.h"
 #include <chrono>
 #include <cstdint>
 #include <filesystem>

@@ -10,9 +10,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider)
-        : _resourceManager([&]() {
-                               return Experimental::Graphics::GraphicsResourceManager(_graphicsDevice);
-                           }),
+        : _resourceManager([&]() { return Experimental::Graphics::GraphicsResourceManager(_graphicsDevice); }),
           _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider)),
           _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider))
@@ -52,44 +50,33 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
             Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, _inputs, _resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
-        _textureStagingBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Experimental::Graphics::GraphicsBufferKind::Default, Experimental::Graphics::GraphicsResourceAccess::Write,
-            Experimental::Graphics::GraphicsResourceAccess::Read, 32 * 1024 * 1024);
-
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
         graphicsContext->BeginFrame();
-        auto pVertexBuffer = std::vector<TexturedVertexTest> {
+        auto pVertexBuffer = std::vector<TexturedVertexTest>{
             TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)},
             TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, 0.0f)},
             TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
             TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
             TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)}
-        };
+            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
 
         auto& resourceManager = _resourceManager.getActual();
         auto vertexBufferRegion = resourceManager.LoadVertexData(gsl::span<TexturedVertexTest>(pVertexBuffer));
 
         auto texture = resourceLoader->LoadTexture("novel-chan.png");
 
-        _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-            Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
-            Experimental::Graphics::GraphicsTextureKind::TwoDimensional,
-            Experimental::Graphics::GraphicsResourceAccess::None, Experimental::Graphics::GraphicsResourceAccess::Write,
-            texture.width, texture.height);
-        auto texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
-        auto pTextureData = _textureStagingBuffer->Map<uint8_t>(texture2DRegion);
-        memcpy_s(pTextureData, texture.data.size(), texture.data.data(), texture.data.size());
-        _textureStagingBuffer->UnmapAndWrite(texture2DRegion);
+        auto texture2DRegion =
+            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
+                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
 
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
             inputResourceRegions{texture2DRegion};
 
         auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
             0, nullptr, _graphicsDevice, false, 0, 0);
-        graphicsContext->Copy(_texture2D, _textureStagingBuffer);
+
         _primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest),
                                                       dummyRegion, 0, inputResourceRegions);
         graphicsContext->EndFrame();
