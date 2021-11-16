@@ -2,11 +2,15 @@
 // for more information.
 
 #include <NovelRT.h>
+#include <time.h>
 
 using namespace NovelRT::Ecs::Audio;
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+    //RNG
+    srand (time(NULL));
+
     // Old resources setup
     std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
     std::filesystem::path resourcesDirPath = executableDirPath / "Resources";
@@ -18,12 +22,22 @@ int main(int /*argc*/, char* /*argv*/[])
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playMusicInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playMusicText;
 
+    std::unique_ptr<NovelRT::Graphics::BasicFillRect> fadeMusicOutButton;
+    std::unique_ptr<NovelRT::Input::BasicInteractionRect> fadeMusicOutInteraction;
+    std::unique_ptr<NovelRT::Graphics::TextRect> fadeMusicOutText;
+
+    std::unique_ptr<NovelRT::Graphics::BasicFillRect> fadeMusicInButton;
+    std::unique_ptr<NovelRT::Input::BasicInteractionRect> fadeMusicInInteraction;
+    std::unique_ptr<NovelRT::Graphics::TextRect> fadeMusicInText;
+
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> playLazerButton;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playLazerInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playLazerText;
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> playGoatButton;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playGoatInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playGoatText;
+
+
 
     // Setup of NovelRunner
     auto runner = NovelRT::NovelRunner(0, "NovelRT - Audio ECS Sample", NovelRT::Windowing::WindowMode::Windowed);
@@ -36,7 +50,7 @@ int main(int /*argc*/, char* /*argv*/[])
     auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2F((1920 / 2), (1080 / 2)), 0,
                                                   NovelRT::Maths::GeoVector2F(200, 200));
     playMusicButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3,
-                                                                NovelRT::Graphics::RGBAColour(0, 255, 0, 255));
+                                                                NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
     auto playMusicTextTransform = playButtonTransform;
     playMusicTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
     auto vec = playButtonTransform.position;
@@ -49,6 +63,35 @@ int main(int /*argc*/, char* /*argv*/[])
     playMusicInteraction = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
     playMusicInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
     bool paused = false;
+
+    //fade music in button
+    auto fadeMusicInTransform = playButtonTransform;
+    fadeMusicInTransform.position.x += (1920 / 3);
+    fadeMusicInButton = runner.getRenderer()->createBasicFillRect(fadeMusicInTransform, 3,
+                                                                NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
+    auto fadeMusicInTextTransform = fadeMusicInTransform;
+    fadeMusicInTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+    fadeMusicInText =
+        runner.getRenderer()->createTextRect(fadeMusicInTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
+                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
+    fadeMusicInText->setText("Fade In");
+    fadeMusicInInteraction = runner.getInteractionService()->createBasicInteractionRect(fadeMusicInTransform, 2);
+    fadeMusicInInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+
+    //fade music out button
+    auto fadeMusicOutTransform = playButtonTransform;
+    fadeMusicOutTransform.position.x -= (1920 / 3);
+    fadeMusicOutButton = runner.getRenderer()->createBasicFillRect(fadeMusicOutTransform, 3,
+                                                                  NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
+    auto fadeMusicOutTextTransform = fadeMusicOutTransform;
+    fadeMusicOutTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+    fadeMusicOutText =
+        runner.getRenderer()->createTextRect(fadeMusicOutTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
+                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
+    fadeMusicOutText->setText("Fade Out");
+    fadeMusicOutInteraction = runner.getInteractionService()->createBasicInteractionRect(fadeMusicOutTransform, 2);
+    fadeMusicOutInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+
 
     auto lazerButtonTransform = playButtonTransform;
     lazerButtonTransform.position.y += (1080 / 3);
@@ -95,7 +138,7 @@ int main(int /*argc*/, char* /*argv*/[])
     auto goatHandle = audioSystem->CreateAudio(goatPath, false);
     AudioEmitterComponent waltzComponent =
         AudioEmitterComponent{waltzHandle, true, -1, 0.75f};
-    AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::ToPlay};
+    AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
     // Now the sound components
     AudioEmitterComponent lazer =
         AudioEmitterComponent{lazerHandle, false, 0, 0.75f};
@@ -136,6 +179,18 @@ int main(int /*argc*/, char* /*argv*/[])
         }
     };
 
+    fadeMusicOutInteraction->Interacted +=  [&] {
+        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+            0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeOut, 5.0f, 0.0f});
+        console.logDebugLine("Fading music out!");
+    };
+
+    fadeMusicInInteraction->Interacted +=  [&] {
+        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+            0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 5.0f, 0.0f});
+        console.logDebugLine("Fading music in!");
+    };
+
     playLazerInteraction->Interacted += [&] {
         console.logInfoLine("Entity Id: 1 - I'ma firin' mah lazar!");
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
@@ -151,13 +206,19 @@ int main(int /*argc*/, char* /*argv*/[])
     runner.Update += [&](NovelRT::Timing::Timestamp delta) { scheduler.ExecuteIteration(delta); };
 
     runner.SceneConstructionRequested += [&] {
-        playMusicButton->executeObjectBehaviour();
+        //playMusicButton->executeObjectBehaviour();
+        fadeMusicInButton->executeObjectBehaviour();
+        fadeMusicOutButton->executeObjectBehaviour();
         playLazerButton->executeObjectBehaviour();
         playGoatButton->executeObjectBehaviour();
-        playMusicText->executeObjectBehaviour();
+        //playMusicText->executeObjectBehaviour();
+        fadeMusicInText->executeObjectBehaviour();
+        fadeMusicOutText->executeObjectBehaviour();
         playLazerText->executeObjectBehaviour();
         playGoatText->executeObjectBehaviour();
-        playMusicInteraction->executeObjectBehaviour();
+        //playMusicInteraction->executeObjectBehaviour();
+        fadeMusicInInteraction->executeObjectBehaviour();
+        fadeMusicOutInteraction->executeObjectBehaviour();
         playLazerInteraction->executeObjectBehaviour();
         playGoatInteraction->executeObjectBehaviour();
     };

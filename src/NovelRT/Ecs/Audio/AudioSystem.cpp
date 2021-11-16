@@ -7,16 +7,19 @@ namespace NovelRT::Ecs::Audio
 {
     AudioSystem::AudioSystem()
         : _counter(1),
+          _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
+          _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
           _musicCache(std::map<uint32_t, std::vector<ALuint>::iterator>()),
-          _soundCache(std::map<uint32_t, ALuint>()),
           _service(std::make_shared<NovelRT::Audio::AudioService>()),
-          _logger(Utilities::Misc::CONSOLE_LOG_AUDIO)
+          _soundCache(std::map<uint32_t, ALuint>()),
+          _systemTime(Timing::Timestamp::zero())
     {
         _service->initializeAudio();
     }
 
-    void AudioSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue catalogue)
+    void AudioSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
+        _systemTime += delta;
         auto [emitters, states] = catalogue.GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
 
         for (auto [entity, emitterState] : states)
@@ -37,7 +40,7 @@ namespace NovelRT::Ecs::Audio
                     }
                     _logger.logDebug("Entity ID {} - EmitterState ToPlay -> Playing", entity);
                     states.PushComponentUpdateInstruction(
-                        entity, AudioEmitterStateComponent{AudioEmitterState::Playing});
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Playing, emitterState.fadeDuration});
                     break;
                 }
                 case AudioEmitterState::ToStop:
@@ -52,18 +55,17 @@ namespace NovelRT::Ecs::Audio
                     }
                     _logger.logDebug("Entity ID {} - EmitterState ToStop -> Stopped", entity);
                     states.PushComponentUpdateInstruction(
-                        entity, AudioEmitterStateComponent{AudioEmitterState::Stopped});
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, emitterState.fadeDuration});
                     break;
                 }
                 case AudioEmitterState::ToPause:
                 {
-                    // Sounds can't be paused so we just ignore that state.
                     if (emitter.isMusic)
                     {
                         _service->pauseMusic();
                         _logger.logDebug("Entity ID {} - EmitterState ToPause -> Paused", entity);
                         states.PushComponentUpdateInstruction(
-                            entity, AudioEmitterStateComponent{AudioEmitterState::Paused});
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Paused, emitterState.fadeDuration});
                     }
                     break;
                 }
@@ -74,9 +76,120 @@ namespace NovelRT::Ecs::Audio
                         _service->resumeMusic();
                         _logger.logDebug("Entity ID {} - EmitterState ToResume -> Playing", entity);
                         states.PushComponentUpdateInstruction(
-                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing});
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing, emitterState.fadeDuration});
                     }
                     break;
+                }
+                case AudioEmitterState::ToFadeOut:
+                {
+                    if (emitter.isMusic && !_service->isMusicPlaying())
+                    {
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
+                        break;
+                    }
+                    else if (!emitter.isMusic && !_service->isSoundPlaying(_soundCache.at(emitter.handle)))
+                    {
+                       states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
+                       break;
+                    }
+
+                    float slope = -(emitter.volume / emitterState.fadeDuration);
+                    Timing::Timestamp endTime = _systemTime + Timing::Timestamp::fromSeconds(emitterState.fadeDuration);
+                    _fadeCache.insert({entity, std::make_tuple(endTime, slope)});
+
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::FadingOut, emitterState.fadeDuration, 0.0f});
+                    _logger.logDebug("Entity ID {} - EmitterState ToFadeOut -> FadingOut", entity);
+                    break;
+                }
+                case AudioEmitterState::FadingOut:
+                {
+                    Timing::Timestamp endTime = std::get<0>(_fadeCache.at(entity));
+                    float remainingDuration = (endTime - _systemTime).getSecondsFloat();
+
+                    if(_systemTime < endTime)
+                    {
+                        float slope = std::get<1>(_fadeCache.at(entity));
+                        float newVolume = emitter.volume + (slope * delta.getSecondsFloat());
+                        ChangeAudioVolume(emitter, newVolume);
+                        states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::FadingOut, remainingDuration, emitterState.fadeExpectedVolume});
+                        emitters.PushComponentUpdateInstruction(entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, newVolume});
+                        _logger.logDebug("Entity ID {} - EmitterState FadingOut at volume {}, slope: {}, currentTime: {}, remaining: {}", entity, newVolume, slope, _systemTime.getSecondsFloat(), remainingDuration);
+                        break;
+                    }
+                    else
+                    {
+                        ChangeAudioVolume(emitter, 0.0f);
+                        emitters.PushComponentUpdateInstruction(entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, emitterState.fadeExpectedVolume});
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
+                        _fadeCache.erase(entity);
+                        _logger.logDebug("Entity ID {} - EmitterState FadingOut -> Stopped", entity);
+                        break;
+                    }
+
+                    break;
+                }
+                case AudioEmitterState::ToFadeIn:
+                {
+                    if (emitter.isMusic && !_service->isMusicPlaying())
+                    {
+                        _service->setMusicVolume(0.0f);
+                        _service->playMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
+                    }
+                    else if (!emitter.isMusic && !_service->isSoundPlaying(emitter.handle))
+                    {
+                        auto sound = _soundCache.at(emitter.handle);
+                        _service->setSoundVolume(sound, 0.0f);
+                        _service->playSound(sound, emitter.numberOfLoops);
+                    }
+                    else
+                    {
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing, 0.0f, 0.0f});
+                        break;
+                    }
+
+                    float slope = (emitter.volume / emitterState.fadeDuration);
+                    Timing::Timestamp endTime = _systemTime + Timing::Timestamp::fromSeconds(emitterState.fadeDuration);
+                    _fadeCache.insert({entity, std::make_tuple(endTime, slope)});
+
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::FadingIn, emitterState.fadeDuration, emitter.volume});
+                    emitters.PushComponentUpdateInstruction(entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, 0.0f});
+                    _logger.logDebug("Entity ID {} - EmitterState ToFadeIn -> FadingIn", entity);
+                    break;
+                }
+                case AudioEmitterState::FadingIn:
+                {
+                    Timing::Timestamp endTime = std::get<0>(_fadeCache.at(entity));
+                    float remainingDuration = (endTime - _systemTime).getSecondsFloat();
+
+                    if(_systemTime < endTime)
+                    {
+                        float slope = std::get<1>(_fadeCache.at(entity));
+                        float newVolume = emitter.volume + (slope * delta.getSecondsFloat());
+                        ChangeAudioVolume(emitter, newVolume);
+                        states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::FadingIn, remainingDuration, emitterState.fadeExpectedVolume});
+                        emitters.PushComponentUpdateInstruction(entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, newVolume});
+                        _logger.logDebug("Entity ID {} - EmitterState FadingIn at volume {}, slope: {}, currentTime: {}, remaining: {}", entity, newVolume, slope, _systemTime.getSecondsFloat(), remainingDuration);
+                        break;
+                    }
+                    else
+                    {
+                        if(emitter.volume < emitterState.fadeExpectedVolume)
+                        {
+                            ChangeAudioVolume(emitter, emitterState.fadeExpectedVolume);
+                        }
+                        emitters.PushComponentUpdateInstruction(entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, emitterState.fadeExpectedVolume});
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing, 0.0f, 0.0f});
+                        _fadeCache.erase(entity);
+                        _logger.logDebug("Entity ID {} - EmitterState FadingIn -> Playing", entity);
+                        break;
+                    }
                 }
                 case AudioEmitterState::Playing:
                 {
@@ -128,5 +241,17 @@ namespace NovelRT::Ecs::Audio
         }
 
         return value;
+    }
+
+    void AudioSystem::ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume)
+    {
+        if(emitter.isMusic)
+        {
+            _service->setMusicVolume(desiredVolume);
+        }
+        else
+        {
+            _service->setSoundVolume(_soundCache.at(emitter.handle), desiredVolume);
+        }
     }
 }

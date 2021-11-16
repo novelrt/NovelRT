@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT.h>
+#include <NovelRT/Audio/AudioService.h>
 
 namespace NovelRT::Audio
 {
@@ -445,6 +446,18 @@ namespace NovelRT::Audio
     AudioService::~AudioService()
     {
         tearDown();
+    }
+
+    bool AudioService::isMusicPlaying()
+    {
+        alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+        return (_musicSourceState == AL_PLAYING);
+    }
+
+    bool AudioService::isSoundPlaying(ALuint handle)
+    {
+        alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
+        return (_soundSourceState == AL_PLAYING);
     }
 
 } // namespace NovelRT::Audio

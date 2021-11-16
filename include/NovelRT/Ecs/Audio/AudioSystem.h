@@ -10,10 +10,14 @@ namespace NovelRT::Ecs::Audio
     {
     private:
         uint32_t _counter;
-        std::map<uint32_t, std::vector<ALuint>::iterator> _musicCache;
-        std::map<uint32_t, ALuint> _soundCache;
-        std::shared_ptr<NovelRT::Audio::AudioService> _service;
+        std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>> _fadeCache;
         LoggingService _logger;
+        std::map<uint32_t, std::vector<ALuint>::iterator> _musicCache;
+        std::shared_ptr<NovelRT::Audio::AudioService> _service;
+        std::map<uint32_t, ALuint> _soundCache;
+        NovelRT::Timing::Timestamp _systemTime;
+
+        void ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume);
 
     public:
         AudioSystem();

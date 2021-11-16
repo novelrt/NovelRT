@@ -9,10 +9,14 @@ namespace NovelRT::Ecs::Audio
     struct AudioEmitterStateComponent
     {
         AudioEmitterState state = AudioEmitterState::Stopped;
+        float fadeDuration = 0;
+        float fadeExpectedVolume = 0;
 
         inline AudioEmitterStateComponent& operator+=(const AudioEmitterStateComponent& other) noexcept
         {
             state = other.state;
+            fadeDuration = other.fadeDuration;
+            fadeExpectedVolume = other.fadeExpectedVolume;
             return *this;
         };
     };

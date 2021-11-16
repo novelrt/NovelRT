@@ -55,6 +55,8 @@ namespace NovelRT::Audio
         void tearDown();
         bool isLoaded(std::vector<ALuint>::iterator handle);
         bool isLoaded(ALuint handle);
+        bool isMusicPlaying();
+        bool isSoundPlaying(ALuint handle);
     };
 }
 

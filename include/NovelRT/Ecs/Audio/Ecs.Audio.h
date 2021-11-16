@@ -9,6 +9,9 @@
 #endif
 
 #include "../../Audio/Audio.h"
+#include "../../Timing/Timestamp.h"
+#include "../../Timing/StepTimer.h"
+#include <chrono>
 #include <map>
 
 namespace NovelRT::Ecs::Audio

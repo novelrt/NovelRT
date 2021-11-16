@@ -15,7 +15,11 @@ namespace NovelRT::Ecs::Audio
         Stopped = 4,
         ToPause = 5,
         Paused = 6,
-        ToResume = 7
+        ToResume = 7,
+        ToFadeIn = 8,
+        FadingIn = 9,
+        ToFadeOut = 10,
+        FadingOut = 11
     };
 }
 
