@@ -36,10 +36,18 @@ namespace NovelRT::Experimental::Graphics
         }
 
         std::shared_ptr<GraphicsBuffer> vertexBuffer = GetOrCreateGraphicsBufferForAllocationSize(sizeToStage);
+        auto blablabla = vertexBuffer->GetSize();
+        unused(blablabla);
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
+        auto fuck = vertexRegion.GetSize();
+        unused(fuck);
         uint8_t* writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
         memcpy_s(writeArea, sizeToStage, data, sizeToStage);
         stagingBuffer->UnmapAndWrite(vertexRegion);
+        auto bla = stagingBuffer->GetSize();
+        auto blabla = vertexBuffer->GetSize();
+        unused(bla);
+        unused(blabla);
         currentContext->Copy(vertexBuffer, stagingBuffer);
 
         currentContext->EndFrame();
@@ -70,7 +78,7 @@ namespace NovelRT::Experimental::Graphics
 
         //TODO: This needs to be improved.
         auto newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, allocationSize);
+            GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, std::max(_graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize, allocationSize));
 
         _vertexBuffers.emplace_back(newBuffer);
 

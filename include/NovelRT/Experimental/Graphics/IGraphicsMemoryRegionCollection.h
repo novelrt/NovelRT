@@ -590,7 +590,7 @@ namespace NovelRT::Experimental::Graphics
                 size_t paddingBegin = offset - region.GetOffset();
                 size_t requiredEndMargin = GetMinimumAllocatedRegionMarginSize();
 
-                if ((paddingBegin + size + requiredEndMargin) > size)
+                if ((paddingBegin + size + requiredEndMargin) > region.GetSize())
                 {
                     return false;
                 }
