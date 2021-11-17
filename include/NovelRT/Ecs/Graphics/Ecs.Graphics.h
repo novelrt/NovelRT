@@ -15,11 +15,13 @@ namespace NovelRT::Ecs::Graphics
     class DefaultEcsRenderingSystem;
     struct RenderComponent;
     struct GraphicsPipelineComponent;
+    struct TextureInfo;
 }
 
 // clang-format off
 #include "DefaultRenderingSystem.h"
 #include "DefaultRenderingComponentTypes.h"
+#include "TextureInfo.h"
 // clang-format on
 
 #endif // NOVELRT_ECS_GRAPHICS_H

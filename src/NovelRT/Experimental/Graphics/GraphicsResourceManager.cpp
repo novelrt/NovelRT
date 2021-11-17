@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Graphics.h>
-#include <NovelRT/Experimental/Graphics/GraphicsResourceManager.h>
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -176,5 +175,41 @@ namespace NovelRT::Experimental::Graphics
         currentContext->BeginFrame();
 
         return texture2dRegion;
+    }
+
+    void GraphicsResourceManager::FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource)
+    {
+        auto collection = vertexResource.GetCollection();
+        auto bufferPtr = std::dynamic_pointer_cast<Experimental::Graphics::GraphicsBuffer>(collection);
+
+        if (bufferPtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeVertexData.");
+        }
+
+        collection->Free(vertexResource);
+
+        if (bufferPtr->GetSize() == bufferPtr->GetLargestFreeRegionSize())
+        {
+            unused(std::remove_if(_vertexBuffers.begin(), _vertexBuffers.end(),
+                                  [bufferPtr](auto testPtr) { return bufferPtr == testPtr; }));
+        }
+    }
+
+    void GraphicsResourceManager::FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource)
+    {
+        auto collection = textureResource.GetCollection();
+        auto texturePtr = std::dynamic_pointer_cast<Experimental::Graphics::GraphicsTexture>(collection);
+
+        if (texturePtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeTextureData.");
+        }
+
+        collection->Free(textureResource);
+
+        // For now, a single region is a single texture pointer, so we can just remove it.
+        unused(std::remove_if(_textures.begin(), _textures.end(),
+                              [texturePtr](auto testPtr) { return texturePtr == testPtr; }));
     }
 }

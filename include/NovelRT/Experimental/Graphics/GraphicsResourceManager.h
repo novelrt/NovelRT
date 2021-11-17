@@ -21,9 +21,12 @@ namespace NovelRT::Experimental::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateStagingBuffer();
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(size_t allocationSize);
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetStagingBufferWithProperSizeHandling(
+            size_t sizeToStage,
+            std::shared_ptr<GraphicsContext>& currentContext);
 
     public:
-        GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice, size_t startingStagingBufferSize = 0);
+        explicit GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice, size_t startingStagingBufferSize = 0);
         GraphicsResourceManager(const GraphicsResourceManager& other);
         GraphicsResourceManager(GraphicsResourceManager&& other) noexcept;
 
@@ -49,9 +52,9 @@ namespace NovelRT::Experimental::Graphics
             GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind);
 
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetStagingBufferWithProperSizeHandling(
-            size_t sizeToStage,
-            std::shared_ptr<GraphicsContext>& currentContext);
+        void FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource);
+        void FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource);
+
     };
 }
 

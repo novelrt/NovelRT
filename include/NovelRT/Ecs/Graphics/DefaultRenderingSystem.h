@@ -28,6 +28,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
         std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> _primitive;
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> _inputResourceRegions;
+        std::vector<TextureInfo> _namedTextureInfo;
         SceneGraph::Scene _renderScene;
 
     public:
@@ -36,6 +37,12 @@ namespace NovelRT::Ecs::Graphics
                                std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider);
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
+
+        [[nodiscard]] const TextureInfo& GetOrLoadTexture(const std::string& spriteFileName);
+        /*
+        void AttachSpriteRenderingToEntity(EntityId entity, const TextureInfo& texture);
+        [[nodiscard]] EntityId CreateSpriteEntity(const TextureInfo& texture);
+         */
     };
 }
 

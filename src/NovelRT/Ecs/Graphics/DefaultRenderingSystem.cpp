@@ -3,6 +3,8 @@
 
 #include <NovelRT/Ecs/Ecs.h>
 #include <NovelRT/Experimental/Graphics/Graphics.h>
+#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
+
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -68,14 +70,12 @@ namespace NovelRT::Ecs::Graphics
         auto& resourceManager = _resourceManager.getActual();
         auto vertexBufferRegion = resourceManager.LoadVertexData(gsl::span<TexturedVertexTest>(pVertexBuffer));
 
-        auto texture = resourceLoader->LoadTexture("novel-chan.png");
-
-        auto texture2DRegion =
-            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
-                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
+        auto texture2DRegion = GetOrLoadTexture("novel-chan.png");
+/*            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
+                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional); */
 
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-            inputResourceRegions{texture2DRegion};
+            inputResourceRegions{texture2DRegion.gpuTextureRegion};
 
         auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
             0, nullptr, _graphicsDevice, false, 0, 0);
@@ -98,4 +98,30 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->PresentFrame();
         _graphicsDevice->WaitForIdle();
     }
+
+    const TextureInfo& DefaultRenderingSystem::GetOrLoadTexture(const std::string& textureFileName)
+    {
+        auto resourceManager = _resourceManager.getActual();
+        auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
+        auto texture = resourceLoader->LoadTexture(textureFileName);
+
+        auto texture2DRegion =
+            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
+                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
+
+        _namedTextureInfo.emplace_back(TextureInfo{texture2DRegion, textureFileName});
+        return _namedTextureInfo.back();
+    }
+
+    /*
+    void DefaultRenderingSystem::AttachSpriteRenderingToEntity(EntityId entity, const TextureInfo& texture)
+    {
+
+    }
+
+    EntityId DefaultRenderingSystem::CreateSpriteEntity(const TextureInfo& texture)
+    {
+
+    }
+     */
 }
