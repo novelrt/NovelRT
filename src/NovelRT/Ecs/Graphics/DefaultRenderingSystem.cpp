@@ -29,18 +29,21 @@ namespace NovelRT::Ecs::Graphics
         auto vertShaderData = resourceLoader->LoadShaderSource("vert.spv");
         auto pixelShaderData = resourceLoader->LoadShaderSource("frag.spv");
 
-        _elements = {Experimental::Graphics::GraphicsPipelineInputElement(
-                         typeid(NovelRT::Maths::GeoVector3F),
-                         Experimental::Graphics::GraphicsPipelineInputElementKind::Position, 12),
-                     Experimental::Graphics::GraphicsPipelineInputElement(
-                         typeid(NovelRT::Maths::GeoVector2F),
-                         Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> elements = {
+            Experimental::Graphics::GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector3F), Experimental::Graphics::GraphicsPipelineInputElementKind::Position,
+                12),
+            Experimental::Graphics::GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector2F),
+                Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
-        _inputs = {Experimental::Graphics::GraphicsPipelineInput(_elements)};
+        std::vector<Experimental::Graphics::GraphicsPipelineInput> inputs = {
+            Experimental::Graphics::GraphicsPipelineInput(elements)};
 
-        _resources = {Experimental::Graphics::GraphicsPipelineResource(
-            Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
-            Experimental::Graphics::ShaderProgramVisibility::Pixel)};
+        std::vector<Experimental::Graphics::GraphicsPipelineResource> resources = {
+            Experimental::Graphics::GraphicsPipelineResource(
+                Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
+                Experimental::Graphics::ShaderProgramVisibility::Pixel)};
 
         auto vertexShaderProgram = _graphicsDevice->CreateShaderProgram(
             "main", Experimental::Graphics::ShaderProgramKind::Vertex, vertShaderData);
@@ -48,7 +51,7 @@ namespace NovelRT::Ecs::Graphics
             "main", Experimental::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
         auto signature = _graphicsDevice->CreatePipelineSignature(
             Experimental::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
-            Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, _inputs, _resources);
+            Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();

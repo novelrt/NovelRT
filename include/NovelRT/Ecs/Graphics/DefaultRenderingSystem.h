@@ -27,9 +27,6 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
         std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> _primitive;
-        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> _elements;
-        std::vector<Experimental::Graphics::GraphicsPipelineInput> _inputs;
-        std::vector<Experimental::Graphics::GraphicsPipelineResource> _resources;
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> _inputResourceRegions;
         SceneGraph::Scene _renderScene;
 
@@ -37,8 +34,6 @@ namespace NovelRT::Ecs::Graphics
         DefaultRenderingSystem(std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
                                std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
                                std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider);
-
-
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
     };
