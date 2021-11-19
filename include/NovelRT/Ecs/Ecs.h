@@ -29,6 +29,7 @@ namespace NovelRT::Ecs
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
 #include "../PluginManagement/PluginManagement.h"
+#include "../Experimental/Threading/Threading.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>
@@ -38,7 +39,6 @@ namespace NovelRT::Ecs
 #include <functional>
 #include <iterator>
 #include <memory>
-#include <mutex>
 #include <optional>
 #include <queue>
 #include <thread>
@@ -47,7 +47,9 @@ namespace NovelRT::Ecs
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
+#endif
 #include <oneapi/tbb/mutex.h>
 
 // clang-format on

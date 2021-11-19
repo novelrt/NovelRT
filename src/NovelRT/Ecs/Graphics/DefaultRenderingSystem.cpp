@@ -2,9 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Experimental/Graphics/Graphics.h>
-#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
-
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -70,9 +67,10 @@ namespace NovelRT::Ecs::Graphics
         auto& resourceManager = _resourceManager.getActual();
         auto vertexBufferRegion = resourceManager.LoadVertexData(gsl::span<TexturedVertexTest>(pVertexBuffer));
 
-        auto texture2DRegion = GetOrLoadTexture("novel-chan.png");
-/*            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
-                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional); */
+        auto texture2DRegionFuture = GetOrLoadTexture("novel-chan.png");
+        ResolveTextureFutureResults(); // TODO: Workaround for internal texture testing for now. Will be gone in final.
+
+        auto texture2DRegion = texture2DRegionFuture.GetValue();
 
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
             inputResourceRegions{texture2DRegion.gpuTextureRegion};
@@ -91,6 +89,10 @@ namespace NovelRT::Ecs::Graphics
     {
         auto context = _graphicsDevice->GetCurrentContext();
         context->BeginFrame();
+
+        // TODO: This call is probably not supposed to be here but we have nowhere else for it to live right now. :)
+        ResolveTextureFutureResults();
+
         context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
         context->Draw(_primitive);
         context->EndDrawing();
@@ -99,18 +101,47 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->WaitForIdle();
     }
 
-    const TextureInfo& DefaultRenderingSystem::GetOrLoadTexture(const std::string& textureFileName)
+    void DefaultRenderingSystem::ResolveTextureFutureResults()
     {
-        auto resourceManager = _resourceManager.getActual();
-        auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
-        auto texture = resourceLoader->LoadTexture(textureFileName);
+        std::scoped_lock<tbb::mutex> guard(_textureQueueVectorMutex);
 
-        auto texture2DRegion =
-            resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
-                                            Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
+        while (!_texturesToInitialise.empty())
+        {
+            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> ptr = _texturesToInitialise.front();
+            _texturesToInitialise.pop();
 
-        _namedTextureInfo.emplace_back(TextureInfo{texture2DRegion, textureFileName});
-        return _namedTextureInfo.back();
+            auto resourceManager = _resourceManager.getActual();
+            auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
+            auto texture = resourceLoader->LoadTexture(ptr->textureName);
+
+            auto texture2DRegion =
+                resourceManager.LoadTextureData(texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
+                                                Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
+
+            *ptr = TextureInfo{texture2DRegion, ptr->textureName};
+            _namedTextureInfo.emplace_back(ptr);
+        }
+    }
+
+    Experimental::Threading::FutureResult<TextureInfo> DefaultRenderingSystem::GetOrLoadTexture(
+        const std::string& textureFileName)
+    {
+        std::scoped_lock<tbb::mutex> guard(_textureQueueVectorMutex);
+
+        auto resultIterator =
+            std::find_if(_namedTextureInfo.begin(), _namedTextureInfo.end(),
+                         [textureFileName](const auto& ptr) { return textureFileName == ptr->textureName; });
+
+        if (resultIterator == _namedTextureInfo.end())
+        {
+            auto concurrentPtr = Experimental::Threading::MakeShared<TextureInfo>();
+            concurrentPtr->textureName = textureFileName;
+
+            _texturesToInitialise.emplace(concurrentPtr);
+            return Experimental::Threading::FutureResult<TextureInfo>(concurrentPtr);
+        }
+
+        return Experimental::Threading::FutureResult<TextureInfo>(*resultIterator);
     }
 
     /*
