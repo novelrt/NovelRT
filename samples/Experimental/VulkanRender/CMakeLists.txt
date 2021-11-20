@@ -1,41 +1,27 @@
 set(SOURCES
-        main.cpp
-        )
+  main.cpp
+)
 
 add_executable(VulkanRender ${SOURCES})
 add_dependencies(VulkanRender Dotnet Resources)
 target_link_libraries(VulkanRender
-        PRIVATE
-        Engine
-        )
-
-add_custom_command(
-        TARGET VulkanRender POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Dotnet>
-        $<TARGET_FILE_DIR:VulkanRender>/dotnet
+  PRIVATE
+    Engine
 )
 
-#this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
-if(WIN32)
-    add_custom_command(
-            TARGET VulkanRender POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE_DIR:VulkanRender>/dotnet/nethost.dll
-            $<TARGET_FILE_DIR:VulkanRender>
-    )
-endif()
+copy_build_products(VulkanRender
+  DEPENDENCY Resources
+  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
 
-add_custom_command(
-        TARGET VulkanRender POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Resources>
-        $<TARGET_FILE_DIR:VulkanRender>/Resources
-)
+  DEPENDENCY Engine
+  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
 
-add_custom_command(
-        TARGET VulkanRender POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Engine>
-        $<TARGET_FILE_DIR:VulkanRender>
+  DEPENDENCY Dotnet
+  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/dotnet
+  CONDITION NOVELRT_INCLUDE_INK
+
+  DEPENDENCY Dotnet
+  DEPENDENCY_FILES nethost.dll
+  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
+  CONDITION NOVELRT_INCLUDE_INK AND WIN32
 )

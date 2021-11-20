@@ -65,6 +65,7 @@ if(NOT DOXYGEN_FOUND)
   set(NOVELRT_BUILD_DOCUMENTATION OFF)
 endif()
 
+add_subdirectory(resources)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
@@ -80,5 +81,3 @@ if(NOVELRT_BUILD_TESTS)
 
   add_subdirectory(tests)
 endif()
-
-add_subdirectory(resources)

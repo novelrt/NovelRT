@@ -1,3 +1,5 @@
+include(CopyBuildProducts)
+
 set(SOURCES
   main.c
 )
@@ -12,43 +14,28 @@ target_link_libraries(CAPI
     Interop
 )
 
-add_custom_command(
-  TARGET CAPI POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Resources>
-    $<TARGET_FILE_DIR:CAPI>/Resources
-)
+copy_build_products(CAPI
+  DEPENDENCY Resources
+  TARGET_LOCATION $<TARGET_FILE_DIR:CAPI>/Resources
 
-add_custom_command(
-  TARGET CAPI POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Engine>
-    $<TARGET_FILE_DIR:CAPI>
-)
+  DEPENDENCY Engine
+  TARGET_LOCATION $<TARGET_FILE_DIR:CAPI>
 
-add_custom_command(
-  TARGET CAPI POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Interop>
-    $<TARGET_FILE_DIR:CAPI>
+  DEPENDENCY Interop
+  TARGET_LOCATION $<TARGET_FILE_DIR:CAPI>
+
+  DEPENDENCY Dotnet
+  TARGET_LOCATION $<TARGET_FILE_DIR:Simple>/dotnet
+  CONDITION NOVELRT_INCLUDE_INK
+
+  DEPENDENCY Dotnet
+  DEPENDENCY_FILES nethost.dll
+  TARGET_LOCATION $<TARGET_FILE_DIR:Simple>
+  CONDITION NOVELRT_INCLUDE_INK AND WIN32
 )
 
 if(NOVELRT_INCLUDE_INK)
   add_dependencies(CAPI Dotnet)
   target_compile_definitions(CAPI PRIVATE NOVELRT_INK)
-  add_custom_command(
-  TARGET CAPI POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Dotnet>
-    $<TARGET_FILE_DIR:CAPI>/dotnet
-  )
-
-  if(WIN32)
-    add_custom_command(
-      TARGET CAPI POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy
-        $<TARGET_FILE_DIR:CAPI>/dotnet/nethost.dll
-        $<TARGET_FILE_DIR:CAPI>
-    )
-  endif()
 endif()
+
