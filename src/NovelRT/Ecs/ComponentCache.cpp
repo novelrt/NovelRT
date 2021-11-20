@@ -28,7 +28,7 @@ namespace NovelRT::Ecs
         const void* deleteInstructionState,
         const std::function<void(void*, const void*, size_t)>& componentUpdateLogic)
     {
-        ComponentTypeId returnId = Atom::getNextComponentTypeId();
+        ComponentTypeId returnId = Atom::GetNextComponentTypeId();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr =
             CreateContainer(sizeOfDataType, deleteInstructionState, componentUpdateLogic);
         _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };

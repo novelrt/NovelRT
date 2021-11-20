@@ -62,17 +62,23 @@ namespace NovelRT
 
         // TODO: These should be internal to NovelRT
 
-        static Atom getNextEventHandlerId() noexcept;
+        static Atom GetNextEventHandlerId() noexcept;
 
-        static Atom getNextFontSetId() noexcept;
+        static Atom GetNextFontSetId() noexcept;
 
-        static Atom getNextTextureId() noexcept;
+        static Atom GetNextTextureId() noexcept;
 
-        static Atom getNextComponentTypeId() noexcept;
+        static Atom GetNextComponentTypeId() noexcept;
 
-        static Atom getNextEntityId() noexcept;
+        static Atom GetNextEntityId() noexcept;
 
-        static Atom getNextSystemId() noexcept;
+        static Atom GetNextSystemId() noexcept;
+
+        static Atom GetNextEcsTextureId() noexcept;
+
+        static Atom GetNextEcsMeshDataId() noexcept;
+
+        static Atom GetNextEcsPrimitiveId() noexcept;
     };
 
     class AtomHashFunction

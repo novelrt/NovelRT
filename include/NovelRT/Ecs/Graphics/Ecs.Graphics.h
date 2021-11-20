@@ -8,6 +8,7 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
+// Ecs.Graphics Dependencies
 #include "../../Graphics/RGBAColour.h"
 
 namespace NovelRT::Ecs::Graphics
@@ -16,12 +17,23 @@ namespace NovelRT::Ecs::Graphics
     struct RenderComponent;
     struct GraphicsPipelineComponent;
     struct TextureInfo;
+    struct GraphicsPrimitiveInfo;
+    struct MeshInfo;
+    struct AttachRenderToExistingEntityRequestInfo;
+    struct GraphicsPipelineInfo;
+    struct CreateRenderEntityRequestInfo;
 }
 
 // clang-format off
+#include "GraphicsPrimitiveInfo.h"
+#include "AttachRenderToExistingEntityRequestInfo.h"
+#include "CreateRenderEntityRequestInfo.h"
 #include "DefaultRenderingSystem.h"
 #include "DefaultRenderingComponentTypes.h"
 #include "TextureInfo.h"
+#include "MeshInfo.h"
+#include "GraphicsPrimitiveInfo.h"
+#include "GraphicsPipelineInfo.h"
 // clang-format on
 
 #endif // NOVELRT_ECS_GRAPHICS_H

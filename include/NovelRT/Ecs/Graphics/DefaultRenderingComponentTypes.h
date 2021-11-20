@@ -8,20 +8,20 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
-namespace NovelRT::Experimental::Graphics
+namespace NovelRT::Ecs::Graphics
 {
     using BindingIndex = uint32_t;
 
     struct RenderComponent
     {
-        size_t meshDataIndex = 0;
+        Atom meshDataId = 0;
+        Atom textureId = 0;
+        Atom pipelineId = 0;
+        Atom primitiveId = 0; //TODO: This probably won't be sticking around once we rework the primitive internals
     };
 
-    struct GraphicsPipelineComponent
-    {
-        size_t pipelineDataIndex = 0;
-    };
-
+    // TODO: I don't know how to use these given how GraphicsPrimitive currently works quite yet.
+    /*
     struct RGBAColourShaderDescriptorComponent
     {
         NovelRT::Graphics::RGBAColour value = NovelRT::Graphics::RGBAColour(0, 0, 0, 0);
@@ -71,6 +71,7 @@ namespace NovelRT::Experimental::Graphics
     {
         Maths::GeoMatrix4x4F value = Maths::GeoMatrix4x4F::getDefaultIdentity();
     };
+     */
 
 }
 

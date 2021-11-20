@@ -37,7 +37,7 @@ namespace NovelRT::Ecs
             // TODO: Two threads each trying to get a component type ID for T
             // at the first time can race here. We'll either want to lock or
             // do some kind of interlocked compare-exchange here to make it atomic
-            componentTypeId = Atom::getNextComponentTypeId();
+            componentTypeId = Atom::GetNextComponentTypeId();
         }
         return componentTypeId;
     }

@@ -47,6 +47,7 @@ namespace NovelRT::Ecs
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <map>
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif

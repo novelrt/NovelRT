@@ -27,6 +27,11 @@ namespace NovelRT::Experimental::Threading
         {
         }
 
+        ConcurrentSharedPtr(std::nullptr_t) noexcept : _value(nullptr), _mutex(std::make_shared<tbb::mutex>())
+        {
+
+        }
+
         TValue* operator->()
         {
             return _value.get();

@@ -26,26 +26,53 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<Experimental::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
-        std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> _primitive;
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> _inputResourceRegions;
+
         tbb::mutex _textureQueueVectorMutex;
         std::vector<Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfo;
         std::queue<Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _texturesToInitialise;
+
+        tbb::mutex _meshQueueVectorMutex;
+        std::vector<Experimental::Threading::ConcurrentSharedPtr<MeshInfo>> _namedMeshInfo;
+        std::queue<Experimental::Threading::ConcurrentSharedPtr<MeshInfo>> _meshesToInitialise;
+
+        Experimental::Threading::ConcurrentSharedPtr<MeshInfo> _defaultSpriteMeshPtr;
+        size_t _defaultSpriteMeshIndex;
+
+        tbb::mutex _ecsPrimitiveMapMutex;
+        std::map<Atom, GraphicsPrimitiveInfo, AtomHashFunction> _ecsPrimitiveMap;
+
+        tbb::mutex _existingEntityRenderComponentAttachQueueMutex;
+        std::queue<AttachRenderToExistingEntityRequestInfo> _existingEntityRenderComponentAttachQueue;
+
+        tbb::mutex _createEntityWithRenderComponentQueueMutex;
+        std::queue<CreateRenderEntityRequestInfo> _createEntityWithRenderComponentQueue;
+
+        tbb::mutex _graphicsPipelineVectorQueueMutex;
+        std::vector<Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline>> _namedGraphicsPipelineInfo;
+        std::queue<Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline>> _graphicsPipelinesToInitialise;
+
+        Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline> _defaultGraphicsPipelinePtr;
+        size_t _defaultGraphicsPtrIndex;
+
         SceneGraph::Scene _renderScene;
 
+
+        void ResolveTextureFutureResults();
+        void ResolveExistingEntityAttachments(Catalogue& catalogue);
+        void ResolveCreatingNewEntities(Catalogue& catalogue);
     public:
         DefaultRenderingSystem(std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
                                std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
                                std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider);
 
-        void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
+        void Update(Timing::Timestamp delta, Catalogue catalogue) final;
 
         [[nodiscard]] Experimental::Threading::FutureResult<TextureInfo> GetOrLoadTexture(const std::string& spriteFileName);
+        [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTextureBasedOnId(Atom ecsId);
 
-        void AttachSpriteRenderingToEntity(EntityId entity, const TextureInfo& texture);
-        [[nodiscard]] EntityId CreateSpriteEntity(const TextureInfo& texture);
-
-        void ResolveTextureFutureResults();
+        void AttachSpriteRenderingToEntity(EntityId entity, Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture);
+        [[nodiscard]] Experimental::Threading::FutureResult<EntityId> CreateSpriteEntity( Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture);
     };
 }
 
