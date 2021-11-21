@@ -14,10 +14,9 @@ namespace NovelRT::Ecs::Graphics
 
     struct RenderComponent
     {
-        Atom meshDataId = 0;
+        Atom vertexDataId = 0;
         Atom textureId = 0;
         Atom pipelineId = 0;
-        Atom primitiveId = 0; //TODO: This probably won't be sticking around once we rework the primitive internals
     };
 
     // TODO: I don't know how to use these given how GraphicsPrimitive currently works quite yet.

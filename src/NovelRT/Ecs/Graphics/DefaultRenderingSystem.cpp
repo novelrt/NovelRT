@@ -2,9 +2,29 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
 
 namespace NovelRT::Ecs::Graphics
 {
+    void DefaultRenderingSystem::ResolveVertexInfoFutureResults()
+    {
+        std::scoped_lock<tbb::mutex> guard(_vertexQueueVectorMutex);
+
+        while (!_vertexDataToInitialise.empty())
+        {
+            Experimental::Threading::ConcurrentSharedPtr<VertexInfo> ptr = _vertexDataToInitialise.front();
+            _texturesToInitialise.pop();
+
+            auto& resourceManager = _resourceManager.getActual();
+
+            ptr->gpuVertexRegion =
+                resourceManager.LoadVertexDataUntyped(ptr->stagingPtr, ptr->sizeOfVert, ptr->stagingPtrLength);
+            ptr->ecsId = Atom::GetNextEcsVertexDataId();
+            free(ptr->stagingPtr);
+            ptr->stagingPtr = nullptr;
+        }
+    }
+
     void DefaultRenderingSystem::ResolveTextureFutureResults()
     {
         std::scoped_lock<tbb::mutex> guard(_textureQueueVectorMutex);
@@ -14,7 +34,7 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Threading::ConcurrentSharedPtr<TextureInfo> ptr = _texturesToInitialise.front();
             _texturesToInitialise.pop();
 
-            auto resourceManager = _resourceManager.getActual();
+            auto& resourceManager = _resourceManager.getActual();
             auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
             auto texture = resourceLoader->LoadTexture(ptr->textureName);
 
@@ -29,60 +49,39 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::ResolveExistingEntityAttachments(Catalogue& catalogue)
     {
-        std::scoped_lock guard(_existingEntityRenderComponentAttachQueueMutex, _meshQueueVectorMutex,
-                               _textureQueueVectorMutex, _ecsPrimitiveMapMutex, _graphicsPipelineVectorQueueMutex);
+        std::scoped_lock guard(_existingEntityRenderComponentAttachQueueMutex);
 
         ComponentView<RenderComponent> renderComponentView = catalogue.GetComponentView<RenderComponent>();
 
         while (!_existingEntityRenderComponentAttachQueue.empty())
         {
-            Atom primitiveId = 0;
             AttachRenderToExistingEntityRequestInfo requestInfo = _existingEntityRenderComponentAttachQueue.front();
             _existingEntityRenderComponentAttachQueue.pop();
 
-            if (requestInfo.primitivePtr == nullptr)
-            {
-                auto iteratorResult =
-                    std::find_if(_ecsPrimitiveMap.begin(), _ecsPrimitiveMap.end(),
-                                 [requestInfoCopy = requestInfo](const auto& pair)
-                                 {
-                                     auto& value = pair.second;
-                                     return (value.ecsMeshDataId == requestInfoCopy.meshPtr->ecsId) &&
-                                            (value.ecsTextureId == requestInfoCopy.texturePtr->ecsId) &&
-                                            (value.ecsPipelineId == requestInfoCopy.pipelinePtr->ecsId);
-                                 });
-
-                if (iteratorResult == _ecsPrimitiveMap.end())
-                {
-                    auto& meshInfoPtr = _namedMeshInfo.at(_defaultSpriteMeshIndex);
-                    auto dummyRegion =
-                        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
-                            0, nullptr, _graphicsDevice, false, 0, 0);
-
-                    std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                        inputResourceRegions{requestInfo.texturePtr->gpuTextureRegion};
-
-                    auto newPrimitive = _graphicsDevice->CreatePrimitive(
-                        _defaultGraphicsPipelinePtr.GetUnderlyingSharedPtr(), _defaultSpriteMeshPtr->gpuVertexRegion,
-                        sizeof(TexturedVertexTest), dummyRegion, 0, inputResourceRegions);
-                    primitiveId = Atom::GetNextEcsPrimitiveId();
-                    _ecsPrimitiveMap.emplace(primitiveId, newPrimitive);
-                }
-            }
-            else
-            {
-                primitiveId = requestInfo.primitivePtr->ecsId;
-            }
-
             renderComponentView.AddComponent(requestInfo.entityId,
                                              RenderComponent{requestInfo.meshPtr->ecsId, requestInfo.texturePtr->ecsId,
-                                                             requestInfo.pipelinePtr->ecsId, primitiveId});
+                                                             requestInfo.pipelinePtr->ecsId});
         }
     }
 
     void DefaultRenderingSystem::ResolveCreatingNewEntities(Catalogue& catalogue)
     {
+        std::scoped_lock guard(_createEntityWithRenderComponentQueueMutex);
 
+        ComponentView<RenderComponent> renderComponentView = catalogue.GetComponentView<RenderComponent>();
+
+        while (!_createEntityWithRenderComponentQueue.empty())
+        {
+            CreateRenderEntityRequestInfo requestInfo = _createEntityWithRenderComponentQueue.front();
+            _createEntityWithRenderComponentQueue.pop();
+
+            EntityId newEntity = catalogue.CreateEntity();
+            *requestInfo.entityId = newEntity;
+
+            renderComponentView.AddComponent(newEntity,
+                                             RenderComponent{requestInfo.meshPtr->ecsId, requestInfo.texturePtr->ecsId,
+                                                             requestInfo.pipelinePtr->ecsId});
+        }
     }
 
     DefaultRenderingSystem::DefaultRenderingSystem(
@@ -92,7 +91,25 @@ namespace NovelRT::Ecs::Graphics
         : _resourceManager([&]() { return Experimental::Graphics::GraphicsResourceManager(_graphicsDevice); }),
           _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider)),
-          _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider))
+          _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider)),
+          _surfaceContext(nullptr),
+          _graphicsAdapter(nullptr),
+          _graphicsDevice(nullptr),
+          _inputResourceRegions{},
+          _textureQueueVectorMutex(),
+          _namedTextureInfo{},
+          _texturesToInitialise{},
+          _vertexQueueVectorMutex(),
+          _namedVertexInfo{},
+          _vertexDataToInitialise{},
+          _defaultSpriteMeshPtr(nullptr),
+          _existingEntityRenderComponentAttachQueueMutex(),
+          _existingEntityRenderComponentAttachQueue{},
+          _createEntityWithRenderComponentQueueMutex(),
+          _createEntityWithRenderComponentQueue{},
+          _namedGraphicsPipelineInfo{},
+          _defaultGraphicsPipelinePtr(nullptr),
+          _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
                                                                    Maths::GeoVector2F(400, 400));
@@ -133,6 +150,8 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
+        _defaultGraphicsPipelinePtr = RegisterPipeline("default", pipeline);
+
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
         graphicsContext->BeginFrame();
@@ -144,22 +163,19 @@ namespace NovelRT::Ecs::Graphics
             TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)},
             TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
 
-        auto& resourceManager = _resourceManager.getActual();
-        auto vertexBufferRegion = resourceManager.LoadVertexData(gsl::span<TexturedVertexTest>(pVertexBuffer));
+        //auto texture2DRegionFuture = GetOrLoadTexture("novel-chan.png");
+        auto spriteMeshFuture = LoadVertexDataRaw<TexturedVertexTest>("default", pVertexBuffer, elements);
 
-        auto texture2DRegionFuture = GetOrLoadTexture("novel-chan.png");
-        ResolveTextureFutureResults(); // TODO: Workaround for internal texture testing for now. Will be gone in final.
+        ResolveVertexInfoFutureResults();
+        ResolveTextureFutureResults();
 
-        auto texture2DRegion = texture2DRegionFuture.GetValue();
+        _defaultSpriteMeshPtr = spriteMeshFuture.GetBackingConcurrentSharedPtr();
 
+        /*
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
             inputResourceRegions{texture2DRegion.gpuTextureRegion};
+        */
 
-        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
-            0, nullptr, _graphicsDevice, false, 0, 0);
-
-        //_primitive = _graphicsDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertexTest),
-        //                                            dummyRegion, 0, inputResourceRegions);
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();
@@ -171,6 +187,7 @@ namespace NovelRT::Ecs::Graphics
         context->BeginFrame();
 
         // TODO: This call is probably not supposed to be here but we have nowhere else for it to live right now. :)
+        ResolveVertexInfoFutureResults();
         ResolveTextureFutureResults();
         ResolveExistingEntityAttachments(catalogue);
         ResolveCreatingNewEntities(catalogue);
@@ -184,25 +201,24 @@ namespace NovelRT::Ecs::Graphics
     }
 
     Experimental::Threading::FutureResult<TextureInfo> DefaultRenderingSystem::GetOrLoadTexture(
-        const std::string& textureFileName)
+        const std::string& textureName)
     {
         std::scoped_lock guard(_textureQueueVectorMutex);
 
-        auto resultIterator =
-            std::find_if(_namedTextureInfo.begin(), _namedTextureInfo.end(),
-                         [textureFileName](const auto& ptr) { return textureFileName == ptr->textureName; });
+        auto resultIterator = std::find_if(_namedTextureInfo.begin(), _namedTextureInfo.end(),
+                                           [textureName](const auto& ptr) { return textureName == ptr->textureName; });
 
         if (resultIterator == _namedTextureInfo.end())
         {
-            auto concurrentPtr = Experimental::Threading::MakeShared<TextureInfo>();
-            concurrentPtr->textureName = textureFileName;
+            auto concurrentPtr = Experimental::Threading::MakeConcurrentShared<TextureInfo>();
+            concurrentPtr->textureName = textureName;
             concurrentPtr->ecsId = Atom::GetNextEcsTextureId();
 
             _texturesToInitialise.emplace(concurrentPtr);
-            return Experimental::Threading::FutureResult<TextureInfo>(concurrentPtr);
+            return Experimental::Threading::FutureResult<TextureInfo>(concurrentPtr, TextureInfo{});
         }
 
-        return Experimental::Threading::FutureResult<TextureInfo>(*resultIterator);
+        return Experimental::Threading::FutureResult<TextureInfo>(*resultIterator, TextureInfo{});
     }
 
     Experimental::Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTextureBasedOnId(
@@ -210,15 +226,17 @@ namespace NovelRT::Ecs::Graphics
     {
         std::scoped_lock guard(_textureQueueVectorMutex);
 
-        auto resultIterator = std::find_if(_namedTextureInfo.begin(), _namedTextureInfo.end(),
-                                           [ecsId](const auto& ptr) { return ptr->ecsId == ecsId; });
-
-        if (resultIterator == _namedTextureInfo.end())
+        for (auto&& ptr : _namedTextureInfo)
         {
-            throw Exceptions::KeyNotFoundException("The specified ECS texture ID does not exist.");
+            if (ptr->ecsId != ecsId)
+            {
+                continue;
+            }
+
+            return ptr;
         }
 
-        return *resultIterator;
+        throw Exceptions::KeyNotFoundException();
     }
 
     void DefaultRenderingSystem::AttachSpriteRenderingToEntity(
@@ -230,14 +248,89 @@ namespace NovelRT::Ecs::Graphics
         _existingEntityRenderComponentAttachQueue.emplace(entity, std::move(texture));
     }
 
+    Experimental::Threading::FutureResult<VertexInfo> DefaultRenderingSystem::LoadVertexDataRawUntyped(
+        const std::string& vertexDataName,
+        void* data,
+        size_t dataTypeSize,
+        size_t dataLength,
+        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> vertexShaderInputElements)
+    {
+        std::scoped_lock guard(_vertexQueueVectorMutex);
+
+        auto ptr = Experimental::Threading::MakeConcurrentShared<VertexInfo>();
+        size_t size = dataTypeSize * dataLength;
+        ptr->stagingPtr = malloc(size);
+        ptr->sizeOfVert = dataTypeSize;
+        ptr->stagingPtrLength = dataLength;
+        ptr->vertexShaderInputElements = std::move(vertexShaderInputElements);
+        memcpy_s(ptr->stagingPtr, size, data, size);
+        _vertexDataToInitialise.emplace(ptr);
+
+        return Experimental::Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
+    }
+
+    Experimental::Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnName(
+        const std::string& vertexDataName)
+    {
+        std::scoped_lock guard(_vertexQueueVectorMutex);
+
+        for (auto&& ptr : _namedVertexInfo)
+        {
+            if (ptr->vertexInfoName != vertexDataName)
+            {
+                continue;
+            }
+
+            return ptr;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    Experimental::Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnId(
+        Atom ecsId)
+    {
+        std::scoped_lock guard(_vertexQueueVectorMutex);
+
+        for (auto&& ptr : _namedVertexInfo)
+        {
+            if (ptr->ecsId != ecsId)
+            {
+                continue;
+            }
+
+            return ptr;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::RegisterPipeline(
+        const std::string& pipelineName,
+        std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline)
+    {
+        std::scoped_lock guard(_graphicsPipelineVectorMutex);
+
+        auto ptr = Experimental::Threading::MakeConcurrentShared<GraphicsPipelineInfo>();
+        ptr->gpuPipeline =
+            Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline>(pipeline);
+        ptr->pipelineName = pipelineName;
+        ptr->ecsId = Atom::GetNextEcsGraphicsPipelineId();
+
+        _namedGraphicsPipelineInfo.emplace_back(ptr);
+
+        return ptr;
+    }
+
     Experimental::Threading::FutureResult<EntityId> DefaultRenderingSystem::CreateSpriteEntity(
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture)
     {
         std::scoped_lock guard(_createEntityWithRenderComponentQueueMutex);
 
-        auto ptr = Experimental::Threading::MakeShared<EntityId>();
+        auto ptr = Experimental::Threading::MakeConcurrentShared<EntityId>();
         _createEntityWithRenderComponentQueue.emplace(ptr, std::move(texture));
 
-        return Experimental::Threading::FutureResult(ptr);
+        // TODO: I don't like this. At ALL. There's gotta be a better way to symbolise an invalid entity. :(
+        return Experimental::Threading::FutureResult(ptr, std::numeric_limits<EntityId>::max());
     }
 }

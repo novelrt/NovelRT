@@ -13,10 +13,9 @@ namespace NovelRT::Ecs::Graphics
     struct GraphicsPrimitiveInfo
     {
         std::shared_ptr<Experimental::Graphics::GraphicsPrimitive> primitive = nullptr;
-        Atom ecsMeshDataId = 0;
+        Atom ecsVertexDataId = 0;
         Atom ecsTextureId = 0;
         Atom ecsPipelineId = 0;
-        Atom ecsId = 0;
     };
 }
 

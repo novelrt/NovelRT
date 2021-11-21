@@ -76,9 +76,11 @@ namespace NovelRT
 
         static Atom GetNextEcsTextureId() noexcept;
 
-        static Atom GetNextEcsMeshDataId() noexcept;
+        static Atom GetNextEcsVertexDataId() noexcept;
 
         static Atom GetNextEcsPrimitiveId() noexcept;
+
+        static Atom GetNextEcsGraphicsPipelineId() noexcept;
     };
 
     class AtomHashFunction

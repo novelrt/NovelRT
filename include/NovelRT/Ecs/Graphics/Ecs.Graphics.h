@@ -18,7 +18,7 @@ namespace NovelRT::Ecs::Graphics
     struct GraphicsPipelineComponent;
     struct TextureInfo;
     struct GraphicsPrimitiveInfo;
-    struct MeshInfo;
+    struct VertexInfo;
     struct AttachRenderToExistingEntityRequestInfo;
     struct GraphicsPipelineInfo;
     struct CreateRenderEntityRequestInfo;
@@ -28,10 +28,10 @@ namespace NovelRT::Ecs::Graphics
 #include "GraphicsPrimitiveInfo.h"
 #include "AttachRenderToExistingEntityRequestInfo.h"
 #include "CreateRenderEntityRequestInfo.h"
+#include "TextureInfo.h"
+#include "VertexInfo.h"
 #include "DefaultRenderingSystem.h"
 #include "DefaultRenderingComponentTypes.h"
-#include "TextureInfo.h"
-#include "MeshInfo.h"
 #include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPipelineInfo.h"
 // clang-format on

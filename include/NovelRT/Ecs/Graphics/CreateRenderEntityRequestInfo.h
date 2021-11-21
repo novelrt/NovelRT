@@ -14,7 +14,7 @@ namespace NovelRT::Ecs::Graphics
     {
         Experimental::Threading::ConcurrentSharedPtr<EntityId> entityId = nullptr;
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texturePtr = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<MeshInfo> meshPtr = nullptr;
+        Experimental::Threading::ConcurrentSharedPtr<VertexInfo> meshPtr = nullptr;
         Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelinePtr = nullptr;
     };
 }

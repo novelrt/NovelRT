@@ -120,7 +120,7 @@ namespace NovelRT::Experimental::Threading
     }
 
     template<typename TValue, typename... TArgs>
-    [[nodiscard]] static ConcurrentSharedPtr<TValue> MakeShared(TArgs&&... args)
+    [[nodiscard]] static ConcurrentSharedPtr<TValue> MakeConcurrentShared(TArgs&&... args)
     {
         return ConcurrentSharedPtr<TValue>(std::make_shared<TValue>(std::forward(args)...),
                                            std::make_shared<tbb::mutex>());

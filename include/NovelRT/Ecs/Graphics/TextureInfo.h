@@ -12,9 +12,15 @@ namespace NovelRT::Ecs::Graphics
 {
     struct TextureInfo
     {
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuTextureRegion = nullptr;
-        std::string textureName = "";
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuTextureRegion = {};
+        std::string textureName;
         Atom ecsId = 0;
+
+        bool operator==(const TextureInfo& other) const noexcept
+        {
+            return (gpuTextureRegion == other.gpuTextureRegion) && (textureName == other.textureName) &&
+                   (ecsId == other.ecsId);
+        }
     };
 }
 

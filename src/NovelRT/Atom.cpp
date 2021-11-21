@@ -54,10 +54,10 @@ namespace NovelRT
         return Atom(value);
     }
 
-    Atom Atom::GetNextEcsMeshDataId() noexcept
+    Atom Atom::GetNextEcsVertexDataId() noexcept
     {
-        static std::atomic_uintptr_t _nextEcsMeshDataId(0);
-        auto value = ++_nextEcsMeshDataId;
+        static std::atomic_uintptr_t _nextEcsVertexDataId(0);
+        auto value = ++_nextEcsVertexDataId;
         return Atom(value);
     }
 
@@ -65,6 +65,13 @@ namespace NovelRT
     {
         static std::atomic_uintptr_t _nextEcsPrimitiveId(0);
         auto value = ++_nextEcsPrimitiveId;
+        return Atom(value);
+    }
+
+    Atom Atom::GetNextEcsGraphicsPipelineId() noexcept
+    {
+        static std::atomic_uintptr_t _nextEcsGraphicsPipelineId(0);
+        auto value = ++_nextEcsGraphicsPipelineId;
         return Atom(value);
     }
 }

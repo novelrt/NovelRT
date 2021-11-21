@@ -15,11 +15,16 @@ namespace NovelRT::Experimental::Threading
     {
     private:
         ConcurrentSharedPtr<TResultType> _dataContainer;
+        TResultType _nullState;
 
     public:
-        explicit FutureResult(ConcurrentSharedPtr<TResultType> dataContainer) noexcept :
-        _dataContainer(dataContainer)
+        FutureResult(ConcurrentSharedPtr<TResultType> dataContainer, TResultType nullState) noexcept :
+        _dataContainer(std::move(dataContainer)), _nullState(nullState)
         {
+            if (_dataContainer == nullptr)
+            {
+                throw Exceptions::NullPointerException();
+            }
         }
 
         [[nodiscard]] bool IsValueCreated() noexcept
@@ -32,7 +37,7 @@ namespace NovelRT::Experimental::Threading
         {
             std::scoped_lock<ConcurrentSharedPtr<TResultType>> ptrLock(_dataContainer);
 
-            if (_dataContainer == nullptr)
+            if (*_dataContainer == _nullState)
             {
                 return false;
             }
@@ -41,7 +46,7 @@ namespace NovelRT::Experimental::Threading
             return true;
         }
 
-        TResultType& GetValue()
+        [[nodiscard]] TResultType& GetValue()
         {
             if (!IsValueCreated())
             {
@@ -49,6 +54,11 @@ namespace NovelRT::Experimental::Threading
             }
 
             return *_dataContainer;
+        }
+
+        [[nodiscard]] ConcurrentSharedPtr<TResultType> GetBackingConcurrentSharedPtr() const noexcept
+        {
+            return _dataContainer;
         }
     };
 }

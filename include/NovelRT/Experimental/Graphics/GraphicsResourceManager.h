@@ -26,7 +26,8 @@ namespace NovelRT::Experimental::Graphics
             std::shared_ptr<GraphicsContext>& currentContext);
 
     public:
-        explicit GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice, size_t startingStagingBufferSize = 0);
+        explicit GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice,
+                                         size_t startingStagingBufferSize = 0);
         GraphicsResourceManager(const GraphicsResourceManager& other);
         GraphicsResourceManager(GraphicsResourceManager&& other) noexcept;
 
@@ -45,7 +46,7 @@ namespace NovelRT::Experimental::Graphics
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexDataUntyped(void* data,
                                                                                    size_t dataTypeSize,
                                                                                    size_t dataLength,
-                                                                                   size_t alignment);
+                                                                                   size_t alignment = 16);
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
             const ResourceManagement::TextureMetadata& metadata,
@@ -54,7 +55,6 @@ namespace NovelRT::Experimental::Graphics
 
         void FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource);
         void FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource);
-
     };
 }
 
