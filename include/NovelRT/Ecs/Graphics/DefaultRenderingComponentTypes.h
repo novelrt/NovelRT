@@ -17,6 +17,16 @@ namespace NovelRT::Ecs::Graphics
         Atom vertexDataId = 0;
         Atom textureId = 0;
         Atom pipelineId = 0;
+        bool markedForDeletion = false;
+
+        inline RenderComponent& operator +=(const RenderComponent& other)
+        {
+            vertexDataId = other.vertexDataId;
+            textureId = other.textureId;
+            pipelineId = other.pipelineId;
+            markedForDeletion = other.markedForDeletion;
+            return *this;
+        }
     };
 
     // TODO: I don't know how to use these given how GraphicsPrimitive currently works quite yet.

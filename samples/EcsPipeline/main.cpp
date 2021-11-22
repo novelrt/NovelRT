@@ -10,7 +10,6 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
 
@@ -21,6 +20,15 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
+
+    std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
+        scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
+
+    NovelRT::Experimental::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture = renderingSystem->GetOrLoadTexture("novel-chan");
+
+    renderingSystem->ForceVertexTextureFutureResolution();
+
+    unused(renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler));
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
@@ -33,7 +41,6 @@ int main()
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
     }
-
 
     return 0;
 }

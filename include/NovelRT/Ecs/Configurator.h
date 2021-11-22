@@ -27,6 +27,7 @@ namespace NovelRT::Ecs
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
+            target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, true});
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(_graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
         }
 

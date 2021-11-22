@@ -18,7 +18,7 @@ namespace NovelRT::Ecs::Graphics
         void* stagingPtr = nullptr;
         size_t sizeOfVert = 0;
         size_t stagingPtrLength = 0;
-        std::vector<Experimental::Graphics::GraphicsPipelineInputElement> vertexShaderInputElements;
+        uint32_t stride = 0;
 
         bool operator==(const VertexInfo& other) const noexcept
         {

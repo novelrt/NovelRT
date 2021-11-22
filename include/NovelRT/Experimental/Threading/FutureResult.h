@@ -18,7 +18,7 @@ namespace NovelRT::Experimental::Threading
         TResultType _nullState;
 
     public:
-        FutureResult(ConcurrentSharedPtr<TResultType> dataContainer, TResultType nullState) noexcept :
+        FutureResult(ConcurrentSharedPtr<TResultType> dataContainer, TResultType nullState) :
         _dataContainer(std::move(dataContainer)), _nullState(nullState)
         {
             if (_dataContainer == nullptr)

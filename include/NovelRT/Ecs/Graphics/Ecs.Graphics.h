@@ -13,7 +13,7 @@
 
 namespace NovelRT::Ecs::Graphics
 {
-    class DefaultEcsRenderingSystem;
+    class DefaultRenderingSystem;
     struct RenderComponent;
     struct GraphicsPipelineComponent;
     struct TextureInfo;

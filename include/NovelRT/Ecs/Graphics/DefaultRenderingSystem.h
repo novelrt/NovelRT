@@ -29,35 +29,27 @@ namespace NovelRT::Ecs::Graphics
         std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
             _inputResourceRegions;
 
-        tbb::mutex _textureQueueVectorMutex;
+        tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
         std::queue<Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _texturesToInitialise;
 
-        tbb::mutex _vertexQueueVectorMutex;
+        tbb::mutex _vertexQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfoObjects;
         std::queue<Experimental::Threading::ConcurrentSharedPtr<VertexInfo>> _vertexDataToInitialise;
 
         Experimental::Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
-        tbb::mutex _existingEntityRenderComponentAttachQueueMutex;
-        std::queue<AttachRenderToExistingEntityRequestInfo> _existingEntityRenderComponentAttachQueue;
-
-        tbb::mutex _createEntityWithRenderComponentQueueMutex;
-        std::queue<CreateRenderEntityRequestInfo> _createEntityWithRenderComponentQueue;
-
-        tbb::mutex _graphicsPipelineVectorMutex;
+        tbb::mutex _graphicsPipelineMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>>
             _namedGraphicsPipelineInfoObjects;
 
-        Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
-            _defaultGraphicsPipelinePtr;
+        Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
 
         SceneGraph::Scene _renderScene;
 
+        void ResolveGpuFutures();
         void ResolveVertexInfoFutureResults();
         void ResolveTextureFutureResults();
-        void ResolveExistingEntityAttachments(Catalogue& catalogue);
-        void ResolveCreatingNewEntities(Catalogue& catalogue);
 
     public:
         DefaultRenderingSystem(
@@ -79,22 +71,20 @@ namespace NovelRT::Ecs::Graphics
         template<typename TSpanType>
         [[nodiscard]] Experimental::Threading::FutureResult<VertexInfo> LoadVertexDataRaw(
             const std::string& vertexDataName,
-            gsl::span<TSpanType> vertexDataSpan,
-            std::vector<Experimental::Graphics::GraphicsPipelineInputElement> vertexShaderInputElements)
+            gsl::span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
 
             return LoadVertexDataRawUntyped(vertexDataName, vertexDataSpan.data(), sizeof(TSpanType),
-                                            vertexDataSpan.size(), std::move(vertexShaderInputElements));
+                                            vertexDataSpan.size());
         }
 
         [[nodiscard]] Experimental::Threading::FutureResult<VertexInfo> LoadVertexDataRawUntyped(
             const std::string& vertexDataName,
             void* data,
             size_t dataTypeSize,
-            size_t dataLength,
-            std::vector<Experimental::Graphics::GraphicsPipelineInputElement> vertexShaderInputElements);
+            size_t dataLength);
 
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnName(
             const std::string& vertexDataName);
@@ -102,13 +92,20 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(
             Atom ecsId);
 
+
+        [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
+            const std::string& pipelineName,
+            std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline);
+
         void AttachSpriteRenderingToEntity(EntityId entity,
-                                           Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture);
+                                           Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, Catalogue& catalogue);
 
-        [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(const std::string& pipelineName, std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline);
+        [[nodiscard]] EntityId CreateSpriteEntity(
+            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, Catalogue& catalogue);
 
-        [[nodiscard]] Experimental::Threading::FutureResult<EntityId> CreateSpriteEntity(
-            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture);
+        [[nodiscard]] EntityId CreateSpriteEntityOutsideOfSystem(Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, SystemScheduler& scheduler);
+
+        void ForceVertexTextureFutureResolution();
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H
