@@ -30,11 +30,11 @@ namespace NovelRT::Ecs::Graphics
             _inputResourceRegions;
 
         tbb::mutex _textureQueueVectorMutex;
-        std::vector<Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfo;
+        std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
         std::queue<Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _texturesToInitialise;
 
         tbb::mutex _vertexQueueVectorMutex;
-        std::vector<Experimental::Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfo;
+        std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfoObjects;
         std::queue<Experimental::Threading::ConcurrentSharedPtr<VertexInfo>> _vertexDataToInitialise;
 
         Experimental::Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
@@ -46,8 +46,8 @@ namespace NovelRT::Ecs::Graphics
         std::queue<CreateRenderEntityRequestInfo> _createEntityWithRenderComponentQueue;
 
         tbb::mutex _graphicsPipelineVectorMutex;
-        std::vector<Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline>>
-            _namedGraphicsPipelineInfo;
+        std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>>
+            _namedGraphicsPipelineInfoObjects;
 
         Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
             _defaultGraphicsPipelinePtr;
