@@ -189,7 +189,7 @@ int main()
     const char* path = Nrt_appendFilePath(2, pathParts);
 
     // Getting & Initialising AudioService
-    audio = Nrt_AudioService_create();
+    audio = Nrt_AudioService_Create();
     if (audio == NULL)
     {
         const char* const textParts[2] = {"Error getting AudioService: ", Nrt_getLastError()};
@@ -199,7 +199,7 @@ int main()
     }
     else
     {
-        booleanResult = Nrt_AudioService_initialiseAudio(audio);
+        booleanResult = Nrt_AudioService_InitialiseAudio(audio);
         if (booleanResult != NRT_TRUE)
         {
             const char* const textParts[2] = {"Error initialising AudioService: ", Nrt_getLastError()};
@@ -211,11 +211,11 @@ int main()
         NrtAudioServiceIteratorHandle waltz = NULL;
         const char* const soundParts[3] = {path, "Sounds", "waltz.ogg"};
         const char* waltzFile = Nrt_appendFilePath(3, soundParts);
-        res = Nrt_AudioService_loadMusic(audio, waltzFile, &waltz);
+        res = Nrt_AudioService_LoadMusic(audio, waltzFile, &waltz);
 
         if(res == NRT_SUCCESS)
         {
-            Nrt_AudioService_playMusic(audio, waltz, -1);
+            Nrt_AudioService_PlayMusic(audio, waltz, -1);
         }
     }
 
