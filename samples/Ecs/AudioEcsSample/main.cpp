@@ -49,19 +49,6 @@ int main(int, char*[])
     // Creating the UI
     auto playButtonTransform = NovelRT::Transform(NovelRT::Maths::GeoVector2F((1920 / 2), (1080 / 2)), 0,
                                                   NovelRT::Maths::GeoVector2F(200, 200));
-//    playMusicButton = runner.getRenderer()->createBasicFillRect(playButtonTransform, 3,
-//                                                                NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
-//    auto playMusicTextTransform = playButtonTransform;
-//    playMusicTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
-//    auto vec = playButtonTransform.position;
-//    vec.x = playButtonTransform.position.x - 75;
-//    playMusicTextTransform.position = vec;
-//    playMusicText =
-//        runner.getRenderer()->createTextRect(playMusicTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
-//                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
-//    playMusicText->setText("Play / Pause");
-//    playMusicInteraction = runner.getInteractionService()->createBasicInteractionRect(playButtonTransform, 2);
-//    playMusicInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
     bool paused = false;
 
     //fade music in button
@@ -192,7 +179,7 @@ int main(int, char*[])
     };
 
     playLazerInteraction->Interacted += [&] {
-        console.logInfoLine("Entity Id: 1 - I'ma firin' mah lazar!");
+        console.logInfoLine("Entity Id: 1 - I'ma firin' mah laz0r!");
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
             0, 1, AudioEmitterStateComponent{AudioEmitterState::ToPlay});
     };

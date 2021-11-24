@@ -287,7 +287,7 @@ int main(int /*argc*/, char* /*argv*/[])
         dotnetRuntimeService->freeString(result);
     };
 #endif
-    audio.playMusic(bgm, -1);
+    audio.PlayMusic(bgm, -1);
     runner.runNovel();
 
     return 0;

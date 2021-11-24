@@ -158,7 +158,7 @@ extern "C"
 
         try
         {
-            serv->playMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
+            serv->PlayMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
         }
         catch (const Exceptions::NotInitialisedException)
         {
