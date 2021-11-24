@@ -9,7 +9,6 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <sndfile.h>
-//#include "../Maths/GeoVector2F.h"
 
 namespace NovelRT::Audio
 {

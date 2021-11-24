@@ -18,7 +18,7 @@ set(RESOURCES_FILES
   Shaders/vert.spv
 
   Sounds/waltz.ogg
-  Sounds/lazer.ogg
+        Sounds/laz0r.ogg
   Sounds/goat.ogg
 )
 

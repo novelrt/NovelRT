@@ -47,7 +47,7 @@ int main(int /*argc*/, char* /*argv*/[])
     auto audio = NovelRT::Audio::AudioService();
     audio.initializeAudio();
     auto bgm = audio.loadMusic((soundsDirPath / "waltz.ogg").string());
-    auto lazer = audio.loadSound((soundsDirPath / "lazer.ogg").string());
+    auto lazer = audio.loadSound((soundsDirPath / "laz0r.ogg").string());
 
 #ifdef TEST_ANIM
     auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();

@@ -131,7 +131,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     // Setup of entities and components
     std::string waltzPath = (soundsDirPath / "waltz.ogg").string();
-    std::string lazerPath = (soundsDirPath / "lazer.ogg").string();
+    std::string lazerPath = (soundsDirPath / "laz0r.ogg").string();
     std::string goatPath = (soundsDirPath / "goat.ogg").string();
     auto waltzHandle = audioSystem->CreateAudio(waltzPath, true);
     auto lazerHandle = audioSystem->CreateAudio(lazerPath, false);
