@@ -16,7 +16,7 @@ int32_t inkServiceProvided = NRT_FALSE;
 int32_t hMove = 1; // 1 == move right, 0 == move left
 int32_t vMove = 1; // 1 == move up, 0 == move down
 int32_t playAudio = 0;
-NrtAudioEmitterStateComponent toPlayState = { NRT_EMITTER_STATE_TOPLAY };
+NrtAudioEmitterStateComponent toPlayState = {NRT_EMITTER_STATE_TO_PLAY};
 
 char flippedAxisTempBuffer[1024];
 
