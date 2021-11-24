@@ -6,7 +6,7 @@
 
 using namespace NovelRT::Ecs::Audio;
 
-int main(int /*argc*/, char* /*argv*/[])
+int main(int, char*[])
 {
     //RNG
     srand (time(NULL));
