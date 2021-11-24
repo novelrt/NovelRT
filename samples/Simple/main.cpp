@@ -45,9 +45,9 @@ int main(int /*argc*/, char* /*argv*/[])
     auto runner = NovelRT::NovelRunner(0, "NovelRTTest", NovelRT::Windowing::WindowMode::Windowed);
     auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
     auto audio = NovelRT::Audio::AudioService();
-    audio.initializeAudio();
-    auto bgm = audio.loadMusic((soundsDirPath / "waltz.ogg").string());
-    auto lazer = audio.loadSound((soundsDirPath / "laz0r.ogg").string());
+    audio.InitializeAudio();
+    auto bgm = audio.LoadMusic((soundsDirPath / "waltz.ogg").string());
+    auto lazer = audio.LoadSound((soundsDirPath / "laz0r.ogg").string());
 
 #ifdef TEST_ANIM
     auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
@@ -208,7 +208,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     memeInteractionRect->Interacted += [&] {
         console.logDebug("WAHEYYY");
-        audio.playSound(lazer, 0);
+        audio.PlaySound(lazer, 0);
     };
 
     interactionRect->Interacted += [&] {

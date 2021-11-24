@@ -131,7 +131,7 @@ namespace NovelRT::Audio
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setSoundVolume",
+                "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
 
@@ -158,7 +158,7 @@ namespace NovelRT::Audio
             _logger.logError(
                 "Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::stopSound", "You cannot stop a sound when the AudioService is not initialised.");
+                "AudioService::StopSound", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
         alSource3f(source, AL_POSITION, posX, posY, 0.0f);
@@ -171,7 +171,7 @@ namespace NovelRT::Audio
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setSoundVolume",
+                "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
 
@@ -218,7 +218,7 @@ namespace NovelRT::Audio
         {
             _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::pauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
+                "AudioService::PauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
         }
 
         alSourcePause(_musicSource);
@@ -230,7 +230,7 @@ namespace NovelRT::Audio
         {
             _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::stopMusic", "You cannot stop a sound when the AudioService is not initialised.");
+                "AudioService::StopMusic", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
         alSourceStop(_musicSource);
@@ -242,7 +242,7 @@ namespace NovelRT::Audio
         {
             _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
         }
 
         if (value > 1.0f)

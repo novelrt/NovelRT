@@ -37,26 +37,26 @@ namespace NovelRT::Audio
         AudioService();
         ~AudioService();
 
-        bool initializeAudio();
-        std::vector<ALuint>::iterator loadMusic(std::string input);
+        bool InitializeAudio();
+        std::vector<ALuint>::iterator LoadMusic(std::string input);
 
-        void setSoundVolume(ALuint source, float val);
-        void setSoundPosition(ALuint source, float posX, float posY);
-        void resumeMusic();
-        void playMusic(std::vector<ALuint>::iterator handle, int32_t loops);
-        void pauseMusic();
-        void stopMusic();
-        void setMusicVolume(float value);
-        void checkSources();
-        ALuint loadSound(std::string input);
-        void unload(ALuint handle);
-        void playSound(ALuint handle, int32_t loops);
-        void stopSound(ALuint handle);
-        void tearDown();
-        bool isLoaded(std::vector<ALuint>::iterator handle);
-        bool isLoaded(ALuint handle);
-        bool isMusicPlaying();
-        bool isSoundPlaying(ALuint handle);
+        void SetSoundVolume(ALuint source, float val);
+        void SetSoundPosition(ALuint source, float posX, float posY);
+        void ResumeMusic();
+        void PlayMusic(std::vector<ALuint>::iterator handle, int32_t loops);
+        void PauseMusic();
+        void StopMusic();
+        void SetMusicVolume(float value);
+        void CheckSources();
+        ALuint LoadSound(std::string input);
+        void Unload(ALuint handle);
+        void PlaySound(ALuint handle, int32_t loops);
+        void StopSound(ALuint handle);
+        void TearDown();
+        [[nodiscard]] bool IsLoaded(std::vector<ALuint>::iterator handle);
+        [[nodiscard]] bool IsLoaded(ALuint handle);
+        [[nodiscard]] bool IsMusicPlaying();
+        [[nodiscard]] bool IsSoundPlaying(ALuint handle);
     };
 }
 

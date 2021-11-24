@@ -36,7 +36,7 @@ extern "C"
 
         try
         {
-            return serv->initializeAudio() ? NRT_TRUE : NRT_FALSE;
+            return serv->InitializeAudio() ? NRT_TRUE : NRT_FALSE;
         }
         catch (const Exceptions::InitialisationFailureException)
         {
@@ -60,7 +60,7 @@ extern "C"
         NovelRT::Audio::SoundBank::iterator out;
         try
         {
-            out = serv->loadMusic(input);
+            out = serv->LoadMusic(input);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -84,7 +84,7 @@ extern "C"
 
         try
         {
-            serv->setSoundVolume(source, val);
+            serv->SetSoundVolume(source, val);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -110,7 +110,7 @@ extern "C"
 
         try
         {
-            serv->setSoundPosition(source, posX, posY);
+            serv->SetSoundPosition(source, posX, posY);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -133,7 +133,7 @@ extern "C"
 
         try
         {
-            serv->resumeMusic();
+            serv->ResumeMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -181,7 +181,7 @@ extern "C"
 
         try
         {
-            serv->pauseMusic();
+            serv->PauseMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -204,7 +204,7 @@ extern "C"
 
         try
         {
-            serv->stopMusic();
+            serv->StopMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -227,7 +227,7 @@ extern "C"
 
         try
         {
-            serv->setMusicVolume(value);
+            serv->SetMusicVolume(value);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -247,7 +247,7 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->checkSources();
+        serv->CheckSources();
 
         return NRT_SUCCESS;
     }
@@ -264,7 +264,7 @@ extern "C"
 
         try
         {
-            *output = serv->loadSound(input);
+            *output = serv->LoadSound(input);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -284,7 +284,7 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->unload(handle);
+        serv->Unload(handle);
         return NRT_SUCCESS;
     }
 
@@ -300,7 +300,7 @@ extern "C"
 
         try
         {
-            serv->playSound(handle, loops);
+            serv->PlaySound(handle, loops);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -320,7 +320,7 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->stopSound(handle);
+        serv->StopSound(handle);
         return NRT_SUCCESS;
     }
 
@@ -333,7 +333,7 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->tearDown();
+        serv->TearDown();
         return NRT_SUCCESS;
     }
 
@@ -347,7 +347,7 @@ extern "C"
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
 
-        return serv->isLoaded(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle)) ? NRT_TRUE : NRT_FALSE;
+        return serv->IsLoaded(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle)) ? NRT_TRUE : NRT_FALSE;
     }
 
     NrtBool Nrt_AudioService_IsSoundLoaded(NrtAudioServiceHandle service, unsigned int handle)
@@ -360,7 +360,7 @@ extern "C"
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
 
-        return serv->isLoaded(handle) ? NRT_TRUE : NRT_FALSE;
+        return serv->IsLoaded(handle) ? NRT_TRUE : NRT_FALSE;
     }
 
 #ifdef __cplusplus
