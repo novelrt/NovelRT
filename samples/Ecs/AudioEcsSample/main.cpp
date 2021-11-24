@@ -18,10 +18,6 @@ int main(int, char*[])
     std::filesystem::path soundsDirPath = resourcesDirPath / "Sounds";
 
     // Button setup - old way
-    std::unique_ptr<NovelRT::Graphics::BasicFillRect> playMusicButton;
-    std::unique_ptr<NovelRT::Input::BasicInteractionRect> playMusicInteraction;
-    std::unique_ptr<NovelRT::Graphics::TextRect> playMusicText;
-
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> fadeMusicOutButton;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> fadeMusicOutInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> fadeMusicOutText;
@@ -30,9 +26,9 @@ int main(int, char*[])
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> fadeMusicInInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> fadeMusicInText;
 
-    std::unique_ptr<NovelRT::Graphics::BasicFillRect> playLazerButton;
-    std::unique_ptr<NovelRT::Input::BasicInteractionRect> playLazerInteraction;
-    std::unique_ptr<NovelRT::Graphics::TextRect> playLazerText;
+    std::unique_ptr<NovelRT::Graphics::BasicFillRect> playLaz0rButton;
+    std::unique_ptr<NovelRT::Input::BasicInteractionRect> playLaz0rInteraction;
+    std::unique_ptr<NovelRT::Graphics::TextRect> playLaz0rText;
     std::unique_ptr<NovelRT::Graphics::BasicFillRect> playGoatButton;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playGoatInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playGoatText;
@@ -80,19 +76,19 @@ int main(int, char*[])
     fadeMusicOutInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
 
-    auto lazerButtonTransform = playButtonTransform;
-    lazerButtonTransform.position.y += (1080 / 3);
-    playLazerButton = runner.getRenderer()->createBasicFillRect(lazerButtonTransform, 3,
+    auto laz0rButtonTransform = playButtonTransform;
+    laz0rButtonTransform.position.y += (1080 / 3);
+    playLaz0rButton = runner.getRenderer()->createBasicFillRect(laz0rButtonTransform, 3,
                                                                 NovelRT::Graphics::RGBAColour(255, 0, 0, 255));
-    auto playLazerTextTransform = lazerButtonTransform;
-    playLazerTextTransform.position.x -= 50;
-    playLazerTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
-    playLazerText =
-        runner.getRenderer()->createTextRect(playLazerTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
+    auto playLaz0rTextTransform = laz0rButtonTransform;
+    playLaz0rTextTransform.position.x -= 50;
+    playLaz0rTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+    playLaz0rText =
+        runner.getRenderer()->createTextRect(playLaz0rTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
                                              (fontsDirPath / "Gayathri-Regular.ttf").string());
-    playLazerText->setText("Pew");
-    playLazerInteraction = runner.getInteractionService()->createBasicInteractionRect(lazerButtonTransform, 2);
-    playLazerInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
+    playLaz0rText->setText("Pew");
+    playLaz0rInteraction = runner.getInteractionService()->createBasicInteractionRect(laz0rButtonTransform, 2);
+    playLaz0rInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
     auto goatButtonTransform = playButtonTransform;
     goatButtonTransform.position.x += (1920 / 4);
@@ -118,18 +114,18 @@ int main(int, char*[])
 
     // Setup of entities and components
     std::string waltzPath = (soundsDirPath / "waltz.ogg").string();
-    std::string lazerPath = (soundsDirPath / "laz0r.ogg").string();
+    std::string laz0rPath = (soundsDirPath / "laz0r.ogg").string();
     std::string goatPath = (soundsDirPath / "goat.ogg").string();
     auto waltzHandle = audioSystem->CreateAudio(waltzPath, true);
-    auto lazerHandle = audioSystem->CreateAudio(lazerPath, false);
+    auto laz0rHandle = audioSystem->CreateAudio(laz0rPath, false);
     auto goatHandle = audioSystem->CreateAudio(goatPath, false);
     AudioEmitterComponent waltzComponent =
         AudioEmitterComponent{waltzHandle, true, -1, 0.75f};
     AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
     // Now the sound components
-    AudioEmitterComponent lazer =
-        AudioEmitterComponent{lazerHandle, false, 0, 0.75f};
-    AudioEmitterComponent goat = lazer;
+    AudioEmitterComponent laz0r =
+        AudioEmitterComponent{laz0rHandle, false, 0, 0.75f};
+    AudioEmitterComponent goat = laz0r;
     goat.handle = goatHandle;
     goat.volume = 1.0f; // o no
 
@@ -141,7 +137,7 @@ int main(int, char*[])
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
         0, 0, waltzState);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(0, 1,
-                                                                                                             lazer);
+                                                                                                             laz0r);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
         0, 1, AudioEmitterStateComponent{AudioEmitterState::Stopped});
 
@@ -149,22 +145,6 @@ int main(int, char*[])
                                                                                                              goat);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
         0, 2, AudioEmitterStateComponent{AudioEmitterState::Stopped});
-
-    playMusicInteraction->Interacted += [&] {
-        paused = !paused;
-        if (paused)
-        {
-            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-                0, 0, AudioEmitterStateComponent{AudioEmitterState::ToPause});
-            console.logDebugLine("Pausing!");
-        }
-        else
-        {
-            scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-                0, 0, AudioEmitterStateComponent{AudioEmitterState::ToResume});
-            console.logDebugLine("Resuming!");
-        }
-    };
 
     fadeMusicOutInteraction->Interacted +=  [&] {
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
@@ -178,7 +158,7 @@ int main(int, char*[])
         console.logDebugLine("Fading music in!");
     };
 
-    playLazerInteraction->Interacted += [&] {
+    playLaz0rInteraction->Interacted += [&] {
         console.logInfoLine("Entity Id: 1 - I'ma firin' mah laz0r!");
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
             0, 1, AudioEmitterStateComponent{AudioEmitterState::ToPlay});
@@ -195,15 +175,15 @@ int main(int, char*[])
     runner.SceneConstructionRequested += [&] {
         fadeMusicInButton->executeObjectBehaviour();
         fadeMusicOutButton->executeObjectBehaviour();
-        playLazerButton->executeObjectBehaviour();
+        playLaz0rButton->executeObjectBehaviour();
         playGoatButton->executeObjectBehaviour();
         fadeMusicInText->executeObjectBehaviour();
         fadeMusicOutText->executeObjectBehaviour();
-        playLazerText->executeObjectBehaviour();
+        playLaz0rText->executeObjectBehaviour();
         playGoatText->executeObjectBehaviour();
         fadeMusicInInteraction->executeObjectBehaviour();
         fadeMusicOutInteraction->executeObjectBehaviour();
-        playLazerInteraction->executeObjectBehaviour();
+        playLaz0rInteraction->executeObjectBehaviour();
         playGoatInteraction->executeObjectBehaviour();
     };
 
