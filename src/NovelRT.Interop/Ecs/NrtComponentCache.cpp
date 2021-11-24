@@ -63,11 +63,8 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto test = reinterpret_cast<ComponentCache*>(componentCache);
-        auto lol = test->GetComponentBufferById(id).get();
-
         *outputResult = reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
-            lol);
+            reinterpret_cast<ComponentCache*>(componentCache)->GetComponentBufferById(id).get());
 
         return NRT_SUCCESS;
     }
