@@ -3,10 +3,28 @@
 
 #include "TextureTypes.hlsl"
 
+cbuffer ProjectionData : register(b0)
+{
+    matrix projectionMatrix;
+};
+
+cbuffer ViewData : register(b1)
+{
+    matrix viewMatrix;
+};
+
+cbuffer PrimitiveData : register(b2)
+{
+    matrix primitiveTransform;
+};
+
 PSInput main(VSInput input)
 {
     PSInput output;
+    matrix finalViewProjectionMatrix = mul(projectionMatrix, viewMatrix);
+    finalViewProjectionMatrix = transpose(mul(finalViewProjectionMatrix, primitiveTransform));
     output.position = float4(input.position, 1.0f);
+    output.position = mul(output.position, finalViewProjectionMatrix);
     output.uv = input.uv;
     return output;
 }

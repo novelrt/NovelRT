@@ -41,6 +41,33 @@ namespace NovelRT::Maths
         {
         }
 
+        inline void Translate(Maths::GeoVector3F vector)
+        {
+            *reinterpret_cast<glm::mat4*>(this) = glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
+        }
+
+        inline void Rotate(float angleInEulerDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, 1.0f))
+        {
+            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInEulerDegrees, *reinterpret_cast<glm::vec3*>(&rotationAngle));
+        }
+
+        inline void Scale(GeoVector3F scaleValue)
+        {
+            *reinterpret_cast<glm::mat4*>(this) = glm::scale(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&scaleValue));
+        }
+
+        inline void Scale(GeoVector2F scaleValue)
+        {
+            auto vec3 = GeoVector3F(scaleValue);
+            vec3.z = 1.0f;
+            Scale(vec3);
+        }
+
+        inline void Transpose()
+        {
+            *reinterpret_cast<glm::mat4*>(this) = glm::transpose(*reinterpret_cast<glm::mat4*>(this));
+        }
+
         inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
@@ -123,6 +150,16 @@ namespace NovelRT::Maths
         static GeoMatrix4x4F getDefaultIdentity() noexcept
         {
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
+        }
+
+        static GeoMatrix4x4F CreateOrthographic(float left, float right, float bottom, float top, float zNear, float zFar) noexcept
+        {
+            return GeoMatrix4x4F(glm::ortho(left, right, bottom, top, zNear, zFar));
+        }
+
+        static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
+        {
+            return GeoMatrix4x4F(glm::scale(glm::vec3(x, y, z)));
         }
     };
 }

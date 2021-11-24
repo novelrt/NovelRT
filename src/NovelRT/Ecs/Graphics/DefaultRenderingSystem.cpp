@@ -68,7 +68,10 @@ namespace NovelRT::Ecs::Graphics
           _surfaceContext(nullptr),
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
-          _inputResourceRegions{},
+          _matricesConstantBuffer(nullptr),
+          _projectionMatrixConstantBufferRegion(),
+          _viewMatrixConstantBufferRegion(),
+          _transformConstantBufferRegion(),
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
           _texturesToInitialise(),
@@ -84,7 +87,7 @@ namespace NovelRT::Ecs::Graphics
                                                                    Maths::GeoVector2F(400, 400));
 
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-        EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Warn;
+        EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
@@ -98,6 +101,7 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsPipelineInputElement(
                 typeid(NovelRT::Maths::GeoVector3F), Experimental::Graphics::GraphicsPipelineInputElementKind::Position,
                 12),
+
             Experimental::Graphics::GraphicsPipelineInputElement(
                 typeid(NovelRT::Maths::GeoVector2F),
                 Experimental::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
@@ -107,8 +111,21 @@ namespace NovelRT::Ecs::Graphics
 
         std::vector<Experimental::Graphics::GraphicsPipelineResource> resources = {
             Experimental::Graphics::GraphicsPipelineResource(
+                Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                Experimental::Graphics::ShaderProgramVisibility::Vertex),
+
+            Experimental::Graphics::GraphicsPipelineResource(
+                Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                Experimental::Graphics::ShaderProgramVisibility::Vertex),
+
+            Experimental::Graphics::GraphicsPipelineResource(
+                Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                Experimental::Graphics::ShaderProgramVisibility::Vertex),
+
+            Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::Texture,
-                Experimental::Graphics::ShaderProgramVisibility::Pixel)};
+                Experimental::Graphics::ShaderProgramVisibility::Pixel),
+        };
 
         auto vertexShaderProgram = _graphicsDevice->CreateShaderProgram(
             "main", Experimental::Graphics::ShaderProgramKind::Vertex, vertShaderData);
@@ -138,10 +155,29 @@ namespace NovelRT::Ecs::Graphics
 
         _defaultSpriteMeshPtr = spriteMeshFuture.GetBackingConcurrentSharedPtr();
 
-        /*
-        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-            inputResourceRegions{texture2DRegion.gpuTextureRegion};
-        */
+        _matricesConstantBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+            Experimental::Graphics::GraphicsBufferKind::Constant, Experimental::Graphics::GraphicsResourceAccess::Write,
+            Experimental::Graphics::GraphicsResourceAccess::Read, 64 * 1024);
+
+        auto windowingDevice = _windowingPluginProvider->GetWindowingDevice();
+
+        _projectionMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
+        Maths::GeoMatrix4x4F* pProjectionMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_projectionMatrixConstantBufferRegion);
+        pProjectionMatrix[0] = Maths::GeoMatrix4x4F::CreateOrthographic(0.0f, windowingDevice->GetWidth(), windowingDevice->GetHeight(), 0.0f, 0.0f, 65535.0f);
+        _matricesConstantBuffer->UnmapAndWrite();
+
+        _viewMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
+        Maths::GeoMatrix4x4F* pViewMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_viewMatrixConstantBufferRegion);
+        pViewMatrix[0] = Maths::GeoMatrix4x4F::CreateFromScale(windowingDevice->GetWidth(), windowingDevice->GetHeight(), -1.0f);
+        _matricesConstantBuffer->UnmapAndWrite();
+
+        auto testTransform = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        testTransform.Scale(Maths::GeoVector2F(762, 881));
+
+        _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
+        Maths::GeoMatrix4x4F* pTransformMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
+        pTransformMatrix[0] = testTransform;
+        _matricesConstantBuffer->UnmapAndWrite();
 
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
@@ -184,15 +220,23 @@ namespace NovelRT::Ecs::Graphics
                 auto& vertexData = _namedVertexInfoObjects.at(component.vertexDataId);
                 auto& textureData = _namedTextureInfoObjects.at(component.textureId);
                 auto& pipelineData = _namedGraphicsPipelineInfoObjects.at(component.pipelineId);
+
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                    textureRegion{textureData->gpuTextureRegion};
+                    resourceRegions
+                    {
+                        _projectionMatrixConstantBufferRegion,
+                        _viewMatrixConstantBufferRegion,
+                        _transformConstantBufferRegion,
+                        textureData->gpuTextureRegion
+                    };
+
                 auto dummyRegion =
                     Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
                         0, nullptr, _graphicsDevice, false, 0, 0);
                 primitiveCache.emplace_back(GraphicsPrimitiveInfo{
                     _graphicsDevice->CreatePrimitive(
                         pipelineData->gpuPipeline.GetUnderlyingSharedPtr(), vertexData->gpuVertexRegion,
-                        static_cast<uint32_t>(vertexData->sizeOfVert), dummyRegion, vertexData->stride, textureRegion),
+                        static_cast<uint32_t>(vertexData->sizeOfVert), dummyRegion, vertexData->stride, resourceRegions),
                     vertexData->ecsId, textureData->ecsId, pipelineData->ecsId});
 
                 primitiveInfo = primitiveCache.back();

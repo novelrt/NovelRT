@@ -26,8 +26,11 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<Experimental::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
-        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-            _inputResourceRegions;
+
+        std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _matricesConstantBuffer;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _projectionMatrixConstantBufferRegion;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _viewMatrixConstantBufferRegion;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _transformConstantBufferRegion;
 
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;

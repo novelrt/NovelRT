@@ -116,10 +116,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
             auto inputs = signature->GetInputs();
             size_t inputsLength = inputs.size();
-            size_t inputElementsIndex = 0;
-            size_t inputElementsCount = GetInputElementsCount(inputs);
 
-            if (inputsLength != 0)
+            size_t inputElementsCount = GetInputElementsCount(inputs);
+            size_t inputElementsIndex = 0;
+
+            if (inputElementsCount != 0)
             {
                 vertexInputAttributeDescriptions.resize(inputElementsCount);
 
