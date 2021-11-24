@@ -90,7 +90,7 @@ namespace NovelRT.DotNet.Sample
             }
             else
             {
-                booleanResult = (NrtBool)Nrt_AudioService_initialiseAudio(audio);
+                booleanResult = (NrtBool)Nrt_AudioService_InitialiseAudio(audio);
 
                 if (booleanResult != NRT_TRUE)
                 {
