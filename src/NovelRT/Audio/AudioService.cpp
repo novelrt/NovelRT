@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Audio/AudioService.h>
-
+#include <NovelRT/Audio/Audio.h>
 
 namespace NovelRT::Audio
 {
@@ -12,7 +11,7 @@ namespace NovelRT::Audio
                   auto device = alcOpenDevice((_deviceName.empty()) ? nullptr : _deviceName.c_str());
                   if (!device)
                   {
-                      std::string error = getALError();
+                      std::string error = GetALError();
                       _logger.logError("OpenAL device creation failed! {}", error);
                       throw Exceptions::InitialisationFailureException(
                           "OpenAL failed to create an audio device! Aborting...", error);
@@ -46,7 +45,7 @@ namespace NovelRT::Audio
     {
     }
 
-    bool AudioService::initializeAudio()
+    bool AudioService::InitializeAudio()
     {
         _device.getActual();
         _context.getActual();
@@ -57,7 +56,7 @@ namespace NovelRT::Audio
         return isInitialised;
     }
 
-    ALuint AudioService::readFile(std::string input)
+    ALuint AudioService::ReadFile(std::string input)
     {
         SF_INFO info;
         info.format = 0;
@@ -92,7 +91,7 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::loadMusic(std::string input)
+    std::vector<ALuint>::iterator AudioService::LoadMusic(std::string input)
     {
         if (!isInitialised)
         {
@@ -100,7 +99,7 @@ namespace NovelRT::Audio
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = readFile(input);
+        auto newBuffer = ReadFile(input);
 
         // Sorry Matt, nullptr types are incompatible to ALuint according to VS.
         if (newBuffer == _noBuffer)
@@ -124,7 +123,7 @@ namespace NovelRT::Audio
         }
     }
 
-    void AudioService::setSoundVolume(ALuint source, float value)
+    void AudioService::SetSoundVolume(ALuint source, float value)
     {
         if (!isInitialised)
         {
@@ -151,7 +150,7 @@ namespace NovelRT::Audio
 
     // Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector2<float> here...
     // This also has no effect if the buffer is more than one channel (not Mono)
-    void AudioService::setSoundPosition(ALuint source, float posX, float posY)
+    void AudioService::SetSoundPosition(ALuint source, float posX, float posY)
     {
         if (!isInitialised)
         {
@@ -164,7 +163,7 @@ namespace NovelRT::Audio
         alSource3f(source, AL_POSITION, posX, posY, 0.0f);
     }
 
-    void AudioService::resumeMusic()
+    void AudioService::ResumeMusic()
     {
         if (!isInitialised)
         {
@@ -178,7 +177,7 @@ namespace NovelRT::Audio
         alSourcePlay(_musicSource);
     }
 
-    void AudioService::playMusic(std::vector<ALuint>::iterator handle, int32_t loops)
+    void AudioService::PlayMusic(std::vector<ALuint>::iterator handle, int32_t loops)
     {
         if (!isInitialised)
         {
@@ -212,7 +211,7 @@ namespace NovelRT::Audio
         alSourcePlay(_musicSource);
     }
 
-    void AudioService::pauseMusic()
+    void AudioService::PauseMusic()
     {
         if (!isInitialised)
         {
@@ -224,7 +223,7 @@ namespace NovelRT::Audio
         alSourcePause(_musicSource);
     }
 
-    void AudioService::stopMusic()
+    void AudioService::StopMusic()
     {
         if (!isInitialised)
         {
@@ -236,7 +235,7 @@ namespace NovelRT::Audio
         alSourceStop(_musicSource);
     }
 
-    void AudioService::setMusicVolume(float value)
+    void AudioService::SetMusicVolume(float value)
     {
         if (!isInitialised)
         {
@@ -259,7 +258,7 @@ namespace NovelRT::Audio
         }
     }
 
-    void AudioService::checkSources()
+    void AudioService::CheckSources()
     {
         // Changing the init check as I don't want this to kill the Runner.
         if (isInitialised)
@@ -304,7 +303,7 @@ namespace NovelRT::Audio
         }
     }
 
-    std::string AudioService::getALError()
+    std::string AudioService::GetALError()
     {
         auto err = alGetError();
         switch (err)
@@ -336,7 +335,7 @@ namespace NovelRT::Audio
         }
     }
 
-    ALuint AudioService::loadSound(std::string input)
+    ALuint AudioService::LoadSound(std::string input)
     {
         if (!isInitialised)
         {
@@ -344,7 +343,7 @@ namespace NovelRT::Audio
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = readFile(input);
+        auto newBuffer = ReadFile(input);
 
         if (newBuffer == _noBuffer)
         {
@@ -365,12 +364,12 @@ namespace NovelRT::Audio
         return newSource;
     }
 
-    void AudioService::unload(ALuint source)
+    void AudioService::Unload(ALuint source)
     {
         alSourcei(source, AL_BUFFER, 0);
     }
 
-    void AudioService::playSound(ALuint handle, int32_t loops)
+    void AudioService::PlaySound(ALuint handle, int32_t loops)
     {
         if (!isInitialised)
         {
@@ -397,22 +396,22 @@ namespace NovelRT::Audio
         alSourcePlay(handle);
     }
 
-    void AudioService::stopSound(ALuint handle)
+    void AudioService::StopSound(ALuint handle)
     {
         alSourceStop(handle);
     }
 
-    bool AudioService::isLoaded(std::vector<ALuint>::iterator handle)
+    bool AudioService::IsLoaded(std::vector<ALuint>::iterator handle)
     {
         return (handle != _music.end());
     }
 
-    bool AudioService::isLoaded(ALuint handle)
+    bool AudioService::IsLoaded(ALuint handle)
     {
         return (handle != _noBuffer);
     }
 
-    void AudioService::tearDown()
+    void AudioService::TearDown()
     {
         if (!_context.isCreated())
             return;
@@ -445,16 +444,16 @@ namespace NovelRT::Audio
 
     AudioService::~AudioService()
     {
-        tearDown();
+        TearDown();
     }
 
-    bool AudioService::isMusicPlaying()
+    bool AudioService::IsMusicPlaying()
     {
         alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
         return (_musicSourceState == AL_PLAYING);
     }
 
-    bool AudioService::isSoundPlaying(ALuint handle)
+    bool AudioService::IsSoundPlaying(ALuint handle)
     {
         alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
         return (_soundSourceState == AL_PLAYING);

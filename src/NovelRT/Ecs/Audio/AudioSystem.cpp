@@ -32,7 +32,7 @@ namespace NovelRT::Ecs::Audio
                 {
                     if (emitter.isMusic)
                     {
-                        _service->playMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
+                        _service->PlayMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
                     }
                     else
                     {
@@ -137,7 +137,7 @@ namespace NovelRT::Ecs::Audio
                     if (emitter.isMusic && !_service->IsMusicPlaying())
                     {
                         _service->SetMusicVolume(0.0f);
-                        _service->playMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
+                        _service->PlayMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
                     }
                     else if (!emitter.isMusic && !_service->IsSoundPlaying(emitter.handle))
                     {

@@ -4,6 +4,10 @@
 #ifndef NOVELRT_AUDIO_AUDIOSERVICE_H
 #define NOVELRT_AUDIO_AUDIOSERVICE_H
 
+#ifndef NOVELRT_AUDIO_H
+#error NovelRT does not support including types explicitly by default. Please include Audio.h instead for the Audio namespace subset.
+#endif
+
 namespace NovelRT::Audio
 {
     // TODO: This won't exist after Kenny's rewrite, not too bothered about this class.
@@ -28,8 +32,8 @@ namespace NovelRT::Audio
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
 
-        ALuint readFile(std::string input);
-        std::string getALError();
+        ALuint ReadFile(std::string input);
+        std::string GetALError();
 
     public:
         bool isInitialised;

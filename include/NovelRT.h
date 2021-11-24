@@ -173,8 +173,8 @@
   #include "NovelRT/Animation/SpriteAnimatorState.h"
   #include "NovelRT/Animation/SpriteAnimator.h"
 
-// Audio types
- #include "NovelRT/Audio/Audio.h"
+  // Audio types
+  #include "NovelRT/Audio/Audio.h"
 
   // ECS types
   #include "NovelRT/Ecs/Ecs.h"
