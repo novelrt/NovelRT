@@ -6,9 +6,11 @@
 
 #include "../LoggingService.h"
 #include "../Utilities/Lazy.h"
+#include "../Exceptions/Exceptions.h"
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <sndfile.h>
+#include <vector>
 
 namespace NovelRT::Audio
 {
