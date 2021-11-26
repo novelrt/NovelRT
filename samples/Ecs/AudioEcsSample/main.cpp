@@ -187,7 +187,6 @@ int main(int, char*[])
         playGoatInteraction->executeObjectBehaviour();
     };
 
-    // GASSSSSSSSS GASSSSSSSSSS GASSSSSSSSSSSSSS
     runner.runNovel();
 
     return 0;

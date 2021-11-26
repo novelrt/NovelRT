@@ -19,9 +19,9 @@ set(SOURCES
   Ecs/NrtSystemScheduler.cpp
   Ecs/NrtUnsafeComponentView.cpp
 
-        Ecs/Audio/NrtAudioSystem.cpp
-        Ecs/Audio/NrtAudioEmitterComponent.cpp
-        Ecs/Audio/NrtAudioEmitterStateComponent.cpp
+  Ecs/Audio/NrtAudioSystem.cpp
+  Ecs/Audio/NrtAudioEmitterComponent.cpp
+  Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
   Graphics/NrtBasicFillRect.cpp
   Graphics/NrtCamera.cpp
