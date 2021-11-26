@@ -298,7 +298,7 @@ namespace NovelRT::Audio
                     _musicLoopAmount--;
                     if (_musicLoopAmount == 0)
                     {
-                        alSourcei(_musicSource, AL_LOOPING, FALSE);
+                        alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
                     }
                 }
             }
