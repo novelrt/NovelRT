@@ -36,6 +36,7 @@ namespace NovelRT::Audio
           _manualLoad(false),
           _musicSource(),
           _musicSourceState(0),
+          _musicStopRequested(false),
           _musicLoopAmount(0),
           _soundLoopAmount(0),
           _soundSourceState(0),
@@ -175,6 +176,7 @@ namespace NovelRT::Audio
         }
 
         alSourcePlay(_musicSource);
+        _musicStopRequested = false;
     }
 
     void AudioService::PlayMusic(std::vector<ALuint>::iterator handle, int32_t loops)
@@ -209,6 +211,7 @@ namespace NovelRT::Audio
             alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
         }
         alSourcePlay(_musicSource);
+        _musicStopRequested = false;
     }
 
     void AudioService::PauseMusic()
@@ -220,6 +223,7 @@ namespace NovelRT::Audio
                 "AudioService::PauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
         }
 
+        _musicStopRequested = true;
         alSourcePause(_musicSource);
     }
 
@@ -232,6 +236,7 @@ namespace NovelRT::Audio
                 "AudioService::StopMusic", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
+        _musicStopRequested = true;
         alSourceStop(_musicSource);
     }
 
@@ -272,15 +277,13 @@ namespace NovelRT::Audio
                 if (soundLoop == AL_TRUE)
                 {
                     alGetSourcei(sound, AL_SOURCE_STATE, &_soundSourceState);
-                    // Pretty sure there's a better way to check this...
-                    if (_soundSourceState == AL_STOPPED && (_soundLoopAmount > 0 || _soundLoopAmount == -1))
+                    if (_soundLoopAmount > 0)
                     {
-                        if (_soundLoopAmount > 0)
+                        _soundLoopAmount--;
+                        if (_soundLoopAmount == 0)
                         {
-                            _soundLoopAmount--;
+                            alSourcei(sound, AL_LOOPING, AL_FALSE);
                         }
-                        alSourceRewind(sound);
-                        alSourcePlay(sound);
                     }
                 }
             }
@@ -290,14 +293,13 @@ namespace NovelRT::Audio
             if (musicLoop == AL_TRUE)
             {
                 alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-                if (_musicSourceState == AL_STOPPED && (_musicLoopAmount > 0 || _musicLoopAmount == -1))
+                if (_musicLoopAmount > 0 && !_musicStopRequested)
                 {
-                    if (_musicLoopAmount > 0)
+                    _musicLoopAmount--;
+                    if(_musicLoopAmount == 0)
                     {
-                        _musicLoopAmount--;
+                        alSourcei(_musicSource, AL_LOOPING, FALSE);
                     }
-                    alSourceRewind(_musicSource);
-                    alSourcePlay(_musicSource);
                 }
             }
         }
@@ -457,6 +459,34 @@ namespace NovelRT::Audio
     {
         alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
         return (_soundSourceState == AL_PLAYING);
+    }
+
+    float AudioService::GetMusicVolume()
+    {
+        if (!isInitialised)
+        {
+            _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+            throw NovelRT::Exceptions::NotInitialisedException(
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+        }
+
+        float result = 0.0f;
+        alGetSourcef(_musicSource, AL_GAIN, &result);
+        return result;
+    }
+
+    float AudioService::GetSoundVolume(ALuint handle)
+    {
+        if (!isInitialised)
+        {
+            _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+            throw NovelRT::Exceptions::NotInitialisedException(
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+        }
+
+        float result = 0.0f;
+        alGetSourcef(handle, AL_GAIN, &result);
+        return result;
     }
 
 } // namespace NovelRT::Audio

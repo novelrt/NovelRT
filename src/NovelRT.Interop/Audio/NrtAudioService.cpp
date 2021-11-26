@@ -389,6 +389,52 @@ extern "C"
         return serv->IsSoundPlaying(handle) ? NRT_TRUE : NRT_FALSE;
     }
 
+    NrtResult Nrt_AudioService_GetMusicVolume(NrtAudioServiceHandle service, float* output)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        try
+        {
+            *output = serv->GetMusicVolume();
+        }
+        catch (const Exceptions::NotInitialisedException)
+        {
+            Nrt_setErrMsgIsNotInitialisedInternal();
+            return NRT_FAILURE_NOT_INITIALISED;
+        }
+
+        return NRT_SUCCESS;
+    }
+
+    NrtResult Nrt_AudioService_GetSoundVolume(NrtAudioServiceHandle service, unsigned int source, float* output)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        try
+        {
+            *output = serv->GetSoundVolume(source);
+        }
+        catch (const Exceptions::NotInitialisedException)
+        {
+            Nrt_setErrMsgIsNotInitialisedInternal();
+            return NRT_FAILURE_NOT_INITIALISED;
+        }
+
+        return NRT_SUCCESS;
+    }
+
 #ifdef __cplusplus
 }
 #endif

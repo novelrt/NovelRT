@@ -149,7 +149,7 @@ int main(int, char*[])
 
     fadeMusicInInteraction->Interacted += [&] {
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-            0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 5.0f, 0.0f});
+            0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 5.0f, 0.75f});
         console.logDebugLine("Fading music in!");
     };
 

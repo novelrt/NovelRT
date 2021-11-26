@@ -129,6 +129,15 @@ namespace NovelRT::Ecs::Audio
                     else
                     {
                         ChangeAudioVolume(emitter, 0.0f);
+                        if(emitter.isMusic)
+                        {
+                            _service->StopMusic();
+                        }
+                        else
+                        {
+                            _service->StopSound(_soundCache.at(emitter.handle));
+                        }
+
                         emitters.PushComponentUpdateInstruction(
                             entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
                                                           emitterState.fadeExpectedVolume});
@@ -161,13 +170,13 @@ namespace NovelRT::Ecs::Audio
                         break;
                     }
 
-                    float slope = (emitter.volume / emitterState.fadeDuration);
+                    float slope = (emitterState.fadeExpectedVolume / emitterState.fadeDuration);
                     Timing::Timestamp endTime = _systemTime + Timing::Timestamp::fromSeconds(emitterState.fadeDuration);
                     _fadeCache.insert({entity, std::make_tuple(endTime, slope)});
 
                     states.PushComponentUpdateInstruction(
                         entity, AudioEmitterStateComponent{AudioEmitterState::FadingIn, emitterState.fadeDuration,
-                                                           emitter.volume});
+                                                           emitterState.fadeExpectedVolume});
                     emitters.PushComponentUpdateInstruction(
                         entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, 0.0f});
                     _logger.logDebug("Entity ID {} - EmitterState ToFadeIn -> FadingIn", entity);
@@ -212,7 +221,25 @@ namespace NovelRT::Ecs::Audio
                 }
                 case AudioEmitterState::Playing:
                 {
-                    // check for volume changes
+                    float currentVolume = 0;
+                    if(emitter.isMusic)
+                    {
+                        currentVolume = _service->GetMusicVolume();
+                        if (currentVolume != emitter.volume)
+                        {
+                            _service->SetMusicVolume(emitter.volume);
+                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume, emitter.volume);
+                        }
+                    }
+                    else
+                    {
+                        currentVolume = _service->GetSoundVolume(_soundCache.at(emitter.handle));
+                        if (currentVolume != emitter.volume)
+                        {
+                            _service->SetSoundVolume(_soundCache.at(emitter.handle), emitter.volume);
+                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume, emitter.volume);
+                        }
+                    }
                     break;
                 }
                 case AudioEmitterState::Stopped:

@@ -26,6 +26,7 @@ namespace NovelRT::Audio
         MusicBank _music;
         ALuint _musicSource;
         ALint _musicSourceState;
+        bool _musicStopRequested;
         ALint _musicLoopAmount;
         ALint _soundLoopAmount;
         ALint _soundSourceState;
@@ -61,6 +62,8 @@ namespace NovelRT::Audio
         [[nodiscard]] bool IsLoaded(ALuint handle);
         [[nodiscard]] bool IsMusicPlaying();
         [[nodiscard]] bool IsSoundPlaying(ALuint handle);
+        float GetMusicVolume();
+        float GetSoundVolume(ALuint handle);
     };
 }
 
