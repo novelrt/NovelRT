@@ -105,13 +105,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                     vulkanImage),
               _metadata([&]() {
                   TMetadata metadata(GraphicsDeviceObject::GetDevice());
-                  std::shared_ptr<GraphicsMemoryBlock> block = GetBlockRegion().GetCollection();
+                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
+                  std::shared_ptr<GraphicsMemoryBlock> block = blockRegionInternal.GetCollection();
 
                   size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
                   size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
                   metadata.Initialise(std::static_pointer_cast<VulkanGraphicsTextureImpl<TMetadata>>(shared_from_this()),
-                                      blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
+                                      blockRegionInternal.GetSize(), minimumAllocatedRegionMarginSize,
                                       minimumFreeRegionSizeToRegister);
 
                   return metadata;
