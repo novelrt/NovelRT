@@ -4,11 +4,6 @@
 #ifndef NOVELRT_AUDIO_H
 #define NOVELRT_AUDIO_H
 
-namespace NovelRT::Audio
-{
-    class AudioService;
-}
-
 //Dependencies for Audio
 #include <AL/al.h>
 #include <AL/alc.h>
