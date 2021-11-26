@@ -40,6 +40,8 @@ extern "C"
     typedef struct
     {
         NrtAudioEmitterState state;
+        float fadeDuration;
+        float fadeExpectedVolume;
     } NrtAudioEmitterStateComponent;
 
 #ifdef __cplusplus

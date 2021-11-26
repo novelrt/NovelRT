@@ -363,6 +363,32 @@ extern "C"
         return serv->IsLoaded(handle) ? NRT_TRUE : NRT_FALSE;
     }
 
+    NrtBool Nrt_AudioService_IsMusicPlaying(NrtAudioServiceHandle service)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsMusicPlaying() ? NRT_TRUE : NRT_FALSE;
+    }
+
+    NrtBool Nrt_AudioService_IsSoundPlaying(NrtAudioServiceHandle service, unsigned int handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsSoundPlaying(handle) ? NRT_TRUE : NRT_FALSE;
+    }
+
 #ifdef __cplusplus
 }
 #endif

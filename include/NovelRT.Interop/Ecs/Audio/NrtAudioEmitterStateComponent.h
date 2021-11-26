@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-    void Nrt_AudioEmitterStateComponent_Update(void* lhs, const void* rhs, size_t size, void* context);
+    void Nrt_AudioEmitterStateComponent_Update(NrtAudioEmitterStateComponent* lhs, const NrtAudioEmitterStateComponent* rhs, size_t size, void* context);
 
 #ifdef __cplusplus
 }
