@@ -28,7 +28,8 @@ extern "C"
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);
         auto deleteState = Ecs::Audio::AudioEmitterComponent();
         sys->GetComponentCache().RegisterComponentType(deleteState);
-        sys->GetComponentCache().RegisterComponentType(Ecs::Audio::AudioEmitterStateComponent{Ecs::Audio::AudioEmitterState::Done});
+        sys->GetComponentCache().RegisterComponentType(
+            Ecs::Audio::AudioEmitterStateComponent{Ecs::Audio::AudioEmitterState::Done});
         return NRT_SUCCESS;
     }
 
@@ -48,7 +49,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioSystem_CreateAudio(NrtAudioSystemHandle system, char* fileName, NrtBool isMusic, uint32_t* result)
+    NrtResult Nrt_AudioSystem_CreateAudio(NrtAudioSystemHandle system,
+                                          char* fileName,
+                                          NrtBool isMusic,
+                                          uint32_t* result)
     {
         if (system == nullptr)
         {
@@ -62,7 +66,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioSystem_PushEmitterComponentUpdate(NrtSystemSchedulerHandle system, NrtEntityId entity, NrtAudioEmitterComponent emitter)
+    NrtResult Nrt_AudioSystem_PushEmitterComponentUpdate(NrtSystemSchedulerHandle system,
+                                                         NrtEntityId entity,
+                                                         NrtAudioEmitterComponent emitter)
     {
         if (system == nullptr)
         {
@@ -78,7 +84,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioSystem_PushEmitterStateComponentUpdate(NrtSystemSchedulerHandle system, NrtEntityId entity, NrtAudioEmitterStateComponent state)
+    NrtResult Nrt_AudioSystem_PushEmitterStateComponentUpdate(NrtSystemSchedulerHandle system,
+                                                              NrtEntityId entity,
+                                                              NrtAudioEmitterStateComponent state)
     {
         if (system == nullptr)
         {
@@ -88,8 +96,10 @@ extern "C"
 
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);
 
-        sys->GetComponentCache().GetComponentBuffer<Ecs::Audio::AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-            0, entity, *reinterpret_cast<Ecs::Audio::AudioEmitterStateComponent*>(&state));
+        sys->GetComponentCache()
+            .GetComponentBuffer<Ecs::Audio::AudioEmitterStateComponent>()
+            .PushComponentUpdateInstruction(0, entity,
+                                            *reinterpret_cast<Ecs::Audio::AudioEmitterStateComponent*>(&state));
 
         return NRT_SUCCESS;
     }

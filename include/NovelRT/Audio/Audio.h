@@ -4,16 +4,16 @@
 #ifndef NOVELRT_AUDIO_H
 #define NOVELRT_AUDIO_H
 
-//Dependencies for Audio
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <sndfile.h>
-#include <vector>
-#include <cstdint>
+// Dependencies for Audio
+#include "../Exceptions/Exceptions.h"
 #include "../LoggingService.h"
 #include "../Utilities/Lazy.h"
 #include "../Utilities/Misc.h"
-#include "../Exceptions/Exceptions.h"
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <cstdint>
+#include <sndfile.h>
+#include <vector>
 
 #if defined(__cplusplus) && !defined(NOVELRT_C_API)
 /***
@@ -27,7 +27,7 @@ namespace NovelRT::Audio
 }
 #endif
 
-//Audio Types
+// Audio Types
 #include "AudioService.h"
 
 #endif // NOVELRT_AUDIO_H

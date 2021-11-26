@@ -2,8 +2,8 @@
 // for more information.
 
 #define NOVELRT_C_API 1
-#include <NovelRT.h>
 #include <NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h>
+#include <NovelRT.h>
 #include <memory.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -20,7 +20,7 @@ NrtAudioEmitterStateComponent toPlayState = {NRT_EMITTER_STATE_TO_PLAY};
 
 char flippedAxisTempBuffer[1024];
 
-//ECS
+// ECS
 NrtAudioSystemHandle audio = NULL;
 NrtSystemSchedulerHandle scheduler = NULL;
 NrtComponentCacheHandle componentCache = NULL;
@@ -29,7 +29,7 @@ NrtEntityId singleEntity = 0;
 NrtComponentTypeId audioEmitterId = 0;
 NrtComponentTypeId emitterStateId = 0;
 
-    // Services
+// Services
 NrtInteractionServiceHandle input = NULL;
 NrtLoggingServiceHandle console = NULL;
 NrtStepTimerHandle timer = NULL;
@@ -159,7 +159,7 @@ void UpdateAudio(NrtTimestamp delta, void* context)
     if (scheduler == NULL)
         return;
 
-    if(playAudio == 1)
+    if (playAudio == 1)
     {
         playAudio = 0;
         Nrt_AudioSystem_PushEmitterStateComponentUpdate(scheduler, singleEntity, toPlayState);
@@ -236,7 +236,7 @@ int main()
     NrtTransform interactTransform = {nChanPosition, nChanSize, 0};
     res = Nrt_InteractionService_createBasicInteractionRect(input, interactTransform, 3, &interactRect);
 
-    //Setting up ECS & Audio
+    // Setting up ECS & Audio
     scheduler = Nrt_SystemScheduler_Create(4);
     componentCache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     entityCache = Nrt_SystemScheduler_GetEntityCache(scheduler);
@@ -247,25 +247,25 @@ int main()
         res = Nrt_AudioSystem_CreateAudio(audio, goatFileLocation, NRT_FALSE, &goatHandle);
     }
 
-    //Create the components
-    NrtAudioEmitterComponent goat = { goatHandle, 0, 0, 1.0};
-    NrtAudioEmitterComponent deleted = { -1, 0, 0, 0};
-    NrtAudioEmitterStateComponent goatState = { NRT_EMITTER_STATE_STOPPED };
-    NrtAudioEmitterStateComponent deletedState = { NRT_EMITTER_STATE_DONE };
+    // Create the components
+    NrtAudioEmitterComponent goat = {goatHandle, 0, 0, 1.0};
+    NrtAudioEmitterComponent deleted = {-1, 0, 0, 0};
+    NrtAudioEmitterStateComponent goatState = {NRT_EMITTER_STATE_STOPPED};
+    NrtAudioEmitterStateComponent deletedState = {NRT_EMITTER_STATE_DONE};
 
-    //Create the system's update function pointer
-    NrtCatalogueHandle catalogue = Nrt_Catalogue_Create(0,componentCache, entityCache);
-    void(*updateAudio)(NrtTimestamp, NrtCatalogueHandle, void*) = Nrt_AudioSystem_Update;
+    // Create the system's update function pointer
+    NrtCatalogueHandle catalogue = Nrt_Catalogue_Create(0, componentCache, entityCache);
+    void (*updateAudio)(NrtTimestamp, NrtCatalogueHandle, void*) = Nrt_AudioSystem_Update;
     NrtSystemUpdateFnPtr updateAudioPtr = updateAudio;
 
-    //Create the entity
+    // Create the entity
     singleEntity = Nrt_Catalogue_CreateEntity(catalogue);
 
-    //Register the System & Component
+    // Register the System & Component
     Nrt_SystemScheduler_RegisterSystem(scheduler, updateAudioPtr, audio);
     Nrt_AudioSystem_RegisterDefaultAudioComponents(scheduler);
 
-    //Add the components
+    // Add the components
     Nrt_AudioSystem_PushEmitterComponentUpdate(scheduler, singleEntity, goat);
     Nrt_AudioSystem_PushEmitterStateComponentUpdate(scheduler, singleEntity, goatState);
 
@@ -273,11 +273,11 @@ int main()
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
-    struct MoveContext moveContext = {0,0};
+    struct MoveContext moveContext = {0, 0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
     Nrt_NovelRunner_SubscribeToUpdate(runner, UpdateAudio, NULL, NULL);
 
-    //Spin Threads
+    // Spin Threads
     Nrt_SystemScheduler_SpinThreads(scheduler);
 
     // Run the novel!

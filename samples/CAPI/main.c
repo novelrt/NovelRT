@@ -213,7 +213,7 @@ int main()
         const char* waltzFile = Nrt_appendFilePath(3, soundParts);
         res = Nrt_AudioService_LoadMusic(audio, waltzFile, &waltz);
 
-        if(res == NRT_SUCCESS)
+        if (res == NRT_SUCCESS)
         {
             Nrt_AudioService_PlayMusic(audio, waltz, -1);
         }
@@ -331,7 +331,7 @@ int main()
     Nrt_NovelRunner_SubscribeToSceneConstructionRequested(runner, &RenderNovelChan, NULL, NULL);
 
     // Setting up Update methods
-    struct MoveContext moveContext = {0,0};
+    struct MoveContext moveContext = {0, 0};
     Nrt_NovelRunner_SubscribeToUpdate(runner, MoveNovelChan, &moveContext, NULL);
 
     // Run the novel!

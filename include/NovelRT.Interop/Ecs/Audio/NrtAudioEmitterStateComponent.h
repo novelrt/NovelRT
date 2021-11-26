@@ -3,14 +3,17 @@
 #ifndef NOVELRT_INTEROP_ECS_AUDIO_AUDIOEMITTERSTATECOMPONENT_H
 #define NOVELRT_INTEROP_ECS_AUDIO_AUDIOEMITTERSTATECOMPONENT_H
 
-#include "../NrtEcsTypedefs.h"
+#include "../../NrtTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    void Nrt_AudioEmitterStateComponent_Update(NrtAudioEmitterStateComponent* lhs, const NrtAudioEmitterStateComponent* rhs, size_t size, void* context);
+    void Nrt_AudioEmitterStateComponent_Update(NrtAudioEmitterStateComponent* lhs,
+                                               const NrtAudioEmitterStateComponent* rhs,
+                                               size_t size,
+                                               void* context);
 
 #ifdef __cplusplus
 }

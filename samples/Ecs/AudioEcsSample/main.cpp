@@ -8,8 +8,8 @@ using namespace NovelRT::Ecs::Audio;
 
 int main(int, char*[])
 {
-    //RNG
-    srand (time(NULL));
+    // RNG
+    srand(time(NULL));
 
     // Old resources setup
     std::filesystem::path executableDirPath = NovelRT::Utilities::Misc::getExecutableDirPath();
@@ -33,8 +33,6 @@ int main(int, char*[])
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> playGoatInteraction;
     std::unique_ptr<NovelRT::Graphics::TextRect> playGoatText;
 
-
-
     // Setup of NovelRunner
     auto runner = NovelRT::NovelRunner(0, "NovelRT - Audio ECS Sample", NovelRT::Windowing::WindowMode::Windowed);
     auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
@@ -47,34 +45,33 @@ int main(int, char*[])
                                                   NovelRT::Maths::GeoVector2F(200, 200));
     bool paused = false;
 
-    //fade music in button
+    // fade music in button
     auto fadeMusicInTransform = playButtonTransform;
     fadeMusicInTransform.position.x += (1920 / 3);
-    fadeMusicInButton = runner.getRenderer()->createBasicFillRect(fadeMusicInTransform, 3,
-                                                                NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
+    fadeMusicInButton = runner.getRenderer()->createBasicFillRect(
+        fadeMusicInTransform, 3, NovelRT::Graphics::RGBAColour(rand() % 255, rand() % 255, rand() % 255, 255));
     auto fadeMusicInTextTransform = fadeMusicInTransform;
     fadeMusicInTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
     fadeMusicInText =
-        runner.getRenderer()->createTextRect(fadeMusicInTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
-                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
+        runner.getRenderer()->createTextRect(fadeMusicInTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255),
+                                             36, (fontsDirPath / "Gayathri-Regular.ttf").string());
     fadeMusicInText->setText("Fade In");
     fadeMusicInInteraction = runner.getInteractionService()->createBasicInteractionRect(fadeMusicInTransform, 2);
     fadeMusicInInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
 
-    //fade music out button
+    // fade music out button
     auto fadeMusicOutTransform = playButtonTransform;
     fadeMusicOutTransform.position.x -= (1920 / 3);
-    fadeMusicOutButton = runner.getRenderer()->createBasicFillRect(fadeMusicOutTransform, 3,
-                                                                  NovelRT::Graphics::RGBAColour(rand()%255, rand()%255, rand()%255, 255));
+    fadeMusicOutButton = runner.getRenderer()->createBasicFillRect(
+        fadeMusicOutTransform, 3, NovelRT::Graphics::RGBAColour(rand() % 255, rand() % 255, rand() % 255, 255));
     auto fadeMusicOutTextTransform = fadeMusicOutTransform;
     fadeMusicOutTextTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
     fadeMusicOutText =
-        runner.getRenderer()->createTextRect(fadeMusicOutTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255), 36,
-                                             (fontsDirPath / "Gayathri-Regular.ttf").string());
+        runner.getRenderer()->createTextRect(fadeMusicOutTextTransform, 1, NovelRT::Graphics::RGBAColour(0, 0, 0, 255),
+                                             36, (fontsDirPath / "Gayathri-Regular.ttf").string());
     fadeMusicOutText->setText("Fade Out");
     fadeMusicOutInteraction = runner.getInteractionService()->createBasicInteractionRect(fadeMusicOutTransform, 2);
     fadeMusicOutInteraction->subscribedKey() = NovelRT::Input::KeyCode::LeftMouseButton;
-
 
     auto laz0rButtonTransform = playButtonTransform;
     laz0rButtonTransform.position.y += (1080 / 3);
@@ -119,12 +116,10 @@ int main(int, char*[])
     auto waltzHandle = audioSystem->CreateAudio(waltzPath, true);
     auto laz0rHandle = audioSystem->CreateAudio(laz0rPath, false);
     auto goatHandle = audioSystem->CreateAudio(goatPath, false);
-    AudioEmitterComponent waltzComponent =
-        AudioEmitterComponent{waltzHandle, true, -1, 0.75f};
+    AudioEmitterComponent waltzComponent = AudioEmitterComponent{waltzHandle, true, -1, 0.75f};
     AudioEmitterStateComponent waltzState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
     // Now the sound components
-    AudioEmitterComponent laz0r =
-        AudioEmitterComponent{laz0rHandle, false, 0, 0.75f};
+    AudioEmitterComponent laz0r = AudioEmitterComponent{laz0rHandle, false, 0, 0.75f};
     AudioEmitterComponent goat = laz0r;
     goat.handle = goatHandle;
     goat.volume = 1.0f; // o no
@@ -146,13 +141,13 @@ int main(int, char*[])
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
         0, 2, AudioEmitterStateComponent{AudioEmitterState::Stopped});
 
-    fadeMusicOutInteraction->Interacted +=  [&] {
+    fadeMusicOutInteraction->Interacted += [&] {
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
             0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeOut, 5.0f, 0.0f});
         console.logDebugLine("Fading music out!");
     };
 
-    fadeMusicInInteraction->Interacted +=  [&] {
+    fadeMusicInInteraction->Interacted += [&] {
         scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
             0, 0, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 5.0f, 0.0f});
         console.logDebugLine("Fading music in!");

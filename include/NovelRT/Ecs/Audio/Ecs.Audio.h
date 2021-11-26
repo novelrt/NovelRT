@@ -9,8 +9,8 @@
 #endif
 
 #include "../../Audio/Audio.h"
-#include "../../Timing/Timestamp.h"
 #include "../../Timing/StepTimer.h"
+#include "../../Timing/Timestamp.h"
 #include <chrono>
 #include <map>
 

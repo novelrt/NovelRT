@@ -14,9 +14,16 @@ extern "C"
     NrtAudioSystemHandle Nrt_AudioSystem_Create();
     NrtResult Nrt_AudioSystem_RegisterDefaultAudioComponents(NrtSystemSchedulerHandle system);
     NrtResult Nrt_AudioSystem_Update(NrtTimestamp delta, NrtCatalogueHandle catalogue, void* context);
-    NrtResult Nrt_AudioSystem_CreateAudio(NrtAudioSystemHandle system, char* fileName, NrtBool isMusic, uint32_t* result);
-    NrtResult Nrt_AudioSystem_PushEmitterComponentUpdate(NrtSystemSchedulerHandle system, NrtEntityId entity, NrtAudioEmitterComponent emitter);
-    NrtResult Nrt_AudioSystem_PushEmitterStateComponentUpdate(NrtSystemSchedulerHandle system, NrtEntityId entity, NrtAudioEmitterStateComponent state);
+    NrtResult Nrt_AudioSystem_CreateAudio(NrtAudioSystemHandle system,
+                                          char* fileName,
+                                          NrtBool isMusic,
+                                          uint32_t* result);
+    NrtResult Nrt_AudioSystem_PushEmitterComponentUpdate(NrtSystemSchedulerHandle system,
+                                                         NrtEntityId entity,
+                                                         NrtAudioEmitterComponent emitter);
+    NrtResult Nrt_AudioSystem_PushEmitterStateComponentUpdate(NrtSystemSchedulerHandle system,
+                                                              NrtEntityId entity,
+                                                              NrtAudioEmitterStateComponent state);
 
 #ifdef __cplusplus
 }
