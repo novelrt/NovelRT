@@ -4,6 +4,10 @@
 #ifndef NOVELRT_ECS_AUDIO_AUDIOEMITTERCOMPONENT_H
 #define NOVELRT_ECS_AUDIO_AUDIOEMITTERCOMPONENT_H
 
+#ifndef NOVELRT_ECS_AUDIO_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.Audio.h instead for the Ecs.Audio namespace subset.
+#endif
+
 namespace NovelRT::Ecs::Audio
 {
     struct AudioEmitterComponent

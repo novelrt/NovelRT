@@ -4,6 +4,10 @@
 #ifndef NOVELRT_ECS_AUDIO_AUDIOEMITTERSTATE_H
 #define NOVELRT_ECS_AUDIO_AUDIOEMITTERSTATE_H
 
+#ifndef NOVELRT_ECS_AUDIO_H
+#error NovelRT does not support including types explicitly by default. Please include Ecs.Audio.h instead for the Ecs.Audio namespace subset.
+#endif
+
 namespace NovelRT::Ecs::Audio
 {
     enum class AudioEmitterState : int32_t
