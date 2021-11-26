@@ -129,7 +129,7 @@ namespace NovelRT::Ecs::Audio
                     else
                     {
                         ChangeAudioVolume(emitter, 0.0f);
-                        if(emitter.isMusic)
+                        if (emitter.isMusic)
                         {
                             _service->StopMusic();
                         }
@@ -222,13 +222,14 @@ namespace NovelRT::Ecs::Audio
                 case AudioEmitterState::Playing:
                 {
                     float currentVolume = 0;
-                    if(emitter.isMusic)
+                    if (emitter.isMusic)
                     {
                         currentVolume = _service->GetMusicVolume();
                         if (currentVolume != emitter.volume)
                         {
                             _service->SetMusicVolume(emitter.volume);
-                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume, emitter.volume);
+                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
+                                             emitter.volume);
                         }
                     }
                     else
@@ -237,7 +238,8 @@ namespace NovelRT::Ecs::Audio
                         if (currentVolume != emitter.volume)
                         {
                             _service->SetSoundVolume(_soundCache.at(emitter.handle), emitter.volume);
-                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume, emitter.volume);
+                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
+                                             emitter.volume);
                         }
                     }
                     break;

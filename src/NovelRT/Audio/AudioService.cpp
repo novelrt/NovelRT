@@ -296,7 +296,7 @@ namespace NovelRT::Audio
                 if (_musicLoopAmount > 0 && !_musicStopRequested)
                 {
                     _musicLoopAmount--;
-                    if(_musicLoopAmount == 0)
+                    if (_musicLoopAmount == 0)
                     {
                         alSourcei(_musicSource, AL_LOOPING, FALSE);
                     }
