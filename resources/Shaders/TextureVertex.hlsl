@@ -24,7 +24,7 @@ PSInput main(VSInput input)
     matrix finalViewProjectionMatrix = mul(projectionMatrix, viewMatrix);
     finalViewProjectionMatrix = transpose(mul(finalViewProjectionMatrix, primitiveTransform));
     output.position = float4(input.position, 1.0f);
-    output.position = mul(output.position, finalViewProjectionMatrix);
+    //output.position = mul(output.position, finalViewProjectionMatrix);
     output.uv = input.uv;
     return output;
 }

@@ -3,8 +3,8 @@
 
 #include "TextureTypes.hlsl"
 
-Texture2D textureInput : register(t0);
-SamplerState samplerInput : register(s0);
+Texture2D textureInput : register(t3);
+SamplerState samplerInput : register(s3);
 
 float4 main(PSInput input) : SV_Target
 {
