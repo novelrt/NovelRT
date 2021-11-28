@@ -2,7 +2,6 @@
 // for more information.
 
 #define NOVELRT_C_API 1
-#include <NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h>
 #include <NovelRT.h>
 #include <memory.h>
 #include <stdint.h>

@@ -248,7 +248,7 @@
   #include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
 
   // Audio
-  #include "NovelRT.Interop/Audio/NrtAudioService.h"
+  #include "NovelRT.Interop/Audio/NrtAudio.h"
 
 #ifdef NOVELRT_INK
   // DotNet
@@ -264,6 +264,7 @@
   #include "NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h"
   #include "NovelRT.Interop/Ecs/NrtSystemScheduler.h"
   #include "NovelRT.Interop/Ecs/NrtUnsafeComponentView.h"
+  #include "NovelRT.Interop/Ecs/NrtEcsAudio.h"
 
   // Graphics
   #include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"
