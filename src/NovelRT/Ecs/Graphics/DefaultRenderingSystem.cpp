@@ -84,7 +84,7 @@ namespace NovelRT::Ecs::Graphics
           _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(1920, 1080));
+                                                                   Maths::GeoVector2F(500, 1000));
 
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
@@ -174,8 +174,8 @@ namespace NovelRT::Ecs::Graphics
          */
 
         auto size = windowingDevice->GetSize();
-        float width = size.x / 1000;
-        float height = size.y / 1000;
+        float width = size.x;
+        float height = size.y;
         float halfWidth = width / 2;
         float halfHeight = height / 2;
         float left = -halfWidth;
@@ -201,6 +201,14 @@ namespace NovelRT::Ecs::Graphics
         _matricesConstantBuffer->UnmapAndWrite();
 
         auto testTransform = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        auto scaleValue = Maths::GeoVector2F(762, 881);
+        scaleValue /= 2.0f;
+        testTransform.Scale(scaleValue);
+        testTransform.Transpose();
+
+        //Maths::GeoVector2F::uniform(500);
+        /*float aspectRatio = 762.0f / 881.0f;
+        scaleValue.y *= aspectRatio;*/
 
         _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
         Maths::GeoMatrix4x4F* pTransformMatrix =
