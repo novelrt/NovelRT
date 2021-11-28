@@ -28,8 +28,9 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
 
         std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _matricesConstantBuffer;
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _projectionMatrixConstantBufferRegion;
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _viewMatrixConstantBufferRegion;
+        //Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _projectionMatrixConstantBufferRegion;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
+            _frameMatrixConstantBufferRegion;
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _transformConstantBufferRegion;
 
         tbb::mutex _textureQueueMapMutex;

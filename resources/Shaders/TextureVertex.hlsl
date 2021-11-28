@@ -3,28 +3,22 @@
 
 #include "TextureTypes.hlsl"
 
-cbuffer ProjectionData : register(b0)
+cbuffer FrameData : register(b0)
 {
-    row_major matrix projectionMatrix;
+    matrix frameTransform;
 };
 
-cbuffer ViewData : register(b1)
+cbuffer PrimitiveData : register(b1)
 {
-    row_major matrix viewMatrix;
-};
-
-cbuffer PrimitiveData : register(b2)
-{
-    row_major matrix primitiveTransform;
+    matrix primitiveTransform;
 };
 
 PSInput main(VSInput input)
 {
     PSInput output;
-    row_major matrix finalViewProjectionMatrix = mul(viewMatrix, projectionMatrix);
-    finalViewProjectionMatrix = mul(finalViewProjectionMatrix, primitiveTransform);
     output.position = float4(input.position, 1.0f);
-    output.position = mul(output.position, finalViewProjectionMatrix);
+    output.position = mul(output.position, primitiveTransform);
+    output.position = mul(output.position, frameTransform);
     output.uv = input.uv;
     return output;
 }

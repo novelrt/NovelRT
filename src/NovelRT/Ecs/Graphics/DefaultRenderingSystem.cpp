@@ -69,8 +69,8 @@ namespace NovelRT::Ecs::Graphics
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
           _matricesConstantBuffer(nullptr),
-          _projectionMatrixConstantBufferRegion(),
-          _viewMatrixConstantBufferRegion(),
+          //_projectionMatrixConstantBufferRegion(),
+          _frameMatrixConstantBufferRegion(),
           _transformConstantBufferRegion(),
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
@@ -114,9 +114,11 @@ namespace NovelRT::Ecs::Graphics
                 Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
                 Experimental::Graphics::ShaderProgramVisibility::Vertex),
 
+            /*
             Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
                 Experimental::Graphics::ShaderProgramVisibility::Vertex),
+                */
 
             Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
@@ -161,6 +163,7 @@ namespace NovelRT::Ecs::Graphics
 
         auto windowingDevice = _windowingPluginProvider->GetWindowingDevice();
 
+        /*
         _projectionMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
         Maths::GeoMatrix4x4F* pProjectionMatrix =
             _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_projectionMatrixConstantBufferRegion);
@@ -168,17 +171,36 @@ namespace NovelRT::Ecs::Graphics
             0.0f, windowingDevice->GetWidth(), windowingDevice->GetHeight(), 0.0f, 0.0f, 65535.0f);
         // pProjectionMatrix->y.y *= -1;
         _matricesConstantBuffer->UnmapAndWrite();
+         */
 
-        _viewMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pViewMatrix =
-            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_viewMatrixConstantBufferRegion);
-        pViewMatrix[0] = Maths::GeoMatrix4x4F::CreateFromLookAt(
-            Maths::GeoVector3F::zero(), Maths::GeoVector3F(0, 0, -1), Maths::GeoVector3F(0, 1, 0));
+        auto size = windowingDevice->GetSize();
+        float width = size.x / 1000;
+        float height = size.y / 1000;
+        float halfWidth = width / 2;
+        float halfHeight = height / 2;
+        float left = -halfWidth;
+        float right = +halfWidth;
+        float top = -halfHeight;
+        float bottom = +halfHeight;
+
+        auto position = Maths::GeoVector2F::zero();
+        auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(
+            left, right, bottom, top, 0.1f, 10.0f);
+        auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
+                                                                 Maths::GeoVector3F(position.x, position.y, 0.0f),
+                                                                 Maths::GeoVector3F(0, -1, 0));
+
+        _frameMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
+
+        Maths::GeoMatrix4x4F* pFrameMatrix =
+            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_frameMatrixConstantBufferRegion);
+        auto frameTransform = viewMatrix * projectionMatrix;
+        frameTransform.Transpose();
+
+        pFrameMatrix[0] = frameTransform;
         _matricesConstantBuffer->UnmapAndWrite();
 
         auto testTransform = Maths::GeoMatrix4x4F::getDefaultIdentity();
-        testTransform.Scale(Maths::GeoVector2F(762, 881));
-        testTransform.Translate(Maths::GeoVector3F(0, 0, -1));
 
         _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
         Maths::GeoMatrix4x4F* pTransformMatrix =
@@ -229,7 +251,7 @@ namespace NovelRT::Ecs::Graphics
                 auto& pipelineData = _namedGraphicsPipelineInfoObjects.at(component.pipelineId);
 
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                    resourceRegions{_projectionMatrixConstantBufferRegion, _viewMatrixConstantBufferRegion,
+                    resourceRegions{/*_projectionMatrixConstantBufferRegion,*/ _frameMatrixConstantBufferRegion,
                                     _transformConstantBufferRegion, textureData->gpuTextureRegion};
 
                 auto dummyRegion =
