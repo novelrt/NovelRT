@@ -84,7 +84,7 @@ namespace NovelRT::Ecs::Graphics
           _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(400, 400));
+                                                                   Maths::GeoVector2F(1920, 1080));
 
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
@@ -162,20 +162,27 @@ namespace NovelRT::Ecs::Graphics
         auto windowingDevice = _windowingPluginProvider->GetWindowingDevice();
 
         _projectionMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pProjectionMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_projectionMatrixConstantBufferRegion);
-        pProjectionMatrix[0] = Maths::GeoMatrix4x4F::CreateOrthographic(0.0f, windowingDevice->GetWidth(), windowingDevice->GetHeight(), 0.0f, 0.0f, 65535.0f);
+        Maths::GeoMatrix4x4F* pProjectionMatrix =
+            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_projectionMatrixConstantBufferRegion);
+        pProjectionMatrix[0] = Maths::GeoMatrix4x4F::CreateOrthographic(
+            0.0f, windowingDevice->GetWidth(), windowingDevice->GetHeight(), 0.0f, 0.0f, 65535.0f);
+        // pProjectionMatrix->y.y *= -1;
         _matricesConstantBuffer->UnmapAndWrite();
 
         _viewMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pViewMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_viewMatrixConstantBufferRegion);
-        pViewMatrix[0] = Maths::GeoMatrix4x4F::CreateFromScale(windowingDevice->GetWidth(), windowingDevice->GetHeight(), -1.0f);
+        Maths::GeoMatrix4x4F* pViewMatrix =
+            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_viewMatrixConstantBufferRegion);
+        pViewMatrix[0] = Maths::GeoMatrix4x4F::CreateFromLookAt(
+            Maths::GeoVector3F::zero(), Maths::GeoVector3F(0, 0, -1), Maths::GeoVector3F(0, 1, 0));
         _matricesConstantBuffer->UnmapAndWrite();
 
         auto testTransform = Maths::GeoMatrix4x4F::getDefaultIdentity();
         testTransform.Scale(Maths::GeoVector2F(762, 881));
+        testTransform.Translate(Maths::GeoVector3F(0, 0, -1));
 
         _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pTransformMatrix = _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
+        Maths::GeoMatrix4x4F* pTransformMatrix =
+            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
         pTransformMatrix[0] = testTransform;
         _matricesConstantBuffer->UnmapAndWrite();
 
@@ -222,21 +229,17 @@ namespace NovelRT::Ecs::Graphics
                 auto& pipelineData = _namedGraphicsPipelineInfoObjects.at(component.pipelineId);
 
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                    resourceRegions
-                    {
-                        _projectionMatrixConstantBufferRegion,
-                        _viewMatrixConstantBufferRegion,
-                        _transformConstantBufferRegion,
-                        textureData->gpuTextureRegion
-                    };
+                    resourceRegions{_projectionMatrixConstantBufferRegion, _viewMatrixConstantBufferRegion,
+                                    _transformConstantBufferRegion, textureData->gpuTextureRegion};
 
                 auto dummyRegion =
                     Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
                         0, nullptr, _graphicsDevice, false, 0, 0);
                 primitiveCache.emplace_back(GraphicsPrimitiveInfo{
-                    _graphicsDevice->CreatePrimitive(
-                        pipelineData->gpuPipeline.GetUnderlyingSharedPtr(), vertexData->gpuVertexRegion,
-                        static_cast<uint32_t>(vertexData->sizeOfVert), dummyRegion, vertexData->stride, resourceRegions),
+                    _graphicsDevice->CreatePrimitive(pipelineData->gpuPipeline.GetUnderlyingSharedPtr(),
+                                                     vertexData->gpuVertexRegion,
+                                                     static_cast<uint32_t>(vertexData->sizeOfVert), dummyRegion,
+                                                     vertexData->stride, resourceRegions),
                     vertexData->ecsId, textureData->ecsId, pipelineData->ecsId});
 
                 primitiveInfo = primitiveCache.back();

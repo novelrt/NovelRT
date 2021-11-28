@@ -5,26 +5,26 @@
 
 cbuffer ProjectionData : register(b0)
 {
-    matrix projectionMatrix;
+    row_major matrix projectionMatrix;
 };
 
 cbuffer ViewData : register(b1)
 {
-    matrix viewMatrix;
+    row_major matrix viewMatrix;
 };
 
 cbuffer PrimitiveData : register(b2)
 {
-    matrix primitiveTransform;
+    row_major matrix primitiveTransform;
 };
 
 PSInput main(VSInput input)
 {
     PSInput output;
-    matrix finalViewProjectionMatrix = mul(projectionMatrix, viewMatrix);
-    finalViewProjectionMatrix = transpose(mul(finalViewProjectionMatrix, primitiveTransform));
+    row_major matrix finalViewProjectionMatrix = mul(viewMatrix, projectionMatrix);
+    finalViewProjectionMatrix = mul(finalViewProjectionMatrix, primitiveTransform);
     output.position = float4(input.position, 1.0f);
-    //output.position = mul(output.position, finalViewProjectionMatrix);
+    output.position = mul(output.position, finalViewProjectionMatrix);
     output.uv = input.uv;
     return output;
 }

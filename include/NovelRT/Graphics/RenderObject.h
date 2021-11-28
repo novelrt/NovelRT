@@ -4,6 +4,8 @@
 #ifndef NOVELRT_GRAPHICS_RENDEROBJECT_H
 #define NOVELRT_GRAPHICS_RENDEROBJECT_H
 
+#include <NovelRT/Maths/GeoMatrix4x4F.h>
+
 #ifndef NOVELRT_H
 #error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
 #endif

@@ -43,17 +43,20 @@ namespace NovelRT::Maths
 
         inline void Translate(Maths::GeoVector3F vector)
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
+            *reinterpret_cast<glm::mat4*>(this) =
+                glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
         }
 
         inline void Rotate(float angleInEulerDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, 1.0f))
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInEulerDegrees, *reinterpret_cast<glm::vec3*>(&rotationAngle));
+            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInEulerDegrees,
+                                                              *reinterpret_cast<glm::vec3*>(&rotationAngle));
         }
 
         inline void Scale(GeoVector3F scaleValue)
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::scale(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&scaleValue));
+            *reinterpret_cast<glm::mat4*>(this) =
+                glm::scale(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&scaleValue));
         }
 
         inline void Scale(GeoVector2F scaleValue)
@@ -152,7 +155,12 @@ namespace NovelRT::Maths
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }
 
-        static GeoMatrix4x4F CreateOrthographic(float left, float right, float bottom, float top, float zNear, float zFar) noexcept
+        static GeoMatrix4x4F CreateOrthographic(float left,
+                                                float right,
+                                                float bottom,
+                                                float top,
+                                                float zNear,
+                                                float zFar) noexcept
         {
             return GeoMatrix4x4F(glm::ortho(left, right, bottom, top, zNear, zFar));
         }
@@ -160,6 +168,13 @@ namespace NovelRT::Maths
         static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
         {
             return GeoMatrix4x4F(glm::scale(glm::vec3(x, y, z)));
+        }
+
+        static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
+        {
+            return GeoMatrix4x4F(glm::lookAt(*reinterpret_cast<glm::vec3*>(&eye),
+                                             *reinterpret_cast<glm::vec3*>(&centre),
+                                             *reinterpret_cast<glm::vec3*>(&up)));
         }
     };
 }
