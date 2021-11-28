@@ -39,8 +39,8 @@ extern "C"
     NrtBool Nrt_AudioService_IsSoundLoaded(NrtAudioServiceHandle service, unsigned int handle);
     NrtBool Nrt_AudioService_IsMusicPlaying(NrtAudioServiceHandle service);
     NrtBool Nrt_AudioService_IsSoundPlaying(NrtAudioServiceHandle service, unsigned int handle);
-    NrtResult Nrt_AudioService_GetMusicVolume(NrtAudioServiceHandle service, float* output);
-    NrtResult Nrt_AudioService_GetSoundVolume(NrtAudioServiceHandle service, unsigned int source, float* output);
+    float Nrt_AudioService_GetMusicVolume(NrtAudioServiceHandle service);
+    float Nrt_AudioService_GetSoundVolume(NrtAudioServiceHandle service, unsigned int source);
 
 #ifdef __cplusplus
 }
