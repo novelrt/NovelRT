@@ -15,17 +15,14 @@
 #include <sndfile.h>
 #include <vector>
 
-#if defined(__cplusplus) && !defined(NOVELRT_C_API)
 /***
- * @brief Contains audio features, such as playing audio, and managing audio resources.
+  * @brief Contains audio features, such as playing audio, and managing audio resources.
  */
-namespace NovelRT::Audio
-{
+namespace NovelRT::Audio {
     typedef std::vector<ALuint> SoundBank;
     typedef std::vector<ALuint> MusicBank;
     typedef class AudioService AudioService;
 }
-#endif
 
 // Audio Types
 #include "AudioService.h"
