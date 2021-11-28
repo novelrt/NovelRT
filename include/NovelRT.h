@@ -264,7 +264,7 @@
   #include "NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h"
   #include "NovelRT.Interop/Ecs/NrtSystemScheduler.h"
   #include "NovelRT.Interop/Ecs/NrtUnsafeComponentView.h"
-  #include "NovelRT.Interop/Ecs/NrtEcsAudio.h"
+  #include "NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h"
 
   // Graphics
   #include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"

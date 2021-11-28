@@ -17,6 +17,19 @@ extern "C"
         return reinterpret_cast<NrtAudioSystemHandle>(new Ecs::Audio::AudioSystem());
     }
 
+    NrtResult Nrt_AudioSystem_Destroy(NrtAudioSystemHandle system)
+    {
+        if (system == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto sys = reinterpret_cast<Ecs::Audio::AudioSystem*>(system);
+        sys->~AudioSystem();
+        return NRT_SUCCESS;
+    }
+
     NrtResult Nrt_AudioSystem_RegisterDefaultAudioComponents(NrtSystemSchedulerHandle system)
     {
         if (system == nullptr)

@@ -302,4 +302,12 @@ namespace NovelRT::Ecs::Audio
             _service->SetSoundVolume(_soundCache.at(emitter.handle), desiredVolume);
         }
     }
+
+    AudioSystem::~AudioSystem() noexcept
+    {
+        unused(_soundCache.empty());
+        unused(_musicCache.empty());
+        unused(_fadeCache.empty());
+        _service->TearDown();
+    }
 }

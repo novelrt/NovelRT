@@ -62,8 +62,8 @@ namespace NovelRT::Audio
         [[nodiscard]] bool IsLoaded(ALuint handle);
         [[nodiscard]] bool IsMusicPlaying();
         [[nodiscard]] bool IsSoundPlaying(ALuint handle);
-        float GetMusicVolume();
-        float GetSoundVolume(ALuint handle);
+        [[nodiscard]] float GetMusicVolume();
+        [[nodiscard]] float GetSoundVolume(ALuint handle);
     };
 }
 

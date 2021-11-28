@@ -282,5 +282,7 @@ int main()
     // Run the novel!
     Nrt_NovelRunner_runNovel(runner);
 
+    Nrt_AudioSystem_Destroy(audio);
+
     return 0;
 }
