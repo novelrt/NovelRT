@@ -16,9 +16,10 @@
 #include <vector>
 
 /***
-  * @brief Contains audio features, such as playing audio, and managing audio resources.
+ * @brief Contains audio features, such as playing audio, and managing audio resources.
  */
-namespace NovelRT::Audio {
+namespace NovelRT::Audio
+{
     typedef std::vector<ALuint> SoundBank;
     typedef std::vector<ALuint> MusicBank;
     typedef class AudioService AudioService;
