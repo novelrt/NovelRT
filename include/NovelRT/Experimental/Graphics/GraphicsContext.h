@@ -32,7 +32,13 @@ namespace NovelRT::Experimental::Graphics
         virtual void BeginFrame() = 0;
         virtual void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
         virtual void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
-        virtual void Draw(std::shared_ptr<GraphicsPrimitive> primitive) = 0;
+
+        inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive)
+        {
+            Draw(std::move(primitive), 1);
+        }
+
+        virtual void Draw(std::shared_ptr<GraphicsPrimitive> primitive, int32_t instanceCount) = 0;
         virtual void EndDrawing() = 0;
         virtual void EndFrame() = 0;
     };

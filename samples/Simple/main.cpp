@@ -25,6 +25,8 @@ int main(int /*argc*/, char* /*argv*/[])
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> interactionRect;
     std::unique_ptr<NovelRT::Input::BasicInteractionRect> memeInteractionRect;
 
+#undef NOVELRT_INK
+
 #ifdef TEST_ANIM
     std::unique_ptr<NovelRT::Animation::SpriteAnimator> testAnim;
     std::unique_ptr<NovelRT::Graphics::ImageRect> animRect;
@@ -103,7 +105,7 @@ int main(int /*argc*/, char* /*argv*/[])
         NovelRT::Transform(NovelRT::Maths::GeoVector2F(1920 / 2, 1080 / 2), 2, NovelRT::Maths::GeoVector2F(762, 881));
 
     novelChanRect =
-        runner.getRenderer()->createImageRect(novelChanTransform, 3, (imagesDirPath / "novel-chan.png").string(),
+        runner.getRenderer()->createImageRect(novelChanTransform, 0, (imagesDirPath / "novel-chan.png").string(),
                                               NovelRT::Graphics::RGBAColour(255, 0, 255, 255));
 
     auto rubyGnomerTextTransform = NovelRT::Transform(

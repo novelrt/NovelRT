@@ -84,7 +84,7 @@ namespace NovelRT::Ecs::Graphics
           _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(500, 1000));
+                                                                   Maths::GeoVector2F(1920, 1080));
 
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
@@ -144,12 +144,12 @@ namespace NovelRT::Ecs::Graphics
 
         graphicsContext->BeginFrame();
         auto pVertexBuffer = std::vector<TexturedVertexTest>{
-            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(1, 1, 0), Maths::GeoVector2F(1.0f, 0.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(1, -1, 0), Maths::GeoVector2F(1.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(-1, -1, 0), Maths::GeoVector2F(0.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(-1, 1, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
+            TexturedVertexTest{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(+0.5, +0.5, 0), Maths::GeoVector2F(1.0f, 0.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(-0.5, -0.5, 0), Maths::GeoVector2F(0.0f, 1.0f)},
+            TexturedVertexTest{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
 
         auto spriteMeshFuture = LoadVertexDataRaw<TexturedVertexTest>("default", pVertexBuffer);
 
@@ -176,8 +176,8 @@ namespace NovelRT::Ecs::Graphics
         auto size = windowingDevice->GetSize();
         float width = size.x;
         float height = size.y;
-        float halfWidth = width / 2;
-        float halfHeight = height / 2;
+        float halfWidth = width / 2.0f;
+        float halfHeight = height / 2.0f;
         float left = -halfWidth;
         float right = +halfWidth;
         float top = -halfHeight;
@@ -185,36 +185,27 @@ namespace NovelRT::Ecs::Graphics
 
         auto position = Maths::GeoVector2F::zero();
         auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(
-            left, right, bottom, top, 0.1f, 10.0f);
+            left, right, bottom, top, 0.1f, 65535.0f);
         auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
                                                                  Maths::GeoVector3F(position.x, position.y, 0.0f),
                                                                  Maths::GeoVector3F(0, -1, 0));
 
-        _frameMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-
-        Maths::GeoMatrix4x4F* pFrameMatrix =
-            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_frameMatrixConstantBufferRegion);
         auto frameTransform = viewMatrix * projectionMatrix;
         frameTransform.Transpose();
 
+        _frameMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F) * 2, 256);
+
+        Maths::GeoMatrix4x4F* pFrameMatrix =
+            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_frameMatrixConstantBufferRegion);
         pFrameMatrix[0] = frameTransform;
         _matricesConstantBuffer->UnmapAndWrite();
 
-        auto testTransform = Maths::GeoMatrix4x4F::getDefaultIdentity();
-        auto scaleValue = Maths::GeoVector2F(762, 881);
-        scaleValue /= 2.0f;
-        testTransform.Scale(scaleValue);
-        testTransform.Transpose();
 
         //Maths::GeoVector2F::uniform(500);
         /*float aspectRatio = 762.0f / 881.0f;
         scaleValue.y *= aspectRatio;*/
 
         _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pTransformMatrix =
-            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
-        pTransformMatrix[0] = testTransform;
-        _matricesConstantBuffer->UnmapAndWrite();
 
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
@@ -275,7 +266,43 @@ namespace NovelRT::Ecs::Graphics
                 primitiveInfo = primitiveCache.back();
             }
 
-            context->Draw(primitiveInfo->primitive);
+            auto size = _windowingPluginProvider->GetWindowingDevice()->GetSize();
+            float width = size.x;
+            float height = size.y;
+            auto testTransformOne = Maths::GeoMatrix4x4F::getDefaultIdentity();
+            auto scaleValue = Maths::GeoVector2F(500, 500);
+            float aspect = (width < height) ? (width / height) : (height / width);
+            unused(aspect);
+
+            /*
+            if (aspect == 1)
+            {
+                aspect = width / 762; //pretend the "512" is either the width or height, whichever is smaller
+            }
+             */
+
+            float imageAspect = (881.0f / 762.0f);
+            scaleValue.y *= imageAspect;
+            //scaleValue *= 0.25f;
+            //testTransformOne.Translate(Maths::GeoVector3F(-100, 0, 0));
+            testTransformOne.Scale(scaleValue);
+            testTransformOne.Transpose();
+
+
+            auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
+            scaleValue = Maths::GeoVector2F(50, 100);
+            //scaleValue *= aspect;
+            testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
+            testTransformTwo.Scale(scaleValue);
+            testTransformTwo.Transpose();
+
+            Maths::GeoMatrix4x4F* pTransformMatrix =
+                _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
+            pTransformMatrix[0] = testTransformOne;
+            pTransformMatrix[1] = testTransformTwo;
+            _matricesConstantBuffer->UnmapAndWrite();
+
+            context->Draw(primitiveInfo->primitive, 1);
         }
 
         context->EndDrawing();

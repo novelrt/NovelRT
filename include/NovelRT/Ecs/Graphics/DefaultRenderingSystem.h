@@ -31,7 +31,10 @@ namespace NovelRT::Ecs::Graphics
         //Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _projectionMatrixConstantBufferRegion;
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
             _frameMatrixConstantBufferRegion;
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _transformConstantBufferRegion;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
+            _transformConstantBufferRegion;
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
+            _transformConstantBufferRegionTwo;
 
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;

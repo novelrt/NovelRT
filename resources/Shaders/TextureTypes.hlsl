@@ -5,6 +5,7 @@ struct VSInput
 {
     float3 position : POSITION;
     float2 uv : TEXCOORD;
+    int instanceID : SV_InstanceID;
 };
 
 struct PSInput

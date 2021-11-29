@@ -339,7 +339,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         EndCopy(vulkanImage);
     }
 
-    void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive)
+    void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive, int32_t instanceCount)
     {
         if (primitive == nullptr)
         {
@@ -442,12 +442,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                  indexType);
 
             vkCmdDrawIndexed(vulkanCommandBuffer,
-                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), 1, 0, 0, 0);
+                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), instanceCount, 0, 0, 0);
         }
         else
         {
             vkCmdDraw(vulkanCommandBuffer,
-                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()), 1, 0,
+                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()), instanceCount, 0,
                       0);
         }
     }

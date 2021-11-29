@@ -10,14 +10,14 @@ cbuffer FrameData : register(b0)
 
 cbuffer PrimitiveData : register(b1)
 {
-    matrix primitiveTransform;
+    matrix primitiveTransform[2];
 };
 
 PSInput main(VSInput input)
 {
     PSInput output;
     output.position = float4(input.position, 1.0f);
-    output.position = mul(output.position, primitiveTransform);
+    output.position = mul(output.position, primitiveTransform[input.instanceID]);
     output.position = mul(output.position, frameTransform);
     output.uv = input.uv;
     return output;
