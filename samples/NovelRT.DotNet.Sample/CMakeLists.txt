@@ -13,7 +13,7 @@ set(OPTIONS
   /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/obj/
   /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/obj/
   /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/bin/
-  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/
+  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}
   /p:BuildingViaCMake=true
 )
 

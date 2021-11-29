@@ -79,11 +79,12 @@ execute_process(COMMAND \${CMAKE_COMMAND} -E copy_if_different
 
   list(JOIN copy_snippet "\n" copy_snippet)
 
+  get_property(multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
   file(GENERATE
-    OUTPUT copy_build_products.cmake
+    OUTPUT copy_build_products$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
     CONTENT "${copy_snippet}")
   add_custom_target("copy_build_products_to_${target}" ALL
-    COMMAND ${CMAKE_COMMAND} -P copy_build_products.cmake
+    COMMAND ${CMAKE_COMMAND} -P copy_build_products$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
     COMMENT "Copying required build products to ${target}")
   add_dependencies(${target} copy_build_products_to_${target})
   add_dependencies(copy_build_products_to_${target} ${COPY_BUILD_PRODUCTS_DEPENDENCIES})
