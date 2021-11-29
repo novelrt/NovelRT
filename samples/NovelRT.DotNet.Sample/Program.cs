@@ -73,35 +73,19 @@ namespace NovelRT.DotNet.Sample
             }
 
             // Getting & Initialising AudioService
-            fixed (IntPtr* pAudio = &audio)
-            {
-                res = (NrtResult)Nrt_NovelRunner_getAudioService(runner, pAudio);
-            }
+            audio = Nrt_AudioService_Create();
 
-            if (res != NRT_SUCCESS)
-            {
-                fixed (byte* text = Encoding.UTF8.GetBytes("Error getting AudioService: "))
-                {
-                    var textParts = stackalloc sbyte*[2] { (sbyte*)text, Nrt_getLastError() };
-                    sbyte* errMsg = Nrt_appendText(2, textParts);
-                    Nrt_LoggingService_logErrorLine(console, errMsg);
-                }
-                return -1;
-            }
-            else
-            {
-                booleanResult = (NrtBool)Nrt_AudioService_InitialiseAudio(audio);
+            booleanResult = (NrtBool)Nrt_AudioService_InitialiseAudio(audio);
 
-                if (booleanResult != NRT_TRUE)
-                {
-                    fixed (byte* text = Encoding.UTF8.GetBytes("Error initialising AudioService: "))
-                    {
-                        var textParts = stackalloc sbyte*[2] { (sbyte*)text, Nrt_getLastError() };
-                        sbyte* errMsg = Nrt_appendText(2, textParts);
-                        Nrt_LoggingService_logErrorLine(console, errMsg);
-                    }
-                    return -1;
-                }
+            if (booleanResult != NRT_TRUE)
+            {
+               fixed (byte* text = Encoding.UTF8.GetBytes("Error initialising AudioService: "))
+               {
+                   var textParts = stackalloc sbyte*[2] { (sbyte*)text, Nrt_getLastError() };
+                   sbyte* errMsg = Nrt_appendText(2, textParts);
+                   Nrt_LoggingService_logErrorLine(console, errMsg);
+               }
+               return -1;
             }
 
             // Getting InteractionService

@@ -17,3 +17,8 @@ include-NrtEcs.h
 ../../../include/NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h
 ../../../include/NovelRT.Interop/Ecs/NrtSystemScheduler.h
 ../../../include/NovelRT.Interop/Ecs/NrtUnsafeComponentView.h
+../../../include/NovelRT.Interop/Ecs/Audio/NrtAudioEmitterComponent.h
+../../../include/NovelRT.Interop/Ecs/Audio/NrtAudioEmitterStateComponent.h
+../../../include/NovelRT.Interop/Ecs/Audio/NrtAudioSystem.h
+../../../include/NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h
+../../../include/NovelRT.Interop/Ecs/Audio/NrtEcsAudioTypedefs.h

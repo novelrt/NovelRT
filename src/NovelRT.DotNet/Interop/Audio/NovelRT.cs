@@ -58,5 +58,23 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_AudioService_TearDown([NativeTypeName("NrtAudioServiceHandle")] IntPtr service);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtBool Nrt_AudioService_IsMusicLoaded([NativeTypeName("NrtAudioServiceHandle")] IntPtr service, [NativeTypeName("NrtAudioServiceIteratorHandle")] IntPtr handle);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtBool Nrt_AudioService_IsSoundLoaded([NativeTypeName("NrtAudioServiceHandle")] IntPtr service, [NativeTypeName("unsigned int")] uint handle);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtBool Nrt_AudioService_IsMusicPlaying([NativeTypeName("NrtAudioServiceHandle")] IntPtr service);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtBool Nrt_AudioService_IsSoundPlaying([NativeTypeName("NrtAudioServiceHandle")] IntPtr service, [NativeTypeName("unsigned int")] uint handle);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern float Nrt_AudioService_GetMusicVolume([NativeTypeName("NrtAudioServiceHandle")] IntPtr service);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern float Nrt_AudioService_GetSoundVolume([NativeTypeName("NrtAudioServiceHandle")] IntPtr service, [NativeTypeName("unsigned int")] uint source);
     }
 }

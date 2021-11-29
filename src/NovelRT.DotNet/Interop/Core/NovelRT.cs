@@ -124,9 +124,6 @@ namespace NovelRT.Interop
         public static extern NrtResult Nrt_NovelRunner_destroy([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
-        public static extern NrtResult Nrt_NovelRunner_getAudioService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtAudioServiceHandle *")] IntPtr* outputService);
-
-        [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_NovelRunner_getInteractionService([NativeTypeName("NrtNovelRunnerHandle")] IntPtr runner, [NativeTypeName("NrtInteractionServiceHandle *")] IntPtr* outputService);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]

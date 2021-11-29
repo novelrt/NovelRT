@@ -25,6 +25,9 @@ set(SOURCES
   Interop/DotNet/NovelRT.cs
 
   Interop/Ecs/NovelRT.cs
+  Interop/Ecs/NrtAudioEmitterComponent.cs
+  Interop/Ecs/NrtAudioEmitterStateComponent.cs
+  Interop/Ecs/NrtAudioEmitterStateKind.cs
 
   Interop/Graphics/NovelRT.cs
   Interop/Graphics/NrtCameraFrameState.cs
