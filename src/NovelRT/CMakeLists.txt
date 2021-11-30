@@ -38,6 +38,7 @@ set(SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
+  Ecs/Audio/AudioSystem.cpp
 
   Experimental/EngineConfig.cpp
   Experimental/Graphics/GraphicsMemoryBlock.cpp

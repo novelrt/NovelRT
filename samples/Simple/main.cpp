@@ -44,10 +44,10 @@ int main(int /*argc*/, char* /*argv*/[])
 
     auto runner = NovelRT::NovelRunner(0, "NovelRTTest", NovelRT::Windowing::WindowMode::Windowed);
     auto console = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_APP);
-    auto audio = runner.getAudioService();
-    audio->initializeAudio();
-    auto bgm = audio->loadMusic((soundsDirPath / "marisa.ogg").string());
-    auto jojo = audio->loadSound((soundsDirPath / "caution.wav").string());
+    auto audio = NovelRT::Audio::AudioService();
+    audio.InitializeAudio();
+    auto bgm = audio.LoadMusic((soundsDirPath / "waltz.ogg").string());
+    auto lazer = audio.LoadSound((soundsDirPath / "laz0r.ogg").string());
 
 #ifdef TEST_ANIM
     auto movingState = std::make_shared<NovelRT::Animation::SpriteAnimatorState>();
@@ -96,7 +96,6 @@ int main(int /*argc*/, char* /*argv*/[])
         runner.getRenderer()->createImageRect(animTransform, 3, NovelRT::Graphics::RGBAColour(255, 255, 255, 255));
     testAnim = std::make_unique<NovelRT::Animation::SpriteAnimator>(&runner, animRect.get());
     testAnim->insertNewState(idleState);
-
 #endif
 
     auto novelChanTransform =
@@ -209,7 +208,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
     memeInteractionRect->Interacted += [&] {
         console.logDebug("WAHEYYY");
-        audio->playSound(jojo, 0);
+        audio.PlaySound(lazer, 0);
     };
 
     interactionRect->Interacted += [&] {
@@ -288,7 +287,7 @@ int main(int /*argc*/, char* /*argv*/[])
         dotnetRuntimeService->freeString(result);
     };
 #endif
-    audio->playMusic(bgm, -1);
+    audio.PlayMusic(bgm, -1);
     runner.runNovel();
 
     return 0;

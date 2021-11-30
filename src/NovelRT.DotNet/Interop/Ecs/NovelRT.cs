@@ -20,7 +20,7 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         [return: NativeTypeName("NrtEntityId")]
-        public static extern nuint Nrt_catalogue_CreateEntity([NativeTypeName("NrtCatalogueHandle")] IntPtr catalogue);
+        public static extern nuint Nrt_Catalogue_CreateEntity([NativeTypeName("NrtCatalogueHandle")] IntPtr catalogue);
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_Catalogue_DeleteEntity([NativeTypeName("NrtCatalogueHandle")] IntPtr catalogue, [NativeTypeName("NrtEntityId")] nuint entity);
@@ -321,5 +321,33 @@ namespace NovelRT.Interop
 
         [DllImport("NovelRT.Interop", ExactSpelling = true)]
         public static extern NrtResult Nrt_UnsafeComponentView_Destroy([NativeTypeName("NrtUnsafeComponentViewHandle")] IntPtr componentView);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern void Nrt_AudioEmitterComponent_Update(NrtAudioEmitterComponent* lhs, [NativeTypeName("const NrtAudioEmitterComponent *")] NrtAudioEmitterComponent* rhs, [NativeTypeName("size_t")] nuint size, void* context);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern void Nrt_AudioEmitterStateComponent_Update(NrtAudioEmitterStateComponent* lhs, [NativeTypeName("const NrtAudioEmitterStateComponent *")] NrtAudioEmitterStateComponent* rhs, [NativeTypeName("size_t")] nuint size, void* context);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        [return: NativeTypeName("NrtAudioSystemHandle")]
+        public static extern IntPtr Nrt_AudioSystem_Create();
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_Destroy([NativeTypeName("NrtAudioSystemHandle")] IntPtr service);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_RegisterDefaultAudioComponents([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr system);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_Update([NativeTypeName("NrtTimestamp")] ulong delta, [NativeTypeName("NrtCatalogueHandle")] IntPtr catalogue, void* context);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_CreateAudio([NativeTypeName("NrtAudioSystemHandle")] IntPtr system, [NativeTypeName("char *")] sbyte* fileName, NrtBool isMusic, [NativeTypeName("uint32_t *")] uint* result);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_PushEmitterComponentUpdate([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr system, [NativeTypeName("NrtEntityId")] nuint entity, NrtAudioEmitterComponent emitter);
+
+        [DllImport("NovelRT.Interop", ExactSpelling = true)]
+        public static extern NrtResult Nrt_AudioSystem_PushEmitterStateComponentUpdate([NativeTypeName("NrtSystemSchedulerHandle")] IntPtr system, [NativeTypeName("NrtEntityId")] nuint entity, NrtAudioEmitterStateComponent state);
     }
 }

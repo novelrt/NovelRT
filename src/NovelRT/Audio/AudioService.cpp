@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
+#include <NovelRT/Audio/Audio.h>
 
 namespace NovelRT::Audio
 {
@@ -11,7 +11,7 @@ namespace NovelRT::Audio
                   auto device = alcOpenDevice((_deviceName.empty()) ? nullptr : _deviceName.c_str());
                   if (!device)
                   {
-                      std::string error = getALError();
+                      std::string error = GetALError();
                       _logger.logError("OpenAL device creation failed! {}", error);
                       throw Exceptions::InitialisationFailureException(
                           "OpenAL failed to create an audio device! Aborting...", error);
@@ -36,6 +36,7 @@ namespace NovelRT::Audio
           _manualLoad(false),
           _musicSource(),
           _musicSourceState(0),
+          _musicStopRequested(false),
           _musicLoopAmount(0),
           _soundLoopAmount(0),
           _soundSourceState(0),
@@ -45,7 +46,7 @@ namespace NovelRT::Audio
     {
     }
 
-    bool AudioService::initializeAudio()
+    bool AudioService::InitializeAudio()
     {
         _device.getActual();
         _context.getActual();
@@ -56,7 +57,7 @@ namespace NovelRT::Audio
         return isInitialised;
     }
 
-    ALuint AudioService::readFile(std::string input)
+    ALuint AudioService::ReadFile(std::string input)
     {
         SF_INFO info;
         info.format = 0;
@@ -91,7 +92,7 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::loadMusic(std::string input)
+    std::vector<ALuint>::iterator AudioService::LoadMusic(std::string input)
     {
         if (!isInitialised)
         {
@@ -99,7 +100,7 @@ namespace NovelRT::Audio
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = readFile(input);
+        auto newBuffer = ReadFile(input);
 
         // Sorry Matt, nullptr types are incompatible to ALuint according to VS.
         if (newBuffer == _noBuffer)
@@ -123,14 +124,14 @@ namespace NovelRT::Audio
         }
     }
 
-    void AudioService::setSoundVolume(ALuint source, float value)
+    void AudioService::SetSoundVolume(ALuint source, float value)
     {
         if (!isInitialised)
         {
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setSoundVolume",
+                "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
 
@@ -150,34 +151,35 @@ namespace NovelRT::Audio
 
     // Switched to using two floats - for some reason VS complained when trying to use Maths::GeoVector2<float> here...
     // This also has no effect if the buffer is more than one channel (not Mono)
-    void AudioService::setSoundPosition(ALuint source, float posX, float posY)
+    void AudioService::SetSoundPosition(ALuint source, float posX, float posY)
     {
         if (!isInitialised)
         {
             _logger.logError(
                 "Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::stopSound", "You cannot stop a sound when the AudioService is not initialised.");
+                "AudioService::StopSound", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
         alSource3f(source, AL_POSITION, posX, posY, 0.0f);
     }
 
-    void AudioService::resumeMusic()
+    void AudioService::ResumeMusic()
     {
         if (!isInitialised)
         {
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setSoundVolume",
+                "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
 
         alSourcePlay(_musicSource);
+        _musicStopRequested = false;
     }
 
-    void AudioService::playMusic(std::vector<ALuint>::iterator handle, int32_t loops)
+    void AudioService::PlayMusic(std::vector<ALuint>::iterator handle, int32_t loops)
     {
         if (!isInitialised)
         {
@@ -193,7 +195,7 @@ namespace NovelRT::Audio
         }
 
         alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-        if (_soundSourceState == AL_PLAYING)
+        if (_musicSourceState == AL_PLAYING)
         {
             alSourceStop(_musicSource);
             alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
@@ -209,39 +211,42 @@ namespace NovelRT::Audio
             alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
         }
         alSourcePlay(_musicSource);
+        _musicStopRequested = false;
     }
 
-    void AudioService::pauseMusic()
+    void AudioService::PauseMusic()
     {
         if (!isInitialised)
         {
             _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::pauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
+                "AudioService::PauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
         }
 
+        _musicStopRequested = true;
         alSourcePause(_musicSource);
     }
 
-    void AudioService::stopMusic()
+    void AudioService::StopMusic()
     {
         if (!isInitialised)
         {
             _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::stopMusic", "You cannot stop a sound when the AudioService is not initialised.");
+                "AudioService::StopMusic", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
+        _musicStopRequested = true;
         alSourceStop(_musicSource);
     }
 
-    void AudioService::setMusicVolume(float value)
+    void AudioService::SetMusicVolume(float value)
     {
         if (!isInitialised)
         {
             _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
-                "AudioService::setMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
         }
 
         if (value > 1.0f)
@@ -258,7 +263,7 @@ namespace NovelRT::Audio
         }
     }
 
-    void AudioService::checkSources()
+    void AudioService::CheckSources()
     {
         // Changing the init check as I don't want this to kill the Runner.
         if (isInitialised)
@@ -272,15 +277,13 @@ namespace NovelRT::Audio
                 if (soundLoop == AL_TRUE)
                 {
                     alGetSourcei(sound, AL_SOURCE_STATE, &_soundSourceState);
-                    // Pretty sure there's a better way to check this...
-                    if (_soundSourceState == AL_STOPPED && (_soundLoopAmount > 0 || _soundLoopAmount == -1))
+                    if (_soundLoopAmount > 0)
                     {
-                        if (_soundLoopAmount > 0)
+                        _soundLoopAmount--;
+                        if (_soundLoopAmount == 0)
                         {
-                            _soundLoopAmount--;
+                            alSourcei(sound, AL_LOOPING, AL_FALSE);
                         }
-                        alSourceRewind(sound);
-                        alSourcePlay(sound);
                     }
                 }
             }
@@ -290,20 +293,19 @@ namespace NovelRT::Audio
             if (musicLoop == AL_TRUE)
             {
                 alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-                if (_musicSourceState == AL_STOPPED && (_musicLoopAmount > 0 || _musicLoopAmount == -1))
+                if (_musicLoopAmount > 0 && !_musicStopRequested)
                 {
-                    if (_musicLoopAmount > 0)
+                    _musicLoopAmount--;
+                    if (_musicLoopAmount == 0)
                     {
-                        _musicLoopAmount--;
+                        alSourcei(_musicSource, AL_LOOPING, AL_FALSE);
                     }
-                    alSourceRewind(_musicSource);
-                    alSourcePlay(_musicSource);
                 }
             }
         }
     }
 
-    std::string AudioService::getALError()
+    std::string AudioService::GetALError()
     {
         auto err = alGetError();
         switch (err)
@@ -335,15 +337,15 @@ namespace NovelRT::Audio
         }
     }
 
-    ALuint AudioService::loadSound(std::string input)
+    ALuint AudioService::LoadSound(std::string input)
     {
         if (!isInitialised)
         {
-            _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
+            _logger.logError("Cannot load new audio into memory while the service is yolo uninitialised! Aborting...");
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = readFile(input);
+        auto newBuffer = ReadFile(input);
 
         if (newBuffer == _noBuffer)
         {
@@ -364,12 +366,12 @@ namespace NovelRT::Audio
         return newSource;
     }
 
-    void AudioService::unload(ALuint source)
+    void AudioService::Unload(ALuint source)
     {
         alSourcei(source, AL_BUFFER, 0);
     }
 
-    void AudioService::playSound(ALuint handle, int32_t loops)
+    void AudioService::PlaySound(ALuint handle, int32_t loops)
     {
         if (!isInitialised)
         {
@@ -396,12 +398,22 @@ namespace NovelRT::Audio
         alSourcePlay(handle);
     }
 
-    void AudioService::stopSound(ALuint handle)
+    void AudioService::StopSound(ALuint handle)
     {
         alSourceStop(handle);
     }
 
-    void AudioService::tearDown()
+    bool AudioService::IsLoaded(std::vector<ALuint>::iterator handle)
+    {
+        return (handle != _music.end());
+    }
+
+    bool AudioService::IsLoaded(ALuint handle)
+    {
+        return (handle != _noBuffer);
+    }
+
+    void AudioService::TearDown()
     {
         if (!_context.isCreated())
             return;
@@ -434,7 +446,47 @@ namespace NovelRT::Audio
 
     AudioService::~AudioService()
     {
-        tearDown();
+        TearDown();
+    }
+
+    bool AudioService::IsMusicPlaying()
+    {
+        alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
+        return (_musicSourceState == AL_PLAYING);
+    }
+
+    bool AudioService::IsSoundPlaying(ALuint handle)
+    {
+        alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
+        return (_soundSourceState == AL_PLAYING);
+    }
+
+    float AudioService::GetMusicVolume()
+    {
+        if (!isInitialised)
+        {
+            _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+            throw NovelRT::Exceptions::NotInitialisedException(
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+        }
+
+        float result = 0.0f;
+        alGetSourcef(_musicSource, AL_GAIN, &result);
+        return result;
+    }
+
+    float AudioService::GetSoundVolume(ALuint handle)
+    {
+        if (!isInitialised)
+        {
+            _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
+            throw NovelRT::Exceptions::NotInitialisedException(
+                "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
+        }
+
+        float result = 0.0f;
+        alGetSourcef(handle, AL_GAIN, &result);
+        return result;
     }
 
 } // namespace NovelRT::Audio

@@ -52,12 +52,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// OpenAL
-#include <AL/al.h>
-#include <AL/alc.h>
-
-// LibSndfile
-#include <sndfile.h>
 
 #ifdef NOVELRT_INK
 // nethost
@@ -88,14 +82,6 @@
     typedef class SpriteAnimator SpriteAnimator;
   }
 
-  /***
-   * @brief Contains audio features, such as playing audio, and managing audio resources.
-   */
-  namespace NovelRT::Audio {
-    typedef std::vector<ALuint> SoundBank;
-    typedef std::vector<ALuint> MusicBank;
-    typedef class AudioService AudioService;
-  }
 #ifdef NOVELRT_INK
   /**
    * @brief Contains features to interop with the .NET Core runtime.
@@ -187,6 +173,9 @@
   #include "NovelRT/Animation/SpriteAnimatorState.h"
   #include "NovelRT/Animation/SpriteAnimator.h"
 
+  // Audio types
+  #include "NovelRT/Audio/Audio.h"
+
   // ECS types
   #include "NovelRT/Ecs/Ecs.h"
 
@@ -228,6 +217,7 @@
   #include "NovelRT/ResourceManagement/ResourceManagement.h"
   #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
 
+
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
   #include "NovelRT/DebugService.h"
@@ -258,7 +248,7 @@
   #include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
 
   // Audio
-  #include "NovelRT.Interop/Audio/NrtAudioService.h"
+  #include "NovelRT.Interop/Audio/NrtAudio.h"
 
 #ifdef NOVELRT_INK
   // DotNet
@@ -274,6 +264,7 @@
   #include "NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h"
   #include "NovelRT.Interop/Ecs/NrtSystemScheduler.h"
   #include "NovelRT.Interop/Ecs/NrtUnsafeComponentView.h"
+  #include "NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h"
 
   // Graphics
   #include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"

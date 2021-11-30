@@ -12,12 +12,12 @@ extern "C"
 {
 #endif
 
-    NrtAudioServiceHandle Nrt_AudioService_create()
+    NrtAudioServiceHandle Nrt_AudioService_Create()
     {
         return reinterpret_cast<NrtAudioServiceHandle>(new Audio::AudioService());
     }
 
-    NrtResult Nrt_AudioService_destroy(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_Destroy(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -30,13 +30,13 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_AudioService_initialiseAudio(NrtAudioServiceHandle service)
+    NrtBool Nrt_AudioService_InitialiseAudio(NrtAudioServiceHandle service)
     {
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
 
         try
         {
-            return serv->initializeAudio() ? NRT_TRUE : NRT_FALSE;
+            return serv->InitializeAudio() ? NRT_TRUE : NRT_FALSE;
         }
         catch (const Exceptions::InitialisationFailureException)
         {
@@ -45,7 +45,7 @@ extern "C"
         }
     }
 
-    NrtResult Nrt_AudioService_loadMusic(NrtAudioServiceHandle service,
+    NrtResult Nrt_AudioService_LoadMusic(NrtAudioServiceHandle service,
                                          char* input,
                                          NrtAudioServiceIteratorHandle* output)
     {
@@ -60,7 +60,7 @@ extern "C"
         NovelRT::Audio::SoundBank::iterator out;
         try
         {
-            out = serv->loadMusic(input);
+            out = serv->LoadMusic(input);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -72,7 +72,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setSoundVolume(NrtAudioServiceHandle service, unsigned int source, float val)
+    NrtResult Nrt_AudioService_SetSoundVolume(NrtAudioServiceHandle service, unsigned int source, float val)
     {
         if (service == nullptr)
         {
@@ -84,7 +84,7 @@ extern "C"
 
         try
         {
-            serv->setSoundVolume(source, val);
+            serv->SetSoundVolume(source, val);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -95,7 +95,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setSoundPosition(NrtAudioServiceHandle service,
+    NrtResult Nrt_AudioService_SetSoundPosition(NrtAudioServiceHandle service,
                                                 unsigned int source,
                                                 float posX,
                                                 float posY)
@@ -110,7 +110,7 @@ extern "C"
 
         try
         {
-            serv->setSoundPosition(source, posX, posY);
+            serv->SetSoundPosition(source, posX, posY);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -121,7 +121,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_resumeMusic(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_ResumeMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -133,7 +133,7 @@ extern "C"
 
         try
         {
-            serv->resumeMusic();
+            serv->ResumeMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -144,7 +144,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_playMusic(NrtAudioServiceHandle service,
+    NrtResult Nrt_AudioService_PlayMusic(NrtAudioServiceHandle service,
                                          NrtAudioServiceIteratorHandle handle,
                                          int32_t loops)
     {
@@ -158,7 +158,7 @@ extern "C"
 
         try
         {
-            serv->playMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
+            serv->PlayMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -169,7 +169,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_pauseMusic(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_PauseMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -181,7 +181,7 @@ extern "C"
 
         try
         {
-            serv->pauseMusic();
+            serv->PauseMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -192,7 +192,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_stopMusic(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_StopMusic(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -204,7 +204,7 @@ extern "C"
 
         try
         {
-            serv->stopMusic();
+            serv->StopMusic();
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -215,7 +215,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_setMusicVolume(NrtAudioServiceHandle service, float value)
+    NrtResult Nrt_AudioService_SetMusicVolume(NrtAudioServiceHandle service, float value)
     {
         if (service == nullptr)
         {
@@ -227,7 +227,7 @@ extern "C"
 
         try
         {
-            serv->setMusicVolume(value);
+            serv->SetMusicVolume(value);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -238,7 +238,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_checkSources(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_CheckSources(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -247,12 +247,12 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->checkSources();
+        serv->CheckSources();
 
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_loadSound(NrtAudioServiceHandle service, char* input, unsigned int* output)
+    NrtResult Nrt_AudioService_LoadSound(NrtAudioServiceHandle service, char* input, unsigned int* output)
     {
         if (service == nullptr)
         {
@@ -264,7 +264,7 @@ extern "C"
 
         try
         {
-            *output = serv->loadSound(input);
+            *output = serv->LoadSound(input);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -275,7 +275,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_unload(NrtAudioServiceHandle service, unsigned int handle)
+    NrtResult Nrt_AudioService_Unload(NrtAudioServiceHandle service, unsigned int handle)
     {
         if (service == nullptr)
         {
@@ -284,11 +284,11 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->unload(handle);
+        serv->Unload(handle);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_playSound(NrtAudioServiceHandle service, unsigned int handle, int loops)
+    NrtResult Nrt_AudioService_PlaySound(NrtAudioServiceHandle service, unsigned int handle, int loops)
     {
         if (service == nullptr)
         {
@@ -300,7 +300,7 @@ extern "C"
 
         try
         {
-            serv->playSound(handle, loops);
+            serv->PlaySound(handle, loops);
         }
         catch (const Exceptions::NotInitialisedException)
         {
@@ -311,7 +311,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_stopSound(NrtAudioServiceHandle service, unsigned int handle)
+    NrtResult Nrt_AudioService_StopSound(NrtAudioServiceHandle service, unsigned int handle)
     {
         if (service == nullptr)
         {
@@ -320,11 +320,11 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->stopSound(handle);
+        serv->StopSound(handle);
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_tearDown(NrtAudioServiceHandle service)
+    NrtResult Nrt_AudioService_TearDown(NrtAudioServiceHandle service)
     {
         if (service == nullptr)
         {
@@ -333,8 +333,72 @@ extern "C"
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
-        serv->tearDown();
+        serv->TearDown();
         return NRT_SUCCESS;
+    }
+
+    NrtBool Nrt_AudioService_IsMusicLoaded(NrtAudioServiceHandle service, NrtAudioServiceIteratorHandle handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsLoaded(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle)) ? NRT_TRUE : NRT_FALSE;
+    }
+
+    NrtBool Nrt_AudioService_IsSoundLoaded(NrtAudioServiceHandle service, unsigned int handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsLoaded(handle) ? NRT_TRUE : NRT_FALSE;
+    }
+
+    NrtBool Nrt_AudioService_IsMusicPlaying(NrtAudioServiceHandle service)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsMusicPlaying() ? NRT_TRUE : NRT_FALSE;
+    }
+
+    NrtBool Nrt_AudioService_IsSoundPlaying(NrtAudioServiceHandle service, unsigned int handle)
+    {
+        if (service == nullptr)
+        {
+            Nrt_setErrMsgIsNullptrInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+
+        return serv->IsSoundPlaying(handle) ? NRT_TRUE : NRT_FALSE;
+    }
+
+    float Nrt_AudioService_GetMusicVolume(NrtAudioServiceHandle service)
+    {
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+        return serv->GetMusicVolume();
+    }
+
+    float Nrt_AudioService_GetSoundVolume(NrtAudioServiceHandle service, unsigned int source)
+    {
+        auto serv = reinterpret_cast<Audio::AudioService*>(service);
+        return serv->GetSoundVolume(source);
     }
 
 #ifdef __cplusplus

@@ -1,11 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_AUDIOSERVICE_H
-#define NOVELRT_AUDIOSERVICE_H
+#ifndef NOVELRT_AUDIO_AUDIOSERVICE_H
+#define NOVELRT_AUDIO_AUDIOSERVICE_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#ifndef NOVELRT_AUDIO_H
+#error NovelRT does not support including types explicitly by default. Please include Audio.h instead for the Audio namespace subset.
 #endif
 
 namespace NovelRT::Audio
@@ -26,14 +26,15 @@ namespace NovelRT::Audio
         MusicBank _music;
         ALuint _musicSource;
         ALint _musicSourceState;
+        bool _musicStopRequested;
         ALint _musicLoopAmount;
         ALint _soundLoopAmount;
         ALint _soundSourceState;
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
 
-        ALuint readFile(std::string input);
-        std::string getALError();
+        ALuint ReadFile(std::string input);
+        std::string GetALError();
 
     public:
         bool isInitialised;
@@ -41,23 +42,29 @@ namespace NovelRT::Audio
         AudioService();
         ~AudioService();
 
-        bool initializeAudio();
-        std::vector<ALuint>::iterator loadMusic(std::string input);
+        bool InitializeAudio();
+        std::vector<ALuint>::iterator LoadMusic(std::string input);
 
-        void setSoundVolume(ALuint source, float val);
-        void setSoundPosition(ALuint source, float posX, float posY);
-        void resumeMusic();
-        void playMusic(std::vector<ALuint>::iterator handle, int32_t loops);
-        void pauseMusic();
-        void stopMusic();
-        void setMusicVolume(float value);
-        void checkSources();
-        ALuint loadSound(std::string input);
-        void unload(ALuint handle);
-        void playSound(ALuint handle, int32_t loops);
-        void stopSound(ALuint handle);
-        void tearDown();
+        void SetSoundVolume(ALuint source, float val);
+        void SetSoundPosition(ALuint source, float posX, float posY);
+        void ResumeMusic();
+        void PlayMusic(std::vector<ALuint>::iterator handle, int32_t loops);
+        void PauseMusic();
+        void StopMusic();
+        void SetMusicVolume(float value);
+        void CheckSources();
+        ALuint LoadSound(std::string input);
+        void Unload(ALuint handle);
+        void PlaySound(ALuint handle, int32_t loops);
+        void StopSound(ALuint handle);
+        void TearDown();
+        [[nodiscard]] bool IsLoaded(std::vector<ALuint>::iterator handle);
+        [[nodiscard]] bool IsLoaded(ALuint handle);
+        [[nodiscard]] bool IsMusicPlaying();
+        [[nodiscard]] bool IsSoundPlaying(ALuint handle);
+        [[nodiscard]] float GetMusicVolume();
+        [[nodiscard]] float GetSoundVolume(ALuint handle);
     };
 }
 
-#endif
+#endif // NOVELRT_AUDIO_AUDIOSERVICE_H

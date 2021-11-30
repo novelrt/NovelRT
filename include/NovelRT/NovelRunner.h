@@ -32,7 +32,6 @@ namespace NovelRT
         Utilities::Lazy<std::unique_ptr<Timing::StepTimer>> _stepTimer;
         std::shared_ptr<Windowing::WindowingService> _novelWindowingService;
         std::shared_ptr<Input::InteractionService> _novelInteractionService;
-        std::shared_ptr<Audio::AudioService> _novelAudioService;
 #ifdef NOVELRT_INK
         std::shared_ptr<DotNet::RuntimeService> _novelDotNetRuntimeService;
 #endif
@@ -66,7 +65,6 @@ namespace NovelRT
         /// @brief Gets the Debug Service associated with this Runner.
         std::shared_ptr<DebugService> getDebugService() const noexcept;
         /// @brief Gets the Audio Service associated with this Runner.
-        std::shared_ptr<Audio::AudioService> getAudioService() const noexcept;
 #ifdef NOVELRT_INK
         /// @brief Gets the .NET Runtime Service associated with this Runner.
         std::shared_ptr<DotNet::RuntimeService> getDotNetRuntimeService() const noexcept;
