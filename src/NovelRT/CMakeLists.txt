@@ -69,6 +69,10 @@ set(SOURCES
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
   Experimental/Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 
+  Experimental/Input/Glfw/GlfwInputService.cpp
+  Experimental/Input/Glfw/GlfwInputPluginProvider.cpp
+  Experimental/Input/NovelKey.cpp
+
   Graphics/BasicFillRect.cpp
   Graphics/Camera.cpp
   Graphics/FontSet.cpp

@@ -135,48 +135,48 @@ namespace NovelRT::Windowing
                              monitorY + (displayData->height - windowHeight) / 2);
         }
 
-        glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
+        // glfwSetWindowUserPointer(_window.get(), reinterpret_cast<void*>(this));
 
-        glfwSetWindowCloseCallback(_window.get(), [](auto targetWindow) {
-            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
-            thisPtr->_logger.throwIfNullPtr(
-                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
-
-            thisPtr->tearDown();
-            thisPtr->WindowTornDown();
-        });
-
-        glfwSetWindowSizeCallback(_window.get(), [](auto targetWindow, auto w, auto h) {
-            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
-            thisPtr->_logger.throwIfNullPtr(
-                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
-
-            thisPtr->_windowSize = Maths::GeoVector2F(static_cast<float>(w), static_cast<float>(h));
-            thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
-            thisPtr->WindowResized(thisPtr->_windowSize);
-        });
+        //        glfwSetWindowCloseCallback(_window.get(), [](auto targetWindow) {
+        //            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
+        //            thisPtr->_logger.throwIfNullPtr(
+        //                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+        //
+        //            thisPtr->tearDown();
+        //            thisPtr->WindowTornDown();
+        //        });
+        //
+        //        glfwSetWindowSizeCallback(_window.get(), [](auto targetWindow, auto w, auto h) {
+        //            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
+        //            thisPtr->_logger.throwIfNullPtr(
+        //                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+        //
+        //            thisPtr->_windowSize = Maths::GeoVector2F(static_cast<float>(w), static_cast<float>(h));
+        //            thisPtr->_logger.logInfo("New size detected! Notifying GFX and other members...");
+        //            thisPtr->WindowResized(thisPtr->_windowSize);
+        //        });
         _windowSize = Maths::GeoVector2F(static_cast<float>(wData), static_cast<float>(hData));
 
-        glfwSetMouseButtonCallback(_window.get(), [](auto targetWindow, auto mouseButton, auto action, auto /*mods*/) {
-            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
-            thisPtr->_logger.throwIfNullPtr(
-                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
-
-            double x = 0, y = 0;
-            glfwGetCursorPos(targetWindow, &x, &y);
-            thisPtr->MouseButtonClicked(
-                MouseClickEventArgs{mouseButton, action, Maths::GeoVector2F((float)x, (float)y)});
-        });
-
-        glfwSetKeyCallback(
-            _window.get(), [](auto targetWindow, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
-                auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
-                thisPtr->_logger.throwIfNullPtr(
-                    thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
-                thisPtr->KeyboardButtonChanged(KeyboardButtonChangeEventArgs{key, action});
-            });
+        //        glfwSetMouseButtonCallback(_window.get(), [](auto targetWindow, auto mouseButton, auto action, auto /*mods*/) {
+        //            auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
+        //            thisPtr->_logger.throwIfNullPtr(
+        //                thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+        //
+        //            double x = 0, y = 0;
+        //            glfwGetCursorPos(targetWindow, &x, &y);
+        //            thisPtr->MouseButtonClicked(
+        //                MouseClickEventArgs{mouseButton, action, Maths::GeoVector2F((float)x, (float)y)});
+        //        });
+        //
+        //        glfwSetKeyCallback(
+        //            _window.get(), [](auto targetWindow, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
+        //                auto thisPtr = reinterpret_cast<WindowingService*>(glfwGetWindowUserPointer(targetWindow));
+        //                thisPtr->_logger.throwIfNullPtr(
+        //                    thisPtr, "Unable to continue! WindowUserPointer is NULL. Did you modify this pointer?");
+        //                thisPtr->KeyboardButtonChanged(KeyboardButtonChangeEventArgs{key, action});
+        //            });
+        //    }
     }
-
 #if defined(_WIN64) || defined(_WIN32)
     void WindowingService::checkForOptimus(const char* library)
     {

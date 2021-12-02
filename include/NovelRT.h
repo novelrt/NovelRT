@@ -198,6 +198,8 @@
   #include "NovelRT/Experimental/Threading/Threading.h"
   #include "NovelRT/Experimental/Windowing/Windowing.h"
   #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
+  #include "NovelRT/Experimental/Input/Input.h"
+  #include "NovelRT/Experimental/Input/Glfw/Input.Glfw.h"
 
 #ifdef NOVELRT_INK
   // Ink types

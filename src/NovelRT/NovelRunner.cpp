@@ -16,7 +16,7 @@ namespace NovelRT
           _stepTimer(Utilities::Lazy<std::unique_ptr<Timing::StepTimer>>(std::function<Timing::StepTimer*()>(
               [targetFrameRate] { return new Timing::StepTimer(targetFrameRate); }))),
           _novelWindowingService(std::make_shared<Windowing::WindowingService>()),
-          _novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
+          //_novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
 #if NOVELRT_INK
           _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
 #endif
@@ -33,7 +33,7 @@ namespace NovelRT
         }
         _novelWindowingService->initialiseWindow(displayNumber, windowTitle, windowMode, transparency);
         _novelRenderer->initialiseRendering();
-        _novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
+        //_novelInteractionService->setScreenSize(_novelWindowingService->getWindowSize());
         _novelWindowingService->WindowTornDown += [this] { _exitCode = 0; };
     }
 
@@ -48,8 +48,8 @@ namespace NovelRT
             _novelRenderer->beginFrame();
             SceneConstructionRequested();
             _novelRenderer->endFrame();
-            _novelInteractionService->consumePlayerInput();
-            _novelInteractionService->executeClickedInteractable();
+            //_novelInteractionService->consumePlayerInput();
+            //_novelInteractionService->executeClickedInteractable();
         }
 
         _novelWindowingService->tearDown();
@@ -61,10 +61,10 @@ namespace NovelRT
         return _novelRenderer;
     }
 
-    std::shared_ptr<Input::InteractionService> NovelRunner::getInteractionService() const noexcept
-    {
-        return _novelInteractionService;
-    }
+//    std::shared_ptr<Input::InteractionService> NovelRunner::getInteractionService() const noexcept
+//    {
+//        return _novelInteractionService;
+//    }
 
     std::shared_ptr<DebugService> NovelRunner::getDebugService() const noexcept
     {

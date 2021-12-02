@@ -40,6 +40,13 @@ namespace NovelRT::PluginManagement
             return std::static_pointer_cast<IResourceManagementPluginProvider>(
                 GetDesktopResourceManagementPluginProvider());
         }
+
+        template<>
+        [[nodiscard]] std::shared_ptr<IInputPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
+            IInputPluginProvider>()
+        {
+            return std::static_pointer_cast<IInputPluginProvider>(GetGlfwInputPluginProvider());
+        }
     };
 }
 

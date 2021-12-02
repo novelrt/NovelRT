@@ -7,6 +7,7 @@
 // PluginManagement Dependencies
 #include "../Experimental/Graphics/Graphics.h"
 #include "../Experimental/Windowing/Windowing.h"
+#include "../Experimental/Input/Input.h"
 #include "../ResourceManagement/ResourceManagement.h"
 
 /**
@@ -18,12 +19,15 @@ namespace NovelRT::PluginManagement
     class IResourceManagementPluginProvider;
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
+    class IInputPluginProvider;
 }
 
 // clang-format off
+#include "IInputPluginProvider.h"
 #include "IResourceManagementPluginProvider.h"
 #include "IGraphicsPluginProvider.h"
 #include "IWindowingPluginProvider.h"
+
 #include "TemporaryFnPtrs.h" //TODO: THIS HEADER IS A HACK - DELETE AFTER MVP
 #include "DefaultPluginSelector.h"
 // clang-format on
