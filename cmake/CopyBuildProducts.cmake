@@ -45,7 +45,7 @@ function(copy_build_products target)
     if(NOT DEFINED "COPY_BUILD_PRODUCTS_${dependency_idx}_CONDITION")
       set(cond_succeeded YES)
     else()
-      cmake_language(EVAL CODE "if(COPY_BUILD_PRODUCTS_${dependency_idx}_CONDITION)\nset(cond_succeeded YES)\nendif()")
+      cmake_language(EVAL CODE "if(${COPY_BUILD_PRODUCTS_${dependency_idx}_CONDITION})\nset(cond_succeeded YES)\nendif()")
     endif()
 
     if("${type}" STREQUAL "INTERFACE_LIBRARY")
