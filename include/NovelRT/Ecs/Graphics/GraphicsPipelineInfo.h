@@ -13,6 +13,7 @@ namespace NovelRT::Ecs::Graphics
     struct GraphicsPipelineInfo
     {
         Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline> gpuPipeline = nullptr;
+        //Experimental::Threading::ConcurrentSharedPtr<std::vector<std::shared_ptr<
         std::string pipelineName = "";
         Atom ecsId = 0;
     };

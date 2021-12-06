@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Experimental/Graphics/Graphics.h>
+#include <NovelRT/Experimental/Graphics/GraphicsResourceManager.h>
 
 namespace NovelRT::Experimental::Graphics
 {
@@ -137,11 +138,31 @@ namespace NovelRT::Experimental::Graphics
             sizeToAllocate += minimumBlockSize;
         }
 
-        // TODO: This needs to be improved.
         auto newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, sizeToAllocate);
+            GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write,
+            ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
 
         _vertexBuffers.emplace_back(newBuffer);
+
+        return newBuffer;
+    }
+
+    std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetOrCreateConstantBufferForAllocationSize(
+        size_t allocationSize)
+    {
+        for (auto&& buffer : _constantBuffers)
+        {
+            if (buffer->GetLargestFreeRegionSize() >= allocationSize)
+            {
+                return buffer;
+            }
+        }
+
+        auto newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+            GraphicsBufferKind::Constant, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read,
+            ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
+
+        _constantBuffers.emplace_back(newBuffer);
 
         return newBuffer;
     }
@@ -180,7 +201,7 @@ namespace NovelRT::Experimental::Graphics
     void GraphicsResourceManager::FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource)
     {
         auto collection = vertexResource.GetCollection();
-        auto bufferPtr = std::dynamic_pointer_cast<Experimental::Graphics::GraphicsBuffer>(collection);
+        auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(collection);
 
         if (bufferPtr == nullptr)
         {
@@ -191,25 +212,89 @@ namespace NovelRT::Experimental::Graphics
 
         if (bufferPtr->GetSize() == bufferPtr->GetLargestFreeRegionSize())
         {
-            unused(std::remove_if(_vertexBuffers.begin(), _vertexBuffers.end(),
-                                  [bufferPtr](auto testPtr) { return bufferPtr == testPtr; }));
+            unused(std::remove(_vertexBuffers.begin(), _vertexBuffers.end(), bufferPtr));
         }
     }
 
     void GraphicsResourceManager::FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource)
     {
         auto collection = textureResource.GetCollection();
-        auto texturePtr = std::dynamic_pointer_cast<Experimental::Graphics::GraphicsTexture>(collection);
+        auto texturePtr = std::dynamic_pointer_cast<GraphicsTexture>(collection);
 
         if (texturePtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeTextureData.");
+            throw Exceptions::InvalidOperationException(
+                "An invalid graphics resource was passed into FreeTextureData.");
         }
 
         collection->Free(textureResource);
 
         // For now, a single region is a single texture pointer, so we can just remove it.
-        unused(std::remove_if(_textures.begin(), _textures.end(),
-                              [texturePtr](auto testPtr) { return texturePtr == testPtr; }));
+        unused(std::remove(_textures.begin(), _textures.end(), texturePtr));
+    }
+
+    GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadConstantBufferDataToNewRegion(void* data,
+                                                                                           size_t size,
+                                                                                           size_t alignment)
+    {
+        auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
+        GraphicsMemoryRegion<GraphicsResource> allocation = bufferPtr->Allocate(size, alignment);
+        uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
+        memcpy_s(destination, size, data, size);
+        bufferPtr->UnmapAndWrite(allocation);
+        return allocation;
+    }
+
+    void GraphicsResourceManager::LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
+                                                                         void* data,
+                                                                         size_t size)
+    {
+        auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(targetMemoryResource.GetCollection());
+
+        if (bufferPtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException("The provided region was not provided by a constant buffer");
+        }
+
+        if (std::find(_constantBuffers.begin(), _constantBuffers.end(), bufferPtr) == _constantBuffers.end())
+        {
+            throw Exceptions::InvalidOperationException("The provided region is not managed by this instance of GraphicsResourceManager.");
+        }
+
+        if (targetMemoryResource.GetSize() < size)
+        {
+            throw std::out_of_range("The size of the data is too large for the specified memory region.");
+        }
+
+        uint8_t* destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
+        memcpy_s(destination, size, data, size);
+        bufferPtr->UnmapAndWrite(targetMemoryResource);
+    }
+
+    void GraphicsResourceManager::FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource> region)
+    {
+        auto collection = region.GetCollection();
+        auto bufferPtr = std::dynamic_pointer_cast<Experimental::Graphics::GraphicsBuffer>(collection);
+
+        if (bufferPtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException(
+                "An invalid graphics resource was passed into FreeConstantBufferRegion");
+        }
+
+        auto iterator = std::find(_constantBuffers.begin(), _constantBuffers.end(), bufferPtr);
+
+        if (iterator == _constantBuffers.end())
+        {
+            throw Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
+                                                        "this instance of GraphicsResourceManager.");
+        }
+
+        bufferPtr->Free(region);
+
+        if (bufferPtr->GetSize() == bufferPtr->GetLargestFreeRegionSize())
+        {
+            _constantBuffers.erase(iterator);
+        }
     }
 }

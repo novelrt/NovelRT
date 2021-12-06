@@ -27,14 +27,10 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<Experimental::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<Experimental::Graphics::GraphicsDevice> _graphicsDevice;
 
-        std::shared_ptr<Experimental::Graphics::GraphicsBuffer> _matricesConstantBuffer;
-        //Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> _projectionMatrixConstantBufferRegion;
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
             _frameMatrixConstantBufferRegion;
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
             _transformConstantBufferRegion;
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
-            _transformConstantBufferRegionTwo;
 
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
@@ -99,18 +95,35 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(
             Atom ecsId);
 
+        /*
+        [[nodiscard]] Experimental::Threading::FutureResult<ConstantBufferInfo> LoadConstantBufferDataIntoNewRegionRaw(
+            void* data,
+            size_t size,
+            size_t alignment);
+
+        template<typename TTargetType>
+        [[nodiscard]] Experimental::Threading::FutureResult<
+            Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
+        LoadConstantBufferDataIntoNewRegion(TTargetType* data, size_t amount, size_t alignment = 256)
+        {
+            return LoadConstantBufferDataIntoNewRegionRaw(data, sizeof(TTargetType) * amount, alignment);
+        }
+         */
 
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
             std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline);
 
         void AttachSpriteRenderingToEntity(EntityId entity,
-                                           Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, Catalogue& catalogue);
+                                           Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
+                                           Catalogue& catalogue);
 
-        [[nodiscard]] EntityId CreateSpriteEntity(
-            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, Catalogue& catalogue);
+        [[nodiscard]] EntityId CreateSpriteEntity(Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
+                                                  Catalogue& catalogue);
 
-        [[nodiscard]] EntityId CreateSpriteEntityOutsideOfSystem(Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture, SystemScheduler& scheduler);
+        [[nodiscard]] EntityId CreateSpriteEntityOutsideOfSystem(
+            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
+            SystemScheduler& scheduler);
 
         void ForceVertexTextureFutureResolution();
     };

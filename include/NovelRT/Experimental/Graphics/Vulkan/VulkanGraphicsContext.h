@@ -13,6 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsContext final : public GraphicsContext
     {
     private:
+        std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>> _vulkanDescriptorSets;
         std::shared_ptr<VulkanGraphicsFence> _fence;
         std::shared_ptr<VulkanGraphicsFence> _waitForExecuteCompletionFence;
 
@@ -33,6 +34,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) noexcept;
         void BeginCopy(VkImage vulkanImage) noexcept;
         void EndCopy(VkImage vulkanImage) noexcept;
+        void DestroyDescriptorSets();
 
     public:
         VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept;

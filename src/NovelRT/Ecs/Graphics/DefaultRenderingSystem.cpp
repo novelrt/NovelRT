@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -68,8 +69,6 @@ namespace NovelRT::Ecs::Graphics
           _surfaceContext(nullptr),
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
-          _matricesConstantBuffer(nullptr),
-          //_projectionMatrixConstantBufferRegion(),
           _frameMatrixConstantBufferRegion(),
           _transformConstantBufferRegion(),
           _textureQueueMapMutex(),
@@ -157,21 +156,7 @@ namespace NovelRT::Ecs::Graphics
 
         _defaultSpriteMeshPtr = spriteMeshFuture.GetBackingConcurrentSharedPtr();
 
-        _matricesConstantBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Experimental::Graphics::GraphicsBufferKind::Constant, Experimental::Graphics::GraphicsResourceAccess::Write,
-            Experimental::Graphics::GraphicsResourceAccess::Read, 64 * 1024);
-
         auto windowingDevice = _windowingPluginProvider->GetWindowingDevice();
-
-        /*
-        _projectionMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
-        Maths::GeoMatrix4x4F* pProjectionMatrix =
-            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_projectionMatrixConstantBufferRegion);
-        pProjectionMatrix[0] = Maths::GeoMatrix4x4F::CreateOrthographic(
-            0.0f, windowingDevice->GetWidth(), windowingDevice->GetHeight(), 0.0f, 0.0f, 65535.0f);
-        // pProjectionMatrix->y.y *= -1;
-        _matricesConstantBuffer->UnmapAndWrite();
-         */
 
         auto size = windowingDevice->GetSize();
         float width = size.x;
@@ -193,19 +178,28 @@ namespace NovelRT::Ecs::Graphics
         auto frameTransform = viewMatrix * projectionMatrix;
         frameTransform.Transpose();
 
-        _frameMatrixConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F) * 2, 256);
+        _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(&frameTransform, sizeof(Maths::GeoMatrix4x4F));
 
-        Maths::GeoMatrix4x4F* pFrameMatrix =
-            _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_frameMatrixConstantBufferRegion);
-        pFrameMatrix[0] = frameTransform;
-        _matricesConstantBuffer->UnmapAndWrite();
+        auto testTransformOne = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        auto scaleValue = Maths::GeoVector2F(500, 500);
 
+        float imageAspect = (881.0f / 762.0f);
+        scaleValue.y *= imageAspect;
+        testTransformOne.Scale(scaleValue);
+        testTransformOne.Transpose();
 
-        //Maths::GeoVector2F::uniform(500);
-        /*float aspectRatio = 762.0f / 881.0f;
-        scaleValue.y *= aspectRatio;*/
+        auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        scaleValue = Maths::GeoVector2F(50, 100);
+        testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
+        testTransformTwo.Scale(scaleValue);
+        testTransformTwo.Transpose();
 
-        _transformConstantBufferRegion = _matricesConstantBuffer->Allocate(sizeof(Maths::GeoMatrix4x4F), 256);
+        std::vector<Maths::GeoMatrix4x4F> data {
+            testTransformOne,
+            testTransformTwo
+        };
+
+        _transformConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(data.data(), sizeof(Maths::GeoMatrix4x4F) * 2);
 
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
@@ -250,7 +244,7 @@ namespace NovelRT::Ecs::Graphics
                 auto& pipelineData = _namedGraphicsPipelineInfoObjects.at(component.pipelineId);
 
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                    resourceRegions{/*_projectionMatrixConstantBufferRegion,*/ _frameMatrixConstantBufferRegion,
+                    resourceRegions{_frameMatrixConstantBufferRegion,
                                     _transformConstantBufferRegion, textureData->gpuTextureRegion};
 
                 auto dummyRegion =
@@ -265,42 +259,6 @@ namespace NovelRT::Ecs::Graphics
 
                 primitiveInfo = primitiveCache.back();
             }
-
-            auto size = _windowingPluginProvider->GetWindowingDevice()->GetSize();
-            float width = size.x;
-            float height = size.y;
-            auto testTransformOne = Maths::GeoMatrix4x4F::getDefaultIdentity();
-            auto scaleValue = Maths::GeoVector2F(500, 500);
-            float aspect = (width < height) ? (width / height) : (height / width);
-            unused(aspect);
-
-            /*
-            if (aspect == 1)
-            {
-                aspect = width / 762; //pretend the "512" is either the width or height, whichever is smaller
-            }
-             */
-
-            float imageAspect = (881.0f / 762.0f);
-            scaleValue.y *= imageAspect;
-            //scaleValue *= 0.25f;
-            //testTransformOne.Translate(Maths::GeoVector3F(-100, 0, 0));
-            testTransformOne.Scale(scaleValue);
-            testTransformOne.Transpose();
-
-
-            auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
-            scaleValue = Maths::GeoVector2F(50, 100);
-            //scaleValue *= aspect;
-            testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
-            testTransformTwo.Scale(scaleValue);
-            testTransformTwo.Transpose();
-
-            Maths::GeoMatrix4x4F* pTransformMatrix =
-                _matricesConstantBuffer->Map<Maths::GeoMatrix4x4F>(_transformConstantBufferRegion);
-            pTransformMatrix[0] = testTransformOne;
-            pTransformMatrix[1] = testTransformTwo;
-            _matricesConstantBuffer->UnmapAndWrite();
 
             context->Draw(primitiveInfo->primitive, 1);
         }
@@ -359,6 +317,15 @@ namespace NovelRT::Ecs::Graphics
 
         return Experimental::Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
     }
+
+    /*
+    Experimental::Threading::FutureResult<ConstantBufferInfo>
+    DefaultRenderingSystem::LoadConstantBufferDataIntoNewRegionRaw(void* data, size_t size, size_t alignment)
+    {
+        auto& resourceManager = _resourceManager.getActual();
+        return resourceManager.LoadConstantBufferDataToNewRegion(data, size, alignment);
+    }
+     */
 
     Experimental::Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnName(
         const std::string& vertexDataName)
@@ -443,4 +410,5 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->Signal(currentContext->GetFence());
         _graphicsDevice->WaitForIdle();
     }
+
 }

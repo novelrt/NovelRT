@@ -120,8 +120,6 @@ int main()
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
 
     gfxContext->Copy(texture2D, textureStagingBuffer);
-    auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
-                                                inputResourceRegions);
     gfxContext->EndFrame();
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
@@ -134,6 +132,8 @@ int main()
             auto context = gfxDevice->GetCurrentContext();
             context->BeginFrame();
             context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
+            auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
+                                                        inputResourceRegions);
             context->Draw(primitive);
             context->EndDrawing();
             context->EndFrame();

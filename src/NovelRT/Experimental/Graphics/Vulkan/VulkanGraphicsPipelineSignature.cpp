@@ -5,7 +5,6 @@
 
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
-
     VkDescriptorPool VulkanGraphicsPipelineSignature::CreateDescriptorPool()
     {
         VkDescriptorPool returnDescriptorPool = VK_NULL_HANDLE;
@@ -14,7 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
         descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptorPoolCreateInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-        descriptorPoolCreateInfo.maxSets = 1;
+        descriptorPoolCreateInfo.maxSets = 100;
 
         auto resources = GetResources();
         size_t resourcesLength = resources.size();
@@ -77,6 +76,20 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 vulkanDescriptorPoolSizesIndex++;
             }
 
+            size_t originalSize = vulkanDescriptorPoolSizes.size();
+            size_t finalSize = 100 * originalSize;
+            vulkanDescriptorPoolSizes.resize(finalSize);
+
+            for (size_t i = originalSize; i < finalSize; i += originalSize)
+            {
+                VkDescriptorPoolSize* locationToOverwrite = &vulkanDescriptorPoolSizes[i];
+                for (size_t j = 0; j < originalSize; j++)
+                {
+                    locationToOverwrite[j] = vulkanDescriptorPoolSizes[j];
+                }
+            }
+
+            // TODO: These need to be multiplied by 100 I think. Oh no.
             descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32_t>(vulkanDescriptorPoolSizes.size());
             descriptorPoolCreateInfo.pPoolSizes = vulkanDescriptorPoolSizes.data();
 
@@ -235,14 +248,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsPipelineSignature::DestroyDescriptorSet()
+    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(gsl::span<VkDescriptorSet> vulkanDescriptorSets)
     {
-        if (_vulkanDescriptorSet.isCreated())
-        {
-            vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
-                                 _vulkanDescriptorPool.getActual(), 1, &_vulkanDescriptorSet.getActual());
-            _vulkanDescriptorSet.reset();
-        }
+        vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
+                             _vulkanDescriptorPool.getActual(), static_cast<int32_t>(vulkanDescriptorSets.size()), vulkanDescriptorSets.data());
     }
 
     void VulkanGraphicsPipelineSignature::DestroyDescriptorSetLayout()
@@ -271,9 +280,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         GraphicsPipelineBlendFactor dstBlendFactor,
         gsl::span<const GraphicsPipelineInput> inputs,
         gsl::span<const GraphicsPipelineResource> resources) noexcept
-        : GraphicsPipelineSignature(device, srcBlendFactor, dstBlendFactor, inputs, resources),
+        : GraphicsPipelineSignature(std::move(device), srcBlendFactor, dstBlendFactor, inputs, resources),
           _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
-          _vulkanDescriptorSet([&]() { return CreateDescriptorSet(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),
           _vulkanPipelineLayout([&]() { return CreatePipelineLayout(); })
     {
@@ -301,9 +309,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsPipelineSignature::~VulkanGraphicsPipelineSignature()
     {
-        DestroyDescriptorSet();
         DestroyDescriptorSetLayout();
         DestroyDescriptorPool();
         DestroyPipelineLayout();
     }
-} // namespace NovelRT::Experimental::Graphics::Vulkan
+}

@@ -22,6 +22,7 @@ namespace NovelRT::Ecs::Graphics
     struct AttachRenderToExistingEntityRequestInfo;
     struct GraphicsPipelineInfo;
     struct CreateRenderEntityRequestInfo;
+    struct ConstantBufferInfo;
 }
 
 // clang-format off
@@ -34,6 +35,7 @@ namespace NovelRT::Ecs::Graphics
 #include "DefaultRenderingComponentTypes.h"
 #include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPipelineInfo.h"
+#include "ConstantBufferInfo.h"
 // clang-format on
 
 #endif // NOVELRT_ECS_GRAPHICS_H

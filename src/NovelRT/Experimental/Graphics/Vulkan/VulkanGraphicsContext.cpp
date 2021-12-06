@@ -218,6 +218,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
     {
+        DestroyDescriptorSets();
         VkClearValue clearValue{};
         clearValue.color.float32[0] = backgroundColour.getRScalar();
         clearValue.color.float32[1] = backgroundColour.getGScalar();
@@ -361,7 +362,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
 
-        VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GetVulkanDescriptorSet();
+        VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GenerateVulkanDescriptorSet();
 
         if (vulkanDescriptorSet != VK_NULL_HANDLE)
         {
@@ -417,6 +418,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             vkCmdBindDescriptorSets(vulkanCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     pipelineSignature->GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0,
                                     nullptr);
+
+            if (_vulkanDescriptorSets.find(pipelineSignature) == _vulkanDescriptorSets.end())
+            {
+                _vulkanDescriptorSets[pipelineSignature] = std::vector<VkDescriptorSet>{};
+            }
+
+            _vulkanDescriptorSets[pipelineSignature].emplace_back(vulkanDescriptorSet);
         }
 
         const GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion = primitive->GetIndexBufferRegion();
@@ -507,6 +515,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsContext::~VulkanGraphicsContext()
     {
+        DestroyDescriptorSets();
+
         if (_vulkanCommandBuffer.isCreated())
         {
             DisposeVulkanCommandBuffer(_vulkanCommandBuffer.getActual());
@@ -520,5 +530,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         }
 
         ResetContext();
+    }
+
+    void VulkanGraphicsContext::DestroyDescriptorSets()
+    {
+        for (auto&& pair : _vulkanDescriptorSets)
+        {
+            pair.first->DestroyDescriptorSets(pair.second);
+        }
+
+        _vulkanDescriptorSets.clear();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan
