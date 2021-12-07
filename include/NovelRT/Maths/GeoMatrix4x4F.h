@@ -47,9 +47,9 @@ namespace NovelRT::Maths
                 glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
         }
 
-        inline void Rotate(float angleInEulerDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, 1.0f))
+        inline void Rotate(float angleInEulerDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInEulerDegrees,
+            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), glm::radians(angleInEulerDegrees),
                                                               *reinterpret_cast<glm::vec3*>(&rotationAngle));
         }
 

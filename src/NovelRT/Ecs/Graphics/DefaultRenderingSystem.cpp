@@ -83,7 +83,7 @@ namespace NovelRT::Ecs::Graphics
           _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(1920, 1080));
+                                                                   Maths::GeoVector2F(1920 / 2, 1080));
 
         EngineConfig::EnableDebugOutputFromEngineInternals() = true;
         EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
@@ -175,8 +175,9 @@ namespace NovelRT::Ecs::Graphics
                                                                  Maths::GeoVector3F(position.x, position.y, 0.0f),
                                                                  Maths::GeoVector3F(0, -1, 0));
 
+        // TODO: In theory this is backwards. I have NO idea why this is working.
         auto frameTransform = viewMatrix * projectionMatrix;
-        frameTransform.Transpose();
+        //frameTransform.Transpose();
 
         _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(&frameTransform, sizeof(Maths::GeoMatrix4x4F));
 
@@ -185,14 +186,15 @@ namespace NovelRT::Ecs::Graphics
 
         float imageAspect = (881.0f / 762.0f);
         scaleValue.y *= imageAspect;
+        testTransformOne.Rotate(20);
         testTransformOne.Scale(scaleValue);
-        testTransformOne.Transpose();
+        //testTransformOne.Transpose();
 
         auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
         scaleValue = Maths::GeoVector2F(50, 100);
         testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
         testTransformTwo.Scale(scaleValue);
-        testTransformTwo.Transpose();
+        //testTransformTwo.Transpose();
 
         std::vector<Maths::GeoMatrix4x4F> data {
             testTransformOne,
