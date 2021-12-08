@@ -234,20 +234,21 @@ namespace NovelRT::Experimental::Graphics
     }
 
     GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadConstantBufferDataToNewRegion(void* data,
-                                                                                           size_t size,
-                                                                                           size_t alignment)
+                                                                                                      size_t size,
+                                                                                                      size_t alignment)
     {
         auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
-        GraphicsMemoryRegion<GraphicsResource> allocation = bufferPtr->Allocate(size, alignment);
+        auto allocation = bufferPtr->Allocate(size, alignment);
         uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
         memcpy_s(destination, size, data, size);
         bufferPtr->UnmapAndWrite(allocation);
         return allocation;
     }
 
-    void GraphicsResourceManager::LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
-                                                                         void* data,
-                                                                         size_t size)
+    void GraphicsResourceManager::LoadConstantBufferDataToExistingRegion(
+        GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
+        void* data,
+        size_t size)
     {
         auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(targetMemoryResource.GetCollection());
 
@@ -258,7 +259,8 @@ namespace NovelRT::Experimental::Graphics
 
         if (std::find(_constantBuffers.begin(), _constantBuffers.end(), bufferPtr) == _constantBuffers.end())
         {
-            throw Exceptions::InvalidOperationException("The provided region is not managed by this instance of GraphicsResourceManager.");
+            throw Exceptions::InvalidOperationException(
+                "The provided region is not managed by this instance of GraphicsResourceManager.");
         }
 
         if (targetMemoryResource.GetSize() < size)
@@ -296,5 +298,54 @@ namespace NovelRT::Experimental::Graphics
         {
             _constantBuffers.erase(iterator);
         }
+    }
+
+    uint8_t* GraphicsResourceManager::MapConstantBufferRegionForWritingUntyped(
+        GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
+    {
+        auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(targetMemoryResource.GetCollection());
+
+        if (bufferPtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException(
+                "An invalid graphics resource was passed into FreeConstantBufferRegion");
+        }
+
+        size_t oldLength = _constantBuffersToUnmapAndWrite.size();
+        for (size_t i = 0; i < _constantBuffers.size(); i++)
+        {
+            if (bufferPtr != _constantBuffers[i])
+            {
+                continue;
+            }
+
+            _constantBuffersToUnmapAndWrite.emplace(i);
+            break;
+        }
+
+        if (oldLength >= _constantBuffersToUnmapAndWrite.size())
+        {
+            throw Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
+                                                        "this instance of GraphicsResourceManager.");
+        }
+
+        return bufferPtr->Map<uint8_t>(targetMemoryResource);
+    }
+
+    void GraphicsResourceManager::UnmapAndWriteAllConstantBuffers() noexcept
+    {
+        for (size_t index : _constantBuffersToUnmapAndWrite)
+        {
+            _constantBuffers[index]->UnmapAndWrite();
+        }
+
+        _constantBuffersToUnmapAndWrite.clear();
+    }
+
+    GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::AllocateConstantBufferRegion(size_t size,
+                                                                                                 size_t alignment)
+    {
+        auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
+        return bufferPtr->Allocate(size, alignment);
     }
 }

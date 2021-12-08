@@ -81,6 +81,8 @@ namespace NovelRT
         static Atom GetNextEcsPrimitiveId() noexcept;
 
         static Atom GetNextEcsGraphicsPipelineId() noexcept;
+
+        static Atom GetNextEcsPrimitiveInfoConfigurationId() noexcept;
     };
 
     class AtomHashFunction

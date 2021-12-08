@@ -46,7 +46,7 @@ namespace NovelRT::Ecs::Graphics
 
         Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
 
-        std::vector<GraphicsPrimitiveInfo> _primitiveConfigurations;
+        std::map<Atom, GraphicsPrimitiveInfo> _primitiveConfigurations;
 
         SceneGraph::Scene _renderScene;
 

@@ -17,6 +17,7 @@ namespace NovelRT::Experimental::Graphics
         std::vector<std::shared_ptr<GraphicsBuffer>> _vertexBuffers;
         std::vector<std::shared_ptr<GraphicsTexture>> _textures;
         std::vector<std::shared_ptr<GraphicsBuffer>> _constantBuffers;
+        std::set<size_t> _constantBuffersToUnmapAndWrite;
         std::shared_ptr<GraphicsDevice> _graphicsDevice;
         size_t _stagingBufferSize;
         static constexpr size_t _tenMegabytesAsBytes = 10 * 1024 * 1024;
@@ -56,8 +57,18 @@ namespace NovelRT::Experimental::Graphics
             GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind);
 
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> AllocateConstantBufferRegion(size_t size, size_t alignment = 256);
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadConstantBufferDataToNewRegion(void* data, size_t size, size_t alignment = 256);
         void LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource, void* data, size_t size);
+        [[nodiscard]] uint8_t* MapConstantBufferRegionForWritingUntyped(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource);
+
+        template<typename TPointerType>
+        [[nodiscard]] TPointerType* MapConstantBufferRegionForWriting(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
+        {
+            return reinterpret_cast<TPointerType*>(MapConstantBufferRegionForWritingUntyped(targetMemoryResource));
+        }
+        void UnmapAndWriteAllConstantBuffers() noexcept;
+
         void FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource> regionToFree);
 
         void FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource);

@@ -17,6 +17,7 @@ namespace NovelRT::Ecs::Graphics
         Atom vertexDataId = 0;
         Atom textureId = 0;
         Atom pipelineId = 0;
+        Atom primitiveInfoId = 0;
         bool markedForDeletion = false;
 
         inline RenderComponent& operator+=(const RenderComponent& other)
@@ -24,6 +25,7 @@ namespace NovelRT::Ecs::Graphics
             vertexDataId = other.vertexDataId;
             textureId = other.textureId;
             pipelineId = other.pipelineId;
+            primitiveInfoId = other.primitiveInfoId;
             markedForDeletion = other.markedForDeletion;
             return *this;
         }

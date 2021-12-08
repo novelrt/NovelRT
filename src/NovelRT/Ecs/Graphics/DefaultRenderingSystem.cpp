@@ -194,11 +194,9 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue catalogue)
     {
-        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(0, nullptr, _graphicsDevice, false, 0, 0);
+        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
+            0, nullptr, _graphicsDevice, false, 0, 0);
         auto& gpuResourceManager = _resourceManager.getActual();
-        bool firstLayer = true;
-        size_t closestLayer = 0;
-        size_t farthestLayer = 0;
 
         auto context = _graphicsDevice->GetCurrentContext();
         context->BeginFrame();
@@ -211,27 +209,7 @@ namespace NovelRT::Ecs::Graphics
         auto [renderComponents, transformComponents] =
             catalogue.GetComponentViews<RenderComponent, TransformComponent>();
 
-        // make sure all render components have a corresponding primitive info representation
-        for (auto [entity, renderComponent] : renderComponents)
-        {
-            std::optional<GraphicsPrimitiveInfo> searchResult;
-            for (auto&& info : _primitiveConfigurations)
-            {
-                if (info == renderComponent)
-                {
-                    searchResult = info;
-                    break;
-                }
-            }
-
-            if (!searchResult.has_value())
-            {
-                GraphicsPrimitiveInfo newInfo{renderComponent.vertexDataId, renderComponent.textureId,
-                                              renderComponent.pipelineId};
-
-                _primitiveConfigurations.emplace_back(newInfo);
-            }
-        }
+        std::map<int32_t, std::vector<EntityId>> transformLayerMap{};
 
         for (auto [entity, transformComponent] : transformComponents)
         {
@@ -242,105 +220,95 @@ namespace NovelRT::Ecs::Graphics
                 continue;
             }
 
-            auto textureInfo = GetExistingTextureBasedOnId(renderComponent.textureId);
+            int32_t layer = static_cast<int32_t>(transformComponent.value.w.z);
 
-            size_t layer = static_cast<size_t>(transformComponent.value.w.z);
-
-            if (firstLayer)
+            if (transformLayerMap.find(layer) == transformLayerMap.end())
             {
-                closestLayer = layer;
-                firstLayer = false;
+                transformLayerMap[layer] = std::vector<EntityId>{};
+                transformLayerMap[layer].reserve(1000);
             }
 
-            if (farthestLayer < layer)
-            {
-                farthestLayer = layer;
-            }
-
-            if (closestLayer > layer)
-            {
-                closestLayer = layer;
-            }
-
-            auto it = std::find_if(_primitiveConfigurations.begin(), _primitiveConfigurations.end(),
-                                   [&](auto primitiveInfo) { return primitiveInfo == renderComponent; });
-
-            assert(it != _primitiveConfigurations.end() && "A render component doesn't match any of the pre-loaded "
-                                                           "primitive configurations. The preload stage has failed.");
-
-            auto& transformMapRef = it->ecsRawTransformData;
-            auto transformMapIt = std::find_if(transformMapRef.begin(), transformMapRef.end(),
-                                               [&](auto&& pair) { return pair.first == layer; });
-
-            if (transformMapIt == transformMapRef.end())
-            {
-                transformMapRef[layer] = std::vector<Maths::GeoMatrix4x4F>{};
-                transformMapRef[layer].reserve(1000);
-            }
-
-            auto scaleValue = Maths::GeoVector2F::uniform(500);
-            float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
-            scaleValue.y *= aspect;
-            Maths::GeoMatrix4x4F matrix = transformComponent.value;
-            matrix.Scale(scaleValue); // scale based on aspect. :]
-            transformMapRef[layer].emplace_back(matrix);
+            transformLayerMap[layer].emplace_back(entity);
         }
 
-        std::vector<std::shared_ptr<Experimental::Graphics::GraphicsPrimitive>> primitiveCache{};
-        primitiveCache.reserve((farthestLayer - closestLayer) * _primitiveConfigurations.size());
-        for (int64_t indexLayer = static_cast<int64_t>(farthestLayer); indexLayer >= static_cast<int64_t>(closestLayer); indexLayer--)
+        struct GpuSpanCounter
         {
-            for (auto&& primitiveInfo : _primitiveConfigurations)
+            Maths::GeoMatrix4x4F* gpuData = nullptr;
+            size_t currentIndex = 0;
+        };
+
+        std::unordered_map<Atom, std::map<int32_t, GpuSpanCounter>, AtomHashFunction> gpuSpanCounterMap{};
+
+        for (auto reverseIt = transformLayerMap.rbegin(); reverseIt != transformLayerMap.rend(); reverseIt++)
+        {
+            auto&& [layer, entityVector] = *reverseIt;
+
+            for (EntityId entity : entityVector)
             {
-                auto& gpuTransformRegionsRef = primitiveInfo.gpuTransformConstantBufferRegions;
+                RenderComponent renderComponent = renderComponents.GetComponentUnsafe(entity);
+                TransformComponent transformComponent = transformComponents.GetComponentUnsafe(entity);
 
-                if (std::find_if(primitiveInfo.ecsRawTransformData.begin(), primitiveInfo.ecsRawTransformData.end(),
-                                 [&](auto&& pair)
-                                 { return static_cast<int64_t>(pair.first) == indexLayer; }) == primitiveInfo.ecsRawTransformData.end())
+                if (gpuSpanCounterMap.find(renderComponent.primitiveInfoId) == gpuSpanCounterMap.end())
                 {
-                    continue;
+                    gpuSpanCounterMap[renderComponent.primitiveInfoId] = std::map<int32_t, GpuSpanCounter>{};
+                    gpuSpanCounterMap[renderComponent.primitiveInfoId][layer] =
+                        GpuSpanCounter{gpuResourceManager.MapConstantBufferRegionForWriting<Maths::GeoMatrix4x4F>(
+                                           _primitiveConfigurations[renderComponent.primitiveInfoId]
+                                               .gpuTransformConstantBufferRegions[layer]),
+                                       0};
                 }
 
-                auto& ecsTransformLayerDataRef = primitiveInfo.ecsRawTransformData[indexLayer];
+                auto textureInfo = GetExistingTextureBasedOnId(renderComponent.textureId);
 
-                auto regionsIt = std::find_if(gpuTransformRegionsRef.begin(), gpuTransformRegionsRef.end(),
-                                              [&](auto&& pair) { return static_cast<int64_t>(pair.first) == indexLayer; });
+                GpuSpanCounter& tempSpanCounter = gpuSpanCounterMap[renderComponent.primitiveInfoId][layer];
+                auto scaleValue = Maths::GeoVector2F::uniform(500);
+                float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
+                scaleValue.y *= aspect;
+                Maths::GeoMatrix4x4F matrix = transformComponent.value;
+                matrix.Scale(scaleValue); // scale based on aspect. :]
+                tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrix;
+            }
+        }
 
-                if (regionsIt == gpuTransformRegionsRef.end())
-                {
-                    gpuTransformRegionsRef.emplace(indexLayer,
-                                                   gpuResourceManager.LoadConstantBufferDataToNewRegion(
-                                                       ecsTransformLayerDataRef.data(),
-                                                       sizeof(Maths::GeoMatrix4x4F) * ecsTransformLayerDataRef.size()));
-                }
-                else
-                {
-                    gpuResourceManager.LoadConstantBufferDataToExistingRegion(
-                        regionsIt->second, ecsTransformLayerDataRef.data(),
-                        sizeof(Maths::GeoMatrix4x4F) * ecsTransformLayerDataRef.size());
-                }
+        gpuResourceManager.UnmapAndWriteAllConstantBuffers();
 
-                auto vertexInfo = GetExistingVertexDataBasedOnId(primitiveInfo.ecsVertexDataId);
-                auto textureInfo = GetExistingTextureBasedOnId(primitiveInfo.ecsTextureId);
+        int32_t farthestLayer = transformLayerMap.rbegin()->first;
+        int32_t closestLayer = transformLayerMap.begin()->first;
+
+        std::vector<std::shared_ptr<Experimental::Graphics::GraphicsPrimitive>> primitiveCache{};
+        primitiveCache.reserve(1000);
+
+        for (int32_t layer = farthestLayer; layer >= closestLayer; layer--)
+        {
+            for (auto&& [primitiveInfoId, spanCounterMap] : gpuSpanCounterMap)
+            {
+                auto& primitiveInfo = _primitiveConfigurations[primitiveInfoId];
                 auto pipelineInfo = GetExistingPipelineInfoBasedOnId(primitiveInfo.ecsPipelineId);
+                auto texture = GetExistingTextureBasedOnId(primitiveInfo.ecsTextureId);
+                auto mesh = GetExistingVertexDataBasedOnId(primitiveInfo.ecsVertexDataId);
 
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
                     inputResourceRegions{};
 
                 if (pipelineInfo->useEcsTransforms)
                 {
-                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr) ? pipelineInfo->gpuCustomConstantBuffers->size() : 0;
-                    inputResourceRegions.reserve(2 + customConstantBuffersCount); // 2 for the frame transform and the ecs transform data
+                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr)
+                                                            ? pipelineInfo->gpuCustomConstantBuffers->size()
+                                                            : 0;
+                    inputResourceRegions.reserve(
+                        2 + customConstantBuffersCount); // 2 for the frame transform and the ecs transform data
                     inputResourceRegions.emplace_back(_frameMatrixConstantBufferRegion);
-                    inputResourceRegions.emplace_back(gpuTransformRegionsRef[indexLayer]);
+                    inputResourceRegions.emplace_back(primitiveInfo.gpuTransformConstantBufferRegions[layer]);
                 }
                 else
                 {
-                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr) ? pipelineInfo->gpuCustomConstantBuffers->size() : 0;
+                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr)
+                                                            ? pipelineInfo->gpuCustomConstantBuffers->size()
+                                                            : 0;
                     inputResourceRegions.reserve(customConstantBuffersCount);
                 }
 
-                inputResourceRegions.emplace_back(textureInfo->gpuTextureRegion);
+                inputResourceRegions.emplace_back(texture->gpuTextureRegion);
 
                 if (pipelineInfo->gpuCustomConstantBuffers != nullptr)
                 {
@@ -350,19 +318,13 @@ namespace NovelRT::Ecs::Graphics
                     }
                 }
 
-                auto primitive = _graphicsDevice->CreatePrimitive(
-                    pipelineInfo->gpuPipeline.GetUnderlyingSharedPtr(), vertexInfo->gpuVertexRegion,
-                    sizeof(TexturedVertexTest), dummyRegion, 0, inputResourceRegions);
-                context->Draw(primitive, static_cast<int32_t>(ecsTransformLayerDataRef.size()));
+                size_t amountToDraw = spanCounterMap[layer].currentIndex;
+
+                auto primitive = _graphicsDevice->CreatePrimitive(pipelineInfo->gpuPipeline.GetUnderlyingSharedPtr(),
+                                                                  mesh->gpuVertexRegion, sizeof(TexturedVertexTest),
+                                                                  dummyRegion, 0, inputResourceRegions);
+                context->Draw(primitive, static_cast<int32_t>(amountToDraw));
                 primitiveCache.emplace_back(primitive);
-
-                ecsTransformLayerDataRef.clear();
-
-                // this behaviour isn't defined in the spec, so we need to *ensure* its always at 10k capacity.
-                if (ecsTransformLayerDataRef.capacity() != 1000)
-                {
-                    ecsTransformLayerDataRef.reserve(1000);
-                }
             }
         }
 
@@ -504,6 +466,7 @@ namespace NovelRT::Ecs::Graphics
             entity, RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId});
     }
 
+    // TODO: this is broken lol
     EntityId DefaultRenderingSystem::CreateSpriteEntity(
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
         Catalogue& catalogue)
@@ -519,10 +482,38 @@ namespace NovelRT::Ecs::Graphics
     {
         EntityId entity = Atom::GetNextEntityId();
 
+        auto newRenderComponent =
+            RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId};
+
+        bool assigned = false;
+        for (auto&& [primitiveInfoId, primitiveInfo] : _primitiveConfigurations)
+        {
+            if (primitiveInfo == newRenderComponent)
+            {
+                newRenderComponent.primitiveInfoId = primitiveInfoId;
+                assigned = true;
+                break;
+            }
+        }
+
+        if (!assigned)
+        {
+            Atom newId = Atom::GetNextEcsPrimitiveInfoConfigurationId();
+            GraphicsPrimitiveInfo newPrimitiveInfo{_defaultSpriteMeshPtr->ecsId, texture->ecsId,
+                                                   _defaultGraphicsPipelinePtr->ecsId};
+            newPrimitiveInfo.gpuTransformConstantBufferRegions[0] =
+                _resourceManager.getActual().AllocateConstantBufferRegion(sizeof(Maths::GeoMatrix4x4F) * 1000);
+
+            _primitiveConfigurations.emplace(newId, newPrimitiveInfo);
+            newRenderComponent.primitiveInfoId = newId;
+        }
+
         scheduler.GetComponentCache().GetComponentBuffer<RenderComponent>().PushComponentUpdateInstruction(
-            0, entity,
-            RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId});
-        scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(0, entity, TransformComponent{});
+            0, entity, newRenderComponent);
+
+        scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(
+            0, entity, TransformComponent{});
+
         scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         return entity;
     }
