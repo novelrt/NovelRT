@@ -172,21 +172,6 @@ namespace NovelRT::Ecs::Graphics
         _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
             &frameTransform, sizeof(Maths::GeoMatrix4x4F));
 
-        auto testTransformOne = Maths::GeoMatrix4x4F::getDefaultIdentity();
-        auto scaleValue = Maths::GeoVector2F(500, 500);
-
-        float imageAspect = (881.0f / 762.0f);
-        scaleValue.y *= imageAspect;
-        testTransformOne.Rotate(20);
-        testTransformOne.Scale(scaleValue);
-
-        auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
-        scaleValue = Maths::GeoVector2F(50, 100);
-        testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
-        testTransformTwo.Scale(scaleValue);
-
-        std::vector<Maths::GeoMatrix4x4F> data{testTransformOne, testTransformTwo};
-
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();
