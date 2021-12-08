@@ -13,7 +13,8 @@ namespace NovelRT::Ecs::Graphics
     struct GraphicsPipelineInfo
     {
         Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline> gpuPipeline = nullptr;
-        //Experimental::Threading::ConcurrentSharedPtr<std::vector<std::shared_ptr<
+        Experimental::Threading::ConcurrentSharedPtr<std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>> gpuCustomConstantBuffers = nullptr;
+        bool useEcsTransforms = false;
         std::string pipelineName = "";
         Atom ecsId = 0;
     };

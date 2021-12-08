@@ -19,12 +19,14 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer;
     class SystemScheduler;
     class UnsafeComponentView;
+    struct TransformComponent;
 }
 
 // dependencies for ECS
 // clang-format off
 #include "../Atom.h"
 #include "../Exceptions/Exceptions.h"
+#include "../Maths/Maths.h"
 #include "../Timing/Timestamp.h"
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
@@ -73,6 +75,7 @@ namespace NovelRT::Ecs
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
 #include "Graphics/Ecs.Graphics.h"
+#include "DefaultComponentTypes.h"
 #include "Configurator.h"
 
 // clang-format on

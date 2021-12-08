@@ -28,6 +28,7 @@ namespace NovelRT::Ecs
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
             target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, true});
+            target.GetComponentCache().RegisterComponentType(TransformComponent{Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(0),Maths::GeoVector4F::uniform(0),Maths::GeoVector4F::uniform(0),Maths::GeoVector4F::uniform(0))});
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(_graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
         }
 

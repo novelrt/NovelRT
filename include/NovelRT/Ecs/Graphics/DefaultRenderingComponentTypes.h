@@ -19,13 +19,24 @@ namespace NovelRT::Ecs::Graphics
         Atom pipelineId = 0;
         bool markedForDeletion = false;
 
-        inline RenderComponent& operator +=(const RenderComponent& other)
+        inline RenderComponent& operator+=(const RenderComponent& other)
         {
             vertexDataId = other.vertexDataId;
             textureId = other.textureId;
             pipelineId = other.pipelineId;
             markedForDeletion = other.markedForDeletion;
             return *this;
+        }
+
+        inline bool operator==(const RenderComponent& other) const noexcept
+        {
+            return ((vertexDataId == other.vertexDataId) && (textureId == other.textureId) &&
+                   (pipelineId == other.pipelineId)) && (markedForDeletion == other.markedForDeletion);
+        }
+
+        inline bool operator!=(const RenderComponent& other) const noexcept
+        {
+             return !(*this == other);
         }
     };
 

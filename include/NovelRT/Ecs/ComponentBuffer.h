@@ -145,6 +145,28 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Attempts to get the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The entity to use for fetching the component.
+         * @param outComponent The output result for the fetched component, if there is one.
+         * @return true if a component was found and returned in outComponent.
+         * @return false if no component exists.
+         */
+         [[nodiscard]] bool TryGetComponent(EntityId entity, T& outComponent) const noexcept
+         {
+             if (!HasComponent(entity))
+             {
+                 return false;
+             }
+
+             outComponent = GetComponentUnsafe(entity);
+             return true;
+         }
+
+        /**
          * @brief Gets a copy of the component instance attached to this entity.
          *
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for

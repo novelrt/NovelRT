@@ -178,7 +178,6 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
     {
-
         _currentDelta = delta;
 
         ScheduleUpdateWork();

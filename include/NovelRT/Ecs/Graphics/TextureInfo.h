@@ -14,6 +14,8 @@ namespace NovelRT::Ecs::Graphics
     {
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuTextureRegion = {};
         std::string textureName;
+        uint32_t  width = 0;
+        uint32_t  height = 0;
         Atom ecsId = 0;
 
         bool operator==(const TextureInfo& other) const noexcept

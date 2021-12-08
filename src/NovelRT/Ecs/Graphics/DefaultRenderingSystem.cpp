@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Ecs/Graphics/DefaultRenderingSystem.h>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -14,7 +13,7 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::ResolveVertexInfoFutureResults()
     {
-        std::scoped_lock<tbb::mutex> guard(_vertexQueueMapMutex);
+        std::scoped_lock guard(_vertexQueueMapMutex);
 
         while (!_vertexDataToInitialise.empty())
         {
@@ -53,7 +52,7 @@ namespace NovelRT::Ecs::Graphics
                 texture, Experimental::Graphics::GraphicsTextureAddressMode::ClampToEdge,
                 Experimental::Graphics::GraphicsTextureKind::TwoDimensional);
 
-            *ptr = TextureInfo{texture2DRegion, ptr->textureName, ptr->ecsId};
+            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width, texture.height, ptr->ecsId};
             _namedTextureInfoObjects.emplace(ptr->ecsId, ptr);
         }
     }
@@ -70,7 +69,6 @@ namespace NovelRT::Ecs::Graphics
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
           _frameMatrixConstantBufferRegion(),
-          _transformConstantBufferRegion(),
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
           _texturesToInitialise(),
@@ -112,12 +110,6 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
                 Experimental::Graphics::ShaderProgramVisibility::Vertex),
-
-            /*
-            Experimental::Graphics::GraphicsPipelineResource(
-                Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
-                Experimental::Graphics::ShaderProgramVisibility::Vertex),
-                */
 
             Experimental::Graphics::GraphicsPipelineResource(
                 Experimental::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
@@ -169,17 +161,16 @@ namespace NovelRT::Ecs::Graphics
         float bottom = +halfHeight;
 
         auto position = Maths::GeoVector2F::zero();
-        auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(
-            left, right, bottom, top, 0.1f, 65535.0f);
+        auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
         auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
                                                                  Maths::GeoVector3F(position.x, position.y, 0.0f),
                                                                  Maths::GeoVector3F(0, -1, 0));
 
-        // TODO: In theory this is backwards. I have NO idea why this is working.
+        // This is correct for row-major. :]
         auto frameTransform = viewMatrix * projectionMatrix;
-        //frameTransform.Transpose();
 
-        _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(&frameTransform, sizeof(Maths::GeoMatrix4x4F));
+        _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
+            &frameTransform, sizeof(Maths::GeoMatrix4x4F));
 
         auto testTransformOne = Maths::GeoMatrix4x4F::getDefaultIdentity();
         auto scaleValue = Maths::GeoVector2F(500, 500);
@@ -188,20 +179,13 @@ namespace NovelRT::Ecs::Graphics
         scaleValue.y *= imageAspect;
         testTransformOne.Rotate(20);
         testTransformOne.Scale(scaleValue);
-        //testTransformOne.Transpose();
 
         auto testTransformTwo = Maths::GeoMatrix4x4F::getDefaultIdentity();
         scaleValue = Maths::GeoVector2F(50, 100);
         testTransformTwo.Translate(Maths::GeoVector3F(100, 0, 0));
         testTransformTwo.Scale(scaleValue);
-        //testTransformTwo.Transpose();
 
-        std::vector<Maths::GeoMatrix4x4F> data {
-            testTransformOne,
-            testTransformTwo
-        };
-
-        _transformConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(data.data(), sizeof(Maths::GeoMatrix4x4F) * 2);
+        std::vector<Maths::GeoMatrix4x4F> data{testTransformOne, testTransformTwo};
 
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
@@ -210,8 +194,11 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue catalogue)
     {
-        std::vector<GraphicsPrimitiveInfo> primitiveCache{};
-        primitiveCache.reserve(32); // TODO: make this configurable.
+        auto dummyRegion = Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(0, nullptr, _graphicsDevice, false, 0, 0);
+        auto& gpuResourceManager = _resourceManager.getActual();
+        bool firstLayer = true;
+        size_t closestLayer = 0;
+        size_t farthestLayer = 0;
 
         auto context = _graphicsDevice->GetCurrentContext();
         context->BeginFrame();
@@ -221,48 +208,162 @@ namespace NovelRT::Ecs::Graphics
 
         context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
 
-        ComponentView<RenderComponent> renderComponents = catalogue.GetComponentView<RenderComponent>();
+        auto [renderComponents, transformComponents] =
+            catalogue.GetComponentViews<RenderComponent, TransformComponent>();
 
-        for (auto [entity, component] : renderComponents)
+        // make sure all render components have a corresponding primitive info representation
+        for (auto [entity, renderComponent] : renderComponents)
         {
-            std::optional<GraphicsPrimitiveInfo> primitiveInfo;
-
-            for (auto&& primitive : primitiveCache)
+            std::optional<GraphicsPrimitiveInfo> searchResult;
+            for (auto&& info : _primitiveConfigurations)
             {
-                if ((primitive.ecsPipelineId != component.pipelineId) ||
-                    (primitive.ecsTextureId != component.textureId) ||
-                    (primitive.ecsVertexDataId != component.vertexDataId))
+                if (info == renderComponent)
+                {
+                    searchResult = info;
+                    break;
+                }
+            }
+
+            if (!searchResult.has_value())
+            {
+                GraphicsPrimitiveInfo newInfo{renderComponent.vertexDataId, renderComponent.textureId,
+                                              renderComponent.pipelineId};
+
+                _primitiveConfigurations.emplace_back(newInfo);
+            }
+        }
+
+        for (auto [entity, transformComponent] : transformComponents)
+        {
+            RenderComponent renderComponent{};
+
+            if (!renderComponents.TryGetComponent(entity, renderComponent))
+            {
+                continue;
+            }
+
+            auto textureInfo = GetExistingTextureBasedOnId(renderComponent.textureId);
+
+            size_t layer = static_cast<size_t>(transformComponent.value.w.z);
+
+            if (firstLayer)
+            {
+                closestLayer = layer;
+                firstLayer = false;
+            }
+
+            if (farthestLayer < layer)
+            {
+                farthestLayer = layer;
+            }
+
+            if (closestLayer > layer)
+            {
+                closestLayer = layer;
+            }
+
+            auto it = std::find_if(_primitiveConfigurations.begin(), _primitiveConfigurations.end(),
+                                   [&](auto primitiveInfo) { return primitiveInfo == renderComponent; });
+
+            assert(it != _primitiveConfigurations.end() && "A render component doesn't match any of the pre-loaded "
+                                                           "primitive configurations. The preload stage has failed.");
+
+            auto& transformMapRef = it->ecsRawTransformData;
+            auto transformMapIt = std::find_if(transformMapRef.begin(), transformMapRef.end(),
+                                               [&](auto&& pair) { return pair.first == layer; });
+
+            if (transformMapIt == transformMapRef.end())
+            {
+                transformMapRef[layer] = std::vector<Maths::GeoMatrix4x4F>{};
+                transformMapRef[layer].reserve(10000);
+            }
+
+            auto scaleValue = Maths::GeoVector2F::uniform(500);
+            float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
+            scaleValue.y *= aspect;
+            Maths::GeoMatrix4x4F matrix = transformComponent.value;
+            matrix.Scale(scaleValue); // scale based on aspect. :]
+            transformMapRef[layer].emplace_back(matrix);
+        }
+
+        std::vector<std::shared_ptr<Experimental::Graphics::GraphicsPrimitive>> primitiveCache{};
+        primitiveCache.reserve((farthestLayer - closestLayer) * _primitiveConfigurations.size());
+        for (int64_t indexLayer = static_cast<int64_t>(farthestLayer); indexLayer >= static_cast<int64_t>(closestLayer); indexLayer--)
+        {
+            for (auto&& primitiveInfo : _primitiveConfigurations)
+            {
+                auto& gpuTransformRegionsRef = primitiveInfo.gpuTransformConstantBufferRegions;
+
+                if (std::find_if(primitiveInfo.ecsRawTransformData.begin(), primitiveInfo.ecsRawTransformData.end(),
+                                 [&](auto&& pair)
+                                 { return static_cast<int64_t>(pair.first) == indexLayer; }) == primitiveInfo.ecsRawTransformData.end())
                 {
                     continue;
                 }
 
-                primitiveInfo = primitive;
-            }
+                auto& ecsTransformLayerDataRef = primitiveInfo.ecsRawTransformData[indexLayer];
 
-            if (!primitiveInfo.has_value())
-            {
-                auto& vertexData = _namedVertexInfoObjects.at(component.vertexDataId);
-                auto& textureData = _namedTextureInfoObjects.at(component.textureId);
-                auto& pipelineData = _namedGraphicsPipelineInfoObjects.at(component.pipelineId);
+                auto regionsIt = std::find_if(gpuTransformRegionsRef.begin(), gpuTransformRegionsRef.end(),
+                                              [&](auto&& pair) { return static_cast<int64_t>(pair.first) == indexLayer; });
+
+                if (regionsIt == gpuTransformRegionsRef.end())
+                {
+                    gpuTransformRegionsRef.emplace(indexLayer,
+                                                   gpuResourceManager.LoadConstantBufferDataToNewRegion(
+                                                       ecsTransformLayerDataRef.data(),
+                                                       sizeof(Maths::GeoMatrix4x4F) * ecsTransformLayerDataRef.size()));
+                }
+                else
+                {
+                    gpuResourceManager.LoadConstantBufferDataToExistingRegion(
+                        regionsIt->second, ecsTransformLayerDataRef.data(),
+                        sizeof(Maths::GeoMatrix4x4F) * ecsTransformLayerDataRef.size());
+                }
+
+                ecsTransformLayerDataRef.clear();
+
+                // this behaviour isn't defined in the spec, so we need to *ensure* its always at 10k capacity.
+                if (ecsTransformLayerDataRef.capacity() != 10000)
+                {
+                    ecsTransformLayerDataRef.reserve(10000);
+                }
+
+                auto vertexInfo = GetExistingVertexDataBasedOnId(primitiveInfo.ecsVertexDataId);
+                auto textureInfo = GetExistingTextureBasedOnId(primitiveInfo.ecsTextureId);
+                auto pipelineInfo = GetExistingPipelineInfoBasedOnId(primitiveInfo.ecsPipelineId);
 
                 std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-                    resourceRegions{_frameMatrixConstantBufferRegion,
-                                    _transformConstantBufferRegion, textureData->gpuTextureRegion};
+                    inputResourceRegions{};
 
-                auto dummyRegion =
-                    Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>(
-                        0, nullptr, _graphicsDevice, false, 0, 0);
-                primitiveCache.emplace_back(GraphicsPrimitiveInfo{
-                    _graphicsDevice->CreatePrimitive(pipelineData->gpuPipeline.GetUnderlyingSharedPtr(),
-                                                     vertexData->gpuVertexRegion,
-                                                     static_cast<uint32_t>(vertexData->sizeOfVert), dummyRegion,
-                                                     vertexData->stride, resourceRegions),
-                    vertexData->ecsId, textureData->ecsId, pipelineData->ecsId});
+                if (pipelineInfo->useEcsTransforms)
+                {
+                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr) ? pipelineInfo->gpuCustomConstantBuffers->size() : 0;
+                    inputResourceRegions.reserve(2 + customConstantBuffersCount); // 2 for the frame transform and the ecs transform data
+                    inputResourceRegions.emplace_back(_frameMatrixConstantBufferRegion);
+                    inputResourceRegions.emplace_back(gpuTransformRegionsRef[indexLayer]);
+                }
+                else
+                {
+                    size_t customConstantBuffersCount = (pipelineInfo->gpuCustomConstantBuffers != nullptr) ? pipelineInfo->gpuCustomConstantBuffers->size() : 0;
+                    inputResourceRegions.reserve(customConstantBuffersCount);
+                }
 
-                primitiveInfo = primitiveCache.back();
+                inputResourceRegions.emplace_back(textureInfo->gpuTextureRegion);
+
+                if (pipelineInfo->gpuCustomConstantBuffers != nullptr)
+                {
+                    for (auto&& region : *pipelineInfo->gpuCustomConstantBuffers)
+                    {
+                        inputResourceRegions.emplace_back(region);
+                    }
+                }
+
+                auto primitive = _graphicsDevice->CreatePrimitive(
+                    pipelineInfo->gpuPipeline.GetUnderlyingSharedPtr(), vertexInfo->gpuVertexRegion,
+                    sizeof(TexturedVertexTest), dummyRegion, 0, inputResourceRegions);
+                context->Draw(primitive);
+                primitiveCache.emplace_back(primitive);
             }
-
-            context->Draw(primitiveInfo->primitive, 1);
         }
 
         context->EndDrawing();
@@ -354,9 +455,19 @@ namespace NovelRT::Ecs::Graphics
         return _namedVertexInfoObjects.at(ecsId);
     }
 
+    Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::
+        GetExistingPipelineInfoBasedOnId(Atom ecsId)
+    {
+        std::scoped_lock guard(_graphicsPipelineMapMutex);
+        return _namedGraphicsPipelineInfoObjects.at(ecsId);
+    }
+
     Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::RegisterPipeline(
         const std::string& pipelineName,
-        std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline)
+        std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline,
+        std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
+            customConstantBufferRegions,
+        bool useEcsTransforms)
     {
         std::scoped_lock guard(_graphicsPipelineMapMutex);
 
@@ -365,6 +476,17 @@ namespace NovelRT::Ecs::Graphics
             Experimental::Threading::ConcurrentSharedPtr<Experimental::Graphics::GraphicsPipeline>(std::move(pipeline));
         ptr->pipelineName = pipelineName;
         ptr->ecsId = Atom::GetNextEcsGraphicsPipelineId();
+        ptr->useEcsTransforms = useEcsTransforms;
+
+        if (!customConstantBufferRegions.empty())
+        {
+            auto rawShared = std::make_shared<
+                std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>>();
+            *rawShared = std::move(customConstantBufferRegions);
+            ptr->gpuCustomConstantBuffers = Experimental::Threading::ConcurrentSharedPtr<
+                std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>>(
+                std::move(rawShared));
+        }
 
         _namedGraphicsPipelineInfoObjects.emplace(ptr->ecsId, ptr);
 
@@ -400,6 +522,8 @@ namespace NovelRT::Ecs::Graphics
         scheduler.GetComponentCache().GetComponentBuffer<RenderComponent>().PushComponentUpdateInstruction(
             0, entity,
             RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId});
+        scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(0, entity, TransformComponent{});
+        scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         return entity;
     }
 

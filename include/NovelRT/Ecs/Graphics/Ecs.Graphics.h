@@ -26,13 +26,13 @@ namespace NovelRT::Ecs::Graphics
 }
 
 // clang-format off
-#include "GraphicsPrimitiveInfo.h"
 #include "AttachRenderToExistingEntityRequestInfo.h"
 #include "CreateRenderEntityRequestInfo.h"
 #include "TextureInfo.h"
 #include "VertexInfo.h"
 #include "DefaultRenderingSystem.h"
 #include "DefaultRenderingComponentTypes.h"
+#include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPipelineInfo.h"
 #include "ConstantBufferInfo.h"

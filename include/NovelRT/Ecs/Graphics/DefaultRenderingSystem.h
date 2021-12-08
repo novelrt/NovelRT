@@ -29,8 +29,6 @@ namespace NovelRT::Ecs::Graphics
 
         Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
             _frameMatrixConstantBufferRegion;
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>
-            _transformConstantBufferRegion;
 
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Experimental::Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
@@ -47,6 +45,8 @@ namespace NovelRT::Ecs::Graphics
             _namedGraphicsPipelineInfoObjects;
 
         Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
+
+        std::vector<GraphicsPrimitiveInfo> _primitiveConfigurations;
 
         SceneGraph::Scene _renderScene;
 
@@ -95,6 +95,8 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(
             Atom ecsId);
 
+        [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnId(Atom ecsId);
+
         /*
         [[nodiscard]] Experimental::Threading::FutureResult<ConstantBufferInfo> LoadConstantBufferDataIntoNewRegionRaw(
             void* data,
@@ -112,7 +114,7 @@ namespace NovelRT::Ecs::Graphics
 
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
-            std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline);
+            std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline, std::vector<Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> customConstantBufferRegions = {}, bool useEcsTransforms = true);
 
         void AttachSpriteRenderingToEntity(EntityId entity,
                                            Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
