@@ -81,10 +81,10 @@ namespace NovelRT::Ecs::Graphics
           _renderScene()
     {
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(1920 / 2, 1080));
+                                                                   Maths::GeoVector2F(1920, 1080));
 
-        EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-        EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Debug;
+        EngineConfig::EnableDebugOutputFromEngineInternals() = false;
+        EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Err;
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
@@ -275,7 +275,7 @@ namespace NovelRT::Ecs::Graphics
             if (transformMapIt == transformMapRef.end())
             {
                 transformMapRef[layer] = std::vector<Maths::GeoMatrix4x4F>{};
-                transformMapRef[layer].reserve(10000);
+                transformMapRef[layer].reserve(1000);
             }
 
             auto scaleValue = Maths::GeoVector2F::uniform(500);
@@ -320,14 +320,6 @@ namespace NovelRT::Ecs::Graphics
                         sizeof(Maths::GeoMatrix4x4F) * ecsTransformLayerDataRef.size());
                 }
 
-                ecsTransformLayerDataRef.clear();
-
-                // this behaviour isn't defined in the spec, so we need to *ensure* its always at 10k capacity.
-                if (ecsTransformLayerDataRef.capacity() != 10000)
-                {
-                    ecsTransformLayerDataRef.reserve(10000);
-                }
-
                 auto vertexInfo = GetExistingVertexDataBasedOnId(primitiveInfo.ecsVertexDataId);
                 auto textureInfo = GetExistingTextureBasedOnId(primitiveInfo.ecsTextureId);
                 auto pipelineInfo = GetExistingPipelineInfoBasedOnId(primitiveInfo.ecsPipelineId);
@@ -361,8 +353,16 @@ namespace NovelRT::Ecs::Graphics
                 auto primitive = _graphicsDevice->CreatePrimitive(
                     pipelineInfo->gpuPipeline.GetUnderlyingSharedPtr(), vertexInfo->gpuVertexRegion,
                     sizeof(TexturedVertexTest), dummyRegion, 0, inputResourceRegions);
-                context->Draw(primitive);
+                context->Draw(primitive, static_cast<int32_t>(ecsTransformLayerDataRef.size()));
                 primitiveCache.emplace_back(primitive);
+
+                ecsTransformLayerDataRef.clear();
+
+                // this behaviour isn't defined in the spec, so we need to *ensure* its always at 10k capacity.
+                if (ecsTransformLayerDataRef.capacity() != 1000)
+                {
+                    ecsTransformLayerDataRef.reserve(1000);
+                }
             }
         }
 

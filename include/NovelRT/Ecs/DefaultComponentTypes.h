@@ -16,7 +16,7 @@ namespace NovelRT::Ecs
 
         inline TransformComponent& operator+=(const TransformComponent& other)
         {
-            value += other.value;
+            value = other.value * value;
             return *this;
         }
     };

@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT.h>
+#include <random>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -24,11 +25,31 @@ int main()
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
-    NovelRT::Experimental::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture = renderingSystem->GetOrLoadTexture("novel-chan-white-bg");
+    NovelRT::Experimental::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture = renderingSystem->GetOrLoadTexture("novel-chan");
 
     renderingSystem->ForceVertexTextureFutureResolution();
 
-    unused(renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler));
+    //unused(renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler));
+
+    auto buffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
+
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(-1000, +1000); // define the range
+
+    float x = 0;
+    float y = 0;
+    for (int i = 0; i < 1000; ++i)
+    {
+
+        EntityId entityToShift = renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
+        NovelRT::Maths::GeoMatrix4x4F transformValue = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
+        transformValue.Translate(NovelRT::Maths::GeoVector3F(distr(gen), distr(gen), 0));
+        buffer.PushComponentUpdateInstruction(0, entityToShift, TransformComponent{transformValue});
+    }
+
+    scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 

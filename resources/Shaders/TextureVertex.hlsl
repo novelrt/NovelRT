@@ -10,7 +10,7 @@ cbuffer FrameData : register(b0)
 
 cbuffer PrimitiveData : register(b1)
 {
-   row_major matrix primitiveTransform[10000];
+   row_major matrix primitiveTransform[1000];
 };
 
 PSInput main(VSInput input)
