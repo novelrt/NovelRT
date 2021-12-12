@@ -18,15 +18,19 @@ set(RESOURCES_FILES
   Shaders/TexturedVertexShader.glsl
   Shaders/frag.spv
   Shaders/vert.spv
+
+  Sounds/waltz.ogg
+  Sounds/laz0r.ogg
+  Sounds/goat.ogg
 )
 
 foreach(resource ${RESOURCES_FILES})
-  configure_file(${resource} Resources/${resource} COPYONLY)
+  configure_file(${resource} ${resource} COPYONLY)
 endforeach()
 
-add_executable(Resources IMPORTED GLOBAL)
+add_library(Resources INTERFACE IMPORTED GLOBAL)
 set_target_properties(Resources
   PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/Resources/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_RESOURCES_TARGET
+    RESOURCE "${RESOURCES_FILES}"
 )
 

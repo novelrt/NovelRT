@@ -22,7 +22,7 @@ extern "C"
     NrtUnsafeComponentViewHandle Nrt_Catalogue_GetComponentViewByIdUnsafe(NrtCatalogueHandle catalogue,
                                                                           NrtComponentTypeId componentId);
 
-    NrtEntityId Nrt_catalogue_CreateEntity(NrtCatalogueHandle catalogue);
+    NrtEntityId Nrt_Catalogue_CreateEntity(NrtCatalogueHandle catalogue);
 
     NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogueHandle catalogue, NrtEntityId entity);
 

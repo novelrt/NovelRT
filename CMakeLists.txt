@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
 cmake_policy(SET CMP0091 NEW)
 
@@ -43,7 +43,7 @@ set(NOVELRT_GSL_VERSION "3.1.0" CACHE STRING "ms-gsl version")
 set(NOVELRT_GTEST_VERSION "1.10.0" CACHE STRING "GTest version")
 set(NOVELRT_OGG_VERSION "1.3.4" CACHE STRING "Ogg version")
 set(NOVELRT_ONETBB_VERSION "2021.3.0" CACHE STRING "OneTBB version")
-set(NOVELRT_OPENAL_VERSION "1.19.1" CACHE STRING "OpenAL version")
+set(NOVELRT_OPENAL_VERSION "1.21.1" CACHE STRING "OpenAL version")
 set(NOVELRT_OPUS_VERSION "1.3.1" CACHE STRING "Opus version")
 set(NOVELRT_PNG_VERSION "1.6.37" CACHE STRING "PNG version")
 set(NOVELRT_SNDFILE_VERSION "1.0.29" CACHE STRING "Sndfile version")
@@ -65,6 +65,7 @@ if(NOT DOXYGEN_FOUND)
   set(NOVELRT_BUILD_DOCUMENTATION OFF)
 endif()
 
+add_subdirectory(resources)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
@@ -80,5 +81,3 @@ if(NOVELRT_BUILD_TESTS)
 
   add_subdirectory(tests)
 endif()
-
-add_subdirectory(resources)

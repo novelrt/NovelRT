@@ -76,6 +76,7 @@ namespace NovelRT::Ecs
 #include "UnsafeComponentView.h"
 #include "Graphics/Ecs.Graphics.h"
 #include "DefaultComponentTypes.h"
+#include "Audio/Ecs.Audio.h"
 #include "Configurator.h"
 
 // clang-format on

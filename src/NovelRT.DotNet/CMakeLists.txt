@@ -2,6 +2,8 @@ find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 
 set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.csproj)
 
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CSPROJ})
+
 set(SOURCES
   NovelRT.DotNet.runtimeconfig.json
 
@@ -25,6 +27,9 @@ set(SOURCES
   Interop/DotNet/NovelRT.cs
 
   Interop/Ecs/NovelRT.cs
+  Interop/Ecs/NrtAudioEmitterComponent.cs
+  Interop/Ecs/NrtAudioEmitterStateComponent.cs
+  Interop/Ecs/NrtAudioEmitterStateKind.cs
 
   Interop/Graphics/NovelRT.cs
   Interop/Graphics/NrtCameraFrameState.cs
@@ -58,7 +63,7 @@ set(OPTIONS
   /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/obj/
   /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/obj/
   /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Build.dir/bin/
-  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/
+  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}
   /p:BuildingViaCMake=true
 )
 
@@ -94,19 +99,6 @@ add_custom_target(Dotnet_Build ALL
   DEPENDS ${OUTPUT_ASSEMBLY}
 )
 
-
-
-add_executable(Dotnet IMPORTED GLOBAL)
-add_dependencies(Dotnet Dotnet_Build)
-set_target_properties(Dotnet
-  PROPERTIES
-  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
-)
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/NovelRT.DotNet.runtimeconfig.json
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-
 if(WIN32)
   set(nethost_lib "nethost.dll")
 elseif(APPLE)
@@ -115,22 +107,24 @@ elseif(UNIX)
   set(nethost_lib "libnethost.so")
 endif()
 
-add_library(CoreCLR::nethost SHARED IMPORTED GLOBAL)
-set_target_properties(CoreCLR::nethost
+add_library(Dotnet SHARED IMPORTED GLOBAL)
+add_dependencies(Dotnet Dotnet_Build)
+set_target_properties(Dotnet
   PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}"
   IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/${nethost_lib}"
-  )
+  RESOURCE "${OUTPUT_BYPRODUCTS}"
+)
 
 if(WIN32)
-  set_target_properties(CoreCLR::nethost
+  set_target_properties(Dotnet
     PROPERTIES
     IMPORTED_IMPLIB "${CMAKE_CURRENT_BINARY_DIR}/nethost.lib"
-    )
+  )
   # TODO: check if this is necessary on OS X too
 elseif(UNIX AND NOT APPLE)
-  set_target_properties(CoreCLR::nethost
+  set_target_properties(Dotnet
     PROPERTIES
     INTERFACE_LINK_LIBRARIES "dl"
-    )
+  )
 endif()

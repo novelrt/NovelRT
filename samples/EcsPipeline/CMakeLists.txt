@@ -16,26 +16,19 @@ add_custom_command(
         $<TARGET_FILE_DIR:EcsPipeline>/dotnet
 )
 
-#this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
-if(WIN32)
-    add_custom_command(
-            TARGET EcsPipeline POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE_DIR:EcsPipeline>/dotnet/nethost.dll
-            $<TARGET_FILE_DIR:EcsPipeline>
-    )
-endif()
+copy_build_products(EcsPipeline
+        DEPENDENCY Resources
+        TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
 
-add_custom_command(
-        TARGET EcsPipeline POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Resources>
-        $<TARGET_FILE_DIR:EcsPipeline>/Resources
-)
+        DEPENDENCY Engine
+        TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
 
-add_custom_command(
-        TARGET EcsPipeline POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Engine>
-        $<TARGET_FILE_DIR:EcsPipeline>
-)
+        DEPENDENCY Dotnet
+        TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/dotnet
+        CONDITION NOVELRT_INCLUDE_INK
+
+        DEPENDENCY Dotnet
+        DEPENDENCY_FILES nethost.dll
+        TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+        CONDITION NOVELRT_INCLUDE_INK AND WIN32
+        )

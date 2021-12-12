@@ -19,7 +19,6 @@ extern "C"
     NrtResult Nrt_NovelRunner_runNovel(NrtNovelRunnerHandle runner);
     NrtResult Nrt_NovelRunner_destroy(NrtNovelRunnerHandle runner);
 
-    NrtResult Nrt_NovelRunner_getAudioService(NrtNovelRunnerHandle runner, NrtAudioServiceHandle* outputService);
     NrtResult Nrt_NovelRunner_getInteractionService(NrtNovelRunnerHandle runner,
                                                     NrtInteractionServiceHandle* outputService);
     NrtResult Nrt_NovelRunner_getWindowingService(NrtNovelRunnerHandle runner,

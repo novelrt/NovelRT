@@ -17,7 +17,6 @@ namespace NovelRT
               [targetFrameRate] { return new Timing::StepTimer(targetFrameRate); }))),
           _novelWindowingService(std::make_shared<Windowing::WindowingService>()),
           _novelInteractionService(std::make_shared<Input::InteractionService>(getWindowingService())),
-          _novelAudioService(std::make_shared<Audio::AudioService>()),
 #if NOVELRT_INK
           _novelDotNetRuntimeService(std::make_shared<DotNet::RuntimeService>()),
 #endif
@@ -51,7 +50,6 @@ namespace NovelRT
             _novelRenderer->endFrame();
             _novelInteractionService->consumePlayerInput();
             _novelInteractionService->executeClickedInteractable();
-            _novelAudioService->checkSources();
         }
 
         _novelWindowingService->tearDown();
@@ -73,10 +71,6 @@ namespace NovelRT
         return _novelDebugService;
     }
 
-    std::shared_ptr<Audio::AudioService> NovelRunner::getAudioService() const noexcept
-    {
-        return _novelAudioService;
-    }
 #if NOVELRT_INK
     std::shared_ptr<DotNet::RuntimeService> NovelRunner::getDotNetRuntimeService() const noexcept
     {
