@@ -22,6 +22,18 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
 
+    scheduler.RegisterSystem([](auto delta, auto catalogue)
+                             {
+                                 ComponentView<TransformComponent> transforms = catalogue.GetComponentView<TransformComponent>();
+
+                                 for (auto [entity, transform] : transforms)
+                                 {
+                                     TransformComponent newComponent{};
+                                     newComponent.value.Rotate(20 * delta.getSecondsFloat());
+                                     transforms.PushComponentUpdateInstruction(entity, newComponent);
+                                 }
+                             });
+
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
