@@ -2,6 +2,7 @@ find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 
 set(CSPROJ ${CMAKE_CURRENT_LIST_DIR}/NovelRT.DotNet.Sample.csproj)
 
+
 set(SOURCES
   NovelRT.DotNet.Sample.runtimeconfig.json
   Program.cs
@@ -12,7 +13,7 @@ set(OPTIONS
   /p:IntermediateOutputPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/obj/
   /p:MSBuildProjectExtensionsPath=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/obj/
   /p:OutDir=${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dotnet_Sample_Build.dir/bin/
-  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}/
+  /p:PublishDir=${CMAKE_CURRENT_BINARY_DIR}
   /p:BuildingViaCMake=true
 )
 
@@ -49,30 +50,27 @@ add_custom_target(Dotnet_Sample_Build ALL
 )
 
 add_executable(Dotnet_Sample IMPORTED GLOBAL)
-add_dependencies(Dotnet_Sample Dotnet_Build Dotnet_Sample_Build)
+add_dependencies(Dotnet_Sample Dotnet Dotnet_Sample_Build)
 
-set_target_properties(Dotnet_Sample
-  PROPERTIES
-  IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_DOTNET_TARGET
-)
+if (WIN32)
+  set_target_properties(Dotnet_Sample
+    PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.DotNet.Sample.exe
+  )
+else()
+  set_target_properties(Dotnet_Sample
+    PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/NovelRT.DotNet.Sample
+  )
+endif()
 
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Resources>
-    ${CMAKE_CURRENT_BINARY_DIR}/Resources
-)
+copy_build_products(Dotnet_Sample
+  DEPENDENCY Resources
+  TARGET_LOCATION $<TARGET_FILE_DIR:Dotnet_Sample>/Resources
 
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Engine>
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+  DEPENDENCY Engine
+  TARGET_LOCATION $<TARGET_FILE_DIR:Dotnet_Sample>
 
-add_custom_command(
-  TARGET Dotnet_Sample_Build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Interop>
-    ${CMAKE_CURRENT_BINARY_DIR}
+  DEPENDENCY Interop
+  TARGET_LOCATION $<TARGET_FILE_DIR:Dotnet_Sample>
 )

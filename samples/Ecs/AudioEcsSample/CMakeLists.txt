@@ -1,3 +1,5 @@
+include(CopyBuildProducts)
+
 set(SOURCES
   main.cpp
 )
@@ -9,36 +11,24 @@ target_link_libraries(AudioEcsSample
     Engine
 )
 
-add_custom_command(
-  TARGET AudioEcsSample POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Resources>
-    $<TARGET_FILE_DIR:AudioEcsSample>/Resources
-)
+copy_build_products(AudioEcsSample
+  DEPENDENCY Resources
+  TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>/Resources
 
-add_custom_command(
-  TARGET AudioEcsSample POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Engine>
-    $<TARGET_FILE_DIR:AudioEcsSample>
+  DEPENDENCY Engine
+  TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>
+
+  DEPENDENCY Dotnet
+  TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>/dotnet
+  CONDITION NOVELRT_INCLUDE_INK
+
+  DEPENDENCY Dotnet
+  DEPENDENCY_FILES nethost.dll
+  TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>
+  CONDITION NOVELRT_INCLUDE_INK AND WIN32
 )
 
 if(NOVELRT_INCLUDE_INK)
-    add_dependencies(AudioEcsSample Dotnet)
-    target_compile_definitions(AudioEcsSample PRIVATE NOVELRT_INK)
-    add_custom_command(
-            TARGET AudioEcsSample POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            $<TARGET_FILE_DIR:Dotnet>
-            $<TARGET_FILE_DIR:AudioEcsSample>/dotnet
-    )
-    #this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
-    if(WIN32)
-        add_custom_command(
-                TARGET AudioEcsSample POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy
-                $<TARGET_FILE_DIR:AudioEcsSample>/dotnet/nethost.dll
-                $<TARGET_FILE_DIR:AudioEcsSample>
-        )
-    endif()
+  add_dependencies(AudioEcsSample Dotnet)
+  target_compile_definitions(AudioEcsSample PRIVATE NOVELRT_INK)
 endif()
