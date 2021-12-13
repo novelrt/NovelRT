@@ -205,7 +205,7 @@ namespace NovelRT::Ecs::Graphics
                 continue;
             }
 
-            int32_t layer = static_cast<int32_t>(transformComponent.value.w.z);
+            int32_t layer = static_cast<int32_t>(transformComponent.positionAndLayer.z);
 
             if (transformLayerMap.find(layer) == transformLayerMap.end())
             {
@@ -249,9 +249,11 @@ namespace NovelRT::Ecs::Graphics
                 auto scaleValue = Maths::GeoVector2F::uniform(500);
                 float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
                 scaleValue.y *= aspect;
-                Maths::GeoMatrix4x4F matrix = transformComponent.value;
-                matrix.Scale(scaleValue); // scale based on aspect. :]
-                tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrix;
+                Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::getDefaultIdentity();
+                matrixToInsert.Translate(transformComponent.positionAndLayer);
+                matrixToInsert.Rotate(transformComponent.rotationInEulerAngles);
+                matrixToInsert.Scale(scaleValue); // scale based on aspect. :]
+                tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;
             }
         }
 

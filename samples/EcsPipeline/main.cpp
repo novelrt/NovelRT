@@ -29,7 +29,7 @@ int main()
                                  for (auto [entity, transform] : transforms)
                                  {
                                      TransformComponent newComponent{};
-                                     newComponent.value.Rotate(20 * delta.getSecondsFloat());
+                                     newComponent.rotationInEulerAngles = 20 * delta.getSecondsFloat();
                                      transforms.PushComponentUpdateInstruction(entity, newComponent);
                                  }
                              });
@@ -53,11 +53,8 @@ int main()
     float y = 0;
     for (int i = 0; i < 1000; ++i)
     {
-
         EntityId entityToShift = renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
-        NovelRT::Maths::GeoMatrix4x4F transformValue = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
-        transformValue.Translate(NovelRT::Maths::GeoVector3F(distr(gen), distr(gen), 0));
-        buffer.PushComponentUpdateInstruction(0, entityToShift, TransformComponent{transformValue});
+        buffer.PushComponentUpdateInstruction(0, entityToShift, TransformComponent{NovelRT::Maths::GeoVector3F(distr(gen), distr(gen), 0), 0.0f});
     }
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});

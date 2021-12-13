@@ -12,11 +12,13 @@ namespace NovelRT::Ecs
 {
     struct TransformComponent
     {
-        Maths::GeoMatrix4x4F value = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        Maths::GeoVector3F positionAndLayer;
+        float rotationInEulerAngles;
 
         inline TransformComponent& operator+=(const TransformComponent& other)
         {
-            value = other.value * value;
+            positionAndLayer += other.positionAndLayer;
+            rotationInEulerAngles += other.rotationInEulerAngles;
             return *this;
         }
     };
