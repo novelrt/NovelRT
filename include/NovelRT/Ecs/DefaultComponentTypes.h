@@ -19,6 +19,16 @@ namespace NovelRT::Ecs
         {
             positionAndLayer += other.positionAndLayer;
             rotationInEulerAngles += other.rotationInEulerAngles;
+
+            if (rotationInEulerAngles > 360)
+            {
+                rotationInEulerAngles = 0;
+            }
+            else if (rotationInEulerAngles < 0)
+            {
+                rotationInEulerAngles = 0;
+            }
+
             return *this;
         }
     };
