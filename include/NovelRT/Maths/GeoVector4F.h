@@ -34,29 +34,63 @@ namespace NovelRT::Maths
         float z;
         float w;
 
+        /**
+         * @brief Construct new GeoVector4F with X, Y, Z, and W components set to 0
+         * @returns Newly constructed GeoVector4F
+         */
         GeoVector4F() noexcept
         {
         }
+        /**
+         * @brief Construct new GeoVector4F with X, Y, Z, and W components with x, y, z, and w paramters
+         * @param x Set X Component Value
+         * @param y Set Y Component Value
+         * @param z Set Z Component Value
+         * @param w Set W Component Value
+         * @returns Newly constructed GeoVector4F
+         */
         GeoVector4F(float x, float y, float z, float w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
+        /**
+         * @brief Construct new GeoVector4F with X and Y components set with GeoVector2F and other components set to zero
+         * @param vec2Value Set X and Y Components with GeoVector2F
+         * @returns Newly constructed GeoVector4F with X and Y set by GeoVector2F and other components set to zero
+         */
         GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
         {
         }
+        /**
+         * @brief Construct new GeoVector4F with X and Y components set with GeoVector3F and other components set to zero
+         * @param vec2Value Set X, Y, and Z Components with GeoVector3F
+         * @returns Newly constructed GeoVector4F with X, Y, and Z set by GeoVector3F and other component set to zero
+         */
         GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
         }
 
+        /**
+         * @brief Compute a normalized vector of this vector
+         * @returns A Unit Vector in GeoVector4F that have the length of 1
+         */
         inline GeoVector4F getNormalised() const noexcept
         {
             return GeoVector4F(glm::normalize(vec4Value()));
         }
 
+        /**
+         * @brief Compute a magnitude from 0, 0, 0, 0 Coordinate Vector
+         * @returns Magnitude measured from 0, 0, 0, 0 Coordinate Vector
+         */
         inline float getMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec4*>(this));
         }
 
+        /**
+         * @brief Compute length
+         * @returns Vector Length, also known as Magnitude
+         */
         inline float getLength() const noexcept
         {
             return getMagnitude();
@@ -184,6 +218,9 @@ namespace NovelRT::Maths
             return *this;
         }
 
+        /**
+         * @brief Rotate this vector by using another point as a reference for magnitude.
+         */
         void rotateToAngleAroundPoint(float angleRotationValue,
                                       const GeoVector4F& point,
                                       const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
@@ -194,21 +231,34 @@ namespace NovelRT::Maths
                 *reinterpret_cast<const glm::vec4*>(&point);
         }
 
+        /**
+         * @brief Compare this vector to other vector by using epsilonValue vector as a tolerance for any deviation between the two vectors for comparison
+         * @returns Return true if comparison between this vector and other vector fall within the tolerance set by epsilonValue vector, otherwise false
+         */
         bool epsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
         {
             return glm::all(glm::equal(vec4Value(), other.vec4Value(), epsilonValue.vec4Value()));
         }
 
+        /**
+         * @brief Returns a Vector with uniform component of zero
+         */
         static GeoVector4F zero() noexcept
         {
             return GeoVector4F::uniform(0);
         }
 
+        /**
+         * @brief Returns a Vector with uniform component of one
+         */
         static GeoVector4F one() noexcept
         {
             return GeoVector4F::uniform(1);
         }
 
+        /**
+         * @brief Returns a Vector with both x, y, z, and w components set to value
+         */
         static GeoVector4F uniform(float value) noexcept
         {
             return GeoVector4F(value, value, value, value);
