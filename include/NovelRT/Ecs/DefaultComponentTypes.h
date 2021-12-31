@@ -22,13 +22,13 @@ namespace NovelRT::Ecs
             rotationInEulerAngles += other.rotationInEulerAngles;
             scale += other.scale;
 
-            if (rotationInEulerAngles > 359) // 360 == 0 pretty sure :]
+            if (rotationInEulerAngles > 359.999999f) // 360 == 0 pretty sure :]
             {
-                rotationInEulerAngles -= 359;
+                rotationInEulerAngles -= 359.999999f;
             }
             else if (rotationInEulerAngles < 0)
             {
-                rotationInEulerAngles += 359;
+                rotationInEulerAngles += 359.999999f;
             }
 
             return *this;
