@@ -473,7 +473,7 @@ namespace NovelRT::Experimental::Graphics
                 bool mergeWithNext = nextRegionNode != _regions->end() && !nextRegionNode->GetIsAllocated();
 
                 auto previousRegionNode = regionNode;
-                std::advance(previousRegionNode, 1);
+                std::advance(previousRegionNode, -1);
                 bool mergeWithPrevious = previousRegionNode != _regions->end() && !previousRegionNode->GetIsAllocated();
 
                 if (mergeWithNext)
@@ -590,7 +590,7 @@ namespace NovelRT::Experimental::Graphics
                 size_t paddingBegin = offset - region.GetOffset();
                 size_t requiredEndMargin = GetMinimumAllocatedRegionMarginSize();
 
-                if ((paddingBegin + size + requiredEndMargin) > size)
+                if ((paddingBegin + size + requiredEndMargin) > region.GetSize())
                 {
                     return false;
                 }

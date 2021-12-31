@@ -31,7 +31,7 @@ namespace NovelRT::Experimental::Graphics
             return _kind;
         }
 
-        [[nodiscard]] virtual gsl::span<uint8_t> GetBytecode() const noexcept = 0;
+        [[nodiscard]] virtual gsl::span<const uint8_t> GetBytecode() const noexcept = 0;
     };
 }
 

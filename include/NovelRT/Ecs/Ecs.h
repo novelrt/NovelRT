@@ -4,6 +4,43 @@
 #ifndef NOVELRT_ECS_H
 #define NOVELRT_ECS_H
 
+// dependencies for ECS
+// clang-format off
+
+#include "../Atom.h"
+#include "../Exceptions/Exceptions.h"
+#include "../Maths/Maths.h"
+#include "../Timing/Timestamp.h"
+#include "../Utilities/Event.h"
+#include "../Utilities/KeyValuePair.h"
+#include "../PluginManagement/PluginManagement.h"
+#include "../Experimental/Threading/Threading.h"
+#include <algorithm>
+#include <atomic>
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <optional>
+#include <queue>
+#include <thread>
+#include <tuple>
+#include <typeindex>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+#include <map>
+#include <bitset>
+#ifndef __TBB_PREVIEW_MUTEXES
+#define __TBB_PREVIEW_MUTEXES 1
+#endif
+#include <oneapi/tbb/mutex.h>
+
+// clang-format on
+
 /**
  * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs
  * for component management via stateless systems and other miscellaneous ECS features.
@@ -19,41 +56,13 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer;
     class SystemScheduler;
     class UnsafeComponentView;
+    struct TransformComponent;
+    class EntityObject;
+    class LinkedEntityListView;
+    class EntityObject;
 }
 
-// dependencies for ECS
-// clang-format off
-#include "../Atom.h"
-#include "../Exceptions/Exceptions.h"
-#include "../Timing/Timestamp.h"
-#include "../Utilities/Event.h"
-#include "../Utilities/KeyValuePair.h"
-#include "../PluginManagement/PluginManagement.h"
-#include <algorithm>
-#include <atomic>
-#include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <cstring>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <mutex>
-#include <optional>
-#include <queue>
-#include <thread>
-#include <tuple>
-#include <typeindex>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-#define __TBB_PREVIEW_MUTEXES 1
-#include <oneapi/tbb/mutex.h>
-
-// clang-format on
-
 // ECS types
-
 // clang-format off
 
 #include "EcsUtils.h"
@@ -69,9 +78,13 @@ namespace NovelRT::Ecs
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
+#include "Graphics/Ecs.Graphics.h"
+#include "DefaultComponentTypes.h"
 #include "Audio/Ecs.Audio.h"
 #include "Configurator.h"
+#include "LinkedEntityListView.h"
+#include "EntityObject.h"
 
 // clang-format on
 
-#endif //! NOVELRT_ECS_H
+#endif // NOVELRT_ECS_H

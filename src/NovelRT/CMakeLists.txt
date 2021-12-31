@@ -38,6 +38,7 @@ set(SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
+  Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
 
   Experimental/EngineConfig.cpp
@@ -48,6 +49,7 @@ set(SOURCES
   Experimental/Graphics/GraphicsPipelineInputElement.cpp
   Experimental/Graphics/GraphicsPipelineResource.cpp
   Experimental/Graphics/GraphicsPipelineSignature.cpp
+  Experimental/Graphics/GraphicsResourceManager.cpp
   Experimental/Graphics/ShaderProgram.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.cpp
   Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
@@ -123,12 +125,10 @@ endif()
 add_library(Engine SHARED ${SOURCES})
 
 if(NOVELRT_INCLUDE_INK)
-  add_dependencies(Engine Dotnet)
   target_compile_definitions(Engine PRIVATE NOVELRT_INK)
   target_link_libraries(Engine PUBLIC
-    CoreCLR::nethost
+    Dotnet
   )
-  find_package(Dotnet ${NOVELRT_DOTNET_VERSION} REQUIRED)
 endif()
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
@@ -152,7 +152,6 @@ if(MSVC)
       /wd4611
       /MP
   )
-  get_target_property(opts Engine COMPILE_OPTIONS)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(Engine
     PRIVATE
@@ -207,9 +206,11 @@ if(WIN32)
       Winmm
   )
 
-  if(NOVELRT_INCLUDE_CONAN_PATHS)
-    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  # I hate CMake I hate it I hate it I hate it
+  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
-  endif()
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()

@@ -33,7 +33,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 ### Dependencies
 - .NET SDK 6.0.100-rc.1
-- CMake 3.13
+- CMake 3.18
 - Doxygen 1.8.8 (if building docs)
 - Freetype 2.8.1
 - GLAD 0.1.30

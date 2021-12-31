@@ -34,6 +34,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
+                              GraphicsTextureAddressMode addressMode,
                               GraphicsTextureKind kind,
                               GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                               GraphicsResourceAccess cpuAccess,
@@ -85,6 +86,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsTextureImpl(std::shared_ptr<VulkanGraphicsDevice> device,
+                                  GraphicsTextureAddressMode addressMode,
                                   GraphicsTextureKind kind,
                                   GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                                   GraphicsResourceAccess cpuAccess,
@@ -93,6 +95,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                   uint16_t depth,
                                   VkImage vulkanImage)
             : VulkanGraphicsTexture(std::move(device),
+                                    addressMode,
                                     kind,
                                     std::move(blockRegion),
                                     cpuAccess,
@@ -102,13 +105,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                     vulkanImage),
               _metadata([&]() {
                   TMetadata metadata(GraphicsDeviceObject::GetDevice());
-                  std::shared_ptr<GraphicsMemoryBlock> block = GetBlockRegion().GetCollection();
+                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
+                  std::shared_ptr<GraphicsMemoryBlock> block = blockRegionInternal.GetCollection();
 
                   size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
                   size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
-                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsBufferImpl<TMetadata>>(shared_from_this()),
-                                      blockRegion.GetSize(), minimumAllocatedRegionMarginSize,
+                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsTextureImpl<TMetadata>>(shared_from_this()),
+                                      blockRegionInternal.GetSize(), minimumAllocatedRegionMarginSize,
                                       minimumFreeRegionSizeToRegister);
 
                   return metadata;

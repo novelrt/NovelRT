@@ -29,9 +29,19 @@ namespace NovelRT::Experimental::Windowing::Glfw
         }
 
         void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) final;
-
         void TearDown() noexcept final;
 
+        [[nodiscard]] inline bool GetIsVisible() const noexcept final
+        {
+            return glfwGetWindowAttrib(GetRawGLFWwindowHandle(), GLFW_VISIBLE) != 0;
+        }
+
+        [[nodiscard]] inline bool GetShouldClose() const noexcept final
+        {
+            return glfwWindowShouldClose(GetRawGLFWwindowHandle());
+        }
+
+        void ProcessAllMessages() final;
         ~GlfwWindowingDevice() final;
     };
 }

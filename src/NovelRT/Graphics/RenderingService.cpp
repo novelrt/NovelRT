@@ -293,7 +293,7 @@ namespace NovelRT::Graphics
                 return result;
             }
 
-            auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::getNextTextureId());
+            auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::GetNextTextureId());
             std::weak_ptr<Texture> valueForMap = returnValue;
             _textureCache.emplace(returnValue->getId(), valueForMap);
             returnValue->loadPngAsTexture(fileTarget);
@@ -301,7 +301,7 @@ namespace NovelRT::Graphics
         }
 
         // DRY, I know, but Im really not fussed rn
-        auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::getNextTextureId());
+        auto returnValue = std::make_shared<Texture>(shared_from_this(), Atom::GetNextTextureId());
         std::weak_ptr<Texture> valueForMap = returnValue;
         _textureCache.emplace(returnValue->getId(), valueForMap);
 
@@ -322,7 +322,7 @@ namespace NovelRT::Graphics
             }
         }
 
-        auto returnValue = std::make_shared<FontSet>(shared_from_this(), Atom::getNextFontSetId());
+        auto returnValue = std::make_shared<FontSet>(shared_from_this(), Atom::GetNextFontSetId());
         _fontCache.emplace(returnValue->getId(), std::weak_ptr<FontSet>(returnValue));
         returnValue->loadFontAsTextureSet(fileTarget, fontSize);
         return returnValue;

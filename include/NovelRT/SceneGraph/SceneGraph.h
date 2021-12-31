@@ -8,6 +8,9 @@
 #include "../Maths/Maths.h"
 #include <array>
 #include <memory>
+#include <set>
+#include <queue>
+#include <stack>
 
 /**
  * @brief Provides Scene Graph features for a variety of purposes, such as rendering or input.

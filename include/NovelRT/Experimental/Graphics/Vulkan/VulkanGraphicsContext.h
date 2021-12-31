@@ -13,6 +13,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsContext final : public GraphicsContext
     {
     private:
+        std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>> _vulkanDescriptorSets;
         std::shared_ptr<VulkanGraphicsFence> _fence;
         std::shared_ptr<VulkanGraphicsFence> _waitForExecuteCompletionFence;
 
@@ -33,6 +34,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) noexcept;
         void BeginCopy(VkImage vulkanImage) noexcept;
         void EndCopy(VkImage vulkanImage) noexcept;
+        void DestroyDescriptorSets();
 
     public:
         VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept;
@@ -97,14 +99,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         void Copy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
         void Copy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
 
-        inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive) final
+        inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive, int32_t instanceCount) final
         {
-            Draw(std::static_pointer_cast<VulkanGraphicsPrimitive>(primitive));
+            Draw(std::static_pointer_cast<VulkanGraphicsPrimitive>(primitive), instanceCount);
         }
 
-        void Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive);
+        void Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive, int32_t instanceCount);
         void EndDrawing() final;
         void EndFrame() final;
+
+        void ResetContext();
 
         ~VulkanGraphicsContext() final;
     };

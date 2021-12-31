@@ -6,6 +6,7 @@
 namespace NovelRT::Experimental::Graphics::Vulkan
 {
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
+                                                 GraphicsTextureAddressMode addressMode,
                                                  GraphicsTextureKind kind,
                                                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
                                                  GraphicsResourceAccess cpuAccess,
@@ -13,7 +14,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                  uint32_t height,
                                                  uint16_t depth,
                                                  VkImage vulkanImage)
-        : GraphicsTexture(std::move(device), kind, std::move(blockRegion), cpuAccess, width, height, depth),
+        : GraphicsTexture(std::move(device), addressMode, kind, std::move(blockRegion), cpuAccess, width, height, depth),
           _vulkanImage(vulkanImage),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
           _vulkanSampler([&]() { return CreateVulkanSampler(); })
@@ -299,6 +300,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
 
+        VkSamplerAddressMode addressMode = Utilities::GetVulkanAddressMode(GetAddressMode());
+
         VkSamplerCreateInfo samplerCreateInfo{};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
         samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
@@ -306,6 +309,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
         samplerCreateInfo.maxLod = 1.0f;
         samplerCreateInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_WHITE;
+        samplerCreateInfo.addressModeU = addressMode;
+        samplerCreateInfo.addressModeV = addressMode;
+        samplerCreateInfo.addressModeW = addressMode;
 
         VkResult result = vkCreateSampler(vulkanDevice, &samplerCreateInfo, nullptr, &vulkanSampler);
 

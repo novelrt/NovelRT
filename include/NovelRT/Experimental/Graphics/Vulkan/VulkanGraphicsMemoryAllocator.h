@@ -40,6 +40,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                      GraphicsMemoryRegionAllocationFlags allocationFlags) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,

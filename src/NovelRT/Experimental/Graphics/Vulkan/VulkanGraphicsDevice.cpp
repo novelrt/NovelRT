@@ -9,31 +9,22 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                                                int32_t contextCount)
         : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence([&]() {
-              std::shared_ptr<VulkanGraphicsFence> ptr = std::make_shared<VulkanGraphicsFence>(
-                  std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()));
-              ptr->Reset();
-              return ptr;
-          }),
-          _contexts([&, contextCount]() { return CreateGraphicsContexts(contextCount); }),
-          _contextPtrs([&]() {
-              std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
-              ptrs.reserve(_contexts.getActual().size());
-
-              for (auto&& context : _contexts.getActual())
+          _presentCompletionFence(
+              [&]()
               {
-                  ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
-              }
-
-              return ptrs;
-          }),
+                  return std::make_shared<VulkanGraphicsFence>(
+                      std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
+              }),
+          _contextCount(contextCount),
+          _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
+          _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
-          _device(VK_NULL_HANDLE),
+          _device([&]() { return CreateLogicalDevice(); }),
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
-          _vulkanSwapchain(VK_NULL_HANDLE),
-          _swapChainImages(std::vector<VkImage>{}),
+          _vulkanSwapchain([&]() { return CreateSwapChain(); }),
+          _swapChainImages([&]() { return GetSwapChainImages(); }),
           _contextIndex(0),
           _vulkanSwapChainFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
@@ -43,18 +34,30 @@ namespace NovelRT::Experimental::Graphics::Vulkan
           _state()
     {
         _logger.logInfoLine("Provided GPU device: " + GetAdapter()->GetName());
-        Initialise();
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         // TODO: This gonna be an issue...?
         GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
     }
 
+    std::vector<std::shared_ptr<GraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContextPointers()
+    {
+        std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
+        ptrs.reserve(_contexts.getActual().size());
+
+        for (auto&& context : _contexts.getActual())
+        {
+            ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+        }
+
+        return ptrs;
+    }
+
     std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContexts(
-        int32_t contextCount)
+        uint32_t contextCount)
     {
         std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
 
-        for (int32_t i = 0; i < contextCount; i++)
+        for (uint32_t i = 0; i < contextCount; i++)
         {
             contexts[i] = std::make_shared<VulkanGraphicsContext>(
                 std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
@@ -89,9 +92,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -104,9 +107,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -123,8 +126,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return allExtensions;
     }
 
-    void VulkanGraphicsDevice::CreateLogicalDevice()
+    VkDevice VulkanGraphicsDevice::CreateLogicalDevice()
     {
+        VkDevice device;
+
         _indicesData = Utilities::FindQueueFamilies(GetAdapter()->GetVulkanPhysicalDevice(), _surface);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
@@ -168,17 +173,18 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             createInfo.enabledLayerCount = 0;
         }
 
-        VkResult deviceResult = vkCreateDevice(GetAdapter()->GetVulkanPhysicalDevice(), &createInfo, nullptr, &_device);
+        VkResult deviceResult = vkCreateDevice(GetAdapter()->GetVulkanPhysicalDevice(), &createInfo, nullptr, &device);
 
         if (deviceResult != VK_SUCCESS)
         {
             throw Exceptions::InitialisationFailureException("Failed to initialise the VkDevice.", deviceResult);
         }
 
-        vkGetDeviceQueue(_device, _indicesData.graphicsFamily.value(), 0, &_graphicsQueue);
-        vkGetDeviceQueue(_device, _indicesData.presentFamily.value(), 0, &_presentQueue);
+        vkGetDeviceQueue(device, _indicesData.graphicsFamily.value(), 0, &_graphicsQueue);
+        vkGetDeviceQueue(device, _indicesData.presentFamily.value(), 0, &_presentQueue);
 
         _logger.logInfoLine("VkDevice successfully created.");
+        return device;
     }
 
     VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
@@ -241,8 +247,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         return actualExtent;
     }
 
-    void VulkanGraphicsDevice::CreateSwapChain()
+    VkSwapchainKHR VulkanGraphicsDevice::CreateSwapChain()
     {
+        VkSwapchainKHR vulkanSwapchain;
+
         SwapChainSupportDetails swapChainSupport = Utilities::QuerySwapChainSupport(
             GetAdapter()->GetVulkanPhysicalDevice(), GetSurfaceContext()->GetVulkanSurfaceContextHandle());
 
@@ -265,7 +273,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.imageColorSpace = surfaceFormat.colorSpace;
         createInfo.imageExtent = extent;
         createInfo.imageArrayLayers = 1;
-        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        createInfo.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         QueueFamilyIndices indices = Utilities::FindQueueFamilies(GetAdapter()->GetVulkanPhysicalDevice(), _surface);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -289,49 +297,78 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         createInfo.clipped = VK_TRUE;
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        VkResult swapChainResult = vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_vulkanSwapchain);
+        VkResult swapChainResult = vkCreateSwapchainKHR(GetVulkanDevice(), &createInfo, nullptr, &vulkanSwapchain);
         if (swapChainResult != VK_SUCCESS)
         {
             throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
         }
 
-        _logger.logInfoLine("VkSwapchainKHR successfully created. Retrieving VkImages...");
-
-        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _vulkanSwapchain, &imageCount, nullptr);
-
-        if (imagesKHRQuery != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
-        }
-
-        _swapChainImages.resize(imageCount);
-        imagesKHRQuery = vkGetSwapchainImagesKHR(_device, _vulkanSwapchain, &imageCount, _swapChainImages.data());
-
-        if (imagesKHRQuery != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
-        }
-
         _vulkanSwapChainFormat = surfaceFormat.format;
         _swapChainExtent = extent;
 
-        _logger.logInfoLine("VkImages successfully retrieved.");
+        _logger.logInfoLine("VkSwapchainKHR successfully created.");
+        return vulkanSwapchain;
     }
 
-    void VulkanGraphicsDevice::Initialise()
+    std::vector<VkImage> VulkanGraphicsDevice::GetSwapChainImages()
     {
-        CreateLogicalDevice();
-        CreateSwapChain();
+        VkDevice device = GetVulkanDevice();
+        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
 
-        _logger.logInfoLine("Vulkan logical device version 1.2 has been successfully initialised.");
+        uint32_t imageCount;
+        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, nullptr);
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        ResizeGraphicsContexts(imageCount); // TODO: This making vulkan angry for some reason.
+
+        std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
+        imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        auto presentCompletionGraphicsFence = GetPresentCompletionFence();
+
+        uint32_t contextIndex;
+        VkResult acquireNextImageResult =
+            vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
+                                  VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
+
+        if (acquireNextImageResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
+                                     std::to_string(acquireNextImageResult));
+        }
+        _contextIndex = contextIndex;
+
+        presentCompletionGraphicsFence->Wait();
+        presentCompletionGraphicsFence->Reset();
+
+        _logger.logInfoLine("VkImages successfully retrieved.");
+        return swapChainImages;
     }
 
     void VulkanGraphicsDevice::TearDown()
     {
-        vkDestroySwapchainKHR(_device, _vulkanSwapchain, nullptr);
-        vkDestroyDevice(_device, nullptr);
+        if (_vulkanSwapchain.isCreated())
+        {
+            vkDestroySwapchainKHR(GetVulkanDevice(), GetVulkanSwapchain(), nullptr);
+            _vulkanSwapchain.reset();
+        }
+
+        if (_device.isCreated())
+        {
+            vkDestroyDevice(GetVulkanDevice(), nullptr);
+            _device.reset();
+        }
 
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
@@ -363,16 +400,22 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
+        GraphicsPipelineBlendFactor srcBlendFactor,
+        GraphicsPipelineBlendFactor dstBlendFactor,
         gsl::span<GraphicsPipelineInput> inputs,
         gsl::span<GraphicsPipelineResource> resources)
     {
         return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), inputs, resources));
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs, resources));
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
     {
         VkRenderPass returnRenderPass;
+
+        // The swap chain needs to be created first to ensure we know the format
+        auto vulkanSwapchain = GetVulkanSwapchain();
+        unused(vulkanSwapchain);
 
         VkAttachmentDescription attachmentDescription{};
         attachmentDescription.format = _vulkanSwapChainFormat;
@@ -397,7 +440,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &subpass;
 
-        VkResult renderPassResult = vkCreateRenderPass(_device, &renderPassCreateInfo, nullptr, &returnRenderPass);
+        VkResult renderPassResult =
+            vkCreateRenderPass(GetVulkanDevice(), &renderPassCreateInfo, nullptr, &returnRenderPass);
 
         if (renderPassResult != VK_SUCCESS)
         {
@@ -450,6 +494,15 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &contextIndex;
 
+        VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
+
+        if (presentResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to present the data within the present queue!");
+        }
+
+        Signal(GetCurrentContext()->GetFence());
+
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
@@ -460,15 +513,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
-
-        VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
-
-        if (presentResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to present the data within the present queue!");
-        }
-
-        Signal(GetCurrentContext()->GetFence());
 
         presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
@@ -483,7 +527,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsDevice::WaitForIdle()
     {
-        VkResult waitForIdleResult = vkDeviceWaitIdle(_device);
+        VkResult waitForIdleResult = vkDeviceWaitIdle(GetVulkanDevice());
 
         if (waitForIdleResult != VK_SUCCESS)
         {
@@ -501,10 +545,17 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
         WaitForIdle();
 
-        _swapChainImages = GetVulkanSwapChainImages();
-        vkDestroySwapchainKHR(GetVulkanDevice(), _vulkanSwapchain, nullptr);
-        CreateSwapChain();
-        _contextIndex = 0;
+        if (_swapChainImages.isCreated())
+        {
+            _swapChainImages.reset();
+        }
+
+        if (_vulkanSwapchain.isCreated())
+        {
+            vkDestroySwapchainKHR(GetVulkanDevice(), GetVulkanSwapchain(), nullptr);
+            _vulkanSwapchain.reset();
+            _contextIndex = 0;
+        }
 
         for (auto&& context : _contexts.getActual())
         {
@@ -520,5 +571,26 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             throw std::runtime_error("Failed to signal VkQueue PresentQueue! Reason: " + std::to_string(result));
         }
+    }
+
+    void VulkanGraphicsDevice::ResizeGraphicsContexts(uint32_t newContextCount)
+    {
+        _contextCount = newContextCount;
+        auto& contexts = _contexts.getActual();
+        if (contexts.size() == newContextCount)
+        {
+            return;
+        }
+
+        size_t oldSize = contexts.size();
+        contexts.resize(newContextCount);
+
+        for (size_t i = oldSize; i < newContextCount; i++)
+        {
+            contexts[i] = std::make_shared<VulkanGraphicsContext>(
+                std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
+        }
+
+        _contextPtrs.reset();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

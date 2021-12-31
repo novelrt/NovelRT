@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <NovelRT/Ecs/SystemScheduler.h>
 
 namespace NovelRT::Ecs
 {
@@ -34,6 +33,7 @@ namespace NovelRT::Ecs
 
     SystemScheduler::SystemScheduler(SystemScheduler&& other) noexcept
         : _systemIds(std::move(other._systemIds)),
+          _typedSystemCache(std::move(other._typedSystemCache)),
           _systems(std::move(other._systems)),
           _entityCache(std::move(other._entityCache)),
           _componentCache(std::move(other._componentCache)),
@@ -53,6 +53,7 @@ namespace NovelRT::Ecs
     SystemScheduler& SystemScheduler::operator=(SystemScheduler&& other) noexcept
     {
         _systemIds = std::move(other._systemIds);
+        _typedSystemCache = std::move(other._typedSystemCache);
         _systems = std::move(other._systems);
         _entityCache = std::move(other._entityCache);
         _componentCache = std::move(other._componentCache);
@@ -74,7 +75,7 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
     {
-        Atom id = Atom::getNextSystemId();
+        Atom id = Atom::GetNextSystemId();
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
     }
@@ -138,9 +139,11 @@ namespace NovelRT::Ecs
 
             _threadWorkItem[workerIndex] = systemId;
 
+
             assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
                    "Thread marked as busy while available!");
             _threadAvailabilityMap ^= (1ULL << workerIndex);
+
             _mutexCache[workerIndex]->unlock();
         }
 
@@ -175,7 +178,6 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
     {
-
         _currentDelta = delta;
 
         ScheduleUpdateWork();

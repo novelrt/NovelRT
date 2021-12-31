@@ -68,6 +68,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                 continue;
             }
 
+            if (memoryProperties.memoryHeaps[memoryProperties.memoryTypes[i].heapIndex].flags &
+                VK_MEMORY_HEAP_MULTI_INSTANCE_BIT)
+            {
+                continue;
+            }
+
             int32_t cost =
                 Maths::Utilities::PopCount(static_cast<uint32_t>(preferredMemoryPropertyFlags) & ~memoryPropertyFlags) +
                 Maths::Utilities::PopCount(static_cast<uint32_t>(unpreferredMemoryPropertyFlags) &
@@ -155,7 +161,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         VkResult bufferCreationResult = vkCreateBuffer(vulkanDevice, &bufferCreateInfo, nullptr, &vulkanBuffer);
         if (bufferCreationResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create requested VkBufferInstance.",
+            throw Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
                                                              bufferCreationResult);
         }
 
@@ -174,6 +180,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     }
 
     std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
+        GraphicsTextureAddressMode addressMode,
         GraphicsTextureKind textureKind,
         GraphicsResourceAccess cpuAccessKind,
         GraphicsResourceAccess gpuAccessKind,
@@ -238,7 +245,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
 
         return std::static_pointer_cast<GraphicsTexture>(std::make_shared<VulkanGraphicsTextureImpl<Metadata>>(
-            GetDevice(), textureKind, std::move(blockRegion), cpuAccessKind, width, height,
+            GetDevice(), addressMode, textureKind, std::move(blockRegion), cpuAccessKind, width, height,
             static_cast<uint16_t>(depth), vulkanImage));
     }
 

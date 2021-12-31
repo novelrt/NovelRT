@@ -23,10 +23,25 @@ namespace NovelRT::Ecs
         std::vector<std::function<void(Timing::Timestamp, Catalogue)>> _systems;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
 
-        inline void AddDefaultComponentsAndSystems(SystemScheduler& /*target*/)
+        inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
-            // Add default components and systems here when they exist. Uncomment parameter when you do.
+            target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true});
+
+            target.GetComponentCache().RegisterComponentType(
+                EntityGraphComponent{std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+
+            target.GetComponentCache().RegisterComponentType(
+                QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
+                                         std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
+                                         std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+
+            target.GetComponentCache().RegisterComponentType(
+                TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN});
+
+            target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
+                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
         }
 
     public:
@@ -121,6 +136,23 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IResourceManagementPluginProvider>(
+            std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> pluginInstance)
+        {
+            _resourceManagementPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
          * @brief Creates the ECS instance and registers component types to it.
          * This is the final method you should call to obtain the ECS instance.
          *
@@ -156,7 +188,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 

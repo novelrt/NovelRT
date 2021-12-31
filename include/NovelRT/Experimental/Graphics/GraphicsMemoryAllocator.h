@@ -27,9 +27,7 @@ namespace NovelRT::Experimental::Graphics
                                                          ? _settings.MaximumBlockCountPerCollection
                                                          : std::numeric_limits<int32_t>::max();
 
-            size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.has_value()
-                                                ? _settings.MaximumSharedBlockSize.value()
-                                                : 256 * 1024 * 1024;
+            size_t maximumSharedBlockSize = _settings.MaximumSharedBlockSize.value_or(256 * 1024 * 1024);
 
             int32_t minimumBlockCountPerCollection =
                 _settings.MinimumBlockCountPerCollection >= 0 ? _settings.MinimumBlockCountPerCollection : 0;
@@ -38,9 +36,7 @@ namespace NovelRT::Experimental::Graphics
                                           ? _settings.MinimumBlockSize
                                           : std::max(static_cast<size_t>(4096), maximumSharedBlockSize / 8);
 
-            size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.has_value()
-                                                          ? _settings.MinimumAllocatedRegionMarginSize.value()
-                                                          : 0;
+            size_t minimumAllocatedRegionMarginSize = _settings.MinimumAllocatedRegionMarginSize.value_or(0);
 
             size_t minimumFreeRegionSizeToRegister =
                 _settings.MinimumFreeRegionSizeToRegister != 0 ? _settings.MinimumFreeRegionSizeToRegister : 4096;
@@ -80,6 +76,7 @@ namespace NovelRT::Experimental::Graphics
         }
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
@@ -90,22 +87,24 @@ namespace NovelRT::Experimental::Graphics
             TexelFormat texelFormat) = 0;
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
             uint32_t width)
         {
-            return CreateTextureWithDefaultArguments(textureKind, cpuAccessKind, gpuAccessKind, width, 1);
+            return CreateTextureWithDefaultArguments(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, 1);
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTextureWithDefaultArguments(
+            GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
             GraphicsResourceAccess cpuAccessKind,
             GraphicsResourceAccess gpuAccessKind,
             uint32_t width,
             uint32_t height)
         {
-            return CreateTexture(textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
+            return CreateTexture( addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
                                  GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
         }
 

@@ -11,5 +11,7 @@
 #include "BufferUsageKind.h"
 #include "Support.h"
 #include "Texel.h"
+#include "TextureAddressMode.h"
+#include "PipelineBlendFactor.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_GRAPHICS_VULKAN_UTILITIES_H

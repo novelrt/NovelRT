@@ -15,7 +15,7 @@ namespace NovelRT::Ecs
 
     EntityId Catalogue::CreateEntity() noexcept
     {
-        EntityId returnId = Atom::getNextEntityId();
+        EntityId returnId = Atom::GetNextEntityId();
         _createdEntitiesThisFrame.push_back(returnId);
         return returnId;
     }

@@ -3,6 +3,8 @@ set(RESOURCES_FILES
   Fonts/Raleway-Regular.ttf
 
   Images/novel-chan.png
+  Images/novel-chan-white-bg.png
+  Images/test.png
 
   Scripts/avg.lua
   Scripts/story.ink
@@ -23,12 +25,12 @@ set(RESOURCES_FILES
 )
 
 foreach(resource ${RESOURCES_FILES})
-  configure_file(${resource} Resources/${resource} COPYONLY)
+  configure_file(${resource} ${resource} COPYONLY)
 endforeach()
 
-add_executable(Resources IMPORTED GLOBAL)
+add_library(Resources INTERFACE IMPORTED GLOBAL)
 set_target_properties(Resources
   PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/Resources/IF_YOU_SEE_THIS_YOU_TRIED_TO_RUN_THE_RESOURCES_TARGET
+    RESOURCE "${RESOURCES_FILES}"
 )
 

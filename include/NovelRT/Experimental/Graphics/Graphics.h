@@ -9,8 +9,11 @@
 #include "../../Maths/Maths.h"
 #include "../../Utilities/Event.h"
 #include "../../Utilities/Misc.h"
+#include "../../Utilities/Lazy.h"
 #include "../EngineConfig.h"
 #include "../Threading/Threading.h"
+#include "../../SceneGraph/SceneGraph.h"
+#include "../../ResourceManagement/ResourceManagement.h"
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
@@ -39,8 +42,10 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsResource;
     class GraphicsBuffer;
     class GraphicsTexture;
+    enum class GraphicsTextureAddressMode: uint32_t;
     class ShaderProgram;
     class GraphicsPipeline;
+    enum class GraphicsPipelineBlendFactor : uint32_t;
     class GraphicsPipelineSignature;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
@@ -64,14 +69,13 @@ namespace NovelRT::Experimental::Graphics
     enum class GraphicsBufferKind : uint32_t;
     enum class TexelFormat : uint32_t;
     class GraphicsSurfaceContext;
+    class GraphicsResourceManager;
 }
 
 // Graphics types
 // clang-format off
 
 #include "ShaderProgramKind.h"
-#include "EcsDefaultRenderingComponentTypes.h"
-#include "EcsDefaultRenderingSystem.h"
 #include "GraphicsAdapter.h"
 #include "GraphicsDeviceObject.h"
 #include "GraphicsContext.h"
@@ -94,9 +98,11 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsResource.h"
 #include "GraphicsBufferKind.h"
 #include "GraphicsBuffer.h"
+#include "GraphicsTextureAddressMode.h"
 #include "GraphicsTexture.h"
 #include "IGraphicsAdapterSelector.h"
 #include "ShaderProgram.h"
+#include "GraphicsPipelineBlendFactor.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"
 #include "GraphicsPrimitive.h"
@@ -107,6 +113,7 @@ namespace NovelRT::Experimental::Graphics
 #include "GraphicsPipelineResource.h"
 #include "GraphicsPipelineResourceKind.h"
 #include "ShaderProgramVisibility.h"
+#include "GraphicsResourceManager.h"
 
 // clang-format on
 

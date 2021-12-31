@@ -66,8 +66,17 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineDepthStencilStateCreateInfo.front = frontState;
         pipelineDepthStencilStateCreateInfo.back = backState;
 
+        VkBlendFactor srcBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetSrcBlendFactor());
+        VkBlendFactor dstBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetDstBlendFactor());
+
         VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState{};
+        pipelineColorBlendAttachmentState.blendEnable = true;
         pipelineColorBlendAttachmentState.colorWriteMask = 0xF;
+        pipelineColorBlendAttachmentState.srcColorBlendFactor = srcBlendFactor;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = srcBlendFactor;
+        pipelineColorBlendAttachmentState.dstColorBlendFactor = dstBlendFactor;
+        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = dstBlendFactor;
+        //pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
 
         VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo{};
         pipelineColorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -107,10 +116,11 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
             auto inputs = signature->GetInputs();
             size_t inputsLength = inputs.size();
-            size_t inputElementsIndex = 0;
-            size_t inputElementsCount = GetInputElementsCount(inputs);
 
-            if (inputsLength != 0)
+            size_t inputElementsCount = GetInputElementsCount(inputs);
+            size_t inputElementsIndex = 0;
+
+            if (inputElementsCount != 0)
             {
                 vertexInputAttributeDescriptions.resize(inputElementsCount);
 

@@ -205,8 +205,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : GraphicsContext(std::move(device), index),
-          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice())),
-          _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice())),
+          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ true)),
+          _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _vulkanCommandBuffer([&]() { return CreateVulkanCommandBuffer(); }),
           _vulkanCommandPool([&]() { return CreateVulkanCommandPool(); }),
           _vulkanFramebuffer([&]() { return CreateVulkanFramebuffer(); }),
@@ -217,6 +217,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
     {
+        DestroyDescriptorSets();
         VkClearValue clearValue{};
         clearValue.color.float32[0] = backgroundColour.getRScalar();
         clearValue.color.float32[1] = backgroundColour.getGScalar();
@@ -265,7 +266,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     void VulkanGraphicsContext::BeginFrame()
     {
-        std::shared_ptr<GraphicsFence> fence = GetFence();
+        std::shared_ptr<VulkanGraphicsFence> fence = GetVulkanFence();
         fence->Wait();
         fence->Reset();
 
@@ -338,7 +339,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         EndCopy(vulkanImage);
     }
 
-    void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive)
+    void VulkanGraphicsContext::Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive, int32_t instanceCount)
     {
         if (primitive == nullptr)
         {
@@ -360,7 +361,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
 
-        VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GetVulkanDescriptorSet();
+        VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GenerateVulkanDescriptorSet();
 
         if (vulkanDescriptorSet != VK_NULL_HANDLE)
         {
@@ -416,6 +417,13 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             vkCmdBindDescriptorSets(vulkanCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     pipelineSignature->GetVulkanPipelineLayout(), 0, 1, &vulkanDescriptorSet, 0,
                                     nullptr);
+
+            if (_vulkanDescriptorSets.find(pipelineSignature) == _vulkanDescriptorSets.end())
+            {
+                _vulkanDescriptorSets[pipelineSignature] = std::vector<VkDescriptorSet>{};
+            }
+
+            _vulkanDescriptorSets[pipelineSignature].emplace_back(vulkanDescriptorSet);
         }
 
         const GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion = primitive->GetIndexBufferRegion();
@@ -441,12 +449,12 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                  indexType);
 
             vkCmdDrawIndexed(vulkanCommandBuffer,
-                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), 1, 0, 0, 0);
+                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), instanceCount, 0, 0, 0);
         }
         else
         {
             vkCmdDraw(vulkanCommandBuffer,
-                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()), 1, 0,
+                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()), instanceCount, 0,
                       0);
         }
     }
@@ -489,8 +497,25 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         executeGraphicsFence->Reset();
     }
 
+    void VulkanGraphicsContext::ResetContext()
+    {
+        if (_vulkanFramebuffer.isCreated())
+        {
+            DisposeVulkanFramebuffer(_vulkanFramebuffer.getActual());
+            _vulkanFramebuffer.reset();
+        }
+
+        if (_vulkanSwapChainImageView.isCreated())
+        {
+            DisposeVulkanSwapChainImageView(_vulkanSwapChainImageView.getActual());
+            _vulkanSwapChainImageView.reset();
+        }
+    }
+
     VulkanGraphicsContext::~VulkanGraphicsContext()
     {
+        DestroyDescriptorSets();
+
         if (_vulkanCommandBuffer.isCreated())
         {
             DisposeVulkanCommandBuffer(_vulkanCommandBuffer.getActual());
@@ -503,16 +528,16 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             _vulkanCommandPool.reset();
         }
 
-        if (_vulkanFramebuffer.isCreated())
+        ResetContext();
+    }
+
+    void VulkanGraphicsContext::DestroyDescriptorSets()
+    {
+        for (auto&& pair : _vulkanDescriptorSets)
         {
-            DisposeVulkanFramebuffer(_vulkanFramebuffer.getActual());
-            _vulkanFramebuffer.reset();
+            pair.first->DestroyDescriptorSets(pair.second);
         }
 
-        if (_vulkanSwapChainImageView.isCreated())
-        {
-            DisposeVulkanSwapChainImageView(_vulkanSwapChainImageView.getActual());
-            _vulkanSwapChainImageView.reset();
-        }
+        _vulkanDescriptorSets.clear();
     }
 } // namespace NovelRT::Experimental::Graphics::Vulkan

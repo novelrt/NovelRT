@@ -14,7 +14,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     {
 
         NovelRT::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
-        NovelRT::Utilities::Lazy<VkDescriptorSet> _vulkanDescriptorSet;
         NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
         NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
 
@@ -24,7 +23,6 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         [[nodiscard]] VkPipelineLayout CreatePipelineLayout();
 
         void DestroyDescriptorPool();
-        void DestroyDescriptorSet();
         void DestroyDescriptorSetLayout();
         void DestroyPipelineLayout();
 
@@ -33,6 +31,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
     public:
         VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,
+                                        GraphicsPipelineBlendFactor srcBlendFactor,
+                                        GraphicsPipelineBlendFactor dstBlendFactor,
                                         gsl::span<const GraphicsPipelineInput> inputs,
                                         gsl::span<const GraphicsPipelineResource> resources) noexcept;
 
@@ -46,9 +46,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             return _vulkanDescriptorPool.getActual();
         }
 
-        [[nodiscard]] inline VkDescriptorSet GetVulkanDescriptorSet()
+        [[nodiscard]] inline VkDescriptorSet GenerateVulkanDescriptorSet()
         {
-            return _vulkanDescriptorSet.getActual();
+            return CreateDescriptorSet();
         }
 
         [[nodiscard]] inline VkDescriptorSetLayout GetVulkanDescriptorSetLayout()
@@ -60,6 +60,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         {
             return _vulkanPipelineLayout.getActual();
         }
+
+        void DestroyDescriptorSets(gsl::span<VkDescriptorSet> vulkanDescriptorSets);
 
         ~VulkanGraphicsPipelineSignature() final;
     };

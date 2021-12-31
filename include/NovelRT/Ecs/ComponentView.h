@@ -149,6 +149,37 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Verifies if a given entity has a component.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The target entity to check for an attached component on.
+         * @return true if the immutable data contains the given EntityId.
+         * @return false if there is no entry for the given EntityId.
+         */
+        [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
+        {
+            return _componentBuffer.HasComponent(entity);
+        }
+
+        /**
+         * @brief Attempts to get the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The entity to use for fetching the component.
+         * @param outComponent The output result for the fetched component, if there is one.
+         * @return true if a component was found and returned in outComponent.
+         * @return false if no component exists.
+         */
+        [[nodiscard]] bool TryGetComponent(EntityId entity, TComponent& outComponent) const noexcept
+        {
+            return _componentBuffer.TryGetComponent(entity, outComponent);
+        }
+
+        /**
          * @brief Gets a copy of the component instance attached to this entity.
          *
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for

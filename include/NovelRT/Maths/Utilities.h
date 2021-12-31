@@ -15,7 +15,6 @@
 #define NOVELRT_MATHS_UTILITIES_H
 
 #include <NovelRT/Exceptions/InvalidOperationException.h>
-#include <array>
 
 namespace NovelRT::Maths
 {

@@ -115,4 +115,9 @@ namespace NovelRT::Experimental::Windowing::Glfw
         return Graphics::GraphicsSurfaceKind::Glfw;
     }
 
+    void GlfwWindowingDevice::ProcessAllMessages()
+    {
+        glfwPollEvents();
+    }
+
 } // namespace NovelRT::Experimental::Windowing::Glfw

@@ -11,7 +11,7 @@
 #if defined(NDEBUG)
 #define unused(x) (void)(x)
 #else
-#define unused(x) (void)(0)
+#define unused(x) (void)(x)
 #endif
 
 namespace NovelRT::Utilities
