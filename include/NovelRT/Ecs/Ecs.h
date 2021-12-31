@@ -4,26 +4,9 @@
 #ifndef NOVELRT_ECS_H
 #define NOVELRT_ECS_H
 
-/**
- * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs
- * for component management via stateless systems and other miscellaneous ECS features.
- */
-namespace NovelRT::Ecs
-{
-    class Configurator;
-    class Catalogue;
-    class ComponentBufferMemoryContainer;
-    class ComponentCache;
-    class EntityCache;
-    class IEcsSystem;
-    class SparseSetMemoryContainer;
-    class SystemScheduler;
-    class UnsafeComponentView;
-    struct TransformComponent;
-}
-
 // dependencies for ECS
 // clang-format off
+
 #include "../Atom.h"
 #include "../Exceptions/Exceptions.h"
 #include "../Maths/Maths.h"
@@ -50,6 +33,7 @@ namespace NovelRT::Ecs
 #include <utility>
 #include <vector>
 #include <map>
+#include <bitset>
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
@@ -57,8 +41,28 @@ namespace NovelRT::Ecs
 
 // clang-format on
 
-// ECS types
+/**
+ * @brief Contains all the types required to quickly spin up NovelRT's multithreaded ECS system. Also contains ECS APIs
+ * for component management via stateless systems and other miscellaneous ECS features.
+ */
+namespace NovelRT::Ecs
+{
+    class Configurator;
+    class Catalogue;
+    class ComponentBufferMemoryContainer;
+    class ComponentCache;
+    class EntityCache;
+    class IEcsSystem;
+    class SparseSetMemoryContainer;
+    class SystemScheduler;
+    class UnsafeComponentView;
+    struct TransformComponent;
+    class EntityObject;
+    class LinkedEntityListView;
+    class EntityObject;
+}
 
+// ECS types
 // clang-format off
 
 #include "EcsUtils.h"
@@ -78,7 +82,9 @@ namespace NovelRT::Ecs
 #include "DefaultComponentTypes.h"
 #include "Audio/Ecs.Audio.h"
 #include "Configurator.h"
+#include "LinkedEntityListView.h"
+#include "EntityObject.h"
 
 // clang-format on
 
-#endif //! NOVELRT_ECS_H
+#endif // NOVELRT_ECS_H

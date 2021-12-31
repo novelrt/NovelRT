@@ -191,8 +191,8 @@ namespace NovelRT::Ecs::Graphics
 
         context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
 
-        auto [renderComponents, transformComponents] =
-            catalogue.GetComponentViews<RenderComponent, TransformComponent>();
+        auto [renderComponents, transformComponents, entityGraphComponents] =
+            catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
 
         std::map<int32_t, std::vector<EntityId>> transformLayerMap{};
 
@@ -244,15 +244,39 @@ namespace NovelRT::Ecs::Graphics
                 }
 
                 auto textureInfo = GetExistingTextureBasedOnId(renderComponent.textureId);
-
                 GpuSpanCounter& tempSpanCounter = gpuSpanCounterMap[renderComponent.primitiveInfoId][layer];
                 auto scaleValue = Maths::GeoVector2F::uniform(500);
                 float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
                 scaleValue.y *= aspect;
                 Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::getDefaultIdentity();
+
+                std::vector<TransformComponent> parentTransforms{};
+
+                auto graphComponent = entityGraphComponents.GetComponentUnsafe(entity);
+
+                while (graphComponent.parent != std::numeric_limits<EntityId>::max())
+                {
+                    TransformComponent transform = transformComponents.GetComponentUnsafe(graphComponent.parent);
+                    parentTransforms.emplace_back(transform);
+                    graphComponent = entityGraphComponents.GetComponentUnsafe(graphComponent.parent);
+                }
+
+                scaleValue *= transformComponent.scale;
+
+                //TODO: There is definitely a better way to handle this but I'm being stupid.
+                for (auto it = parentTransforms.rbegin(); it != parentTransforms.rend(); it++)
+                {
+                    matrixToInsert.Translate(it->positionAndLayer);
+                    matrixToInsert.Rotate(it->rotationInEulerAngles);
+                    matrixToInsert.Translate(Maths::GeoVector3F(-it->positionAndLayer.x, -it->positionAndLayer.y , -it->positionAndLayer.z));
+                    scaleValue *= it->scale;
+                }
+
                 matrixToInsert.Translate(transformComponent.positionAndLayer);
                 matrixToInsert.Rotate(transformComponent.rotationInEulerAngles);
                 matrixToInsert.Scale(scaleValue); // scale based on aspect. :]
+
+
                 tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;
             }
         }
@@ -499,7 +523,15 @@ namespace NovelRT::Ecs::Graphics
             0, entity, newRenderComponent);
 
         scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(
-            0, entity, TransformComponent{});
+            0, entity, TransformComponent{Maths::GeoVector3F::zero(), Maths::GeoVector2F::one(), 0.0f});
+
+        scheduler.GetComponentCache().GetComponentBuffer<QuadEntityBlockComponent>().PushComponentUpdateInstruction(
+            0, entity,
+            QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), 0, 0, 0, 0,
+                                     std::numeric_limits<EntityId>::max()});
+
+        scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
+            0, entity, EntityGraphComponent{std::numeric_limits<EntityId>::max(), entity});
 
         scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         return entity;
