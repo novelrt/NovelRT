@@ -163,11 +163,11 @@ namespace NovelRT::Experimental::Input::Glfw
 
         glfwSetWindowUserPointer(_window, static_cast<void*>(this));
 
-        auto callbackFunction = [](GLFWwindow* inWindow, int inKey, int inScancode, int inAction, int inMods)
-        {
-            static_cast<GlfwInputService*>(glfwGetWindowUserPointer(inWindow))->KeyCallback(inWindow,inKey,inScancode,inAction,inMods);
-        };
-        glfwSetKeyCallback(_window, callbackFunction);
+//        auto callbackFunction = [](GLFWwindow* inWindow, int inKey, int inScancode, int inAction, int inMods)
+//        {
+//            static_cast<GlfwInputService*>(glfwGetWindowUserPointer(inWindow))->KeyCallback(inWindow,inKey,inScancode,inAction,inMods);
+//        };
+//        glfwSetKeyCallback(_window, callbackFunction);
 
         _isInitialised = true;
 
@@ -183,13 +183,9 @@ namespace NovelRT::Experimental::Input::Glfw
         unused(_availableKeys.empty());
     }
 
-    void GlfwInputService::Update(Timing::Timestamp delta)
+    void GlfwInputService::Update(Timing::Timestamp /*delta*/)
     {
-        auto x = _timer.getElapsedTime().getSecondsDouble() - delta.getSecondsDouble();
-        _logger.logDebugLine(std::to_string(x));
-
         _previousStates = _mappedActions;
-        glfwPollEvents();
 
         auto count = _mappedActions.size();
         auto mapIterator = std::next(_mappedActions.begin(), 0);
@@ -202,7 +198,10 @@ namespace NovelRT::Experimental::Input::Glfw
 
             if(mapIterator->actionName == stateIterator->actionName)
             {
-                if(mapIterator->isPressed && stateIterator->isPressed)
+                bool press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
+                bool release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+
+                if(press && stateIterator->isPressed)
                 {
                     mapIterator->isHeld = true;
                 }
@@ -210,28 +209,31 @@ namespace NovelRT::Experimental::Input::Glfw
                 {
                     mapIterator->isHeld = false;
                 }
+
+                mapIterator->isPressed = press;
+                mapIterator->isReleased = release;
             }
 
         }
 
     }
 
-    void GlfwInputService::KeyCallback(GLFWwindow* /*window*/, int32_t key, int32_t /*scancode*/, int32_t action, int32_t mods)
+    void GlfwInputService::KeyCallback(GLFWwindow* /*window*/, int32_t /*key*/ , int32_t /*scancode*/, int32_t /*action*/, int32_t /*mods*/)
     {
-        for(auto& input : _mappedActions)
-        {
-            int32_t mod = input.pairedKey.GetExternalModifierCode();
-            int32_t inputKey = input.pairedKey.GetExternalKeyCode();
-
-            if(inputKey == key && mod == mods)
-            {
-                UpdateInput(input, (action == GLFW_PRESS || action == GLFW_REPEAT), (action == GLFW_RELEASE));
-            }
-            else
-            {
-                UpdateInput(input, false, false);
-            }
-        }
+//        for(auto& input : _mappedActions)
+//        {
+//            int32_t mod = input.pairedKey.GetExternalModifierCode();
+//            int32_t inputKey = input.pairedKey.GetExternalKeyCode();
+//
+//            if(inputKey == key && mod == mods)
+//            {
+//                //UpdateInput(input, (action == GLFW_PRESS || action == GLFW_REPEAT), (action == GLFW_RELEASE));
+//            }
+//            else
+//            {
+//                //UpdateInput(input, false, false);
+//            }
+//        }
     }
 
     bool GlfwInputService::IsKeyPressed(std::string input)

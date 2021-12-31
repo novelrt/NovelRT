@@ -9,33 +9,19 @@ target_link_libraries(InputPlugin
         Engine
         )
 
-add_custom_command(
-        TARGET InputPlugin POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Dotnet>
-        $<TARGET_FILE_DIR:InputPlugin>/dotnet
-)
+copy_build_products(InputPlugin
+        DEPENDENCY Resources
+        TARGET_LOCATION $<TARGET_FILE_DIR:InputPlugin>/Resources
 
-#this is pure hacky hotfix goodness. We need to figure out a better way to do this in the future.
-if(WIN32)
-    add_custom_command(
-            TARGET InputPlugin POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE_DIR:InputPlugin>/dotnet/nethost.dll
-            $<TARGET_FILE_DIR:InputPlugin>
-    )
-endif()
+        DEPENDENCY Engine
+        TARGET_LOCATION $<TARGET_FILE_DIR:InputPlugin>
 
-add_custom_command(
-        TARGET InputPlugin POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Resources>
-        $<TARGET_FILE_DIR:InputPlugin>/Resources
-)
+        DEPENDENCY Dotnet
+        TARGET_LOCATION $<TARGET_FILE_DIR:InputPlugin>/dotnet
+        CONDITION NOVELRT_INCLUDE_INK
 
-add_custom_command(
-        TARGET InputPlugin POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        $<TARGET_FILE_DIR:Engine>
-        $<TARGET_FILE_DIR:InputPlugin>
-)
+        DEPENDENCY Dotnet
+        DEPENDENCY_FILES nethost.dll
+        TARGET_LOCATION $<TARGET_FILE_DIR:InputPlugin>
+        CONDITION NOVELRT_INCLUDE_INK AND WIN32
+        )
