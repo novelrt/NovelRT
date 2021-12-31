@@ -10,12 +10,12 @@
 namespace NovelRT::Experimental::Input::Glfw
 {
     class GlfwInputService;
-    class GlfwInputPluginProvider;
 }
 
 // Input.Glfw dependencies
 #include "../../../PluginManagement/PluginManagement.h"
 #include "../Input.h"
+#include "../../../Timing/StepTimer.h"
 #include <cstdint>
 #include <GLFW/glfw3.h>
 

@@ -22,7 +22,9 @@ namespace NovelRT::Experimental::Input
         virtual void TearDown() noexcept = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
         [[nodiscard]] virtual bool IsKeyPressed(std::string key) = 0;
-        virtual void AddInputAction(InputAction action) noexcept = 0;
+        [[nodiscard]] virtual bool IsKeyHeld(std::string key) = 0;
+        [[nodiscard]] virtual bool IsKeyReleased(std::string key) = 0;
+        [[nodiscard]] virtual InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) = 0;
         virtual NovelKey& GetAvailableKey(std::string keyRequested) = 0;
 
         virtual ~IInputService() = default;

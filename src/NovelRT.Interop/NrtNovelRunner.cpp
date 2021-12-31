@@ -81,7 +81,7 @@ extern "C"
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
-        _interactionCollection.push_back(cRunner->getInteractionService());
+//        _interactionCollection.push_back(cRunner->getInteractionService());
 
         auto ptr = _interactionCollection.back().get();
         if (ptr == nullptr)

@@ -134,21 +134,27 @@ int main()
 
     gfxDevice->WaitForIdle();
 
+
+    auto timer = NovelRT::Timing::StepTimer(60);
+    NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> event = NovelRT::Utilities::Event<NovelRT::Timing::Timestamp>();
+
     auto input = GlfwInputService();
     input.Initialise(reinterpret_cast<void*>(device->GetHandle()));
-    InputAction space = InputAction{"Jump", input.GetAvailableKey("Space")};
-    input.AddInputAction(space);
+    //InputAction space = InputAction{"Jump", input.GetAvailableKey("Space")};
+    InputAction space = input.AddInputAction("Jump", "Space");
     while(1)
     {
-        input.Update(NovelRT::Timing::Timestamp::zero());
-        if (input.IsKeyPressed("Jump"))
+        timer.tick(event);
+        input.Update(timer.getElapsedTime());
+        if (input.IsKeyHeld("Jump"))
+        {
+            logger.logInfo("Action: {}, Key: {}, State: Held", space.actionName, space.pairedKey.GetKeyName());
+        }
+         else if (input.IsKeyPressed("Jump"))
         {
             logger.logInfo("Action: {}, Key: {}, State: Pressed", space.actionName, space.pairedKey.GetKeyName());
         }
-        else if (space.isReleased)
-        {
-            logger.logInfo("Action: {}, Key: {}, State: Released", space.actionName, space.pairedKey.GetKeyName());
-        }
+
 
     }
     return 0;

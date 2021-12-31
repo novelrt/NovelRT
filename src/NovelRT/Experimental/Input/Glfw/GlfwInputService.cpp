@@ -5,8 +5,11 @@
 
 namespace NovelRT::Experimental::Input::Glfw
 {
-    GlfwInputService::GlfwInputService() noexcept : _isInitialised(false)
+    GlfwInputService::GlfwInputService() noexcept : _isInitialised(false), _timer(60,0.1),
+          _previousStates(std::list<InputAction>())
     {
+        _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
+        _dummyEvent += [&](auto /*delta*/){};
     }
 
     void GlfwInputService::Initialise(void* window)
@@ -167,6 +170,7 @@ namespace NovelRT::Experimental::Input::Glfw
         glfwSetKeyCallback(_window, callbackFunction);
 
         _isInitialised = true;
+
         int width = 0;
         int height = 0;
         glfwGetWindowSize(_window, &width, &height);
@@ -179,37 +183,55 @@ namespace NovelRT::Experimental::Input::Glfw
         unused(_availableKeys.empty());
     }
 
-    void GlfwInputService::Update(Timing::Timestamp /*delta*/)
+    void GlfwInputService::Update(Timing::Timestamp delta)
     {
-        if(_isInitialised)
+        auto x = _timer.getElapsedTime().getSecondsDouble() - delta.getSecondsDouble();
+        _logger.logDebugLine(std::to_string(x));
+
+        _previousStates = _mappedActions;
+        glfwPollEvents();
+
+        auto count = _mappedActions.size();
+        auto mapIterator = std::next(_mappedActions.begin(), 0);
+        auto stateIterator = std::next(_previousStates.begin(), 0);
+
+        for(int c = 0; c < count; c++)
         {
-            glfwPollEvents();
+            mapIterator = std::next(_mappedActions.begin(), c);
+            stateIterator = std::next(_previousStates.begin(), c);
+
+            if(mapIterator->actionName == stateIterator->actionName)
+            {
+                if(mapIterator->isPressed && stateIterator->isPressed)
+                {
+                    mapIterator->isHeld = true;
+                }
+                else
+                {
+                    mapIterator->isHeld = false;
+                }
+            }
+
         }
+
     }
 
     void GlfwInputService::KeyCallback(GLFWwindow* /*window*/, int32_t key, int32_t /*scancode*/, int32_t action, int32_t mods)
     {
-        //if(action != GLFW_RELEASE)
-        //{
-            for(auto& input : _mappedActions)
-            {
-                int32_t mod = input.pairedKey.GetExternalModifierCode();
-                int32_t inputKey = input.pairedKey.GetExternalKeyCode();
+        for(auto& input : _mappedActions)
+        {
+            int32_t mod = input.pairedKey.GetExternalModifierCode();
+            int32_t inputKey = input.pairedKey.GetExternalKeyCode();
 
-                if(inputKey == key && mod == mods)
-                {
-                    input.isHeld = (action == GLFW_REPEAT);
-                    input.isPressed = (action == GLFW_PRESS);
-                    input.isReleased = (action == GLFW_RELEASE);
-                }
-                else
-                {
-                    input.isHeld = false;
-                    input.isPressed = false;
-                    input.isReleased = false;
-                }
+            if(inputKey == key && mod == mods)
+            {
+                UpdateInput(input, (action == GLFW_PRESS || action == GLFW_REPEAT), (action == GLFW_RELEASE));
             }
-        //}
+            else
+            {
+                UpdateInput(input, false, false);
+            }
+        }
     }
 
     bool GlfwInputService::IsKeyPressed(std::string input)
@@ -218,7 +240,7 @@ namespace NovelRT::Experimental::Input::Glfw
         {
             if (action.actionName == input)
             {
-                return (action.isPressed || action.isHeld);
+                return action.isPressed;
             }
         }
 
@@ -226,34 +248,71 @@ namespace NovelRT::Experimental::Input::Glfw
         return false;
     }
 
-    void GlfwInputService::AddInputAction(InputAction action) noexcept
+    bool GlfwInputService::IsKeyHeld(std::string input)
+    {
+        for(auto action : _mappedActions)
+        {
+            if (action.actionName == input)
+            {
+                return action.isHeld;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    bool GlfwInputService::IsKeyReleased(std::string input)
+    {
+        for(auto action : _mappedActions)
+        {
+            if (action.actionName == input)
+            {
+                return action.isReleased;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    InputAction& GlfwInputService::AddInputAction(std::string actionName, std::string keyIdentifier)
     {
         bool nameExists = false;
         bool keyBoundAlready = false;
+        NovelKey pairedKey = GetAvailableKey(keyIdentifier);
+
         for (auto existingAction : _mappedActions)
         {
-            if (existingAction.actionName == action.actionName)
+            if (existingAction.actionName == actionName)
             {
                 nameExists = true;
             }
-            if (existingAction.pairedKey == action.pairedKey)
+            if (existingAction.pairedKey == pairedKey)
             {
                 keyBoundAlready = true;
             }
         }
 
-        if (!nameExists && !keyBoundAlready)
+        if (nameExists)
         {
-            _mappedActions.emplace_back(action);
-        }
-        else if (nameExists)
-        {
-            _logger.logWarning("Cannot add InputAction {} as the name has already been mapped!", action.actionName);
+            throw Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
         }
         else if (keyBoundAlready)
         {
-            _logger.logWarning("Cannot add InputAction {} as key {} has already been bound!", action.actionName, action.pairedKey.GetKeyName());
+            throw Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
         }
+        else
+        {
+            _mappedActions.emplace_back(InputAction{actionName, pairedKey});
+            return _mappedActions.back();
+        }
+    }
+
+    void GlfwInputService::UpdateInput(InputAction& action, bool pressed, bool released)
+    {
+        action.isPressed = pressed;
+        action.isReleased = released;
     }
 
     NovelKey& GlfwInputService::GetAvailableKey(std::string keyRequested)
