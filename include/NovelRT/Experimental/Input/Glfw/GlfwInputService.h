@@ -18,6 +18,7 @@ namespace NovelRT::Experimental::Input::Glfw
         NovelRT::Timing::StepTimer _timer;
         NovelRT::Utilities::Event<Timing::Timestamp> _dummyEvent;
         std::list<InputAction> _previousStates;
+        NovelRT::Maths::GeoVector2F _mousePos;
 
         void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
         void UpdateInput(InputAction& action, bool pressed, bool released);
@@ -32,6 +33,9 @@ namespace NovelRT::Experimental::Input::Glfw
         [[nodiscard]] bool IsKeyReleased(std::string key) final;
         [[nodiscard]] InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) final;
         NovelKey& GetAvailableKey(std::string keyRequested) final;
+        NovelRT::Maths::GeoVector2F& GetMousePosition() final;
+
+
 
 
         ~GlfwInputService() final;

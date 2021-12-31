@@ -70,19 +70,59 @@ int main()
     auto windowPtr = windowingProvider->GetWindowingDevice();
     input.Initialise(reinterpret_cast<void*>(windowPtr->GetHandle()));
     InputAction space = input.AddInputAction("Jump", "Space");
+    InputAction up = input.AddInputAction("Up", "W");
+    InputAction down = input.AddInputAction("Down", "S");
+    InputAction left = input.AddInputAction("Left", "A");
+    InputAction right = input.AddInputAction("Right", "D");
+    InputAction fire = input.AddInputAction("Fire", "LeftMouseButton");
+    NovelRT::Maths::GeoVector2F pos = NovelRT::Maths::GeoVector2F::zero();
+
+    std::string output = "Mouse Position: {}, {} / Buttons Pressed: ";
+    bool outputLine = false;
 
     DummyUpdateStuff += [&](auto delta) {
         input.Update(delta);
-        if (input.IsKeyHeld("Jump"))
+        pos = input.GetMousePosition();
+
+        if (input.IsKeyPressed("Up"))
         {
-           logger.logInfo("Action: {}, Key: {}, State: Held", space.actionName, space.pairedKey.GetKeyName());
+            output.append("Up, ");
+            outputLine = true;
         }
-        else if (input.IsKeyPressed("Jump"))
+        if (input.IsKeyPressed("Down"))
         {
-            logger.logInfo("Action: {}, Key: {}, State: Pressed", space.actionName, space.pairedKey.GetKeyName());
+            output.append("Down, ");
+            outputLine = true;
+        }
+        if (input.IsKeyPressed("Left"))
+        {
+            output.append("Left, ");
+            outputLine = true;
+        }
+        if (input.IsKeyPressed("Right"))
+        {
+            output.append("Right, ");
+            outputLine = true;
+        }
+        if (input.IsKeyPressed("Jump"))
+        {
+            output.append("Jump, ");
+            outputLine = true;
+        }
+        if (input.IsKeyPressed("Fire"))
+        {
+            output.append("Fire");
+            outputLine = true;
         }
 
         scheduler.ExecuteIteration(delta);
+        if(outputLine)
+        {
+            outputLine = false;
+            logger.logInfo(output, pos.x, pos.y);
+            output.clear();
+            output = "Mouse Position: {}, {} / Buttons Pressed: ";
+        }
     };
 
     NovelRT::Timing::StepTimer timer;
@@ -91,8 +131,8 @@ int main()
     {
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
-        auto t = timer.getFrameCount();
-        logger.logInfo("Frame count: {}", t);
+        //auto t = timer.getFrameCount();
+        //logger.logInfo("Frame count: {}", t);
     }
 
 

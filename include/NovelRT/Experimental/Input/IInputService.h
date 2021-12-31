@@ -26,6 +26,7 @@ namespace NovelRT::Experimental::Input
         [[nodiscard]] virtual bool IsKeyReleased(std::string key) = 0;
         [[nodiscard]] virtual InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) = 0;
         virtual NovelKey& GetAvailableKey(std::string keyRequested) = 0;
+        virtual NovelRT::Maths::GeoVector2F& GetMousePosition() = 0;
 
         virtual ~IInputService() = default;
     };

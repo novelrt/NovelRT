@@ -6,7 +6,7 @@
 namespace NovelRT::Experimental::Input::Glfw
 {
     GlfwInputService::GlfwInputService() noexcept : _isInitialised(false), _timer(60,0.1),
-          _previousStates(std::list<InputAction>())
+          _previousStates(std::list<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
     {
         _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
         _dummyEvent += [&](auto /*delta*/){};
@@ -163,12 +163,6 @@ namespace NovelRT::Experimental::Input::Glfw
 
         glfwSetWindowUserPointer(_window, static_cast<void*>(this));
 
-//        auto callbackFunction = [](GLFWwindow* inWindow, int inKey, int inScancode, int inAction, int inMods)
-//        {
-//            static_cast<GlfwInputService*>(glfwGetWindowUserPointer(inWindow))->KeyCallback(inWindow,inKey,inScancode,inAction,inMods);
-//        };
-//        glfwSetKeyCallback(_window, callbackFunction);
-
         _isInitialised = true;
 
         int width = 0;
@@ -185,6 +179,12 @@ namespace NovelRT::Experimental::Input::Glfw
 
     void GlfwInputService::Update(Timing::Timestamp /*delta*/)
     {
+        double x = 0;
+        double y = 0;
+        glfwGetCursorPos(_window, &x, &y);
+        _mousePos.x = static_cast<float>(x);
+        _mousePos.y = static_cast<float>(y);
+
         _previousStates = _mappedActions;
 
         auto count = _mappedActions.size();
@@ -198,8 +198,22 @@ namespace NovelRT::Experimental::Input::Glfw
 
             if(mapIterator->actionName == stateIterator->actionName)
             {
-                bool press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
-                bool release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+                bool press = false;
+                bool release = false;
+
+                if ((mapIterator->pairedKey.GetKeyName() == "LeftMouseButton") ||
+                    (mapIterator->pairedKey.GetKeyName() == "RightMouseButton") ||
+                    (mapIterator->pairedKey.GetKeyName() == "MiddleMouseButton"))
+                {
+                    press = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
+                    release = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+                }
+                else
+                {
+                    press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
+                    release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+                }
+
 
                 if(press && stateIterator->isPressed)
                 {
@@ -220,20 +234,6 @@ namespace NovelRT::Experimental::Input::Glfw
 
     void GlfwInputService::KeyCallback(GLFWwindow* /*window*/, int32_t /*key*/ , int32_t /*scancode*/, int32_t /*action*/, int32_t /*mods*/)
     {
-//        for(auto& input : _mappedActions)
-//        {
-//            int32_t mod = input.pairedKey.GetExternalModifierCode();
-//            int32_t inputKey = input.pairedKey.GetExternalKeyCode();
-//
-//            if(inputKey == key && mod == mods)
-//            {
-//                //UpdateInput(input, (action == GLFW_PRESS || action == GLFW_REPEAT), (action == GLFW_RELEASE));
-//            }
-//            else
-//            {
-//                //UpdateInput(input, false, false);
-//            }
-//        }
     }
 
     bool GlfwInputService::IsKeyPressed(std::string input)
@@ -334,6 +334,11 @@ namespace NovelRT::Experimental::Input::Glfw
 
         _logger.logError("Key {} not available from this input service.", keyRequested);
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
+    }
+
+    NovelRT::Maths::GeoVector2F& GlfwInputService::GetMousePosition()
+    {
+        return _mousePos;
     }
 
     GlfwInputService::~GlfwInputService()
