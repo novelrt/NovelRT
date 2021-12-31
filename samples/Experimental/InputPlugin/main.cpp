@@ -16,7 +16,7 @@ int main()
 {
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-
+    auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()
@@ -64,65 +64,15 @@ int main()
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
-    //Input begins here
-    auto input = GlfwInputService();
-    auto logger = NovelRT::LoggingService();
-    auto windowPtr = windowingProvider->GetWindowingDevice();
-    input.Initialise(reinterpret_cast<void*>(windowPtr->GetHandle()));
-    InputAction space = input.AddInputAction("Jump", "Space");
-    InputAction up = input.AddInputAction("Up", "W");
-    InputAction down = input.AddInputAction("Down", "S");
-    InputAction left = input.AddInputAction("Left", "A");
-    InputAction right = input.AddInputAction("Right", "D");
-    InputAction fire = input.AddInputAction("Fire", "LeftMouseButton");
-    NovelRT::Maths::GeoVector2F pos = NovelRT::Maths::GeoVector2F::zero();
 
-    std::string output = "Mouse Position: {}, {} / Buttons Pressed: ";
-    bool outputLine = false;
+
+    //Input begins here
+
+    auto windowPtr = windowingProvider->GetWindowingDevice();
+
 
     DummyUpdateStuff += [&](auto delta) {
-        input.Update(delta);
-        pos = input.GetMousePosition();
-
-        if (input.IsKeyPressed("Up"))
-        {
-            output.append("Up, ");
-            outputLine = true;
-        }
-        if (input.IsKeyPressed("Down"))
-        {
-            output.append("Down, ");
-            outputLine = true;
-        }
-        if (input.IsKeyPressed("Left"))
-        {
-            output.append("Left, ");
-            outputLine = true;
-        }
-        if (input.IsKeyPressed("Right"))
-        {
-            output.append("Right, ");
-            outputLine = true;
-        }
-        if (input.IsKeyPressed("Jump"))
-        {
-            output.append("Jump, ");
-            outputLine = true;
-        }
-        if (input.IsKeyPressed("Fire"))
-        {
-            output.append("Fire");
-            outputLine = true;
-        }
-
         scheduler.ExecuteIteration(delta);
-        if(outputLine)
-        {
-            outputLine = false;
-            logger.logInfo(output, pos.x, pos.y);
-            output.clear();
-            output = "Mouse Position: {}, {} / Buttons Pressed: ";
-        }
     };
 
     NovelRT::Timing::StepTimer timer;
@@ -131,8 +81,6 @@ int main()
     {
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
-        //auto t = timer.getFrameCount();
-        //logger.logInfo("Frame count: {}", t);
     }
 
 

@@ -24,6 +24,7 @@ namespace NovelRT::Ecs
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
+        std::shared_ptr<PluginManagement::IInputPluginProvider> _inputPluginProvider;
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
@@ -149,6 +150,23 @@ namespace NovelRT::Ecs
             std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> pluginInstance)
         {
             _resourceManagementPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IInputPluginProvider>(
+            std::shared_ptr<PluginManagement::IInputPluginProvider> pluginInstance)
+        {
+            _inputPluginProvider = std::move(pluginInstance);
             return *this;
         }
 
