@@ -87,6 +87,19 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Gets the immutable component state for a delete instruction.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return The immutable component state that represents a delete instruction for given type TComponent.
+         */
+        [[nodiscard]] TComponent GetDeleteInstructionState() const noexcept
+        {
+            return _componentBuffer.GetDeleteInstructionState();
+        }
+
+        /**
          * @brief Attempts to add a new component of the given type to the entity with safety checks to ensure it is an
          * exceptionless operation.
          *
