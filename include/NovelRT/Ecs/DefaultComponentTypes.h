@@ -67,5 +67,17 @@ namespace NovelRT::Ecs
         }
     };
 
+    struct LinkedEntityListNodeComponent
+    {
+        EntityId previous = std::numeric_limits<EntityId>::max();
+        EntityId next = std::numeric_limits<EntityId>::max();
+
+        inline LinkedEntityListNodeComponent& operator+=(const LinkedEntityListNodeComponent& other)
+        {
+            *this = other;
+            return *this;
+        }
+    };
+
 }
 #endif // NOVELRT_DEFAULTCOMPONENTTYPES_H

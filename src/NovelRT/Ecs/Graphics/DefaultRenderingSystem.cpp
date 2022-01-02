@@ -268,7 +268,6 @@ namespace NovelRT::Ecs::Graphics
                 {
                     matrixToInsert.Translate(it->positionAndLayer);
                     matrixToInsert.Rotate(it->rotationInEulerAngles);
-                    matrixToInsert.Translate(Maths::GeoVector3F(-it->positionAndLayer.x, -it->positionAndLayer.y , -it->positionAndLayer.z));
                     scaleValue *= it->scale;
                 }
 

@@ -23,6 +23,130 @@ namespace NovelRT::Ecs
         class ConstIterator
         {
         private:
+            EntityId _currentEntityNode;
+            LinkedEntityListNodeComponent _currentComponentNode;
+            Catalogue& _catalogue;
+
+        public:
+            ConstIterator(EntityId currentEntityNode, Catalogue& catalogue) noexcept
+                : _currentEntityNode(currentEntityNode),
+                  _currentComponentNode(catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                      currentEntityNode)),
+                  _catalogue(catalogue)
+            {
+            }
+
+            inline value operator*() const noexcept
+            {
+                return _currentEntityNode;
+            }
+
+            inline ConstIterator& operator++() noexcept
+            {
+                _currentEntityNode = _currentComponentNode.next;
+
+                _currentComponentNode =
+                    _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(_currentEntityNode);
+                return *this;
+            }
+
+            inline ConstIterator& operator--() noexcept
+            {
+                _currentEntityNode = _currentComponentNode.previous;
+
+                _currentComponentNode =
+                    _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(_currentEntityNode);
+                return *this;
+            }
+
+            inline ConstIterator& operator--(int amount) noexcept
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    this->operator--();
+                }
+
+                return *this;
+            }
+
+            inline ConstIterator& operator++(int amount) noexcept
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    this->operator++();
+                }
+
+                return *this;
+            }
+
+            [[nodiscard]] inline EntityId GetCurrentEntityNode() const noexcept
+            {
+                return _currentEntityNode;
+            }
+
+            [[nodiscard]] inline LinkedEntityListNodeComponent GetListNode() const noexcept
+            {
+                return _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(_currentEntityNode);
+            }
+
+            [[nodiscard]] inline bool operator==(const ConstIterator& other) const noexcept
+            {
+                return _currentEntityNode == other._currentEntityNode;
+            }
+
+            [[nodiscard]] inline bool operator!=(const ConstIterator& other) const noexcept
+            {
+                return !(*this == other);
+            }
+        };
+
+        LinkedEntityListView(EntityId node, Catalogue& catalogue) noexcept : _begin(node), _catalogue(catalogue)
+        {
+        }
+
+        [[nodiscard]] inline ConstIterator begin() const noexcept
+        {
+            return ConstIterator(_begin, _catalogue);
+        }
+
+        [[nodiscard]] inline ConstIterator end() const noexcept
+        {
+            return ConstIterator(_end, _catalogue);
+        }
+
+        [[nodiscard]] inline EntityId operator[](size_t index) const noexcept
+        {
+            auto it = begin();
+            for (size_t i = 0; i < index; i++)
+            {
+                it++;
+            }
+
+            return it.GetCurrentEntityNode();
+        }
+
+        /*
+        inline ConstIterator InsertAtIndex(size_t index, EntityId newNode)
+        {
+
+        }
+*/
+    };
+
+    /*
+    class LinkedEntityListView
+    {
+    private:
+        EntityId _begin;
+        EntityId _end = std::numeric_limits<EntityId>::max();
+        Catalogue& _catalogue;
+
+    public:
+        using value = EntityId;
+
+        class ConstIterator
+        {
+        private:
             EntityId _currentEntityBlock;
             uint32_t _currentIndexInBlock;
             Catalogue& _catalogue;
@@ -324,7 +448,7 @@ namespace NovelRT::Ecs
             for (ConstIterator it = begin(); it != end(); it++)
             {
                 component = it.GetListBlock();
-                currentEntity = it.GetCurrentEntityBlock();
+                currentEntity = it.GetCurrentEntityNode();
 
                 if (component.zero == entity)
                 {
@@ -396,6 +520,7 @@ namespace NovelRT::Ecs
             return ConstIterator(_end, 4, _catalogue);
         }
     };
+     */
 }
 
 #endif // NOVELRT_ECS_LINKEDENTITYLISTVIEW_H
