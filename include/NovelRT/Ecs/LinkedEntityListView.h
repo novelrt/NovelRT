@@ -119,7 +119,7 @@ namespace NovelRT::Ecs
                 _begin = currentBeginComponent.previous;
                 currentBeginComponent = view.GetComponentUnsafe(_begin);
             }
-            
+
             currentBeginComponent = view.GetComponentUnsafe(node);
 
             while (currentBeginComponent.next != std::numeric_limits<EntityId>::max())
@@ -468,6 +468,12 @@ namespace NovelRT::Ecs
         void Commit()
         {
             _hasBeenCommitted = true;
+            auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+
+            for (auto [entity, diffInstruction] : _changes)
+            {
+                nodeView.PushComponentUpdateInstruction(entity, diffInstruction);
+            }
         }
 
         ~LinkedEntityListView()
