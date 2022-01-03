@@ -390,7 +390,7 @@ namespace NovelRT::Ecs
                 else if (component.previous != std::numeric_limits<EntityId>::max())
                 {
                     auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{previousComponent.previous, component.next});
+                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
                 }
 
                 if (next.has_value())
@@ -400,7 +400,7 @@ namespace NovelRT::Ecs
                 else if (component.next != std::numeric_limits<EntityId>::max())
                 {
                     auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                    _changes.Insert(component.next, LinkedEntityListNodeComponent{component.previous, nextComponent.next});
+                    _changes.Insert(component.next, LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
                 }
 
                 if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeEntity)
@@ -438,7 +438,7 @@ namespace NovelRT::Ecs
                 else if (component.previous != std::numeric_limits<EntityId>::max())
                 {
                     auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{previousComponent.previous, component.next});
+                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
                 }
 
                 if (next.has_value())
@@ -448,7 +448,7 @@ namespace NovelRT::Ecs
                 else if (component.next != std::numeric_limits<EntityId>::max())
                 {
                     auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                    _changes.Insert(component.next, LinkedEntityListNodeComponent{component.previous, nextComponent.next});
+                    _changes.Insert(component.next, LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
                 }
 
                 if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeEntity)

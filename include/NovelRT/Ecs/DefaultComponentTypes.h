@@ -69,6 +69,7 @@ namespace NovelRT::Ecs
 
     struct LinkedEntityListNodeComponent
     {
+        bool IsValid = true;
         EntityId previous = std::numeric_limits<EntityId>::max();
         EntityId next = std::numeric_limits<EntityId>::max();
 

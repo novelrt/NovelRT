@@ -524,10 +524,9 @@ namespace NovelRT::Ecs::Graphics
         scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(
             0, entity, TransformComponent{Maths::GeoVector3F::zero(), Maths::GeoVector2F::one(), 0.0f});
 
-        scheduler.GetComponentCache().GetComponentBuffer<QuadEntityBlockComponent>().PushComponentUpdateInstruction(
+        scheduler.GetComponentCache().GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(
             0, entity,
-            QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), 0, 0, 0, 0,
-                                     std::numeric_limits<EntityId>::max()});
+            LinkedEntityListNodeComponent{});
 
         scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
             0, entity, EntityGraphComponent{std::numeric_limits<EntityId>::max(), entity});
