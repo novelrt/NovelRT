@@ -13,7 +13,7 @@ namespace NovelRT::Ecs
     struct TransformComponent
     {
         Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::zero();
-        Maths::GeoVector2F scale = Maths::GeoVector2F::zero();
+        Maths::GeoVector2F scale = Maths::GeoVector2F::one();
         float rotationInEulerAngles = 0.0f;
 
         inline TransformComponent& operator+=(const TransformComponent& other)
@@ -37,8 +37,9 @@ namespace NovelRT::Ecs
 
     struct EntityGraphComponent
     {
-        EntityId parent = 0;
-        EntityId childrenStartNode = 0;
+        bool isValid = true;
+        EntityId parent = std::numeric_limits<EntityId>::max();
+        EntityId childrenStartNode = std::numeric_limits<EntityId>::max();
 
         inline EntityGraphComponent& operator+=(const EntityGraphComponent& other)
         {
@@ -47,6 +48,7 @@ namespace NovelRT::Ecs
         }
     };
 
+    /*
     struct QuadEntityBlockComponent
     {
         uint8_t blockWriteMap;
@@ -66,6 +68,7 @@ namespace NovelRT::Ecs
             return *this;
         }
     };
+    */
 
     struct LinkedEntityListNodeComponent
     {
