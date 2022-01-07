@@ -15,6 +15,23 @@ namespace NovelRT::Ecs::Input
     void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
         _service->Update(delta);
+
+        //add new buttons that are held
+
+
+        //check for holds
+
+        //delete any old inputs
+        auto inputEvents = catalogue.GetComponentViews<InputEventComponent>();
+
+        for (auto [entity, inputEvent] : inputEvents)
+        {
+            if (inputEvent.released && _service->IsKeyReleased(inputEvent.actionName))
+            {
+                //set inputevent for deletion
+            }
+        }
+
     }
 
     void InputSystem::AddDefaultKBMMapping()

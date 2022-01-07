@@ -12,7 +12,7 @@ namespace NovelRT::Ecs::Input
 {
     struct InputEventComponent
     {
-
+        std::string actionName;
         bool pressed;
         bool released;
         float mousePositionX;
@@ -20,6 +20,11 @@ namespace NovelRT::Ecs::Input
 
         inline InputEventComponent& operator+=(const InputEventComponent& other) noexcept
         {
+            actionName = other.actionName;
+            pressed = other.pressed;
+            released = other.released;
+            mousePositionX = other.mousePositionX;
+            mousePositionY = other.mousePositionY;
             return *this;
         };
     };
