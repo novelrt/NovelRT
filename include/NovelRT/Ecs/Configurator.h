@@ -31,12 +31,17 @@ namespace NovelRT::Ecs
             target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true});
 
             target.GetComponentCache().RegisterComponentType(
-                EntityGraphComponent{std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+                EntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 
+            /*
             target.GetComponentCache().RegisterComponentType(
                 QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
                                          std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
                                          std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+            */
+
+            target.GetComponentCache().RegisterComponentType(
+                LinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 
             target.GetComponentCache().RegisterComponentType(
                 TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN});

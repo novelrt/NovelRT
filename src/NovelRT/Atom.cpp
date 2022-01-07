@@ -37,6 +37,12 @@ namespace NovelRT
     {
         static std::atomic_uintptr_t _nextEntityId(0);
         auto value = ++_nextEntityId;
+
+        if (value == std::numeric_limits<uintptr_t>::max())
+        {
+            value = ++_nextEntityId;
+        }
+
         return Atom(value);
     }
 

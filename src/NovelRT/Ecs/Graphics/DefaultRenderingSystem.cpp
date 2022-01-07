@@ -263,19 +263,17 @@ namespace NovelRT::Ecs::Graphics
 
                 scaleValue *= transformComponent.scale;
 
-                //TODO: There is definitely a better way to handle this but I'm being stupid.
+                // TODO: There is definitely a better way to handle this but I'm being stupid.
                 for (auto it = parentTransforms.rbegin(); it != parentTransforms.rend(); it++)
                 {
                     matrixToInsert.Translate(it->positionAndLayer);
                     matrixToInsert.Rotate(it->rotationInEulerAngles);
-                    matrixToInsert.Translate(Maths::GeoVector3F(-it->positionAndLayer.x, -it->positionAndLayer.y , -it->positionAndLayer.z));
                     scaleValue *= it->scale;
                 }
 
                 matrixToInsert.Translate(transformComponent.positionAndLayer);
                 matrixToInsert.Rotate(transformComponent.rotationInEulerAngles);
                 matrixToInsert.Scale(scaleValue); // scale based on aspect. :]
-
 
                 tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;
             }
@@ -471,13 +469,50 @@ namespace NovelRT::Ecs::Graphics
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
         Catalogue& catalogue)
     {
-        ComponentView<RenderComponent> renderComponentView = catalogue.GetComponentView<RenderComponent>();
+        auto [renderComponentView, transformComponentView,
+              entityGraphComponentView] =
+            catalogue.GetComponentViews<RenderComponent, TransformComponent,
+                                        EntityGraphComponent>();
 
-        renderComponentView.AddComponent(
-            entity, RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId});
+        auto newRenderComponent =
+            RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId};
+
+        bool assigned = false;
+        for (auto&& [primitiveInfoId, primitiveInfo] : _primitiveConfigurations)
+        {
+            if (primitiveInfo == newRenderComponent)
+            {
+                newRenderComponent.primitiveInfoId = primitiveInfoId;
+                assigned = true;
+                break;
+            }
+        }
+
+        if (!assigned)
+        {
+            Atom newId = Atom::GetNextEcsPrimitiveInfoConfigurationId();
+            GraphicsPrimitiveInfo newPrimitiveInfo{_defaultSpriteMeshPtr->ecsId, texture->ecsId,
+                                                   _defaultGraphicsPipelinePtr->ecsId};
+            newPrimitiveInfo.gpuTransformConstantBufferRegions[0] =
+                _resourceManager.getActual().AllocateConstantBufferRegion(sizeof(Maths::GeoMatrix4x4F) * 1000);
+
+            _primitiveConfigurations.emplace(newId, newPrimitiveInfo);
+            newRenderComponent.primitiveInfoId = newId;
+        }
+
+        renderComponentView.AddComponent(entity, newRenderComponent);
+
+        if (!transformComponentView.HasComponent(entity))
+        {
+            transformComponentView.AddComponent(entity);
+        }
+
+        if (!entityGraphComponentView.HasComponent(entity))
+        {
+            entityGraphComponentView.AddComponent(entity);
+        }
     }
 
-    // TODO: this is broken lol
     EntityId DefaultRenderingSystem::CreateSpriteEntity(
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
         Catalogue& catalogue)
@@ -523,15 +558,10 @@ namespace NovelRT::Ecs::Graphics
             0, entity, newRenderComponent);
 
         scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>().PushComponentUpdateInstruction(
-            0, entity, TransformComponent{Maths::GeoVector3F::zero(), Maths::GeoVector2F::one(), 0.0f});
-
-        scheduler.GetComponentCache().GetComponentBuffer<QuadEntityBlockComponent>().PushComponentUpdateInstruction(
-            0, entity,
-            QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), 0, 0, 0, 0,
-                                     std::numeric_limits<EntityId>::max()});
+            0, entity, TransformComponent{});
 
         scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
-            0, entity, EntityGraphComponent{std::numeric_limits<EntityId>::max(), entity});
+            0, entity, EntityGraphComponent{});
 
         scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         return entity;
