@@ -48,28 +48,6 @@ namespace NovelRT::Ecs
         }
     };
 
-    /*
-    struct QuadEntityBlockComponent
-    {
-        uint8_t blockWriteMap;
-
-        EntityId previousBlock;
-
-        EntityId zero;
-        EntityId one;
-        EntityId two;
-        EntityId three;
-
-        EntityId nextBlock;
-
-        inline QuadEntityBlockComponent& operator+=(const QuadEntityBlockComponent& other)
-        {
-            *this = other;
-            return *this;
-        }
-    };
-    */
-
     struct LinkedEntityListNodeComponent
     {
         bool IsValid = true;

@@ -13,7 +13,6 @@ namespace NovelRT::Ecs
     class LinkedEntityListView
     {
     private:
-
         EntityId _begin;
         EntityId _end = std::numeric_limits<EntityId>::max();
         EntityId _tail;
@@ -109,24 +108,37 @@ namespace NovelRT::Ecs
         };
 
         LinkedEntityListView(EntityId node, Catalogue& catalogue) noexcept
-            : _begin(node), _catalogue(catalogue), _tail(_end), _hasBeenCommitted(false)
+            : _begin(node), _catalogue(catalogue), _tail(_end), _hasBeenCommitted(false), _changes{}
         {
+            if (_begin == std::numeric_limits<EntityId>::max())
+            {
+                return;
+            }
+
             auto view = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
-            auto currentBeginComponent = view.GetComponentUnsafe(_begin);
+            LinkedEntityListNodeComponent currentBeginComponent{};
 
-            while (currentBeginComponent.previous != std::numeric_limits<EntityId>::max())
+            if (!view.TryGetComponent(_begin, currentBeginComponent))
             {
-                _begin = currentBeginComponent.previous;
-                currentBeginComponent = view.GetComponentUnsafe(_begin);
+                _changes[_begin] = LinkedEntityListNodeComponent{};
+                _tail = _begin;
+            }
+            else
+            {
+                while (currentBeginComponent.previous != std::numeric_limits<EntityId>::max())
+                {
+                    _begin = currentBeginComponent.previous;
+                    currentBeginComponent = view.GetComponentUnsafe(_begin);
+                }
+
+                currentBeginComponent = view.GetComponentUnsafe(node);
+
+                while (currentBeginComponent.next != std::numeric_limits<EntityId>::max()){
+                    _tail = currentBeginComponent.next;
+                    currentBeginComponent = view.GetComponentUnsafe(_tail);
+                }
             }
 
-            currentBeginComponent = view.GetComponentUnsafe(node);
-
-            while (currentBeginComponent.next != std::numeric_limits<EntityId>::max())
-            {
-                _tail = currentBeginComponent.next;
-                currentBeginComponent = view.GetComponentUnsafe(_tail);
-            }
         }
 
         [[nodiscard]] inline ConstIterator begin() const noexcept

@@ -57,9 +57,11 @@ namespace NovelRT::Ecs
     class SystemScheduler;
     class UnsafeComponentView;
     struct TransformComponent;
+    struct EntityGraphComponent;
     class EntityObject;
     class LinkedEntityListView;
     class EntityObject;
+    class EntityGraphView;
 }
 
 // ECS types
@@ -72,6 +74,7 @@ namespace NovelRT::Ecs
 #include "ComponentBuffer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
+#include "DefaultComponentTypes.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
 #include "IEcsSystem.h"
@@ -84,6 +87,7 @@ namespace NovelRT::Ecs
 #include "Configurator.h"
 #include "LinkedEntityListView.h"
 #include "EntityObject.h"
+#include "EntityGraphView.h"
 
 // clang-format on
 

@@ -32,13 +32,6 @@ namespace NovelRT::Ecs
             target.GetComponentCache().RegisterComponentType(
                 EntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 
-            /*
-            target.GetComponentCache().RegisterComponentType(
-                QuadEntityBlockComponent{0, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
-                                         std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max(),
-                                         std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
-            */
-
             target.GetComponentCache().RegisterComponentType(
                 LinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 

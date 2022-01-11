@@ -27,7 +27,7 @@ namespace NovelRT::Utilities
         {
             if (!isCreated())
             {
-                _actual = _delegate();
+                _actual.emplace(_delegate());
             }
 
             return _actual.value();
