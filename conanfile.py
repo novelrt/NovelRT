@@ -20,7 +20,8 @@ class NovelRTConan(ConanFile):
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
         ("vulkan-loader/1.2.182"),
-        ("vulkan-memory-allocator/2.3.0")
+        ("vulkan-memory-allocator/2.3.0"),
+        ("ffmpeg/4.3.2")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
@@ -46,6 +47,13 @@ class NovelRTConan(ConanFile):
         "glad:gles2_version":3.0,
         "spdlog:header_only":True,
         "vulkan-loader:shared":True,
+        "ffmpeg:shared":True,
+        "ffmpeg:avfilter":False,
+        "ffmpeg:with_freetype":False,
+        "ffmpeg:with_libx264":False,
+        "ffmpeg:with_libfdk_aac":False,
+        "ffmpeg:with_libx265":False,
+        "ffmpeg:postproc":False,
         "inksupport": True,
         "documentation": False,
         "buildtests":True,

@@ -54,6 +54,7 @@ int main()
     std::shared_ptr<GraphicsAdapter> adapter = selector.GetDefaultRecommendedAdapter(vulkanProvider, surfaceContext);
 
     auto gfxDevice = adapter->CreateDevice(surfaceContext, 2);
+    auto graphicsResourceManager = NovelRT::Experimental::Graphics::GraphicsResourceManager(gfxDevice);
     auto gfxContext = gfxDevice->GetCurrentContext();
 
     auto vertexStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
@@ -66,6 +67,32 @@ int main()
     auto vertShaderData = LoadSpv("vert.spv");
     auto pixelShaderData = LoadSpv("frag.spv");
 
+    auto size = device->GetSize();
+    float width = size.x;
+    float height = size.y;
+    float halfWidth = width / 2.0f;
+    float halfHeight = height / 2.0f;
+    float left = -halfWidth;
+    float right = +halfWidth;
+    float top = -halfHeight;
+    float bottom = +halfHeight;
+
+    auto position = NovelRT::Maths::GeoVector2F::zero();
+    auto projectionMatrix = NovelRT::Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
+    auto viewMatrix = NovelRT::Maths::GeoMatrix4x4F::CreateFromLookAt(NovelRT::Maths::GeoVector3F(position.x, position.y, -1.0f),
+                                                             NovelRT::Maths::GeoVector3F(position.x, position.y, 0.0f),
+                                                             NovelRT::Maths::GeoVector3F(0, -1, 0));
+
+    // This is correct for row-major. :]
+    auto frameTransform = viewMatrix * projectionMatrix;
+    auto primitiveTransform = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
+    primitiveTransform.Scale(NovelRT::Maths::GeoVector2F(200,200));
+
+    auto frameTransformRegion = graphicsResourceManager.LoadConstantBufferDataToNewRegion(
+        &frameTransform, sizeof(NovelRT::Maths::GeoMatrix4x4F));
+
+    auto primitiveTransformRegion = graphicsResourceManager.LoadConstantBufferDataToNewRegion(&primitiveTransform, sizeof(NovelRT::Maths::GeoMatrix4x4F));
+
     gfxContext->BeginFrame();
     std::vector<GraphicsPipelineInputElement> elements{
         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
@@ -74,8 +101,22 @@ int main()
                                      GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
     std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-    std::vector<GraphicsPipelineResource> resources{
-        GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+//    std::vector<GraphicsPipelineResource> resources{
+//        GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+
+    std::vector<GraphicsPipelineResource> resources = {
+        GraphicsPipelineResource(
+            GraphicsPipelineResourceKind::ConstantBuffer,
+            ShaderProgramVisibility::Vertex),
+
+        GraphicsPipelineResource(
+            GraphicsPipelineResourceKind::ConstantBuffer,
+            ShaderProgramVisibility::Vertex),
+
+        GraphicsPipelineResource(
+            GraphicsPipelineResourceKind::Texture,
+            ShaderProgramVisibility::Pixel),
+    };
 
     auto signature = gfxDevice->CreatePipelineSignature(
         GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
@@ -84,19 +125,22 @@ int main()
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
     auto dummyRegion = GraphicsMemoryRegion<GraphicsResource>(0, nullptr, gfxDevice, false, 0, 0);
 
-    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-
+    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 6, 16);
+    
     auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
-    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)};
+    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
+    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+    pVertexBuffer[3] = TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+    pVertexBuffer[4] = TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+    pVertexBuffer[5] = TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
 
-    uint32_t textureWidth = 256;
-    uint32_t textureHeight = 256;
+    uint32_t textureWidth = 1280;
+    uint32_t textureHeight = 720;
     uint32_t texturePixels = textureWidth * textureHeight;
     uint32_t cellWidth = textureWidth / 8;
     uint32_t cellHeight = textureHeight / 8;
@@ -117,7 +161,7 @@ int main()
 
     textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
-    std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{texture2DRegion};
+    std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{frameTransformRegion, primitiveTransformRegion, texture2DRegion};
 
     gfxContext->Copy(texture2D, textureStagingBuffer);
     gfxContext->EndFrame();

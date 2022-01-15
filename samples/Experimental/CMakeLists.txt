@@ -1,1 +1,2 @@
 add_subdirectory(VulkanRender)
+add_subdirectory(BadApple)
