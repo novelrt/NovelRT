@@ -22,9 +22,10 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
 set(SOURCES
+  Atom.cpp
+
   Animation/SpriteAnimator.cpp
 
-  Atom.cpp
 
   Audio/AudioService.cpp
 

@@ -21,7 +21,7 @@ protected:
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
         rootListId = NovelRT::Atom::GetNextEntityId();
-        componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(0, rootListId, LinkedEntityListNodeComponent{});
+        componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(0, rootListId, LinkedEntityListNodeComponent());
         entityCache = EntityCache(1);
 
         componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
@@ -145,5 +145,87 @@ TEST_F(LinkedEntityListViewTest, CanRemoveNodeUsingNodeId)
     EXPECT_EQ(0, view.GetImmutableDataLength());
 }
 
+TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertBeforeIndex)
+{
+    EntityId previousId = catalogue->CreateEntity();
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        ASSERT_NO_THROW(view.AddInsertBeforeIndexInstruction(0, previousId));
+        ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
+    }
 
+    componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(1, view.GetImmutableDataLength());
+    EXPECT_EQ(view.GetComponent(previousId).previous, max);
+    EXPECT_EQ(view.GetComponent(previousId).next, max);
+}
+
+TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertBeforeIndex)
+{
+    EntityId previousId = catalogue->CreateEntity();
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
+        ASSERT_NO_THROW(view.AddInsertBeforeIndexInstruction(0, previousId));
+    }
+
+    componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(1, view.GetImmutableDataLength());
+    EXPECT_EQ(view.GetComponent(previousId).previous, max);
+    EXPECT_EQ(view.GetComponent(previousId).next, max);
+}
+
+TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAfterIndex)
+{
+    EntityId nextId = catalogue->CreateEntity();
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        ASSERT_NO_THROW(view.AddInsertAfterIndexInstruction(0, nextId));
+        ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
+    }
+
+    componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(1, view.GetImmutableDataLength());
+    EXPECT_EQ(view.GetComponent(nextId).previous, max);
+    EXPECT_EQ(view.GetComponent(nextId).next, max);
+}
+
+TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAfterIndex)
+{
+    EntityId nextId = catalogue->CreateEntity();
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
+        ASSERT_NO_THROW(view.AddInsertAfterIndexInstruction(0, nextId));
+    }
+
+    componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(1, view.GetImmutableDataLength());
+    EXPECT_EQ(view.GetComponent(nextId).previous, max);
+    EXPECT_EQ(view.GetComponent(nextId).next, max);
+}
 

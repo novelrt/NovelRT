@@ -59,6 +59,16 @@ namespace NovelRT::Ecs
             *this = other;
             return *this;
         }
+
+        [[nodiscard]] inline bool operator==(const LinkedEntityListNodeComponent& other) const noexcept
+        {
+            return IsValid == other.IsValid && previous == other.previous && next == other.next;
+        }
+
+        [[nodiscard]] inline bool operator!=(const LinkedEntityListNodeComponent& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 
 }

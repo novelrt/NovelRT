@@ -36,8 +36,11 @@ namespace NovelRT::Ecs
             using difference_type = std::ptrdiff_t;
             ConstIterator(EntityId currentEntityNode, Catalogue& catalogue) noexcept
                 : _currentEntityNode(currentEntityNode),
-                  _currentComponentNode(catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
-                      currentEntityNode)),
+                  _currentComponentNode(
+                      currentEntityNode != std::numeric_limits<EntityId>::max()
+                          ? catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                                currentEntityNode)
+                          : catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
                   _catalogue(catalogue)
             {
             }
@@ -51,8 +54,18 @@ namespace NovelRT::Ecs
             {
                 _currentEntityNode = _currentComponentNode.next;
 
-                _currentComponentNode =
-                    _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(_currentEntityNode);
+                if (_currentEntityNode == std::numeric_limits<EntityId>::max())
+                {
+                    _currentComponentNode =
+                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                }
+                else
+                {
+                    _currentComponentNode =
+                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                            _currentEntityNode);
+                }
+
                 return *this;
             }
 
@@ -60,28 +73,30 @@ namespace NovelRT::Ecs
             {
                 _currentEntityNode = _currentComponentNode.previous;
 
-                _currentComponentNode =
-                    _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(_currentEntityNode);
-                return *this;
-            }
-
-            inline ConstIterator& operator--(int amount) noexcept
-            {
-                for (int i = 0; i < amount; i++)
+                if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
-                    this->operator--();
+                    _currentComponentNode =
+                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                }
+                else
+                {
+                    _currentComponentNode =
+                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                            _currentEntityNode);
                 }
 
                 return *this;
             }
 
-            inline ConstIterator& operator++(int amount) noexcept
+            inline ConstIterator& operator--(int) noexcept
             {
-                for (int i = 0; i < amount; i++)
-                {
-                    this->operator++();
-                }
+                this->operator--();
+                return *this;
+            }
 
+            inline ConstIterator& operator++(int) noexcept
+            {
+                this->operator++();
                 return *this;
             }
 
@@ -92,8 +107,7 @@ namespace NovelRT::Ecs
 
             [[nodiscard]] inline LinkedEntityListNodeComponent GetListNode() const noexcept
             {
-                return _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
-                    _currentEntityNode);
+                return _currentComponentNode;
             }
 
             [[nodiscard]] inline bool operator==(const ConstIterator& other) const noexcept
@@ -134,7 +148,8 @@ namespace NovelRT::Ecs
                 currentBeginComponent = view.GetComponentUnsafe(node);
 
                 _tail = _begin;
-                while (currentBeginComponent.next != std::numeric_limits<EntityId>::max()){
+                while (currentBeginComponent.next != std::numeric_limits<EntityId>::max())
+                {
                     _tail = currentBeginComponent.next;
                     currentBeginComponent = view.GetComponentUnsafe(_tail);
                 }
@@ -162,6 +177,19 @@ namespace NovelRT::Ecs
             return it.GetCurrentEntityNode();
         }
 
+        [[nodiscard]] inline bool ContainsNode(EntityId target) const noexcept
+        {
+            for (auto&& node : *this)
+            {
+                if (node == target)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         [[nodiscard]] inline size_t GetLength() const noexcept
         {
             size_t returnCount = 0;
@@ -182,50 +210,52 @@ namespace NovelRT::Ecs
                 throw std::out_of_range("The specified index was out of range of the linked entity list.");
             }
 
-            auto it = begin();
+            auto nextIt = begin();
 
             for (size_t i = 0; i < index; i++)
             {
-                it++;
+                nextIt++;
             }
 
-            EntityId existingNode = it.GetCurrentEntityNode();
-
             auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+            EntityId existingPreviousNode = nextIt.GetCurrentEntityNode();
 
-            if (_changes.ContainsKey(existingNode))
+            if (_changes.ContainsKey(existingPreviousNode) || _changes.ContainsKey(nextIt.GetListNode().previous))
             {
-                auto& diffInstruction = _changes[existingNode];
-                EntityId oldPrevious = diffInstruction.previous;
-                auto& oldPreviousDiffInstruction = _changes[oldPrevious];
-
-                oldPreviousDiffInstruction.next = newNode;
-                LinkedEntityListNodeComponent newNodeInstruction{};
-                newNodeInstruction.previous = oldPrevious;
-                newNodeInstruction.next = existingNode;
-                oldPreviousDiffInstruction.next = newNode;
-                diffInstruction.previous = newNode;
-
-                _changes.Insert(newNode, newNodeInstruction);
+                existingPreviousNode =
+                    UpdateExistingChangesForAddBeforeOperation(newNode, nextIt, nodeView, existingPreviousNode);
             }
             else
             {
-                LinkedEntityListNodeComponent nodeComponent = it.GetListNode();
-                LinkedEntityListNodeComponent newNodeInstruction{};
-                newNodeInstruction.next = existingNode;
-                newNodeInstruction.previous = nodeComponent.previous;
-                nodeComponent.previous = newNode;
+                auto max = std::numeric_limits<EntityId>::max();
+                auto nextNodeComponent = nextIt.GetListNode();
+                auto nextEntityId = nextIt.GetCurrentEntityNode();
+                nextIt--;
+                auto previousNodeComponent = nextIt.GetListNode();
+                auto previousEntityId = nextIt.GetCurrentEntityNode();
 
-                _changes.Insert(existingNode, nodeComponent);
-                _changes.Insert(newNode, newNodeInstruction);
+                LinkedEntityListNodeComponent newInstruction{true, previousEntityId, nextEntityId};
+                _changes.Insert(newNode, newInstruction);
+
+                previousNodeComponent.next = newNode;
+                nextNodeComponent.previous = newNode;
+
+                if (previousEntityId != max)
+                {
+                    _changes.Insert(previousEntityId, previousNodeComponent);
+                }
+
+                if (nextEntityId != max)
+                {
+                    _changes.Insert(nextEntityId, nextNodeComponent);
+                }
             }
 
-            if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == existingNode)
+            if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == existingPreviousNode)
             {
                 _newTailPostDiff = newNode;
             }
         }
-
 
         inline void AddInsertAfterIndexInstruction(size_t index, EntityId newNode)
         {
@@ -234,46 +264,310 @@ namespace NovelRT::Ecs
                 throw std::out_of_range("The specified index was out of range of the linked entity list.");
             }
 
-            auto it = begin();
+            auto previousIt = begin();
 
             for (size_t i = 0; i < index; i++)
             {
-                it++;
+                previousIt++;
             }
 
-
             auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
-            EntityId existingNode = it.GetCurrentEntityNode();
+            EntityId existingPreviousNode = previousIt.GetCurrentEntityNode();
 
-            if (_changes.ContainsKey(existingNode))
+            if (_changes.ContainsKey(existingPreviousNode) || _changes.ContainsKey(previousIt.GetListNode().next))
             {
-                auto& diffInstruction = _changes[existingNode];
-                EntityId oldNext = diffInstruction.next;
-                auto& oldNextDiffInstruction = _changes[oldNext];
-                LinkedEntityListNodeComponent newNodeInstruction{};
-                newNodeInstruction.previous = existingNode;
-                newNodeInstruction.next = oldNext;
-                oldNextDiffInstruction.previous = newNode;
-                diffInstruction.next = newNode;
-
-                _changes.Insert(newNode, newNodeInstruction);
+                existingPreviousNode =
+                    UpdateExistingChangesForAddAfterOperation(newNode, previousIt, nodeView, existingPreviousNode);
             }
             else
             {
-                LinkedEntityListNodeComponent nodeComponent = it.GetListNode();
-                LinkedEntityListNodeComponent newNodeInstruction{};
-                newNodeInstruction.previous = existingNode;
-                newNodeInstruction.next = nodeComponent.next;
-                nodeComponent.next = newNode;
+                auto max = std::numeric_limits<EntityId>::max();
+                auto previousNodeComponent = previousIt.GetListNode();
+                auto previousEntityId = previousIt.GetCurrentEntityNode();
+                previousIt++;
+                auto nextNodeComponent = previousIt.GetListNode();
+                auto nextEntityId = previousIt.GetCurrentEntityNode();
 
-                _changes.Insert(existingNode, nodeComponent);
-                _changes.Insert(newNode, newNodeInstruction);
+                LinkedEntityListNodeComponent newInstruction{true, previousEntityId, nextEntityId};
+                _changes.Insert(newNode, newInstruction);
+
+                previousNodeComponent.next = newNode;
+                nextNodeComponent.previous = newNode;
+
+                if (previousEntityId != max)
+                {
+                    _changes.Insert(previousEntityId, previousNodeComponent);
+                }
+
+                if (nextEntityId != max)
+                {
+                    _changes.Insert(nextEntityId, nextNodeComponent);
+                }
             }
 
-            if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == existingNode)
+            if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == existingPreviousNode)
             {
                 _newTailPostDiff = newNode;
             }
+        }
+
+        /*
+         *
+auto nextIt = begin();
+EntityId existingNextNode = nextIt.GetCurrentEntityNode();
+
+while (existingNextNode != finalDiffInstructionForPrevious.next && nextIt != end())
+{
+nextIt++;
+}
+
+if (_changes.ContainsKey(existingNextNode))
+{
+auto nextDiffInstruction = _changes[existingNextNode];
+
+while (nextDiffInstruction == nodeView.GetDeleteInstructionState() || nextIt != end())
+{
+    nextIt++;
+    existingNextNode = nextIt.GetCurrentEntityNode();
+
+    if (_changes.ContainsKey(existingNextNode))
+    {
+        nextDiffInstruction = _changes[existingNextNode];
+        continue;
+    }
+
+    break;
+}
+}
+
+LinkedEntityListNodeComponent finalDiffInstructionForNext{};
+
+if (_changes.ContainsKey(existingNextNode))
+{
+finalDiffInstructionForNext = _changes[existingNextNode];
+}
+else if (!nodeView.TryGetComponent(existingNextNode, finalDiffInstructionForNext))
+{
+finalDiffInstructionForNext = nodeView.GetDeleteInstructionState();
+}
+         * */
+
+        EntityId& UpdateExistingChangesForAddBeforeOperation(
+            EntityId& newNode,
+            ConstIterator& nextIt,
+            const ComponentView<LinkedEntityListNodeComponent>& nodeView,
+            EntityId& existingNextNode)
+        {
+            auto nextDiffInstruction = _changes[existingNextNode];
+
+            while (nextDiffInstruction == nodeView.GetDeleteInstructionState() || nextIt != begin())
+            {
+                nextIt--;
+                existingNextNode = nextIt.GetCurrentEntityNode();
+
+                if (_changes.ContainsKey(existingNextNode))
+                {
+                    nextDiffInstruction = _changes[existingNextNode];
+                    continue;
+                }
+
+                break;
+            }
+
+            LinkedEntityListNodeComponent finalDiffInstructionForNext{};
+
+            if (_changes.ContainsKey(existingNextNode))
+            {
+                finalDiffInstructionForNext = _changes[existingNextNode];
+            }
+            else if (!nodeView.TryGetComponent(existingNextNode, finalDiffInstructionForNext))
+            {
+                finalDiffInstructionForNext = nodeView.GetDeleteInstructionState();
+            }
+
+            auto previousIt = begin();
+            EntityId existingPreviousNode = previousIt.GetCurrentEntityNode();
+
+            while (existingPreviousNode != finalDiffInstructionForNext.previous && previousIt != end())
+            {
+                previousIt++;
+            }
+
+            if (_changes.ContainsKey(existingPreviousNode))
+            {
+                auto previousDiffInstruction = _changes[existingPreviousNode];
+
+                while (previousDiffInstruction == nodeView.GetDeleteInstructionState() || previousIt != end())
+                {
+                    previousIt++;
+                    existingPreviousNode = previousIt.GetCurrentEntityNode();
+
+                    if (_changes.ContainsKey(existingPreviousNode))
+                    {
+                        previousDiffInstruction = _changes[existingPreviousNode];
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+
+            LinkedEntityListNodeComponent finalDiffInstructionForPrevious{};
+
+            if (_changes.ContainsKey(existingPreviousNode))
+            {
+                finalDiffInstructionForPrevious = _changes[existingPreviousNode];
+            }
+            else if (!nodeView.TryGetComponent(existingPreviousNode, finalDiffInstructionForPrevious))
+            {
+                finalDiffInstructionForPrevious = nodeView.GetDeleteInstructionState();
+            }
+
+            bool hasPrevious = finalDiffInstructionForPrevious != nodeView.GetDeleteInstructionState();
+            bool hasNext = finalDiffInstructionForNext != nodeView.GetDeleteInstructionState();
+
+            if (hasPrevious)
+            {
+                finalDiffInstructionForNext.next = newNode;
+
+                if (_changes.ContainsKey(existingNextNode))
+                {
+                    _changes.Insert(existingNextNode, finalDiffInstructionForNext);
+                }
+                else
+                {
+                    _changes[existingNextNode] = finalDiffInstructionForNext;
+                }
+            }
+
+            if (hasNext)
+            {
+                finalDiffInstructionForNext.previous = newNode;
+
+                if (_changes.ContainsKey(existingNextNode))
+                {
+                    _changes.Insert(existingNextNode, finalDiffInstructionForNext);
+                }
+                else
+                {
+                    _changes[existingNextNode] = finalDiffInstructionForNext;
+                }
+            }
+
+            _changes.Insert(newNode,
+                            LinkedEntityListNodeComponent{
+                                true, hasPrevious ? existingNextNode : EntityId(std::numeric_limits<EntityId>::max()),
+                                hasNext ? existingNextNode : EntityId(std::numeric_limits<EntityId>::max())});
+            return existingNextNode;
+        }
+
+        EntityId& UpdateExistingChangesForAddAfterOperation(
+            EntityId& newNode,
+            ConstIterator& previousIt,
+            const ComponentView<LinkedEntityListNodeComponent>& nodeView,
+            EntityId& existingPreviousNode)
+        {
+            auto previousDiffInstruction = _changes[existingPreviousNode];
+
+            while (previousDiffInstruction == nodeView.GetDeleteInstructionState() || previousIt != begin())
+            {
+                previousIt--;
+                existingPreviousNode = previousIt.GetCurrentEntityNode();
+
+                if (_changes.ContainsKey(existingPreviousNode))
+                {
+                    previousDiffInstruction = _changes[existingPreviousNode];
+                    continue;
+                }
+
+                break;
+            }
+
+            LinkedEntityListNodeComponent finalDiffInstructionForPrevious{};
+
+            if (_changes.ContainsKey(existingPreviousNode))
+            {
+                finalDiffInstructionForPrevious = _changes[existingPreviousNode];
+            }
+            else if (!nodeView.TryGetComponent(existingPreviousNode, finalDiffInstructionForPrevious))
+            {
+                finalDiffInstructionForPrevious = nodeView.GetDeleteInstructionState();
+            }
+
+            auto nextIt = begin();
+            EntityId existingNextNode = nextIt.GetCurrentEntityNode();
+
+            while (existingNextNode != finalDiffInstructionForPrevious.next && nextIt != end())
+            {
+                nextIt++;
+            }
+
+            if (_changes.ContainsKey(existingNextNode))
+            {
+                auto nextDiffInstruction = _changes[existingNextNode];
+
+                while (nextDiffInstruction == nodeView.GetDeleteInstructionState() || nextIt != end())
+                {
+                    nextIt++;
+                    existingNextNode = nextIt.GetCurrentEntityNode();
+
+                    if (_changes.ContainsKey(existingNextNode))
+                    {
+                        nextDiffInstruction = _changes[existingNextNode];
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+
+            LinkedEntityListNodeComponent finalDiffInstructionForNext{};
+
+            if (_changes.ContainsKey(existingNextNode))
+            {
+                finalDiffInstructionForNext = _changes[existingNextNode];
+            }
+            else if (!nodeView.TryGetComponent(existingNextNode, finalDiffInstructionForNext))
+            {
+                finalDiffInstructionForNext = nodeView.GetDeleteInstructionState();
+            }
+
+            bool hasPrevious = finalDiffInstructionForPrevious != nodeView.GetDeleteInstructionState();
+            bool hasNext = finalDiffInstructionForNext != nodeView.GetDeleteInstructionState();
+
+            if (hasPrevious)
+            {
+                finalDiffInstructionForPrevious.next = newNode;
+
+                if (_changes.ContainsKey(existingPreviousNode))
+                {
+                    _changes.Insert(existingPreviousNode, finalDiffInstructionForPrevious);
+                }
+                else
+                {
+                    _changes[existingPreviousNode] = finalDiffInstructionForPrevious;
+                }
+            }
+
+            if (hasNext)
+            {
+                finalDiffInstructionForNext.previous = newNode;
+
+                if (_changes.ContainsKey(existingNextNode))
+                {
+                    _changes.Insert(existingNextNode, finalDiffInstructionForNext);
+                }
+                else
+                {
+                    _changes[existingNextNode] = finalDiffInstructionForNext;
+                }
+            }
+
+            _changes.Insert(newNode,
+                            LinkedEntityListNodeComponent{
+                                true, hasPrevious ? existingPreviousNode : EntityId(std::numeric_limits<EntityId>::max()),
+                                hasNext ? existingNextNode : EntityId(std::numeric_limits<EntityId>::max())});
+            return existingPreviousNode;
         }
 
         inline void AddInsertAtBackInstruction(EntityId newNode)
@@ -295,10 +589,11 @@ namespace NovelRT::Ecs
                 last.next = newNode;
                 _newTailPostDiff = newNode;
                 _changes.Insert(_tail, last);
-                _changes.Insert(newNode, LinkedEntityListNodeComponent{true, _tail, std::numeric_limits<EntityId>::max()});
+                _changes.Insert(newNode,
+                                LinkedEntityListNodeComponent{true, _tail, std::numeric_limits<EntityId>::max()});
             }
 
-            //nodeView.PushComponentUpdateInstruction(_tail, last);
+            // nodeView.PushComponentUpdateInstruction(_tail, last);
         }
 
         inline void AddInsertAtFrontInstruction(EntityId newNode)
@@ -320,21 +615,23 @@ namespace NovelRT::Ecs
                 begin.previous = newNode;
                 _newBeginPostDiff = newNode;
                 _changes.Insert(_begin, begin);
-                _changes.Insert(newNode, LinkedEntityListNodeComponent{true, std::numeric_limits<EntityId>::max(), _begin});
+                _changes.Insert(newNode,
+                                LinkedEntityListNodeComponent{true, std::numeric_limits<EntityId>::max(), _begin});
             }
         }
 
-        inline void AddRemoveNodeInstruction(EntityId nodeEntity)
+        inline void AddRemoveNodeInstruction(EntityId nodeToRemove)
         {
             auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
 
-            if (_changes.ContainsKey(nodeEntity))
+            if (_changes.ContainsKey(nodeToRemove))
             {
-                auto& component = _changes[nodeEntity];
+                auto& component = _changes[nodeToRemove];
                 std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> previous;
                 std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> next;
 
-                if (component.previous != std::numeric_limits<EntityId>::max() && _changes.ContainsKey(component.previous))
+                if (component.previous != std::numeric_limits<EntityId>::max() &&
+                    _changes.ContainsKey(component.previous))
                 {
                     previous = _changes[component.previous];
                 }
@@ -351,7 +648,8 @@ namespace NovelRT::Ecs
                 else if (component.previous != std::numeric_limits<EntityId>::max())
                 {
                     auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
+                    _changes.Insert(component.previous,
+                                    LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
                 }
 
                 if (next.has_value())
@@ -361,28 +659,30 @@ namespace NovelRT::Ecs
                 else if (component.next != std::numeric_limits<EntityId>::max())
                 {
                     auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                    _changes.Insert(component.next, LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
+                    _changes.Insert(component.next,
+                                    LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
                 }
 
-                if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeEntity)
+                if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeToRemove)
                 {
                     _newBeginPostDiff = component.next;
                 }
 
-                if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == nodeEntity)
+                if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == nodeToRemove)
                 {
                     _newTailPostDiff = component.previous;
                 }
 
                 component = nodeView.GetDeleteInstructionState();
             }
-            else
+            else if (nodeView.HasComponent(nodeToRemove) && ContainsNode(nodeToRemove))
             {
-                auto component = nodeView.GetComponentUnsafe(nodeEntity);
+                auto component = nodeView.GetComponent(nodeToRemove);
                 std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> previous;
                 std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> next;
 
-                if (component.previous != std::numeric_limits<EntityId>::max() && _changes.ContainsKey(component.previous))
+                if (component.previous != std::numeric_limits<EntityId>::max() &&
+                    _changes.ContainsKey(component.previous))
                 {
                     previous = _changes[component.previous];
                 }
@@ -399,7 +699,8 @@ namespace NovelRT::Ecs
                 else if (component.previous != std::numeric_limits<EntityId>::max())
                 {
                     auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                    _changes.Insert(component.previous, LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
+                    _changes.Insert(component.previous,
+                                    LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
                 }
 
                 if (next.has_value())
@@ -409,20 +710,25 @@ namespace NovelRT::Ecs
                 else if (component.next != std::numeric_limits<EntityId>::max())
                 {
                     auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                    _changes.Insert(component.next, LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
+                    _changes.Insert(component.next,
+                                    LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
                 }
 
-                if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeEntity)
+                if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeToRemove)
                 {
                     _newBeginPostDiff = component.next;
                 }
 
-                if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == nodeEntity)
+                if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == nodeToRemove)
                 {
                     _newTailPostDiff = component.previous;
                 }
 
-                _changes.Insert(nodeEntity, nodeView.GetDeleteInstructionState());
+                _changes.Insert(nodeToRemove, nodeView.GetDeleteInstructionState());
+            }
+            else
+            {
+                throw Exceptions::KeyNotFoundException();
             }
         }
 
