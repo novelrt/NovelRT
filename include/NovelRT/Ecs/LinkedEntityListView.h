@@ -602,8 +602,6 @@ namespace NovelRT::Ecs
                 _changes.Insert(
                     newNode, LinkedEntityListNodeComponent{true, finalPrevious, std::numeric_limits<EntityId>::max()});
             }
-
-            // nodeView.PushComponentUpdateInstruction(_tail, last);
         }
 
         inline void AddInsertAtFrontInstruction(EntityId newNode)
@@ -621,12 +619,40 @@ namespace NovelRT::Ecs
             }
             else
             {
-                auto begin = nodeView.GetComponentUnsafe(_begin);
-                begin.previous = newNode;
+                EntityId finalNext = 0;
+
+                if (_newBeginPostDiff.has_value())
+                {
+                    auto& begin = _changes[_newBeginPostDiff.value()];
+                    begin.previous = newNode;
+                    finalNext = _newBeginPostDiff.value();
+                }
+                else if (_changes.ContainsKey(_begin))
+                {
+                    auto& beginComponent = _changes[_begin];
+
+                    if (beginComponent != nodeView.GetDeleteInstructionState())
+                    {
+                        beginComponent.previous = newNode;
+                        finalNext = _begin;
+                    }
+                    else
+                    {
+                        finalNext = std::numeric_limits<EntityId>::max();
+                    }
+                }
+                else
+                {
+                    auto beginComponentDiff = nodeView.GetComponentUnsafe(_begin);
+                    beginComponentDiff.previous = newNode;
+                    _changes.Insert(_begin, beginComponentDiff);
+                    finalNext = _begin;
+                    //throw Exceptions::InvalidOperationException("I can't do that dave.");
+                }
+
                 _newBeginPostDiff = newNode;
-                _changes.Insert(_begin, begin);
-                _changes.Insert(newNode,
-                                LinkedEntityListNodeComponent{true, std::numeric_limits<EntityId>::max(), _begin});
+                _changes.Insert(
+                    newNode, LinkedEntityListNodeComponent{true,  std::numeric_limits<EntityId>::max(), finalNext});
             }
         }
 
