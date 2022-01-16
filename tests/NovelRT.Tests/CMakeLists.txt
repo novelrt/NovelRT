@@ -14,6 +14,7 @@ set(SOURCES
   Ecs/ComponentViewTest.cpp
   Ecs/ConfiguratorTest.cpp
   Ecs/EntityCacheTest.cpp
+  Ecs/EntityGraphViewTest.cpp
   Ecs/LinkedEntityListViewTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp

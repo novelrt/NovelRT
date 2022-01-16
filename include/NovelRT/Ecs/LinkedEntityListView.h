@@ -145,10 +145,15 @@ namespace NovelRT::Ecs
                 }
 
                 currentBeginComponent = view.GetComponentUnsafe(node);
-
-                while (currentBeginComponent.next != std::numeric_limits<EntityId>::max())
+                if (currentBeginComponent.next != std::numeric_limits<EntityId>::max())
                 {
-                    _tail = currentBeginComponent.next;
+                    auto currentEndComponent = view.GetComponentUnsafe(currentBeginComponent.next);
+
+                    while (currentEndComponent.next != std::numeric_limits<EntityId>::max())
+                    {
+                        _tail = currentEndComponent.next;
+                        currentEndComponent = view.GetComponentUnsafe(currentEndComponent.next);
+                    }
                 }
             }
         }
