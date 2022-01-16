@@ -69,3 +69,21 @@ TEST_F(EntityGraphViewTest, CanAddNewEntityAsChild)
     EXPECT_EQ(children[0].get().GetRawEntityId(), childId);
     EXPECT_EQ(children[1].get().GetRawEntityId(), newChild);
 }
+
+TEST_F(EntityGraphViewTest, CanRemoveExistingChild)
+{
+    {
+        EntityGraphView view(*catalogue, parentId,catalogue->GetComponentView<EntityGraphComponent>().GetComponentUnsafe(parentId));
+        ASSERT_NO_THROW(view.AddRemoveChildInstruction(childId));
+    }
+
+    componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+
+    EntityGraphView view(*catalogue, parentId,catalogue->GetComponentView<EntityGraphComponent>().GetComponentUnsafe(parentId));
+
+    EXPECT_FALSE(view.HasChildren());
+    EXPECT_EQ(view.GetOriginalChildren().size(), 0);
+}

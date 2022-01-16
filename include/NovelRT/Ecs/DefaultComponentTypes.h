@@ -46,6 +46,16 @@ namespace NovelRT::Ecs
             *this = other;
             return *this;
         }
+
+        [[nodiscard]] inline bool operator==(const EntityGraphComponent& other) const noexcept
+        {
+            return isValid == other.isValid && parent == other.parent && childrenStartNode == other.childrenStartNode;
+        }
+
+        [[nodiscard]] inline bool operator!=(const EntityGraphComponent& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 
     struct LinkedEntityListNodeComponent
