@@ -312,3 +312,87 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtFront)
     EXPECT_EQ(view.GetComponent(previousId).previous, max);
     EXPECT_EQ(view.GetComponent(previousId).next, max);
 }
+
+TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheBack)
+{
+    std::vector<EntityId> committedEntities{};
+
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            EntityId id = catalogue->CreateEntity();
+            ASSERT_NO_THROW(view.AddInsertAtBackInstruction( id));
+            committedEntities.emplace_back(id);
+        }
+    }
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    auto [firstEntity, firstComponent] = *view.begin();
+    LinkedEntityListView readList(firstEntity, *catalogue);
+    auto firstNode = readList[0];
+    auto rootListComponent = view.GetComponent(firstNode);
+
+    EntityId previous = rootListComponent.previous;
+
+    for (auto&& node : readList)
+    {
+
+        auto component = view.GetComponentUnsafe(node);
+
+        if (node != firstNode)
+        {
+            EXPECT_EQ(node, previous);
+        }
+
+        previous = component.next;
+    }
+}
+
+TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheFront)
+{
+    std::vector<EntityId> committedEntities{};
+
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            EntityId id = catalogue->CreateEntity();
+            ASSERT_NO_THROW(view.AddInsertAtFrontInstruction( id));
+            committedEntities.emplace_back(id);
+        }
+    }
+
+    std::reverse(committedEntities.begin(), committedEntities.end());
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    auto [firstEntity, firstComponent] = *view.begin();
+    LinkedEntityListView readList(firstEntity, *catalogue);
+    auto firstNode = readList[0];
+    auto rootListComponent = view.GetComponent(firstNode);
+
+    EntityId previous = rootListComponent.previous;
+
+    for (auto&& node : readList)
+    {
+
+        auto component = view.GetComponentUnsafe(node);
+
+        if (node != firstNode)
+        {
+            EXPECT_EQ(node, previous);
+        }
+
+        previous = component.next;
+    }
+}
