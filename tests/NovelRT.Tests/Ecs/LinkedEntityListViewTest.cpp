@@ -21,7 +21,8 @@ protected:
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
         rootListId = NovelRT::Atom::GetNextEntityId();
-        componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(0, rootListId, LinkedEntityListNodeComponent());
+        componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(
+            0, rootListId, LinkedEntityListNodeComponent());
         entityCache = EntityCache(1);
 
         componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
@@ -257,7 +258,7 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtBack)
     {
         LinkedEntityListView view(rootListId, *catalogue);
         ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
-        ASSERT_NO_THROW(view.AddInsertAtBackInstruction( nextId));
+        ASSERT_NO_THROW(view.AddInsertAtBackInstruction(nextId));
     }
 
     componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
@@ -299,7 +300,7 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtFront)
     {
         LinkedEntityListView view(rootListId, *catalogue);
         ASSERT_NO_THROW(view.AddRemoveNodeInstruction(rootListId));
-        ASSERT_NO_THROW(view.AddInsertAtFrontInstruction( previousId));
+        ASSERT_NO_THROW(view.AddInsertAtFrontInstruction(previousId));
     }
 
     componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
@@ -324,7 +325,7 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheBack)
         for (size_t i = 0; i < 10; i++)
         {
             EntityId id = catalogue->CreateEntity();
-            ASSERT_NO_THROW(view.AddInsertAtBackInstruction( id));
+            ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
             committedEntities.emplace_back(id);
         }
     }
@@ -365,12 +366,104 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheFront)
         for (size_t i = 0; i < 10; i++)
         {
             EntityId id = catalogue->CreateEntity();
-            ASSERT_NO_THROW(view.AddInsertAtFrontInstruction( id));
+            ASSERT_NO_THROW(view.AddInsertAtFrontInstruction(id));
             committedEntities.emplace_back(id);
         }
     }
 
     std::reverse(committedEntities.begin(), committedEntities.end());
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    auto [firstEntity, firstComponent] = *view.begin();
+    LinkedEntityListView readList(firstEntity, *catalogue);
+    auto firstNode = readList[0];
+    auto rootListComponent = view.GetComponent(firstNode);
+
+    EntityId previous = rootListComponent.previous;
+
+    for (auto&& node : readList)
+    {
+
+        auto component = view.GetComponentUnsafe(node);
+
+        if (node != firstNode)
+        {
+            EXPECT_EQ(node, previous);
+        }
+
+        previous = component.next;
+    }
+}
+
+TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtFrontAndRemoveEntities)
+{
+    std::vector<EntityId> committedEntities{};
+
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            EntityId id = catalogue->CreateEntity();
+            ASSERT_NO_THROW(view.AddInsertAtFrontInstruction(id));
+            committedEntities.emplace_back(id);
+        }
+
+        view.AddRemoveNodeInstruction(rootListId);
+        view.AddRemoveNodeInstruction(committedEntities[2]);
+        static_cast<void>(std::remove(committedEntities.begin(), committedEntities.end(), committedEntities[2]));
+    }
+
+    std::reverse(committedEntities.begin(), committedEntities.end());
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    auto [firstEntity, firstComponent] = *view.begin();
+    LinkedEntityListView readList(firstEntity, *catalogue);
+    auto firstNode = readList[0];
+    auto rootListComponent = view.GetComponent(firstNode);
+
+    EntityId previous = rootListComponent.previous;
+
+    for (auto&& node : readList)
+    {
+
+        auto component = view.GetComponentUnsafe(node);
+
+        if (node != firstNode)
+        {
+            EXPECT_EQ(node, previous);
+        }
+
+        previous = component.next;
+    }
+}
+
+TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtBackAndRemoveEntities)
+{
+    std::vector<EntityId> committedEntities{};
+
+    // scope for auto commit/delete.
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            EntityId id = catalogue->CreateEntity();
+            ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
+            committedEntities.emplace_back(id);
+        }
+
+        view.AddRemoveNodeInstruction(rootListId);
+        view.AddRemoveNodeInstruction(committedEntities[2]);
+        static_cast<void>(std::remove(committedEntities.begin(), committedEntities.end(), committedEntities[2]));
+    }
 
     delete catalogue;
     catalogue = new Catalogue(0, componentCache, entityCache);
