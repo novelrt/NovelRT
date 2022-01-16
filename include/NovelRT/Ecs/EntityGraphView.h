@@ -117,27 +117,20 @@ namespace NovelRT::Ecs
             auto& graphView = _externalChanges.at(newChildEntity);
             graphView.GetRawComponentData().parent = _owningEntity;
             _childrenChanges.getActual().AddInsertAtBackInstruction(newChildEntity);
+
+            if (_component.childrenStartNode == std::numeric_limits<EntityId>::max())
+            {
+                _component.childrenStartNode = newChildEntity;
+            }
+
             return graphView;
         }
 
         EntityGraphView& AddRemoveChildInstruction(EntityId childToRemove)
         {
-            auto [entityGraphView, linkedListView] = _catalogue.GetComponentViews<EntityGraphComponent, LinkedEntityListNodeComponent>();
+            auto [entityGraphView, linkedListView] =
+                _catalogue.GetComponentViews<EntityGraphComponent, LinkedEntityListNodeComponent>();
             EntityGraphComponent component{};
-
-            if (_component.childrenStartNode == childToRemove)
-            {
-                for (EntityId childNode : _childrenChanges.getActual())
-                {
-                    if (_externalChanges.find(childNode) != _externalChanges.end() && _externalChanges.at(childNode).GetRawComponentData().parent == _owningEntity)
-                    {
-                        _component.childrenStartNode = childNode;
-                        break;
-                    }
-
-                    _component.childrenStartNode = std::numeric_limits<EntityId>::max();
-                }
-            }
 
             if (_externalChanges.find(childToRemove) == _externalChanges.end())
             {
@@ -157,6 +150,12 @@ namespace NovelRT::Ecs
             childGraphView.GetRawComponentData().parent = std::numeric_limits<EntityId>::max();
             _childrenChanges.getActual().AddRemoveNodeInstruction(childToRemove);
 
+            if (_component.childrenStartNode == childToRemove && !_childrenChanges.getActual().TryGetNewNodeAtBeginning(_component.childrenStartNode))
+            {
+                _component.childrenStartNode = std::numeric_limits<EntityId>::max();
+            }
+
+            return childGraphView;
         }
 
         void Commit()

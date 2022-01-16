@@ -432,6 +432,78 @@ namespace NovelRT::Ecs
             return existingNextNode;
         }
 
+        [[nodiscard]] inline bool TryGetComposedDiffInstruction(EntityId node, LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        {
+            if (_changes.ContainsKey(node))
+            {
+                outNodeComponent = _changes[node];
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtBeginning(LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        {
+            if (_newBeginPostDiff.has_value())
+            {
+                outNodeComponent = _changes[_newBeginPostDiff.value()];
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtEnd(LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        {
+            if (_newTailPostDiff.has_value())
+            {
+                outNodeComponent = _changes[_newTailPostDiff.value()];
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline bool TryGetNewNodeAtBeginning(EntityId& outEntityId) const noexcept
+        {
+            if (_newBeginPostDiff.has_value())
+            {
+                outEntityId = _newBeginPostDiff.value();
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline bool TryGetNewNodeAtEnd(EntityId& outEntityId) const noexcept
+        {
+            if (_newTailPostDiff.has_value())
+            {
+                outEntityId = _newTailPostDiff.value();
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline EntityId GetOriginalBeginning() const noexcept
+        {
+            return _begin;
+        }
+
+        [[nodiscard]] inline EntityId GetOriginalEnd() const noexcept
+        {
+            if (_tail == std::numeric_limits<EntityId>::max())
+            {
+                return _begin;
+            }
+            else
+            {
+                return _end;
+            }
+        }
+
         EntityId& UpdateExistingChangesForAddAfterOperation(
             EntityId& newNode,
             ConstIterator& previousIt,
@@ -712,6 +784,35 @@ namespace NovelRT::Ecs
                 if (_newTailPostDiff.has_value() && _newTailPostDiff.value() == nodeToRemove)
                 {
                     _newTailPostDiff = component.previous;
+                }
+
+                if (!_newBeginPostDiff.has_value() && nodeToRemove == _begin)
+                {
+                    if (component.next == std::numeric_limits<EntityId>::max() && _newTailPostDiff.has_value())
+                    {
+                        _newBeginPostDiff = _newTailPostDiff;
+                    }
+                    else
+                    {
+                        EntityId nextBeginCandidate = component.next;
+                        EntityId currentBeginCandidate = 0;
+                        while (nextBeginCandidate != std::numeric_limits<EntityId>::max())
+                        {
+                            currentBeginCandidate = nextBeginCandidate;
+                            LinkedEntityListNodeComponent testComponent{};
+                            if (_changes.ContainsKey(currentBeginCandidate))
+                            {
+                                testComponent = _changes[currentBeginCandidate];
+                            }
+                            else
+                            {
+                                unused(nodeView.TryGetComponent(currentBeginCandidate, testComponent));
+                            }
+                            nextBeginCandidate = testComponent.next;
+                        }
+
+                        _newBeginPostDiff = currentBeginCandidate;
+                    }
                 }
 
                 component = nodeView.GetDeleteInstructionState();
