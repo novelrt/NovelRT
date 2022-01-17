@@ -386,7 +386,7 @@ namespace NovelRT::Ecs::Graphics
         ptr->stagingPtr = malloc(size);
         ptr->sizeOfVert = dataTypeSize;
         ptr->stagingPtrLength = dataLength;
-        
+
 #ifdef WIN32
         memcpy_s(ptr->stagingPtr, size, data, size);
 #else

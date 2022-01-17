@@ -8,8 +8,8 @@ namespace NovelRT::Experimental::Graphics
 {
     GraphicsResourceManager::GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice,
                                                      size_t startingStagingBufferSize)
-        : _graphicsDevice(std::move(graphicsDevice)),
-          _stagingBuffer([&]() { return CreateStagingBuffer(); }),
+        : _stagingBuffer([&]() { return CreateStagingBuffer(); }),
+          _graphicsDevice(std::move(graphicsDevice)),
           _stagingBufferSize(startingStagingBufferSize)
     {
         if (_stagingBufferSize == 0)
@@ -19,13 +19,13 @@ namespace NovelRT::Experimental::Graphics
     }
 
     GraphicsResourceManager::GraphicsResourceManager(const GraphicsResourceManager& other)
-        : _graphicsDevice(nullptr), _stagingBuffer(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
+        : _stagingBuffer(nullptr), _graphicsDevice(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
     {
         *this = other;
     }
 
     GraphicsResourceManager::GraphicsResourceManager(GraphicsResourceManager&& other) noexcept
-        : _graphicsDevice(nullptr), _stagingBuffer(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
+        : _stagingBuffer(nullptr), _graphicsDevice(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
     {
         *this = std::move(other);
     }
