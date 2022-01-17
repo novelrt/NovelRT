@@ -36,6 +36,8 @@ set(SOURCES
   Ecs/ComponentCache.cpp
   Ecs/EcsUtils.cpp
   Ecs/EntityCache.cpp
+  Ecs/EntityGraphView.cpp
+  Ecs/LinkedEntityListView.cpp
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
