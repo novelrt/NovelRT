@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT.h>
-#include <random>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -53,7 +52,7 @@ int main()
     scheduler.RegisterSystem(
         [](auto delta, auto catalogue)
         {
-            ComponentView<TransformComponent> transforms = catalogue.GetComponentView<TransformComponent>();
+            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
 
             for (auto [entity, transform] : transforms)
             {
@@ -63,23 +62,6 @@ int main()
                 transforms.PushComponentUpdateInstruction(entity, newComponent);
             }
         });
-
-    /*
-    std::random_device rd;                               // obtain a random number from hardware
-    std::mt19937 gen(rd());                              // seed the generator
-    std::uniform_int_distribution<> distr(-1000, +1000); // define the range
-
-    float x = 0;
-    float y = 0;
-    for (int i = 0; i < 1000; ++i)
-    {
-        EntityId entityToShift = renderingSystem->CreateSpriteEntityOutsideOfSystem(
-            textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
-        buffer.PushComponentUpdateInstruction(0, entityToShift,
-                                              TransformComponent{NovelRT::Maths::GeoVector3F(distr(gen), distr(gen), 0),
-                                                                 NovelRT::Maths::GeoVector2F::zero(), 0.0f});
-    }
-     */
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
