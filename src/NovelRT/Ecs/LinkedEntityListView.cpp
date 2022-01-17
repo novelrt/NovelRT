@@ -101,7 +101,7 @@ namespace NovelRT::Ecs
             {
                 _changes.Insert(existingNextNode, finalDiffInstructionForNext);
 
-                if (_newBeginPostDiff.has_value() && existingNextNode == _newBeginPostDiff.value() || _begin == existingNextNode)
+                if ((_newBeginPostDiff.has_value() && existingNextNode == _newBeginPostDiff.value()) || _begin == existingNextNode)
                 {
                     _newTailPostDiff = newNode;
                 }
@@ -206,7 +206,7 @@ namespace NovelRT::Ecs
             {
                 _changes.Insert(existingPreviousNode, finalDiffInstructionForPrevious);
 
-                if (_newTailPostDiff.has_value() && existingPreviousNode == _newTailPostDiff.value() || _tail == existingPreviousNode)
+                if ((_newTailPostDiff.has_value() && existingPreviousNode == _newTailPostDiff.value()) || _tail == existingPreviousNode)
                 {
                     _newTailPostDiff = newNode;
                 }
@@ -244,7 +244,7 @@ namespace NovelRT::Ecs
     }
 
     LinkedEntityListView::LinkedEntityListView(EntityId node, Catalogue& catalogue) noexcept
-        : _begin(node), _catalogue(catalogue), _tail(_end), _hasBeenCommitted(false), _changes{}
+        : _begin(node), _tail(_end), _hasBeenCommitted(false), _changes{}, _catalogue(catalogue)
     {
         if (_begin == std::numeric_limits<EntityId>::max())
         {
