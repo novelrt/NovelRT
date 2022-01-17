@@ -19,13 +19,13 @@ namespace NovelRT::Experimental::Graphics
     }
 
     GraphicsResourceManager::GraphicsResourceManager(const GraphicsResourceManager& other)
-        : _stagingBuffer(nullptr), _graphicsDevice(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
+        : _stagingBuffer(nullptr), _vertexBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
     {
         *this = other;
     }
 
     GraphicsResourceManager::GraphicsResourceManager(GraphicsResourceManager&& other) noexcept
-        : _stagingBuffer(nullptr), _graphicsDevice(nullptr), _stagingBufferSize(0), _vertexBuffers{}, _textures{}
+        : _stagingBuffer(nullptr), _vertexBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
     {
         *this = std::move(other);
     }
