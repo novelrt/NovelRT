@@ -79,7 +79,11 @@ namespace NovelRT::Experimental::Graphics
         std::shared_ptr<GraphicsBuffer> vertexBuffer = GetOrCreateGraphicsBufferForAllocationSize(sizeToStage);
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
+#ifdef WIN32
         memcpy_s(writeArea, sizeToStage, data, sizeToStage);
+#else
+        memcpy(writeArea, data, sizeToStage);
+#endif
         stagingBuffer->UnmapAndWrite(vertexRegion);
         currentContext->Copy(vertexBuffer, stagingBuffer);
 
@@ -184,7 +188,13 @@ namespace NovelRT::Experimental::Graphics
 
         auto texture2dRegion = texture2d->Allocate(texture2d->GetSize(), 4);
         auto pTextureData = stagingBuffer->Map<uint8_t>(texture2dRegion);
+
+#ifdef WIN32
         memcpy_s(pTextureData, metadata.data.size(), metadata.data.data(), metadata.data.size());
+#else
+        memcpy(pTextureData, metadata.data.data(), metadata.data.size());
+#endif
+
         stagingBuffer->UnmapAndWrite(texture2dRegion);
 
         currentContext->Copy(texture2d, stagingBuffer);
@@ -240,7 +250,13 @@ namespace NovelRT::Experimental::Graphics
         auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
         auto allocation = bufferPtr->Allocate(size, alignment);
         uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
+
+#ifdef WIN32
         memcpy_s(destination, size, data, size);
+#else
+        memcpy(destination, data, size);
+#endif
+
         bufferPtr->UnmapAndWrite(allocation);
         return allocation;
     }
@@ -269,7 +285,13 @@ namespace NovelRT::Experimental::Graphics
         }
 
         uint8_t* destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
+
+#ifdef WIN32
         memcpy_s(destination, size, data, size);
+#else
+        memcpy(destination, data, size);
+#endif
+
         bufferPtr->UnmapAndWrite(targetMemoryResource);
     }
 
