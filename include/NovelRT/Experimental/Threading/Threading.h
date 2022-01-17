@@ -13,6 +13,7 @@
 #include <oneapi/tbb/mutex.h>
 #include <optional>
 #include <memory>
+#include <mutex>
 
 /**
  * @brief The experimental Threading API.
