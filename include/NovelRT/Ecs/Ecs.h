@@ -58,9 +58,7 @@ namespace NovelRT::Ecs
     class UnsafeComponentView;
     struct TransformComponent;
     struct EntityGraphComponent;
-    class EntityObject;
     class LinkedEntityListView;
-    class EntityObject;
     class EntityGraphView;
 }
 
@@ -85,7 +83,6 @@ namespace NovelRT::Ecs
 #include "Audio/Ecs.Audio.h"
 #include "Configurator.h"
 #include "LinkedEntityListView.h"
-#include "EntityObject.h"
 #include "EntityGraphView.h"
 
 // clang-format on

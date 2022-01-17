@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include "NovelRT/Ecs/LinkedEntityListView.h"
 
 namespace NovelRT::Ecs
 {
