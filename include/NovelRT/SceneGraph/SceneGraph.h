@@ -7,6 +7,7 @@
 // dependencies
 #include "../Maths/Maths.h"
 #include <array>
+#include <functional>
 #include <memory>
 #include <queue>
 #include <set>
