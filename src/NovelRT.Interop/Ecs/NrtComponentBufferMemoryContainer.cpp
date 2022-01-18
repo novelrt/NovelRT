@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 #include <vector>
 
@@ -51,12 +52,12 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (componentData == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         try
@@ -67,7 +68,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+            return Nrt_getArgumentOutOfRangeErrorInternal();
         }
         catch (const DuplicateKeyException&)
         {
@@ -82,12 +83,12 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputResult == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         try
@@ -150,7 +151,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer*>(container);
@@ -169,7 +170,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<ComponentBufferMemoryContainer::ImmutableDataView*>(view);

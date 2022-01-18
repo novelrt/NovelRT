@@ -34,8 +34,7 @@ extern "C"
     {
         if (camera == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -55,8 +54,7 @@ extern "C"
     {
         if (camera == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -85,8 +83,7 @@ extern "C"
     {
         if (camera == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -116,8 +113,7 @@ extern "C"
     {
         if (camera == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Camera* cameraPtr = reinterpret_cast<Camera*>(camera);
@@ -133,8 +129,7 @@ extern "C"
             return NRT_SUCCESS;
         }
 
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+        return Nrt_getAlreadyDeletedOrRemovedErrorInternal();
     }
 
 #ifdef __cplusplus

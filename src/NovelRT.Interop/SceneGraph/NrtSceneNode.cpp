@@ -41,14 +41,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet =
@@ -62,14 +60,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         std::set<std::shared_ptr<SceneGraph::SceneNode>>* nodeSet =
@@ -106,14 +102,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -129,8 +123,7 @@ extern "C"
     {
         if (node == nullptr || action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -149,14 +142,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -173,14 +164,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
@@ -204,16 +193,14 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node)->shared_from_this();
         if (std::find(_sceneNodeCollection.begin(), _sceneNodeCollection.end(), nodePointer) ==
             _sceneNodeCollection.end())
         {
-            Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-            return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+            return Nrt_getAlreadyDeletedOrRemovedErrorInternal();
         }
 
         _sceneNodeCollection.remove(nodePointer);
@@ -224,8 +211,7 @@ extern "C"
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);
@@ -243,14 +229,12 @@ extern "C"
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputSceneNode == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto cNodeSet = reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet);

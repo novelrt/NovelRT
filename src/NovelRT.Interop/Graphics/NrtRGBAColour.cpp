@@ -31,8 +31,7 @@ extern "C"
     {
         if (colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
@@ -51,8 +50,7 @@ extern "C"
     {
         if (colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
@@ -71,8 +69,7 @@ extern "C"
     {
         if (colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
@@ -91,8 +88,7 @@ extern "C"
     {
         if (colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);
@@ -129,8 +125,7 @@ extern "C"
     {
         if (colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RGBAColour* colourConfigPtr = reinterpret_cast<RGBAColour*>(colourConfig);

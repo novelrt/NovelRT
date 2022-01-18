@@ -17,8 +17,7 @@ extern "C"
     {
         if (runner == nullptr || rect == nullptr || outputAnimator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         Animation::SpriteAnimator* animator = new Animation::SpriteAnimator(
@@ -31,8 +30,7 @@ extern "C"
     {
         if (animator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -44,8 +42,7 @@ extern "C"
     {
         if (animator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -57,8 +54,7 @@ extern "C"
     {
         if (animator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);
@@ -77,14 +73,12 @@ extern "C"
     {
         if (animator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (state == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         Animation::SpriteAnimator* cppAnimator = reinterpret_cast<Animation::SpriteAnimator*>(animator);

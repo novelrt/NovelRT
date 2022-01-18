@@ -30,16 +30,14 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
 
         if (windowTitle == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         servicePtr->initialiseWindow(displayNumber, windowTitle, static_cast<Windowing::WindowMode>(windowMode),
@@ -51,8 +49,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
@@ -72,16 +69,14 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);
 
         if (value == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         servicePtr->setWindowTitle(value);
@@ -92,8 +87,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto servicePtr = reinterpret_cast<Windowing::WindowingService*>(service);

@@ -32,8 +32,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -46,8 +45,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -60,14 +58,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -80,14 +76,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -100,14 +94,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -120,14 +112,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -140,8 +130,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -156,14 +145,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (exceptionMessage == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
@@ -177,14 +164,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (exceptionMessage == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);

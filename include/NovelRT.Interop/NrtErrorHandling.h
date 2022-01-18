@@ -29,6 +29,20 @@ extern "C"
     void Nrt_setErrMsgIsOutOfMemoryInternal();
     void Nrt_setErrMsgCustomInternal(const char* message);
 
+    NrtResult Nrt_getNullArgumentErrorInternal();
+    NrtResult Nrt_getNullInstanceErrorInternal();
+    NrtResult Nrt_getNaNErrorInternal();
+    NrtResult Nrt_getDivideByZeroErrorInternal();
+    NrtResult Nrt_getAlreadyDeletedOrRemovedErrorInternal();
+    NrtResult Nrt_getNotSupportedErrorInternal();
+    NrtResult Nrt_getInitialisationFailureErrorInternal();
+    NrtResult Nrt_getFunctionNotFoundErrorInternal();
+    NrtResult Nrt_getNotInitialisedErrorInternal();
+    NrtResult Nrt_getArgumentOutOfRangeErrorInternal();
+    NrtResult Nrt_getInvalidOperationErrorInternal();
+    NrtResult Nrt_getCharacterNotFoundErrorInternal();
+    NrtResult Nrt_getOutOfMemoryErrorInternal();
+
 #ifdef __cplusplus
 }
 #endif

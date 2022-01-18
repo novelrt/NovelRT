@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <vector>
 
 using namespace NovelRT::Ecs;
@@ -26,12 +27,12 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (instructionData == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         try
@@ -46,11 +47,11 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
-            return NRT_FAILURE_OUT_OF_MEMORY;
+            return Nrt_getOutOfMemoryErrorInternal();
         }
         catch (const std::out_of_range&)
         {
-            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+            return Nrt_getArgumentOutOfRangeErrorInternal();
         }
     }
 
@@ -58,7 +59,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         try
@@ -72,11 +73,11 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
-            return NRT_FAILURE_OUT_OF_MEMORY;
+            return Nrt_getOutOfMemoryErrorInternal();
         }
         catch (const std::out_of_range&)
         {
-            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+            return Nrt_getArgumentOutOfRangeErrorInternal();
         }
     }
 
@@ -87,12 +88,12 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputResult == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         try
@@ -149,7 +150,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<UnsafeComponentView*>(componentView);

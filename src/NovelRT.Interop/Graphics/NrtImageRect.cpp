@@ -27,8 +27,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -47,8 +46,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -72,8 +70,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -94,8 +91,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -109,8 +105,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -125,8 +120,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -139,8 +133,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -155,8 +148,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         ImageRect* imageRectPtr = reinterpret_cast<ImageRect*>(rect);
@@ -169,8 +161,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputRenderObject == nullptr)
@@ -187,8 +178,7 @@ extern "C"
     {
         if (rect == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<ImageRect*>(rect);

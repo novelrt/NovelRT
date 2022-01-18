@@ -21,8 +21,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -40,8 +39,7 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
     }
 
@@ -51,8 +49,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -64,8 +61,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         *output = reinterpret_cast<NrtAudioServiceIteratorHandle&>(out);
@@ -76,8 +72,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -88,8 +83,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -102,8 +96,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -114,8 +107,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -125,8 +117,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -137,8 +128,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -150,8 +140,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -162,8 +151,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -173,8 +161,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -185,8 +172,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -196,8 +182,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -208,8 +193,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -219,8 +203,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -231,8 +214,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -242,8 +224,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -256,8 +237,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -268,8 +248,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -279,8 +258,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -292,8 +270,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -304,8 +281,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -315,8 +291,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -328,8 +303,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -341,8 +315,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -354,8 +327,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -367,8 +339,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);
@@ -380,8 +351,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto serv = reinterpret_cast<Audio::AudioService*>(service);

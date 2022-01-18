@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -67,7 +68,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         try
@@ -77,15 +78,15 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
-            return NRT_FAILURE_OUT_OF_MEMORY;
+            return Nrt_getOutOfMemoryErrorInternal();
         }
         catch (const std::out_of_range&)
         {
-            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+            return Nrt_getArgumentOutOfRangeErrorInternal();
         }
         catch (const CharacterNotFoundException&)
         {
-            return NRT_FAILURE_CHARACTER_NOT_FOUND;
+            return Nrt_getCharacterNotFoundErrorInternal();
         }
         catch (const CompilationErrorException&)
         {
@@ -101,15 +102,15 @@ extern "C"
         }
         catch (const FunctionNotFoundException&)
         {
-            return NRT_FAILURE_FUNCTION_NOT_FOUND;
+            return Nrt_getFunctionNotFoundErrorInternal();
         }
         catch (const InitialisationFailureException&)
         {
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
         catch (const InvalidOperationException&)
         {
-            return NRT_FAILURE_INVALID_OPERATION;
+            return Nrt_getInvalidOperationErrorInternal();
         }
         catch (const KeyNotFoundException&)
         {
@@ -117,19 +118,19 @@ extern "C"
         }
         catch (const NotInitialisedException&)
         {
-            return NRT_FAILURE_NOT_INITIALISED;
+            return Nrt_getNotInitialisedErrorInternal();
         }
         catch (const NotSupportedException&)
         {
-            return NRT_FAILURE_NOT_SUPPORTED;
+            return Nrt_getNotSupportedErrorInternal();
         }
         catch (const NullPointerException&)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
         catch (const OutOfMemoryException&)
         {
-            return NRT_FAILURE_OUT_OF_MEMORY;
+            return Nrt_getOutOfMemoryErrorInternal();
         }
         catch (const RuntimeNotFoundException&)
         {
@@ -145,7 +146,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto schedulerPtr = reinterpret_cast<SystemScheduler*>(systemScheduler);
@@ -158,7 +159,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<SystemScheduler*>(systemScheduler);

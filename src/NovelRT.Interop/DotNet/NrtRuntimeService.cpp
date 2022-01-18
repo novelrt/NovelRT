@@ -25,8 +25,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -38,8 +37,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -50,13 +48,11 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
         catch (const Exceptions::FunctionNotFoundException)
         {
-            Nrt_setErrMsgIsFunctionNotFoundInternal();
-            return NRT_FAILURE_FUNCTION_NOT_FOUND;
+            return Nrt_getFunctionNotFoundErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -66,8 +62,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -79,8 +74,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -91,13 +85,11 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
         catch (const Exceptions::FunctionNotFoundException)
         {
-            Nrt_setErrMsgIsFunctionNotFoundInternal();
-            return NRT_FAILURE_FUNCTION_NOT_FOUND;
+            return Nrt_getFunctionNotFoundErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -107,14 +99,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (str == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -125,13 +115,11 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
         catch (const Exceptions::FunctionNotFoundException)
         {
-            Nrt_setErrMsgIsFunctionNotFoundInternal();
-            return NRT_FAILURE_FUNCTION_NOT_FOUND;
+            return Nrt_getFunctionNotFoundErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -141,14 +129,12 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputInkService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRT::DotNet::RuntimeService* cService = reinterpret_cast<NovelRT::DotNet::RuntimeService*>(service);
@@ -160,13 +146,11 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
         catch (const Exceptions::FunctionNotFoundException)
         {
-            Nrt_setErrMsgIsFunctionNotFoundInternal();
-            return NRT_FAILURE_FUNCTION_NOT_FOUND;
+            return Nrt_getFunctionNotFoundErrorInternal();
         }
 
         _inkServiceCollection.push_back(inkServicePtr);

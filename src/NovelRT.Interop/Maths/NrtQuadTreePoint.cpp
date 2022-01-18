@@ -40,16 +40,14 @@ extern "C"
     {
         if (point == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto ptr = reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this();
 
         if (std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end())
         { // TODO: This may prove to be a bottleneck later
-            Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-            return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+            return Nrt_getAlreadyDeletedOrRemovedErrorInternal();
         }
 
         _pointCollection.remove(reinterpret_cast<Maths::QuadTreePoint*>(point)->shared_from_this());

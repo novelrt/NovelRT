@@ -18,8 +18,7 @@ extern "C"
     {
         if (targetTexture == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         Texture* texturePtr = reinterpret_cast<Texture*>(targetTexture);
@@ -29,9 +28,8 @@ extern "C"
             texturePtr->loadPngAsTexture(std::string(file));
         }
         catch (const Exceptions::InvalidOperationException)
-        { // todo: handle error message
-            Nrt_setErrMsgIsInvalidOperationInternal();
-            return NRT_FAILURE_INVALID_OPERATION;
+        {
+            return Nrt_getInvalidOperationErrorInternal();
         }
 
         return NRT_SUCCESS;

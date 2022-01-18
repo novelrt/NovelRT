@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtCatalogue.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::Ecs;
 
@@ -23,12 +24,12 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputResult == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto returnPtr = new UnsafeComponentView(0, nullptr);
@@ -41,7 +42,7 @@ extern "C"
         catch (const std::out_of_range&)
         {
             delete returnPtr;
-            return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+            return Nrt_getArgumentOutOfRangeErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -66,7 +67,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         reinterpret_cast<Catalogue*>(catalogue)->DeleteEntity(entity);
@@ -78,7 +79,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<Catalogue*>(catalogue);

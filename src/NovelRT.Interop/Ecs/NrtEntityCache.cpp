@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEntityCache.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::Ecs;
 
@@ -33,7 +34,7 @@ extern "C"
     {
         if (entityCache == nullptr)
         {
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         delete reinterpret_cast<EntityCache*>(entityCache);

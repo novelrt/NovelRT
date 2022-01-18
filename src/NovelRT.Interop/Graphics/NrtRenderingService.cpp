@@ -28,8 +28,7 @@ extern "C"
     {
         if (windowingService == nullptr || outputRenderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         WindowingService* windowingServicePtr = reinterpret_cast<WindowingService*>(windowingService);
@@ -45,8 +44,7 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -57,8 +55,7 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
-            return NRT_FAILURE_INITIALISATION_FAILURE;
+            return Nrt_getInitialisationFailureErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -68,8 +65,7 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -87,14 +83,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputImageRect == nullptr || filePath == nullptr || colourTint == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -115,14 +109,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputImageRect == nullptr || colourTint == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -142,14 +134,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputBasicFillRect == nullptr || colourConfig == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -171,14 +161,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputTextRect == nullptr || colourConfig == nullptr || fontFilePath == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -196,14 +184,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputCamera == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -216,8 +202,7 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -230,8 +215,7 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -245,14 +229,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (colour == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -266,14 +248,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputTexture == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -289,14 +269,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputTexture == nullptr || fileTarget == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -314,14 +292,12 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputFontSet == nullptr || fileTarget == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -336,8 +312,7 @@ extern "C"
     {
         if (renderingService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         RenderingService* renderingServicePtr = reinterpret_cast<RenderingService*>(renderingService);
@@ -354,8 +329,7 @@ extern "C"
             return NRT_SUCCESS;
         }
 
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+        return Nrt_getAlreadyDeletedOrRemovedErrorInternal();
     }
 
 #ifdef __cplusplus

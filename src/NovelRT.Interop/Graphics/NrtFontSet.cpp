@@ -19,8 +19,7 @@ extern "C"
     {
         if (fontSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -31,8 +30,7 @@ extern "C"
         }
         catch (const Exceptions::InvalidOperationException)
         {
-            Nrt_setErrMsgIsInvalidOperationInternal();
-            return NRT_FAILURE_INVALID_OPERATION;
+            return Nrt_getInvalidOperationErrorInternal();
         }
 
         return NRT_SUCCESS;
@@ -42,8 +40,7 @@ extern "C"
     {
         if (fontSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);
@@ -56,13 +53,12 @@ extern "C"
     {
         if (fontSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputFontSize == nullptr)
         {
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         FontSet* fontSetPtr = reinterpret_cast<FontSet*>(fontSet);

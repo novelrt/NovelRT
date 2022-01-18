@@ -42,8 +42,7 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -55,8 +54,7 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -70,14 +68,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -86,8 +82,7 @@ extern "C"
         auto ptr = _interactionCollection.back().get();
         if (ptr == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
         *outputService = reinterpret_cast<NrtInteractionServiceHandle>(ptr);
 
@@ -98,14 +93,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -114,8 +107,7 @@ extern "C"
         auto ptr = _windowingCollection.back().get();
         if (ptr == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
         *outputService = reinterpret_cast<NrtWindowingServiceHandle>(ptr);
 
@@ -127,14 +119,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -143,8 +133,7 @@ extern "C"
         auto ptr = _runtimeCollection.back().get();
         if (ptr == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
         *outputService = reinterpret_cast<NrtRuntimeServiceHandle>(ptr);
 
@@ -156,14 +145,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -172,8 +159,7 @@ extern "C"
         auto ptr = _rendererCollection.back().get();
         if (ptr == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
         *outputService = reinterpret_cast<NrtRenderingServiceHandle>(ptr);
 
@@ -184,14 +170,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -200,8 +184,7 @@ extern "C"
         auto ptr = _debugServiceCollection.back().get();
         if (ptr == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
         *outputService = reinterpret_cast<NrtDebugServiceHandle>(ptr);
 
@@ -217,14 +200,12 @@ extern "C"
 
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (func == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -244,8 +225,7 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -264,14 +244,12 @@ extern "C"
 
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (func == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -290,8 +268,7 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -306,14 +283,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputEvent == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);
@@ -326,14 +301,12 @@ extern "C"
     {
         if (runner == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputEvent == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         NovelRunner* cRunner = reinterpret_cast<NovelRunner*>(runner);

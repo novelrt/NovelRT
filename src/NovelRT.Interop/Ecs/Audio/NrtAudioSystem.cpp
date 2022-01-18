@@ -21,8 +21,7 @@ extern "C"
     {
         if (system == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::Audio::AudioSystem*>(system);
@@ -34,8 +33,7 @@ extern "C"
     {
         if (system == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);
@@ -51,8 +49,7 @@ extern "C"
 
         if (context == nullptr || catalogue == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::Audio::AudioSystem*>(context);
@@ -69,8 +66,7 @@ extern "C"
     {
         if (system == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::Audio::AudioSystem*>(system);
@@ -85,8 +81,7 @@ extern "C"
     {
         if (system == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);
@@ -103,8 +98,7 @@ extern "C"
     {
         if (system == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);

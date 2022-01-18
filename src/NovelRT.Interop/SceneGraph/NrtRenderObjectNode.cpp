@@ -20,8 +20,7 @@ extern "C"
     {
         if (object == nullptr || outputNode == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto ptr = reinterpret_cast<Graphics::RenderObject*>(object);
@@ -35,14 +34,12 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputObject == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         SceneGraph::RenderObjectNode* cppNode = reinterpret_cast<SceneGraph::RenderObjectNode*>(node);
@@ -55,8 +52,7 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto cppNode = reinterpret_cast<SceneGraph::RenderObjectNode*>(node)->getRenderObject();
@@ -69,8 +65,7 @@ extern "C"
             }
         }
 
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+        return Nrt_getAlreadyDeletedOrRemovedErrorInternal();
     }
 
 #ifdef __cplusplus

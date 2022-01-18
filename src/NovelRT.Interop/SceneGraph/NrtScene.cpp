@@ -21,14 +21,12 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
@@ -58,8 +56,7 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+            return Nrt_getNullInstanceErrorInternal();
         }
 
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);

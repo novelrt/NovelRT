@@ -130,6 +130,84 @@ extern "C"
         customMessageSet = true;
     }
 
+    NrtResult Nrt_getNullArgumentErrorInternal()
+    {
+        Nrt_setErrMsgIsNullptrInternal();
+        return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+    }
+
+    NrtResult Nrt_getNullInstanceErrorInternal()
+    {
+        Nrt_setErrMsgIsNullptrInternal();
+        return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+    }
+
+    NrtResult Nrt_getNaNErrorInternal()
+    {
+        Nrt_setErrMsgIsNaNInternal();
+        return NRT_FAILURE_NOT_A_NUMBER;
+    }
+
+    NrtResult Nrt_getDivideByZeroErrorInternal()
+    {
+        Nrt_setErrMsgIsDivideByZeroInternal();
+        return NRT_FAILURE_DIVIDE_BY_ZERO;
+    }
+
+    NrtResult Nrt_getAlreadyDeletedOrRemovedErrorInternal()
+    {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+    }
+
+    NrtResult Nrt_getNotSupportedErrorInternal()
+    {
+        Nrt_setErrMsgIsNotSupportedInternal();
+        return NRT_FAILURE_NOT_SUPPORTED;
+    }
+
+    NrtResult Nrt_getInitialisationFailureErrorInternal()
+    {
+        Nrt_setErrMsgIsInitialisationFailureInternal();
+        return NRT_FAILURE_INITIALISATION_FAILURE;
+    }
+
+    NrtResult Nrt_getFunctionNotFoundErrorInternal()
+    {
+        Nrt_setErrMsgIsFunctionNotFoundInternal();
+        return NRT_FAILURE_FUNCTION_NOT_FOUND;
+    }
+
+    NrtResult Nrt_getNotInitialisedErrorInternal()
+    {
+        Nrt_setErrMsgIsNotInitialisedInternal();
+        return NRT_FAILURE_NOT_INITIALISED;
+    }
+
+    NrtResult Nrt_getArgumentOutOfRangeErrorInternal()
+    {
+        Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+        return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
+    }
+
+    NrtResult Nrt_getInvalidOperationErrorInternal()
+    {
+        Nrt_setErrMsgIsInvalidOperationInternal();
+        return NRT_FAILURE_INVALID_OPERATION;
+    }
+
+    NrtResult Nrt_getCharacterNotFoundErrorInternal()
+    {
+        Nrt_setErrMsgIsCharacterNotFoundInternal();
+        return NRT_FAILURE_CHARACTER_NOT_FOUND;
+    }
+
+    NrtResult Nrt_getOutOfMemoryErrorInternal()
+    {
+        Nrt_setErrMsgIsOutOfMemoryInternal();
+        return /*regexo no*/ NRT_FAILURE_OUT_OF_MEMORY;
+    }
+
 #ifdef __cplusplus
 }
 #endif

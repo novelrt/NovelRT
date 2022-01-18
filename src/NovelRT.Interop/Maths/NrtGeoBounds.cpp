@@ -67,8 +67,7 @@ extern "C"
     {
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
-            return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+            return Nrt_getNullArgumentErrorInternal();
         }
 
         Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&first);
@@ -89,8 +88,7 @@ extern "C"
         }
         catch (const Exceptions::NotSupportedException)
         {
-            Nrt_setErrMsgIsNotSupportedInternal();
-            return NRT_FAILURE_NOT_SUPPORTED;
+            return Nrt_getNotSupportedErrorInternal();
         }
     }
 
