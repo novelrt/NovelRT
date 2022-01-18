@@ -108,7 +108,7 @@ bool VideoProvider::Initialise()
         }
 
         _scalerContext = sws_getContext(_frame->width, _frame->height, _codecContext->pix_fmt,
-                                        _frame->width, _frame->height, AV_PIX_FMT_RGBA,
+                                        1280, 720, AV_PIX_FMT_RGBA,
                                         SWS_FAST_BILINEAR, NULL, NULL, NULL);
 
         if (!_scalerContext)
