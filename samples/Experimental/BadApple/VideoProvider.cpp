@@ -126,6 +126,7 @@ bool VideoProvider::Initialise()
         auto vec = std::vector<uint8_t>(_frame->width*_frame->height*4);
         memcpy(vec.data(), data, _frame->width * _frame->height * 4);
         _frames.insert(_frames.end(), vec);
+        delete[] data;
 
         av_packet_unref(_packet);
     }

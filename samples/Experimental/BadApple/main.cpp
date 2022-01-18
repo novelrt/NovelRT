@@ -48,7 +48,7 @@ int main()
 
 
 
-    VideoProvider video = VideoProvider("C:\\users\\krjoh\\downloads\\badapple.mp4", true);
+    VideoProvider video = VideoProvider("C:\\users\\matth\\downloads\\badapple.mp4", true);
     if(!video.Initialise())
     {
         std::cerr << "Could not initialize video provider!" << std::endl;
@@ -186,6 +186,7 @@ int main()
             vec = video.RetrieveNextFrame();
             memcpy(pTextureData, vec->data(), vec->size());
             textureStagingBuffer->UnmapAndWrite(texture2DRegion);
+            gfxContext->Copy(texture2D, textureStagingBuffer);
 
             context->BeginDrawing(NovelRT::Graphics::RGBAColour(75, 75, 75, 255));
             auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
@@ -193,6 +194,7 @@ int main()
             context->Draw(primitive);
             context->EndDrawing();
             context->EndFrame();
+            gfxDevice->Signal(gfxContext->GetFence());
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
         }
