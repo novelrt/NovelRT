@@ -3,13 +3,8 @@
 
 #include <NovelRT.h>
 #include <memory>
+#include "VideoProvider.h"
 
-extern "C"
-{
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libswscale/swscale.h>
-}
 
 using namespace NovelRT::Experimental::Windowing::Glfw;
 using namespace NovelRT::Experimental::Windowing;
@@ -44,148 +39,28 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-bool LoadFrame(std::vector<uint8_t>* textureData, uint32_t* tWidth, uint32_t* tHeight)
-{
-    AVFormatContext* formatContext = avformat_alloc_context();
-    if(!formatContext)
-    {
-        logging.logErrorLine("Could not allocate memory for AV Format Context!");
-        return false;
-    }
-
-    if(avformat_open_input(&formatContext, "C:\\Users\\krjoh\\Downloads\\gamedev.mp4", NULL, NULL) != 0)
-    //if(avformat_open_input(&formatContext, "C:\\Users\\krjoh\\Downloads\\gamedev.mp4", NULL, NULL) != 0)
-    {
-        logging.logErrorLine("Could not open the provided media file!");
-        return false;
-    }
-
-    //Find the first valid video stream
-    int videoStream = -1;
-    AVCodecParameters* codecParams;
-    AVCodec* codec;
-
-    for (int i = 0; i < formatContext->nb_streams; i++)
-    {
-        codecParams = formatContext->streams[i]->codecpar;
-        codec = avcodec_find_decoder(codecParams->codec_id);
-        if(!codec)
-            continue;
-        if (codecParams->codec_type == AVMEDIA_TYPE_VIDEO)
-        {
-            videoStream = i;
-            break;
-        }
-    }
-    if (videoStream == -1)
-    {
-        logging.logErrorLine("Could not find valid video stream!");
-        return false;
-    }
-
-    //Set up codec context
-    AVCodecContext* codecContext = avcodec_alloc_context3(codec);
-    if(!codecContext)
-    {
-        logging.logErrorLine("Could not create codec context!");
-        return false;
-    }
-    if (avcodec_parameters_to_context(codecContext, codecParams) < 0)
-    {
-        logging.logErrorLine("Could not initialise codec context!");
-        return false;
-    }
-    if (avcodec_open2(codecContext, codec, NULL) < 0)
-    {
-        logging.logErrorLine("Could not open codec!");
-        return false;
-    }
-
-    AVFrame* frame = av_frame_alloc();
-    if(!frame)
-    {
-        logging.logErrorLine("Could not create frame!");
-        return false;
-    }
-
-    AVPacket* packet = av_packet_alloc();
-    if(!packet)
-    {
-        logging.logErrorLine("Could not create packet!");
-        return false;
-    }
-
-    int response;
-    while (av_read_frame(formatContext, packet) >= 0)
-    {
-        //if packet is related to video stream
-        if(packet->stream_index != videoStream)
-        {
-            continue;
-        }
-        response = avcodec_send_packet(codecContext, packet);
-        if (response < 0)
-        {
-            logging.logErrorLine("Failed to decode packet!");
-            return false;
-        }
-
-        response = avcodec_receive_frame(codecContext, frame);
-        if(response == AVERROR(EAGAIN) || response == AVERROR_EOF)
-        {
-            continue;
-        }
-        else if (response < 0)
-        {
-            logging.logErrorLine("Failed to decode packet!");
-            return false;
-        }
-
-        av_packet_unref(packet);
-        break;
-    }
-
-    SwsContext* scalerContext = sws_getContext(frame->width, frame->height, codecContext->pix_fmt,
-                                               frame->width, frame->height, AV_PIX_FMT_RGBA,
-                                               SWS_FAST_BILINEAR, NULL, NULL, NULL);
-
-    if (!scalerContext)
-    {
-        logging.logErrorLine("Failed to init scaler!");
-        return false;
-    }
-
-    uint8_t* data = new uint8_t[frame->width * frame->height * 4];
-    uint8_t* destination[4] = { data, NULL, NULL, NULL};
-    int dataLineSize[4] = { frame->width * 4, 0, 0, 0 };
-
-    *tWidth = (uint32_t)frame->width;
-    *tHeight = (uint32_t)frame->height;
-
-    sws_scale(scalerContext, frame->data, frame->linesize, 0, frame->height, destination, dataLineSize);
-
-
-
-    memcpy(textureData->data(), data, frame->width * frame->height * 4);
-    avformat_close_input(&formatContext);
-    avformat_free_context(formatContext);
-    av_frame_free(&frame);
-    av_packet_free(&packet);
-    avcodec_free_context(&codecContext);
-    return true;
-}
+NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
-    //logging = LoggingService();
-    //logging.setLogLevel(LogLevel::Debug);
+
+
+    VideoProvider video = VideoProvider("C:\\users\\krjoh\\downloads\\badapple.mp4", true);
+    if(!video.Initialise())
+    {
+        std::cerr << "Could not initialize video provider!" << std::endl;
+        return -1;
+    }
+
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1280, 720));
+
+    NovelRT::Timing::StepTimer timer;
 
     auto vulkanProvider = std::make_shared<VulkanGraphicsProvider>();
 
@@ -282,12 +157,7 @@ int main()
     uint32_t textureWidth = 1280;
     uint32_t textureHeight = 720;
     uint32_t texturePixels = textureWidth * textureHeight;
-    //uint8_t* tex = new uint8_t[texturePixels*4];
-    std::vector<uint8_t> tex = std::vector<uint8_t>(texturePixels * 4);
-    LoadFrame(&tex, &textureWidth, &textureHeight);
-    //texturePixels = textureWidth * textureHeight;
-    //textureWidth = 256;
-    //textureHeight = 256;
+    auto vec = video.RetrieveNextFrame();
 
 
     auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
@@ -296,7 +166,7 @@ int main()
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
-    memcpy(pTextureData, tex.data(), tex.size());
+    memcpy(pTextureData, vec->data(), vec->size());
     textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{frameTransformRegion, primitiveTransformRegion, texture2DRegion };
@@ -306,13 +176,17 @@ int main()
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
 
-    while (!device->GetShouldClose())
-    {
-        device->ProcessAllMessages();
+    DummyUpdateStuff += [&](auto delta) {
         if (device->GetIsVisible())
         {
             auto context = gfxDevice->GetCurrentContext();
             context->BeginFrame();
+
+            pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+            vec = video.RetrieveNextFrame();
+            memcpy(pTextureData, vec->data(), vec->size());
+            textureStagingBuffer->UnmapAndWrite(texture2DRegion);
+
             context->BeginDrawing(NovelRT::Graphics::RGBAColour(75, 75, 75, 255));
             auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
                                                         inputResourceRegions);
@@ -322,6 +196,13 @@ int main()
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
         }
+    };
+
+
+    while (!device->GetShouldClose())
+    {
+        device->ProcessAllMessages();
+        timer.tick(DummyUpdateStuff);
     }
 
     return 0;

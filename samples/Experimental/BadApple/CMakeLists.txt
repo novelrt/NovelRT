@@ -1,6 +1,7 @@
 find_package(ffmpeg)
 
 set(SOURCES
+  VideoProvider.cpp
   main.cpp
 )
 
