@@ -57,13 +57,20 @@ namespace NovelRT::Experimental::Graphics
             GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind);
 
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> AllocateConstantBufferRegion(size_t size, size_t alignment = 256);
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadConstantBufferDataToNewRegion(void* data, size_t size, size_t alignment = 256);
-        void LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource, void* data, size_t size);
-        [[nodiscard]] uint8_t* MapConstantBufferRegionForWritingUntyped(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource);
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> AllocateConstantBufferRegion(size_t size,
+                                                                                          size_t alignment = 256);
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadConstantBufferDataToNewRegion(void* data,
+                                                                                               size_t size,
+                                                                                               size_t alignment = 256);
+        void LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
+                                                    void* data,
+                                                    size_t size);
+        [[nodiscard]] uint8_t* MapConstantBufferRegionForWritingUntyped(
+            GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource);
 
         template<typename TPointerType>
-        [[nodiscard]] TPointerType* MapConstantBufferRegionForWriting(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
+        [[nodiscard]] TPointerType* MapConstantBufferRegionForWriting(
+            GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
         {
             return reinterpret_cast<TPointerType*>(MapConstantBufferRegionForWritingUntyped(targetMemoryResource));
         }

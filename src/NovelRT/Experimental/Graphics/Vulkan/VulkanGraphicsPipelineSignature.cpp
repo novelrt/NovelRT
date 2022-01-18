@@ -251,7 +251,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(gsl::span<VkDescriptorSet> vulkanDescriptorSets)
     {
         vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
-                             _vulkanDescriptorPool.getActual(), static_cast<int32_t>(vulkanDescriptorSets.size()), vulkanDescriptorSets.data());
+                             _vulkanDescriptorPool.getActual(), static_cast<int32_t>(vulkanDescriptorSets.size()),
+                             vulkanDescriptorSets.data());
     }
 
     void VulkanGraphicsPipelineSignature::DestroyDescriptorSetLayout()

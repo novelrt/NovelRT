@@ -70,7 +70,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
             : VulkanGraphicsBuffer(std::move(device), kind, std::move(blockRegion), cpuAccess, vulkanBuffer),
               _metadata([&]() {
                   TMetadata metadata(GraphicsDeviceObject::GetDevice());
-                GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
+                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
                   std::shared_ptr<GraphicsMemoryBlock> block = blockRegionInternal.GetCollection();
 
                   size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();

@@ -13,7 +13,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
     class VulkanGraphicsContext final : public GraphicsContext
     {
     private:
-        std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>> _vulkanDescriptorSets;
+        std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>>
+            _vulkanDescriptorSets;
         std::shared_ptr<VulkanGraphicsFence> _fence;
         std::shared_ptr<VulkanGraphicsFence> _waitForExecuteCompletionFence;
 

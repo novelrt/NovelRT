@@ -29,11 +29,11 @@ namespace NovelRT::Ecs
         {
             target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true});
 
-            target.GetComponentCache().RegisterComponentType(
-                EntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+            target.GetComponentCache().RegisterComponentType(EntityGraphComponent{
+                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 
-            target.GetComponentCache().RegisterComponentType(
-                LinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+            target.GetComponentCache().RegisterComponentType(LinkedEntityListNodeComponent{
+                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
 
             target.GetComponentCache().RegisterComponentType(
                 TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN});
@@ -186,7 +186,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<> [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 

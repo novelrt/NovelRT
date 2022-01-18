@@ -33,12 +33,13 @@ namespace NovelRT::Ecs::Graphics
         inline bool operator==(const RenderComponent& other) const noexcept
         {
             return ((vertexDataId == other.vertexDataId) && (textureId == other.textureId) &&
-                   (pipelineId == other.pipelineId)) && (markedForDeletion == other.markedForDeletion);
+                    (pipelineId == other.pipelineId)) &&
+                   (markedForDeletion == other.markedForDeletion);
         }
 
         inline bool operator!=(const RenderComponent& other) const noexcept
         {
-             return !(*this == other);
+            return !(*this == other);
         }
     };
 

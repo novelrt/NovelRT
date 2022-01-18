@@ -7,13 +7,13 @@
 // Graphics dependencies
 #include "../../Graphics/RGBAColour.h"
 #include "../../Maths/Maths.h"
+#include "../../ResourceManagement/ResourceManagement.h"
+#include "../../SceneGraph/SceneGraph.h"
 #include "../../Utilities/Event.h"
-#include "../../Utilities/Misc.h"
 #include "../../Utilities/Lazy.h"
+#include "../../Utilities/Misc.h"
 #include "../EngineConfig.h"
 #include "../Threading/Threading.h"
-#include "../../SceneGraph/SceneGraph.h"
-#include "../../ResourceManagement/ResourceManagement.h"
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
@@ -42,7 +42,7 @@ namespace NovelRT::Experimental::Graphics
     class GraphicsResource;
     class GraphicsBuffer;
     class GraphicsTexture;
-    enum class GraphicsTextureAddressMode: uint32_t;
+    enum class GraphicsTextureAddressMode : uint32_t;
     class ShaderProgram;
     class GraphicsPipeline;
     enum class GraphicsPipelineBlendFactor : uint32_t;

@@ -474,10 +474,8 @@ namespace NovelRT::Ecs::Graphics
         Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texture,
         Catalogue& catalogue)
     {
-        auto [renderComponentView, transformComponentView,
-              entityGraphComponentView] =
-            catalogue.GetComponentViews<RenderComponent, TransformComponent,
-                                        EntityGraphComponent>();
+        auto [renderComponentView, transformComponentView, entityGraphComponentView] =
+            catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
 
         auto newRenderComponent =
             RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId};

@@ -12,8 +12,8 @@ namespace NovelRT::Ecs::Graphics
 {
     struct ConstantBufferInfo
     {
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuConstantBufferRegion = {};
-
+        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuConstantBufferRegion =
+            {};
     };
 }
 

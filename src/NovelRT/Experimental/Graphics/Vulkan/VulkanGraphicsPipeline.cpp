@@ -76,7 +76,7 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         pipelineColorBlendAttachmentState.srcAlphaBlendFactor = srcBlendFactor;
         pipelineColorBlendAttachmentState.dstColorBlendFactor = dstBlendFactor;
         pipelineColorBlendAttachmentState.srcAlphaBlendFactor = dstBlendFactor;
-        //pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
+        // pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
 
         VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo{};
         pipelineColorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;

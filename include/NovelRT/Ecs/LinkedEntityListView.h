@@ -28,9 +28,9 @@ namespace NovelRT::Ecs
                 : _currentEntityNode(currentEntityNode),
                   _currentComponentNode(
                       currentEntityNode != std::numeric_limits<EntityId>::max()
-                      ? catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
-                          currentEntityNode)
-                      : catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
+                          ? catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                                currentEntityNode)
+                          : catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
                   _catalogue(catalogue)
             {
             }
@@ -187,7 +187,9 @@ namespace NovelRT::Ecs
         void AddInsertBeforeIndexInstruction(size_t index, EntityId newNode);
         void AddInsertAfterIndexInstruction(size_t index, EntityId newNode);
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstruction(EntityId node, LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline bool TryGetComposedDiffInstruction(
+            EntityId node,
+            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_changes.ContainsKey(node))
             {
@@ -198,7 +200,8 @@ namespace NovelRT::Ecs
             return false;
         }
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtBeginning(LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtBeginning(
+            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_newBeginPostDiff.has_value())
             {
@@ -209,7 +212,8 @@ namespace NovelRT::Ecs
             return false;
         }
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtEnd(LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtEnd(
+            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_newTailPostDiff.has_value())
             {

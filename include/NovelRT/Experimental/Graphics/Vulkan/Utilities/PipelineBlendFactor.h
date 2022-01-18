@@ -72,7 +72,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan::Utilities
                 return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
                 break;
             default:
-                throw Exceptions::NotSupportedException("The specified blend factor is not supported on the default Vulkan pipeline.");
+                throw Exceptions::NotSupportedException(
+                    "The specified blend factor is not supported on the default Vulkan pipeline.");
         }
     }
 }

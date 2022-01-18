@@ -104,7 +104,7 @@ namespace NovelRT::Experimental::Graphics
             uint32_t width,
             uint32_t height)
         {
-            return CreateTexture( addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
+            return CreateTexture(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
                                  GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
         }
 

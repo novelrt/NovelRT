@@ -9,12 +9,10 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                                const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                                                int32_t contextCount)
         : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence(
-              [&]()
-              {
-                  return std::make_shared<VulkanGraphicsFence>(
-                      std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
-              }),
+          _presentCompletionFence([&]() {
+              return std::make_shared<VulkanGraphicsFence>(
+                  std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
+          }),
           _contextCount(contextCount),
           _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
           _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
@@ -92,9 +90,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -107,9 +105,9 @@ namespace NovelRT::Experimental::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
+                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
+            });
 
             if (result == extensionProperties.end())
             {
@@ -406,7 +404,8 @@ namespace NovelRT::Experimental::Graphics::Vulkan
         gsl::span<GraphicsPipelineResource> resources)
     {
         return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs, resources));
+            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs,
+            resources));
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()

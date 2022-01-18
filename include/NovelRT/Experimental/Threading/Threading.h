@@ -10,10 +10,10 @@
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
-#include <oneapi/tbb/mutex.h>
-#include <optional>
 #include <memory>
 #include <mutex>
+#include <oneapi/tbb/mutex.h>
+#include <optional>
 
 /**
  * @brief The experimental Threading API.
@@ -24,8 +24,8 @@ namespace NovelRT::Experimental::Threading
 }
 
 // Threading types.
-#include "VolatileState.h"
 #include "ConcurrentSharedPtr.h"
 #include "FutureResult.h"
+#include "VolatileState.h"
 
 #endif // !NOVELRT_EXPERIMENTAL_THREADING_H

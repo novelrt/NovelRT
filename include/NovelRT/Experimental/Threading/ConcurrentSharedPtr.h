@@ -29,7 +29,6 @@ namespace NovelRT::Experimental::Threading
 
         ConcurrentSharedPtr(std::nullptr_t) noexcept : _value(nullptr), _mutex(std::make_shared<tbb::mutex>())
         {
-
         }
 
         TValue* operator->()
@@ -82,15 +81,15 @@ namespace NovelRT::Experimental::Threading
             return *_value;
         }
 
-        [[nodiscard]] bool
-        operator!=(const ConcurrentSharedPtr<TValue>& other) const noexcept
+        [[nodiscard]] bool operator!=(const ConcurrentSharedPtr<TValue>& other) const noexcept
         {
             return !(*this == other);
         }
     };
 
     template<typename TValue>
-    [[nodiscard]] bool operator==(const ConcurrentSharedPtr<TValue>& lhs, const ConcurrentSharedPtr<TValue>& rhs) noexcept
+    [[nodiscard]] bool operator==(const ConcurrentSharedPtr<TValue>& lhs,
+                                  const ConcurrentSharedPtr<TValue>& rhs) noexcept
     {
         return (lhs._value == rhs._value) && (lhs._mutex == rhs._mutex);
     }

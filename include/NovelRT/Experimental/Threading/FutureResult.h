@@ -10,16 +10,15 @@
 
 namespace NovelRT::Experimental::Threading
 {
-    template<typename TResultType>
-    class FutureResult
+    template<typename TResultType> class FutureResult
     {
     private:
         ConcurrentSharedPtr<TResultType> _dataContainer;
         TResultType _nullState;
 
     public:
-        FutureResult(ConcurrentSharedPtr<TResultType> dataContainer, TResultType nullState) :
-        _dataContainer(std::move(dataContainer)), _nullState(nullState)
+        FutureResult(ConcurrentSharedPtr<TResultType> dataContainer, TResultType nullState)
+            : _dataContainer(std::move(dataContainer)), _nullState(nullState)
         {
             if (_dataContainer == nullptr)
             {

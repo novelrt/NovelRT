@@ -449,13 +449,14 @@ namespace NovelRT::Experimental::Graphics::Vulkan
                                  indexType);
 
             vkCmdDrawIndexed(vulkanCommandBuffer,
-                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), instanceCount, 0, 0, 0);
+                             static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), instanceCount, 0,
+                             0, 0);
         }
         else
         {
             vkCmdDraw(vulkanCommandBuffer,
-                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()), instanceCount, 0,
-                      0);
+                      static_cast<uint32_t>(vertexBufferRegion.GetSize() / primitive->GetVertexBufferStride()),
+                      instanceCount, 0, 0);
         }
     }
 

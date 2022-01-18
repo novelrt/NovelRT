@@ -8,8 +8,8 @@
 #include "../Maths/Maths.h"
 #include <array>
 #include <memory>
-#include <set>
 #include <queue>
+#include <set>
 #include <stack>
 
 /**

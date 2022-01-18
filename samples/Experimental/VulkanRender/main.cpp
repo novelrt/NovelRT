@@ -132,8 +132,8 @@ int main()
             auto context = gfxDevice->GetCurrentContext();
             context->BeginFrame();
             context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
-            auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex), dummyRegion, 0,
-                                                        inputResourceRegions);
+            auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
+                                                        dummyRegion, 0, inputResourceRegions);
             context->Draw(primitive);
             context->EndDrawing();
             context->EndFrame();

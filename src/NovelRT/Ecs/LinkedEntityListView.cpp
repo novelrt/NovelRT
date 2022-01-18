@@ -101,7 +101,8 @@ namespace NovelRT::Ecs
             {
                 _changes.Insert(existingNextNode, finalDiffInstructionForNext);
 
-                if ((_newBeginPostDiff.has_value() && existingNextNode == _newBeginPostDiff.value()) || _begin == existingNextNode)
+                if ((_newBeginPostDiff.has_value() && existingNextNode == _newBeginPostDiff.value()) ||
+                    _begin == existingNextNode)
                 {
                     _newTailPostDiff = newNode;
                 }
@@ -206,7 +207,8 @@ namespace NovelRT::Ecs
             {
                 _changes.Insert(existingPreviousNode, finalDiffInstructionForPrevious);
 
-                if ((_newTailPostDiff.has_value() && existingPreviousNode == _newTailPostDiff.value()) || _tail == existingPreviousNode)
+                if ((_newTailPostDiff.has_value() && existingPreviousNode == _newTailPostDiff.value()) ||
+                    _tail == existingPreviousNode)
                 {
                     _newTailPostDiff = newNode;
                 }
@@ -236,10 +238,10 @@ namespace NovelRT::Ecs
             }
         }
 
-        _changes.Insert(
-            newNode, LinkedEntityListNodeComponent{
-                true, hasPrevious ? existingPreviousNode : EntityId(std::numeric_limits<EntityId>::max()),
-                hasNext ? existingNextNode : EntityId(std::numeric_limits<EntityId>::max())});
+        _changes.Insert(newNode,
+                        LinkedEntityListNodeComponent{
+                            true, hasPrevious ? existingPreviousNode : EntityId(std::numeric_limits<EntityId>::max()),
+                            hasNext ? existingNextNode : EntityId(std::numeric_limits<EntityId>::max())});
         return existingPreviousNode;
     }
 
@@ -449,8 +451,8 @@ namespace NovelRT::Ecs
             }
 
             _newTailPostDiff = newNode;
-            _changes.Insert(
-                newNode, LinkedEntityListNodeComponent{true, finalPrevious, std::numeric_limits<EntityId>::max()});
+            _changes.Insert(newNode,
+                            LinkedEntityListNodeComponent{true, finalPrevious, std::numeric_limits<EntityId>::max()});
         }
     }
 
@@ -497,12 +499,12 @@ namespace NovelRT::Ecs
                 beginComponentDiff.previous = newNode;
                 _changes.Insert(_begin, beginComponentDiff);
                 finalNext = _begin;
-                //throw Exceptions::InvalidOperationException("I can't do that dave.");
+                // throw Exceptions::InvalidOperationException("I can't do that dave.");
             }
 
             _newBeginPostDiff = newNode;
-            _changes.Insert(
-                newNode, LinkedEntityListNodeComponent{true,  std::numeric_limits<EntityId>::max(), finalNext});
+            _changes.Insert(newNode,
+                            LinkedEntityListNodeComponent{true, std::numeric_limits<EntityId>::max(), finalNext});
         }
     }
 
@@ -516,8 +518,7 @@ namespace NovelRT::Ecs
             std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> previous;
             std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> next;
 
-            if (component.previous != std::numeric_limits<EntityId>::max() &&
-                _changes.ContainsKey(component.previous))
+            if (component.previous != std::numeric_limits<EntityId>::max() && _changes.ContainsKey(component.previous))
             {
                 previous = _changes[component.previous];
             }
@@ -596,8 +597,7 @@ namespace NovelRT::Ecs
             std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> previous;
             std::optional<std::reference_wrapper<LinkedEntityListNodeComponent>> next;
 
-            if (component.previous != std::numeric_limits<EntityId>::max() &&
-                _changes.ContainsKey(component.previous))
+            if (component.previous != std::numeric_limits<EntityId>::max() && _changes.ContainsKey(component.previous))
             {
                 previous = _changes[component.previous];
             }
