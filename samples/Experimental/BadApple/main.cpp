@@ -45,11 +45,12 @@ int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+    int videoWidth = 0;
+    int videoHeight = 0;
 
 
-
-    VideoProvider video = VideoProvider("C:\\users\\matth\\downloads\\badapple.mp4", true);
-    if(!video.Initialise())
+    VideoProvider video = VideoProvider("C:\\users\\krjoh\\downloads\\badapple2.mp4", true);
+    if(!video.Initialise(&videoWidth, &videoHeight))
     {
         std::cerr << "Could not initialize video provider!" << std::endl;
         return -1;
@@ -58,9 +59,9 @@ int main()
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
 
-    device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1280, 720));
+    device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1920, 1080));
 
-    NovelRT::Timing::StepTimer timer;
+    NovelRT::Timing::StepTimer timer = NovelRT::Timing::StepTimer(60);
 
     auto vulkanProvider = std::make_shared<VulkanGraphicsProvider>();
 
@@ -103,7 +104,7 @@ int main()
     // This is correct for row-major. :]
     auto frameTransform = viewMatrix * projectionMatrix;
     auto primitiveTransform = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
-    primitiveTransform.Scale(NovelRT::Maths::GeoVector2F(1280,720));
+    primitiveTransform.Scale(NovelRT::Maths::GeoVector2F(videoWidth,videoHeight));
 
     auto frameTransformRegion = graphicsResourceManager.LoadConstantBufferDataToNewRegion(
         &frameTransform, sizeof(NovelRT::Maths::GeoMatrix4x4F));
@@ -154,19 +155,17 @@ int main()
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     gfxContext->Copy(vertexBuffer, vertexStagingBuffer);
 
-    uint32_t textureWidth = 1280;
-    uint32_t textureHeight = 720;
+    uint32_t textureWidth = videoWidth;
+    uint32_t textureHeight = videoHeight;
     uint32_t texturePixels = textureWidth * textureHeight;
-    auto vec = video.RetrieveNextFrame();
-
 
     auto texture2D = gfxContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-        GraphicsTextureAddressMode::ClampToEdge, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None,
+        GraphicsTextureAddressMode::ClampToBorder, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None,
         GraphicsResourceAccess::Write, textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-    auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+    uint8_t* pTextureData = textureStagingBuffer->Map<uint8_t>(texture2DRegion);
 
-    memcpy(pTextureData, vec->data(), vec->size());
+    video.RetrieveNextFrame(&pTextureData);
     textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{frameTransformRegion, primitiveTransformRegion, texture2DRegion };
@@ -182,9 +181,8 @@ int main()
             auto context = gfxDevice->GetCurrentContext();
             context->BeginFrame();
 
-            pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
-            vec = video.RetrieveNextFrame();
-            memcpy(pTextureData, vec->data(), vec->size());
+            pTextureData = textureStagingBuffer->Map<uint8_t>(texture2DRegion);
+            video.RetrieveNextFrame(&pTextureData);
             textureStagingBuffer->UnmapAndWrite(texture2DRegion);
             gfxContext->Copy(texture2D, textureStagingBuffer);
 

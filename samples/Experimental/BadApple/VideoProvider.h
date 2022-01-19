@@ -35,8 +35,8 @@ private:
 
 public:
     VideoProvider(const char* url, bool debugModeEnabled);
-    bool Initialise();
-    std::vector<uint8_t>* RetrieveNextFrame();
+    bool Initialise(int* width, int* height);
+    void RetrieveNextFrame(uint8_t** buffer);
     ~VideoProvider();
 };
 

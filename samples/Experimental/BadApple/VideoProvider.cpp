@@ -13,7 +13,7 @@ VideoProvider::VideoProvider(const char* url, bool debugModeEnabled)
     _averageFps = 0;
 }
 
-bool VideoProvider::Initialise()
+bool VideoProvider::Initialise(int* width, int* height)
 {
     _frames = std::vector<std::vector<uint8_t>>();
     _formatContext = avformat_alloc_context();
@@ -39,6 +39,8 @@ bool VideoProvider::Initialise()
         if (_codecParams->codec_type == AVMEDIA_TYPE_VIDEO)
         {
             _videoStream = i;
+            *width = _codecParams->width;
+            *height = _codecParams->height;
             break;
         }
     }
@@ -81,68 +83,62 @@ bool VideoProvider::Initialise()
         return false;
     }
 
-    int response;
-    while (av_read_frame(_formatContext, _packet) >= 0)
-    {
-        //if _packet is related to video stream
-        if(_packet->stream_index != _videoStream)
-        {
-            continue;
-        }
-        response = avcodec_send_packet(_codecContext, _packet);
-        if (response < 0)
-        {
-            _logger.logErrorLine("Failed to decode packet!");
-            return false;
-        }
-
-        response = avcodec_receive_frame(_codecContext, _frame);
-        if(response == AVERROR(EAGAIN) || response == AVERROR_EOF)
-        {
-            continue;
-        }
-        else if (response < 0)
-        {
-            _logger.logErrorLine("Failed to decode frame!");
-            return false;
-        }
-
-        _scalerContext = sws_getContext(_frame->width, _frame->height, _codecContext->pix_fmt,
-                                        1280, 720, AV_PIX_FMT_RGBA,
-                                        SWS_FAST_BILINEAR, NULL, NULL, NULL);
-
-        if (!_scalerContext)
-        {
-            _logger.logErrorLine("Failed to init scaler!");
-            return false;
-        }
-
-        uint8_t* data = new uint8_t[_frame->width * _frame->height * 4];
-        uint8_t* destination[4] = { data, NULL, NULL, NULL};
-        int dataLineSize[4] = { _frame->width * 4, 0, 0, 0 };
-
-        sws_scale(_scalerContext, _frame->data, _frame->linesize, 0, _frame->height, destination, dataLineSize);
-
-        auto vec = std::vector<uint8_t>(_frame->width*_frame->height*4);
-        memcpy(vec.data(), data, _frame->width * _frame->height * 4);
-        _frames.insert(_frames.end(), vec);
-        delete[] data;
-
-        av_packet_unref(_packet);
-    }
-
-    _frameCount = _frames.size();
-    _currentFrame = 0;
     return true;
 }
 
-std::vector<uint8_t>* VideoProvider::RetrieveNextFrame()
+void VideoProvider::RetrieveNextFrame(uint8_t** buffer)
 {
-    if(_currentFrame + 1 <= _frameCount)
-        _currentFrame++;
-    _logger.logInfo("Currently playing frame {}", _currentFrame);
-    return &(_frames.at(_currentFrame));
+    if (!(av_read_frame(_formatContext, _packet) >= 0))
+    {
+        return;
+    }
+    else
+    {
+        int response;
+        // if _packet is related to video stream
+        if (_packet->stream_index == _videoStream)
+        {
+            response = avcodec_send_packet(_codecContext, _packet);
+            if (response < 0)
+            {
+                _logger.logErrorLine("Failed to decode packet!");
+                return;
+            }
 
+            response = avcodec_receive_frame(_codecContext, _frame);
+            if (response == AVERROR(EAGAIN) || response == AVERROR_EOF)
+            {
+                return;
+            }
+            else if (response < 0)
+            {
+                _logger.logErrorLine("Failed to decode frame!");
+                return;
+            }
+
+            _scalerContext = sws_getContext(_frame->width, _frame->height, _codecContext->pix_fmt, _frame->width, _frame->height,
+                                            AV_PIX_FMT_RGBA, SWS_FAST_BILINEAR, NULL, NULL, NULL);
+
+            if (!_scalerContext)
+            {
+                _logger.logErrorLine("Failed to init scaler!");
+                return;
+            }
+
+            uint8_t* data = new uint8_t[_frame->width * _frame->height * 4];
+            uint8_t* destination[4] = {data, NULL, NULL, NULL};
+            int dataLineSize[4] = {_frame->width * 4, 0, 0, 0};
+
+            sws_scale(_scalerContext, _frame->data, _frame->linesize, 0, _frame->height, destination, dataLineSize);
+
+            memcpy(*buffer, data, _frame->width * _frame->height * 4);
+            delete[] data;
+
+            av_packet_unref(_packet);
+        }
+    }
+
+    return;
 }
 
 VideoProvider::~VideoProvider()
