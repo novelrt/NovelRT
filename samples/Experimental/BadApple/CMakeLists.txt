@@ -13,6 +13,8 @@ target_link_libraries(BadApple
     ffmpeg::avformat
     ffmpeg::avcodec
     ffmpeg::swscale
+    ffmpeg::swresample
+    ffmpeg::avutil
 )
 
 copy_build_products(BadApple

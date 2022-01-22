@@ -165,7 +165,13 @@ int main()
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     uint8_t* pTextureData = textureStagingBuffer->Map<uint8_t>(texture2DRegion);
 
-    video.RetrieveNextFrame(&pTextureData);
+    bool isAudio = false;
+
+    video.RetrieveNextFrame(&pTextureData, &isAudio);
+    while(isAudio)
+    {
+        video.RetrieveNextFrame(&pTextureData, &isAudio);
+    }
     textureStagingBuffer->UnmapAndWrite(texture2DRegion);
 
     std::vector<GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions{frameTransformRegion, primitiveTransformRegion, texture2DRegion };
@@ -182,7 +188,7 @@ int main()
             context->BeginFrame();
 
             pTextureData = textureStagingBuffer->Map<uint8_t>(texture2DRegion);
-            video.RetrieveNextFrame(&pTextureData);
+            video.RetrieveNextFrame(&pTextureData, &isAudio);
             textureStagingBuffer->UnmapAndWrite(texture2DRegion);
             gfxContext->Copy(texture2D, textureStagingBuffer);
 
