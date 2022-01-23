@@ -1,13 +1,6 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
-  COMPONENTS
-    REPRODUCIBLE
-    PROFILE core
-    SPEC gl
-    API gl=4.0,gles2=3.0
-)
 find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -161,7 +154,6 @@ target_link_libraries(Engine
     BZip2::BZip2
     FLAC::FLAC
     Freetype::Freetype
-    glad::glad
     glfw::glfw
     glm::glm
     Microsoft.GSL::Microsoft.GSL
