@@ -1,14 +1,8 @@
 set(SOURCES
-  NrtDebugService.cpp
-  NrtInteropErrorHandling.cpp
+        NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
-  NrtNovelRunner.cpp
 
-  Animation/NrtSpriteAnimator.cpp
-  Animation/NrtSpriteAnimatorFrame.cpp
-  Animation/NrtSpriteAnimatorState.cpp
-
-  Audio/NrtAudioService.cpp
+        Audio/NrtAudioService.cpp
 
   Ecs/NrtCatalogue.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
@@ -25,10 +19,6 @@ set(SOURCES
 
   Graphics/NrtRGBAColour.cpp
 
-  Input/NrtBasicInteractionRect.cpp
-  Input/NrtInteractionService.cpp
-  Input/NrtKeyStateFrameChangeLog.cpp
-
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoMatrix4x4F.cpp
   Maths/NrtGeoVector2F.cpp
@@ -39,8 +29,7 @@ set(SOURCES
 
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
-  SceneGraph/NrtRenderObjectNode.cpp
-  SceneGraph/NrtScene.cpp
+        SceneGraph/NrtScene.cpp
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
   SceneGraph/NrtSceneNodeDepthFirstIterator.cpp

@@ -1,2 +1,0 @@
-add_subdirectory(AudioEcsSample)
-add_subdirectory(AudioEcsCAPI)

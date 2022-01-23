@@ -17,18 +17,6 @@ extern "C"
         return NrtGeoBounds{Nrt_GeoVector2F_zero(), Nrt_GeoVector2F_zero(), 0.0f};
     }
 
-    NrtGeoBounds Nrt_GeoBounds_GetAABBFromTransform(NrtTransform transform)
-    {
-        auto bounds = Maths::GeoBounds::GetAABBFromTransform(*reinterpret_cast<Transform*>(&transform));
-        return reinterpret_cast<NrtGeoBounds&>(bounds);
-    }
-
-    NrtGeoBounds Nrt_GeoBounds_FromTransform(NrtTransform transform)
-    {
-        auto bounds = Maths::GeoBounds::FromTransform(*reinterpret_cast<Transform*>(&transform));
-        return reinterpret_cast<NrtGeoBounds&>(bounds);
-    }
-
     NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int32_t index)
     {
         Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);

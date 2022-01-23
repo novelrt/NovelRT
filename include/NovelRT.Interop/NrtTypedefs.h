@@ -14,7 +14,7 @@ extern "C"
 
     typedef struct NrtDebugService* NrtDebugServiceHandle;
     typedef struct NrtLoggingService* NrtLoggingServiceHandle;
-    typedef struct NrtNovelRunner* NrtNovelRunnerHandle;
+    typedef struct NrtRGBAColour* NrtRGBAColourHandle;
 
     typedef enum
     {
@@ -67,18 +67,15 @@ extern "C"
 #include "Timing/NrtTimingTypedefs.h"
 #include "Utilities/NrtUtilitiesTypedefs.h"
 
-#include "Animation/NrtAnimationTypedefs.h"
 #include "Audio/NrtAudioTypedefs.h"
 #ifdef NOVELRT_INK
 #include "DotNet/NrtDotNetTypedefs.h"
 #endif
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
-#include "Graphics/NrtGraphicsTypedefs.h"
 #ifdef NOVELRT_INK
 #include "Ink/NrtInkTypedefs.h"
 #endif
-#include "Input/NrtInputTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 #include "Windowing/NrtWindowingTypedefs.h"
 
