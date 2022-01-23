@@ -59,7 +59,7 @@ int main()
         for (auto [entity, transform] : transforms)
         {
             TransformComponent newComponent{};
-            newComponent.rotationInEulerAngles = 20 * delta.getSecondsFloat();
+            newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
             newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
             transforms.PushComponentUpdateInstruction(entity, newComponent);
         }

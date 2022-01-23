@@ -267,12 +267,12 @@ namespace NovelRT::Ecs::Graphics
                 for (auto it = parentTransforms.rbegin(); it != parentTransforms.rend(); it++)
                 {
                     matrixToInsert.Translate(it->positionAndLayer);
-                    matrixToInsert.Rotate(it->rotationInEulerAngles);
+                    matrixToInsert.Rotate(it->rotationInRadians);
                     scaleValue *= it->scale;
                 }
 
                 matrixToInsert.Translate(transformComponent.positionAndLayer);
-                matrixToInsert.Rotate(transformComponent.rotationInEulerAngles);
+                matrixToInsert.Rotate(transformComponent.rotationInRadians);
                 matrixToInsert.Scale(scaleValue); // scale based on aspect. :]
 
                 tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;

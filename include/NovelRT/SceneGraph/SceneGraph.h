@@ -20,7 +20,6 @@ namespace NovelRT::SceneGraph
 {
     class QuadTreeNode;
     class QuadTreeScenePoint;
-    class RenderObjectNode;
     class Scene;
     class SceneNode;
 }
@@ -30,7 +29,6 @@ namespace NovelRT::SceneGraph
 #include "SceneNode.h"
 #include "QuadTreeNode.h"
 #include "QuadTreeScenePoint.h"
-#include "RenderObjectNode.h"
 #include "Scene.h"
 
 // clang-format on

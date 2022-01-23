@@ -24,12 +24,7 @@ find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} 
 set(SOURCES
   Atom.cpp
 
-  Animation/SpriteAnimator.cpp
-
-
   Audio/AudioService.cpp
-
-  DebugService.cpp
 
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
@@ -74,19 +69,7 @@ set(SOURCES
   Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
   Experimental/Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 
-  Graphics/BasicFillRect.cpp
-  Graphics/Camera.cpp
-  Graphics/FontSet.cpp
-  Graphics/ImageRect.cpp
-  Graphics/RenderingService.cpp
-  Graphics/RenderObject.cpp
   Graphics/RGBAConfig.cpp
-  Graphics/TextRect.cpp
-  Graphics/Texture.cpp
-
-  Input/BasicInteractionRect.cpp
-  Input/InteractionObject.cpp
-  Input/InteractionService.cpp
 
   LoggingService.cpp
 
@@ -98,18 +81,13 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
-  NovelRunner.cpp
+        Timing/StepTimer.cpp
 
-  Timing/StepTimer.cpp
-
-  Transform.cpp
-
-  Utilities/Misc.cpp
+        Utilities/Misc.cpp
 
   Windowing/WindowingService.cpp
 
-  WorldObject.cpp
-)
+        )
 
 if(NOVELRT_INCLUDE_INK)
   message("NovelRT is compiling with Ink / C# Support.")

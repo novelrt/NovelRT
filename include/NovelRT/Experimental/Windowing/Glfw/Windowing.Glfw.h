@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Windowing::Glfw
 }
 
 // Windowing.Glfw dependencies
-#include "../../../Maths/GeoVector2F.h"
+#include "../../../Maths/Maths.h"
 #include "../../../PluginManagement/PluginManagement.h"
 #include "../Windowing.h"
 #include <cstdint>

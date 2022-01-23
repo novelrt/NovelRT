@@ -138,9 +138,6 @@
   #include "NovelRT/Experimental/EngineConfig.h"
 
   //enums
-  #include "NovelRT/Input/KeyCode.h"
-  #include "NovelRT/Input/KeyState.h"
-  #include "NovelRT/Graphics/CameraFrameState.h"
   #include "NovelRT/Windowing/WindowMode.h"
 
   // Value types
@@ -150,14 +147,6 @@
   #include "NovelRT/Utilities/Lazy.h"
   #include "NovelRT/Utilities/Misc.h"
 
-  #include "NovelRT/Transform.h"
-
-  #include "NovelRT/Animation/AnimatorPlayState.h"
-  #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-
-  #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
-  #include "NovelRT/Graphics/ImageData.h"
-  #include "NovelRT/Graphics/ShaderProgram.h"
   #include "NovelRT/Graphics/RGBAColour.h"
 
   //Maths types
@@ -166,12 +155,6 @@
   // Base Types
   #include "NovelRT/LoggingService.h" // this isn't in the services section due to include order/dependencies.
   #include "NovelRT/Timing/StepTimer.h"
-  #include "NovelRT/NovelRunner.h"
-  #include "NovelRT/WorldObject.h"
-
-  // Animation types
-  #include "NovelRT/Animation/SpriteAnimatorState.h"
-  #include "NovelRT/Animation/SpriteAnimator.h"
 
   // Audio types
   #include "NovelRT/Audio/Audio.h"
@@ -181,16 +164,6 @@
 
   // Exception types
   #include "NovelRT/Exceptions/Exceptions.h"
-
-  // Graphics types
-  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
-  #include "NovelRT/Graphics/Camera.h"
-  #include "NovelRT/Graphics/Texture.h"
-  #include "NovelRT/Graphics/FontSet.h"
-  #include "NovelRT/Graphics/RenderObject.h"
-  #include "NovelRT/Graphics/BasicFillRect.h"
-  #include "NovelRT/Graphics/ImageRect.h"
-  #include "NovelRT/Graphics/TextRect.h"
 
   // Experimental types
   #include "NovelRT/Experimental/Graphics/Graphics.h"
@@ -205,11 +178,6 @@
   #include "NovelRT/Ink/InkService.h"
 #endif
 
-  // Input types
-  #include "NovelRT/Input/InteractionObject.h"
-  #include "NovelRT/Input/BasicInteractionRect.h"
-  #include "NovelRT/Input/KeyStateFrameChangeLog.h"
-
   // Plugin Management types
   #include "NovelRT/PluginManagement/PluginManagement.h"
 
@@ -220,13 +188,10 @@
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
-  #include "NovelRT/DebugService.h"
 #ifdef NOVELRT_INK
   #include "NovelRT/DotNet/RuntimeService.h"
 #endif
-  #include "NovelRT/Input/InteractionService.h"
   #include "NovelRT/Windowing/WindowingService.h"
-  #include "NovelRT/Graphics/RenderingService.h"
 
   // Scene Graph types
   #include "NovelRT/SceneGraph/SceneGraph.h"

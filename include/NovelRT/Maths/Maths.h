@@ -4,6 +4,14 @@
 #ifndef NOVELRT_MATHS_H
 #define NOVELRT_MATHS_H
 
+// Maths dependencies
+#include <array>
+#include <memory>
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <NovelRT/Exceptions/Exceptions.h>
+
 namespace NovelRT::Maths
 {
     class GeoBounds;
@@ -13,16 +21,19 @@ namespace NovelRT::Maths
     class GeoVector4F;
     class QuadTree;
     class QuadTreePoint;
-    class Utilities;
 }
 
-#include "GeoBounds.h"
-#include "GeoMatrix4x4F.h"
+// clang-format off
+
+#include "Utilities.h"
 #include "GeoVector2F.h"
+#include "GeoBounds.h"
 #include "GeoVector3F.h"
 #include "GeoVector4F.h"
-#include "QuadTree.h"
+#include "GeoMatrix4x4F.h"
 #include "QuadTreePoint.h"
-#include "Utilities.h"
+#include "QuadTree.h"
+
+// clang-format on
 
 #endif // NOVELRT_MATHS_H

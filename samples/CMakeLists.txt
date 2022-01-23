@@ -1,5 +1,3 @@
-add_subdirectory(Simple)
-add_subdirectory(CAPI)
 add_subdirectory(Experimental)
 add_subdirectory(EcsPipeline)
 add_subdirectory(Ecs)

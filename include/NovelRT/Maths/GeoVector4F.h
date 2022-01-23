@@ -4,13 +4,14 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR4_H
 #define NOVELRT_MATHS_GEOVECTOR4_H
 
-#include "GeoVector3F.h"
+#ifndef NOVELRT_MATHS_H
+#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
+#endif
 
 namespace NovelRT::Maths
 {
     class GeoVector4F
     {
-        friend class Input::InteractionService;
         friend class GeoMatrix4x4F;
 
     private:

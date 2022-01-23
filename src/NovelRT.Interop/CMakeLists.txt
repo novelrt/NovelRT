@@ -23,14 +23,7 @@ set(SOURCES
   Ecs/Audio/NrtAudioEmitterComponent.cpp
   Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
-  Graphics/NrtBasicFillRect.cpp
-  Graphics/NrtCamera.cpp
-  Graphics/NrtFontSet.cpp
-  Graphics/NrtImageRect.cpp
-  Graphics/NrtRenderingService.cpp
   Graphics/NrtRGBAColour.cpp
-  Graphics/NrtTextRect.cpp
-  Graphics/NrtTexture.cpp
 
   Input/NrtBasicInteractionRect.cpp
   Input/NrtInteractionService.cpp

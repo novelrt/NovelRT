@@ -14,21 +14,21 @@ namespace NovelRT::Ecs
     {
         Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::zero();
         Maths::GeoVector2F scale = Maths::GeoVector2F::one();
-        float rotationInEulerAngles = 0.0f;
+        float rotationInRadians = 0.0f;
 
         inline TransformComponent& operator+=(const TransformComponent& other)
         {
             positionAndLayer += other.positionAndLayer;
-            rotationInEulerAngles += other.rotationInEulerAngles;
+            rotationInRadians += other.rotationInRadians;
             scale += other.scale;
 
-            if (rotationInEulerAngles > 359.999999f) // 360 == 0 pretty sure :]
+            if (rotationInRadians > Maths::Utilities::Tau<float>())
             {
-                rotationInEulerAngles -= 359.999999f;
+                rotationInRadians -= Maths::Utilities::Tau<float>();
             }
-            else if (rotationInEulerAngles < 0)
+            else if (rotationInRadians < -Maths::Utilities::Tau<float>())
             {
-                rotationInEulerAngles += 359.999999f;
+                rotationInRadians += Maths::Utilities::Tau<float>();
             }
 
             return *this;
