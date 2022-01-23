@@ -5,12 +5,12 @@
 #define NOVELRT_MATHS_H
 
 // Maths dependencies
+#include <NovelRT/Exceptions/Exceptions.h>
 #include <array>
-#include <memory>
-#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <memory>
+#include <vector>
 
 namespace NovelRT::Maths
 {

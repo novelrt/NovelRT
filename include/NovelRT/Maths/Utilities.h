@@ -104,18 +104,18 @@ namespace NovelRT::Maths::Utilities
         return glm::degrees(radians);
     }
 
-    template<typename TFloatingPointType> [[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
+    template<typename TFloatingPointType>[[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
     {
         _assert(std::is_same_v<TFloatingPointType, float> || std::is_same_v<TFloatingPointType, double>,
-                      "Type is unsupported for a Tau representation.");
+                "Type is unsupported for a Tau representation.");
     }
 
-    template<> [[nodiscard]] inline constexpr float Tau<float>() noexcept
+    template<>[[nodiscard]] inline constexpr float Tau<float>() noexcept
     {
         return 6.283185307f;
     }
 
-    template<> [[nodiscard]] inline constexpr double Tau<double>() noexcept
+    template<>[[nodiscard]] inline constexpr double Tau<double>() noexcept
     {
         return 6.283185307179586476925;
     }
