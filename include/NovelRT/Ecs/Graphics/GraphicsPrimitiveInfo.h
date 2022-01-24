@@ -15,7 +15,7 @@ namespace NovelRT::Ecs::Graphics
         Atom ecsVertexDataId = 0;
         Atom ecsTextureId = 0;
         Atom ecsPipelineId = 0;
-        std::map<size_t, Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
+        std::map<size_t, NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
             gpuTransformConstantBufferRegions = {};
 
         inline bool operator==(const GraphicsPrimitiveInfo& other) const noexcept

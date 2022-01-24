@@ -32,37 +32,39 @@ set(SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
 
-  Experimental/EngineConfig.cpp
-  Experimental/Graphics/GraphicsMemoryBlock.cpp
-  Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
-  Experimental/Graphics/GraphicsPipeline.cpp
-  Experimental/Graphics/GraphicsPipelineInput.cpp
-  Experimental/Graphics/GraphicsPipelineInputElement.cpp
-  Experimental/Graphics/GraphicsPipelineResource.cpp
-  Experimental/Graphics/GraphicsPipelineSignature.cpp
-  Experimental/Graphics/GraphicsResourceManager.cpp
-  Experimental/Graphics/ShaderProgram.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsBuffer.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsContext.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsFence.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
-  Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
-  Experimental/Threading/VolatileState.cpp
-  Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
-  Experimental/Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+  EngineConfig.cpp
 
-  Graphics/RGBAConfig.cpp
+  Graphics/GraphicsMemoryBlock.cpp
+  Graphics/GraphicsMemoryBlockCollection.cpp
+  Graphics/GraphicsPipeline.cpp
+  Graphics/GraphicsPipelineInput.cpp
+  Graphics/GraphicsPipelineInputElement.cpp
+  Graphics/GraphicsPipelineResource.cpp
+  Graphics/GraphicsPipelineSignature.cpp
+  Graphics/GraphicsResourceManager.cpp
+        Graphics/RGBAConfig.cpp
+  Graphics/ShaderProgram.cpp
+  Graphics/Vulkan/VulkanGraphicsAdapter.cpp
+  Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
+  Graphics/Vulkan/VulkanGraphicsBuffer.cpp
+  Graphics/Vulkan/VulkanGraphicsContext.cpp
+  Graphics/Vulkan/VulkanGraphicsDevice.cpp
+  Graphics/Vulkan/VulkanGraphicsFence.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
+  Graphics/Vulkan/VulkanGraphicsPipeline.cpp
+  Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
+  Graphics/Vulkan/VulkanGraphicsProvider.cpp
+  Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
+  Graphics/Vulkan/VulkanGraphicsTexture.cpp
+  Graphics/Vulkan/VulkanShaderProgram.cpp
+
+  Threading/VolatileState.cpp
+  Windowing/Glfw/GlfwWindowingDevice.cpp
+  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+
 
   LoggingService.cpp
 
@@ -74,13 +76,11 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
-        Timing/StepTimer.cpp
+   Timing/StepTimer.cpp
 
-        Utilities/Misc.cpp
+   Utilities/Misc.cpp
 
-  Windowing/WindowingService.cpp
-
-        )
+   )
 
 if(NOVELRT_INCLUDE_INK)
   message("NovelRT is compiling with Ink / C# Support.")

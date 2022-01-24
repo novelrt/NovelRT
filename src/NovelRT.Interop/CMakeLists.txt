@@ -1,8 +1,8 @@
 set(SOURCES
-        NrtInteropErrorHandling.cpp
+  NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
 
-        Audio/NrtAudioService.cpp
+  Audio/NrtAudioService.cpp
 
   Ecs/NrtCatalogue.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
@@ -29,7 +29,7 @@ set(SOURCES
 
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
-        SceneGraph/NrtScene.cpp
+  SceneGraph/NrtScene.cpp
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
   SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
@@ -38,8 +38,6 @@ set(SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
-
-  Windowing/NrtWindowingService.cpp
 )
 
 if(NOVELRT_INCLUDE_INK)

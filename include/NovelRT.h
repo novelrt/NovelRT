@@ -104,10 +104,7 @@
   }
 
   //generic experimental files in root namespace
-  #include "NovelRT/Experimental/EngineConfig.h"
-
-  //enums
-  #include "NovelRT/Windowing/WindowMode.h"
+  #include "NovelRT/EngineConfig.h"
 
   // Value types
   #include "NovelRT/Atom.h"
@@ -135,11 +132,11 @@
   #include "NovelRT/Exceptions/Exceptions.h"
 
   // Experimental types
-  #include "NovelRT/Experimental/Graphics/Graphics.h"
-  #include "NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h"
-  #include "NovelRT/Experimental/Threading/Threading.h"
-  #include "NovelRT/Experimental/Windowing/Windowing.h"
-  #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
+  #include "NovelRT/Graphics/Graphics.h"
+  #include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
+  #include "NovelRT/Threading/Threading.h"
+  #include "NovelRT/Windowing/Windowing.h"
+  #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
 
 #ifdef NOVELRT_INK
   // Ink types
@@ -160,7 +157,6 @@
 #ifdef NOVELRT_INK
   #include "NovelRT/DotNet/RuntimeService.h"
 #endif
-  #include "NovelRT/Windowing/WindowingService.h"
 
   // Scene Graph types
   #include "NovelRT/SceneGraph/SceneGraph.h"

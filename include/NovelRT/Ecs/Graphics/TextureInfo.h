@@ -12,7 +12,7 @@ namespace NovelRT::Ecs::Graphics
 {
     struct TextureInfo
     {
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuTextureRegion = {};
+        NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> gpuTextureRegion = {};
         std::string textureName;
         uint32_t width = 0;
         uint32_t height = 0;

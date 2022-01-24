@@ -9,7 +9,7 @@
 #endif
 
 // Ecs.Graphics Dependencies
-#include "../../Graphics/RGBAColour.h"
+#include "NovelRT/Graphics/RGBAColour.h"
 
 namespace NovelRT::Ecs::Graphics
 {

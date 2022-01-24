@@ -14,7 +14,7 @@
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
 #include "../PluginManagement/PluginManagement.h"
-#include "../Experimental/Threading/Threading.h"
+#include "../Threading/Threading.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>

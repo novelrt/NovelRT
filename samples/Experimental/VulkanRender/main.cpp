@@ -4,10 +4,10 @@
 #include <NovelRT.h>
 #include <memory>
 
-using namespace NovelRT::Experimental::Windowing::Glfw;
-using namespace NovelRT::Experimental::Windowing;
-using namespace NovelRT::Experimental::Graphics::Vulkan;
-using namespace NovelRT::Experimental::Graphics;
+using namespace NovelRT::Windowing::Glfw;
+using namespace NovelRT::Windowing;
+using namespace NovelRT::Graphics::Vulkan;
+using namespace NovelRT::Graphics;
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {

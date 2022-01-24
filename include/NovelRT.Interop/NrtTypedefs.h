@@ -77,7 +77,6 @@ extern "C"
 #include "Ink/NrtInkTypedefs.h"
 #endif
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
-#include "Windowing/NrtWindowingTypedefs.h"
 
 #ifdef __cplusplus
 }
