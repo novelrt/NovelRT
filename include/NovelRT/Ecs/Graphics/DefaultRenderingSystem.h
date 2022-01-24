@@ -98,21 +98,6 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
         GetExistingPipelineInfoBasedOnId(Atom ecsId);
 
-        /*
-        [[nodiscard]] Experimental::Threading::FutureResult<ConstantBufferInfo> LoadConstantBufferDataIntoNewRegionRaw(
-            void* data,
-            size_t size,
-            size_t alignment);
-
-        template<typename TTargetType>
-        [[nodiscard]] Experimental::Threading::FutureResult<
-            Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>>
-        LoadConstantBufferDataIntoNewRegion(TTargetType* data, size_t amount, size_t alignment = 256)
-        {
-            return LoadConstantBufferDataIntoNewRegionRaw(data, sizeof(TTargetType) * amount, alignment);
-        }
-         */
-
         [[nodiscard]] Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
             std::shared_ptr<Experimental::Graphics::GraphicsPipeline> pipeline,

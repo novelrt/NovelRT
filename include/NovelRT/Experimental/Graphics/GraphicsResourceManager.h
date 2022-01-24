@@ -42,7 +42,7 @@ namespace NovelRT::Experimental::Graphics
 
         template<typename TData>
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data,
-                                                                            size_t alignment = 16)
+                                                                            size_t alignment = 0)
         {
             return LoadVertexDataUntyped(&(*data.begin()), sizeof(TData), data.size(), alignment);
         }

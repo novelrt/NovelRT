@@ -29,9 +29,6 @@ int main()
 
     renderingSystem->ForceVertexTextureFutureResolution();
 
-    // unused(renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(),
-    // scheduler));
-
     auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
     auto entityGraphBuffer = scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>();
 

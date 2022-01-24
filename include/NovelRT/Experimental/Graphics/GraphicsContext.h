@@ -38,7 +38,7 @@ namespace NovelRT::Experimental::Graphics
             Draw(std::move(primitive), 1);
         }
 
-        virtual void Draw(std::shared_ptr<GraphicsPrimitive> primitive, int32_t instanceCount) = 0;
+        virtual void Draw(std::shared_ptr<GraphicsPrimitive> primitive, uint32_t instanceCount) = 0;
         virtual void EndDrawing() = 0;
         virtual void EndFrame() = 0;
     };
