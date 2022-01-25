@@ -12,8 +12,6 @@ namespace NovelRT::Windowing::Glfw
 {
     class GlfwWindowingDevice final : public IWindowingDevice
     {
-    public:
-
     private:
         std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
         std::string _currentTitle;
