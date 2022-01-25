@@ -5,15 +5,15 @@
 #define NOVELRT_GRAPHICS_H
 
 // Graphics dependencies
-#include "RGBAColour.h"
+#include "NovelRT/EngineConfig.h"
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/ResourceManagement/ResourceManagement.h"
 #include "NovelRT/SceneGraph/SceneGraph.h"
+#include "NovelRT/Threading/Threading.h"
 #include "NovelRT/Utilities/Event.h"
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
-#include "NovelRT/EngineConfig.h"
-#include "NovelRT/Threading/Threading.h"
+#include "RGBAColour.h"
 #include <chrono>
 #include <cstdint>
 #include <filesystem>

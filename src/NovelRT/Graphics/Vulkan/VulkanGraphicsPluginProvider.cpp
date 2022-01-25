@@ -2,7 +2,6 @@
 // for more information.
 
 #include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
-#include "NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.h"
 
 namespace NovelRT::Graphics::Vulkan
 {

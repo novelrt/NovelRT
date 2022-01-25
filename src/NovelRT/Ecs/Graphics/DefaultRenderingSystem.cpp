@@ -48,9 +48,9 @@ namespace NovelRT::Ecs::Graphics
             auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
             auto texture = resourceLoader->LoadTexture(ptr->textureName + ".png");
 
-            auto texture2DRegion = resourceManager.LoadTextureData(
-                texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
-                NovelRT::Graphics::GraphicsTextureKind::TwoDimensional);
+            auto texture2DRegion =
+                resourceManager.LoadTextureData(texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
+                                                NovelRT::Graphics::GraphicsTextureKind::TwoDimensional);
 
             *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width, texture.height, ptr->ecsId};
             _namedTextureInfoObjects.emplace(ptr->ecsId, ptr);
@@ -96,8 +96,7 @@ namespace NovelRT::Ecs::Graphics
 
         std::vector<NovelRT::Graphics::GraphicsPipelineInputElement> elements = {
             NovelRT::Graphics::GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector3F), NovelRT::Graphics::GraphicsPipelineInputElementKind::Position,
-                12),
+                typeid(NovelRT::Maths::GeoVector3F), NovelRT::Graphics::GraphicsPipelineInputElementKind::Position, 12),
 
             NovelRT::Graphics::GraphicsPipelineInputElement(
                 typeid(NovelRT::Maths::GeoVector2F),
@@ -107,23 +106,20 @@ namespace NovelRT::Ecs::Graphics
             NovelRT::Graphics::GraphicsPipelineInput(elements)};
 
         std::vector<NovelRT::Graphics::GraphicsPipelineResource> resources = {
-            NovelRT::Graphics::GraphicsPipelineResource(
-                NovelRT::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
-                NovelRT::Graphics::ShaderProgramVisibility::Vertex),
+            NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                                                        NovelRT::Graphics::ShaderProgramVisibility::Vertex),
 
-            NovelRT::Graphics::GraphicsPipelineResource(
-                NovelRT::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
-                NovelRT::Graphics::ShaderProgramVisibility::Vertex),
+            NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                                                        NovelRT::Graphics::ShaderProgramVisibility::Vertex),
 
-            NovelRT::Graphics::GraphicsPipelineResource(
-                NovelRT::Graphics::GraphicsPipelineResourceKind::Texture,
-                NovelRT::Graphics::ShaderProgramVisibility::Pixel),
+            NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::Texture,
+                                                        NovelRT::Graphics::ShaderProgramVisibility::Pixel),
         };
 
-        auto vertexShaderProgram = _graphicsDevice->CreateShaderProgram(
-            "main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertShaderData);
-        auto pixelShaderProgram = _graphicsDevice->CreateShaderProgram(
-            "main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
+        auto vertexShaderProgram =
+            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertShaderData);
+        auto pixelShaderProgram =
+            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
         auto signature = _graphicsDevice->CreatePipelineSignature(
             NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
             NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
@@ -343,8 +339,7 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->WaitForIdle();
     }
 
-    Threading::FutureResult<TextureInfo> DefaultRenderingSystem::GetOrLoadTexture(
-        const std::string& textureName)
+    Threading::FutureResult<TextureInfo> DefaultRenderingSystem::GetOrLoadTexture(const std::string& textureName)
     {
         std::scoped_lock guard(_textureQueueMapMutex);
 
@@ -365,8 +360,7 @@ namespace NovelRT::Ecs::Graphics
         return Threading::FutureResult<TextureInfo>(resultIterator->second, TextureInfo{});
     }
 
-    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTextureBasedOnId(
-        Atom ecsId)
+    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTextureBasedOnId(Atom ecsId)
     {
         std::scoped_lock guard(_textureQueueMapMutex);
         return _namedTextureInfoObjects.at(ecsId);
@@ -424,15 +418,14 @@ namespace NovelRT::Ecs::Graphics
         throw Exceptions::KeyNotFoundException();
     }
 
-    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnId(
-        Atom ecsId)
+    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnId(Atom ecsId)
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
         return _namedVertexInfoObjects.at(ecsId);
     }
 
-    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::
-        GetExistingPipelineInfoBasedOnId(Atom ecsId)
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfoBasedOnId(
+        Atom ecsId)
     {
         std::scoped_lock guard(_graphicsPipelineMapMutex);
         return _namedGraphicsPipelineInfoObjects.at(ecsId);
@@ -448,8 +441,7 @@ namespace NovelRT::Ecs::Graphics
         std::scoped_lock guard(_graphicsPipelineMapMutex);
 
         auto ptr = Threading::MakeConcurrentShared<GraphicsPipelineInfo>();
-        ptr->gpuPipeline =
-            Threading::ConcurrentSharedPtr<NovelRT::Graphics::GraphicsPipeline>(std::move(pipeline));
+        ptr->gpuPipeline = Threading::ConcurrentSharedPtr<NovelRT::Graphics::GraphicsPipeline>(std::move(pipeline));
         ptr->pipelineName = pipelineName;
         ptr->ecsId = Atom::GetNextEcsGraphicsPipelineId();
         ptr->useEcsTransforms = useEcsTransforms;
@@ -469,10 +461,9 @@ namespace NovelRT::Ecs::Graphics
         return ptr;
     }
 
-    void DefaultRenderingSystem::AttachSpriteRenderingToEntity(
-        EntityId entity,
-        Threading::ConcurrentSharedPtr<TextureInfo> texture,
-        Catalogue& catalogue)
+    void DefaultRenderingSystem::AttachSpriteRenderingToEntity(EntityId entity,
+                                                               Threading::ConcurrentSharedPtr<TextureInfo> texture,
+                                                               Catalogue& catalogue)
     {
         auto [renderComponentView, transformComponentView, entityGraphComponentView] =
             catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
@@ -516,9 +507,8 @@ namespace NovelRT::Ecs::Graphics
         }
     }
 
-    EntityId DefaultRenderingSystem::CreateSpriteEntity(
-        Threading::ConcurrentSharedPtr<TextureInfo> texture,
-        Catalogue& catalogue)
+    EntityId DefaultRenderingSystem::CreateSpriteEntity(Threading::ConcurrentSharedPtr<TextureInfo> texture,
+                                                        Catalogue& catalogue)
     {
         EntityId entity = catalogue.CreateEntity();
         AttachSpriteRenderingToEntity(entity, std::move(texture), catalogue);

@@ -4,6 +4,21 @@
 #ifndef NOVELRT_GRAPHICS_VULKAN_H
 #define NOVELRT_GRAPHICS_VULKAN_H
 
+// Graphics.Vulkan dependencies
+#include "../../EngineConfig.h"
+#include "../../Exceptions/Exceptions.h"
+#include "../Graphics.h"
+#include "../../LoggingService.h"
+#include "../../PluginManagement/PluginManagement.h"
+#include "../../Utilities/Lazy.h"
+#include "../../Utilities/Misc.h"
+#include <array>
+#include <map>
+#include <optional>
+#include <set>
+#include <vector>
+#include <vulkan/vulkan.h>
+
 /**
  * @brief The default Vulkan implementation for the Graphics plugin API.
  */
@@ -30,21 +45,6 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsSurfaceContext;
     class VulkanGraphicsPluginProvider;
 }
-
-// Graphics.Vulkan dependencies
-#include "NovelRT/Exceptions/Exceptions.h"
-#include "NovelRT/LoggingService.h"
-#include "NovelRT/PluginManagement/PluginManagement.h"
-#include "NovelRT/Utilities/Lazy.h"
-#include "NovelRT/Utilities/Misc.h"
-#include "NovelRT/EngineConfig.h"
-#include "NovelRT/Graphics/Graphics.h"
-#include <array>
-#include <map>
-#include <optional>
-#include <set>
-#include <vector>
-#include <vulkan/vulkan.h>
 
 // Graphics.Vulkan types
 

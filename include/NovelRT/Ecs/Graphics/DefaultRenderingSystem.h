@@ -27,8 +27,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice> _graphicsDevice;
 
-        NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>
-            _frameMatrixConstantBufferRegion;
+        NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> _frameMatrixConstantBufferRegion;
 
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
@@ -41,8 +40,7 @@ namespace NovelRT::Ecs::Graphics
         Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
         tbb::mutex _graphicsPipelineMapMutex;
-        std::map<Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>>
-            _namedGraphicsPipelineInfoObjects;
+        std::map<Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>> _namedGraphicsPipelineInfoObjects;
 
         Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
 
@@ -62,8 +60,7 @@ namespace NovelRT::Ecs::Graphics
 
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;
 
-        [[nodiscard]] Threading::FutureResult<TextureInfo> GetOrLoadTexture(
-            const std::string& spriteName);
+        [[nodiscard]] Threading::FutureResult<TextureInfo> GetOrLoadTexture(const std::string& spriteName);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTextureBasedOnId(Atom ecsId);
 
@@ -72,9 +69,8 @@ namespace NovelRT::Ecs::Graphics
         // TODO: in the future when we have mesh loading capabilities these will be replaced with similar mechanisms to
         // texture loading. End-users shouldn't need to manually hard-code the data.
         template<typename TSpanType>
-        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(
-            const std::string& vertexDataName,
-            gsl::span<TSpanType> vertexDataSpan)
+        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(const std::string& vertexDataName,
+                                                                            gsl::span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
@@ -83,20 +79,17 @@ namespace NovelRT::Ecs::Graphics
                                             vertexDataSpan.size());
         }
 
-        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRawUntyped(
-            const std::string& vertexDataName,
-            void* data,
-            size_t dataTypeSize,
-            size_t dataLength);
+        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRawUntyped(const std::string& vertexDataName,
+                                                                                   void* data,
+                                                                                   size_t dataTypeSize,
+                                                                                   size_t dataLength);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnName(
             const std::string& vertexDataName);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(
-            Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(Atom ecsId);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
-        GetExistingPipelineInfoBasedOnId(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnId(Atom ecsId);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
@@ -112,9 +105,8 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] EntityId CreateSpriteEntity(Threading::ConcurrentSharedPtr<TextureInfo> texture,
                                                   Catalogue& catalogue);
 
-        [[nodiscard]] EntityId CreateSpriteEntityOutsideOfSystem(
-            Threading::ConcurrentSharedPtr<TextureInfo> texture,
-            SystemScheduler& scheduler);
+        [[nodiscard]] EntityId CreateSpriteEntityOutsideOfSystem(Threading::ConcurrentSharedPtr<TextureInfo> texture,
+                                                                 SystemScheduler& scheduler);
 
         void ForceVertexTextureFutureResolution();
     };

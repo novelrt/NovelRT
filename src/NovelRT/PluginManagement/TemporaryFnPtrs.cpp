@@ -2,10 +2,10 @@
 // for more information.
 
 #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
-#include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/PluginManagement/PluginManagement.h>
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
+#include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 
 namespace NovelRT::PluginManagement
 {

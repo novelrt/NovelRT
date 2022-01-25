@@ -21,8 +21,7 @@ namespace NovelRT::PluginManagement
             return GetGraphicsProviderInternal()->shared_from_this();
         }
 
-        [[nodiscard]] virtual std::shared_ptr<Graphics::GraphicsAdapter>
-        GetDefaultSelectedGraphicsAdapterForContext(
+        [[nodiscard]] virtual std::shared_ptr<Graphics::GraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContext(
             std::shared_ptr<Graphics::GraphicsSurfaceContext> context) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<Graphics::GraphicsSurfaceContext> CreateSurfaceContext(

@@ -2,7 +2,6 @@
 // for more information.
 
 #include "NovelRT/Graphics/Graphics.h"
-#include "NovelRT/Graphics/GraphicsResourceManager.h"
 
 namespace NovelRT::Graphics
 {
