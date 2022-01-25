@@ -8,11 +8,7 @@
 #include <gsl/span>
 #include <type_traits>
 
-#if defined(NDEBUG)
 #define unused(x) (void)(x)
-#else
-#define unused(x) (void)(0)
-#endif
 
 namespace NovelRT::Utilities
 {

@@ -343,7 +343,7 @@ namespace NovelRT::Ecs
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
          *
-         * @return SparseSet::Iterator starting at the beginning.
+         * @return SparseSet::ConstIterator starting at the beginning.
          */
         [[nodiscard]] SparseSet<TKey, TValue>::Iterator begin() noexcept
         {
@@ -357,7 +357,7 @@ namespace NovelRT::Ecs
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
          *
-         * @return SparseSet::Iterator starting at the end.
+         * @return SparseSet::ConstIterator starting at the end.
          */
         [[nodiscard]] SparseSet<TKey, TValue>::Iterator end() noexcept
         {
@@ -370,7 +370,7 @@ namespace NovelRT::Ecs
          * This function is under special formatting so that range-based for loops are supported.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
          *
-         * @return SparseSet::Iterator starting at the beginning.
+         * @return SparseSet::ConstIterator starting at the beginning.
          */
         [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator begin() const noexcept
         {
@@ -384,7 +384,7 @@ namespace NovelRT::Ecs
          * While this method is not const, it does not modify the SparseSet itself.
          * Calling this without using the result has no effect and introduces overhead for calling a method.
          *
-         * @return SparseSet::Iterator starting at the end.
+         * @return SparseSet::ConstIterator starting at the end.
          */
         [[nodiscard]] SparseSet<TKey, TValue>::ConstIterator end() const noexcept
         {

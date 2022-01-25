@@ -1,13 +1,6 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(glad ${NOVELRT_GLAD_VERSION} REQUIRED
-  COMPONENTS
-    REPRODUCIBLE
-    PROFILE core
-    SPEC gl
-    API gl=4.0,gles2=3.0
-)
 find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -22,66 +15,56 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
 set(SOURCES
-  Animation/SpriteAnimator.cpp
-
   Atom.cpp
 
   Audio/AudioService.cpp
-
-  DebugService.cpp
 
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
   Ecs/EcsUtils.cpp
   Ecs/EntityCache.cpp
+  Ecs/EntityGraphView.cpp
+  Ecs/LinkedEntityListView.cpp
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
+  Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
 
-  Experimental/EngineConfig.cpp
-  Experimental/Graphics/GraphicsMemoryBlock.cpp
-  Experimental/Graphics/GraphicsMemoryBlockCollection.cpp
-  Experimental/Graphics/GraphicsPipeline.cpp
-  Experimental/Graphics/GraphicsPipelineInput.cpp
-  Experimental/Graphics/GraphicsPipelineInputElement.cpp
-  Experimental/Graphics/GraphicsPipelineResource.cpp
-  Experimental/Graphics/GraphicsPipelineSignature.cpp
-  Experimental/Graphics/ShaderProgram.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsAdapter.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsBuffer.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsContext.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsDevice.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsFence.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPipeline.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsProvider.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
-  Experimental/Graphics/Vulkan/VulkanGraphicsTexture.cpp
-  Experimental/Graphics/Vulkan/VulkanShaderProgram.cpp
-  Experimental/Threading/VolatileState.cpp
-  Experimental/Windowing/Glfw/GlfwWindowingDevice.cpp
-  Experimental/Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+  EngineConfig.cpp
 
-  Graphics/BasicFillRect.cpp
-  Graphics/Camera.cpp
-  Graphics/FontSet.cpp
-  Graphics/ImageRect.cpp
-  Graphics/RenderingService.cpp
-  Graphics/RenderObject.cpp
-  Graphics/RGBAConfig.cpp
-  Graphics/TextRect.cpp
-  Graphics/Texture.cpp
+  Graphics/GraphicsMemoryBlock.cpp
+  Graphics/GraphicsMemoryBlockCollection.cpp
+  Graphics/GraphicsPipeline.cpp
+  Graphics/GraphicsPipelineInput.cpp
+  Graphics/GraphicsPipelineInputElement.cpp
+  Graphics/GraphicsPipelineResource.cpp
+  Graphics/GraphicsPipelineSignature.cpp
+  Graphics/GraphicsResourceManager.cpp
+        Graphics/RGBAConfig.cpp
+  Graphics/ShaderProgram.cpp
+  Graphics/Vulkan/VulkanGraphicsAdapter.cpp
+  Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
+  Graphics/Vulkan/VulkanGraphicsBuffer.cpp
+  Graphics/Vulkan/VulkanGraphicsContext.cpp
+  Graphics/Vulkan/VulkanGraphicsDevice.cpp
+  Graphics/Vulkan/VulkanGraphicsFence.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
+  Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
+  Graphics/Vulkan/VulkanGraphicsPipeline.cpp
+  Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
+  Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
+  Graphics/Vulkan/VulkanGraphicsProvider.cpp
+  Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
+  Graphics/Vulkan/VulkanGraphicsTexture.cpp
+  Graphics/Vulkan/VulkanShaderProgram.cpp
 
-  Input/BasicInteractionRect.cpp
-  Input/InteractionObject.cpp
-  Input/InteractionService.cpp
+  Threading/VolatileState.cpp
+  Windowing/Glfw/GlfwWindowingDevice.cpp
+  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+
 
   LoggingService.cpp
 
@@ -93,18 +76,11 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
-  NovelRunner.cpp
+   Timing/StepTimer.cpp
 
-  Timing/StepTimer.cpp
+   Utilities/Misc.cpp
 
-  Transform.cpp
-
-  Utilities/Misc.cpp
-
-  Windowing/WindowingService.cpp
-
-  WorldObject.cpp
-)
+   )
 
 if(NOVELRT_INCLUDE_INK)
   message("NovelRT is compiling with Ink / C# Support.")
@@ -178,7 +154,6 @@ target_link_libraries(Engine
     BZip2::BZip2
     FLAC::FLAC
     Freetype::Freetype
-    glad::glad
     glfw::glfw
     glm::glm
     Microsoft.GSL::Microsoft.GSL

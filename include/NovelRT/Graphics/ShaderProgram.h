@@ -4,21 +4,35 @@
 #ifndef NOVELRT_GRAPHICS_SHADERPROGRAM_H
 #define NOVELRT_GRAPHICS_SHADERPROGRAM_H
 
-#ifndef NOVELRT_H
-#error Please do not include this directly. Use the centralised header (NovelRT.h) instead!
+#ifndef NOVELRT_GRAPHICS_H
+#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
 #endif
 
 namespace NovelRT::Graphics
 {
-    struct ShaderProgram
+    class ShaderProgram : public GraphicsDeviceObject
     {
-    public:
-        GLuint shaderProgramId = 0;
-        GLuint finalViewMatrixBufferUboId = 0;
-        std::vector<GLuint> uboIds;
+    private:
+        std::string _entryPointName;
+        ShaderProgramKind _kind;
 
-        ShaderProgram() = default;
+    public:
+        ShaderProgram(std::shared_ptr<GraphicsDevice> device,
+                      std::string entryPointName,
+                      ShaderProgramKind kind) noexcept;
+
+        [[nodiscard]] inline const std::string& GetEntryPointName() const noexcept
+        {
+            return _entryPointName;
+        }
+
+        [[nodiscard]] inline ShaderProgramKind GetKind() const noexcept
+        {
+            return _kind;
+        }
+
+        [[nodiscard]] virtual gsl::span<const uint8_t> GetBytecode() const noexcept = 0;
     };
 }
 
-#endif
+#endif // !NOVELRT_GRAPHICS_SHADERPROGRAM_H

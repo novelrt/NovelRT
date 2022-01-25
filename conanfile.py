@@ -10,7 +10,6 @@ class NovelRTConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = [
         ("freetype/2.10.1"),
-        ("glad/0.1.33"),
         ("glfw/3.3.2"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
@@ -41,9 +40,6 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
-        "glad:gl_profile":"core",
-        "glad:gl_version":4.0,
-        "glad:gles2_version":3.0,
         "spdlog:header_only":True,
         "vulkan-loader:shared":True,
         "inksupport": True,

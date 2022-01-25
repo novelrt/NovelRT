@@ -72,7 +72,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanModifyValues)
 
 TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 {
-    EntityId entity = Atom::getNextEntityId();
+    EntityId entity = Atom::GetNextEntityId();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
@@ -122,7 +122,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
     cppScheduler->RegisterSystem(sysThree);
     scheduler = reinterpret_cast<NrtSystemSchedulerHandle>(cppScheduler);
 
-    EntityId entity = Atom::getNextEntityId();
+    EntityId entity = Atom::GetNextEntityId();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
@@ -214,7 +214,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
 TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
-    EntityId entity = Atom::getNextEntityId();
+    EntityId entity = Atom::GetNextEntityId();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);

@@ -87,6 +87,19 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Gets the immutable component state for a delete instruction.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return The immutable component state that represents a delete instruction for given type TComponent.
+         */
+        [[nodiscard]] TComponent GetDeleteInstructionState() const noexcept
+        {
+            return _componentBuffer.GetDeleteInstructionState();
+        }
+
+        /**
          * @brief Attempts to add a new component of the given type to the entity with safety checks to ensure it is an
          * exceptionless operation.
          *
@@ -146,6 +159,37 @@ namespace NovelRT::Ecs
         [[nodiscard]] TComponent GetComponent(EntityId entity) const
         {
             return _componentBuffer.GetComponent(entity);
+        }
+
+        /**
+         * @brief Verifies if a given entity has a component.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The target entity to check for an attached component on.
+         * @return true if the immutable data contains the given EntityId.
+         * @return false if there is no entry for the given EntityId.
+         */
+        [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
+        {
+            return _componentBuffer.HasComponent(entity);
+        }
+
+        /**
+         * @brief Attempts to get the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The entity to use for fetching the component.
+         * @param outComponent The output result for the fetched component, if there is one.
+         * @return true if a component was found and returned in outComponent.
+         * @return false if no component exists.
+         */
+        [[nodiscard]] bool TryGetComponent(EntityId entity, TComponent& outComponent) const noexcept
+        {
+            return _componentBuffer.TryGetComponent(entity, outComponent);
         }
 
         /**

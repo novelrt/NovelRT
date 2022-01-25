@@ -3,6 +3,8 @@ set(RESOURCES_FILES
   Fonts/Raleway-Regular.ttf
 
   Images/novel-chan.png
+  Images/novel-chan-white-bg.png
+  Images/test.png
 
   Scripts/avg.lua
   Scripts/story.ink

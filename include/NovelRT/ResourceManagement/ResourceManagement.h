@@ -17,9 +17,11 @@
 namespace NovelRT::ResourceManagement
 {
     class ResourceLoader;
+    struct TextureMetadata;
 }
 
 // clang-format off
+#include "TextureMetadata.h"
 #include "ResourceLoader.h"
 // clang-format on
 

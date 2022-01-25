@@ -13,10 +13,10 @@ namespace NovelRT::PluginManagement
     class IWindowingPluginProvider
     {
     private:
-        [[nodiscard]] virtual Experimental::Windowing::IWindowingDevice* GetWindowingDeviceInternal() = 0;
+        [[nodiscard]] virtual Windowing::IWindowingDevice* GetWindowingDeviceInternal() = 0;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<Experimental::Windowing::IWindowingDevice> GetWindowingDevice()
+        [[nodiscard]] inline std::shared_ptr<Windowing::IWindowingDevice> GetWindowingDevice()
         {
             return GetWindowingDeviceInternal()->shared_from_this();
         }

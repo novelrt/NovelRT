@@ -1,12 +1,6 @@
 set(SOURCES
-  NrtDebugService.cpp
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
-  NrtNovelRunner.cpp
-
-  Animation/NrtSpriteAnimator.cpp
-  Animation/NrtSpriteAnimatorFrame.cpp
-  Animation/NrtSpriteAnimatorState.cpp
 
   Audio/NrtAudioService.cpp
 
@@ -23,18 +17,7 @@ set(SOURCES
   Ecs/Audio/NrtAudioEmitterComponent.cpp
   Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
-  Graphics/NrtBasicFillRect.cpp
-  Graphics/NrtCamera.cpp
-  Graphics/NrtFontSet.cpp
-  Graphics/NrtImageRect.cpp
-  Graphics/NrtRenderingService.cpp
   Graphics/NrtRGBAColour.cpp
-  Graphics/NrtTextRect.cpp
-  Graphics/NrtTexture.cpp
-
-  Input/NrtBasicInteractionRect.cpp
-  Input/NrtInteractionService.cpp
-  Input/NrtKeyStateFrameChangeLog.cpp
 
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoMatrix4x4F.cpp
@@ -46,7 +29,6 @@ set(SOURCES
 
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
-  SceneGraph/NrtRenderObjectNode.cpp
   SceneGraph/NrtScene.cpp
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
@@ -56,8 +38,6 @@ set(SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
-
-  Windowing/NrtWindowingService.cpp
 )
 
 if(NOVELRT_INCLUDE_INK)
