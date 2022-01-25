@@ -119,5 +119,4 @@ namespace NovelRT::Windowing::Glfw
     {
         glfwPollEvents();
     }
-
 } // namespace NovelRT::Windowing::Glfw

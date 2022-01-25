@@ -83,9 +83,6 @@ namespace NovelRT::Ecs::Graphics
         _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
                                                                    Maths::GeoVector2F(1920, 1080));
 
-        EngineConfig::EnableDebugOutputFromEngineInternals() = false;
-        EngineConfig::MinimumInternalLoggingLevel() = LogLevel::Err;
-
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
         _graphicsDevice = _graphicsAdapter->CreateDevice(_surfaceContext, 2);

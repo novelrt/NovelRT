@@ -12,8 +12,11 @@ namespace NovelRT::Windowing::Glfw
 {
     class GlfwWindowingDevice final : public IWindowingDevice
     {
+    public:
+
     private:
         std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
+        std::string _currentTitle;
 
     public:
         GlfwWindowingDevice() noexcept;
@@ -39,6 +42,17 @@ namespace NovelRT::Windowing::Glfw
         [[nodiscard]] inline bool GetShouldClose() const noexcept final
         {
             return glfwWindowShouldClose(GetRawGLFWwindowHandle());
+        }
+
+        [[nodiscard]] inline std::string GetWindowTitle() const noexcept final
+        {
+            return _currentTitle;
+        }
+
+        void SetWindowTitle(const std::string& newTitle) final
+        {
+            _currentTitle = newTitle;
+            glfwSetWindowTitle(_window.get(), _currentTitle.c_str());
         }
 
         void ProcessAllMessages() final;
