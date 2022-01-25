@@ -47,7 +47,7 @@ namespace NovelRT::Windowing::Glfw
             return _currentTitle;
         }
 
-        void SetWindowTitle(const std::string& newTitle) final
+        inline void SetWindowTitle(const std::string& newTitle) final
         {
             _currentTitle = newTitle;
             glfwSetWindowTitle(_window.get(), _currentTitle.c_str());

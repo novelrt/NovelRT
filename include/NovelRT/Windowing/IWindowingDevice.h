@@ -19,7 +19,7 @@ namespace NovelRT::Windowing
         [[nodiscard]] virtual bool GetIsVisible() const noexcept = 0;
         [[nodiscard]] virtual bool GetShouldClose() const noexcept = 0;
         [[nodiscard]] virtual std::string GetWindowTitle() const noexcept = 0;
-        [[nodiscard]] virtual void SetWindowTitle(const std::string& newTitle) = 0;
+        virtual void SetWindowTitle(const std::string& newTitle) = 0;
 
         virtual ~IWindowingDevice() = default;
     };
