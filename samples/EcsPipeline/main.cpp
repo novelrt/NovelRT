@@ -69,6 +69,7 @@ int main()
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
+    windowPtr->SetWindowTitle("ECS Test");
 
     while (!windowPtr->GetShouldClose())
     {
