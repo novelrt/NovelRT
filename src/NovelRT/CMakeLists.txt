@@ -40,6 +40,7 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
+  Ecs/Input/InputSystem.cpp
 
   Experimental/EngineConfig.cpp
   Experimental/Graphics/GraphicsMemoryBlock.cpp

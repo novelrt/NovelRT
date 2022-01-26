@@ -5,11 +5,9 @@
 
 namespace NovelRT::Ecs::Input
 {
-    InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider):
-          _logger(Utilities::Misc::CONSOLE_LOG_INPUT),
-          _service(std::make_shared<Experimental::Input::Glfw::GlfwInputService>())
+    InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider)
     {
-        _service->Initialise(windowPtr->GetHandle());
+        //_service->Initialise(windowPtr->GetHandle());
     }
 
     void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
@@ -17,7 +15,6 @@ namespace NovelRT::Ecs::Input
         _service->Update(delta);
 
         //add new buttons that are held
-
 
         //check for holds
 

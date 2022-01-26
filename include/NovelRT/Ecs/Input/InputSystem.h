@@ -14,7 +14,7 @@ namespace NovelRT::Ecs::Input
     {
     private:
         LoggingService _logger;
-        std::shared_ptr<NovelRT::Experimental::Input::Glfw::GlfwInputService> _service;
+        std::shared_ptr<NovelRT::Experimental::Input::IInputService> _service;
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider);
         ~InputSystem() noexcept;
