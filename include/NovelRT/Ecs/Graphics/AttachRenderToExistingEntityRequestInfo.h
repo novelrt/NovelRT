@@ -13,9 +13,9 @@ namespace NovelRT::Ecs::Graphics
     struct AttachRenderToExistingEntityRequestInfo
     {
         EntityId entityId = 0;
-        Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texturePtr = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<VertexInfo> meshPtr = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelinePtr = nullptr;
+        Threading::ConcurrentSharedPtr<TextureInfo> texturePtr = nullptr;
+        Threading::ConcurrentSharedPtr<VertexInfo> meshPtr = nullptr;
+        Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelinePtr = nullptr;
     };
 }
 

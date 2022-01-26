@@ -12,7 +12,6 @@ public:
     uint64_t testValue = 0;
 
 protected:
-
     void SetUp() override
     {
         testValue = 0;
@@ -479,7 +478,6 @@ TEST_F(LeadingZeroCount64Test, LeadingZeroCount64ReturnsCorrectCountWhenAllBitsS
     auto result = Utilities::LeadingZeroCount64(testValue);
     EXPECT_EQ(result, 0);
 }
-
 
 TEST_F(LeadingZeroCount64Test, LeadingZeroCount64ReturnsCorrectCountWhenBit0SetInverse)
 {

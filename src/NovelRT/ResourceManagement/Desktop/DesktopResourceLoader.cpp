@@ -140,7 +140,7 @@ namespace NovelRT::ResourceManagement::Desktop
         delete[] data.rowPointers;
         png_destroy_read_struct(&png, &info, nullptr);
 
-        return TextureMetadata { returnImage, data.width, data.height, finalLength };
+        return TextureMetadata{returnImage, data.width, data.height, finalLength};
     }
 
     std::vector<uint8_t> DesktopResourceLoader::LoadShaderSourceInternal(std::filesystem::path filePath)

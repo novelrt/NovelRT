@@ -5,8 +5,6 @@ find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
 include(GoogleTest)
 
 set(SOURCES
-  Animation/SpriteAnimatorStateTest.cpp
-
   Ecs/CatalogueTest.cpp
   Ecs/ComponentBufferMemoryContainerTest.cpp
   Ecs/ComponentBufferTest.cpp
@@ -14,12 +12,13 @@ set(SOURCES
   Ecs/ComponentViewTest.cpp
   Ecs/ConfiguratorTest.cpp
   Ecs/EntityCacheTest.cpp
+  Ecs/EntityGraphViewTest.cpp
+  Ecs/LinkedEntityListViewTest.cpp
   Ecs/SparseSetTest.cpp
   Ecs/SystemSchedulerTest.cpp
   Ecs/SparseSetMemoryContainerTest.cpp
 
   Interop/NovelRTInteropUtilsTest.cpp
-  Interop/Animation/SpriteAnimatorStateTest.cpp
   Interop/Ecs/NrtCatalogueTest.cpp
   Interop/Ecs/NrtComponentBufferMemoryContainerTest.cpp
   Interop/Ecs/NrtComponentCacheTest.cpp

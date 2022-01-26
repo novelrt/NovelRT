@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT.h>
-#include <random>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -25,13 +24,10 @@ int main()
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
-    NovelRT::Experimental::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
+    NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
         renderingSystem->GetOrLoadTexture("novel-chan");
 
     renderingSystem->ForceVertexTextureFutureResolution();
-
-    // unused(renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(),
-    // scheduler));
 
     auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
     auto entityGraphBuffer = scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>();
@@ -45,41 +41,26 @@ int main()
     EntityId childOfChildEntity =
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
-    transformBuffer.PushComponentUpdateInstruction(0, childEntity, TransformComponent{ NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0 });
-    transformBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TransformComponent{ NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0 });
+    transformBuffer.PushComponentUpdateInstruction(
+        0, childEntity,
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+    transformBuffer.PushComponentUpdateInstruction(
+        0, childOfChildEntity,
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    scheduler.RegisterSystem(
-        [](auto delta, auto catalogue)
+    scheduler.RegisterSystem([](auto delta, auto catalogue) {
+        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+
+        for (auto [entity, transform] : transforms)
         {
-            ComponentView<TransformComponent> transforms = catalogue.GetComponentView<TransformComponent>();
-
-            for (auto [entity, transform] : transforms)
-            {
-                TransformComponent newComponent{};
-                newComponent.rotationInEulerAngles = 20 * delta.getSecondsFloat();
-                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                transforms.PushComponentUpdateInstruction(entity, newComponent);
-            }
-        });
-
-    /*
-    std::random_device rd;                               // obtain a random number from hardware
-    std::mt19937 gen(rd());                              // seed the generator
-    std::uniform_int_distribution<> distr(-1000, +1000); // define the range
-
-    float x = 0;
-    float y = 0;
-    for (int i = 0; i < 1000; ++i)
-    {
-        EntityId entityToShift = renderingSystem->CreateSpriteEntityOutsideOfSystem(
-            textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
-        buffer.PushComponentUpdateInstruction(0, entityToShift,
-                                              TransformComponent{NovelRT::Maths::GeoVector3F(distr(gen), distr(gen), 0),
-                                                                 NovelRT::Maths::GeoVector2F::zero(), 0.0f});
-    }
-     */
+            TransformComponent newComponent{};
+            newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            transforms.PushComponentUpdateInstruction(entity, newComponent);
+        }
+    });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
@@ -88,6 +69,7 @@ int main()
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
+    windowPtr->SetWindowTitle("ECS Test");
 
     while (!windowPtr->GetShouldClose())
     {

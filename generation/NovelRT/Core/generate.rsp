@@ -7,9 +7,7 @@ include-NrtCore.h
 --test-output
 ../../../tests/NovelRT.DotNet/Interop/Core
 --traverse
-../../../include/NovelRT.Interop/NrtDebugService.h
 ../../../include/NovelRT.Interop/NrtErrorHandling.h
 ../../../include/NovelRT.Interop/NrtLoggingService.h
-../../../include/NovelRT.Interop/NrtNovelRunner.h
 ../../../include/NovelRT.Interop/NrtTransform.h
 ../../../include/NovelRT.Interop/Windowing/../NrtTypedefs.h

@@ -14,21 +14,21 @@ namespace NovelRT::Ecs
     {
         Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::zero();
         Maths::GeoVector2F scale = Maths::GeoVector2F::one();
-        float rotationInEulerAngles = 0.0f;
+        float rotationInRadians = 0.0f;
 
         inline TransformComponent& operator+=(const TransformComponent& other)
         {
             positionAndLayer += other.positionAndLayer;
-            rotationInEulerAngles += other.rotationInEulerAngles;
+            rotationInRadians += other.rotationInRadians;
             scale += other.scale;
 
-            if (rotationInEulerAngles > 359.999999f) // 360 == 0 pretty sure :]
+            if (rotationInRadians > Maths::Utilities::Tau<float>())
             {
-                rotationInEulerAngles -= 359.999999f;
+                rotationInRadians -= Maths::Utilities::Tau<float>();
             }
-            else if (rotationInEulerAngles < 0)
+            else if (rotationInRadians < -Maths::Utilities::Tau<float>())
             {
-                rotationInEulerAngles += 359.999999f;
+                rotationInRadians += Maths::Utilities::Tau<float>();
             }
 
             return *this;
@@ -46,29 +46,17 @@ namespace NovelRT::Ecs
             *this = other;
             return *this;
         }
-    };
 
-    /*
-    struct QuadEntityBlockComponent
-    {
-        uint8_t blockWriteMap;
-
-        EntityId previousBlock;
-
-        EntityId zero;
-        EntityId one;
-        EntityId two;
-        EntityId three;
-
-        EntityId nextBlock;
-
-        inline QuadEntityBlockComponent& operator+=(const QuadEntityBlockComponent& other)
+        [[nodiscard]] inline bool operator==(const EntityGraphComponent& other) const noexcept
         {
-            *this = other;
-            return *this;
+            return isValid == other.isValid && parent == other.parent && childrenStartNode == other.childrenStartNode;
+        }
+
+        [[nodiscard]] inline bool operator!=(const EntityGraphComponent& other) const noexcept
+        {
+            return !(*this == other);
         }
     };
-    */
 
     struct LinkedEntityListNodeComponent
     {
@@ -80,6 +68,16 @@ namespace NovelRT::Ecs
         {
             *this = other;
             return *this;
+        }
+
+        [[nodiscard]] inline bool operator==(const LinkedEntityListNodeComponent& other) const noexcept
+        {
+            return IsValid == other.IsValid && previous == other.previous && next == other.next;
+        }
+
+        [[nodiscard]] inline bool operator!=(const LinkedEntityListNodeComponent& other) const noexcept
+        {
+            return !(*this == other);
         }
     };
 

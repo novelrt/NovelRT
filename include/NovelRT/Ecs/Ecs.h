@@ -14,7 +14,7 @@
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
 #include "../PluginManagement/PluginManagement.h"
-#include "../Experimental/Threading/Threading.h"
+#include "../Threading/Threading.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>
@@ -57,9 +57,9 @@ namespace NovelRT::Ecs
     class SystemScheduler;
     class UnsafeComponentView;
     struct TransformComponent;
-    class EntityObject;
+    struct EntityGraphComponent;
     class LinkedEntityListView;
-    class EntityObject;
+    class EntityGraphView;
 }
 
 // ECS types
@@ -72,6 +72,7 @@ namespace NovelRT::Ecs
 #include "ComponentBuffer.h"
 #include "ComponentCache.h"
 #include "ComponentView.h"
+#include "DefaultComponentTypes.h"
 #include "EcsUtils.h"
 #include "EntityCache.h"
 #include "IEcsSystem.h"
@@ -79,12 +80,11 @@ namespace NovelRT::Ecs
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
 #include "Graphics/Ecs.Graphics.h"
-#include "DefaultComponentTypes.h"
 #include "Audio/Ecs.Audio.h"
 #include "Input/Ecs.Input.h"
 #include "Configurator.h"
 #include "LinkedEntityListView.h"
-#include "EntityObject.h"
+#include "EntityGraphView.h"
 
 // clang-format on
 

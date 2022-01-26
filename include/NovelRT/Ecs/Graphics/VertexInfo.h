@@ -12,7 +12,7 @@ namespace NovelRT::Ecs::Graphics
 {
     struct VertexInfo
     {
-        Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource> gpuVertexRegion = {};
+        NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> gpuVertexRegion = {};
         std::string vertexInfoName;
         Atom ecsId = 0;
         void* stagingPtr = nullptr;

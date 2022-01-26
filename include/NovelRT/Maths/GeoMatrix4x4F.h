@@ -4,19 +4,14 @@
 #ifndef NOVELRT_MATHS_GEOMATRIX4_H
 #define NOVELRT_MATHS_GEOMATRIX4_H
 
-#include "GeoVector4F.h"
+#ifndef NOVELRT_MATHS_H
+#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
+#endif
 
 namespace NovelRT::Maths
 {
     class GeoMatrix4x4F
     {
-        friend class Graphics::RenderObject;
-        friend class Graphics::ImageRect;
-        friend class Graphics::BasicFillRect;
-        friend class Graphics::TextRect;
-        friend class Graphics::RenderingService;
-        friend class Graphics::Camera;
-
     private:
         explicit GeoMatrix4x4F(glm::mat4 matrix) noexcept
             : x(*reinterpret_cast<GeoVector4F*>(&matrix[0])),
@@ -47,10 +42,15 @@ namespace NovelRT::Maths
                 glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
         }
 
-        inline void Rotate(float angleInEulerDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
+        inline void Rotate(float angleInRadians, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), glm::radians(angleInEulerDegrees),
+            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInRadians,
                                                               *reinterpret_cast<glm::vec3*>(&rotationAngle));
+        }
+
+        inline void RotateUsingDegrees(float angleInDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
+        {
+            Rotate(Utilities::DegreesToRadians(angleInDegrees), rotationAngle);
         }
 
         inline void Scale(GeoVector3F scaleValue)

@@ -15,12 +15,13 @@ namespace NovelRT::Ecs::Graphics
         Atom ecsVertexDataId = 0;
         Atom ecsTextureId = 0;
         Atom ecsPipelineId = 0;
-        std::map<size_t, Experimental::Graphics::GraphicsMemoryRegion<Experimental::Graphics::GraphicsResource>> gpuTransformConstantBufferRegions = {};
+        std::map<size_t, NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
+            gpuTransformConstantBufferRegions = {};
 
         inline bool operator==(const GraphicsPrimitiveInfo& other) const noexcept
         {
             return (ecsVertexDataId == other.ecsVertexDataId) && (ecsTextureId == other.ecsTextureId) &&
-                    (ecsPipelineId == other.ecsPipelineId);
+                   (ecsPipelineId == other.ecsPipelineId);
         }
 
         inline bool operator==(const RenderComponent& other) const noexcept

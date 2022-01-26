@@ -9,7 +9,6 @@ include-NrtSceneGraph.h
 --traverse
 ../../../include/NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h
 ../../../include/NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h
-../../../include/NovelRT.Interop/SceneGraph/NrtRenderObjectNode.h
 ../../../include/NovelRT.Interop/SceneGraph/NrtScene.h
 ../../../include/NovelRT.Interop/SceneGraph/NrtSceneGraphTypedefs.h
 ../../../include/NovelRT.Interop/SceneGraph/NrtSceneNode.h

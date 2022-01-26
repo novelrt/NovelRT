@@ -45,9 +45,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-// glad
-#include <glad/glad.h>
-
 // GLFW3
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -70,16 +67,7 @@
    */
   namespace NovelRT {
     typedef class Atom Atom;
-    typedef class DebugService DebugService;
     typedef class LoggingService LoggingService;
-    typedef class NovelRunner NovelRunner;
-  }
-
-  /**
-   * @brief Contains animation features.
-   */
-  namespace NovelRT::Animation {
-    typedef class SpriteAnimator SpriteAnimator;
   }
 
 #ifdef NOVELRT_INK
@@ -90,18 +78,7 @@
     typedef class RuntimeService RuntimeService;
   }
 #endif
-  /**
-   * @brief Contains graphics features, such as rendering, textures, cameras, etc.
-   */
-  namespace NovelRT::Graphics {
-    typedef class Texture Texture;
-    typedef class BasicFillRect BasicFillRect;
-    typedef class Camera Camera;
-    typedef class ImageRect ImageRect;
-    typedef class RenderingService RenderingService;
-    typedef class RenderObject RenderObject;
-    typedef class TextRect TextRect;
-  }
+
 #ifdef NOVELRT_INK
   /**
    * @brief Contains bindings for Ink.
@@ -111,14 +88,6 @@
     typedef class Story Story;
   }
 #endif
-  /**
-   * @brief Contains input features, such as keyboard and mouse interactivity.
-   */
-  namespace NovelRT::Input {
-    typedef class BasicInteractionRect BasicInteractionRect;
-    typedef class InteractionObject InteractionObject;
-    typedef class InteractionService InteractionService;
-  }
 
   /**
    * @brief Contains timing features, such as timers.
@@ -135,13 +104,7 @@
   }
 
   //generic experimental files in root namespace
-  #include "NovelRT/Experimental/EngineConfig.h"
-
-  //enums
-  #include "NovelRT/Input/KeyCode.h"
-  #include "NovelRT/Input/KeyState.h"
-  #include "NovelRT/Graphics/CameraFrameState.h"
-  #include "NovelRT/Windowing/WindowMode.h"
+  #include "NovelRT/EngineConfig.h"
 
   // Value types
   #include "NovelRT/Atom.h"
@@ -150,14 +113,6 @@
   #include "NovelRT/Utilities/Lazy.h"
   #include "NovelRT/Utilities/Misc.h"
 
-  #include "NovelRT/Transform.h"
-
-  #include "NovelRT/Animation/AnimatorPlayState.h"
-  #include "NovelRT/Animation/SpriteAnimatorFrame.h"
-
-  #include "NovelRT/Graphics/GraphicsCharacterRenderData.h"
-  #include "NovelRT/Graphics/ImageData.h"
-  #include "NovelRT/Graphics/ShaderProgram.h"
   #include "NovelRT/Graphics/RGBAColour.h"
 
   //Maths types
@@ -166,12 +121,6 @@
   // Base Types
   #include "NovelRT/LoggingService.h" // this isn't in the services section due to include order/dependencies.
   #include "NovelRT/Timing/StepTimer.h"
-  #include "NovelRT/NovelRunner.h"
-  #include "NovelRT/WorldObject.h"
-
-  // Animation types
-  #include "NovelRT/Animation/SpriteAnimatorState.h"
-  #include "NovelRT/Animation/SpriteAnimator.h"
 
   // Audio types
   #include "NovelRT/Audio/Audio.h"
@@ -182,35 +131,21 @@
   // Exception types
   #include "NovelRT/Exceptions/Exceptions.h"
 
-  // Graphics types
-  #include "NovelRT/Graphics/GraphicsCharacterRenderDataHelper.h"
-  #include "NovelRT/Graphics/Camera.h"
-  #include "NovelRT/Graphics/Texture.h"
-  #include "NovelRT/Graphics/FontSet.h"
-  #include "NovelRT/Graphics/RenderObject.h"
-  #include "NovelRT/Graphics/BasicFillRect.h"
-  #include "NovelRT/Graphics/ImageRect.h"
-  #include "NovelRT/Graphics/TextRect.h"
-
   // Experimental types
-  #include "NovelRT/Experimental/Graphics/Graphics.h"
-  #include "NovelRT/Experimental/Graphics/Vulkan/Graphics.Vulkan.h"
-  #include "NovelRT/Experimental/Threading/Threading.h"
-  #include "NovelRT/Experimental/Windowing/Windowing.h"
-  #include "NovelRT/Experimental/Windowing/Glfw/Windowing.Glfw.h"
+  #include "NovelRT/Graphics/Graphics.h"
+  #include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
+  #include "NovelRT/Threading/Threading.h"
+  #include "NovelRT/Windowing/Windowing.h"
+  #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
   #include "NovelRT/Experimental/Input/Input.h"
   #include "NovelRT/Experimental/Input/Glfw/Input.Glfw.h"
+
 
 #ifdef NOVELRT_INK
   // Ink types
   #include "NovelRT/Ink/Story.h"
   #include "NovelRT/Ink/InkService.h"
 #endif
-
-  // Input types
-  #include "NovelRT/Input/InteractionObject.h"
-  #include "NovelRT/Input/BasicInteractionRect.h"
-  #include "NovelRT/Input/KeyStateFrameChangeLog.h"
 
   // Plugin Management types
   #include "NovelRT/PluginManagement/PluginManagement.h"
@@ -222,13 +157,9 @@
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
-  #include "NovelRT/DebugService.h"
 #ifdef NOVELRT_INK
   #include "NovelRT/DotNet/RuntimeService.h"
 #endif
-  #include "NovelRT/Input/InteractionService.h"
-  #include "NovelRT/Windowing/WindowingService.h"
-  #include "NovelRT/Graphics/RenderingService.h"
 
   // Scene Graph types
   #include "NovelRT/SceneGraph/SceneGraph.h"
@@ -238,16 +169,8 @@
   #include "NovelRT.Interop/NrtTypedefs.h"
 
   // Core
-  #include "NovelRT.Interop/NrtDebugService.h"
   #include "NovelRT.Interop/NrtErrorHandling.h"
   #include "NovelRT.Interop/NrtLoggingService.h"
-  #include "NovelRT.Interop/NrtNovelRunner.h"
-  #include "NovelRT.Interop/NrtTransform.h"
-
-  // Animation
-  #include "NovelRT.Interop/Animation/NrtSpriteAnimator.h"
-  #include "NovelRT.Interop/Animation/NrtSpriteAnimatorFrame.h"
-  #include "NovelRT.Interop/Animation/NrtSpriteAnimatorState.h"
 
   // Audio
   #include "NovelRT.Interop/Audio/NrtAudio.h"
@@ -268,26 +191,11 @@
   #include "NovelRT.Interop/Ecs/NrtUnsafeComponentView.h"
   #include "NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h"
 
-  // Graphics
-  #include "NovelRT.Interop/Graphics/NrtBasicFillRect.h"
-  #include "NovelRT.Interop/Graphics/NrtCamera.h"
-  #include "NovelRT.Interop/Graphics/NrtFontSet.h"
-  #include "NovelRT.Interop/Graphics/NrtImageRect.h"
-  #include "NovelRT.Interop/Graphics/NrtRenderingService.h"
-  #include "NovelRT.Interop/Graphics/NrtRGBAColour.h"
-  #include "NovelRT.Interop/Graphics/NrtTextRect.h"
-  #include "NovelRT.Interop/Graphics/NrtTexture.h"
-
 #ifdef NOVELRT_INK
   // Ink
   #include "NovelRT.Interop/Ink/NrtInkService.h"
   #include "NovelRT.Interop/Ink/NrtStory.h"
 #endif
-
-  // Input
-  #include "NovelRT.Interop/Input/NrtBasicInteractionRect.h"
-  #include "NovelRT.Interop/Input/NrtInteractionService.h"
-  #include "NovelRT.Interop/Input/NrtKeyStateFrameChangeLog.h"
 
   // Maths
   #include "NovelRT.Interop/Maths/NrtGeoBounds.h"
@@ -301,7 +209,6 @@
   // SceneGraph
   #include "NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h"
   #include "NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h"
-  #include "NovelRT.Interop/SceneGraph/NrtRenderObjectNode.h"
   #include "NovelRT.Interop/SceneGraph/NrtScene.h"
   #include "NovelRT.Interop/SceneGraph/NrtSceneNode.h"
   #include "NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h"

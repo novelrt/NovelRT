@@ -16,7 +16,9 @@ namespace NovelRT::ResourceManagement
         std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
 
     protected:
-        [[nodiscard]] virtual TextureMetadata LoadTextureInternal(std::filesystem::path filePath) = 0; // TODO: I've realised these should probably be overloads, not internal methods. Monke brain. :(
+        [[nodiscard]] virtual TextureMetadata LoadTextureInternal(
+            std::filesystem::path filePath) = 0; // TODO: I've realised these should probably be overloads, not internal
+                                                 // methods. Monke brain. :(
         [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSourceInternal(std::filesystem::path filePath) = 0;
 
     public:
@@ -32,7 +34,9 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] inline TextureMetadata LoadTexture(const std::string& fileName)
         {
-            return LoadTextureInternal(_resourcesRootDirectory / "Images" / fileName); // TODO: This should probably either be textures or sprites, not image? Thonk.
+            return LoadTextureInternal(
+                _resourcesRootDirectory / "Images" /
+                fileName); // TODO: This should probably either be textures or sprites, not image? Thonk.
         }
 
         [[nodiscard]] inline std::vector<uint8_t> LoadShaderSource(const std::string& fileName)

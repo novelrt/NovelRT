@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <cstddef>
+#include <limits>
 
 #ifndef NOVELRT_ATOM_H
 #define NOVELRT_ATOM_H
@@ -17,11 +18,11 @@ namespace NovelRT
         uintptr_t _value;
 
     public:
-        explicit Atom() noexcept : Atom(0)
+        constexpr Atom() noexcept : Atom(0)
         {
         }
 
-        Atom(uintptr_t value) noexcept : _value(value)
+        constexpr Atom(uintptr_t value) noexcept : _value(value)
         {
         }
 
@@ -30,9 +31,19 @@ namespace NovelRT
             return _value == other._value;
         }
 
+        bool operator==(uintptr_t other) const noexcept
+        {
+            return _value == other;
+        }
+
         bool operator!=(Atom other) const noexcept
         {
             return _value != other._value;
+        }
+
+        bool operator!=(uintptr_t other) const noexcept
+        {
+            return _value != other;
         }
 
         bool operator<(Atom other) const noexcept
@@ -92,6 +103,13 @@ namespace NovelRT
         {
             return static_cast<size_t>(atom._value);
         }
+    };
+}
+
+namespace std
+{
+    template<> class numeric_limits<NovelRT::Atom> : public numeric_limits<uintptr_t>
+    {
     };
 }
 

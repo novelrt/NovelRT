@@ -12,10 +12,10 @@ namespace NovelRT::Ecs::Graphics
 {
     struct CreateRenderEntityRequestInfo
     {
-        Experimental::Threading::ConcurrentSharedPtr<EntityId> entityId = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<TextureInfo> texturePtr = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<VertexInfo> meshPtr = nullptr;
-        Experimental::Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelinePtr = nullptr;
+        Threading::ConcurrentSharedPtr<EntityId> entityId = nullptr;
+        Threading::ConcurrentSharedPtr<TextureInfo> texturePtr = nullptr;
+        Threading::ConcurrentSharedPtr<VertexInfo> meshPtr = nullptr;
+        Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelinePtr = nullptr;
     };
 }
 

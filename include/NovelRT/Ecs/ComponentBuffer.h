@@ -155,16 +155,16 @@ namespace NovelRT::Ecs
          * @return true if a component was found and returned in outComponent.
          * @return false if no component exists.
          */
-         [[nodiscard]] bool TryGetComponent(EntityId entity, T& outComponent) const noexcept
-         {
-             if (!HasComponent(entity))
-             {
-                 return false;
-             }
+        [[nodiscard]] bool TryGetComponent(EntityId entity, T& outComponent) const noexcept
+        {
+            if (!HasComponent(entity))
+            {
+                return false;
+            }
 
-             outComponent = GetComponentUnsafe(entity);
-             return true;
-         }
+            outComponent = GetComponentUnsafe(entity);
+            return true;
+        }
 
         /**
          * @brief Gets a copy of the component instance attached to this entity.

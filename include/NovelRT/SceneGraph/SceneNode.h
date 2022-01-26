@@ -5,7 +5,7 @@
 #define NOVELRT_SCENEGRAPH_SCENENODE_H
 
 #ifndef NOVELRT_SCENEGRAPH_H
-#error NovelRT does not support including types explicitly by default. Please include SceneGraph.h instead for the Graphics namespace subset.
+#error NovelRT does not support including types explicitly by default. Please include SceneGraph.h instead for the SceneGraph.h namespace subset.
 #endif
 
 namespace NovelRT::SceneGraph

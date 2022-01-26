@@ -106,7 +106,6 @@ function Update-CSharp() {
       "$HOME/.conan/data/fmt/7.1.2/_/_/package/127af201a4cdf8111e2e08540525c245c9b3b99e/include"
       "$HOME/.conan/data/freetype/2.10.1/_/_/package/0346a2bb772a133154db158db36dcafcf4a18114/include"
       "$HOME/.conan/data/freetype/2.10.1/_/_/package/0346a2bb772a133154db158db36dcafcf4a18114/include/freetype2"
-      "$HOME/.conan/data/glad/0.1.33/_/_/package/830ebe61abc2ce47d1ae6b80029e84624132be57/include"
       "$HOME/.conan/data/glfw/3.3.2/_/_/package/bbccade5442fcfbbf624bac852a93d4485409c0f/include"
       "$HOME/.conan/data/glm/0.9.9.7/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
       "$HOME/.conan/data/gtest/1.10.0/_/_/package/5ad274d83035c78ba2b205e6cf4f1b317aee8e05/include"

@@ -1,3 +1,5 @@
+include(CopyBuildProducts)
+
 set(SOURCES
   main.cpp
 )
