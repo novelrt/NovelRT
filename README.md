@@ -32,7 +32,6 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- .NET SDK 6.0.100-rc.1
 - CMake 3.18
 - Doxygen 1.8.8 (if building docs)
 - Freetype 2.8.1
@@ -84,7 +83,7 @@ conan build .. --build-folder .
 
 If you would like to change any of the settings prior to building, pass them in like so:
 ```
-conan build .. --build-folder . -o NovelRT:inksupport=False -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
+conan build .. --build-folder . -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 
@@ -124,7 +123,7 @@ conan build .. --build-folder .
 
 If you would like to change any of the settings prior to building, pass them in like so:
 ```
-conan build .. --build-folder . -o NovelRT:inksupport=False -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
+conan build .. --build-folder . -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 

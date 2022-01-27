@@ -82,24 +82,7 @@ set(SOURCES
 
    )
 
-if(NOVELRT_INCLUDE_INK)
-  message("NovelRT is compiling with Ink / C# Support.")
-  set(SOURCES
-    DotNet/RuntimeService.cpp
-    Ink/InkService.cpp
-    Ink/Story.cpp
-    ${SOURCES}
-  )
-endif()
-
 add_library(Engine SHARED ${SOURCES})
-
-if(NOVELRT_INCLUDE_INK)
-  target_compile_definitions(Engine PRIVATE NOVELRT_INK)
-  target_link_libraries(Engine PUBLIC
-    Dotnet
-  )
-endif()
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
 

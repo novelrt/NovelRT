@@ -68,15 +68,6 @@ copy_build_products(Engine_Tests
 
   DEPENDENCY Interop
   TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-
-  DEPENDENCY Dotnet
-  TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>/dotnet
-  CONDITION NOVELRT_INCLUDE_INK
-
-  DEPENDENCY Dotnet
-  DEPENDENCY_FILES nethost.dll
-  TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-  CONDITION NOVELRT_INCLUDE_INK AND WIN32
 )
 
 gtest_discover_tests(Engine_Tests

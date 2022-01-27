@@ -5,7 +5,7 @@ set(SOURCES
 )
 
 add_executable(VulkanRender ${SOURCES})
-add_dependencies(VulkanRender Dotnet Resources)
+add_dependencies(VulkanRender Resources)
 target_link_libraries(VulkanRender
   PRIVATE
     Engine
@@ -17,13 +17,4 @@ copy_build_products(VulkanRender
 
   DEPENDENCY Engine
   TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
-
-  DEPENDENCY Dotnet
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/dotnet
-  CONDITION NOVELRT_INCLUDE_INK
-
-  DEPENDENCY Dotnet
-  DEPENDENCY_FILES nethost.dll
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
-  CONDITION NOVELRT_INCLUDE_INK AND WIN32
 )
