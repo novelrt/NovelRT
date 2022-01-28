@@ -87,4 +87,11 @@ namespace NovelRT
         auto value = ++_nextEcsPrimitiveInfoConfigurationId;
         return Atom(value);
     }
+
+    Atom Atom::GetNextEcsInputActionId() noexcept
+    {
+        static std::atomic_uintptr_t _nextInputActionId(0);
+        auto value = ++_nextInputActionId;
+        return Atom(value);
+    }
 }

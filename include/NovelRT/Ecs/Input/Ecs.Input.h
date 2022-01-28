@@ -14,12 +14,10 @@
 namespace NovelRT::Ecs::Input
 {
     struct InputEventComponent;
-    struct InputReceiverComponent;
     class InputSystem;
 }
 
 #include "InputEventComponent.h"
-#include "InputReceiverComponent.h"
 #include "InputSystem.h"
 
 #endif // NOVELRT_ECS_INPUT_H

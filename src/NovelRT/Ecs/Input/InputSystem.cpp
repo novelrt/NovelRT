@@ -7,42 +7,68 @@ namespace NovelRT::Ecs::Input
 {
     InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider)
     {
-        //_service->Initialise(windowPtr->GetHandle());
+        _actionMap = std::map<NovelRT::Atom, std::string>();
     }
 
     void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
         _service->Update(delta);
 
-        //add new buttons that are held
+        auto inputs = catalogue.GetComponentView<InputEventComponent>();
+        auto mappings = _service->GetAllMappings();
 
-        //check for holds
-
-        //delete any old inputs
-        auto inputEvents = catalogue.GetComponentViews<InputEventComponent>();
-
-        for (auto [entity, inputEvent] : inputEvents)
+        for (auto [entity, input] : inputs)
         {
-            if (inputEvent.released && _service->IsKeyReleased(inputEvent.actionName))
+            if (_service->GetKeyState(_actionMap.at(input.actionId)) == Experimental::Input::KeyState::Idle)
             {
-                //set inputevent for deletion
+                inputs.RemoveComponent(entity);
+            }
+            else
+            {
+                auto mouse = _service->GetMousePosition();
+                auto event = InputEventComponent{input.actionId, _service->GetKeyState(_actionMap.at(input.actionId)), input.mousePositionX, input.mousePositionY};
+                inputs.PushComponentUpdateInstruction(entity, event);
             }
         }
+        inputs = catalogue.GetComponentView<InputEventComponent>();
 
+
+
+        for (auto action : mappings)
+        {
+            bool found = false;
+            auto findResult = std::find_if(inputs.begin(), inputs.end(),  [&](const std::pair<EntityId, InputEventComponent> &pair){
+                                               auto x = _actionMap.at(pair.second.actionId);
+                                    return _actionMap.at(pair.second.actionId). == action;
+                                });
+
+
+            if (findResult == inputs.end())
+            {
+                auto entity = catalogue.CreateEntity();
+                inputs.AddComponent(entity, InputEventComponent{});
+            }
+        }
+    }
+
+    void InputSystem::AddMapping(std::string name, std::string id)
+    {
+        unused(_service->AddInputAction(name, id));
+        _actionMap.insert(std::pair<NovelRT::Atom, std::string>(NovelRT::Atom::GetNextEcsInputActionId(), name));
     }
 
     void InputSystem::AddDefaultKBMMapping()
     {
-        _service->AddInputAction("Up", "W");
-        _service->AddInputAction("Down", "S");
-        _service->AddInputAction("Left", "A");
-        _service->AddInputAction("Right", "D");
-        _service->AddInputAction("LeftClick", "LeftMouseButton");
-        _service->AddInputAction("A", "K");
-        _service->AddInputAction("B", "L");
+        AddMapping("Down", "S");
+        AddMapping("Left", "A");
+        AddMapping("Right", "D");
+        AddMapping("LeftClick", "LeftMouseButton");
+        AddMapping("A", "K");
+        AddMapping("B", "L");
     }
 
     InputSystem::~InputSystem() noexcept
     {
+        _service->TearDown();
     }
 }

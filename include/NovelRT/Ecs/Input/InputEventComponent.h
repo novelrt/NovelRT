@@ -12,21 +12,24 @@ namespace NovelRT::Ecs::Input
 {
     struct InputEventComponent
     {
-        LinkedEntityListNodeComponent actionList;
-        bool pressed;
-        bool released;
+        NovelRT::Atom actionId;
+        NovelRT::Experimental::Input::KeyState state;
         float mousePositionX;
         float mousePositionY;
 
         inline InputEventComponent& operator+=(const InputEventComponent& other) noexcept
         {
-            actionList = other.actionList;
-            pressed = other.pressed;
-            released = other.released;
+            actionId = actionId;
+            state = other.state;
             mousePositionX = other.mousePositionX;
             mousePositionY = other.mousePositionY;
             return *this;
         };
+
+        inline bool operator==(const InputEventComponent& other) noexcept
+        {
+            return actionId == other.actionId;
+        }
     };
 }
 

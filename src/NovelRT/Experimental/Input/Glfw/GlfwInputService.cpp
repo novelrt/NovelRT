@@ -215,25 +215,39 @@ namespace NovelRT::Experimental::Input::Glfw
                 }
 
 
-                if(press && stateIterator->isPressed)
+                if(press && stateIterator->state == KeyState::KeyDown)
                 {
-                    mapIterator->isHeld = true;
+                    mapIterator->state = KeyState::KeyDownHeld;
+                }
+                else if (press && stateIterator->state == KeyState::Idle)
+                {
+                    mapIterator->state = KeyState::KeyDown;
+                }
+                else if (release && (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
+                {
+                    mapIterator->state = KeyState::KeyUp;
                 }
                 else
                 {
-                    mapIterator->isHeld = false;
+                    mapIterator->state = KeyState::Idle;
                 }
-
-                mapIterator->isPressed = press;
-                mapIterator->isReleased = release;
             }
 
         }
 
     }
-
-    void GlfwInputService::KeyCallback(GLFWwindow* /*window*/, int32_t /*key*/ , int32_t /*scancode*/, int32_t /*action*/, int32_t /*mods*/)
+    KeyState& GlfwInputService::GetKeyState(std::string key)
     {
+        for(auto action : _mappedActions)
+        {
+            if (action.actionName == key)
+            {
+                return action.state;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", key);
+        return KeyState::Idle;
     }
 
     bool GlfwInputService::IsKeyPressed(std::string input)
@@ -242,7 +256,7 @@ namespace NovelRT::Experimental::Input::Glfw
         {
             if (action.actionName == input)
             {
-                return action.isPressed;
+                return action.state == KeyState::KeyDown;
             }
         }
 
@@ -256,7 +270,7 @@ namespace NovelRT::Experimental::Input::Glfw
         {
             if (action.actionName == input)
             {
-                return action.isHeld;
+                return action.state == KeyState::KeyDownHeld;
             }
         }
 
@@ -270,7 +284,7 @@ namespace NovelRT::Experimental::Input::Glfw
         {
             if (action.actionName == input)
             {
-                return action.isReleased;
+                return action.state == KeyState::KeyUp;
             }
         }
 
@@ -311,12 +325,6 @@ namespace NovelRT::Experimental::Input::Glfw
         }
     }
 
-    void GlfwInputService::UpdateInput(InputAction& action, bool pressed, bool released)
-    {
-        action.isPressed = pressed;
-        action.isReleased = released;
-    }
-
     NovelKey& GlfwInputService::GetAvailableKey(std::string keyRequested)
     {
         if(keyRequested == "")
@@ -334,6 +342,11 @@ namespace NovelRT::Experimental::Input::Glfw
 
         _logger.logError("Key {} not available from this input service.", keyRequested);
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
+    }
+
+    std::list<InputAction> GlfwInputService::GetAllMappings()
+    {
+        return _mappedActions;
     }
 
     NovelRT::Maths::GeoVector2F& GlfwInputService::GetMousePosition()

@@ -17,12 +17,14 @@
 namespace NovelRT::Experimental::Input
 {
     class NovelKey;
+    enum class KeyState;
     struct InputAction;
     class IInputService;
 }
 
 //Input Types
 #include "NovelKey.h"
+#include "KeyState.h"
 #include "InputAction.h"
 #include "IInputService.h"
 

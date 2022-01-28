@@ -14,7 +14,11 @@ namespace NovelRT::Ecs::Input
     {
     private:
         LoggingService _logger;
+        //NovelRT::Atom _actionIdIncrement;
         std::shared_ptr<NovelRT::Experimental::Input::IInputService> _service;
+        std::map<NovelRT::Atom, std::string> _actionMap;
+
+        void AddMapping(std::string name, std::string id);
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider);
         ~InputSystem() noexcept;

@@ -20,8 +20,7 @@ namespace NovelRT::Experimental::Input::Glfw
         std::list<InputAction> _previousStates;
         NovelRT::Maths::GeoVector2F _mousePos;
 
-        void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
-        void UpdateInput(InputAction& action, bool pressed, bool released);
+
     public:
         GlfwInputService() noexcept;
 
@@ -31,9 +30,11 @@ namespace NovelRT::Experimental::Input::Glfw
         [[nodiscard]] bool IsKeyPressed(std::string key) final;
         [[nodiscard]] bool IsKeyHeld(std::string key) final;
         [[nodiscard]] bool IsKeyReleased(std::string key) final;
+        [[nodiscard]] KeyState& GetKeyState(std::string key) final;
         [[nodiscard]] InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) final;
         NovelKey& GetAvailableKey(std::string keyRequested) final;
         NovelRT::Maths::GeoVector2F& GetMousePosition() final;
+        std::list<InputAction> GetAllMappings() final;
 
 
 

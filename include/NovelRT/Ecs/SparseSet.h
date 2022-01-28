@@ -121,9 +121,9 @@ namespace NovelRT::Ecs
 
             ConstIterator operator++(int)
             {
-                Iterator tmp = *this;
+                Iterator tmp = reinterpret_cast<Iterator>(*this);
                 ++(*this);
-                return tmp;
+                return reinterpret_cast<ConstIterator>(tmp);
             }
 
             friend bool operator==(const ConstIterator& lhs, const ConstIterator& rhs)
