@@ -14,7 +14,7 @@ namespace NovelRT::Experimental::Input
     {
     protected:
         LoggingService _logger;
-        std::list<InputAction> _mappedActions;
+        std::vector<InputAction> _mappedActions;
 
         std::map<std::string, NovelKey> _availableKeys;
     public:
@@ -24,11 +24,11 @@ namespace NovelRT::Experimental::Input
         [[nodiscard]] virtual bool IsKeyPressed(std::string key) = 0;
         [[nodiscard]] virtual bool IsKeyHeld(std::string key) = 0;
         [[nodiscard]] virtual bool IsKeyReleased(std::string key) = 0;
-        [[nodiscard]] virtual KeyState& GetKeyState(std::string key) = 0;
+        [[nodiscard]] virtual KeyState GetKeyState(std::string key) = 0;
         [[nodiscard]] virtual InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) = 0;
         virtual NovelKey& GetAvailableKey(std::string keyRequested) = 0;
         virtual NovelRT::Maths::GeoVector2F& GetMousePosition() = 0;
-        virtual std::list<InputAction>& GetAllMappings() = 0;
+        //virtual std::list<InputAction>& GetAllMappings() = 0;
 
         virtual ~IInputService() = default;
     };

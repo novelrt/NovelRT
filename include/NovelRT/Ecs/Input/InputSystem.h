@@ -14,17 +14,16 @@ namespace NovelRT::Ecs::Input
     {
     private:
         LoggingService _logger;
-        //NovelRT::Atom _actionIdIncrement;
         std::shared_ptr<NovelRT::Experimental::Input::IInputService> _service;
         std::map<NovelRT::Atom, std::string> _actionMap;
 
-        void AddMapping(std::string name, std::string id);
+        void AddMapping(std::string name, std::string id, Ecs::Catalogue catalogue);
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider);
         ~InputSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
-        void AddDefaultKBMMapping();
+        void AddDefaultKBMMapping(Ecs::Catalogue catalogue);
     };
 }
 

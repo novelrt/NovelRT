@@ -15,7 +15,6 @@ namespace NovelRT::Ecs::Input
         _service->Update(delta);
 
         auto inputs = catalogue.GetComponentView<InputEventComponent>();
-        auto mappings = _service->GetAllMappings();
 
         for (auto [entity, input] : inputs)
         {
@@ -25,46 +24,41 @@ namespace NovelRT::Ecs::Input
             }
             else
             {
-                auto mouse = _service->GetMousePosition();
                 auto event = InputEventComponent{input.actionId, _service->GetKeyState(_actionMap.at(input.actionId)), input.mousePositionX, input.mousePositionY};
                 inputs.PushComponentUpdateInstruction(entity, event);
             }
         }
         inputs = catalogue.GetComponentView<InputEventComponent>();
 
-
-
-        for (auto action : mappings)
+        for (auto action : _actionMap)
         {
-            bool found = false;
-            auto findResult = std::find_if(inputs.begin(), inputs.end(),  [&](const std::pair<EntityId, InputEventComponent> &pair){
-                                               auto x = _actionMap.at(pair.second.actionId);
-                                    return _actionMap.at(pair.second.actionId). == action;
-                                });
-
-
-            if (findResult == inputs.end())
+            InputEventComponent in;
+            if(!inputs.TryGetComponent(action.first, in))
             {
-                auto entity = catalogue.CreateEntity();
-                inputs.AddComponent(entity, InputEventComponent{});
+                if (_service->GetKeyState(action.second) != NovelRT::Experimental::Input::KeyState::Idle)
+                {
+                    auto mouse = _service->GetMousePosition();
+                    in = InputEventComponent{action.first, _service->GetKeyState(action.second), mouse.x, mouse.y};
+                }
             }
         }
     }
 
-    void InputSystem::AddMapping(std::string name, std::string id)
+    void InputSystem::AddMapping(std::string name, std::string id, Ecs::Catalogue catalogue)
     {
         unused(_service->AddInputAction(name, id));
-        _actionMap.insert(std::pair<NovelRT::Atom, std::string>(NovelRT::Atom::GetNextEcsInputActionId(), name));
+        auto entityActionId = catalogue.CreateEntity();
+        _actionMap.insert(std::pair<NovelRT::Atom, std::string>(entityActionId, name));
     }
 
-    void InputSystem::AddDefaultKBMMapping()
+    void InputSystem::AddDefaultKBMMapping(Ecs::Catalogue catalogue)
     {
-        AddMapping("Down", "S");
-        AddMapping("Left", "A");
-        AddMapping("Right", "D");
-        AddMapping("LeftClick", "LeftMouseButton");
-        AddMapping("A", "K");
-        AddMapping("B", "L");
+        AddMapping("Down", "S", catalogue);
+        AddMapping("Left", "A", catalogue);
+        AddMapping("Right", "D", catalogue);
+        AddMapping("LeftClick", "LeftMouseButton", catalogue);
+        AddMapping("A", "K", catalogue);
+        AddMapping("B", "L", catalogue);
     }
 
     InputSystem::~InputSystem() noexcept

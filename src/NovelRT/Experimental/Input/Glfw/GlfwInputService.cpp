@@ -6,7 +6,7 @@
 namespace NovelRT::Experimental::Input::Glfw
 {
     GlfwInputService::GlfwInputService() noexcept : _isInitialised(false), _timer(60,0.1),
-          _previousStates(std::list<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
+          _previousStates(std::vector<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
     {
         _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
         _dummyEvent += [&](auto /*delta*/){};
@@ -28,7 +28,7 @@ namespace NovelRT::Experimental::Input::Glfw
 
         _logger.logInfoLine("Initialising GLFW input service.");
         _availableKeys = std::map<std::string, NovelKey>();
-        _mappedActions = std::list<InputAction>();
+        _mappedActions = std::vector<InputAction>();
         _window = reinterpret_cast<GLFWwindow*>(window);
 
         //Map GLFW keys to NovelKeys
@@ -236,13 +236,14 @@ namespace NovelRT::Experimental::Input::Glfw
         }
 
     }
-    KeyState& GlfwInputService::GetKeyState(std::string key)
+    KeyState GlfwInputService::GetKeyState(std::string key)
     {
-        for(auto action : _mappedActions)
+        size_t count = _mappedActions.size();
+        for(size_t c = 0; c < count; c++)
         {
-            if (action.actionName == key)
+            if(_mappedActions[c].actionName == key)
             {
-                return action.state;
+                return _mappedActions[c].state;
             }
         }
 
@@ -342,11 +343,6 @@ namespace NovelRT::Experimental::Input::Glfw
 
         _logger.logError("Key {} not available from this input service.", keyRequested);
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
-    }
-
-    std::list<InputAction> GlfwInputService::GetAllMappings()
-    {
-        return _mappedActions;
     }
 
     NovelRT::Maths::GeoVector2F& GlfwInputService::GetMousePosition()
