@@ -7,7 +7,6 @@ class NovelRTTestConan(ConanFile):
     requires = [
         ("NovelRT/0.1")]
     default_options = {
-        "NovelRT:inksupport": False,
         "NovelRT:documentation": False,
         "NovelRT:buildtests":False,
         "NovelRT:buildsamples":False,

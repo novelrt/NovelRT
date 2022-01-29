@@ -23,7 +23,6 @@ class NovelRTConan(ConanFile):
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
-        "inksupport": [True, False],
         "documentation": [True, False],
         "buildtests": [True, False],
         "buildsamples": [True, False]
@@ -42,7 +41,6 @@ class NovelRTConan(ConanFile):
         "Vorbis:shared":True,
         "spdlog:header_only":True,
         "vulkan-loader:shared":True,
-        "inksupport": True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True
@@ -60,10 +58,6 @@ class NovelRTConan(ConanFile):
 
     def configure_cmake(self):
         cmake = CMake(self)
-        if(self.options.inksupport):
-            cmake.definitions["NOVELRT_INCLUDE_INK"] = "On"
-        else:
-            cmake.definitions["NOVELRT_INCLUDE_INK"] = "Off"
         if(self.options.documentation):
             cmake.definitions["NOVELRT_BUILD_DOCUMENTATION"] = "On"
         else:

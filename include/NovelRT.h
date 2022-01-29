@@ -50,12 +50,6 @@
 #include <GLFW/glfw3.h>
 
 
-#ifdef NOVELRT_INK
-// nethost
-#include "NovelRT/DotNet/coreclr_delegates.h"
-#include "NovelRT/DotNet/hostfxr.h"
-#endif
-
 // libpng
 #include <png.h>
 #endif // __cplusplus
@@ -69,25 +63,6 @@
     typedef class Atom Atom;
     typedef class LoggingService LoggingService;
   }
-
-#ifdef NOVELRT_INK
-  /**
-   * @brief Contains features to interop with the .NET Core runtime.
-   */
-  namespace NovelRT::DotNet {
-    typedef class RuntimeService RuntimeService;
-  }
-#endif
-
-#ifdef NOVELRT_INK
-  /**
-   * @brief Contains bindings for Ink.
-   */
-  namespace NovelRT::Ink {
-    typedef class InkService InkService;
-    typedef class Story Story;
-  }
-#endif
 
   /**
    * @brief Contains timing features, such as timers.
@@ -141,12 +116,6 @@
   #include "NovelRT/Experimental/Input/Glfw/Input.Glfw.h"
 
 
-#ifdef NOVELRT_INK
-  // Ink types
-  #include "NovelRT/Ink/Story.h"
-  #include "NovelRT/Ink/InkService.h"
-#endif
-
   // Plugin Management types
   #include "NovelRT/PluginManagement/PluginManagement.h"
 
@@ -157,9 +126,6 @@
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"
-#ifdef NOVELRT_INK
-  #include "NovelRT/DotNet/RuntimeService.h"
-#endif
 
   // Scene Graph types
   #include "NovelRT/SceneGraph/SceneGraph.h"
@@ -174,11 +140,6 @@
 
   // Audio
   #include "NovelRT.Interop/Audio/NrtAudio.h"
-
-#ifdef NOVELRT_INK
-  // DotNet
-  #include "NovelRT.Interop/DotNet/NrtRuntimeService.h"
-#endif
 
   // Ecs
   #include "NovelRT.Interop/Ecs/NrtCatalogue.h"
