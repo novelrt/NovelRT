@@ -31,5 +31,4 @@ namespace NovelRT::Input
 #include "InputAction.h"
 // clang-format on
 
-
 #endif // NOVELRT_INPUT_H
