@@ -38,5 +38,3 @@ namespace NovelRT::Input
         return _modifier;
     }
 }
-
-// namespace NovelRT::Experimental::Input

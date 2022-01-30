@@ -17,10 +17,10 @@
  */
 namespace NovelRT::Input
 {
-    class NovelKey;
     enum class KeyState;
-    struct InputAction;
     class IInputDevice;
+    class NovelKey;
+    struct InputAction;
 }
 
 //Input Types

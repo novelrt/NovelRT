@@ -14,7 +14,7 @@ namespace NovelRT::PluginManagement
     {
         return std::make_shared<Graphics::Vulkan::VulkanGraphicsPluginProvider>();
     }
-    std::shared_ptr<IWindowingPluginProvider> GetGlfwPluginProvider() noexcept
+    std::shared_ptr<IWindowingPluginProvider> GetGlfwWindowPluginProvider() noexcept
     {
         return std::make_shared<Windowing::Glfw::GlfwWindowingPluginProvider>();
     }
