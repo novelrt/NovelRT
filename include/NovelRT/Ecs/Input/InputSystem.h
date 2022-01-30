@@ -15,15 +15,14 @@ namespace NovelRT::Ecs::Input
     private:
         bool _firstUpdate;
         LoggingService _logger;
-        std::shared_ptr<NovelRT::Input::IInputService> _service;
+        std::shared_ptr<NovelRT::Input::IInputDevice> _device;
         std::map<NovelRT::Atom, std::string> _actionMap;
-
-        void AddMapping(std::string name, std::string id);
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider, std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider);
         ~InputSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
+        void AddMapping(std::string name, std::string id);
         void AddDefaultKBMMapping();
         std::string& GetMappingName(EntityId id);
     };

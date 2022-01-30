@@ -5,14 +5,14 @@
 
 namespace NovelRT::Input::Glfw
 {
-    GlfwInputService::GlfwInputService() noexcept : _isInitialised(false), _timer(60,0.1),
+    GlfwInputDevice::GlfwInputDevice() noexcept : _isInitialised(false), _timer(60,0.1),
           _previousStates(std::vector<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
     {
         _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
         _dummyEvent += [&](auto /*delta*/){};
     }
 
-    void GlfwInputService::Initialise(void* window)
+    void GlfwInputDevice::Initialise(void* window)
     {
         if(!glfwInit())
         {
@@ -171,13 +171,13 @@ namespace NovelRT::Input::Glfw
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width,height);
     }
 
-    void GlfwInputService::TearDown() noexcept
+    void GlfwInputDevice::TearDown() noexcept
     {
         unused(_mappedActions.empty());
         unused(_availableKeys.empty());
     }
 
-    void GlfwInputService::Update(Timing::Timestamp /*delta*/)
+    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
     {
         double x = 0;
         double y = 0;
@@ -236,7 +236,7 @@ namespace NovelRT::Input::Glfw
         }
 
     }
-    KeyState GlfwInputService::GetKeyState(std::string key)
+    KeyState GlfwInputDevice::GetKeyState(std::string key)
     {
         size_t count = _mappedActions.size();
         for(size_t c = 0; c < count; c++)
@@ -251,7 +251,7 @@ namespace NovelRT::Input::Glfw
         return KeyState::Idle;
     }
 
-    bool GlfwInputService::IsKeyPressed(std::string input)
+    bool GlfwInputDevice::IsKeyPressed(std::string input)
     {
         for(auto action : _mappedActions)
         {
@@ -265,7 +265,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputService::IsKeyHeld(std::string input)
+    bool GlfwInputDevice::IsKeyHeld(std::string input)
     {
         for(auto action : _mappedActions)
         {
@@ -279,7 +279,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputService::IsKeyReleased(std::string input)
+    bool GlfwInputDevice::IsKeyReleased(std::string input)
     {
         for(auto action : _mappedActions)
         {
@@ -293,7 +293,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    InputAction& GlfwInputService::AddInputAction(std::string actionName, std::string keyIdentifier)
+    InputAction& GlfwInputDevice::AddInputAction(std::string actionName, std::string keyIdentifier)
     {
         bool nameExists = false;
         bool keyBoundAlready = false;
@@ -326,7 +326,7 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    NovelKey& GlfwInputService::GetAvailableKey(std::string keyRequested)
+    NovelKey& GlfwInputDevice::GetAvailableKey(std::string keyRequested)
     {
         if(keyRequested == "")
         {
@@ -345,17 +345,17 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    std::vector<InputAction>& GlfwInputService::GetAllMappings()
+    std::vector<InputAction>& GlfwInputDevice::GetAllMappings()
     {
         return _mappedActions;
     }
 
-    NovelRT::Maths::GeoVector2F& GlfwInputService::GetMousePosition()
+    NovelRT::Maths::GeoVector2F& GlfwInputDevice::GetMousePosition()
     {
         return _mousePos;
     }
 
-    GlfwInputService::~GlfwInputService()
+    GlfwInputDevice::~GlfwInputDevice()
     {
         TearDown();
     }

@@ -4,15 +4,12 @@
 #ifndef NOVELRT_INPUT_GLFW_H
 #define NOVELRT_INPUT_GLFW_H
 
-
-
-
 /**
  * @Brief The default GLFW3 implementation of the Input plugin API.
  */
 namespace NovelRT::Input::Glfw
 {
-    class GlfwInputService;
+    class GlfwInputDevice;
 }
 
 // Input.Glfw dependencies
@@ -23,7 +20,7 @@ namespace NovelRT::Input::Glfw
 #include <cstdint>
 
 // Input.Glfw types
-#include "GlfwInputService.h"
+#include "GlfwInputDevice.h"
 #include "GlfwInputPluginProvider.h"
 
 #endif // NOVELRT_INPUT_GLFW_H

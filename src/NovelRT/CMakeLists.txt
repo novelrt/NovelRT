@@ -35,7 +35,7 @@ set(SOURCES
 
   EngineConfig.cpp
 
-  Input/Glfw/GlfwInputService.cpp
+  Input/Glfw/GlfwInputDevice.cpp
   Input/Glfw/GlfwInputPluginProvider.cpp
   Input/NovelKey.cpp
 

@@ -13,16 +13,16 @@ namespace NovelRT::Input::Glfw
     class GlfwInputPluginProvider final : public PluginManagement::IInputPluginProvider
     {
     private:
-        std::shared_ptr<GlfwInputService> _inputService;
+        std::shared_ptr<GlfwInputDevice> _inputService;
 
-        [[nodiscard]] GlfwInputService* GetInputServiceInternal() override;
+        [[nodiscard]] GlfwInputDevice* GetInputDeviceInternal() override;
 
     public:
         GlfwInputPluginProvider() noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<GlfwInputService> GetInputService()
+        [[nodiscard]] inline std::shared_ptr<GlfwInputDevice> GetInputService()
         {
-            return std::dynamic_pointer_cast<GlfwInputService>(GetInputServiceInternal()->shared_from_this());
+            return std::dynamic_pointer_cast<GlfwInputDevice>(GetInputDeviceInternal()->shared_from_this());
         }
     };
 }

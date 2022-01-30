@@ -13,12 +13,12 @@ namespace NovelRT::PluginManagement
     class IInputPluginProvider
     {
     private:
-        [[nodiscard]] virtual NovelRT::Input::IInputService* GetInputServiceInternal() = 0;
+        [[nodiscard]] virtual NovelRT::Input::IInputDevice* GetInputDeviceInternal() = 0;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<Input::IInputService> GetInputService()
+        [[nodiscard]] inline std::shared_ptr<Input::IInputDevice> GetInputService()
         {
-            return GetInputServiceInternal()->shared_from_this();
+            return GetInputDeviceInternal()->shared_from_this();
         }
     };
 }

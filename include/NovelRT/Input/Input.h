@@ -20,14 +20,14 @@ namespace NovelRT::Input
     class NovelKey;
     enum class KeyState;
     struct InputAction;
-    class IInputService;
+    class IInputDevice;
 }
 
 //Input Types
 #include "NovelKey.h"
 #include "KeyState.h"
 #include "InputAction.h"
-#include "IInputService.h"
+#include "IInputDevice.h"
 
 
 #endif // NOVELRT_INPUT_H

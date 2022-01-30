@@ -10,7 +10,7 @@
 
 namespace NovelRT::Input
 {
-    class IInputService : public std::enable_shared_from_this<IInputService>
+    class IInputDevice : public std::enable_shared_from_this<IInputDevice>
     {
     protected:
         LoggingService _logger;
@@ -30,7 +30,7 @@ namespace NovelRT::Input
         virtual NovelRT::Maths::GeoVector2F& GetMousePosition() = 0;
         [[nodiscard]] virtual std::vector<InputAction>& GetAllMappings() = 0;
 
-        virtual ~IInputService() = default;
+        virtual ~IInputDevice() = default;
     };
 }
 
