@@ -85,7 +85,7 @@ namespace NovelRT::Ecs::Input
 
     InputSystem::~InputSystem() noexcept
     {
-        _actionMap.empty();
+        unused(_actionMap.empty());
         _device->TearDown();
     }
 }

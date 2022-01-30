@@ -23,10 +23,13 @@ namespace NovelRT::Input
     struct InputAction;
 }
 
+// clang-format off
 // Input Types
 #include "IInputDevice.h"
-#include "InputAction.h"
 #include "KeyState.h"
 #include "NovelKey.h"
+#include "InputAction.h"
+// clang-format on
+
 
 #endif // NOVELRT_INPUT_H
