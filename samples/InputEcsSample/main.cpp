@@ -4,8 +4,8 @@
 #include <NovelRT.h>
 #include <memory>
 
-using namespace NovelRT::Experimental::Input::Glfw;
-using namespace NovelRT::Experimental::Input;
+using namespace NovelRT::Input::Glfw;
+using namespace NovelRT::Input;
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;

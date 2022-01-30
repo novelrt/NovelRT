@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Experimental/Input/Glfw/Input.Glfw.h>
+#include <NovelRT/Input/Glfw/Input.Glfw.h>
 
-namespace NovelRT::Experimental::Input::Glfw
+namespace NovelRT::Input::Glfw
 {
     GlfwInputService::GlfwInputService() noexcept : _isInitialised(false), _timer(60,0.1),
           _previousStates(std::vector<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
@@ -360,4 +360,4 @@ namespace NovelRT::Experimental::Input::Glfw
         TearDown();
     }
 
-} // namespace NovelRT::Experimental::Input::Glfw
+}

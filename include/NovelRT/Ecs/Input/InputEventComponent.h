@@ -13,7 +13,7 @@ namespace NovelRT::Ecs::Input
     struct InputEventComponent
     {
         NovelRT::Atom actionId;
-        NovelRT::Experimental::Input::KeyState state;
+        NovelRT::Input::KeyState state;
         float mousePositionX;
         float mousePositionY;
 

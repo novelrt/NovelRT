@@ -33,7 +33,7 @@ namespace NovelRT::Ecs::Input
 
         for (auto [entity, input] : inputs)
         {
-            if (_service->GetKeyState(_actionMap.at(input.actionId)) == Experimental::Input::KeyState::Idle)
+            if (_service->GetKeyState(_actionMap.at(input.actionId)) == NovelRT::Input::KeyState::Idle)
             {
                 inputs.RemoveComponent(entity);
             }
@@ -50,7 +50,7 @@ namespace NovelRT::Ecs::Input
             InputEventComponent in;
             if(!inputs.TryGetComponent(action.first, in))
             {
-                if (_service->GetKeyState(action.second) != NovelRT::Experimental::Input::KeyState::Idle)
+                if (_service->GetKeyState(action.second) != NovelRT::Input::KeyState::Idle)
                 {
                     auto mouse = _service->GetMousePosition();
                     in = InputEventComponent{action.first, _service->GetKeyState(action.second), mouse.x, mouse.y};

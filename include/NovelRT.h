@@ -47,7 +47,7 @@
 
 // GLFW3
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 
 
 // libpng
@@ -112,8 +112,8 @@
   #include "NovelRT/Threading/Threading.h"
   #include "NovelRT/Windowing/Windowing.h"
   #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
-  #include "NovelRT/Experimental/Input/Input.h"
-  #include "NovelRT/Experimental/Input/Glfw/Input.Glfw.h"
+  #include "NovelRT/Input/Input.h"
+  #include "NovelRT/Input/Glfw/Input.Glfw.h"
 
 
   // Plugin Management types
@@ -122,7 +122,6 @@
  // ResourceManagement types
   #include "NovelRT/ResourceManagement/ResourceManagement.h"
   #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
-
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"

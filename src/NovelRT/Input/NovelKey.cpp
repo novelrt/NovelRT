@@ -2,9 +2,9 @@
 // for more information.
 
 #include <NovelRT/PluginManagement/PluginManagement.h>
-#include <NovelRT/Experimental/Input/Input.h>
+#include <NovelRT/Input/Input.h>
 
-namespace NovelRT::Experimental::Input
+namespace NovelRT::Input
 {
     NovelKey::NovelKey(std::string keyName, int32_t pairedKeyCode, int32_t modifier) noexcept
     {

@@ -1,14 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_EXPERIMENTAL_INPUT_GLFW_GLFWINPUTSERVICE_H
-#define NOVELRT_EXPERIMENTAL_INPUT_GLFW_GLFWINPUTSERVICE_H
+#ifndef NOVELRT_INPUT_GLFW_GLFWINPUTSERVICE_H
+#define NOVELRT_INPUT_GLFW_GLFWINPUTSERVICE_H
 
-#ifndef NOVELRT_EXPERIMENTAL_INPUT_GLFW_H
+#ifndef NOVELRT_INPUT_GLFW_H
 #error NovelRT does not support including types explicitly by default. Please include Input.Glfw.h instead for the Input::Glfw namespace subset.
 #endif
 
-namespace NovelRT::Experimental::Input::Glfw
+namespace NovelRT::Input::Glfw
 {
     class GlfwInputService final : public Input::IInputService
     {
@@ -42,4 +42,4 @@ namespace NovelRT::Experimental::Input::Glfw
     };
 }
 
-#endif // NOVELRT_EXPERIMENTAL_INPUT_GLFW_GLFWINPUTSERVICE_H
+#endif // NOVELRT_INPUT_GLFW_GLFWINPUTSERVICE_H

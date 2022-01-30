@@ -1,20 +1,21 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_EXPERIMENTAL_INPUT_H
-#define NOVELRT_EXPERIMENTAL_INPUT_H
+#ifndef NOVELRT_INPUT_H
+#define NOVELRT_INPUT_H
 
 //Input Dependencies
+#include "NovelRT/LoggingService.h"
+#include "NovelRT/Maths/Maths.h"
+#include "NovelRT/Utilities/Event.h"
+#include "NovelRT/Timing/Timestamp.h"
 #include <map>
 #include <string>
-#include "../../LoggingService.h"
-#include "../../PluginManagement/PluginManagement.h"
-#include "../../Timing/Timestamp.h"
 
 /**
- * @Brief The experimental input plugin API.
+ * @Brief The input plugin API.
  */
-namespace NovelRT::Experimental::Input
+namespace NovelRT::Input
 {
     class NovelKey;
     enum class KeyState;
@@ -29,4 +30,4 @@ namespace NovelRT::Experimental::Input
 #include "IInputService.h"
 
 
-#endif // NOVELRT_EXPERIMENTAL_INPUT_H
+#endif // NOVELRT_INPUT_H

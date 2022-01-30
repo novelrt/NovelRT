@@ -6,7 +6,7 @@
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
-#include <NovelRT/Experimental/Input/Glfw/Input.Glfw.h>
+#include <NovelRT/Input/Glfw/Input.Glfw.h>
 
 namespace NovelRT::PluginManagement
 {
@@ -24,6 +24,6 @@ namespace NovelRT::PluginManagement
     }
     std::shared_ptr<IInputPluginProvider> GetGlfwInputPluginProvider() noexcept
     {
-        return std::make_shared<Experimental::Input::Glfw::GlfwInputPluginProvider>();
+        return std::make_shared<Input::Glfw::GlfwInputPluginProvider>();
     }
 }

@@ -15,7 +15,7 @@ namespace NovelRT::Ecs::Input
     private:
         bool _firstUpdate;
         LoggingService _logger;
-        std::shared_ptr<NovelRT::Experimental::Input::IInputService> _service;
+        std::shared_ptr<NovelRT::Input::IInputService> _service;
         std::map<NovelRT::Atom, std::string> _actionMap;
 
         void AddMapping(std::string name, std::string id);

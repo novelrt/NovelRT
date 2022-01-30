@@ -43,7 +43,7 @@ namespace NovelRT::Ecs
                 _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
 
             //TODO: remove input comment here
-            target.GetComponentCache().RegisterComponentType(Input::InputEventComponent{0,Experimental::Input::KeyState::Idle, 0, 0});
+            target.GetComponentCache().RegisterComponentType(Ecs::Input::InputEventComponent{0,NovelRT::Input::KeyState::Idle, 0, 0});
 
             target.RegisterSystem(std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
 
