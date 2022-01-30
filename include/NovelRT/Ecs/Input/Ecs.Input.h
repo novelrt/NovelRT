@@ -17,7 +17,7 @@ namespace NovelRT::Ecs::Input
     struct InputEventComponent;
 }
 
-#include "InputSystem.h"
 #include "InputEventComponent.h"
+#include "InputSystem.h"
 
 #endif // NOVELRT_ECS_INPUT_H

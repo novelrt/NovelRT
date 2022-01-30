@@ -17,6 +17,7 @@ namespace NovelRT::Input
         std::vector<InputAction> _mappedActions;
 
         std::map<std::string, NovelKey> _availableKeys;
+
     public:
         virtual void Initialise(void* window) = 0;
         virtual void TearDown() noexcept = 0;

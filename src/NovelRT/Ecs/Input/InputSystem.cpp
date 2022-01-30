@@ -5,7 +5,8 @@
 
 namespace NovelRT::Ecs::Input
 {
-    InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider, std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
+    InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
+                             std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
     {
         _actionMap = std::map<NovelRT::Atom, std::string>();
         _firstUpdate = true;
@@ -39,7 +40,8 @@ namespace NovelRT::Ecs::Input
             }
             else
             {
-                auto event = InputEventComponent{input.actionId, _device->GetKeyState(_actionMap.at(input.actionId)), input.mousePositionX, input.mousePositionY};
+                auto event = InputEventComponent{input.actionId, _device->GetKeyState(_actionMap.at(input.actionId)),
+                                                 input.mousePositionX, input.mousePositionY};
                 inputs.PushComponentUpdateInstruction(entity, event);
             }
         }
@@ -48,7 +50,7 @@ namespace NovelRT::Ecs::Input
         for (auto action : _actionMap)
         {
             InputEventComponent in;
-            if(!inputs.TryGetComponent(action.first, in))
+            if (!inputs.TryGetComponent(action.first, in))
             {
                 if (_device->GetKeyState(action.second) != NovelRT::Input::KeyState::Idle)
                 {

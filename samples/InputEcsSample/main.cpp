@@ -59,16 +59,16 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
     scheduler.RegisterSystem([](auto delta, auto catalogue) {
-                                 ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
 
-                                 for (auto [entity, transform] : transforms)
-                                 {
-                                     TransformComponent newComponent{};
-                                     newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-                                     newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                                     transforms.PushComponentUpdateInstruction(entity, newComponent);
-                                 }
-                             });
+        for (auto [entity, transform] : transforms)
+        {
+            TransformComponent newComponent{};
+            newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            transforms.PushComponentUpdateInstruction(entity, newComponent);
+        }
+    });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
@@ -83,56 +83,64 @@ int main()
     inputSystem->AddDefaultKBMMapping();
 
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-                                 ComponentView<NovelRT::Ecs::Input::InputEventComponent> events = catalogue.GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
-                                 ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-                                 NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::zero();
-                                 NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
+        ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
+            catalogue.GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
+        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+        NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::zero();
+        NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
 
-                                 for (auto [entity, input] : events)
-                                 {
-                                     //movement
-                                     if(inputSystem->GetMappingName(entity) == "Down" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         move += NovelRT::Maths::GeoVector2F{0.0f, -5.0f};
-                                     }
-                                     if(inputSystem->GetMappingName(entity) == "Up" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         move += NovelRT::Maths::GeoVector2F{0.0f, 5.0f};
-                                     }
-                                     if(inputSystem->GetMappingName(entity) == "Left" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         move += NovelRT::Maths::GeoVector2F{-5.0f, 0.0f};
-                                     }
-                                     if(inputSystem->GetMappingName(entity) == "Right" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         move += NovelRT::Maths::GeoVector2F{5.0f, 0.0f};
-                                     }
+        for (auto [entity, input] : events)
+        {
+            // movement
+            if (inputSystem->GetMappingName(entity) == "Down" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                move += NovelRT::Maths::GeoVector2F{0.0f, -5.0f};
+            }
+            if (inputSystem->GetMappingName(entity) == "Up" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                move += NovelRT::Maths::GeoVector2F{0.0f, 5.0f};
+            }
+            if (inputSystem->GetMappingName(entity) == "Left" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                move += NovelRT::Maths::GeoVector2F{-5.0f, 0.0f};
+            }
+            if (inputSystem->GetMappingName(entity) == "Right" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                move += NovelRT::Maths::GeoVector2F{5.0f, 0.0f};
+            }
 
-                                     //scale
-                                     if(inputSystem->GetMappingName(entity) == "A" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         scale += NovelRT::Maths::GeoVector2F{0.2f, 0.2f};
-                                     }
-                                     if(inputSystem->GetMappingName(entity) == "B" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         scale += NovelRT::Maths::GeoVector2F{-0.2f, -0.2f};
-                                     }
+            // scale
+            if (inputSystem->GetMappingName(entity) == "A" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                scale += NovelRT::Maths::GeoVector2F{0.2f, 0.2f};
+            }
+            if (inputSystem->GetMappingName(entity) == "B" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                scale += NovelRT::Maths::GeoVector2F{-0.2f, -0.2f};
+            }
 
-                                     if(inputSystem->GetMappingName(entity) == "LeftClick" && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-                                     {
-                                         logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
-                                     }
-                                 }
+            if (inputSystem->GetMappingName(entity) == "LeftClick" &&
+                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            {
+                logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
+            }
+        }
 
-                                 for (auto [entity, transform] : transforms)
-                                 {
-                                     TransformComponent newComponent{};
-                                     newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                                     newComponent.scale += scale;
-                                     newComponent.positionAndLayer += move;
-                                     transforms.PushComponentUpdateInstruction(entity, newComponent);
-                                 }
-                             });
+        for (auto [entity, transform] : transforms)
+        {
+            TransformComponent newComponent{};
+            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            newComponent.scale += scale;
+            newComponent.positionAndLayer += move;
+            transforms.PushComponentUpdateInstruction(entity, newComponent);
+        }
+    });
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 

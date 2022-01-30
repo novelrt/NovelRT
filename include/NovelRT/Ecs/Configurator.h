@@ -42,11 +42,12 @@ namespace NovelRT::Ecs
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
                 _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
 
-            //TODO: remove input comment here
-            target.GetComponentCache().RegisterComponentType(Ecs::Input::InputEventComponent{0,NovelRT::Input::KeyState::Idle, 0, 0});
+            // TODO: remove input comment here
+            target.GetComponentCache().RegisterComponentType(
+                Ecs::Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0});
 
-            target.RegisterSystem(std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
-
+            target.RegisterSystem(
+                std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
         }
 
     public:

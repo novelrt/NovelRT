@@ -4,11 +4,11 @@
 #ifndef NOVELRT_INPUT_H
 #define NOVELRT_INPUT_H
 
-//Input Dependencies
+// Input Dependencies
 #include "NovelRT/LoggingService.h"
 #include "NovelRT/Maths/Maths.h"
-#include "NovelRT/Utilities/Event.h"
 #include "NovelRT/Timing/Timestamp.h"
+#include "NovelRT/Utilities/Event.h"
 #include <map>
 #include <string>
 
@@ -23,11 +23,10 @@ namespace NovelRT::Input
     struct InputAction;
 }
 
-//Input Types
-#include "NovelKey.h"
-#include "KeyState.h"
-#include "InputAction.h"
+// Input Types
 #include "IInputDevice.h"
-
+#include "InputAction.h"
+#include "KeyState.h"
+#include "NovelKey.h"
 
 #endif // NOVELRT_INPUT_H

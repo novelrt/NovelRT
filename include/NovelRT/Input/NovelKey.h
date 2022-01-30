@@ -16,6 +16,7 @@ namespace NovelRT::Input
         int32_t _pairedKey;
         std::string _keyName;
         int32_t _modifier;
+
     public:
         NovelKey(std::string keyName = "", int32_t pairedKeyCode = -1, int32_t modifier = 0) noexcept;
         void PairKey(int32_t externalKeyCode) noexcept;

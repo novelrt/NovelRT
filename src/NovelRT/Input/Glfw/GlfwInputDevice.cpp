@@ -5,25 +5,29 @@
 
 namespace NovelRT::Input::Glfw
 {
-    GlfwInputDevice::GlfwInputDevice() noexcept : _isInitialised(false), _timer(60,0.1),
-          _previousStates(std::vector<InputAction>()), _mousePos(NovelRT::Maths::GeoVector2F::zero())
+    GlfwInputDevice::GlfwInputDevice() noexcept
+        : _isInitialised(false),
+          _timer(60, 0.1),
+          _previousStates(std::vector<InputAction>()),
+          _mousePos(NovelRT::Maths::GeoVector2F::zero())
     {
         _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
-        _dummyEvent += [&](auto /*delta*/){};
+        _dummyEvent += [&](auto /*delta*/) {};
     }
 
     void GlfwInputDevice::Initialise(void* window)
     {
-        if(!glfwInit())
+        if (!glfwInit())
         {
             const char* output = nullptr;
             glfwGetError(&output);
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
-        if(window == nullptr)
+        if (window == nullptr)
         {
-            throw Exceptions::NullPointerException("Could not initialise GLFW input service - null pointer was provided for window.");
+            throw Exceptions::NullPointerException(
+                "Could not initialise GLFW input service - null pointer was provided for window.");
         }
 
         _logger.logInfoLine("Initialising GLFW input service.");
@@ -31,7 +35,7 @@ namespace NovelRT::Input::Glfw
         _mappedActions = std::vector<InputAction>();
         _window = reinterpret_cast<GLFWwindow*>(window);
 
-        //Map GLFW keys to NovelKeys
+        // Map GLFW keys to NovelKeys
         _availableKeys.emplace("LeftMouseButton", NovelKey("LeftMouseButton", GLFW_MOUSE_BUTTON_LEFT));
         _availableKeys.emplace("RightMouseButton", NovelKey("RightMouseButton", GLFW_MOUSE_BUTTON_RIGHT));
         _availableKeys.emplace("MiddleMouseButton", NovelKey("MiddleMouseButton", GLFW_MOUSE_BUTTON_MIDDLE));
@@ -168,7 +172,7 @@ namespace NovelRT::Input::Glfw
         int width = 0;
         int height = 0;
         glfwGetWindowSize(_window, &width, &height);
-        _logger.logInfo("GLFW input system initialised: window at {} x {}", width,height);
+        _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
 
     void GlfwInputDevice::TearDown() noexcept
@@ -191,12 +195,12 @@ namespace NovelRT::Input::Glfw
         auto mapIterator = std::next(_mappedActions.begin(), 0);
         auto stateIterator = std::next(_previousStates.begin(), 0);
 
-        for(int c = 0; c < count; c++)
+        for (int c = 0; c < count; c++)
         {
             mapIterator = std::next(_mappedActions.begin(), c);
             stateIterator = std::next(_previousStates.begin(), c);
 
-            if(mapIterator->actionName == stateIterator->actionName)
+            if (mapIterator->actionName == stateIterator->actionName)
             {
                 bool press = false;
                 bool release = false;
@@ -214,8 +218,7 @@ namespace NovelRT::Input::Glfw
                     release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
                 }
 
-
-                if(press && stateIterator->state == KeyState::KeyDown)
+                if (press && stateIterator->state == KeyState::KeyDown)
                 {
                     mapIterator->state = KeyState::KeyDownHeld;
                 }
@@ -223,7 +226,8 @@ namespace NovelRT::Input::Glfw
                 {
                     mapIterator->state = KeyState::KeyDown;
                 }
-                else if (release && (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
+                else if (release &&
+                         (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
                 {
                     mapIterator->state = KeyState::KeyUp;
                 }
@@ -232,16 +236,14 @@ namespace NovelRT::Input::Glfw
                     mapIterator->state = KeyState::Idle;
                 }
             }
-
         }
-
     }
     KeyState GlfwInputDevice::GetKeyState(std::string key)
     {
         size_t count = _mappedActions.size();
-        for(size_t c = 0; c < count; c++)
+        for (size_t c = 0; c < count; c++)
         {
-            if(_mappedActions[c].actionName == key)
+            if (_mappedActions[c].actionName == key)
             {
                 return _mappedActions[c].state;
             }
@@ -253,7 +255,7 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyPressed(std::string input)
     {
-        for(auto action : _mappedActions)
+        for (auto action : _mappedActions)
         {
             if (action.actionName == input)
             {
@@ -267,7 +269,7 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyHeld(std::string input)
     {
-        for(auto action : _mappedActions)
+        for (auto action : _mappedActions)
         {
             if (action.actionName == input)
             {
@@ -281,7 +283,7 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyReleased(std::string input)
     {
-        for(auto action : _mappedActions)
+        for (auto action : _mappedActions)
         {
             if (action.actionName == input)
             {
@@ -328,14 +330,14 @@ namespace NovelRT::Input::Glfw
 
     NovelKey& GlfwInputDevice::GetAvailableKey(std::string keyRequested)
     {
-        if(keyRequested == "")
+        if (keyRequested == "")
         {
             throw NovelRT::Exceptions::InvalidOperationException("Cannot request a key with no name.");
         }
 
-        for(auto key : _availableKeys)
+        for (auto key : _availableKeys)
         {
-            if(key.first == keyRequested)
+            if (key.first == keyRequested)
             {
                 return _availableKeys.at(key.first);
             }

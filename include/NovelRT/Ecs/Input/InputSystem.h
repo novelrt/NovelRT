@@ -17,8 +17,10 @@ namespace NovelRT::Ecs::Input
         LoggingService _logger;
         std::shared_ptr<NovelRT::Input::IInputDevice> _device;
         std::map<NovelRT::Atom, std::string> _actionMap;
+
     public:
-        InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider, std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider);
+        InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
+                    std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider);
         ~InputSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
