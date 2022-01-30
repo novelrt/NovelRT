@@ -136,7 +136,13 @@ int main()
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
-    logger.logInfoLine("\n\n\nPress the following:\nW - Move Up\nS - Move Down\nA - Move Left\nD - Move Right\nK - Grow\nL - Shrink");
+    logger.logInfoLine("Press the following:");
+    logger.logInfoLine("W - Move Up");
+    logger.logInfoLine("S - Move Down");
+    logger.logInfoLine("A - Move Left");
+    logger.logInfoLine("D - Move Right");
+    logger.logInfoLine("K - Grow NovelChan");
+    logger.logInfoLine("L - Shrink NovelChan");
 
     while (!windowPtr->GetShouldClose())
     {

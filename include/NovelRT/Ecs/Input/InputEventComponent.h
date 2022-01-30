@@ -19,7 +19,7 @@ namespace NovelRT::Ecs::Input
 
         inline InputEventComponent& operator+=(const InputEventComponent& other) noexcept
         {
-            actionId = actionId;
+            actionId = other.actionId;
             state = other.state;
             mousePositionX = other.mousePositionX;
             mousePositionY = other.mousePositionY;

@@ -18,7 +18,7 @@ namespace NovelRT::Ecs::Input
         if (_firstUpdate)
         {
             auto actions = _device->GetAllMappings();
-            for (auto act : actions)
+            for (auto&& act : actions)
             {
                 auto entityActionId = catalogue.CreateEntity();
                 _actionMap.insert(std::pair<NovelRT::Atom, std::string>(entityActionId, act.actionName));
@@ -83,6 +83,7 @@ namespace NovelRT::Ecs::Input
 
     InputSystem::~InputSystem() noexcept
     {
+        _actionMap.empty();
         _device->TearDown();
     }
 }
