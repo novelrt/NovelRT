@@ -84,7 +84,7 @@ int main()
 
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
-            catalogue.GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
+            catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
         NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::zero();
         NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
