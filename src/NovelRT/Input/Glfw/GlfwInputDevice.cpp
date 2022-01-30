@@ -191,11 +191,11 @@ namespace NovelRT::Input::Glfw
 
         _previousStates = _mappedActions;
 
-        auto count = _mappedActions.size();
+        size_t count = _mappedActions.size();
         auto mapIterator = std::next(_mappedActions.begin(), 0);
         auto stateIterator = std::next(_previousStates.begin(), 0);
 
-        for (int c = 0; c < count; c++)
+        for (size_t c = 0; c < count; c++)
         {
             mapIterator = std::next(_mappedActions.begin(), c);
             stateIterator = std::next(_previousStates.begin(), c);
