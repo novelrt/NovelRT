@@ -345,6 +345,11 @@ namespace NovelRT::Experimental::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
+    std::vector<InputAction>& GlfwInputService::GetAllMappings()
+    {
+        return _mappedActions;
+    }
+
     NovelRT::Maths::GeoVector2F& GlfwInputService::GetMousePosition()
     {
         return _mousePos;

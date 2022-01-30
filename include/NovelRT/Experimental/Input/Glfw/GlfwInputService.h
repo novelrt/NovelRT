@@ -20,7 +20,6 @@ namespace NovelRT::Experimental::Input::Glfw
         std::vector<InputAction> _previousStates;
         NovelRT::Maths::GeoVector2F _mousePos;
 
-
     public:
         GlfwInputService() noexcept;
 
@@ -34,7 +33,7 @@ namespace NovelRT::Experimental::Input::Glfw
         [[nodiscard]] InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) final;
         NovelKey& GetAvailableKey(std::string keyRequested) final;
         NovelRT::Maths::GeoVector2F& GetMousePosition() final;
-        //std::list<InputAction> GetAllMappings() final;
+        [[nodiscard]] std::vector<InputAction>& GetAllMappings() final;
 
 
 
