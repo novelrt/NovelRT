@@ -23,17 +23,17 @@ namespace NovelRT::Input
         _pairedKey = -1;
     }
 
-    const std::string& NovelKey::GetKeyName() noexcept
+    std::string NovelKey::GetKeyName() const noexcept
     {
         return _keyName;
     }
 
-    const int32_t NovelKey::GetExternalKeyCode() noexcept
+    int32_t NovelKey::GetExternalKeyCode() const noexcept
     {
         return _pairedKey;
     }
 
-    const int32_t NovelKey::GetExternalModifierCode() noexcept
+    int32_t NovelKey::GetExternalModifierCode() const noexcept
     {
         return _modifier;
     }

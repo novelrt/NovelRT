@@ -16,7 +16,7 @@ namespace NovelRT::Ecs::Input
         bool _firstUpdate;
         LoggingService _logger;
         std::shared_ptr<NovelRT::Input::IInputDevice> _device;
-        std::map<NovelRT::Atom, std::string> _actionMap;
+        std::map<std::string, NovelRT::Atom> _inputMap;
 
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
@@ -26,7 +26,7 @@ namespace NovelRT::Ecs::Input
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
         void AddMapping(std::string name, std::string id);
         void AddDefaultKBMMapping();
-        std::string& GetMappingName(EntityId id);
+        NovelRT::Atom GetMappingId(std::string mappingName);
     };
 }
 

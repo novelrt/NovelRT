@@ -81,6 +81,13 @@ int main()
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>();
 
     inputSystem->AddDefaultKBMMapping();
+    auto up = inputSystem->GetMappingId("Up");
+    auto down = inputSystem->GetMappingId("Down");
+    auto left = inputSystem->GetMappingId("Left");
+    auto right = inputSystem->GetMappingId("Right");
+    auto buttonA = inputSystem->GetMappingId("A");
+    auto buttonB = inputSystem->GetMappingId("B");
+    auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
@@ -89,44 +96,52 @@ int main()
         NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::zero();
         NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
 
-        for (auto [entity, input] : events)
+        NovelRT::Ecs::Input::InputEventComponent input;
+        if(events.TryGetComponent(up, input))
         {
-            // movement
-            if (inputSystem->GetMappingName(entity) == "Down" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
-            {
-                move += NovelRT::Maths::GeoVector2F{0.0f, -5.0f};
-            }
-            if (inputSystem->GetMappingName(entity) == "Up" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 move += NovelRT::Maths::GeoVector2F{0.0f, 5.0f};
             }
-            if (inputSystem->GetMappingName(entity) == "Left" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        }
+        if(events.TryGetComponent(down, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
+            {
+                move += NovelRT::Maths::GeoVector2F{0.0f, -5.0f};
+            }
+        }
+        if(events.TryGetComponent(left, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 move += NovelRT::Maths::GeoVector2F{-5.0f, 0.0f};
             }
-            if (inputSystem->GetMappingName(entity) == "Right" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        }
+        if(events.TryGetComponent(right, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 move += NovelRT::Maths::GeoVector2F{5.0f, 0.0f};
             }
-
-            // scale
-            if (inputSystem->GetMappingName(entity) == "A" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        }
+        if(events.TryGetComponent(buttonA, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 scale += NovelRT::Maths::GeoVector2F{0.2f, 0.2f};
             }
-            if (inputSystem->GetMappingName(entity) == "B" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        }
+        if(events.TryGetComponent(buttonB, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 scale += NovelRT::Maths::GeoVector2F{-0.2f, -0.2f};
             }
-
-            if (inputSystem->GetMappingName(entity) == "LeftClick" &&
-                (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        }
+        if(events.TryGetComponent(mouseClick, input))
+        {
+            if (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld)
             {
                 logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
             }

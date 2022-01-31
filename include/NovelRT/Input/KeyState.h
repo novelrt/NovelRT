@@ -17,7 +17,7 @@ namespace NovelRT::Input
     {
         Idle = 0,
         KeyUp = 1,
-        KeyDown = 3,
+        KeyDown = 2,
         KeyDownHeld = 3
     };
 }

@@ -8,55 +8,49 @@ namespace NovelRT::Ecs::Input
     InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
                              std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
     {
-        _actionMap = std::map<NovelRT::Atom, std::string>();
-        _firstUpdate = true;
+        _inputMap = std::map<std::string, NovelRT::Atom>();
         _device = inputProvider->GetInputService();
         _device->Initialise(windowingProvider->GetWindowingDevice()->GetHandle());
     }
 
     void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
-        if (_firstUpdate)
-        {
-            auto actions = _device->GetAllMappings();
-            for (auto&& action : actions)
-            {
-                auto entityActionId = catalogue.CreateEntity();
-                _actionMap.insert(std::pair<NovelRT::Atom, std::string>(entityActionId, action.actionName));
-                _logger.logDebug("Input Mapped: \"{}\" to {}", action.actionName, action.pairedKey.GetKeyName());
-            }
-            _firstUpdate = false;
-        }
-
         _device->Update(delta);
 
         auto inputs = catalogue.GetComponentView<InputEventComponent>();
 
-        for (auto [entity, input] : inputs)
+        for (auto&& input : _inputMap)
         {
-            if (_device->GetKeyState(_actionMap.at(input.actionId)) == NovelRT::Input::KeyState::Idle)
+            InputEventComponent in;
+            auto state = _device->GetKeyState(input.first);
+            if(inputs.TryGetComponent(input.second, in) )
             {
-                inputs.RemoveComponent(entity);
+
+                switch(state)
+                {
+                    case NovelRT::Input::KeyState::KeyUp:
+                    case NovelRT::Input::KeyState::KeyDown:
+                    case NovelRT::Input::KeyState::KeyDownHeld:
+                    {
+                        auto event = InputEventComponent{in.actionId, state, in.mousePositionX, in.mousePositionY};
+                        inputs.PushComponentUpdateInstruction(in.actionId, event);
+                        break;
+                    }
+                    case NovelRT::Input::KeyState::Idle:
+                    default:
+                    {
+                        inputs.RemoveComponent(input.second);
+                        break;
+                    }
+                }
             }
             else
             {
-                auto event = InputEventComponent{input.actionId, _device->GetKeyState(_actionMap.at(input.actionId)),
-                                                 input.mousePositionX, input.mousePositionY};
-                inputs.PushComponentUpdateInstruction(entity, event);
-            }
-        }
-        inputs = catalogue.GetComponentView<InputEventComponent>();
-
-        for (auto action : _actionMap)
-        {
-            InputEventComponent in;
-            if (!inputs.TryGetComponent(action.first, in))
-            {
-                if (_device->GetKeyState(action.second) != NovelRT::Input::KeyState::Idle)
+                if (state != NovelRT::Input::KeyState::Idle)
                 {
                     auto mouse = _device->GetMousePosition();
-                    in = InputEventComponent{action.first, _device->GetKeyState(action.second), mouse.x, mouse.y};
-                    inputs.AddComponent(action.first, in);
+                    in = InputEventComponent{input.second, state, mouse.x, mouse.y};
+                    inputs.AddComponent(input.second, in);
                 }
             }
         }
@@ -65,6 +59,9 @@ namespace NovelRT::Ecs::Input
     void InputSystem::AddMapping(std::string name, std::string id)
     {
         unused(_device->AddInputAction(name, id));
+        auto entityMappingId = NovelRT::Atom::GetNextEntityId();
+        _inputMap.insert(std::pair<std::string, NovelRT::Atom>(name, entityMappingId));
+        _logger.logDebug("Input Mapped: \"{}\" to {}", name, id);
     }
 
     void InputSystem::AddDefaultKBMMapping()
@@ -78,9 +75,9 @@ namespace NovelRT::Ecs::Input
         AddMapping("B", "L");
     }
 
-    std::string& InputSystem::GetMappingName(EntityId id)
+    NovelRT::Atom InputSystem::GetMappingId(std::string mappingName)
     {
-        return _actionMap.at(id);
+        return _inputMap.at(mappingName);
     }
 
     InputSystem::~InputSystem() noexcept
