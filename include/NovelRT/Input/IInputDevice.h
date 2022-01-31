@@ -20,12 +20,12 @@ namespace NovelRT::Input
     public:
         virtual void Initialise(void* window) = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
-        [[nodiscard]] virtual bool IsKeyPressed(std::string key) = 0;
-        [[nodiscard]] virtual bool IsKeyHeld(std::string key) = 0;
-        [[nodiscard]] virtual bool IsKeyReleased(std::string key) = 0;
-        [[nodiscard]] virtual KeyState GetKeyState(std::string key) = 0;
-        [[nodiscard]] virtual InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) = 0;
-        virtual NovelKey& GetAvailableKey(std::string keyRequested) = 0;
+        [[nodiscard]] virtual bool IsKeyPressed(const std::string& key) = 0;
+        [[nodiscard]] virtual bool IsKeyHeld(const std::string& key) = 0;
+        [[nodiscard]] virtual bool IsKeyReleased(const std::string& key) = 0;
+        [[nodiscard]] virtual KeyState GetKeyState(const std::string& key) = 0;
+        [[nodiscard]] virtual InputAction& AddInputAction(const std::string& actionName, const std::string& keyIdentifier) = 0;
+        virtual NovelKey& GetAvailableKey(const std::string& keyRequested) = 0;
         virtual NovelRT::Maths::GeoVector2F GetMousePosition() = 0;
         [[nodiscard]] virtual std::vector<InputAction>& GetAllMappings() = 0;
 
