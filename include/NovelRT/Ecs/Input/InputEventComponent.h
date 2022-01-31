@@ -26,7 +26,7 @@ namespace NovelRT::Ecs::Input
             return *this;
         };
 
-        inline bool operator==(const InputEventComponent& other) noexcept
+        [[nodiscard]] inline bool operator==(const InputEventComponent& other) const noexcept
         {
             return actionId == other.actionId;
         }
