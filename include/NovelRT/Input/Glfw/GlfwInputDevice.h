@@ -24,7 +24,6 @@ namespace NovelRT::Input::Glfw
         GlfwInputDevice() noexcept;
 
         void Initialise(void* window) final;
-        void TearDown() noexcept final;
         void Update(Timing::Timestamp delta) final;
         [[nodiscard]] bool IsKeyPressed(std::string key) final;
         [[nodiscard]] bool IsKeyHeld(std::string key) final;

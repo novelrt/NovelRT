@@ -15,12 +15,10 @@ namespace NovelRT::Input
     protected:
         LoggingService _logger;
         std::vector<InputAction> _mappedActions;
-
         std::map<std::string, NovelKey> _availableKeys;
 
     public:
         virtual void Initialise(void* window) = 0;
-        virtual void TearDown() noexcept = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
         [[nodiscard]] virtual bool IsKeyPressed(std::string key) = 0;
         [[nodiscard]] virtual bool IsKeyHeld(std::string key) = 0;

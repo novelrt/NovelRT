@@ -175,12 +175,6 @@ namespace NovelRT::Input::Glfw
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
 
-    void GlfwInputDevice::TearDown() noexcept
-    {
-        unused(_mappedActions.empty());
-        unused(_availableKeys.empty());
-    }
-
     void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
     {
         double x = 0;
@@ -359,7 +353,6 @@ namespace NovelRT::Input::Glfw
 
     GlfwInputDevice::~GlfwInputDevice()
     {
-        TearDown();
     }
 
 }

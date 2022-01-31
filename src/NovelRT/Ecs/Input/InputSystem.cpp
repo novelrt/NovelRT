@@ -19,11 +19,11 @@ namespace NovelRT::Ecs::Input
         if (_firstUpdate)
         {
             auto actions = _device->GetAllMappings();
-            for (auto&& act : actions)
+            for (auto&& action : actions)
             {
                 auto entityActionId = catalogue.CreateEntity();
-                _actionMap.insert(std::pair<NovelRT::Atom, std::string>(entityActionId, act.actionName));
-                _logger.logDebug("Input Mapped: \"{}\" to {}", act.actionName, act.pairedKey.GetKeyName());
+                _actionMap.insert(std::pair<NovelRT::Atom, std::string>(entityActionId, action.actionName));
+                _logger.logDebug("Input Mapped: \"{}\" to {}", action.actionName, action.pairedKey.GetKeyName());
             }
             _firstUpdate = false;
         }
@@ -85,7 +85,5 @@ namespace NovelRT::Ecs::Input
 
     InputSystem::~InputSystem() noexcept
     {
-        unused(_actionMap.empty());
-        _device->TearDown();
     }
 }
