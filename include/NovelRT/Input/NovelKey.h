@@ -21,9 +21,9 @@ namespace NovelRT::Input
         NovelKey(std::string keyName = "", int32_t pairedKeyCode = -1, int32_t modifier = 0) noexcept;
         void PairKey(int32_t externalKeyCode) noexcept;
         void UnpairKey() noexcept;
-        [[nodiscard]] std::string& GetKeyName() noexcept;
-        [[nodiscard]] int32_t GetExternalKeyCode() noexcept;
-        [[nodiscard]] int32_t GetExternalModifierCode() noexcept;
+        [[nodiscard]] const std::string& GetKeyName() noexcept;
+        [[nodiscard]] const int32_t GetExternalKeyCode() noexcept;
+        [[nodiscard]] const int32_t GetExternalModifierCode() noexcept;
 
         inline bool operator==(NovelKey& other) noexcept
         {
