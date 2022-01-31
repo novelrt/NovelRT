@@ -26,7 +26,7 @@ namespace NovelRT::Input
         [[nodiscard]] virtual KeyState GetKeyState(std::string key) = 0;
         [[nodiscard]] virtual InputAction& AddInputAction(std::string actionName, std::string keyIdentifier) = 0;
         virtual NovelKey& GetAvailableKey(std::string keyRequested) = 0;
-        virtual NovelRT::Maths::GeoVector2F& GetMousePosition() = 0;
+        virtual NovelRT::Maths::GeoVector2F GetMousePosition() = 0;
         [[nodiscard]] virtual std::vector<InputAction>& GetAllMappings() = 0;
 
         virtual ~IInputDevice() = default;
