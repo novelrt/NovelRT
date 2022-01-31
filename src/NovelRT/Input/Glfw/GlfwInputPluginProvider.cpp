@@ -5,12 +5,12 @@
 
 namespace NovelRT::Input::Glfw
 {
-    GlfwInputPluginProvider::GlfwInputPluginProvider() noexcept : _inputService(std::make_shared<GlfwInputDevice>())
+    GlfwInputPluginProvider::GlfwInputPluginProvider() noexcept : _inputDevice(std::make_shared<GlfwInputDevice>())
     {
     }
 
     GlfwInputDevice* GlfwInputPluginProvider::GetInputDeviceInternal()
     {
-        return _inputService.get();
+        return _inputDevice.get();
     }
 }
