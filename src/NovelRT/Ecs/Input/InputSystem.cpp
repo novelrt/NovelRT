@@ -80,7 +80,4 @@ namespace NovelRT::Ecs::Input
         return _inputMap.at(mappingName);
     }
 
-    InputSystem::~InputSystem() noexcept
-    {
-    }
 }
