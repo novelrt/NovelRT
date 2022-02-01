@@ -31,8 +31,13 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
+  Ecs/Input/InputSystem.cpp
 
   EngineConfig.cpp
+
+  Input/Glfw/GlfwInputDevice.cpp
+  Input/Glfw/GlfwInputPluginProvider.cpp
+  Input/NovelKey.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
@@ -42,7 +47,7 @@ set(SOURCES
   Graphics/GraphicsPipelineResource.cpp
   Graphics/GraphicsPipelineSignature.cpp
   Graphics/GraphicsResourceManager.cpp
-        Graphics/RGBAConfig.cpp
+  Graphics/RGBAConfig.cpp
   Graphics/ShaderProgram.cpp
   Graphics/Vulkan/VulkanGraphicsAdapter.cpp
   Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
@@ -65,7 +70,6 @@ set(SOURCES
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 
-
   LoggingService.cpp
 
   Maths/GeoBounds.cpp
@@ -76,11 +80,10 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
-   Timing/StepTimer.cpp
+  Timing/StepTimer.cpp
 
-   Utilities/Misc.cpp
-
-   )
+  Utilities/Misc.cpp
+  )
 
 add_library(Engine SHARED ${SOURCES})
 

@@ -6,6 +6,7 @@
 
 // PluginManagement Dependencies
 #include "../Graphics/Graphics.h"
+#include "../Input/Input.h"
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
 
@@ -18,9 +19,12 @@ namespace NovelRT::PluginManagement
     class IResourceManagementPluginProvider;
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
+    class IInputPluginProvider;
 }
 
 // clang-format off
+
+#include "IInputPluginProvider.h"
 #include "IResourceManagementPluginProvider.h"
 #include "IGraphicsPluginProvider.h"
 #include "IWindowingPluginProvider.h"

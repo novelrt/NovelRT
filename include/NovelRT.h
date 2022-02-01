@@ -45,11 +45,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-// GLFW3
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
-
 // libpng
 #include <png.h>
 #endif // __cplusplus
@@ -112,6 +107,9 @@
   #include "NovelRT/Threading/Threading.h"
   #include "NovelRT/Windowing/Windowing.h"
   #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
+  #include "NovelRT/Input/Input.h"
+  #include "NovelRT/Input/Glfw/Input.Glfw.h"
+
 
   // Plugin Management types
   #include "NovelRT/PluginManagement/PluginManagement.h"
@@ -119,7 +117,6 @@
  // ResourceManagement types
   #include "NovelRT/ResourceManagement/ResourceManagement.h"
   #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
-
 
   // Engine service types
   #include "NovelRT/Audio/AudioService.h"

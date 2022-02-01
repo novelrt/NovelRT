@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
+#include <NovelRT/Input/Glfw/Input.Glfw.h>
 #include <NovelRT/PluginManagement/PluginManagement.h>
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
@@ -13,12 +14,16 @@ namespace NovelRT::PluginManagement
     {
         return std::make_shared<Graphics::Vulkan::VulkanGraphicsPluginProvider>();
     }
-    std::shared_ptr<IWindowingPluginProvider> GetGlfwPluginProvider() noexcept
+    std::shared_ptr<IWindowingPluginProvider> GetGlfwWindowPluginProvider() noexcept
     {
         return std::make_shared<Windowing::Glfw::GlfwWindowingPluginProvider>();
     }
     std::shared_ptr<IResourceManagementPluginProvider> GetDesktopResourceManagementPluginProvider() noexcept
     {
         return std::make_shared<ResourceManagement::Desktop::DesktopResourceManagementPluginProvider>();
+    }
+    std::shared_ptr<IInputPluginProvider> GetGlfwInputPluginProvider() noexcept
+    {
+        return std::make_shared<Input::Glfw::GlfwInputPluginProvider>();
     }
 }
