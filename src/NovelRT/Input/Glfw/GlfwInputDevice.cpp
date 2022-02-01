@@ -229,7 +229,7 @@ namespace NovelRT::Input::Glfw
             }
         }
     }
-    
+
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
     {
         size_t count = _mappedActions.size();
