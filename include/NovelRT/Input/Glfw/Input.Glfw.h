@@ -15,7 +15,6 @@ namespace NovelRT::Input::Glfw
 // Input.Glfw dependencies
 #include "NovelRT/Input/Input.h"
 #include "NovelRT/PluginManagement/PluginManagement.h"
-#include "NovelRT/Timing/StepTimer.h"
 #include <GLFW/glfw3.h>
 #include <cstdint>
 
