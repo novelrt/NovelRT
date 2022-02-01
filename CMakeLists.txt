@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
 cmake_policy(SET CMP0091 NEW)
 
@@ -29,21 +29,19 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_INCLUDE_CONAN_PATHS "Include conan_paths toolchain" ON)
-option(NOVELRT_INCLUDE_INK "Include Ink functionality in the build" ON)
 
 set(NOVELRT_BZIP2_VERSION "1.0.8" CACHE STRING "BZip2 version")
 set(NOVELRT_DOTNET_VERSION "6.0.100" CACHE STRING "Dotnet version")
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
 set(NOVELRT_FLAC_VERSION "1.3.3" CACHE STRING "FLAC version")
 set(NOVELRT_FREETYPE_VERSION "2.10.1" CACHE STRING "Freetype version")
-set(NOVELRT_GLAD_VERSION "0.1.33" CACHE STRING "Glad version")
 set(NOVELRT_GLFW_VERSION "3.3.2" CACHE STRING "GLFW version")
 set(NOVELRT_GLM_VERSION "0.9.9.7" CACHE STRING "GLM version")
 set(NOVELRT_GSL_VERSION "3.1.0" CACHE STRING "ms-gsl version")
 set(NOVELRT_GTEST_VERSION "1.10.0" CACHE STRING "GTest version")
 set(NOVELRT_OGG_VERSION "1.3.4" CACHE STRING "Ogg version")
 set(NOVELRT_ONETBB_VERSION "2021.3.0" CACHE STRING "OneTBB version")
-set(NOVELRT_OPENAL_VERSION "1.19.1" CACHE STRING "OpenAL version")
+set(NOVELRT_OPENAL_VERSION "1.21.1" CACHE STRING "OpenAL version")
 set(NOVELRT_OPUS_VERSION "1.3.1" CACHE STRING "Opus version")
 set(NOVELRT_PNG_VERSION "1.6.37" CACHE STRING "PNG version")
 set(NOVELRT_SNDFILE_VERSION "1.0.29" CACHE STRING "Sndfile version")
@@ -65,6 +63,7 @@ if(NOT DOXYGEN_FOUND)
   set(NOVELRT_BUILD_DOCUMENTATION OFF)
 endif()
 
+add_subdirectory(resources)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
@@ -80,5 +79,3 @@ if(NOVELRT_BUILD_TESTS)
 
   add_subdirectory(tests)
 endif()
-
-add_subdirectory(resources)

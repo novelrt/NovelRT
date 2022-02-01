@@ -10,13 +10,12 @@ class NovelRTConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = [
         ("freetype/2.10.1"),
-        ("glad/0.1.33"),
         ("glfw/3.3.2"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
         ("libsndfile/1.0.30"),
         ("ms-gsl/3.1.0"),
-        ("openal/1.19.1"),
+        ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
         ("vulkan-loader/1.2.182"),
@@ -24,7 +23,6 @@ class NovelRTConan(ConanFile):
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
-        "inksupport": [True, False],
         "documentation": [True, False],
         "buildtests": [True, False],
         "buildsamples": [True, False]
@@ -41,12 +39,8 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
-        "glad:gl_profile":"core",
-        "glad:gl_version":4.0,
-        "glad:gles2_version":3.0,
         "spdlog:header_only":True,
         "vulkan-loader:shared":True,
-        "inksupport": True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True
@@ -64,10 +58,6 @@ class NovelRTConan(ConanFile):
 
     def configure_cmake(self):
         cmake = CMake(self)
-        if(self.options.inksupport):
-            cmake.definitions["NOVELRT_INCLUDE_INK"] = "On"
-        else:
-            cmake.definitions["NOVELRT_INCLUDE_INK"] = "Off"
         if(self.options.documentation):
             cmake.definitions["NOVELRT_BUILD_DOCUMENTATION"] = "On"
         else:

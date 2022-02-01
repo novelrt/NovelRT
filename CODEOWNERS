@@ -11,37 +11,17 @@
 /.github/workflows/          @FiniteReality @tannergooding
 /scripts/                    @FiniteReality @tannergooding
 
-# Animation
-/include/NovelRT/Animation/  @FiniteReality @RubyNova
-/src/NovelRT/Animation/      @FiniteReality @RubyNova
-
 # Ecs
 /include/NovelRT/Ecs/        @RubyNova
 /src/NovelRT/Ecs/            @RubyNova
-
-# DotNet
-/include/NovelRT/DotNet/     @tannergooding
-/src/NovelRT/DotNet/         @tannergooding
 
 # Graphics
 /include/NovelRT/Graphics/   @RubyNova @tannergooding
 /src/NovelRT/Graphics/       @RubyNova @tannergooding
 
-# Ink
-/include/NovelRT/Ink/        @tannergooding
-/src/NovelRT/Ink/            @tannergooding
-
-# Input
-/include/NovelRT/Input/      @RubyNova
-/src/NovelRT/Input/          @RubyNova
-
 # Maths
 /include/NovelRT/Maths/      @RubyNova @tannergooding
 /src/NovelRT/Maths/          @RubyNova @tannergooding
-
-# SceneGraph
-/include/NovelRT/SceneGraph/ @tannergooding
-/src/NovelRT/SceneGraph/     @tannergooding
 
 # Timing
 /include/NovelRT/Timing/     @RubyNova @tannergooding
@@ -57,7 +37,3 @@
 # NovelRT.Interop
 /include/NovelRT.Interop/    @RubyNova @capnkenny
 /src/NovelRT.Interop/        @RubyNova @capnkenny
-
-# NovelRT.DotNet
-/src/NovelRT.DotNet/        @tannergooding @RubyNova @FiniteReality @capnkenny
-

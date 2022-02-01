@@ -160,7 +160,7 @@ TEST_F(InteropCatalogueTest, CanHandleEntityDeletionBetweenFrames)
 
 TEST_F(InteropCatalogueTest, CanHandleEntityDeletionInSameFrame)
 {
-    auto id = Nrt_catalogue_CreateEntity(catalogue);
+    auto id = Nrt_Catalogue_CreateEntity(catalogue);
     Nrt_Catalogue_DeleteEntity(catalogue, id);
     Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(entityCache);
     Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,

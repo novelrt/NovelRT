@@ -1,8 +1,9 @@
 #ifndef NOVELRT_MATHS_QUADTREENODE_H
 #define NOVELRT_MATHS_QUADTREENODE_H
 
-#include "GeoVector2F.h"
-#include <memory>
+#ifndef NOVELRT_MATHS_H
+#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
+#endif
 
 namespace NovelRT::Maths
 {

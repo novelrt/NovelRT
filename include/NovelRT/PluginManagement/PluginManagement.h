@@ -5,9 +5,9 @@
 #define NOVELRT_PLUGINMANAGEMENT_H
 
 // PluginManagement Dependencies
-#include "../Experimental/Graphics/Graphics.h"
-#include "../Experimental/Windowing/Windowing.h"
+#include "../Graphics/Graphics.h"
 #include "../ResourceManagement/ResourceManagement.h"
+#include "../Windowing/Windowing.h"
 
 /**
  * @brief The NovelRT engine plugin system for loading modules such as Vulkan, GLFW3, OpenAL, and more.

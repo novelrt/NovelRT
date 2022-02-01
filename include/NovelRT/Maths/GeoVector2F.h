@@ -4,30 +4,14 @@
 #ifndef NOVELRT_MATHS_GEOVECTOR2_H
 #define NOVELRT_MATHS_GEOVECTOR2_H
 
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
-namespace NovelRT::Graphics
-{
-    class RenderObject;
-    class ImageRect;
-    class BasicFillRect;
-    class TextRect;
-    class RenderingService;
-    class Camera;
-}
-
-namespace NovelRT::Input
-{
-    class InteractionService;
-}
+#ifndef NOVELRT_MATHS_H
+#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
+#endif
 
 namespace NovelRT::Maths
 {
     class GeoVector2F
     {
-        friend class Graphics::RenderObject;
-        friend class Input::InteractionService;
         friend class GeoVector3F;
         friend class GeoVector4F;
 

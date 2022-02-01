@@ -7,12 +7,4 @@ include-NrtGraphics.h
 --test-output
 ../../../tests/NovelRT.DotNet/Interop/Graphics
 --traverse
-../../../include/NovelRT.Interop/Graphics/NrtBasicFillRect.h
-../../../include/NovelRT.Interop/Graphics/NrtCamera.h
-../../../include/NovelRT.Interop/Graphics/NrtFontSet.h
-../../../include/NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h
-../../../include/NovelRT.Interop/Graphics/NrtImageRect.h
-../../../include/NovelRT.Interop/Graphics/NrtRenderingService.h
 ../../../include/NovelRT.Interop/Graphics/NrtRGBAColour.h
-../../../include/NovelRT.Interop/Graphics/NrtTextRect.h
-../../../include/NovelRT.Interop/Graphics/NrtTexture.h

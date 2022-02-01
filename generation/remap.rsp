@@ -9,6 +9,7 @@ NrtSpriteAnimatorState*=IntPtr
 NrtSpriteAnimatorStateConditionFunctions*=IntPtr
 NrtAudioService*=IntPtr
 NrtAudioServiceIterator*=IntPtr
+NrtAudioSystem*=IntPtr
 NrtRuntimeService*=IntPtr
 NrtCatalogue*=IntPtr
 NrtComponentBufferMemoryContainer*=IntPtr

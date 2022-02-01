@@ -5,16 +5,17 @@
 
 namespace NovelRT::ResourceManagement::Desktop
 {
-    std::vector<std::vector<uint8_t>> DesktopResourceLoader::LoadTextureInternal(std::filesystem::path filePath)
+    TextureMetadata DesktopResourceLoader::LoadTextureInternal(std::filesystem::path filePath)
     {
+        std::string filePathStr = filePath.string();
         FILE* cFile;
 #if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
         // todo: replace with file not found exc
         _logger.throwIfNotZero(
-            fopen_s(&cFile, reinterpret_cast<const char*>(filePath.c_str()), "rb"),
+            fopen_s(&cFile, filePathStr.c_str(), "rb"),
             "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #else
-        cFile = fopen(filePath.c_str(), "rb");
+        cFile = fopen(filePathStr.c_str(), "rb");
         _logger.throwIfNullPtr(
             cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #endif
@@ -96,7 +97,7 @@ namespace NovelRT::ResourceManagement::Desktop
         }
 
         data.rowPointers = new png_bytep[data.height]; // Setup row pointer array and set it into the pixel buffer.
-        unsigned char* p = rawImage;
+        uint8_t* p = reinterpret_cast<uint8_t*>(rawImage);
 
         // TODO: Proper error check on data.rowPointers
         if (data.rowPointers == nullptr)
@@ -119,21 +120,27 @@ namespace NovelRT::ResourceManagement::Desktop
 
         fclose(cFile);
 
-        std::vector<std::vector<uint8_t>> returnImage{};
+        std::vector<uint8_t> returnImage{};
 
-        returnImage.reserve(data.height);
+        size_t finalLength = data.width * data.height;
 
-        for (size_t i = 0; i < data.height; i++)
+        returnImage.reserve(finalLength * 4);
+
+        for (size_t i = 0; i < finalLength * 4; ++i)
         {
-            uint8_t* localRowBytes = reinterpret_cast<uint8_t**>(data.rowPointers)[i];
-            returnImage[i] = std::vector<uint8_t>(localRowBytes, localRowBytes + data.width);
+            returnImage.emplace_back(rawImage[i]);
+        }
+
+        if (data.colourType != PNG_COLOR_TYPE_RGBA)
+        {
+            throw std::runtime_error("reeeeeeee");
         }
 
         delete[] rawImage;
         delete[] data.rowPointers;
         png_destroy_read_struct(&png, &info, nullptr);
 
-        return returnImage;
+        return TextureMetadata{returnImage, data.width, data.height, finalLength};
     }
 
     std::vector<uint8_t> DesktopResourceLoader::LoadShaderSourceInternal(std::filesystem::path filePath)

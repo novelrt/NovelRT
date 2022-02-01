@@ -21,7 +21,7 @@ namespace NovelRT::Utilities
         }
 
         explicit EventHandler(const std::function<void(TArgs...)>& function)
-            : _id((function != nullptr) ? Atom::getNextEventHandlerId() : Atom()), _function(function)
+            : _id((function != nullptr) ? Atom::GetNextEventHandlerId() : Atom()), _function(function)
         {
         }
 

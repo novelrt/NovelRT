@@ -1,12 +1,6 @@
 set(SOURCES
-  NrtDebugService.cpp
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
-  NrtNovelRunner.cpp
-
-  Animation/NrtSpriteAnimator.cpp
-  Animation/NrtSpriteAnimatorFrame.cpp
-  Animation/NrtSpriteAnimatorState.cpp
 
   Audio/NrtAudioService.cpp
 
@@ -19,18 +13,11 @@ set(SOURCES
   Ecs/NrtSystemScheduler.cpp
   Ecs/NrtUnsafeComponentView.cpp
 
-  Graphics/NrtBasicFillRect.cpp
-  Graphics/NrtCamera.cpp
-  Graphics/NrtFontSet.cpp
-  Graphics/NrtImageRect.cpp
-  Graphics/NrtRenderingService.cpp
-        Graphics/NrtRGBAColour.cpp
-  Graphics/NrtTextRect.cpp
-  Graphics/NrtTexture.cpp
+  Ecs/Audio/NrtAudioSystem.cpp
+  Ecs/Audio/NrtAudioEmitterComponent.cpp
+  Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
-  Input/NrtBasicInteractionRect.cpp
-  Input/NrtInteractionService.cpp
-  Input/NrtKeyStateFrameChangeLog.cpp
+  Graphics/NrtRGBAColour.cpp
 
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoMatrix4x4F.cpp
@@ -42,7 +29,6 @@ set(SOURCES
 
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
-  SceneGraph/NrtRenderObjectNode.cpp
   SceneGraph/NrtScene.cpp
   SceneGraph/NrtSceneNode.cpp
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
@@ -52,18 +38,7 @@ set(SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
-
-  Windowing/NrtWindowingService.cpp
 )
-
-if(NOVELRT_INCLUDE_INK)
-  set(SOURCES
-    ${SOURCES}
-    DotNet/NrtRuntimeService.cpp
-    Ink/NrtInkService.cpp
-    Ink/NrtStory.cpp
-  )
-endif()
 
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
@@ -116,7 +91,3 @@ endif()
 target_link_libraries(Interop
   PUBLIC
     Engine)
-
-if(NOVELRT_INCLUDE_INK)
-  target_compile_definitions(Interop PRIVATE NOVELRT_INK)
-endif()
