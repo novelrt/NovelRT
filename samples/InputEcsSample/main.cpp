@@ -4,10 +4,9 @@
 #include <NovelRT.h>
 #include <memory>
 
-using namespace NovelRT::Input::Glfw;
-using namespace NovelRT::Input;
-
 using namespace NovelRT::Ecs;
+using namespace NovelRT::Input;
+using namespace NovelRT::Input::Glfw;
 using namespace NovelRT::PluginManagement;
 
 NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
