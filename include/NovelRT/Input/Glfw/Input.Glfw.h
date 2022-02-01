@@ -13,6 +13,7 @@ namespace NovelRT::Input::Glfw
 }
 
 // Input.Glfw dependencies
+#define GLFW_INCLUDE_NONE
 #include "NovelRT/Input/Input.h"
 #include "NovelRT/PluginManagement/PluginManagement.h"
 #include <GLFW/glfw3.h>

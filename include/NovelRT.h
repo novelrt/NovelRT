@@ -45,9 +45,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-// GLFW3
-#define GLFW_INCLUDE_NONE
-
 // libpng
 #include <png.h>
 #endif // __cplusplus
