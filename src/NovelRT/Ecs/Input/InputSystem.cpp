@@ -13,7 +13,7 @@ namespace NovelRT::Ecs::Input
         _device->Initialise(windowingProvider->GetWindowingDevice()->GetHandle());
     }
 
-    void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
+    void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) noexcept
     {
         _device->Update(delta);
 
@@ -56,7 +56,7 @@ namespace NovelRT::Ecs::Input
         }
     }
 
-    void InputSystem::AddMapping(std::string name, std::string id)
+    void InputSystem::AddMapping(std::string name, std::string id) noexcept
     {
         unused(_device->AddInputAction(name, id));
         auto entityMappingId = NovelRT::Atom::GetNextEntityId();
@@ -64,7 +64,7 @@ namespace NovelRT::Ecs::Input
         _logger.logDebug("Input Mapped: \"{}\" to {}", name, id);
     }
 
-    void InputSystem::AddDefaultKBMMapping()
+    void InputSystem::AddDefaultKBMMapping() noexcept
     {
         AddMapping("Up", "W");
         AddMapping("Down", "S");
@@ -75,7 +75,7 @@ namespace NovelRT::Ecs::Input
         AddMapping("B", "L");
     }
 
-    NovelRT::Atom InputSystem::GetMappingId(const std::string& mappingName) const
+    NovelRT::Atom InputSystem::GetMappingId(const std::string& mappingName) const noexcept
     {
         return _inputMap.at(mappingName);
     }

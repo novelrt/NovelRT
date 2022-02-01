@@ -24,16 +24,16 @@ namespace NovelRT::Input::Glfw
         GlfwInputDevice() noexcept;
 
         void Initialise(void* window) final;
-        void Update(Timing::Timestamp delta) final;
-        [[nodiscard]] bool IsKeyPressed(const std::string& input) final;
-        [[nodiscard]] bool IsKeyHeld(const std::string& input) final;
-        [[nodiscard]] bool IsKeyReleased(const std::string& input) final;
-        [[nodiscard]] KeyState GetKeyState(const std::string& key) final;
+        void Update(Timing::Timestamp delta) noexcept final;
+        [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
+        [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;
+        [[nodiscard]] bool IsKeyReleased(const std::string& input) noexcept final;
+        [[nodiscard]] KeyState GetKeyState(const std::string& key) noexcept final;
         [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
                                                   const std::string& keyIdentifier) final;
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
-        [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() final;
-        [[nodiscard]] gsl::span<InputAction> GetAllMappings() final;
+        [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
+        [[nodiscard]] gsl::span<InputAction> GetAllMappings() noexcept final;
 
         ~GlfwInputDevice() final;
     };

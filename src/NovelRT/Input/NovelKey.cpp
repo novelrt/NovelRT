@@ -23,7 +23,7 @@ namespace NovelRT::Input
         _pairedKey = -1;
     }
 
-    std::string NovelKey::GetKeyName() const noexcept
+    const std::string& NovelKey::GetKeyName() const noexcept
     {
         return _keyName;
     }

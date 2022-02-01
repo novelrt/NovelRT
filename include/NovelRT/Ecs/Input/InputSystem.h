@@ -21,10 +21,10 @@ namespace NovelRT::Ecs::Input
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
                     std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider);
 
-        void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
-        void AddMapping(std::string name, std::string id);
-        void AddDefaultKBMMapping();
-        NovelRT::Atom GetMappingId(const std::string& mappingName) const;
+        void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) noexcept final;
+        void AddMapping(std::string name, std::string id) noexcept;
+        void AddDefaultKBMMapping() noexcept;
+        [[nodiscard]] NovelRT::Atom GetMappingId(const std::string& mappingName) const noexcept;
     };
 }
 

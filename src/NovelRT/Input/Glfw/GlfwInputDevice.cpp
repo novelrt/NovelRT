@@ -175,7 +175,7 @@ namespace NovelRT::Input::Glfw
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
 
-    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
+    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/) noexcept
     {
         double x = 0;
         double y = 0;
@@ -232,7 +232,7 @@ namespace NovelRT::Input::Glfw
             }
         }
     }
-    KeyState GlfwInputDevice::GetKeyState(const std::string& key)
+    KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
     {
         size_t count = _mappedActions.size();
         for (size_t c = 0; c < count; c++)
@@ -247,7 +247,7 @@ namespace NovelRT::Input::Glfw
         return KeyState::Idle;
     }
 
-    bool GlfwInputDevice::IsKeyPressed(const std::string& input)
+    bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
     {
         for (auto action : _mappedActions)
         {
@@ -261,7 +261,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyHeld(const std::string& input)
+    bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
     {
         for (auto action : _mappedActions)
         {
@@ -275,7 +275,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyReleased(const std::string& input)
+    bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
     {
         for (auto action : _mappedActions)
         {
@@ -341,12 +341,12 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    gsl::span<InputAction> GlfwInputDevice::GetAllMappings()
+    gsl::span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
     {
         return _mappedActions;
     }
 
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition()
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition() noexcept
     {
         return _mousePos;
     }
