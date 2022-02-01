@@ -95,37 +95,44 @@ int main()
         NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
 
         NovelRT::Ecs::Input::InputEventComponent input;
-        if(events.TryGetComponent(up, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        if (events.TryGetComponent(up, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
-            move += NovelRT::Maths::GeoVector2F{0.0f, 5.0f};   
+            move += NovelRT::Maths::GeoVector2F{0.0f, 5.0f};
         }
-        
-        if(events.TryGetComponent(down, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(down, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             move += NovelRT::Maths::GeoVector2F{0.0f, -5.0f};
         }
-        
-        if(events.TryGetComponent(left, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(left, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             move += NovelRT::Maths::GeoVector2F{-5.0f, 0.0f};
         }
-        
-        if(events.TryGetComponent(right, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(right, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             move += NovelRT::Maths::GeoVector2F{5.0f, 0.0f};
         }
-        
-        if(events.TryGetComponent(buttonA, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(buttonA, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             scale += NovelRT::Maths::GeoVector2F{0.2f, 0.2f};
         }
-        
-        if(events.TryGetComponent(buttonB, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(buttonB, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             scale += NovelRT::Maths::GeoVector2F{-0.2f, -0.2f};
         }
-        
-        if(events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+
+        if (events.TryGetComponent(mouseClick, input) &&
+            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
         }

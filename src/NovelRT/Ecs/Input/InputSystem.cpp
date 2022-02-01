@@ -26,7 +26,7 @@ namespace NovelRT::Ecs::Input
             if (inputs.TryGetComponent(input.second, in))
             {
 
-                switch(state)
+                switch (state)
                 {
                     case NovelRT::Input::KeyState::KeyUp:
                     case NovelRT::Input::KeyState::KeyDown:

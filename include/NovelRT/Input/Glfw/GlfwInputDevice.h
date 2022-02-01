@@ -29,7 +29,8 @@ namespace NovelRT::Input::Glfw
         [[nodiscard]] bool IsKeyHeld(const std::string& input) final;
         [[nodiscard]] bool IsKeyReleased(const std::string& input) final;
         [[nodiscard]] KeyState GetKeyState(const std::string& key) final;
-        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName, const std::string& keyIdentifier) final;
+        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
+                                                  const std::string& keyIdentifier) final;
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() final;
         [[nodiscard]] gsl::span<InputAction> GetAllMappings() final;

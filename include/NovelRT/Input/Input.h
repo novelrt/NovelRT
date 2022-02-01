@@ -9,9 +9,9 @@
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Event.h"
+#include <gsl/span>
 #include <map>
 #include <string>
-#include <gsl/span>
 
 /**
  * @Brief The input plugin API.
