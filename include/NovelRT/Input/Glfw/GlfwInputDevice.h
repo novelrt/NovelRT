@@ -15,8 +15,6 @@ namespace NovelRT::Input::Glfw
     private:
         bool _isInitialised;
         GLFWwindow* _window;
-        NovelRT::Timing::StepTimer _timer;
-        NovelRT::Utilities::Event<Timing::Timestamp> _dummyEvent;
         std::vector<InputAction> _previousStates;
         NovelRT::Maths::GeoVector2F _mousePos;
 
@@ -24,7 +22,7 @@ namespace NovelRT::Input::Glfw
         GlfwInputDevice() noexcept;
 
         void Initialise(void* window) final;
-        void Update(Timing::Timestamp delta) noexcept final;
+        void Update(Timing::Timestamp delta) final;
         [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyReleased(const std::string& input) noexcept final;

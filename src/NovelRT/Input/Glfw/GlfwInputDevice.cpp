@@ -7,12 +7,9 @@ namespace NovelRT::Input::Glfw
 {
     GlfwInputDevice::GlfwInputDevice() noexcept
         : _isInitialised(false),
-          _timer(60, 0.1),
           _previousStates(std::vector<InputAction>()),
           _mousePos(NovelRT::Maths::GeoVector2F::zero())
     {
-        _dummyEvent = NovelRT::Utilities::Event<Timing::Timestamp>();
-        _dummyEvent += [&](auto /*delta*/) {};
     }
 
     void GlfwInputDevice::Initialise(void* window)
@@ -175,7 +172,7 @@ namespace NovelRT::Input::Glfw
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
 
-    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/) noexcept
+    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
     {
         double x = 0;
         double y = 0;
@@ -232,6 +229,7 @@ namespace NovelRT::Input::Glfw
             }
         }
     }
+    
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
     {
         size_t count = _mappedActions.size();
