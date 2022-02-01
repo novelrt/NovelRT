@@ -21,7 +21,6 @@ namespace NovelRT::Ecs::Input
     public:
         InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
                     std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider);
-        ~InputSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
         void AddMapping(std::string name, std::string id);

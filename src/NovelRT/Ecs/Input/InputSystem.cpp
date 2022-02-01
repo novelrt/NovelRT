@@ -75,7 +75,7 @@ namespace NovelRT::Ecs::Input
         AddMapping("B", "L");
     }
 
-    NovelRT::Atom InputSystem::GetMappingId(std::string mappingName)
+    NovelRT::Atom InputSystem::GetMappingId(const std::string& mappingName) const
     {
         return _inputMap.at(mappingName);
     }

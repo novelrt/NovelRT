@@ -11,6 +11,7 @@
 #include "NovelRT/Utilities/Event.h"
 #include <map>
 #include <string>
+#include <gsl/span>
 
 /**
  * @Brief The input plugin API.

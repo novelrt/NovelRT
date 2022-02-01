@@ -232,7 +232,7 @@ namespace NovelRT::Input::Glfw
             }
         }
     }
-    KeyState GlfwInputDevice::GetKeyState(std::string key)
+    KeyState GlfwInputDevice::GetKeyState(const std::string& key)
     {
         size_t count = _mappedActions.size();
         for (size_t c = 0; c < count; c++)
@@ -247,7 +247,7 @@ namespace NovelRT::Input::Glfw
         return KeyState::Idle;
     }
 
-    bool GlfwInputDevice::IsKeyPressed(std::string input)
+    bool GlfwInputDevice::IsKeyPressed(const std::string& input)
     {
         for (auto action : _mappedActions)
         {
@@ -261,7 +261,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyHeld(std::string input)
+    bool GlfwInputDevice::IsKeyHeld(const std::string& input)
     {
         for (auto action : _mappedActions)
         {
@@ -275,7 +275,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyReleased(std::string input)
+    bool GlfwInputDevice::IsKeyReleased(const std::string& input)
     {
         for (auto action : _mappedActions)
         {
@@ -289,7 +289,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    InputAction& GlfwInputDevice::AddInputAction(std::string actionName, std::string keyIdentifier)
+    InputAction& GlfwInputDevice::AddInputAction(const std::string& actionName, const std::string& keyIdentifier)
     {
         bool nameExists = false;
         bool keyBoundAlready = false;
@@ -322,7 +322,7 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    NovelKey& GlfwInputDevice::GetAvailableKey(std::string keyRequested)
+    NovelKey& GlfwInputDevice::GetAvailableKey(const std::string& keyRequested)
     {
         if (keyRequested == "")
         {
@@ -341,12 +341,12 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    std::vector<InputAction>& GlfwInputDevice::GetAllMappings()
+    gsl::span<InputAction> GlfwInputDevice::GetAllMappings()
     {
         return _mappedActions;
     }
 
-    NovelRT::Maths::GeoVector2F& GlfwInputDevice::GetMousePosition()
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition()
     {
         return _mousePos;
     }
