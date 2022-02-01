@@ -93,8 +93,6 @@ namespace NovelRT
 
         static Atom GetNextEcsGraphicsPipelineId() noexcept;
 
-        static Atom GetNextEcsInputActionId() noexcept;
-
         static Atom GetNextEcsPrimitiveInfoConfigurationId() noexcept;
     };
 
