@@ -18,6 +18,23 @@ set(SOURCES
   Ecs/SystemSchedulerTest.cpp
   Ecs/SparseSetMemoryContainerTest.cpp
 
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/NovelRTInteropUtilsTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtCatalogueTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtComponentBufferMemoryContainerTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtComponentCacheTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtEntityCacheTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtSparseSetMemoryContainerTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtSystemSchedulerTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/GeoBoundsTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/GeoMatrix4x4Test.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/GeoVector2FTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/GeoVector3FTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/GeoVector4FTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/QuadTreePointTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/QuadTreeTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/SceneGraph/NovelRTSceneNodeTest.cpp>
+  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Timing/NovelRTTimestampTest.cpp>
+
   Maths/GeoBoundsTest.cpp
   Maths/GeoMatrix4x4Test.cpp
   Maths/GeoVector2Test.cpp
@@ -35,27 +52,6 @@ set(SOURCES
 
   main.cpp
 )
-
-if(NOVELRT_BUILD_INTEROP)
-    set(SOURCES ${SOURCES}
-      Interop/NovelRTInteropUtilsTest.cpp
-      Interop/Ecs/NrtCatalogueTest.cpp
-      Interop/Ecs/NrtComponentBufferMemoryContainerTest.cpp
-      Interop/Ecs/NrtComponentCacheTest.cpp
-      Interop/Ecs/NrtEntityCacheTest.cpp
-      Interop/Ecs/NrtSparseSetMemoryContainerTest.cpp
-      Interop/Ecs/NrtSystemSchedulerTest.cpp
-      Interop/Maths/GeoBoundsTest.cpp
-      Interop/Maths/GeoMatrix4x4Test.cpp
-      Interop/Maths/GeoVector2FTest.cpp
-      Interop/Maths/GeoVector3FTest.cpp
-      Interop/Maths/GeoVector4FTest.cpp
-      Interop/Maths/QuadTreePointTest.cpp
-      Interop/Maths/QuadTreeTest.cpp
-      Interop/SceneGraph/NovelRTSceneNodeTest.cpp
-      Interop/Timing/NovelRTTimestampTest.cpp
-    )
-endif()
 
 add_executable(Engine_Tests ${SOURCES})
 
