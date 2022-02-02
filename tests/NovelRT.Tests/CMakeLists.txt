@@ -2,8 +2,6 @@ find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
   COMPONENTS gtest_main
 )
 
-set(INTEROPBUILD 0)
-
 include(GoogleTest)
 
 set(SOURCES
@@ -39,7 +37,6 @@ set(SOURCES
 )
 
 if(NOVELRT_BUILD_INTEROP)
-    set(INTEROPBUILD 1)
     set(SOURCES ${SOURCES}
       Interop/NovelRTInteropUtilsTest.cpp
       Interop/Ecs/NrtCatalogueTest.cpp
@@ -80,7 +77,7 @@ endif()
 target_link_libraries(Engine_Tests
   PUBLIC
     Engine
-    $<IF:${INTEROPBUILD},Interop,>
+    $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
     GTest::gtest
     GTest::gtest_main
 )
