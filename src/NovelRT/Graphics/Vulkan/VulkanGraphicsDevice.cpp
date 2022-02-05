@@ -354,6 +354,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (!_isAttachedToResizeEvent)
         {
+            _isAttachedToResizeEvent = true;
             GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
         }
 
@@ -555,11 +556,6 @@ namespace NovelRT::Graphics::Vulkan
         presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
-        if (_swapChainImages.isCreated())
-        {
-            _swapChainImages.reset();
-        }
-
         if (_vulkanSwapchain.isCreated())
         {
             _vulkanSwapchain.reset(CreateSwapChain(_vulkanSwapchain.getActual()));
@@ -568,6 +564,8 @@ namespace NovelRT::Graphics::Vulkan
         {
             _vulkanSwapchain.reset(CreateSwapChain());
         }
+
+        _swapChainImages.reset(GetSwapChainImages());
 
         for (auto&& context : _contexts.getActual())
         {
