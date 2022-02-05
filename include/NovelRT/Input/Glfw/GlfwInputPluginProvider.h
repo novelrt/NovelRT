@@ -12,7 +12,7 @@ namespace NovelRT::Input::Glfw
 {
     class GlfwInputPluginProvider final : public PluginManagement::IInputPluginProvider
     {
-    private:
+    protected:
         std::shared_ptr<GlfwInputDevice> _inputDevice;
 
         [[nodiscard]] GlfwInputDevice* GetInputDeviceInternal() override;

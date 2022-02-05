@@ -12,7 +12,7 @@ namespace NovelRT::PluginManagement
 {
     class IGraphicsPluginProvider
     {
-    private:
+    protected:
         [[nodiscard]] virtual Graphics::GraphicsProvider* GetGraphicsProviderInternal() = 0;
 
     public:
