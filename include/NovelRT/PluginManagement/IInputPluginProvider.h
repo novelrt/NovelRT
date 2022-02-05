@@ -12,7 +12,7 @@ namespace NovelRT::PluginManagement
 {
     class IInputPluginProvider
     {
-    private:
+    protected:
         [[nodiscard]] virtual NovelRT::Input::IInputDevice* GetInputDeviceInternal() = 0;
 
     public:

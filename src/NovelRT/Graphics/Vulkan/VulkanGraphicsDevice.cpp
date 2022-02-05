@@ -322,7 +322,7 @@ namespace NovelRT::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
-        ResizeGraphicsContexts(imageCount); // TODO: This making vulkan angry for some reason.
+        ResizeGraphicsContexts(imageCount);
 
         std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
         imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
