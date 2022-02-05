@@ -35,6 +35,8 @@ namespace NovelRT::Graphics::Vulkan
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
         // TODO: This gonna be an issue...?
         GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
+        auto countFfs = GetSurface()->SizeChanged.getHandlerCount();
+        unused(countFfs);
     }
 
     std::vector<std::shared_ptr<GraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContextPointers()
