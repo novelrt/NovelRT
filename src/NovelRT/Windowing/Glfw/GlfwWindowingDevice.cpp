@@ -51,6 +51,15 @@ namespace NovelRT::Windowing::Glfw
 
         glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
+        glfwSetWindowUserPointer(window, this);
+
+        glfwSetWindowSizeCallback(window, [](auto window, auto width, auto height)
+                                  {
+                                      auto thisDevice = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+                                      auto countFfs = thisDevice->SizeChanged.getHandlerCount();
+                                      unused(countFfs);
+                                      thisDevice->SizeChanged(Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height)));
+                                  });
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
 
