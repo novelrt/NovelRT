@@ -31,6 +31,8 @@ namespace NovelRT::Graphics::Vulkan
         VkFormat _vulkanSwapChainFormat;
         VkExtent2D _swapChainExtent;
 
+        bool _isAttachedToResizeEvent;
+
         NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
         NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
         NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;

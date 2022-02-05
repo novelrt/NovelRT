@@ -29,11 +29,11 @@ namespace NovelRT::Graphics::Vulkan
           _renderPass([&]() { return CreateRenderPass(); }),
           _memoryAllocator([&]() { return CreateMemoryAllocator(); }),
           _indicesData{},
-          _state()
+          _state(),
+          _isAttachedToResizeEvent(false)
     {
         _logger.logInfoLine("Provided GPU device: " + GetAdapter()->GetName());
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
-        GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
         auto countFfs = GetSurface()->SizeChanged.getHandlerCount();
         unused(countFfs);
     }
@@ -339,7 +339,9 @@ namespace NovelRT::Graphics::Vulkan
                                                              imagesKHRQuery);
         }
 
-        uint32_t contextIndex;
+        auto presentCompletionGraphicsFence = GetPresentCompletionFence();
+
+        uint32_t contextIndex = 0;
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
                                   VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
@@ -349,6 +351,12 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
+
+        if (!_isAttachedToResizeEvent)
+        {
+            GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
+        }
+
         _contextIndex = contextIndex;
 
         _logger.logInfoLine("VkImages successfully retrieved.");
@@ -555,7 +563,10 @@ namespace NovelRT::Graphics::Vulkan
         if (_vulkanSwapchain.isCreated())
         {
             _vulkanSwapchain.reset(CreateSwapChain(_vulkanSwapchain.getActual()));
-            _contextIndex = 0;
+        }
+        else
+        {
+            _vulkanSwapchain.reset(CreateSwapChain());
         }
 
         for (auto&& context : _contexts.getActual())
