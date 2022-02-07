@@ -24,8 +24,6 @@ indent_size = 2
 trim_trailing_whitespace = true
 file_header_template = Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root for more information.
 
-[*.cs]
+[*.{cpp,hpp,c,h,tpp,cs,py}]
 indent_size = 4
 
-[*.py]
-indent_size = 4
