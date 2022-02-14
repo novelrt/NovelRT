@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Ecs/Graphics/NrtDefaultRenderingSystem.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT;
@@ -18,16 +18,20 @@ extern "C"
 #endif
 
     NrtDefaultRenderingSystemHandle Nrt_DefaultRenderingSystem_create(
-            NrtIGraphicsPluginProviderPtrHandle graphicsPluginProvider,
-            NrtIWindowingPluginProviderPtrHandle windowingPluginProvider,
-            NrtIResourceManagementPluginProviderPtrHandle resourceManagementPluginProvider)
+        NrtIGraphicsPluginProviderPtrHandle graphicsPluginProvider,
+        NrtIWindowingPluginProviderPtrHandle windowingPluginProvider,
+        NrtIResourceManagementPluginProviderPtrHandle resourceManagementPluginProvider)
     {
-        auto graphics = reinterpret_cast<PluginManagement::IGraphicsPluginProvider*>(graphicsPluginProvider)->shared_from_this();
-        auto window = reinterpret_cast<PluginManagement::IWindowingPluginProvider*>(windowingPluginProvider)->shared_from_this();
-        auto resources = reinterpret_cast<PluginManagement::IResourceManagementPluginProvider*>(
-                                        resourceManagementPluginProvider)->shared_from_this();
+        auto graphics =
+            reinterpret_cast<PluginManagement::IGraphicsPluginProvider*>(graphicsPluginProvider)->shared_from_this();
+        auto window =
+            reinterpret_cast<PluginManagement::IWindowingPluginProvider*>(windowingPluginProvider)->shared_from_this();
+        auto resources =
+            reinterpret_cast<PluginManagement::IResourceManagementPluginProvider*>(resourceManagementPluginProvider)
+                ->shared_from_this();
 
-        _DefaultRenderingSystemCollection.push_back(std::make_shared<DefaultRenderingSystem>(graphics, window, resources));
+        _DefaultRenderingSystemCollection.push_back(
+            std::make_shared<DefaultRenderingSystem>(graphics, window, resources));
 
         return reinterpret_cast<NrtDefaultRenderingSystemHandle>(_DefaultRenderingSystemCollection.back().get());
     }
@@ -41,9 +45,8 @@ extern "C"
         }
 
         auto to_delete = reinterpret_cast<DefaultRenderingSystem*>(system)->shared_from_this();
-        if (std::find(_DefaultRenderingSystemCollection.begin(),
-                        _DefaultRenderingSystemCollection.end(),
-                        to_delete) == _DefaultRenderingSystemCollection.end())
+        if (std::find(_DefaultRenderingSystemCollection.begin(), _DefaultRenderingSystemCollection.end(), to_delete) ==
+            _DefaultRenderingSystemCollection.end())
         {
             Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
@@ -52,10 +55,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_Update(
-            NrtDefaultRenderingSystemHandle system,
-            NrtTimestamp delta,
-            NrtCatalogueHandle catalogue)
+    NrtResult Nrt_DefaultRenderingSystem_Update(NrtDefaultRenderingSystemHandle system,
+                                                NrtTimestamp delta,
+                                                NrtCatalogueHandle catalogue)
     {
         if (system == nullptr || catalogue == nullptr)
         {
@@ -72,10 +74,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_GetOrLoadTexture(
-            NrtDefaultRenderingSystemHandle system,
-            const char* spriteName,
-            NrtTextureInfoFutureResultHandle *output)
+    NrtResult Nrt_DefaultRenderingSystem_GetOrLoadTexture(NrtDefaultRenderingSystemHandle system,
+                                                          const char* spriteName,
+                                                          NrtTextureInfoFutureResultHandle* output)
     {
         if (system == nullptr)
         {
@@ -99,10 +100,9 @@ extern "C"
 
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_GetExistingTextureBasedOnId(
-            NrtDefaultRenderingSystemHandle system,
-            NrtAtom ecsId,
-            NrtTextureInfoThreadedPtrHandle *output)
+    NrtResult Nrt_DefaultRenderingSystem_GetExistingTextureBasedOnId(NrtDefaultRenderingSystemHandle system,
+                                                                     NrtAtom ecsId,
+                                                                     NrtTextureInfoThreadedPtrHandle* output)
     {
         if (system == nullptr)
         {
@@ -124,13 +124,12 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_LoadVertexDataRawUntyped(
-            NrtDefaultRenderingSystemHandle system,
-            const char* vertexDataName,
-            void* data,
-            size_t dataTypeSize,
-            size_t dataLength,
-            NrtVertexInfoFutureResultHandle *output)
+    NrtResult Nrt_DefaultRenderingSystem_LoadVertexDataRawUntyped(NrtDefaultRenderingSystemHandle system,
+                                                                  const char* vertexDataName,
+                                                                  void* data,
+                                                                  size_t dataTypeSize,
+                                                                  size_t dataLength,
+                                                                  NrtVertexInfoFutureResultHandle* output)
     {
         if (system == nullptr)
         {
@@ -154,10 +153,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnName(
-            NrtDefaultRenderingSystemHandle system,
-            const char* vertexDataName,
-            NrtVertexInfoThreadedPtrHandle *output)
+    NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnName(NrtDefaultRenderingSystemHandle system,
+                                                                          const char* vertexDataName,
+                                                                          NrtVertexInfoThreadedPtrHandle* output)
     {
         if (system == nullptr)
         {
@@ -181,10 +179,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnId(
-            NrtDefaultRenderingSystemHandle system,
-            NrtAtom ecsId,
-            NrtVertexInfoThreadedPtrHandle *output)
+    NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnId(NrtDefaultRenderingSystemHandle system,
+                                                                        NrtAtom ecsId,
+                                                                        NrtVertexInfoThreadedPtrHandle* output)
     {
         if (system == nullptr)
         {
@@ -207,9 +204,9 @@ extern "C"
     }
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingPipelineInfoBasedOnId(
-            NrtDefaultRenderingSystemHandle system,
-            NrtAtom ecsId,
-            NrtGraphicsPipelineInfoThreadedPtrHandle *output)
+        NrtDefaultRenderingSystemHandle system,
+        NrtAtom ecsId,
+        NrtGraphicsPipelineInfoThreadedPtrHandle* output)
     {
         if (system == nullptr)
         {
@@ -231,12 +228,12 @@ extern "C"
         return NRT_SUCCESS;
     }
     NrtResult Nrt_DefaultRenderingSystem_RegisterPipeline(
-            NrtDefaultRenderingSystemHandle system,
-            const char* pipelineName,
-            NrtGraphicsPipelinePtrHandle pipeline,
-            NrtGraphicsResourceMemoryVectorHandle customConstantBufferRegions,
-            NrtBool useEcsTransforms,
-            NrtGraphicsPipelineInfoThreadedPtrHandle *output)
+        NrtDefaultRenderingSystemHandle system,
+        const char* pipelineName,
+        NrtGraphicsPipelinePtrHandle pipeline,
+        NrtGraphicsResourceMemoryVectorHandle customConstantBufferRegions,
+        NrtBool useEcsTransforms,
+        NrtGraphicsPipelineInfoThreadedPtrHandle *output)
     {
         if (system == nullptr)
         {
@@ -244,7 +241,8 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr || pipelineName == nullptr || pipeline == nullptr || customConstantBufferRegions == nullptr)
+        if (output == nullptr || pipelineName == nullptr || pipeline == nullptr ||
+            customConstantBufferRegions == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -253,8 +251,10 @@ extern "C"
         auto CppSystem = reinterpret_cast<DefaultRenderingSystem*>(system);
         std::string CppPipelineName = pipelineName;
         auto CppPipeline = std::dynamic_pointer_cast<Graphics::GraphicsPipeline>(
-                        reinterpret_cast<Graphics::GraphicsPipeline*>(pipeline)->shared_from_this());
-        auto CppConstantBuffer = reinterpret_cast<std::vector<Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource>>*>(customConstantBufferRegions);
+            reinterpret_cast<Graphics::GraphicsPipeline*>(pipeline)->shared_from_this());
+        auto CppConstantBuffer =
+            reinterpret_cast<std::vector<Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource>>*>(
+                customConstantBufferRegions);
         auto NewConcurrent = Threading::MakeConcurrentShared<GraphicsPipelineInfo>();
 
         NewConcurrent = CppSystem->RegisterPipeline(CppPipelineName, CppPipeline, *CppConstantBuffer, useEcsTransforms);
@@ -262,11 +262,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_AttachSpriteRenderingToEntity(
-            NrtDefaultRenderingSystemHandle system,
-            NrtEntityId entity,
-            NrtTextureInfoThreadedPtrHandle texture,
-            NrtCatalogueHandle catalogue)
+    NrtResult Nrt_DefaultRenderingSystem_AttachSpriteRenderingToEntity(NrtDefaultRenderingSystemHandle system,
+                                                                       NrtEntityId entity,
+                                                                       NrtTextureInfoThreadedPtrHandle texture,
+                                                                       NrtCatalogueHandle catalogue)
     {
         if (system == nullptr)
         {
@@ -289,11 +288,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntity(
-            NrtDefaultRenderingSystemHandle system,
-            NrtTextureInfoThreadedPtrHandle texture,
-            NrtCatalogueHandle catalogue,
-            NrtEntityId *output)
+    NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntity(NrtDefaultRenderingSystemHandle system,
+                                                            NrtTextureInfoThreadedPtrHandle texture,
+                                                            NrtCatalogueHandle catalogue,
+                                                            NrtEntityId* output)
     {
         if (system == nullptr)
         {
@@ -317,11 +315,10 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntityOutsideOfSystem(
-            NrtDefaultRenderingSystemHandle system,
-            NrtTextureInfoThreadedPtrHandle texture,
-            NrtSystemSchedulerHandle scheduler,
-            NrtEntityId *output)
+    NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntityOutsideOfSystem(NrtDefaultRenderingSystemHandle system,
+                                                                           NrtTextureInfoThreadedPtrHandle texture,
+                                                                           NrtSystemSchedulerHandle scheduler,
+                                                                           NrtEntityId* output)
     {
         if (system == nullptr)
         {

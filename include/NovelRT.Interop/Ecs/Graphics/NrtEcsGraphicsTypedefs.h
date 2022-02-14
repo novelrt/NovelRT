@@ -10,19 +10,19 @@ extern "C"
 #endif
 
     typedef struct NrtGraphicsPipelineThreadedPtr* NrtGraphicsPipelineThreadedPtrHandle;
-    //Threading::ConcurrentSharedPtr<NovelRT::Graphics::GraphicsPipeline>
+    // Threading::ConcurrentSharedPtr<NovelRT::Graphics::GraphicsPipeline>
     typedef struct NrtGraphicsPipelinePtr* NrtGraphicsPipelinePtrHandle;
-    //std::shared_ptr<NovelRT::Graphics::GraphicsPipeline>
+    // std::shared_ptr<NovelRT::Graphics::GraphicsPipeline>
 
     typedef struct NrtGPUCustomConstantBuffers* NrtGPUCustomConstantBuffersHandle;
-    //Threading::ConcurrentSharedPtr<std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>>
+    // Threading::ConcurrentSharedPtr<std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>>
 
     typedef struct NrtGraphicsResourceRegionMemory* NrtGraphicsResourceMemoryRegionHandle;
-    //NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>
+    // NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>
     typedef struct NrtGraphicsResourceMemoryMap* NrtGraphicsResourceMemoryMapHandle;
-    //std::map<size_t, NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
+    // std::map<size_t, NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
     typedef struct NrtGraphicsResourceMemoryVector* NrtGraphicsResourceMemoryVectorHandle;
-    //std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
+    // std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
 
     typedef struct
     {
@@ -35,7 +35,7 @@ extern "C"
     } NrtGraphicsPipelineInfo;
 
     typedef struct NrtGraphicsPipelineInfoThreadedPtr* NrtGraphicsPipelineInfoThreadedPtrHandle;
-    //Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
+    // Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>
 
     typedef struct
     {
@@ -47,12 +47,12 @@ extern "C"
         size_t stagingPtrLength;
         uint32_t stride;
 
-    }  NrtVertexInfo;
+    } NrtVertexInfo;
 
     typedef struct NrtVertexInfoThreadedPtr* NrtVertexInfoThreadedPtrHandle;
-    //Threading::ConcurrentSharedPtr<VertexInfo>
+    // Threading::ConcurrentSharedPtr<VertexInfo>
     typedef struct NrtVertexInfoFutureResult* NrtVertexInfoFutureResultHandle;
-    //Threading::FutureResult<VertexInfo>
+    // Threading::FutureResult<VertexInfo>
 
     typedef struct
     {
@@ -65,15 +65,15 @@ extern "C"
     } NrtTextureInfo;
 
     typedef struct NrtTextureInfoThreadedPtr* NrtTextureInfoThreadedPtrHandle;
-    //Threading::ConcurrentSharedPtr<TextureInfo>
+    // Threading::ConcurrentSharedPtr<TextureInfo>
     typedef struct NrtTextureInfoFutureResult* NrtTextureInfoFutureResultHandle;
-    //Threading::FutureResult<TextureInfo>
+    // Threading::FutureResult<TextureInfo>
 
     typedef struct NrtEntityIdPtr* NrtEntityIdPtrHandle;
-    //Threading::ConcurrentSharedPtr<EntityId>
+    // Threading::ConcurrentSharedPtr<EntityId>
 
     typedef struct NrtDefaultRenderingSystem*  NrtDefaultRenderingSystemHandle;
-    //NovelRT::Ecs::Graphics::DefaultRenderingSystem
+    // NovelRT::Ecs::Graphics::DefaultRenderingSystem
     typedef struct
     {
         NrtEntityId entityId;
@@ -110,8 +110,8 @@ extern "C"
 
     typedef struct
     {
-            NrtGeoVector3F Position;
-            NrtGeoVector2F UV;
+        NrtGeoVector3F Position;
+        NrtGeoVector2F UV;
 
     } NrtTexturedVertexTest;
 

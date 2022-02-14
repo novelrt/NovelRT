@@ -13,10 +13,12 @@ extern "C"
 
     NrtBool Nrt_GraphicsPrimitiveInfo_Equals_Operator(NrtGraphicsPrimitiveInfo lhs, NrtGraphicsPrimitiveInfo rhs)
     {
-        return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) == *reinterpret_cast<const GraphicsPrimitiveInfo*>(&rhs);
+        return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) ==
+               *reinterpret_cast<const GraphicsPrimitiveInfo*>(&rhs);
     }
 
-    NrtBool Nrt_GraphicsPrimitiveInfo_Equals_Operator_With_RenderComponent(NrtGraphicsPrimitiveInfo lhs, NrtRenderComponent rhs)
+    NrtBool Nrt_GraphicsPrimitiveInfo_Equals_Operator_With_RenderComponent(NrtGraphicsPrimitiveInfo lhs,
+                                                                           NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) == *reinterpret_cast<const RenderComponent*>(&rhs);
     }

@@ -4,6 +4,8 @@
 #ifndef NOVELRT_INTEROP_ECS_ECS_H
 #define NOVELRT_INTEROP_ECS_ECS_H
 
+#include "Audio/NrtEcsAudio.h"
+#include "Graphics/NrtEcsGraphics.h"
 #include "NrtCatalogue.h"
 #include "NrtComponentBufferMemoryContainer.h"
 #include "NrtComponentCache.h"
@@ -12,7 +14,5 @@
 #include "NrtSparseSetMemoryContainer.h"
 #include "NrtSystemScheduler.h"
 #include "NrtUnsafeComponentView.h"
-#include "Graphics/NrtEcsGraphics.h"
-#include "Audio/NrtEcsAudio.h"
 
 #endif // NOVELRT_INTEROP_ECS_ECS_H

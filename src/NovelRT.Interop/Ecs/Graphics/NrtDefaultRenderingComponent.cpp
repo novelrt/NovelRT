@@ -18,13 +18,13 @@ extern "C"
     NrtBool Nrt_RenderComponent_Equals_Operator(NrtRenderComponent lhs, NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&lhs) ==
-            *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
+               *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
     }
 
     NrtBool Nrt_RenderComponent_NotEquals_Operator(NrtRenderComponent lhs, NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&lhs) !=
-            *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
+               *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
     }
 
 #ifdef __cplusplus
