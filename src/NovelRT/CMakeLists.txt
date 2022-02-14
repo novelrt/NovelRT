@@ -161,11 +161,38 @@ if(WIN32)
       Winmm
   )
 
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files/NovelRT" CACHE PATH "..." FORCE)
+
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${CMAKE_BINARY_DIR}/thirdparty
-      $<TARGET_FILE_DIR:Engine>)
-  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
+  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #    ${CMAKE_BINARY_DIR}/thirdparty
+  #    $<TARGET_FILE_DIR:Engine>)
+  #file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
+  file(GLOB libs ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()
+
+set_target_properties(Engine PROPERTIES PUBLIC_HEADER "${CMAKE_SOURCE_DIR}/include/NovelRT.h")
+
+install(
+  TARGETS Engine 
+  EXPORT novelrt
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  RESOURCE DESTINATION $<IF:$<BOOL:WIN32>,bin,lib>
+  PUBLIC_HEADER DESTINATION include
+)
+install(
+  DIRECTORY "${CMAKE_SOURCE_DIR}/include/NovelRT"
+  DESTINATION "include"
+  FILES_MATCHING
+  PATTERN "*.h"
+)
+install(
+  DIRECTORY "${CMAKE_SOURCE_DIR}/Resources/Shaders"
+  DESTINATION "bin/Resources"
+  FILES_MATCHING
+  PATTERN "*.spv"
+)
