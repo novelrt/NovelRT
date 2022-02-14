@@ -71,7 +71,6 @@ extern "C"
 #ifdef NOVELRT_INK
 #include "DotNet/NrtDotNetTypedefs.h"
 #endif
-#include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
 #ifdef NOVELRT_INK
 #include "Ink/NrtInkTypedefs.h"

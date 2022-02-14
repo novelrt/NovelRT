@@ -16,7 +16,7 @@ namespace NovelRT::Ecs::Graphics
         NovelRT::Maths::GeoVector2F UV;
     };
 
-    class DefaultRenderingSystem : public IEcsSystem
+    class DefaultRenderingSystem : public IEcsSystem, public std::enable_shared_from_this<DefaultRenderingSystem>
     {
     private:
         Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;

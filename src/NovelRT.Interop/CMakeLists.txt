@@ -16,8 +16,14 @@ set(SOURCES
   Ecs/Audio/NrtAudioSystem.cpp
   Ecs/Audio/NrtAudioEmitterComponent.cpp
   Ecs/Audio/NrtAudioEmitterStateComponent.cpp
+  Ecs/Graphics/NrtDefaultRenderingComponent.cpp
+  Ecs/Graphics/NrtGraphicsPrimitiveInfo.cpp
+  Ecs/Graphics/NrtVertexInfo.cpp
+  Ecs/Graphics/NrtTextureInfo.cpp
+  Ecs/Graphics/NrtDefaultRenderingSystem.cpp
 
   Graphics/NrtRGBAColour.cpp
+  
 
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoMatrix4x4F.cpp

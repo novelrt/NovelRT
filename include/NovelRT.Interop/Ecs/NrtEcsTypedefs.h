@@ -32,6 +32,9 @@ extern "C"
     typedef NrtAtom NrtEntityId;
     typedef NrtAtom NrtComponentTypeId;
 
+    #include "Graphics/NrtEcsGraphicsTypedefs.h"
+    #include "Audio/NrtEcsAudioTypedefs.h"
+    #include "PluginManagement/NrtEcsPluginManagementTypedefs.h"
 #ifdef __cplusplus
 }
 #endif

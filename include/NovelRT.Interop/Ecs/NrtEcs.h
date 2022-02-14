@@ -12,5 +12,7 @@
 #include "NrtSparseSetMemoryContainer.h"
 #include "NrtSystemScheduler.h"
 #include "NrtUnsafeComponentView.h"
+#include "Graphics/NrtEcsGraphics.h"
+#include "Audio/NrtEcsAudio.h"
 
 #endif // NOVELRT_INTEROP_ECS_ECS_H
