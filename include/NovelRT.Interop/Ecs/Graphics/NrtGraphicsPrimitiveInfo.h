@@ -20,5 +20,4 @@ extern "C"
 }
 #endif
 
-
 #endif // NOVELRT_INTEROP_ECS_GRAPHICS_GRAPHICSPRIMITIVEINFO_H

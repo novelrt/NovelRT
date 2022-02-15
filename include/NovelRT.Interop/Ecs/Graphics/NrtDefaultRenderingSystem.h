@@ -48,7 +48,7 @@ extern "C"
     NrtResult Nrt_DefaultRenderingSystem_GetExistingPipelineInfoBasedOnId(
         NrtDefaultRenderingSystemHandle system,
         NrtAtom ecsId,
-        NrtGraphicsPipelineInfoThreadedPtrHandle *output);
+        NrtGraphicsPipelineInfoThreadedPtrHandle* output);;
 
     NrtResult Nrt_DefaultRenderingSystem_RegisterPipeline(
         NrtDefaultRenderingSystemHandle system,

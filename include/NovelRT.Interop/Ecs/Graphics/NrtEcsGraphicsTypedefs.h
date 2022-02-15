@@ -72,7 +72,7 @@ extern "C"
     typedef struct NrtEntityIdPtr* NrtEntityIdPtrHandle;
     // Threading::ConcurrentSharedPtr<EntityId>
 
-    typedef struct NrtDefaultRenderingSystem*  NrtDefaultRenderingSystemHandle;
+    typedef struct NrtDefaultRenderingSystem* NrtDefaultRenderingSystemHandle;
     // NovelRT::Ecs::Graphics::DefaultRenderingSystem
     typedef struct
     {

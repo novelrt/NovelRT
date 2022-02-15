@@ -97,7 +97,6 @@ extern "C"
         *NewResult = CppSystem->GetOrLoadTexture(spriteString);
         *output = reinterpret_cast<NrtTextureInfoFutureResultHandle>(NewResult);
         return NRT_SUCCESS;
-
     }
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingTextureBasedOnId(NrtDefaultRenderingSystemHandle system,
@@ -233,7 +232,7 @@ extern "C"
         NrtGraphicsPipelinePtrHandle pipeline,
         NrtGraphicsResourceMemoryVectorHandle customConstantBufferRegions,
         NrtBool useEcsTransforms,
-        NrtGraphicsPipelineInfoThreadedPtrHandle *output)
+        NrtGraphicsPipelineInfoThreadedPtrHandle* output)
     {
         if (system == nullptr)
         {
