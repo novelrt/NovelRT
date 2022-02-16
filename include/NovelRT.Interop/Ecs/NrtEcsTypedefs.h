@@ -34,7 +34,6 @@ extern "C"
 
 #include "Audio/NrtEcsAudioTypedefs.h"
 #include "Graphics/NrtEcsGraphicsTypedefs.h"
-#include "PluginManagement/NrtEcsPluginManagementTypedefs.h"
 
 #ifdef __cplusplus
 }

@@ -75,6 +75,7 @@ extern "C"
 #ifdef NOVELRT_INK
 #include "Ink/NrtInkTypedefs.h"
 #endif
+#include "PluginManagement/NrtPluginManagementTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus
