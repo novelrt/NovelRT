@@ -10,7 +10,7 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsSurfaceContext
+    class GraphicsSurfaceContext : public std::enable_shared_from_this<GraphicsSurfaceContext>
     {
     private:
         std::shared_ptr<IGraphicsSurface> _surface;

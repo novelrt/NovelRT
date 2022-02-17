@@ -27,6 +27,12 @@ set(SOURCES
   Maths/NrtQuadTree.cpp
   Maths/NrtQuadTreePoint.cpp
 
+  PluginManagement/NrtDefaultPluginSelector.cpp
+  PluginManagement/NrtIGraphicsPluginProvider.cpp
+  PluginManagement/NrtIInputPluginProvider.cpp
+  PluginManagement/NrtIResourceManagementPluginProvider.cpp
+  PluginManagement/NrtIWindowingPluginProvider.cpp
+
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
   SceneGraph/NrtScene.cpp

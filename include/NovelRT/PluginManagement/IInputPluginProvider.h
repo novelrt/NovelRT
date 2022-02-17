@@ -10,7 +10,7 @@
 
 namespace NovelRT::PluginManagement
 {
-    class IInputPluginProvider
+    class IInputPluginProvider : public std::enable_shared_from_this<IInputPluginProvider>
     {
     protected:
         [[nodiscard]] virtual NovelRT::Input::IInputDevice* GetInputDeviceInternal() = 0;
