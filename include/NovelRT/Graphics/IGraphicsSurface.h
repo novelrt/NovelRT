@@ -10,7 +10,7 @@
 
 namespace NovelRT::Graphics
 {
-    class IGraphicsSurface
+    class IGraphicsSurface : public std::enable_shared_from_this<IGraphicsSurface>
     {
     public:
         Utilities::Event<Maths::GeoVector2F> SizeChanged;

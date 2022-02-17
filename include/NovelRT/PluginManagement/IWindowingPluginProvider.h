@@ -18,7 +18,8 @@ namespace NovelRT::PluginManagement
     public:
         [[nodiscard]] inline std::shared_ptr<Windowing::IWindowingDevice> GetWindowingDevice()
         {
-            return GetWindowingDeviceInternal()->shared_from_this();
+            return std::dynamic_pointer_cast<Windowing::IWindowingDevice>(
+                GetWindowingDeviceInternal()->shared_from_this());
         }
     };
 }
