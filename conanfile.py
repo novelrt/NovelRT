@@ -47,11 +47,19 @@ class NovelRTConan(ConanFile):
     }
     cmake = None
 
+    def requirements(self):
+        if self.settings.os == "Macos":
+            self.requires("moltenvk/1.1.4")
+            self.default_options.append({"moltenvk:shared":True});
+
     def imports(self):
-        self.copy("*.dll", dst="thirdparty", src="bin")
-        self.copy("*.dll", dst="thirdparty", src="lib")
-        self.copy("*.json", dst="thirdparty", src="bin")
-        self.copy("*.json", dst="thirdparty", src="lib")
+        if self.settings.os == "Windows":
+            self.copy("*.dll", dst="thirdparty", src="bin")
+            self.copy("*.dll", dst="thirdparty", src="lib")
+        elif self.settings.os == "Macos":
+            self.copy("*.dylib", dst="thirdparty", src="lib")
+            self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
+
 
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
