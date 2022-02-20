@@ -357,10 +357,16 @@ namespace NovelRT::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsBuffer> vertexBuffer =
             std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion.GetCollection());
         VkBuffer vulkanVertexBuffer = vertexBuffer->GetVulkanBuffer();
+
+#ifndef __APPLE__
         size_t vulkanVertexBufferOffset = vertexBufferRegion.GetOffset();
 
         vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
+#else
+        size_t vulkanVertexBufferOffset = vertexBufferRegion.GetOffset();
 
+        vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &static_cast<VkDeviceSize>(vulkanVertexBufferOffset));
+#endif
         VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GenerateVulkanDescriptorSet();
 
         if (vulkanDescriptorSet != VK_NULL_HANDLE)

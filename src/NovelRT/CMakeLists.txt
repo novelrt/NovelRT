@@ -155,6 +155,21 @@ target_link_libraries(Engine
     vulkan-memory-allocator::vulkan-memory-allocator
 )
 
+if(APPLE)
+  target_link_libraries(Engine
+    PUBLIC
+      moltenvk::moltenvk
+  )
+
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_BINARY_DIR}/thirdparty
+      $<TARGET_FILE_DIR:Engine>)
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.json)
+  message("Appending - ${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+endif()
+
 if(WIN32)
   target_link_libraries(Engine
     PUBLIC

@@ -49,7 +49,9 @@ namespace NovelRT::Windowing::Glfw
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
+#ifndef __APPLE__
         glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
+#endif
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);

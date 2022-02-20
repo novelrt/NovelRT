@@ -17,7 +17,11 @@
 #include <optional>
 #include <set>
 #include <vector>
-#include <vulkan/vulkan.h>
+#ifndef __APPLE
+  #include <vulkan/vulkan.h>
+#else
+  #include <MoltenVK/mvk_vulkan.h>
+#endif
 
 /**
  * @brief The default Vulkan implementation for the Graphics plugin API.
