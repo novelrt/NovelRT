@@ -47,7 +47,6 @@ set(SOURCES
   Graphics/GraphicsPipelineResource.cpp
   Graphics/GraphicsPipelineSignature.cpp
   Graphics/GraphicsResourceManager.cpp
-  Graphics/RGBAConfig.cpp
   Graphics/ShaderProgram.cpp
   Graphics/Vulkan/VulkanGraphicsAdapter.cpp
   Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
