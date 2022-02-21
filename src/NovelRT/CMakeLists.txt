@@ -3,6 +3,7 @@ find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
+find_package(imgui ${NOVELRT_IMGUI_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
@@ -144,6 +145,7 @@ target_link_libraries(Engine
     Freetype::Freetype
     glfw::glfw
     glm::glm
+    imgui::imgui
     Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
     OpenAL::OpenAL

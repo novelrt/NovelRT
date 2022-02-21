@@ -12,6 +12,7 @@ class NovelRTConan(ConanFile):
         ("glfw/3.3.6"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
+        ("imgui/1.87"),
         ("libsndfile/1.0.30"),
         ("ms-gsl/3.1.0"),
         ("openal/1.21.1"),
@@ -30,6 +31,7 @@ class NovelRTConan(ConanFile):
     default_options = {
         "freetype:shared":True,
         "glfw:shared":True,
+        "imgui:shared":True,
         "libsndfile:shared":True,
         "openal:shared":True,
         "PNG:shared":True,
