@@ -38,7 +38,6 @@ extern "C"
         return colourConfigPtr->getAScalar();
     }
 
-
 #ifdef __cplusplus
 }
 #endif
