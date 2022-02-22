@@ -17,6 +17,8 @@ class NovelRTConan(ConanFile):
         ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
+        ("vulkan-loader/1.2.182"),
+        ("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
@@ -36,12 +38,19 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
+        "vulkan-loader:shared":True,
         "spdlog:header_only":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True
     }
     cmake = None
+
+    def build_requirements(self):
+        if self.settings.os == "Macos":
+            del self.default_options["vulkan-loader"]
+            del self.requires["vulkan-loader"]
+            del self.requires["vulkan-memory-allocator"]
 
     def imports(self):
         self.copy("*.dll", dst="thirdparty", src="bin")
