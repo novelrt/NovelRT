@@ -298,6 +298,8 @@ namespace NovelRT::Ecs::Graphics
                                       _resourceManager.getActual(), _surfaceContext, _graphicsAdapter, _graphicsDevice,
                                       _windowingDevice, context);
             }
+
+            customRenderReverseIt++;
         }
 
         gpuResourceManager.UnmapAndWriteAllConstantBuffers();
