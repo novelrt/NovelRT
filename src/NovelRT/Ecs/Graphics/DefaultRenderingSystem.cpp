@@ -289,7 +289,7 @@ namespace NovelRT::Ecs::Graphics
 
             auto&& [customLayer, customEntityVector] = *customRenderReverseIt;
 
-            for(EntityId entity : customEntityVector)
+            for (EntityId entity : customEntityVector)
             {
                 RenderComponent renderComponent = renderComponents.GetComponentUnsafe(entity);
                 TransformComponent transformComponent = transformComponents.GetComponentUnsafe(entity);
