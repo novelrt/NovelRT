@@ -358,8 +358,9 @@ namespace NovelRT::Graphics::Vulkan
             std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion.GetCollection());
         VkBuffer vulkanVertexBuffer = vertexBuffer->GetVulkanBuffer();
         size_t vulkanVertexBufferOffset = vertexBufferRegion.GetOffset();
+        VkDeviceSize castedVulkanVertexBufferOffset = static_cast<VkDeviceSize>(vulkanVertexBufferOffset);
 
-        vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
+        vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &castedVulkanVertexBufferOffset);
 
         VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GenerateVulkanDescriptorSet();
 

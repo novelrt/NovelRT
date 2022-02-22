@@ -13,7 +13,6 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
 set(SOURCES
   Atom.cpp
 
@@ -152,7 +151,6 @@ target_link_libraries(Engine
     TBB::TBB
     Vorbis::Vorbis
     Vulkan::Vulkan
-    vulkan-memory-allocator::vulkan-memory-allocator
 )
 
 if(WIN32)
@@ -167,5 +165,12 @@ if(WIN32)
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+endif()
+if(APPLE)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_BINARY_DIR}/thirdparty
+          $<TARGET_FILE_DIR:Engine>)
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()
