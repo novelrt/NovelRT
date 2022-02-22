@@ -9,7 +9,7 @@ class NovelRTConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = [
         ("freetype/2.10.1"),
-        ("glfw/3.3.2"),
+        ("glfw/3.3.6"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
         ("libsndfile/1.0.30"),
@@ -17,8 +17,8 @@ class NovelRTConan(ConanFile):
         ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
-        ("vulkan-loader/1.2.182"),
-        ("vulkan-memory-allocator/2.3.0")
+        ("vulkan-loader/1.2.198.0"),
+        #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
@@ -41,7 +41,6 @@ class NovelRTConan(ConanFile):
         "Vorbis:shared":True,
         "vulkan-loader:shared":True,
         "spdlog:header_only":True,
-        "vulkan-loader:shared":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,
@@ -49,16 +48,20 @@ class NovelRTConan(ConanFile):
     }
     cmake = None
 
-    def build_requirements(self):
+    def requirements(self):
         if self.settings.os == "Macos":
-            del self.default_options["vulkan-loader"]
-            del self.requires["vulkan-loader"]
-            del self.requires["vulkan-memory-allocator"]
+            self.requires("moltenvk/1.1.6")
+            self.options["moltenvk"].shared = True
+            self.output.info("Generating for MacOS with MoltenVK support")
 
     def imports(self):
-        self.copy("*.dll", dst="thirdparty", src="bin")
-        self.copy("*.dll", dst="thirdparty", src="lib")
-        self.copy("*.dylib", dst="thirdparty", src="lib")
+        if self.settings.os == "Windows":
+            self.copy("*.dll", dst="thirdparty", src="bin")
+            self.copy("*.dll", dst="thirdparty", src="lib")
+        if self.settings.os == "Macos":
+            self.copy("*.dylib", dst="thirdparty", src="lib")
+            self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
+
 
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
