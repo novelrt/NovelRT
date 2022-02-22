@@ -26,6 +26,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice> _graphicsDevice;
+        std::shared_ptr<NovelRT::Windowing::IWindowingDevice> _windowingDevice;
 
         NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> _frameMatrixConstantBufferRegion;
 
@@ -53,6 +54,8 @@ namespace NovelRT::Ecs::Graphics
         void ResolveTextureFutureResults();
 
     public:
+        Utilities::Event<Timing::Timestamp, Catalogue&, int32_t, EntityId, RenderComponent, TransformComponent, NovelRT::Graphics::GraphicsResourceManager&, std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext>, std::shared_ptr<NovelRT::Graphics::GraphicsAdapter>, std::shared_ptr<NovelRT::Graphics::GraphicsDevice>, std::shared_ptr<NovelRT::Windowing::IWindowingDevice>, std::shared_ptr<NovelRT::Graphics::GraphicsContext>> CustomRenderForEntity;
+
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
             std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,

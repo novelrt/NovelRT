@@ -18,6 +18,7 @@ namespace NovelRT::Ecs::Graphics
         Atom textureId = 0;
         Atom pipelineId = 0;
         Atom primitiveInfoId = 0;
+        bool requiresCustomRendering = false;
         bool markedForDeletion = false;
 
         inline RenderComponent& operator+=(const RenderComponent& other)
