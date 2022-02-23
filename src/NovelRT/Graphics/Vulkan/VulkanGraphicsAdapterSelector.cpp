@@ -56,9 +56,8 @@ namespace NovelRT::Graphics::Vulkan
         SwapChainSupportDetails supportDetails = Utilities::QuerySwapChainSupport(physicalDevice, surfaceContext);
         QueueFamilyIndices indices = Utilities::FindQueueFamilies(physicalDevice, surfaceContext);
 
-        if (!indices.IsComplete() ||
-            !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) || supportDetails.formats.empty() ||
-            supportDetails.presentModes.empty())
+        if (!indices.IsComplete() || !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) ||
+            supportDetails.formats.empty() || supportDetails.presentModes.empty())
         {
             score = -1;
         }
