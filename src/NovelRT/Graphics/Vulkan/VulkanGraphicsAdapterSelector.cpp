@@ -55,21 +55,14 @@ namespace NovelRT::Graphics::Vulkan
 
         SwapChainSupportDetails supportDetails = Utilities::QuerySwapChainSupport(physicalDevice, surfaceContext);
         QueueFamilyIndices indices = Utilities::FindQueueFamilies(physicalDevice, surfaceContext);
-#ifndef __APPLE__
-        if (deviceFeatures.geometryShader == VK_FALSE || !indices.IsComplete() ||
-            !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) || supportDetails.formats.empty() ||
-            supportDetails.presentModes.empty())
-        {
-            score = -1;
-        }
-#else
+
         if (!indices.IsComplete() ||
             !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) || supportDetails.formats.empty() ||
             supportDetails.presentModes.empty())
         {
             score = -1;
         }
-#endif
+
         return score;
     }
 
