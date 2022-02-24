@@ -169,8 +169,7 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();
 
-        windowingDevice->SizeChanged += [&](Maths::GeoVector2F newSize)
-        {
+        windowingDevice->SizeChanged += [&](Maths::GeoVector2F newSize) {
             float width = newSize.x;
             float height = newSize.y;
             float halfWidth = width / 2.0f;
@@ -189,7 +188,8 @@ namespace NovelRT::Ecs::Graphics
             auto frameTransform = viewMatrix * projectionMatrix; // This is correct for row-major. :]
 
             _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
-                &frameTransform, sizeof(Maths::GeoMatrix4x4F));;
+                &frameTransform, sizeof(Maths::GeoMatrix4x4F));
+            ;
         };
     }
 
