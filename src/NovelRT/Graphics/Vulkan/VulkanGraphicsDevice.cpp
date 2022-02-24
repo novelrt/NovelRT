@@ -24,13 +24,13 @@ namespace NovelRT::Graphics::Vulkan
           _contextIndex(0),
           _vulkanSwapChainFormat(VkFormat{}),
           _swapChainExtent(VkExtent2D{}),
+          _isAttachedToResizeEvent(false),
           _vulkanSwapchain([&]() { return CreateSwapChain(); }),
           _swapChainImages([&]() { return GetSwapChainImages(); }),
           _renderPass([&]() { return CreateRenderPass(); }),
           _memoryAllocator([&]() { return CreateMemoryAllocator(); }),
           _indicesData{},
-          _state(),
-          _isAttachedToResizeEvent(false)
+          _state()
     {
         _logger.logInfoLine("Provided GPU device: " + GetAdapter()->GetName());
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
