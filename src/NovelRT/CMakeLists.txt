@@ -178,3 +178,4 @@ if(APPLE)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()
+
