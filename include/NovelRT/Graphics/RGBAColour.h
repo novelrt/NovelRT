@@ -11,12 +11,12 @@ namespace NovelRT::Graphics
     class RGBAColour
     {
     public:
-        int32_t r;
-        int32_t g;
-        int32_t b;
-        int32_t a;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t a;
 
-        RGBAColour(int32_t initialR, int32_t initialG, int32_t initialB, int32_t initialA) noexcept
+        RGBAColour(uint8_t initialR, uint8_t initialG, uint8_t initialB, uint8_t initialA) noexcept
             : r(initialR), g(initialG), b(initialB), a(initialA)
         {
         }
