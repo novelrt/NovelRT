@@ -162,8 +162,6 @@ namespace NovelRT::Input::Glfw
         _availableKeys.emplace("Underscore", NovelKey("Underscore", GLFW_KEY_MINUS, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Tilde", NovelKey("Tilde", GLFW_KEY_GRAVE_ACCENT, GLFW_MOD_SHIFT));
 
-        glfwSetWindowUserPointer(_window, static_cast<void*>(this));
-
         _isInitialised = true;
 
         int width = 0;
