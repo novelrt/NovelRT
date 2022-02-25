@@ -169,6 +169,29 @@ namespace NovelRT::Ecs::Graphics
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();
+
+        windowingDevice->SizeChanged += [&](Maths::GeoVector2F newSize) {
+            float width = newSize.x;
+            float height = newSize.y;
+            float halfWidth = width / 2.0f;
+            float halfHeight = height / 2.0f;
+            float left = -halfWidth;
+            float right = +halfWidth;
+            float top = -halfHeight;
+            float bottom = +halfHeight;
+
+            auto position = Maths::GeoVector2F::zero();
+            auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
+            auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
+                                                                     Maths::GeoVector3F(position.x, position.y, 0.0f),
+                                                                     Maths::GeoVector3F(0, -1, 0));
+
+            auto frameTransform = viewMatrix * projectionMatrix; // This is correct for row-major. :]
+
+            _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
+                &frameTransform, sizeof(Maths::GeoMatrix4x4F));
+            ;
+        };
     }
 
     void DefaultRenderingSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)

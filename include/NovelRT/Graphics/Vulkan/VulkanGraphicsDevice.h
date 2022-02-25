@@ -31,6 +31,8 @@ namespace NovelRT::Graphics::Vulkan
         VkFormat _vulkanSwapChainFormat;
         VkExtent2D _swapChainExtent;
 
+        bool _isAttachedToResizeEvent;
+
         NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
         NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
         NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
@@ -55,7 +57,7 @@ namespace NovelRT::Graphics::Vulkan
             const std::vector<VkPresentModeKHR>& availablePresentModes) const noexcept;
         [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
 
-        VkSwapchainKHR CreateSwapChain();
+        VkSwapchainKHR CreateSwapChain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE);
         std::vector<VkImage> GetSwapChainImages();
 
         VkRenderPass CreateRenderPass();

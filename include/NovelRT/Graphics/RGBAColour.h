@@ -10,31 +10,36 @@ namespace NovelRT::Graphics
 {
     class RGBAColour
     {
-
-    private:
-        int32_t _r;
-        int32_t _g;
-        int32_t _b;
-        int32_t _a;
-
     public:
-        RGBAColour(int32_t r, int32_t g, int32_t b, int32_t a) noexcept;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t a;
 
-        [[nodiscard]] int32_t getR() const noexcept;
-        [[nodiscard]] float getRScalar() const noexcept;
-        void setR(int32_t value) noexcept;
+        RGBAColour(uint8_t initialR, uint8_t initialG, uint8_t initialB, uint8_t initialA) noexcept
+            : r(initialR), g(initialG), b(initialB), a(initialA)
+        {
+        }
 
-        [[nodiscard]] int32_t getG() const noexcept;
-        [[nodiscard]] float getGScalar() const noexcept;
-        void setG(int32_t value) noexcept;
+        [[nodiscard]] inline float getRScalar() const noexcept
+        {
+            return r / 255.0f;
+        }
 
-        [[nodiscard]] int32_t getB() const noexcept;
-        [[nodiscard]] float getBScalar() const noexcept;
-        void setB(int32_t value) noexcept;
+        [[nodiscard]] inline float getGScalar() const noexcept
+        {
+            return g / 255.0f;
+        }
 
-        [[nodiscard]] int32_t getA() const noexcept;
-        [[nodiscard]] float getAScalar() const noexcept;
-        void setA(int32_t value) noexcept;
+        [[nodiscard]] inline float getBScalar() const noexcept
+        {
+            return b / 255.0f;
+        }
+
+        [[nodiscard]] inline float getAScalar() const noexcept
+        {
+            return a / 255.0f;
+        }
     };
 }
 

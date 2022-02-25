@@ -23,6 +23,11 @@
       "taskLabel": "task-conanfile",
       "appliesTo": "conanfile.py",
       "type": "launch"
+    },
+    {
+      "taskLabel": "task-conanfile",
+      "appliesTo": "conanfile.py",
+      "type": "launch"
     }
   ]
 }
