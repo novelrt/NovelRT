@@ -317,9 +317,9 @@ namespace NovelRT::Ecs::Graphics
                 RenderComponent renderComponent = renderComponents.GetComponentUnsafe(entity);
                 TransformComponent transformComponent = transformComponents.GetComponentUnsafe(entity);
 
-                CustomRenderForEntity(delta, catalogue, customLayer, entity, renderComponent, transformComponent,
+                CustomRenderForEntity(CustomRenderEventArgs {delta, catalogue, customLayer, entity, renderComponent, transformComponent,
                                       _resourceManager.getActual(), _surfaceContext, _graphicsAdapter, _graphicsDevice,
-                                      _windowingDevice, context);
+                                      _windowingDevice, context });
             }
 
             customRenderReverseIt++;

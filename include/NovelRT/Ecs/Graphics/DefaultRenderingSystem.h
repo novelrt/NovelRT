@@ -54,19 +54,23 @@ namespace NovelRT::Ecs::Graphics
         void ResolveTextureFutureResults();
 
     public:
-        Utilities::Event<Timing::Timestamp,
-                         Catalogue&,
-                         int32_t,
-                         EntityId,
-                         RenderComponent,
-                         TransformComponent,
-                         NovelRT::Graphics::GraphicsResourceManager&,
-                         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext>,
-                         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter>,
-                         std::shared_ptr<NovelRT::Graphics::GraphicsDevice>,
-                         std::shared_ptr<NovelRT::Windowing::IWindowingDevice>,
-                         std::shared_ptr<NovelRT::Graphics::GraphicsContext>>
-            CustomRenderForEntity;
+        struct CustomRenderEventArgs
+        {
+            Timing::Timestamp delta;
+            Catalogue& catalogue;
+            int32_t customLayer;
+            EntityId entity;
+            RenderComponent renderComponent;
+            TransformComponent transformComponent;
+            NovelRT::Graphics::GraphicsResourceManager& graphicsResourceManager;
+            std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> graphicsSurfaceContext;
+            std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> graphicsAdapter;
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice> graphicsDevice;
+            std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext> graphicsContext;
+        };
+
+        Utilities::Event<CustomRenderEventArgs> CustomRenderForEntity;
 
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
