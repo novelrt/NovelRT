@@ -13,7 +13,7 @@ extern "C"
 
     NrtResult Nrt_IInputPluginProvider_GetInputService(
         NrtIInputPluginProviderPtrHandle plugin,
-        NrtIInputDevicePtrHandle* inputService);
+        NrtIInputDevicePtrHandle* outputResult);
 
 #ifdef __cplusplus
 }

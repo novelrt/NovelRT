@@ -6,4 +6,4 @@
 
 
 
-#endif // NOVELRT_INTEROP_INPUT_H 
+#endif // NOVELRT_INTEROP_INPUT_H

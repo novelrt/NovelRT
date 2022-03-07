@@ -16,7 +16,7 @@ extern "C"
 
     NrtResult Nrt_IWindowingPluginProvider_GetWindowingDevice(
         NrtIWindowingPluginProviderPtrHandle plugin,
-        NrtIWindowingDevicePtrHandle* windowingDevice)
+        NrtIWindowingDevicePtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -24,15 +24,15 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (windowingDevice == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IWindowingPluginProvider*>(plugin);
-        auto CppWindowing = CppPlugin->GetWindowingDevice();
-        *windowingDevice = reinterpret_cast<NrtIWindowingDevicePtrHandle>(CppWindowing.get());
+        auto cppPlugin = reinterpret_cast<IWindowingPluginProvider*>(plugin);
+        auto windowingDevice = cppPlugin->GetWindowingDevice();
+        *outputResult = reinterpret_cast<NrtIWindowingDevicePtrHandle>(windowingDevice.get());
         return NRT_SUCCESS;
     }
 

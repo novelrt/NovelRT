@@ -13,7 +13,7 @@ extern "C"
 
     NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(
         NrtIResourceManagementPluginProviderPtrHandle plugin,
-        NrtResourceLoaderPtrHandle* resourceLoader);
+        NrtResourceLoaderPtrHandle* outputResult);
 
 #ifdef __cplusplus
 }

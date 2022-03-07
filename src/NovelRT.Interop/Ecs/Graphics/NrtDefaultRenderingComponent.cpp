@@ -9,19 +9,17 @@ extern "C"
 {
 #endif
 
-    void Nrt_RenderComponent_PlusEquals_Operator(NrtRenderComponent* lhs, NrtRenderComponent rhs)
+    void Nrt_RenderComponent_AddAssignRenderComponent(NrtRenderComponent* lhs, NrtRenderComponent rhs)
     {
         *reinterpret_cast<NovelRT::Ecs::Graphics::RenderComponent*>(lhs) +=
             *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
     }
-
-    NrtBool Nrt_RenderComponent_Equals_Operator(NrtRenderComponent lhs, NrtRenderComponent rhs)
+    NrtBool Nrt_RenderComponent_Equal(NrtRenderComponent lhs, NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&lhs) ==
                *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);
     }
-
-    NrtBool Nrt_RenderComponent_NotEquals_Operator(NrtRenderComponent lhs, NrtRenderComponent rhs)
+    NrtBool Nrt_RenderComponent_NotEqual(NrtRenderComponent lhs, NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&lhs) !=
                *reinterpret_cast<const NovelRT::Ecs::Graphics::RenderComponent*>(&rhs);

@@ -16,7 +16,7 @@ extern "C"
 
     NrtResult Nrt_IGraphicsPluginProvider_GetGraphicsProvider(
         NrtIGraphicsPluginProviderPtrHandle plugin,
-        NrtGraphicsProviderPtrHandle* output)
+        NrtGraphicsProviderPtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -24,22 +24,22 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
-        auto GraphicsProvider = CppPlugin->GetGraphicsProvider();
-        *output = reinterpret_cast<NrtGraphicsProviderPtrHandle>(GraphicsProvider.get());
+        auto cppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
+        auto graphicsProvider = cppPlugin->GetGraphicsProvider();
+        *outputResult = reinterpret_cast<NrtGraphicsProviderPtrHandle>(graphicsProvider.get());
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_IGraphicsPluginProvider_GetDefaultSelectedGraphicsAdapterForContext(
         NrtIGraphicsPluginProviderPtrHandle plugin,
         NrtGraphicsSurfaceContextPtrHandle context,
-        NrtGraphicsAdapterPtrHandle* graphics_adapter)
+        NrtGraphicsAdapterPtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -47,23 +47,23 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (graphics_adapter == nullptr || context == nullptr)
+        if (outputResult == nullptr || context == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
-        auto CppContext = reinterpret_cast<GraphicsSurfaceContext*>(context)->shared_from_this();
-        auto GraphicsAdapter = CppPlugin->GetDefaultSelectedGraphicsAdapterForContext(CppContext);
-        *graphics_adapter = reinterpret_cast<NrtGraphicsAdapterPtrHandle>(GraphicsAdapter.get());
+        auto cppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
+        auto cppContext = reinterpret_cast<GraphicsSurfaceContext*>(context)->shared_from_this();
+        auto graphicsAdapter = cppPlugin->GetDefaultSelectedGraphicsAdapterForContext(cppContext);
+        *outputResult = reinterpret_cast<NrtGraphicsAdapterPtrHandle>(graphicsAdapter.get());
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_IGraphicsPluginProvider_CreateSurfaceContext(
         NrtIGraphicsPluginProviderPtrHandle plugin,
         NrtIGraphicsSurfacePtrHandle windowingDevice,
-        NrtGraphicsSurfaceContextPtrHandle* surface_context)
+        NrtGraphicsSurfaceContextPtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -71,16 +71,16 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (surface_context == nullptr || windowingDevice == nullptr)
+        if (outputResult == nullptr || windowingDevice == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
-        auto CppWindowingDevice = reinterpret_cast<IGraphicsSurface*>(windowingDevice)->shared_from_this();
-        auto CppContext = CppPlugin->CreateSurfaceContext(CppWindowingDevice);
-        *surface_context = reinterpret_cast<NrtGraphicsSurfaceContextPtrHandle>(CppContext.get());
+        auto cppPlugin = reinterpret_cast<IGraphicsPluginProvider*>(plugin);
+        auto cppWindowingDevice = reinterpret_cast<IGraphicsSurface*>(windowingDevice)->shared_from_this();
+        auto cppContext = cppPlugin->CreateSurfaceContext(cppWindowingDevice);
+        *outputResult = reinterpret_cast<NrtGraphicsSurfaceContextPtrHandle>(cppContext.get());
         return NRT_SUCCESS;
     }
 

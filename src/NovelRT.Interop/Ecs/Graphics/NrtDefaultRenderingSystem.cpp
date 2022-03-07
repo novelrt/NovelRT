@@ -17,7 +17,7 @@ extern "C"
 {
 #endif
 
-    NrtDefaultRenderingSystemHandle Nrt_DefaultRenderingSystem_create(
+    NrtDefaultRenderingSystemHandle Nrt_DefaultRenderingSystem_Create(
         NrtIGraphicsPluginProviderPtrHandle graphicsPluginProvider,
         NrtIWindowingPluginProviderPtrHandle windowingPluginProvider,
         NrtIResourceManagementPluginProviderPtrHandle resourceManagementPluginProvider)
@@ -36,7 +36,7 @@ extern "C"
         return reinterpret_cast<NrtDefaultRenderingSystemHandle>(_DefaultRenderingSystemCollection.back().get());
     }
 
-    NrtResult Nrt_DefaultRenderingSystem_destroy(NrtDefaultRenderingSystemHandle system)
+    NrtResult Nrt_DefaultRenderingSystem_Destroy(NrtDefaultRenderingSystemHandle system)
     {
         if (system == nullptr)
         {

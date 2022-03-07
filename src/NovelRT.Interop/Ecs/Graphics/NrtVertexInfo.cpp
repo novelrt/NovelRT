@@ -10,7 +10,7 @@ extern "C"
     using namespace NovelRT::Ecs::Graphics;
 #endif
 
-    NrtBool Nrt_VertexInfo_Equals_Operator(NrtVertexInfo lhs, NrtVertexInfo rhs)
+    NrtBool Nrt_VertexInfo_Equal(NrtVertexInfo lhs, NrtVertexInfo rhs)
     {
         return *reinterpret_cast<const VertexInfo*>(&lhs) == *reinterpret_cast<const VertexInfo*>(&rhs);
     }

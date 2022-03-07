@@ -16,7 +16,7 @@ extern "C"
 
     NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(
         NrtIResourceManagementPluginProviderPtrHandle plugin,
-        NrtResourceLoaderPtrHandle* resourceLoader)
+        NrtResourceLoaderPtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -24,15 +24,15 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (resourceLoader == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IResourceManagementPluginProvider*>(plugin);
-        auto CppResource = CppPlugin->GetResourceLoader();
-        *resourceLoader = reinterpret_cast<NrtResourceLoaderPtrHandle>(CppResource.get());
+        auto cppPlugin = reinterpret_cast<IResourceManagementPluginProvider*>(plugin);
+        auto resourceLoader = cppPlugin->GetResourceLoader();
+        *outputResult = reinterpret_cast<NrtResourceLoaderPtrHandle>(resourceLoader.get());
         return NRT_SUCCESS;
     }
 

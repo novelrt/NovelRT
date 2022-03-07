@@ -9,23 +9,23 @@
 using namespace NovelRT;
 using namespace PluginManagement;
 
-std::list<std::shared_ptr<IWindowingPluginProvider>> _IWindowingPluginProviderCollection;
-std::list<std::shared_ptr<IGraphicsPluginProvider>> _IGraphicsPluginProviderCollection;
-std::list<std::shared_ptr<IInputPluginProvider>> _IInputPluginProviderCollection;
-std::list<std::shared_ptr<IResourceManagementPluginProvider>> _IResourceManagementPluginProviderCollection;
+std::list<std::shared_ptr<IWindowingPluginProvider>> _iWindowingPluginProviderCollection;
+std::list<std::shared_ptr<IGraphicsPluginProvider>> _iGraphicsPluginProviderCollection;
+std::list<std::shared_ptr<IInputPluginProvider>> _iInputPluginProviderCollection;
+std::list<std::shared_ptr<IResourceManagementPluginProvider>> _iResourceManagementPluginProviderCollection;
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtDefaultPluginSelectorHandle Nrt_DefaultPluginSelector_create()
+    NrtDefaultPluginSelectorHandle Nrt_DefaultPluginSelector_Create()
     {
-        auto Selector = new DefaultPluginSelector;
-        return reinterpret_cast<NrtDefaultPluginSelectorHandle>(Selector);
+        auto selector = new DefaultPluginSelector();
+        return reinterpret_cast<NrtDefaultPluginSelectorHandle>(selector);
     }
 
-    NrtResult Nrt_DefaultPluginSelector_destroy(NrtDefaultPluginSelectorHandle selector)
+    NrtResult Nrt_DefaultPluginSelector_Destroy(NrtDefaultPluginSelectorHandle selector)
     {
         if (selector == nullptr)
         {
@@ -33,14 +33,14 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto CppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
-        delete CppSelector;
+        auto cppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
+        delete cppSelector;
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IGraphicsPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIGraphicsPluginProviderPtrHandle* output)
+        NrtIGraphicsPluginProviderPtrHandle* outputResult)
     {
         if (selector == nullptr)
         {
@@ -48,21 +48,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
-        auto IGraphics = CppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>();
-        _IGraphicsPluginProviderCollection.push_back(IGraphics);
-        *output = reinterpret_cast<NrtIGraphicsPluginProviderPtrHandle>(
-            _IGraphicsPluginProviderCollection.back().get());
+        auto cppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
+        auto graphicsPlugin = cppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>();
+        _iGraphicsPluginProviderCollection.push_back(graphicsPlugin);
+        *outputResult = reinterpret_cast<NrtIGraphicsPluginProviderPtrHandle>(
+            _iGraphicsPluginProviderCollection.back().get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_IGraphicsPluginProvider_destroy(NrtIGraphicsPluginProviderPtrHandle provider)
+    NrtResult Nrt_IGraphicsPluginProvider_Destroy(NrtIGraphicsPluginProviderPtrHandle provider)
     {
         if (provider == nullptr)
         {
@@ -70,21 +70,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto to_delete = reinterpret_cast<IGraphicsPluginProvider*>(provider)->shared_from_this();
-        if (std::find(_IGraphicsPluginProviderCollection.begin(),
-            _IGraphicsPluginProviderCollection.end(), to_delete) ==
-            _IGraphicsPluginProviderCollection.end())
+        auto toDelete = reinterpret_cast<IGraphicsPluginProvider*>(provider)->shared_from_this();
+        if (std::find(_iGraphicsPluginProviderCollection.begin(),
+            _iGraphicsPluginProviderCollection.end(), toDelete) ==
+            _iGraphicsPluginProviderCollection.end())
         {
             Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
         }
-        _IGraphicsPluginProviderCollection.remove(to_delete);
+        _iGraphicsPluginProviderCollection.remove(toDelete);
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IWindowingPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIWindowingPluginProviderPtrHandle* output)
+        NrtIWindowingPluginProviderPtrHandle* outputResult)
     {
         if (selector == nullptr)
         {
@@ -92,21 +92,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
-        auto IWindowing = CppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-        _IWindowingPluginProviderCollection.push_back(IWindowing);
-        *output = reinterpret_cast<NrtIWindowingPluginProviderPtrHandle>(
-            _IWindowingPluginProviderCollection.back().get());
+        auto cppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
+        auto windowingPlugin = cppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
+        _iWindowingPluginProviderCollection.push_back(windowingPlugin);
+        *outputResult = reinterpret_cast<NrtIWindowingPluginProviderPtrHandle>(
+            _iWindowingPluginProviderCollection.back().get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_IWindowingPluginProvider_destroy(NrtIWindowingPluginProviderPtrHandle provider)
+    NrtResult Nrt_IWindowingPluginProvider_Destroy(NrtIWindowingPluginProviderPtrHandle provider)
     {
         if (provider == nullptr)
         {
@@ -114,21 +114,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto to_delete = reinterpret_cast<IWindowingPluginProvider*>(provider)->shared_from_this();
-        if (std::find(_IWindowingPluginProviderCollection.begin(),
-            _IWindowingPluginProviderCollection.end(), to_delete) ==
-            _IWindowingPluginProviderCollection.end())
+        auto toDelete = reinterpret_cast<IWindowingPluginProvider*>(provider)->shared_from_this();
+        if (std::find(_iWindowingPluginProviderCollection.begin(),
+            _iWindowingPluginProviderCollection.end(), toDelete) ==
+            _iWindowingPluginProviderCollection.end())
         {
             Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
         }
-        _IWindowingPluginProviderCollection.remove(to_delete);
+        _iWindowingPluginProviderCollection.remove(toDelete);
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IResourceManagementPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIResourceManagementPluginProviderPtrHandle* output)
+        NrtIResourceManagementPluginProviderPtrHandle* outputResult)
     {
         if (selector == nullptr)
         {
@@ -136,21 +136,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
-        auto IResource = CppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
-        _IResourceManagementPluginProviderCollection.push_back(IResource);
-        *output = reinterpret_cast<NrtIResourceManagementPluginProviderPtrHandle>(
-            _IResourceManagementPluginProviderCollection.back().get());
+        auto cppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
+        auto resourceManagementPlugin = cppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
+        _iResourceManagementPluginProviderCollection.push_back(resourceManagementPlugin);
+        *outputResult = reinterpret_cast<NrtIResourceManagementPluginProviderPtrHandle>(
+            _iResourceManagementPluginProviderCollection.back().get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_IResourceManagementPluginProvider_destroy(NrtIResourceManagementPluginProviderPtrHandle provider)
+    NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPluginProviderPtrHandle provider)
     {
         if (provider == nullptr)
         {
@@ -158,21 +158,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto to_delete = reinterpret_cast<IResourceManagementPluginProvider*>(provider)->shared_from_this();
-        if (std::find(_IResourceManagementPluginProviderCollection.begin(),
-            _IResourceManagementPluginProviderCollection.end(), to_delete) ==
-            _IResourceManagementPluginProviderCollection.end())
+        auto toDelete = reinterpret_cast<IResourceManagementPluginProvider*>(provider)->shared_from_this();
+        if (std::find(_iResourceManagementPluginProviderCollection.begin(),
+            _iResourceManagementPluginProviderCollection.end(), toDelete) ==
+            _iResourceManagementPluginProviderCollection.end())
         {
             Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
         }
-        _IResourceManagementPluginProviderCollection.remove(to_delete);
+        _iResourceManagementPluginProviderCollection.remove(toDelete);
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IInputPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIInputPluginProviderPtrHandle* output)
+        NrtIInputPluginProviderPtrHandle* outputResult)
     {
         if (selector == nullptr)
         {
@@ -180,21 +180,21 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (output == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
-        auto IInput = CppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
-        _IInputPluginProviderCollection.push_back(IInput);
-        *output = reinterpret_cast<NrtIInputPluginProviderPtrHandle>(
-            _IInputPluginProviderCollection.back().get());
+        auto cppSelector = reinterpret_cast<DefaultPluginSelector*>(selector);
+        auto inputPlugin = cppSelector->GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
+        _iInputPluginProviderCollection.push_back(inputPlugin);
+        *outputResult = reinterpret_cast<NrtIInputPluginProviderPtrHandle>(
+            _iInputPluginProviderCollection.back().get());
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_IInputPluginProvider_destroy(NrtIInputPluginProviderPtrHandle provider)
+    NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderPtrHandle provider)
     {
         if (provider == nullptr)
         {
@@ -202,15 +202,15 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto to_delete = reinterpret_cast<IInputPluginProvider*>(provider)->shared_from_this();
-        if (std::find(_IInputPluginProviderCollection.begin(),
-            _IInputPluginProviderCollection.end(), to_delete) ==
-            _IInputPluginProviderCollection.end())
+        auto toDelete = reinterpret_cast<IInputPluginProvider*>(provider)->shared_from_this();
+        if (std::find(_iInputPluginProviderCollection.begin(),
+            _iInputPluginProviderCollection.end(), toDelete) ==
+            _iInputPluginProviderCollection.end())
         {
             Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
         }
-        _IInputPluginProviderCollection.remove(to_delete);
+        _iInputPluginProviderCollection.remove(toDelete);
         return NRT_SUCCESS;
     }
 

@@ -10,25 +10,25 @@
 extern "C"
 {
 #endif
-    NrtDefaultPluginSelectorHandle Nrt_DefaultPluginSelector_create();
-    NrtResult Nrt_DefaultPluginSelector_destroy(NrtDefaultPluginSelectorHandle selector);
+    NrtDefaultPluginSelectorHandle Nrt_DefaultPluginSelector_Create();
+    NrtResult Nrt_DefaultPluginSelector_Destroy(NrtDefaultPluginSelectorHandle selector);
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IGraphicsPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIGraphicsPluginProviderPtrHandle* output);
-    NrtResult Nrt_IGraphicsPluginProvider_destroy(NrtIGraphicsPluginProviderPtrHandle provider);
+        NrtIGraphicsPluginProviderPtrHandle* outputResult);
+    NrtResult Nrt_IGraphicsPluginProvider_Destroy(NrtIGraphicsPluginProviderPtrHandle provider);
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IWindowingPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIWindowingPluginProviderPtrHandle* output);
-    NrtResult Nrt_IWindowingPluginProvider_destroy(NrtIWindowingPluginProviderPtrHandle provider);
+        NrtIWindowingPluginProviderPtrHandle* outputResult);
+    NrtResult Nrt_IWindowingPluginProvider_Destroy(NrtIWindowingPluginProviderPtrHandle provider);
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IResourceManagementPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIResourceManagementPluginProviderPtrHandle* output);
-    NrtResult Nrt_IResourceManagementPluginProvider_destroy(
+        NrtIResourceManagementPluginProviderPtrHandle* outputResult);
+    NrtResult Nrt_IResourceManagementPluginProvider_Destroy(
         NrtIResourceManagementPluginProviderPtrHandle provider);
     NrtResult Nrt_DefaultPluginSelector_GetDefaultPluginType_IInputPluginProvider(
         NrtDefaultPluginSelectorHandle selector,
-        NrtIInputPluginProviderPtrHandle* output);
-    NrtResult Nrt_IInputPluginProvider_destroy(NrtIInputPluginProviderPtrHandle provider);
+        NrtIInputPluginProviderPtrHandle* outputResult);
+    NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderPtrHandle provider);
 
 #ifdef __cplusplus
 }

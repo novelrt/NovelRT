@@ -16,7 +16,7 @@ extern "C"
 
     NrtResult Nrt_IInputPluginProvider_GetInputService(
         NrtIInputPluginProviderPtrHandle plugin,
-        NrtIInputDevicePtrHandle* inputService)
+        NrtIInputDevicePtrHandle* outputResult)
     {
         if (plugin == nullptr)
         {
@@ -24,15 +24,15 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (inputService == nullptr)
+        if (outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppPlugin = reinterpret_cast<IInputPluginProvider*>(plugin);
-        auto CppInput = CppPlugin->GetInputService();
-        *inputService = reinterpret_cast<NrtIInputDevicePtrHandle>(CppInput.get());
+        auto cppPlugin = reinterpret_cast<IInputPluginProvider*>(plugin);
+        auto inputDevice = cppPlugin->GetInputService();
+        *outputResult = reinterpret_cast<NrtIInputDevicePtrHandle>(inputDevice.get());
         return NRT_SUCCESS;
     }
 

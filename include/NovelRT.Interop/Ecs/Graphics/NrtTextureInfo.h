@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    NrtBool Nrt_TextureInfo_Equals_Operator(NrtTextureInfo lhs, NrtTextureInfo rhs);
+    NrtBool Nrt_TextureInfo_Equal(NrtTextureInfo lhs, NrtTextureInfo rhs);
 
 #ifdef __cplusplus
 }

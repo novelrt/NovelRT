@@ -11,12 +11,12 @@ extern "C"
 {
 #endif
 
-    NrtDefaultRenderingSystemHandle Nrt_DefaultRenderingSystem_create(
+    NrtDefaultRenderingSystemHandle Nrt_DefaultRenderingSystem_Create(
         NrtIGraphicsPluginProviderPtrHandle graphicsPluginProvider,
         NrtIWindowingPluginProviderPtrHandle windowingPluginProvider,
         NrtIResourceManagementPluginProviderPtrHandle resourceManagementPluginProvider);
 
-    NrtResult Nrt_DefaultRenderingSystem_destroy(NrtDefaultRenderingSystemHandle system);
+    NrtResult Nrt_DefaultRenderingSystem_Destroy(NrtDefaultRenderingSystemHandle system);
 
     NrtResult Nrt_DefaultRenderingSystem_Update(NrtDefaultRenderingSystemHandle system,
                                                 NrtTimestamp delta,
@@ -24,31 +24,31 @@ extern "C"
 
     NrtResult Nrt_DefaultRenderingSystem_GetOrLoadTexture(NrtDefaultRenderingSystemHandle system,
                                                           const char* spriteName,
-                                                          NrtTextureInfoFutureResultHandle* output);
+                                                          NrtTextureInfoFutureResultHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingTextureBasedOnId(NrtDefaultRenderingSystemHandle system,
                                                                      NrtAtom ecsId,
-                                                                     NrtTextureInfoThreadedPtrHandle* output);
+                                                                     NrtTextureInfoThreadedPtrHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_LoadVertexDataRawUntyped(NrtDefaultRenderingSystemHandle system,
                                                                   const char* vertexDataName,
                                                                   void* data,
                                                                   size_t dataTypeSize,
                                                                   size_t dataLength,
-                                                                  NrtVertexInfoFutureResultHandle* output);
+                                                                  NrtVertexInfoFutureResultHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnName(NrtDefaultRenderingSystemHandle system,
                                                                           const char* vertexDataName,
-                                                                          NrtVertexInfoThreadedPtrHandle* output);
+                                                                          NrtVertexInfoThreadedPtrHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingVertexDataBasedOnId(NrtDefaultRenderingSystemHandle system,
                                                                         NrtAtom ecsId,
-                                                                        NrtVertexInfoThreadedPtrHandle* output);
+                                                                        NrtVertexInfoThreadedPtrHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_GetExistingPipelineInfoBasedOnId(
         NrtDefaultRenderingSystemHandle system,
         NrtAtom ecsId,
-        NrtGraphicsPipelineInfoThreadedPtrHandle* output);;
+        NrtGraphicsPipelineInfoThreadedPtrHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_RegisterPipeline(
         NrtDefaultRenderingSystemHandle system,
@@ -56,7 +56,7 @@ extern "C"
         NrtGraphicsPipelinePtrHandle pipeline,
         NrtGraphicsResourceMemoryVectorHandle customConstantBufferRegions,
         NrtBool useEcsTransforms,
-        NrtGraphicsPipelineInfoThreadedPtrHandle* output);
+        NrtGraphicsPipelineInfoThreadedPtrHandle* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_AttachSpriteRenderingToEntity(NrtDefaultRenderingSystemHandle system,
                                                                        NrtEntityId entity,
@@ -66,12 +66,12 @@ extern "C"
     NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntity(NrtDefaultRenderingSystemHandle system,
                                                             NrtTextureInfoThreadedPtrHandle texture,
                                                             NrtCatalogueHandle catalogue,
-                                                            NrtEntityId* output);
+                                                            NrtEntityId* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_CreateSpriteEntityOutsideOfSystem(NrtDefaultRenderingSystemHandle system,
                                                                            NrtTextureInfoThreadedPtrHandle texture,
                                                                            NrtSystemSchedulerHandle scheduler,
-                                                                           NrtEntityId* output);
+                                                                           NrtEntityId* outputResult);
 
     NrtResult Nrt_DefaultRenderingSystem_ForceVertexTextureFutureResolution(NrtDefaultRenderingSystemHandle system);
 

@@ -11,21 +11,20 @@ extern "C"
 
 #endif
 
-    NrtBool Nrt_GraphicsPrimitiveInfo_Equals_Operator(NrtGraphicsPrimitiveInfo lhs, NrtGraphicsPrimitiveInfo rhs)
+    NrtBool Nrt_GraphicsPrimitiveInfo_Equal(NrtGraphicsPrimitiveInfo lhs, NrtGraphicsPrimitiveInfo rhs)
     {
         return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) ==
                *reinterpret_cast<const GraphicsPrimitiveInfo*>(&rhs);
     }
-
-    NrtBool Nrt_GraphicsPrimitiveInfo_Equals_Operator_With_RenderComponent(NrtGraphicsPrimitiveInfo lhs,
+    NrtBool Nrt_GraphicsPrimitiveInfo_EqualRenderComponent(NrtGraphicsPrimitiveInfo lhs,
                                                                            NrtRenderComponent rhs)
     {
         return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) == *reinterpret_cast<const RenderComponent*>(&rhs);
     }
-
-    NrtBool Nrt_GraphicsPrimitiveInfo_NotEquals_Operator(NrtGraphicsPrimitiveInfo lhs, NrtGraphicsPrimitiveInfo rhs)
+    NrtBool Nrt_GraphicsPrimitiveInfo_NotEqual(NrtGraphicsPrimitiveInfo lhs, NrtGraphicsPrimitiveInfo rhs)
     {
-        return !(Nrt_GraphicsPrimitiveInfo_Equals_Operator(lhs, rhs));
+        return *reinterpret_cast<const GraphicsPrimitiveInfo*>(&lhs) !=
+               *reinterpret_cast<const GraphicsPrimitiveInfo*>(&rhs);
     }
 
 #ifdef __cplusplus

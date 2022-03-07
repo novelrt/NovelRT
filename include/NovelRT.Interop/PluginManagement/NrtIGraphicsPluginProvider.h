@@ -13,17 +13,17 @@ extern "C"
 
     NrtResult Nrt_IGraphicsPluginProvider_GetGraphicsProvider(
         NrtIGraphicsPluginProviderPtrHandle plugin,
-        NrtGraphicsProviderPtrHandle* output);
+        NrtGraphicsProviderPtrHandle* outputResult);
 
     NrtResult Nrt_IGraphicsPluginProvider_GetDefaultSelectedGraphicsAdapterForContext(
         NrtIGraphicsPluginProviderPtrHandle plugin,
         NrtGraphicsSurfaceContextPtrHandle context,
-        NrtGraphicsAdapterPtrHandle* graphics_adapter);
+        NrtGraphicsAdapterPtrHandle* outputResult);
 
     NrtResult Nrt_IGraphicsPluginProvider_CreateSurfaceContext(
         NrtIGraphicsPluginProviderPtrHandle plugin,
         NrtIGraphicsSurfacePtrHandle windowingDevice,
-        NrtGraphicsSurfaceContextPtrHandle* surface_context);
+        NrtGraphicsSurfaceContextPtrHandle* outputResult);
 
 #ifdef __cplusplus
 }
