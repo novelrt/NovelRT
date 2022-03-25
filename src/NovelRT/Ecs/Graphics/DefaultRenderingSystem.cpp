@@ -68,6 +68,7 @@ namespace NovelRT::Ecs::Graphics
           _surfaceContext(nullptr),
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
+          _windowingDevice(nullptr),
           _frameMatrixConstantBufferRegion(),
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
@@ -80,8 +81,8 @@ namespace NovelRT::Ecs::Graphics
           _defaultGraphicsPipelinePtr(nullptr),
           _renderScene()
     {
-        _windowingPluginProvider->GetWindowingDevice()->Initialise(Windowing::WindowMode::Windowed,
-                                                                   Maths::GeoVector2F(1920, 1080));
+        _windowingDevice = _windowingPluginProvider->GetWindowingDevice();
+        _windowingDevice->Initialise(Windowing::WindowMode::Windowed, Maths::GeoVector2F(1920, 1080));
 
         _surfaceContext = _graphicsPluginProvider->CreateSurfaceContext(_windowingPluginProvider->GetWindowingDevice());
         _graphicsAdapter = _graphicsPluginProvider->GetDefaultSelectedGraphicsAdapterForContext(_surfaceContext);
@@ -168,9 +169,32 @@ namespace NovelRT::Ecs::Graphics
         graphicsContext->EndFrame();
         _graphicsDevice->Signal(graphicsContext->GetFence());
         _graphicsDevice->WaitForIdle();
+
+        windowingDevice->SizeChanged += [&](Maths::GeoVector2F newSize) {
+            float width = newSize.x;
+            float height = newSize.y;
+            float halfWidth = width / 2.0f;
+            float halfHeight = height / 2.0f;
+            float left = -halfWidth;
+            float right = +halfWidth;
+            float top = -halfHeight;
+            float bottom = +halfHeight;
+
+            auto position = Maths::GeoVector2F::zero();
+            auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
+            auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
+                                                                     Maths::GeoVector3F(position.x, position.y, 0.0f),
+                                                                     Maths::GeoVector3F(0, -1, 0));
+
+            auto frameTransform = viewMatrix * projectionMatrix; // This is correct for row-major. :]
+
+            _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
+                &frameTransform, sizeof(Maths::GeoMatrix4x4F));
+            ;
+        };
     }
 
-    void DefaultRenderingSystem::Update(Timing::Timestamp /*delta*/, Ecs::Catalogue catalogue)
+    void DefaultRenderingSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
         auto dummyRegion = NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>(
             0, nullptr, _graphicsDevice, false, 0, 0);
@@ -188,6 +212,7 @@ namespace NovelRT::Ecs::Graphics
             catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
 
         std::map<int32_t, std::vector<EntityId>> transformLayerMap{};
+        std::map<int32_t, std::vector<EntityId>> customRenderTransformLayerMap{};
 
         for (auto [entity, transformComponent] : transformComponents)
         {
@@ -206,7 +231,20 @@ namespace NovelRT::Ecs::Graphics
                 transformLayerMap[layer].reserve(1000);
             }
 
-            transformLayerMap[layer].emplace_back(entity);
+            if (customRenderTransformLayerMap.find(layer) == customRenderTransformLayerMap.end())
+            {
+                customRenderTransformLayerMap[layer] = std::vector<EntityId>();
+                customRenderTransformLayerMap[layer].reserve(1000);
+            }
+
+            if (renderComponent.requiresCustomRendering)
+            {
+                customRenderTransformLayerMap[layer].emplace_back(entity);
+            }
+            else
+            {
+                transformLayerMap[layer].emplace_back(entity);
+            }
         }
 
         struct GpuSpanCounter
@@ -217,6 +255,7 @@ namespace NovelRT::Ecs::Graphics
 
         std::unordered_map<Atom, std::map<int32_t, GpuSpanCounter>, AtomHashFunction> gpuSpanCounterMap{};
 
+        auto customRenderReverseIt = customRenderTransformLayerMap.rbegin();
         for (auto reverseIt = transformLayerMap.rbegin(); reverseIt != transformLayerMap.rend(); reverseIt++)
         {
             auto&& [layer, entityVector] = *reverseIt;
@@ -270,6 +309,21 @@ namespace NovelRT::Ecs::Graphics
 
                 tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;
             }
+
+            auto&& [customLayer, customEntityVector] = *customRenderReverseIt;
+
+            for (EntityId entity : customEntityVector)
+            {
+                RenderComponent renderComponent = renderComponents.GetComponentUnsafe(entity);
+                TransformComponent transformComponent = transformComponents.GetComponentUnsafe(entity);
+
+                CustomRenderForEntity(CustomRenderEventArgs{delta, catalogue, customLayer, entity, renderComponent,
+                                                            transformComponent, _resourceManager.getActual(),
+                                                            _surfaceContext, _graphicsAdapter, _graphicsDevice,
+                                                            _windowingDevice, context});
+            }
+
+            customRenderReverseIt++;
         }
 
         gpuResourceManager.UnmapAndWriteAllConstantBuffers();

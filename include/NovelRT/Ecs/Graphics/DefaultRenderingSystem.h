@@ -26,6 +26,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice> _graphicsDevice;
+        std::shared_ptr<NovelRT::Windowing::IWindowingDevice> _windowingDevice;
 
         NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> _frameMatrixConstantBufferRegion;
 
@@ -53,6 +54,24 @@ namespace NovelRT::Ecs::Graphics
         void ResolveTextureFutureResults();
 
     public:
+        struct CustomRenderEventArgs
+        {
+            Timing::Timestamp delta;
+            Catalogue& catalogue;
+            int32_t customLayer;
+            EntityId entity;
+            RenderComponent renderComponent;
+            TransformComponent transformComponent;
+            NovelRT::Graphics::GraphicsResourceManager& graphicsResourceManager;
+            std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> graphicsSurfaceContext;
+            std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> graphicsAdapter;
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice> graphicsDevice;
+            std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext> graphicsContext;
+        };
+
+        Utilities::Event<CustomRenderEventArgs> CustomRenderForEntity;
+
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
             std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,

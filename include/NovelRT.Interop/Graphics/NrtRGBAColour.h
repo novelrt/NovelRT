@@ -6,27 +6,17 @@
 #define NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
 
 #include "../NrtTypedefs.h"
+#include "NrtGraphicsTypedefs.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    NrtRGBAColourHandle Nrt_RGBAColour_Create(int32_t r, int32_t g, int32_t b, int32_t a);
-    int32_t Nrt_RGBAColour_getR(NrtRGBAColourHandle colourConfig);
-    NrtResult Nrt_RGBAColour_setR(NrtRGBAColourHandle colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAColour_getG(NrtRGBAColourHandle colourConfig);
-    NrtResult Nrt_RGBAColour_setG(NrtRGBAColourHandle colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAColour_getB(NrtRGBAColourHandle colourConfig);
-    NrtResult Nrt_RGBAColour_setB(NrtRGBAColourHandle colourConfig, int32_t inputValue);
-    int32_t Nrt_RGBAColour_getA(NrtRGBAColourHandle colourConfig);
-    NrtResult Nrt_RGBAColour_setA(NrtRGBAColourHandle colourConfig, int32_t inputValue);
-
-    float Nrt_RGBAColour_getRScalar(NrtRGBAColourHandle colourConfig);
-    float Nrt_RGBAColour_getGScalar(NrtRGBAColourHandle colourConfig);
-    float Nrt_RGBAColour_getBScalar(NrtRGBAColourHandle colourConfig);
-    float Nrt_RGBAColour_getAScalar(NrtRGBAColourHandle colourConfig);
-    NrtResult Nrt_RGBAColour_destroy(NrtRGBAColourHandle);
+    float Nrt_RGBAColour_getRScalar(NrtRGBAColour colourConfig);
+    float Nrt_RGBAColour_getGScalar(NrtRGBAColour colourConfig);
+    float Nrt_RGBAColour_getBScalar(NrtRGBAColour colourConfig);
+    float Nrt_RGBAColour_getAScalar(NrtRGBAColour colourConfig);
 
 #ifdef __cplusplus
 }

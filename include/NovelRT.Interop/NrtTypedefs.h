@@ -14,7 +14,6 @@ extern "C"
 
     typedef struct NrtDebugService* NrtDebugServiceHandle;
     typedef struct NrtLoggingService* NrtLoggingServiceHandle;
-    typedef struct NrtRGBAColour* NrtRGBAColourHandle;
 
     typedef enum
     {
