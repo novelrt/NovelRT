@@ -28,11 +28,6 @@
       "taskLabel": "task-conanfile",
       "appliesTo": "conanfile.py",
       "type": "launch"
-    },
-    {
-      "taskLabel": "task-CMakeLists",
-      "appliesTo": "CMakeLists.txt",
-      "type": "launch"
     }
   ]
 }
