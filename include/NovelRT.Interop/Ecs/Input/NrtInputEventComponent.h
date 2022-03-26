@@ -11,8 +11,8 @@ extern "C"
 {
 #endif
 
-    void Nrt_InputEventComponent_PlusEquals_Operator(NrtInputEventComponent* lhs, NrtInputEventComponent rhs);
-    NrtBool Nrt_InputEventComponent_Equals_Operator(NrtInputEventComponent lhs, NrtInputEventComponent rhs);
+    void Nrt_InputEventComponent_AddAssignInputEventComponent(NrtInputEventComponent* lhs, NrtInputEventComponent rhs);
+    NrtBool Nrt_InputEventComponent_Equal(NrtInputEventComponent lhs, NrtInputEventComponent rhs);
 
 #ifdef __cplusplus
 }

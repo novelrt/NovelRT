@@ -14,18 +14,18 @@ extern "C"
 {
 #endif
 
-    NrtInputSystemHandle Nrt_InputSystem_create(
+    NrtInputSystemHandle Nrt_InputSystem_Create(
         NrtIWindowingPluginProviderPtrHandle windowingProvider,
         NrtIInputPluginProviderPtrHandle inputProvider)
     {
-        auto CppWindowing = reinterpret_cast<IWindowingPluginProvider*>(windowingProvider)->shared_from_this();
-        auto CppInput = reinterpret_cast<IInputPluginProvider*>(inputProvider)->shared_from_this();
+        auto cppWindowing = reinterpret_cast<IWindowingPluginProvider*>(windowingProvider)->shared_from_this();
+        auto cppInput = reinterpret_cast<IInputPluginProvider*>(inputProvider)->shared_from_this();
 
-        auto CppSystem = new InputSystem(CppWindowing, CppInput);
-        return reinterpret_cast<NrtInputSystemHandle>(CppSystem);
+        auto cppSystem = new InputSystem(cppWindowing, cppInput);
+        return reinterpret_cast<NrtInputSystemHandle>(cppSystem);
     }
 
-    NrtResult Nrt_InputSystem_destroy(NrtInputSystemHandle system)
+    NrtResult Nrt_InputSystem_Destroy(NrtInputSystemHandle system)
     {
         if (system == nullptr)
         {
@@ -33,8 +33,8 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto CppSystem = reinterpret_cast<InputSystem*>(system);
-        delete CppSystem;
+        auto cppSystem = reinterpret_cast<InputSystem*>(system);
+        delete cppSystem;
         return NRT_SUCCESS;
     }
 
@@ -52,11 +52,11 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSystem = reinterpret_cast<InputSystem*>(system);
-        auto CppTimestamp = *reinterpret_cast<Timing::Timestamp*>(&delta);
-        auto CppCatalogue = reinterpret_cast<Ecs::Catalogue*>(catalogue);
+        auto cppSystem = reinterpret_cast<InputSystem*>(system);
+        auto cppTimestamp = *reinterpret_cast<Timing::Timestamp*>(&delta);
+        auto cppCatalogue = reinterpret_cast<Ecs::Catalogue*>(catalogue);
 
-        CppSystem->Update(CppTimestamp, *CppCatalogue);
+        cppSystem->Update(cppTimestamp, *cppCatalogue);
         return NRT_SUCCESS;
     }
 
@@ -74,9 +74,9 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSystem = reinterpret_cast<InputSystem*>(system);
+        auto cppSystem = reinterpret_cast<InputSystem*>(system);
 
-        CppSystem->AddMapping(std::string(name), std::string(id));
+        cppSystem->AddMapping(std::string(name), std::string(id));
         return NRT_SUCCESS;
     }
 
@@ -88,31 +88,31 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        auto CppSystem = reinterpret_cast<InputSystem*>(system);
+        auto cppSystem = reinterpret_cast<InputSystem*>(system);
 
-        CppSystem->AddDefaultKBMMapping();
+        cppSystem->AddDefaultKBMMapping();
         return NRT_SUCCESS;
     }
 
     NrtResult Nrt_InputSystem_GetMappingId(
         NrtInputSystemHandle system,
         const char* mappingName,
-        NrtAtom *output)
+        NrtAtom *outputResult)
     {
         if (system == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
-        if (mappingName == nullptr, output == nullptr)
+        if (mappingName == nullptr, outputResult == nullptr)
         {
             Nrt_setErrMsgIsNullptrInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        auto CppSystem = reinterpret_cast<InputSystem*>(system);
-        auto CppAtom = CppSystem->GetMappingId(std::string(mappingName));
-        *output = reinterpret_cast<NrtAtom>(&CppAtom);
+        auto cppSystem = reinterpret_cast<InputSystem*>(system);
+        auto cppAtom = cppSystem->GetMappingId(std::string(mappingName));
+        *outputResult = reinterpret_cast<NrtAtom>(&cppAtom);
         return NRT_SUCCESS;
     }
 

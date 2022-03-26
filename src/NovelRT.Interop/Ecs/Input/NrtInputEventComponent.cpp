@@ -11,15 +11,16 @@ extern "C"
 {
 #endif
 
-    void Nrt_InputEventComponent_PlusEquals_Operator(NrtInputEventComponent* lhs, NrtInputEventComponent rhs)
+    void Nrt_InputEventComponent_AddAssignInputEventComponent(NrtInputEventComponent* lhs, NrtInputEventComponent rhs)
     {
         *reinterpret_cast<struct InputEventComponent*>(lhs) +=
             *reinterpret_cast<const struct InputEventComponent*>(&rhs);
     };
 
-    NrtBool Nrt_InputEventComponent_Equals_Operator(NrtInputEventComponent lhs, NrtInputEventComponent rhs)
+    NrtBool Nrt_InputEventComponent_Equal(NrtInputEventComponent lhs, NrtInputEventComponent rhs)
     {
-        return *reinterpret_cast<const InputEventComponent*>(&lhs) == *reinterpret_cast<const InputEventComponent*>(&rhs);;
+        return *reinterpret_cast<const InputEventComponent*>(&lhs) ==
+            *reinterpret_cast<const InputEventComponent*>(&rhs);
     }
 
 #ifdef __cplusplus

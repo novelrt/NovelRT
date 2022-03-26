@@ -11,10 +11,10 @@ extern "C"
 {
 #endif
 
-    NrtInputSystemHandle Nrt_InputSystem_create(
+    NrtInputSystemHandle Nrt_InputSystem_Create(
         NrtIWindowingPluginProviderPtrHandle windowingProvider,
         NrtIInputPluginProviderPtrHandle inputProvider);
-    NrtResult Nrt_InputSystem_destroy(NrtInputSystemHandle system);
+    NrtResult Nrt_InputSystem_Destroy(NrtInputSystemHandle system);
 
     NrtResult Nrt_InputSystem_Update(NrtInputSystemHandle system, NrtTimestamp delta, NrtCatalogueHandle catalogue);
     NrtResult Nrt_InputSystem_AddMapping(NrtInputSystemHandle system, const char* name, const char* id);
@@ -22,7 +22,7 @@ extern "C"
     NrtResult Nrt_InputSystem_GetMappingId(
         NrtInputSystemHandle system,
         const char* mappingName,
-        NrtAtom *output);
+        NrtAtom *outputResult);
 
 #ifdef __cplusplus
 }
