@@ -11,7 +11,9 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 int main()
 {
     DefaultPluginSelector selector;
+
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
+    auto uiProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>();
 
     auto scheduler =
         Configurator()
@@ -20,6 +22,7 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
+            .WithPluginProvider(uiProvider)
             .InitialiseAndRegisterComponents();
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =

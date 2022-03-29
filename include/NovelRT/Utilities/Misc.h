@@ -23,6 +23,7 @@ namespace NovelRT::Utilities
         static inline const char* CONSOLE_LOG_AUDIO = "Audio";
         static inline const char* CONSOLE_LOG_INPUT = "Input";
         static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
+        static inline const char* CONSOLE_LOG_UI = "UI";
 
         /**
          * @brief Gets the path to the executable.

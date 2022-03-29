@@ -36,6 +36,7 @@ set(SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
+  Ecs/UI/UISystem.cpp
 
   EngineConfig.cpp
 
@@ -84,6 +85,9 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
   Timing/StepTimer.cpp
+
+  UI/DearImGui/ImGuiUIPluginProvider.cpp
+  UI/DearImGui/ImGuiUIProvider.cpp
 
   Utilities/Misc.cpp
   )
