@@ -5,7 +5,7 @@
 
 namespace NovelRT::ResourceManagement::Desktop
 {
-    TextureMetadata DesktopResourceLoader::LoadTextureInternal(std::filesystem::path filePath)
+    TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
     {
         std::string filePathStr = filePath.string();
         FILE* cFile;

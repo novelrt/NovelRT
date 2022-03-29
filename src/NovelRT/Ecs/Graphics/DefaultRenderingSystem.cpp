@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include "NovelRT/Ecs/Graphics/DefaultRenderingSystem.h"
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -46,7 +47,19 @@ namespace NovelRT::Ecs::Graphics
 
             auto& resourceManager = _resourceManager.getActual();
             auto resourceLoader = _resourceManagementPluginProvider->GetResourceLoader();
-            auto texture = resourceLoader->LoadTexture(ptr->textureName + ".png");
+            ResourceManagement::TextureMetadata texture;
+
+            if (!ptr->textureData.empty())
+            {
+                texture.width = ptr->width;
+                texture.height = ptr->height;
+                texture.pixelCount = ptr->width * ptr->height;
+                texture.data = ptr->textureData;
+            }
+            else
+            {
+                texture = resourceLoader->LoadTextureFromFile(ptr->textureName + ".png");
+            }
 
             auto texture2DRegion =
                 resourceManager.LoadTextureData(texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
@@ -128,15 +141,15 @@ namespace NovelRT::Ecs::Graphics
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
         graphicsContext->BeginFrame();
-        auto pVertexBuffer = std::vector<TexturedVertexTest>{
-            TexturedVertexTest{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(+0.5, +0.5, 0), Maths::GeoVector2F(1.0f, 0.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(-0.5, -0.5, 0), Maths::GeoVector2F(0.0f, 1.0f)},
-            TexturedVertexTest{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
+        auto pVertexBuffer = std::vector<TexturedVertex>{
+            TexturedVertex{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)},
+            TexturedVertex{Maths::GeoVector3F(+0.5, +0.5, 0), Maths::GeoVector2F(1.0f, 0.0f)},
+            TexturedVertex{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertex{Maths::GeoVector3F(+0.5, -0.5, 0), Maths::GeoVector2F(1.0f, 1.0f)},
+            TexturedVertex{Maths::GeoVector3F(-0.5, -0.5, 0), Maths::GeoVector2F(0.0f, 1.0f)},
+            TexturedVertex{Maths::GeoVector3F(-0.5, +0.5, 0), Maths::GeoVector2F(0.0f, 0.0f)}};
 
-        auto spriteMeshFuture = LoadVertexDataRaw<TexturedVertexTest>("default", pVertexBuffer);
+        auto spriteMeshFuture = LoadVertexDataRaw<TexturedVertex>("default", pVertexBuffer);
 
         ResolveGpuFutures();
 
@@ -212,7 +225,6 @@ namespace NovelRT::Ecs::Graphics
             catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
 
         std::map<int32_t, std::vector<EntityId>> transformLayerMap{};
-        std::map<int32_t, std::vector<EntityId>> customRenderTransformLayerMap{};
 
         for (auto [entity, transformComponent] : transformComponents)
         {
@@ -231,20 +243,7 @@ namespace NovelRT::Ecs::Graphics
                 transformLayerMap[layer].reserve(1000);
             }
 
-            if (customRenderTransformLayerMap.find(layer) == customRenderTransformLayerMap.end())
-            {
-                customRenderTransformLayerMap[layer] = std::vector<EntityId>();
-                customRenderTransformLayerMap[layer].reserve(1000);
-            }
-
-            if (renderComponent.requiresCustomRendering)
-            {
-                customRenderTransformLayerMap[layer].emplace_back(entity);
-            }
-            else
-            {
-                transformLayerMap[layer].emplace_back(entity);
-            }
+            transformLayerMap[layer].emplace_back(entity);
         }
 
         struct GpuSpanCounter
@@ -255,7 +254,6 @@ namespace NovelRT::Ecs::Graphics
 
         std::unordered_map<Atom, std::map<int32_t, GpuSpanCounter>, AtomHashFunction> gpuSpanCounterMap{};
 
-        auto customRenderReverseIt = customRenderTransformLayerMap.rbegin();
         for (auto reverseIt = transformLayerMap.rbegin(); reverseIt != transformLayerMap.rend(); reverseIt++)
         {
             auto&& [layer, entityVector] = *reverseIt;
@@ -309,21 +307,6 @@ namespace NovelRT::Ecs::Graphics
 
                 tempSpanCounter.gpuData[tempSpanCounter.currentIndex++] = matrixToInsert;
             }
-
-            auto&& [customLayer, customEntityVector] = *customRenderReverseIt;
-
-            for (EntityId entity : customEntityVector)
-            {
-                RenderComponent renderComponent = renderComponents.GetComponentUnsafe(entity);
-                TransformComponent transformComponent = transformComponents.GetComponentUnsafe(entity);
-
-                CustomRenderForEntity(CustomRenderEventArgs{delta, catalogue, customLayer, entity, renderComponent,
-                                                            transformComponent, _resourceManager.getActual(),
-                                                            _surfaceContext, _graphicsAdapter, _graphicsDevice,
-                                                            _windowingDevice, context});
-            }
-
-            customRenderReverseIt++;
         }
 
         gpuResourceManager.UnmapAndWriteAllConstantBuffers();
@@ -377,12 +360,14 @@ namespace NovelRT::Ecs::Graphics
                 size_t amountToDraw = spanCounterMap[layer].currentIndex;
 
                 auto primitive = _graphicsDevice->CreatePrimitive(pipelineInfo->gpuPipeline.GetUnderlyingSharedPtr(),
-                                                                  mesh->gpuVertexRegion, sizeof(TexturedVertexTest),
+                                                                  mesh->gpuVertexRegion, sizeof(TexturedVertex),
                                                                   dummyRegion, 0, inputResourceRegions);
                 context->Draw(primitive, static_cast<int32_t>(amountToDraw));
                 primitiveCache.emplace_back(primitive);
             }
         }
+
+        UIRenderEvent(*this, UIRenderEventArgs{delta, catalogue, _surfaceContext, _graphicsAdapter, _graphicsDevice,  context, gpuResourceManager, _frameMatrixConstantBufferRegion});
 
         context->EndDrawing();
         context->EndFrame();
@@ -409,6 +394,32 @@ namespace NovelRT::Ecs::Graphics
         }
 
         return Threading::FutureResult<TextureInfo>(resultIterator->second, TextureInfo{});
+    }
+
+    Threading::FutureResult<TextureInfo> DefaultRenderingSystem::LoadTextureDataRawUntyped(
+        const std::string& textureDataName,
+        void* data,
+        size_t dataTypeSize,
+        size_t dataLength,
+        uint32_t width,
+        uint32_t height)
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        auto ptr = Threading::MakeConcurrentShared<TextureInfo>();
+        std::vector<uint8_t> textureData{};
+        textureData.resize(dataTypeSize * dataLength);
+
+        memcpy(textureData.data(), data, dataTypeSize * dataLength);
+
+        ptr->textureName = textureDataName;
+        ptr->textureData = textureData;
+        ptr->width = width;
+        ptr->height = height;
+        ptr->ecsId = Atom::GetNextEcsTextureId();
+        _texturesToInitialise.push(ptr);
+
+        return Threading::FutureResult<TextureInfo>(ptr, TextureInfo{});
     }
 
     Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTextureBasedOnId(Atom ecsId)
@@ -473,6 +484,22 @@ namespace NovelRT::Ecs::Graphics
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
         return _namedVertexInfoObjects.at(ecsId);
+    }
+
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfoBasedOnName(
+        const std::string& name)
+    {
+        std::scoped_lock guard(_graphicsPipelineMapMutex);
+        auto it = std::find_if(_namedGraphicsPipelineInfoObjects.begin(), _namedGraphicsPipelineInfoObjects.end(), [&](auto pipelineInfo){
+                                   return pipelineInfo.second->pipelineName == name;
+        });
+
+        if (it == _namedGraphicsPipelineInfoObjects.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        return it->second;
     }
 
     Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfoBasedOnId(
@@ -620,5 +647,4 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->Signal(currentContext->GetFence());
         _graphicsDevice->WaitForIdle();
     }
-
 }

@@ -10,7 +10,7 @@
 
 namespace NovelRT::Ecs::Graphics
 {
-    struct TexturedVertexTest
+    struct TexturedVertex
     {
         NovelRT::Maths::GeoVector3F Position;
         NovelRT::Maths::GeoVector2F UV;
@@ -54,23 +54,19 @@ namespace NovelRT::Ecs::Graphics
         void ResolveTextureFutureResults();
 
     public:
-        struct CustomRenderEventArgs
+        struct UIRenderEventArgs
         {
             Timing::Timestamp delta;
             Catalogue& catalogue;
-            int32_t customLayer;
-            EntityId entity;
-            RenderComponent renderComponent;
-            TransformComponent transformComponent;
-            NovelRT::Graphics::GraphicsResourceManager& graphicsResourceManager;
             std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> graphicsSurfaceContext;
             std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> graphicsAdapter;
             std::shared_ptr<NovelRT::Graphics::GraphicsDevice> graphicsDevice;
-            std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice;
             std::shared_ptr<NovelRT::Graphics::GraphicsContext> graphicsContext;
+            NovelRT::Graphics::GraphicsResourceManager& resourceManager;
+            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> frameMatrixConstantBufferRegion;
         };
 
-        Utilities::Event<CustomRenderEventArgs> CustomRenderForEntity;
+        Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs> UIRenderEvent;
 
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
@@ -80,6 +76,24 @@ namespace NovelRT::Ecs::Graphics
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;
 
         [[nodiscard]] Threading::FutureResult<TextureInfo> GetOrLoadTexture(const std::string& spriteName);
+
+        template<typename TSpanType>
+        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
+                                                                              gsl::span<TSpanType> textureDataSpan, uint32_t width, uint32_t height)
+        {
+            static_assert(std::is_trivially_copyable_v<TSpanType> &&
+                          "The specified vertex struct must be trivially copyable.");
+
+            return LoadTextureDataRawUntyped(textureDataName, textureDataSpan.data(), sizeof(TSpanType),
+                                             textureDataSpan.size(), width, height);
+        }
+
+        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRawUntyped(const std::string& textureDataName,
+                                                                                     void* data,
+                                                                                     size_t dataTypeSize,
+                                                                                     size_t dataLength,
+                                                                                     uint32_t width,
+                                                                                     uint32_t height);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTextureBasedOnId(Atom ecsId);
 
@@ -107,6 +121,8 @@ namespace NovelRT::Ecs::Graphics
             const std::string& vertexDataName);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(Atom ecsId);
+
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnName(const std::string& name);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnId(Atom ecsId);
 
