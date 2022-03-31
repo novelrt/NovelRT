@@ -6,6 +6,40 @@
 
 namespace NovelRT::Ecs::Graphics
 {
+    void DefaultRenderingSystem::ResolveGpuResourceCleanup()
+    {
+        ResolveVertexInfoGpuCleanup();
+        ResolveTextureInfoGpuCleanup();
+    }
+
+    void DefaultRenderingSystem::ResolveVertexInfoGpuCleanup()
+    {
+        std::scoped_lock guard(_vertexQueueMapMutex);
+
+        while (!_vertexDataToDelete.empty())
+        {
+            Atom ecsId = _vertexDataToDelete.front();
+            _vertexDataToDelete.pop();
+
+            _resourceManager.getActual().FreeVertexData(_namedVertexInfoObjects.at(ecsId)->gpuVertexRegion);
+            _namedVertexInfoObjects.erase(ecsId);
+        }
+    }
+
+    void DefaultRenderingSystem::ResolveTextureInfoGpuCleanup()
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        while (!_texturesToDelete.empty())
+        {
+            Atom ecsId = _texturesToDelete.front();
+            _texturesToDelete.pop();
+
+            _resourceManager.getActual().FreeTextureData(_namedTextureInfoObjects.at(ecsId)->gpuTextureRegion);
+            _namedVertexInfoObjects.erase(ecsId);
+        }
+    }
+
     void DefaultRenderingSystem::ResolveGpuFutures()
     {
         ResolveVertexInfoFutureResults();
@@ -216,7 +250,7 @@ namespace NovelRT::Ecs::Graphics
         auto context = _graphicsDevice->GetCurrentContext();
         context->BeginFrame();
 
-        // TODO: This call is probably not supposed to be here but we have nowhere else for it to live right now. :)
+        ResolveGpuResourceCleanup();
         ResolveGpuFutures();
 
         context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
@@ -273,7 +307,7 @@ namespace NovelRT::Ecs::Graphics
                                        0};
                 }
 
-                auto textureInfo = GetExistingTextureBasedOnId(renderComponent.textureId);
+                auto textureInfo = GetExistingTexture(renderComponent.textureId);
                 GpuSpanCounter& tempSpanCounter = gpuSpanCounterMap[renderComponent.primitiveInfoId][layer];
                 auto scaleValue = Maths::GeoVector2F::uniform(500);
                 float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
@@ -322,9 +356,9 @@ namespace NovelRT::Ecs::Graphics
             for (auto&& [primitiveInfoId, spanCounterMap] : gpuSpanCounterMap)
             {
                 auto& primitiveInfo = _primitiveConfigurations[primitiveInfoId];
-                auto pipelineInfo = GetExistingPipelineInfoBasedOnId(primitiveInfo.ecsPipelineId);
-                auto texture = GetExistingTextureBasedOnId(primitiveInfo.ecsTextureId);
-                auto mesh = GetExistingVertexDataBasedOnId(primitiveInfo.ecsVertexDataId);
+                auto pipelineInfo = GetExistingPipelineInfo(primitiveInfo.ecsPipelineId);
+                auto texture = GetExistingTexture(primitiveInfo.ecsTextureId);
+                auto mesh = GetExistingVertexData(primitiveInfo.ecsVertexDataId);
 
                 std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
                     inputResourceRegions{};
@@ -422,10 +456,86 @@ namespace NovelRT::Ecs::Graphics
         return Threading::FutureResult<TextureInfo>(ptr, TextureInfo{});
     }
 
-    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTextureBasedOnId(Atom ecsId)
+    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTexture(Atom ecsId)
     {
         std::scoped_lock guard(_textureQueueMapMutex);
         return _namedTextureInfoObjects.at(ecsId);
+    }
+
+    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTexture(
+        const std::string& name)
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        for (auto&& pair : _namedTextureInfoObjects)
+        {
+            if (pair.second->textureName != name)
+            {
+                continue;
+            }
+
+            return pair.second;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    void DefaultRenderingSystem::DeleteTexture(Threading::ConcurrentSharedPtr<TextureInfo> texture)
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        std::optional<Atom> ecsId;
+
+        for (auto&& pair : _namedTextureInfoObjects)
+        {
+            if (pair.second != texture)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        _texturesToDelete.push(ecsId.value());
+    }
+
+    void DefaultRenderingSystem::DeleteTexture(Atom ecsId)
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        auto it = _namedTextureInfoObjects.find(ecsId);
+
+        if (it == _namedTextureInfoObjects.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _texturesToDelete.push(ecsId);
+    }
+
+    void DefaultRenderingSystem::DeleteTexture(const std::string& name)
+    {
+        std::scoped_lock guard(_textureQueueMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedTextureInfoObjects)
+        {
+            if (pair.second->textureName != name)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _texturesToDelete.push(ecsId.value());
     }
 
     Threading::FutureResult<VertexInfo> DefaultRenderingSystem::LoadVertexDataRawUntyped(
@@ -453,16 +563,7 @@ namespace NovelRT::Ecs::Graphics
         return Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
     }
 
-    /*
-    Threading::FutureResult<ConstantBufferInfo>
-    DefaultRenderingSystem::LoadConstantBufferDataIntoNewRegionRaw(void* data, size_t size, size_t alignment)
-    {
-        auto& resourceManager = _resourceManager.getActual();
-        return resourceManager.LoadConstantBufferDataToNewRegion(data, size, alignment);
-    }
-     */
-
-    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnName(
+    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexData(
         const std::string& vertexDataName)
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
@@ -480,29 +581,92 @@ namespace NovelRT::Ecs::Graphics
         throw Exceptions::KeyNotFoundException();
     }
 
-    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexDataBasedOnId(Atom ecsId)
+    Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexData(Atom ecsId)
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
         return _namedVertexInfoObjects.at(ecsId);
     }
 
-    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfoBasedOnName(
-        const std::string& name)
+    void DefaultRenderingSystem::DeleteVertexData(Threading::ConcurrentSharedPtr<VertexInfo> vertexData)
     {
-        std::scoped_lock guard(_graphicsPipelineMapMutex);
-        auto it = std::find_if(_namedGraphicsPipelineInfoObjects.begin(), _namedGraphicsPipelineInfoObjects.end(), [&](auto pipelineInfo){
-                                   return pipelineInfo.second->pipelineName == name;
-        });
+        std::scoped_lock guard(_vertexQueueMapMutex);
 
-        if (it == _namedGraphicsPipelineInfoObjects.end())
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedVertexInfoObjects)
+        {
+            if (pair.second != vertexData)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+        }
+
+        if (!ecsId.has_value())
         {
             throw Exceptions::KeyNotFoundException();
         }
 
-        return it->second;
+        _vertexDataToDelete.push(ecsId.value());
     }
 
-    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfoBasedOnId(
+    void DefaultRenderingSystem::DeleteVertexData(Atom ecsId)
+    {
+        std::scoped_lock guard(_vertexQueueMapMutex);
+
+        auto it = _namedVertexInfoObjects.find(ecsId);
+
+        if (it == _namedVertexInfoObjects.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _vertexDataToDelete.push(ecsId);
+    }
+
+    void DefaultRenderingSystem::DeleteVertexData(const std::string& name)
+    {
+        std::scoped_lock guard(_vertexQueueMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedVertexInfoObjects)
+        {
+            if (pair.second->vertexInfoName != name)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _vertexDataToDelete.push(ecsId.value());
+    }
+
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(
+        const std::string& name)
+    {
+        std::scoped_lock guard(_graphicsPipelineMapMutex);
+
+        for (auto&& pair : _namedGraphicsPipelineInfoObjects)
+        {
+            if (pair.second->pipelineName != name)
+            {
+                continue;
+            }
+
+            return pair.second;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(
         Atom ecsId)
     {
         std::scoped_lock guard(_graphicsPipelineMapMutex);
@@ -537,6 +701,67 @@ namespace NovelRT::Ecs::Graphics
         _namedGraphicsPipelineInfoObjects.emplace(ptr->ecsId, ptr);
 
         return ptr;
+    }
+
+    void DefaultRenderingSystem::UnregisterPipeline(Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelineInfo)
+    {
+        std::lock_guard guard(_graphicsPipelineMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedGraphicsPipelineInfoObjects)
+        {
+            if (pair.second != pipelineInfo)
+            {
+                 continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _namedGraphicsPipelineInfoObjects.erase(ecsId.value());
+    }
+
+    void DefaultRenderingSystem::UnregisterPipeline(Atom ecsId)
+    {
+        std::lock_guard guard(_graphicsPipelineMapMutex);
+        auto it = _namedGraphicsPipelineInfoObjects.find(ecsId);
+
+        if (it == _namedGraphicsPipelineInfoObjects.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _namedGraphicsPipelineInfoObjects.erase(ecsId);
+    }
+
+    void DefaultRenderingSystem::UnregisterPipeline(const std::string& name)
+    {
+        std::lock_guard guard(_graphicsPipelineMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedGraphicsPipelineInfoObjects)
+        {
+            if (pair.second->pipelineName != name)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _namedGraphicsPipelineInfoObjects.erase(ecsId.value());
     }
 
     void DefaultRenderingSystem::AttachSpriteRenderingToEntity(EntityId entity,

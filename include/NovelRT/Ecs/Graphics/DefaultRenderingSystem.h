@@ -33,10 +33,12 @@ namespace NovelRT::Ecs::Graphics
         tbb::mutex _textureQueueMapMutex;
         std::map<Atom, Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
         std::queue<Threading::ConcurrentSharedPtr<TextureInfo>> _texturesToInitialise;
+        std::queue<Atom> _texturesToDelete;
 
         tbb::mutex _vertexQueueMapMutex;
         std::map<Atom, Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfoObjects;
         std::queue<Threading::ConcurrentSharedPtr<VertexInfo>> _vertexDataToInitialise;
+        std::queue<Atom> _vertexDataToDelete;
 
         Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
@@ -48,6 +50,10 @@ namespace NovelRT::Ecs::Graphics
         std::map<Atom, GraphicsPrimitiveInfo> _primitiveConfigurations;
 
         SceneGraph::Scene _renderScene;
+
+        void ResolveGpuResourceCleanup();
+        void ResolveVertexInfoGpuCleanup();
+        void ResolveTextureInfoGpuCleanup();
 
         void ResolveGpuFutures();
         void ResolveVertexInfoFutureResults();
@@ -95,7 +101,15 @@ namespace NovelRT::Ecs::Graphics
                                                                                      uint32_t width,
                                                                                      uint32_t height);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTextureBasedOnId(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(Atom ecsId);
+
+        [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(const std::string& name);
+
+        void DeleteTexture(Threading::ConcurrentSharedPtr<TextureInfo> texture);
+
+        void DeleteTexture(Atom ecsId);
+
+        void DeleteTexture(const std::string& name);
 
         // TODO: I don't know if we want to have an untyped version of this. we could use the C++ new mechanism with a
         // type for complete safety but then C might have a harder time. Unsure.
@@ -117,14 +131,20 @@ namespace NovelRT::Ecs::Graphics
                                                                                    size_t dataTypeSize,
                                                                                    size_t dataLength);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnName(
+        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexData(
             const std::string& vertexDataName);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexDataBasedOnId(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexData(Atom ecsId);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnName(const std::string& name);
+        void DeleteVertexData(Threading::ConcurrentSharedPtr<VertexInfo> vertexData);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfoBasedOnId(Atom ecsId);
+        void DeleteVertexData(Atom ecsId);
+
+        void DeleteVertexData(const std::string& name);
+
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(const std::string& name);
+
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(Atom ecsId);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
@@ -132,6 +152,12 @@ namespace NovelRT::Ecs::Graphics
             std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
                 customConstantBufferRegions = {},
             bool useEcsTransforms = true);
+
+        void UnregisterPipeline(Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelineInfo);
+
+        void UnregisterPipeline(Atom ecsId);
+
+        void UnregisterPipeline(const std::string& name);
 
         void AttachSpriteRenderingToEntity(EntityId entity,
                                            Threading::ConcurrentSharedPtr<TextureInfo> texture,

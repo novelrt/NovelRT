@@ -76,22 +76,12 @@ int main()
     renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args)
     {
         inputResourceRegions.clear();
-        if (!squareVertexFuture.IsValid())
+        if (!squareVertexFuture.IsValid() || !squareVertexFuture.IsValueCreated())
         {
             return;
         }
 
-        if (!squareVertexFuture.IsValueCreated())
-        {
-            return;
-        }
-
-        if (!redTextureFuture.IsValid())
-        {
-            return;
-        }
-
-        if (!redTextureFuture.IsValueCreated())
+        if (!redTextureFuture.IsValid() || !redTextureFuture.IsValueCreated())
         {
             return;
         }
@@ -100,7 +90,7 @@ int main()
           0, nullptr, args.graphicsDevice, false, 0, 0);
 
         auto& systemRef = system.get();
-        auto pipeline = systemRef.GetExistingPipelineInfoBasedOnName("default");
+        auto pipeline = systemRef.GetExistingPipelineInfo("default");
 
         if (!transformRegion.has_value())
         {
