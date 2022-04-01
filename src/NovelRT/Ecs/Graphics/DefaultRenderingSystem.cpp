@@ -99,7 +99,7 @@ namespace NovelRT::Ecs::Graphics
                 resourceManager.LoadTextureData(texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
                                                 NovelRT::Graphics::GraphicsTextureKind::TwoDimensional);
 
-            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width, texture.height, ptr->ecsId};
+            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width, texture.height, ptr->ecsId, std::vector<uint8_t>{}};
             _namedTextureInfoObjects.emplace(ptr->ecsId, ptr);
         }
     }
