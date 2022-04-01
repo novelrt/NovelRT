@@ -69,7 +69,8 @@ namespace NovelRT::Ecs::Graphics
             std::shared_ptr<NovelRT::Graphics::GraphicsDevice> graphicsDevice;
             std::shared_ptr<NovelRT::Graphics::GraphicsContext> graphicsContext;
             NovelRT::Graphics::GraphicsResourceManager& resourceManager;
-            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> frameMatrixConstantBufferRegion;
+            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>
+                frameMatrixConstantBufferRegion;
         };
 
         Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs> UIRenderEvent;
@@ -85,7 +86,9 @@ namespace NovelRT::Ecs::Graphics
 
         template<typename TSpanType>
         [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
-                                                                              gsl::span<TSpanType> textureDataSpan, uint32_t width, uint32_t height)
+                                                                              gsl::span<TSpanType> textureDataSpan,
+                                                                              uint32_t width,
+                                                                              uint32_t height)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
@@ -142,7 +145,8 @@ namespace NovelRT::Ecs::Graphics
 
         void DeleteVertexData(const std::string& name);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(const std::string& name);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
+            const std::string& name);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(Atom ecsId);
 

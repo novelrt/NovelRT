@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
 #include "NovelRT/Ecs/Graphics/DefaultRenderingSystem.h"
+#include <NovelRT/Ecs/Ecs.h>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -99,7 +99,8 @@ namespace NovelRT::Ecs::Graphics
                 resourceManager.LoadTextureData(texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
                                                 NovelRT::Graphics::GraphicsTextureKind::TwoDimensional);
 
-            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width, texture.height, ptr->ecsId, std::vector<uint8_t>{}};
+            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width,
+                               texture.height,  ptr->ecsId,       std::vector<uint8_t>{}};
             _namedTextureInfoObjects.emplace(ptr->ecsId, ptr);
         }
     }
@@ -401,7 +402,8 @@ namespace NovelRT::Ecs::Graphics
             }
         }
 
-        UIRenderEvent(*this, UIRenderEventArgs{delta, catalogue, _surfaceContext, _graphicsAdapter, _graphicsDevice,  context, gpuResourceManager, _frameMatrixConstantBufferRegion});
+        UIRenderEvent(*this, UIRenderEventArgs{delta, catalogue, _surfaceContext, _graphicsAdapter, _graphicsDevice,
+                                               context, gpuResourceManager, _frameMatrixConstantBufferRegion});
 
         context->EndDrawing();
         context->EndFrame();
@@ -462,8 +464,7 @@ namespace NovelRT::Ecs::Graphics
         return _namedTextureInfoObjects.at(ecsId);
     }
 
-    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTexture(
-        const std::string& name)
+    Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTexture(const std::string& name)
     {
         std::scoped_lock guard(_textureQueueMapMutex);
 
@@ -666,8 +667,7 @@ namespace NovelRT::Ecs::Graphics
         throw Exceptions::KeyNotFoundException();
     }
 
-    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(
-        Atom ecsId)
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(Atom ecsId)
     {
         std::scoped_lock guard(_graphicsPipelineMapMutex);
         return _namedGraphicsPipelineInfoObjects.at(ecsId);
@@ -712,7 +712,7 @@ namespace NovelRT::Ecs::Graphics
         {
             if (pair.second != pipelineInfo)
             {
-                 continue;
+                continue;
             }
 
             ecsId = pair.first;
