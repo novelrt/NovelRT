@@ -20,10 +20,9 @@ Currently, NovelRT supports the following in its base form:
 
 Current features in development include:
 - C++ HLAPI
-- CoreCLR hosting
-- Ink narrative scripting language support
+- Fabulist narrative scripting language support
 
-For information on Ink, check it out from [here](https://github.com/inkle/ink).
+For information on Fabulist, check it out from [here](https://github.com/novelrt/fabulist).
 
 ## Getting Started with NovelRT
 
