@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/DotNet/NrtRuntimeService.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <list>
 

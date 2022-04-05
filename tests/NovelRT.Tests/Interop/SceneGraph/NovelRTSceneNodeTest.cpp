@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
 #include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <gtest/gtest.h>
 

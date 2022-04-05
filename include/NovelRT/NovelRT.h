@@ -74,55 +74,55 @@
   }
 
   //generic experimental files in root namespace
-  #include "NovelRT/EngineConfig.h"
+  #include "EngineConfig.h"
 
   // Value types
-  #include "NovelRT/Atom.h"
-  #include "NovelRT/Timing/Timestamp.h"
-  #include "NovelRT/Utilities/Event.h" //these have to exist up here due to include order issues
-  #include "NovelRT/Utilities/Lazy.h"
-  #include "NovelRT/Utilities/Misc.h"
+  #include "Atom.h"
+  #include "Timing/Timestamp.h"
+  #include "Utilities/Event.h" //these have to exist up here due to include order issues
+  #include "Utilities/Lazy.h"
+  #include "Utilities/Misc.h"
 
-  #include "NovelRT/Graphics/RGBAColour.h"
+  #include "Graphics/RGBAColour.h"
 
   //Maths types
-  #include "NovelRT/Maths/Maths.h"
+  #include "Maths/Maths.h"
 
   // Base Types
-  #include "NovelRT/LoggingService.h" // this isn't in the services section due to include order/dependencies.
-  #include "NovelRT/Timing/StepTimer.h"
+  #include "LoggingService.h" // this isn't in the services section due to include order/dependencies.
+  #include "Timing/StepTimer.h"
 
   // Audio types
-  #include "NovelRT/Audio/Audio.h"
+  #include "Audio/Audio.h"
 
   // ECS types
-  #include "NovelRT/Ecs/Ecs.h"
+  #include "Ecs/Ecs.h"
 
   // Exception types
-  #include "NovelRT/Exceptions/Exceptions.h"
+  #include "Exceptions/Exceptions.h"
 
   // Experimental types
-  #include "NovelRT/Graphics/Graphics.h"
-  #include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
-  #include "NovelRT/Threading/Threading.h"
-  #include "NovelRT/Windowing/Windowing.h"
-  #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
-  #include "NovelRT/Input/Input.h"
-  #include "NovelRT/Input/Glfw/Input.Glfw.h"
+  #include "Graphics/Graphics.h"
+  #include "Graphics/Vulkan/Graphics.Vulkan.h"
+  #include "Threading/Threading.h"
+  #include "Windowing/Windowing.h"
+  #include "Windowing/Glfw/Windowing.Glfw.h"
+  #include "Input/Input.h"
+  #include "Input/Glfw/Input.Glfw.h"
 
 
   // Plugin Management types
-  #include "NovelRT/PluginManagement/PluginManagement.h"
+  #include "PluginManagement/PluginManagement.h"
 
  // ResourceManagement types
-  #include "NovelRT/ResourceManagement/ResourceManagement.h"
-  #include "NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h"
+  #include "ResourceManagement/ResourceManagement.h"
+  #include "ResourceManagement/Desktop/ResourceManagement.Desktop.h"
 
   // Engine service types
-  #include "NovelRT/Audio/AudioService.h"
+  #include "Audio/AudioService.h"
 
   // Scene Graph types
-  #include "NovelRT/SceneGraph/SceneGraph.h"
+  #include "SceneGraph/SceneGraph.h"
 #endif // __cplusplus
 
 #if defined(NOVELRT_C_API)
