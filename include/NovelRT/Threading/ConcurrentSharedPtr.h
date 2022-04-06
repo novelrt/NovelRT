@@ -61,6 +61,16 @@ namespace NovelRT::Threading
             return _value;
         }
 
+        [[nodiscard]] std::shared_ptr<tbb::mutex>& GetMutex() noexcept
+        {
+            return _mutex;
+        }
+
+        [[nodiscard]] const std::shared_ptr<tbb::mutex>& GetMutex() const noexcept
+        {
+            return _mutex;
+        }
+
         [[nodiscard]] TValue* get() noexcept
         {
             return _value.get();
@@ -91,7 +101,7 @@ namespace NovelRT::Threading
     [[nodiscard]] bool operator==(const ConcurrentSharedPtr<TValue>& lhs,
                                   const ConcurrentSharedPtr<TValue>& rhs) noexcept
     {
-        return (lhs._value == rhs._value) && (lhs._mutex == rhs._mutex);
+        return (lhs.GetUnderlyingSharedPtr() == rhs.GetUnderlyingSharedPtr()) && (lhs.GetMutex() == rhs.GetMutex());
     }
 
     template<typename TValue>
