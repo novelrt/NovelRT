@@ -59,14 +59,17 @@ if(NOVELRT_BUILD_INTEROP)
     copy_build_products(Engine_Tests
       DEPENDENCY Engine
       TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
+      DROP_PATH ON
 
       DEPENDENCY Interop
       TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
+      DROP_PATH ON
     )
 else()
     copy_build_products(Engine_Tests
-            DEPENDENCY Engine
-            TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
+      DEPENDENCY Engine
+      TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
+      DROP_PATH ON
     )
 endif()
 
