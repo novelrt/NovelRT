@@ -15,4 +15,5 @@ copy_build_products(EcsPipeline
 
   DEPENDENCY Engine
   TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+  DROP_PATH ON
   )
