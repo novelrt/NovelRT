@@ -17,4 +17,5 @@ copy_build_products(VulkanRender
 
   DEPENDENCY Engine
   TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
+  DROP_PATH ON
 )
