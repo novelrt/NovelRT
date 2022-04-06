@@ -90,4 +90,11 @@ endif()
 
 target_link_libraries(Interop
   PUBLIC
-    Engine)
+    Engine
+)
+
+copy_build_products(Interop
+  DEPENDENCY Engine
+  TARGET_LOCATION $<TARGET_FILE_DIR:Interop>
+  DROP_PATH ON
+)
