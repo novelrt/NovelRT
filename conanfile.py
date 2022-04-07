@@ -18,6 +18,7 @@ class NovelRTConan(ConanFile):
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
         ("vulkan-loader/1.2.198.0"),
+        ("zlib/1.2.12")
         #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
@@ -40,6 +41,7 @@ class NovelRTConan(ConanFile):
         "Ogg:shared":True,
         "Vorbis:shared":True,
         "vulkan-loader:shared":True,
+        "zlib:shared":True,
         "spdlog:header_only":True,
         "documentation": False,
         "buildtests":True,
