@@ -141,5 +141,6 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+thirdparty/CMakeLists.txt
 
 # End of https://www.gitignore.io/api/c++,cmake,clion

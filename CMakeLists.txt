@@ -51,8 +51,12 @@ set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Opus version")
 set(NOVELRT_VULKAN_VERSION "1.2.172" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 
+set(CONAN_CMAKE_SILENT_OUTPUT ON)
 if (NOVELRT_INCLUDE_CONAN_PATHS)
   include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+  if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/thirdparty")
+    add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty)
+  endif()
 endif()
 
 find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}

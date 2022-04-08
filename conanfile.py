@@ -1,4 +1,6 @@
 from conans import ConanFile, CMake, tools
+from generateDeps import GenerateDeps
+import os
 
 class NovelRTConan(ConanFile):
     name = "NovelRT"
@@ -57,12 +59,18 @@ class NovelRTConan(ConanFile):
             self.output.info("Generating for MacOS with MoltenVK support")
 
     def imports(self):
+        needDependencies = False
         if self.settings.os == "Windows":
             self.copy("*.dll", dst="thirdparty", src="bin")
             self.copy("*.dll", dst="thirdparty", src="lib")
+            needDependencies = True
         if self.settings.os == "Macos":
             self.copy("*.dylib", dst="thirdparty", src="lib")
             self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
+            needDependencies = True
+        if needDependencies:
+            gd = GenerateDeps()
+            gd.CreateCMakeLists(f"{os.getcwd()}/thirdparty",f"{os.path.abspath(os.path.join(os.getcwd(), os.pardir))}/thirdparty")
 
 
     def source(self):
