@@ -35,10 +35,12 @@ endif()"""
                         st = """\t${CMAKE_BINARY_DIR}"""
                         st += f'/thirdparty/{entry.name}\n'
                         strArray += st
-                        #self.template1 += """\t${CMAKE_BINARY_DIR}"""
-                        #self.template1 += f'/thirdparty/{entry.name}\n'
-        #template = f"{self.template1}{self.template2}"
         template = self.template.replace('#DEP#',strArray)
+        if not os.path.isdir(cmakePath):
+            try:
+                os.mkdir(cmakePath)
+            except:
+                print(f"Cannot create the directory when it does not exist!\nAttempted to create directory: {cmakePath}")
         with open(f'{cmakePath}/CMakeLists.txt', 'w') as f:
             for line in template:
                 f.write(line)

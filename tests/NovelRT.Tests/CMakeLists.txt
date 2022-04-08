@@ -56,25 +56,25 @@ set(SOURCES
 add_executable(Engine_Tests ${SOURCES})
 
 if(NOVELRT_INCLUDE_CONAN_PATHS AND (WIN32 OR APPLE))
-  add_dependencies(EcsPipeline ThirdParty)
+  add_dependencies(Engine_Tests ThirdParty)
   if(NOVELRT_BUILD_INTEROP)
-    copy_build_products(EcsPipeline
+    copy_build_products(Engine_Tests
       DEPENDENCY Engine
-      TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+      TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
 
       DEPENDENCY ThirdParty
-      TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+      TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
 
       DEPENDENCY Interop
       TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
     )
   else()
-    copy_build_products(EcsPipeline
+    copy_build_products(Engine_Tests
       DEPENDENCY Engine
-      TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+      TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
 
       DEPENDENCY ThirdParty
-      TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+      TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
     )
   endif()
 else()
