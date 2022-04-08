@@ -9,11 +9,25 @@ target_link_libraries(EcsPipeline
   Engine
   )
 
-copy_build_products(EcsPipeline
-  DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
+if(NOVELRT_INCLUDE_CONAN_PATHS AND (WIN32 OR APPLE))
+  add_dependencies(EcsPipeline ThirdParty)
+  copy_build_products(EcsPipeline
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
 
-  DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
-  DROP_PATH ON
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+
+    DEPENDENCY ThirdParty
+    TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
   )
+else()
+  copy_build_products(EcsPipeline
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
+
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>
+  )
+endif()
+

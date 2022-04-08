@@ -9,11 +9,24 @@ target_link_libraries(UIEventExample
     Engine
 )
 
-copy_build_products(UIEventExample
-  DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>/Resources
+if(NOVELRT_INCLUDE_CONAN_PATHS AND (WIN32 OR APPLE))
+  add_dependencies(UIEventExample ThirdParty)
+  copy_build_products(UIEventExample
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>/Resources
 
-  DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>
-  DROP_PATH ON
-)
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>
+
+    DEPENDENCY ThirdParty
+    TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>
+  )
+else()
+  copy_build_products(UIEventExample
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>/Resources
+
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>
+  )
+endif()

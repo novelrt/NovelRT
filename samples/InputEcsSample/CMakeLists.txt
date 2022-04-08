@@ -9,11 +9,24 @@ target_link_libraries(InputEcsSample
     Engine
 )
 
-copy_build_products(InputEcsSample
-  DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>/Resources
+if(NOVELRT_INCLUDE_CONAN_PATHS AND (WIN32 OR APPLE))
+  add_dependencies(InputEcsSample ThirdParty)
+  copy_build_products(InputEcsSample
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>/Resources
 
-  DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>
-  DROP_PATH ON
-)
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>
+
+    DEPENDENCY ThirdParty
+    TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>
+  )
+else()
+  copy_build_products(InputEcsSample
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>/Resources
+
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>
+  )
+endif()

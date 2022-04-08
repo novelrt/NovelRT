@@ -11,11 +11,24 @@ target_link_libraries(VulkanRender
     Engine
 )
 
-copy_build_products(VulkanRender
-  DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
+if(NOVELRT_INCLUDE_CONAN_PATHS AND (WIN32 OR APPLE))
+  add_dependencies(VulkanRender ThirdParty)
+  copy_build_products(VulkanRender
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
 
-  DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
-  DROP_PATH ON
-)
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
+
+    DEPENDENCY ThirdParty
+    TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
+  )
+else()
+  copy_build_products(VulkanRender
+    DEPENDENCY Resources
+    TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
+
+    DEPENDENCY Engine
+    TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
+  )
+endif()

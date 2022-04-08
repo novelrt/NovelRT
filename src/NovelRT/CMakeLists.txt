@@ -161,38 +161,16 @@ if(WIN32)
     PUBLIC
       Winmm
   )
-
-  # I hate CMake I hate it I hate it I hate it
-  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${CMAKE_BINARY_DIR}/thirdparty
-      $<TARGET_FILE_DIR:Engine>)
-  file(GLOB libs ABSOLUTE ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
-endif()
-if(APPLE)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-          ${CMAKE_BINARY_DIR}/thirdparty
-          $<TARGET_FILE_DIR:Engine>)
-  file(GLOB libs ABSOLUTE ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()
 
 install(
   TARGETS Engine
   EXPORT NovelRT
   LIBRARY DESTINATION lib
-  RESOURCE DESTINATION bin
 )
 #Workaround due to hierarchy destruction when installing by TARGETS
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT/
   DESTINATION include/NovelRT
   FILES_MATCHING PATTERN "*.h"
-)
-#Only done so that shaders are always copied
-install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/resources/Shaders/
-  DESTINATION bin/Resources/Shaders
-  FILES_MATCHING PATTERN "*.spv"
 )
