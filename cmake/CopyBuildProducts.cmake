@@ -1,5 +1,5 @@
 function(copy_build_products target)
-  set(valid_options "DEPENDENCY;DEPENDENCY_FILES;TARGET_LOCATION;CONDITION;DROP_PATH")
+  set(valid_options "DEPENDENCY;DEPENDENCY_FILES;TARGET_LOCATION;CONDITION")
   foreach(arg IN LISTS ARGN)
     if("${arg}" IN_LIST valid_options)
       set(mode "${arg}")
@@ -19,12 +19,6 @@ function(copy_build_products target)
       else()
         set("COPY_BUILD_PRODUCTS_${current_dependency}_CONDITION" "${arg}")
       endif()
-    elseif("${mode}" STREQUAL "DROP_PATH")
-      if(DEFINED "COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH")
-        set("COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH" "${COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH} ${arg}")
-      else()
-        set("COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH" "${arg}")
-      endif()
     endif()
   endforeach()
 
@@ -40,11 +34,7 @@ function(copy_build_products target)
       foreach(res IN LISTS resx_tmp)
         if(IS_ABSOLUTE "${res}")
           file(RELATIVE_PATH relpath "${bindir}" "${res}")
-          if(COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH)
-            list(APPEND resx "../${relpath}")
-          else()
-            list(APPEND resx "${relpath}")
-          endif()
+          list(APPEND resx "${relpath}")
         else()
           list(APPEND resx "${res}")
         endif()
@@ -77,22 +67,12 @@ function(copy_build_products target)
     if(cond_succeeded)
       foreach(file IN LISTS tgt_outputs)
         list(APPEND COPY_BUILD_PRODUCTS_COPIED_RESOURCES "${COPY_BUILD_PRODUCTS_${dependency_idx}_TARGET_LOCATION}/${file}")
-        if(NOT COPY_BUILD_PRODUCTS_${current_dependency}_DROP_PATH)
-          list(APPEND copy_snippet
+        list(APPEND copy_snippet
 "# ${COPY_BUILD_PRODUCTS_${dependency_idx}_CONDITION} (${dependency} -> ${target})
 execute_process(COMMAND \${CMAKE_COMMAND} -E copy_if_different
   ${tgt_dir}/${file}
   ${COPY_BUILD_PRODUCTS_${dependency_idx}_TARGET_LOCATION}/${file}
 )")
-        else()
-          get_filename_component(filename ${file} NAME)
-          list(APPEND copy_snippet
-"# ${COPY_BUILD_PRODUCTS_${dependency_idx}_CONDITION} (${dependency} -> ${target})
-execute_process(COMMAND \${CMAKE_COMMAND} -E copy_if_different
-  ${tgt_dir}/${file}
-  ${COPY_BUILD_PRODUCTS_${dependency_idx}_TARGET_LOCATION}/${filename}
-)")
-        endif()
       endforeach()
     endif()
   endforeach()
