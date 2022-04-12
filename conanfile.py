@@ -94,5 +94,3 @@ class NovelRTConan(ConanFile):
         if(self.options.buildtests):
             self.cmake.test()
 
-    def package_info(self):
-        self.cpp_info.libs = ["novelrt", "novelrt.interop"]
