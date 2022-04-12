@@ -17,6 +17,7 @@ namespace NovelRT::Ecs::Graphics
         uint32_t width = 0;
         uint32_t height = 0;
         Atom ecsId = 0;
+        std::vector<uint8_t> textureData;
 
         bool operator==(const TextureInfo& other) const noexcept
         {

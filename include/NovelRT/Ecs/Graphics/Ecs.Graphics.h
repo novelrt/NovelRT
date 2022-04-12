@@ -23,6 +23,7 @@ namespace NovelRT::Ecs::Graphics
     struct GraphicsPipelineInfo;
     struct CreateRenderEntityRequestInfo;
     struct ConstantBufferInfo;
+    struct TexturedVertex;
 }
 
 // clang-format off
