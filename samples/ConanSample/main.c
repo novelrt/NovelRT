@@ -2,7 +2,7 @@
 // for more information.
 
 #define NOVELRT_C_API 1
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <memory.h>
 #include <stdint.h>

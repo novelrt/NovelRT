@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtGeoVector3F.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <cmath>
 #include <gtest/gtest.h>

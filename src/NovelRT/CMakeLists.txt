@@ -156,6 +156,12 @@ target_link_libraries(Engine
     Vulkan::Vulkan
 )
 
+install(
+  TARGETS Engine
+  EXPORT NovelRT
+  DESTINATION lib
+  RUNTIME DESTINATION bin
+)
 #Workaround due to hierarchy destruction when installing by TARGETS
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT/
@@ -178,13 +184,9 @@ if(WIN32)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 
   install(
-    DIRECTORY $<TARGET_FILE_DIR:Engine>
+    DIRECTORY "$<TARGET_FILE_DIR:Engine>/"
     DESTINATION bin
-    FILES_MATCHING PATTERN ".dll"
-  )
-  install(
-    FILES "$<TARGET_FILE_DIR:Engine>/NovelRT.lib"
-    DESTINATION lib
+    FILES_MATCHING PATTERN "*.dll"
   )
 elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -195,17 +197,11 @@ elseif(APPLE)
   install(
     DIRECTORY $<TARGET_FILE_DIR:Engine>
     DESTINATION bin
-    FILES_MATCHING PATTERN ".dylib"
+    FILES_MATCHING PATTERN "*.dylib"
   )
   install(
     FILES "$<TARGET_FILE_DIR:Engine>/MoltenVK_icd.json"
     DESTINATION bin
-  )
-else()
-  install(
-    DIRECTORY $<TARGET_FILE_DIR:Engine>
-    DESTINATION bin
-    FILES_MATCHING PATTERN ".so"
   )
 endif()
 

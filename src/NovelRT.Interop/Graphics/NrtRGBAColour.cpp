@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Graphics/NrtRGBAColour.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Maths;
