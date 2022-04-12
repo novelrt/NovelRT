@@ -182,26 +182,11 @@ if(WIN32)
       $<TARGET_FILE_DIR:Engine>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
-
-  install(
-    DIRECTORY "$<TARGET_FILE_DIR:Engine>/"
-    DESTINATION bin
-    FILES_MATCHING PATTERN "*.dll"
-  )
 elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_BINARY_DIR}/thirdparty
           $<TARGET_FILE_DIR:Engine>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
-  install(
-    DIRECTORY $<TARGET_FILE_DIR:Engine>
-    DESTINATION bin
-    FILES_MATCHING PATTERN "*.dylib"
-  )
-  install(
-    FILES "$<TARGET_FILE_DIR:Engine>/MoltenVK_icd.json"
-    DESTINATION bin
-  )
 endif()
 
