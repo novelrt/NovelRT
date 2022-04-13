@@ -31,7 +31,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- CMake 3.18
+- CMake 3.19
 - Doxygen 1.8.8 (if building docs)
 - Freetype 2.8.1
 - GLFW 3.3.2
