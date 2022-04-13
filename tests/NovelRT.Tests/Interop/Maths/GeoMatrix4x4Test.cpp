@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Maths/NrtGeoMatrix4x4F.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <cmath>
 #include <gtest/gtest.h>

@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake
 
 class NovelRTConan(ConanFile):
     name = "NovelRT"
@@ -44,7 +44,7 @@ class NovelRTConan(ConanFile):
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,
-        "buildinterop":True
+        "buildinterop":False
     }
     cmake = None
 
@@ -94,5 +94,3 @@ class NovelRTConan(ConanFile):
         if(self.options.buildtests):
             self.cmake.test()
 
-    def package_info(self):
-        self.cpp_info.libs = ["novelrt", "novelrt.interop"]

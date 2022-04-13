@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Maths/NrtQuadTree.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <cmath>
 #include <list>

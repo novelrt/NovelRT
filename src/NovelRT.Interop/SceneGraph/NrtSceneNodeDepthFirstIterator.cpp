@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/SceneGraph/NrtSceneNodeDepthFirstIterator.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <list>
 
