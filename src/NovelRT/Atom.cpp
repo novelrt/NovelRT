@@ -2,89 +2,89 @@
 // for more information.
 
 #include <NovelRT/Atom.h>
+#ifndef __TBB_PREVIEW_MUTEXES
+#define __TBB_PREVIEW_MUTEXES 1
+#endif
+#include <oneapi/tbb/mutex.h>
+#include <unordered_map>
+#include <mutex>
+#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT
 {
-    Atom Atom::GetNextEventHandlerId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEventHandlerId(0);
-        auto value = ++_nextEventHandlerId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextFontSetId() noexcept
-    {
-        static std::atomic_uintptr_t _nextFontSetId(0);
-        auto value = ++_nextFontSetId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextTextureId() noexcept
-    {
-        static std::atomic_uintptr_t _nextTextureId(0);
-        auto value = ++_nextTextureId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextComponentTypeId() noexcept
-    {
-        static std::atomic_uintptr_t _nextComponentTypeId(0);
-        auto value = ++_nextComponentTypeId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextEntityId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEntityId(0);
-        auto value = ++_nextEntityId;
-
-        if (value == std::numeric_limits<uintptr_t>::max())
-        {
-            value = ++_nextEntityId;
-        }
-
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextSystemId() noexcept
-    {
-        static std::atomic_uintptr_t _nextSystemId(0);
-        auto value = ++_nextSystemId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextEcsTextureId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEcsTextureId(0);
-        auto value = ++_nextEcsTextureId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextEcsVertexDataId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEcsVertexDataId(0);
-        auto value = ++_nextEcsVertexDataId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextEcsPrimitiveId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEcsPrimitiveId(0);
-        auto value = ++_nextEcsPrimitiveId;
-        return Atom(value);
-    }
-
-    Atom Atom::GetNextEcsGraphicsPipelineId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEcsGraphicsPipelineId(0);
-        auto value = ++_nextEcsGraphicsPipelineId;
-        return Atom(value);
-    }
 
     Atom Atom::GetNextEcsPrimitiveInfoConfigurationId() noexcept
     {
         static std::atomic_uintptr_t _nextEcsPrimitiveInfoConfigurationId(0);
         auto value = ++_nextEcsPrimitiveInfoConfigurationId;
         return Atom(value);
+    }
+
+    AtomFactory::AtomFactory() noexcept : AtomFactory(0)
+    {
+    }
+
+    AtomFactory::AtomFactory(Atom startingValue) noexcept :
+    _currentValue(startingValue), _moved(false)
+    {
+    }
+
+    AtomFactory::AtomFactory(const AtomFactory& other) noexcept
+    {
+        *this = other;
+    }
+
+    AtomFactory::AtomFactory(AtomFactory&& other) noexcept
+    {
+        *this = std::move(other);
+    }
+
+    AtomFactory& AtomFactory::operator=(const AtomFactory& other) noexcept
+    {
+        _currentValue = other._currentValue.load();
+        return *this;
+    }
+
+    AtomFactory& AtomFactory::operator=(AtomFactory&& other) noexcept
+    {
+        other._moved = true;
+        _currentValue = other._currentValue.load();
+        return *this;
+    }
+
+    Atom AtomFactory::GetNext()
+    {
+        if (_moved)
+        {
+            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the next atomic value from a factory in this state.");
+        }
+
+        auto value = ++_currentValue;
+        return value;
+    }
+
+    void AtomFactory::SetToValue(Atom value)
+    {
+        if (_moved)
+        {
+            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly set the current atomic value from a factory in this state.");
+        }
+
+        _currentValue = value;
+    }
+
+    AtomFactory& AtomFactoryDatabase::GetFactory(const std::string& factoryName) noexcept
+    {
+        static tbb::mutex _mutex;
+        static std::unordered_map<std::string, AtomFactory> _factories;
+        std::scoped_lock lock(_mutex);
+        auto it = _factories.find(factoryName);
+
+        if (it == _factories.end())
+        {
+            _factories[factoryName] = AtomFactory(0);
+        }
+
+        return _factories[factoryName];
     }
 }

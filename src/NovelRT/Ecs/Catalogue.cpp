@@ -15,7 +15,9 @@ namespace NovelRT::Ecs
 
     EntityId Catalogue::CreateEntity() noexcept
     {
-        EntityId returnId = Atom::GetNextEntityId();
+        static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
+
+        EntityId returnId = _entityIdFactory.GetNext();
         _createdEntitiesThisFrame.push_back(returnId);
         return returnId;
     }

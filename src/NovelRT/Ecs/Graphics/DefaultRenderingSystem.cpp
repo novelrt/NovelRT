@@ -47,6 +47,8 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::ResolveVertexInfoFutureResults()
     {
+        static AtomFactory& vertexDataIdFactory = AtomFactoryDatabase::GetFactory("VertexDataId");
+
         std::scoped_lock guard(_vertexQueueMapMutex);
 
         while (!_vertexDataToInitialise.empty())
@@ -60,7 +62,7 @@ namespace NovelRT::Ecs::Graphics
 
             ptr->gpuVertexRegion =
                 resourceManager.LoadVertexDataUntyped(ptr->stagingPtr, ptr->sizeOfVert, ptr->stagingPtrLength);
-            ptr->ecsId = Atom::GetNextEcsVertexDataId();
+            ptr->ecsId = vertexDataIdFactory.GetNext();
             free(ptr->stagingPtr);
             ptr->stagingPtr = nullptr;
             _namedVertexInfoObjects.emplace(ptr->ecsId, ptr);
@@ -422,7 +424,7 @@ namespace NovelRT::Ecs::Graphics
         {
             auto concurrentPtr = Threading::MakeConcurrentShared<TextureInfo>();
             concurrentPtr->textureName = textureName;
-            concurrentPtr->ecsId = Atom::GetNextEcsTextureId();
+            concurrentPtr->ecsId = _textureIdFactory.GetNext();
 
             _texturesToInitialise.push(concurrentPtr);
             return Threading::FutureResult<TextureInfo>(concurrentPtr, TextureInfo{});
@@ -451,7 +453,7 @@ namespace NovelRT::Ecs::Graphics
         ptr->textureData = textureData;
         ptr->width = width;
         ptr->height = height;
-        ptr->ecsId = Atom::GetNextEcsTextureId();
+        ptr->ecsId = _textureIdFactory.GetNext();
         _texturesToInitialise.push(ptr);
 
         return Threading::FutureResult<TextureInfo>(ptr, TextureInfo{});
@@ -679,12 +681,14 @@ namespace NovelRT::Ecs::Graphics
             customConstantBufferRegions,
         bool useEcsTransforms)
     {
+        static AtomFactory& ecsGraphicsPipelineIdFactory = AtomFactoryDatabase::GetFactory("EcsGraphicsPipelineId");
+
         std::scoped_lock guard(_graphicsPipelineMapMutex);
 
         auto ptr = Threading::MakeConcurrentShared<GraphicsPipelineInfo>();
         ptr->gpuPipeline = Threading::ConcurrentSharedPtr<NovelRT::Graphics::GraphicsPipeline>(std::move(pipeline));
         ptr->pipelineName = pipelineName;
-        ptr->ecsId = Atom::GetNextEcsGraphicsPipelineId();
+        ptr->ecsId = ecsGraphicsPipelineIdFactory.GetNext();
         ptr->useEcsTransforms = useEcsTransforms;
 
         if (!customConstantBufferRegions.empty())
@@ -786,7 +790,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!assigned)
         {
-            Atom newId = Atom::GetNextEcsPrimitiveInfoConfigurationId();
+            Atom newId = _ecsPrimitiveInfoConfigurationIdFactory.GetNext();
             GraphicsPrimitiveInfo newPrimitiveInfo{_defaultSpriteMeshPtr->ecsId, texture->ecsId,
                                                    _defaultGraphicsPipelinePtr->ecsId};
             newPrimitiveInfo.gpuTransformConstantBufferRegions[0] =
@@ -821,7 +825,9 @@ namespace NovelRT::Ecs::Graphics
         Threading::ConcurrentSharedPtr<TextureInfo> texture,
         SystemScheduler& scheduler)
     {
-        EntityId entity = Atom::GetNextEntityId();
+        static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
+
+        EntityId entity = _entityIdFactory.GetNext();
 
         auto newRenderComponent =
             RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId};
@@ -839,7 +845,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!assigned)
         {
-            Atom newId = Atom::GetNextEcsPrimitiveInfoConfigurationId();
+            Atom newId = _ecsPrimitiveInfoConfigurationIdFactory.GetNext();
             GraphicsPrimitiveInfo newPrimitiveInfo{_defaultSpriteMeshPtr->ecsId, texture->ecsId,
                                                    _defaultGraphicsPipelinePtr->ecsId};
             newPrimitiveInfo.gpuTransformConstantBufferRegions[0] =

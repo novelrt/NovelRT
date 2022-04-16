@@ -58,8 +58,10 @@ namespace NovelRT::Ecs::Input
 
     void InputSystem::AddMapping(std::string name, std::string id)
     {
+        static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
+
         unused(_device->AddInputAction(name, id));
-        auto entityMappingId = NovelRT::Atom::GetNextEntityId();
+        auto entityMappingId = _entityIdFactory.GetNext();
         _inputMap.insert(std::pair<std::string, NovelRT::Atom>(name, entityMappingId));
         _logger.logDebug("Input Mapped: \"{}\" to {}", name, id);
     }
