@@ -5,10 +5,10 @@
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
+#include <NovelRT/Exceptions/Exceptions.h>
+#include <mutex>
 #include <oneapi/tbb/mutex.h>
 #include <unordered_map>
-#include <mutex>
-#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT
 {
@@ -24,8 +24,7 @@ namespace NovelRT
     {
     }
 
-    AtomFactory::AtomFactory(Atom startingValue) noexcept :
-    _currentValue(startingValue), _moved(false)
+    AtomFactory::AtomFactory(Atom startingValue) noexcept : _currentValue(startingValue), _moved(false)
     {
     }
 
@@ -56,7 +55,8 @@ namespace NovelRT
     {
         if (_moved)
         {
-            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the next atomic value from a factory in this state.");
+            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
+                                                        "next atomic value from a factory in this state.");
         }
 
         auto value = ++_currentValue;
@@ -67,7 +67,8 @@ namespace NovelRT
     {
         if (_moved)
         {
-            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly set the current atomic value from a factory in this state.");
+            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
+                                                        "set the current atomic value from a factory in this state.");
         }
 
         _currentValue = value;
