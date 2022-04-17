@@ -155,7 +155,7 @@ Please follow these steps to have your contribution considered by the maintainer
 
 While the prerequisites above must be satisfied prior to having your pull request reviewed, the reviewer(s) may ask you to complete additional design work, tests, or other changes before your pull request can be ultimately accepted. Also, please note that under the circumstances listed below, a pull request _may_ be rejected with/without further recourse by the NovelRT team for the following:
 
-* Creating a pull request without an open issue (**_this is limited to contributors only - outside collaborators and maintainers are permitted within reason_**).
+* Creating a pull request without an open issue (**_this is limited to contributors only as well as code/functionality changes indicated in any pull request - outside collaborators and maintainers are permitted within reason, and exceptions i.e. documentation-only changes may be permitted at maintainer discretion_**).
 * Creating a pull request that purposefully breaks functionality / alters functionality in a negative manner
 * Creating a pull request to introduce spam into the repository
 
