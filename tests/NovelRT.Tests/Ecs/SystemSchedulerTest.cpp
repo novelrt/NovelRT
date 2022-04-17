@@ -19,6 +19,7 @@ public:
     std::function<void(Timestamp, Catalogue)> sysOne;
     std::function<void(Timestamp, Catalogue)> sysTwo;
     std::function<void(Timestamp, Catalogue)> sysThree;
+    inline static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
 protected:
     void SetUp() override
@@ -71,7 +72,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 {
     bool isEqual = false;
 
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
@@ -99,7 +100,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     scheduler = new SystemScheduler(3);
     scheduler->SpinThreads();
 
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
@@ -160,7 +161,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
     scheduler = new SystemScheduler(32);
     scheduler->SpinThreads();
 
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
@@ -216,7 +217,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
 
 TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);

@@ -75,7 +75,9 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
     {
-        Atom id = Atom::GetNextSystemId();
+        static AtomFactory& systemIdFactory = AtomFactoryDatabase::GetFactory("SystemId");
+
+        Atom id = systemIdFactory.GetNext();
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
     }

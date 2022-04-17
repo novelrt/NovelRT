@@ -18,9 +18,11 @@ public:
 protected:
     void SetUp() override
     {
+        static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
-        rootListId = NovelRT::Atom::GetNextEntityId();
+        rootListId = _entityIdFactory.GetNext();
         componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(
             0, rootListId, LinkedEntityListNodeComponent());
         entityCache = EntityCache(1);
