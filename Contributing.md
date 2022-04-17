@@ -1,6 +1,6 @@
 # Contributing to NovelRT
 
-:+1::tada: First off, thank you for taking the time to contribute! We really appreciate it! :tada::+1:
+First off, thank you for taking the time to contribute! We really appreciate it!
 
 The following is a set of guidelines for contributing to NovelRT, which is hosted in the [NovelRT Organization](https://github.com/novelrt) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
@@ -45,9 +45,9 @@ When we make a decision in how we maintain the project and what we can or cannot
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report for NovelRT. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
+This section guides you through submitting a bug report for NovelRT. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
-Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. We currently do not have a bug report template, so when you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). 
+Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. We currently do not have a bug report template, so when you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report).
 
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
 
@@ -68,13 +68,13 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
-* **Include screenshots and/or animated GIFs if applicable** which show you following the described steps and clearly demonstrate the problem. 
+* **Include screenshots and/or animated GIFs if applicable** which show you following the described steps and clearly demonstrate the problem.
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
 
 Provide more context by answering these questions:
 
 * **Did the problem start happening recently** (e.g. after updating to the latest build of NovelRT) or was this always a problem?
-* If the problem started happening recently, **can you reproduce the problem in an older build of NovelRT?** What's the most recent build/commit SHA in which the problem doesn't happen? 
+* If the problem started happening recently, **can you reproduce the problem in an older build of NovelRT?** What's the most recent build/commit SHA in which the problem doesn't happen?
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 * What area of NovelRT is the problem occurring in? (e.g. Is it Input related? Is it related to Rendering or Windowing? etc)
 
@@ -99,9 +99,9 @@ Please note that while we will do our best to filter out these types of submissi
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for NovelRT, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
+This section guides you through submitting an enhancement suggestion for NovelRT, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
 
-Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). 
+Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion).
 
 #### Before Submitting An Enhancement Suggestion
 
@@ -117,7 +117,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
 * **Provide specific examples to demonstrate the steps**. Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
-* **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of NovelRT which the suggestion is related to, if possible. (We understand that sometimes code changes can't be shown with a screenshot :sweat_smile:)
+* **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of NovelRT which the suggestion is related to, if possible. (We understand that sometimes code changes can't be shown with a screenshot)
 * **Explain why this enhancement would be useful** to most NovelRT users as core functionality and isn't something that can or should be implemented as a community plugin.
 * **List some other game engines / examples where this enhancement exists (_if applicable_).**
 * **Specify the name and version of the OS you're using.**
