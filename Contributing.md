@@ -83,7 +83,6 @@ Include details about your configuration and environment:
 * **Which build of NovelRT are you using?**
 * **What's the name and version of the OS you're using**?
 * **Was this pre-built? If not, what compiler was NovelRT built with?**
-* **Are you running NovelRT in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
 * **Are you using NovelRT with multiple monitors?** If so, can you reproduce the problem when you use a single monitor?
 * **Which locale/region is your OS configured to use?**
 
