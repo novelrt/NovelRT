@@ -1,5 +1,4 @@
-from conans import ConanFile, CMake, tools
-import sys
+from conans import ConanFile, CMake
 
 class NovelRTConan(ConanFile):
     name = "NovelRT"
@@ -10,7 +9,7 @@ class NovelRTConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = [
         ("freetype/2.10.1"),
-        ("glfw/3.3.2"),
+        ("glfw/3.3.6"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
         ("libsndfile/1.0.30"),
@@ -18,14 +17,15 @@ class NovelRTConan(ConanFile):
         ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("spdlog/1.8.2"),
-        ("vulkan-loader/1.2.182"),
-        ("vulkan-memory-allocator/2.3.0")
+        ("vulkan-loader/1.2.198.0"),
+        #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
         "documentation": [True, False],
         "buildtests": [True, False],
-        "buildsamples": [True, False]
+        "buildsamples": [True, False],
+        "buildinterop": [True, False]
     }
     default_options = {
         "freetype:shared":True,
@@ -39,19 +39,29 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
-        "spdlog:header_only":True,
         "vulkan-loader:shared":True,
+        "spdlog:header_only":True,
         "documentation": False,
         "buildtests":True,
-        "buildsamples":True
+        "buildsamples":True,
+        "buildinterop":False
     }
     cmake = None
 
+    def requirements(self):
+        if self.settings.os == "Macos":
+            self.requires("moltenvk/1.1.6")
+            self.options["moltenvk"].shared = True
+            self.output.info("Generating for MacOS with MoltenVK support")
+
     def imports(self):
-        self.copy("*.dll", dst="thirdparty", src="bin")
-        self.copy("*.dll", dst="thirdparty", src="lib")
-        self.copy("*.json", dst="thirdparty", src="bin")
-        self.copy("*.json", dst="thirdparty", src="lib")
+        if self.settings.os == "Windows":
+            self.copy("*.dll", dst="thirdparty", src="bin")
+            self.copy("*.dll", dst="thirdparty", src="lib")
+        if self.settings.os == "Macos":
+            self.copy("*.dylib", dst="thirdparty", src="lib")
+            self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
+
 
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
@@ -70,6 +80,10 @@ class NovelRTConan(ConanFile):
             cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "On"
         else:
             cmake.definitions["NOVELRT_BUILD_SAMPLES"] = "Off"
+        if(self.options.buildinterop):
+            cmake.definitions["NOVELRT_BUILD_INTEROP"] = "On"
+        else:
+            cmake.definitions["NOVELRT_BUILD_INTEROP"] = "Off"
 
         cmake.configure()
         return cmake
@@ -80,29 +94,3 @@ class NovelRTConan(ConanFile):
         if(self.options.buildtests):
             self.cmake.test()
 
-    # def package(self):
-    #    self.copy("*.h", dst="include", src="NovelRT/include")
-    #     # self.copy("*.h", dst="include/NovelRT", src="NovelRT/include/NovelRT")
-    #     # self.copy("*.h", dst="include/NovelRT.Interop", src="NovelRT/include/NovelRT.Interop")
-    #     if sys.platform.startswith('win32'):
-    #         self.copy("*NovelRT.lib", dst="lib", keep_path=False)
-    #         self.copy("*NovelRT.Interop.lib", dst="lib", keep_path=False)
-    #         self.copy("*NovelRT.dll", dst="bin", keep_path=False)
-    #         self.copy("*NovelRT.Interop.dll", dst="bin", keep_path=False)
-    #         self.copy("*bz2.dll", dst="bin", keep_path=False)
-    #         self.copy("*FLAC.dll", dst="bin", keep_path=False)
-    #         self.copy("*FLAC++.dll", dst="bin", keep_path=False)
-    #         self.copy("*fmt.dll", dst="bin", keep_path=False)
-    #         self.copy("*freetype.dll", dst="bin", keep_path=False)
-    #         self.copy("*glfw3.dll", dst="bin", keep_path=False)
-    #         self.copy("*ogg.dll", dst="bin", keep_path=False)
-    #         self.copy("*OpenAL32.dll", dst="bin", keep_path=False)
-    #         self.copy("*opus.dll", dst="bin", keep_path=False)
-    #         self.copy("*sndfile.dll", dst="bin", keep_path=False)
-    #         self.copy("*vorbis.dll", dst="bin", keep_path=False)
-    #         self.copy("*vorbisenc.dll", dst="bin", keep_path=False)
-    #         self.copy("*vorbisfile.dll", dst="bin", keep_path=False)
-
-
-    def package_info(self):
-        self.cpp_info.libs = ["novelrt", "novelrt.interop"]

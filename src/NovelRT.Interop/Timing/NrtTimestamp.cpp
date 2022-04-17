@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Timing/NrtTimestamp.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #ifdef __cplusplus
 using namespace NovelRT;

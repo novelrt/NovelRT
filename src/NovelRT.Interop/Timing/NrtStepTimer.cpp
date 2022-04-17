@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Timing/NrtStepTimer.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #ifdef __cplusplus
 extern "C"

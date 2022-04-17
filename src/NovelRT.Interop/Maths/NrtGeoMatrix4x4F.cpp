@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Maths/NrtGeoMatrix4x4F.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <cmath>
 

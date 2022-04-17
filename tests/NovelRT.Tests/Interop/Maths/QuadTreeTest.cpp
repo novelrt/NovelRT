@@ -4,7 +4,7 @@
 #include <NovelRT.Interop/Maths/NrtGeoBounds.h>
 #include <NovelRT.Interop/Maths/NrtQuadTree.h>
 #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <gtest/gtest.h>
 

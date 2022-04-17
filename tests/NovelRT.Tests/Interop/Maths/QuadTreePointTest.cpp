@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Maths/NrtGeoVector2F.h>
 #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <gtest/gtest.h>
 

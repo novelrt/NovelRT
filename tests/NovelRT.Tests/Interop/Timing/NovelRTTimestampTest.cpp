@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Timing/NrtTimestamp.h>
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 #include <gtest/gtest.h>
 

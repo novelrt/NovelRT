@@ -13,7 +13,6 @@ namespace NovelRT::Graphics::Vulkan
             VkFramebuffer vulkanFramebuffer = _vulkanFramebuffer.getActual();
             DisposeVulkanFramebuffer(vulkanFramebuffer);
             _vulkanFramebuffer.reset();
-            static_cast<void>(_vulkanFramebuffer.getActual());
         }
 
         if (_vulkanSwapChainImageView.isCreated())
@@ -21,7 +20,20 @@ namespace NovelRT::Graphics::Vulkan
             VkImageView vulkanSwapChainImageView = _vulkanSwapChainImageView.getActual();
             DisposeVulkanSwapChainImageView(vulkanSwapChainImageView);
             _vulkanSwapChainImageView.reset();
-            static_cast<void>(_vulkanSwapChainImageView.getActual());
+        }
+
+        if (_vulkanCommandBuffer.isCreated())
+        {
+            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.getActual();
+            DisposeVulkanCommandBuffer(commandBuffer);
+            _vulkanCommandBuffer.reset();
+        }
+
+        if (_vulkanCommandPool.isCreated())
+        {
+            VkCommandPool pool = _vulkanCommandPool.getActual();
+            DisposeVulkanCommandPool(pool);
+            _vulkanCommandPool.reset();
         }
     }
 
@@ -358,8 +370,9 @@ namespace NovelRT::Graphics::Vulkan
             std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion.GetCollection());
         VkBuffer vulkanVertexBuffer = vertexBuffer->GetVulkanBuffer();
         size_t vulkanVertexBufferOffset = vertexBufferRegion.GetOffset();
+        VkDeviceSize castedVulkanVertexBufferOffset = static_cast<VkDeviceSize>(vulkanVertexBufferOffset);
 
-        vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &vulkanVertexBufferOffset);
+        vkCmdBindVertexBuffers(vulkanCommandBuffer, 0, 1, &vulkanVertexBuffer, &castedVulkanVertexBufferOffset);
 
         VkDescriptorSet vulkanDescriptorSet = pipelineSignature->GenerateVulkanDescriptorSet();
 

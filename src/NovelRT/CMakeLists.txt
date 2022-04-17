@@ -13,7 +13,10 @@ find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-find_package(vulkan-memory-allocator ${NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION} REQUIRED)
+if(APPLE)
+  find_package(moltenvk REQUIRED)
+endif()
+
 set(SOURCES
   Atom.cpp
 
@@ -31,8 +34,13 @@ set(SOURCES
   Ecs/UnsafeComponentView.cpp
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
+  Ecs/Input/InputSystem.cpp
 
   EngineConfig.cpp
+
+  Input/Glfw/GlfwInputDevice.cpp
+  Input/Glfw/GlfwInputPluginProvider.cpp
+  Input/NovelKey.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
@@ -42,7 +50,6 @@ set(SOURCES
   Graphics/GraphicsPipelineResource.cpp
   Graphics/GraphicsPipelineSignature.cpp
   Graphics/GraphicsResourceManager.cpp
-        Graphics/RGBAConfig.cpp
   Graphics/ShaderProgram.cpp
   Graphics/Vulkan/VulkanGraphicsAdapter.cpp
   Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
@@ -65,7 +72,6 @@ set(SOURCES
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 
-
   LoggingService.cpp
 
   Maths/GeoBounds.cpp
@@ -76,11 +82,10 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
-   Timing/StepTimer.cpp
+  Timing/StepTimer.cpp
 
-   Utilities/Misc.cpp
-
-   )
+  Utilities/Misc.cpp
+  )
 
 add_library(Engine SHARED ${SOURCES})
 
@@ -149,7 +154,19 @@ target_link_libraries(Engine
     TBB::TBB
     Vorbis::Vorbis
     Vulkan::Vulkan
-    vulkan-memory-allocator::vulkan-memory-allocator
+)
+
+install(
+  TARGETS Engine
+  EXPORT NovelRT
+  DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+#Workaround due to hierarchy destruction when installing by TARGETS
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT/
+  DESTINATION include/NovelRT
+  FILES_MATCHING PATTERN "*.h"
 )
 
 if(WIN32)
@@ -165,4 +182,11 @@ if(WIN32)
       $<TARGET_FILE_DIR:Engine>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+elseif(APPLE)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_BINARY_DIR}/thirdparty
+          $<TARGET_FILE_DIR:Engine>)
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
 endif()
+

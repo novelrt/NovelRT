@@ -4,7 +4,7 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 namespace NovelRT::Timing
 {

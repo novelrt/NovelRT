@@ -34,3 +34,8 @@ set_target_properties(Resources
     RESOURCE "${RESOURCES_FILES}"
 )
 
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/Resources/Shaders/
+  DESTINATION bin/Resources/Shaders
+  FILES_MATCHING PATTERN "*.spv"
+)

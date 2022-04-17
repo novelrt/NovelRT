@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.h>
+#include <NovelRT/NovelRT.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -19,6 +19,7 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
             .InitialiseAndRegisterComponents();
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
