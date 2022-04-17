@@ -32,8 +32,8 @@ This project and everyone participating in it is governed by the [NovelRT Contri
 
 We have an official message board on Github that you can utilize, or you can reach us on Discord where the community chimes in with helpful advice if you have questions.
 
-* [Github Discussions, NovelRT](https://github.com/novelrt/NovelRT/discussions)
-* [NovelRT Discord Server](https://discord.gg/novelrt)
+* [Github Discussions](https://github.com/novelrt/NovelRT/discussions)
+* [NovelRT Discord Server](https://discord.novelrt.dev)
 
 ## What should I know before I get started?
 
