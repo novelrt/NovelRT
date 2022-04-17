@@ -14,6 +14,7 @@ namespace NovelRT::Utilities
     private:
         Atom _id;
         std::function<void(TArgs...)> _function;
+        inline static AtomFactory& _eventIdFactory = AtomFactoryDatabase::GetFactory("EventHandler");
 
     public:
         EventHandler() : EventHandler(nullptr)
@@ -21,7 +22,7 @@ namespace NovelRT::Utilities
         }
 
         explicit EventHandler(const std::function<void(TArgs...)>& function)
-            : _id((function != nullptr) ? Atom::GetNextEventHandlerId() : Atom()), _function(function)
+            : _id((function != nullptr) ? _eventIdFactory.GetNext() : Atom()), _function(function)
         {
         }
 

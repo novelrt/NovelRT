@@ -19,6 +19,10 @@ namespace NovelRT::Ecs::Graphics
     class DefaultRenderingSystem : public IEcsSystem
     {
     private:
+        inline static AtomFactory& _textureIdFactory = AtomFactoryDatabase::GetFactory("TextureId");
+        inline static AtomFactory& _ecsPrimitiveInfoConfigurationIdFactory =
+            AtomFactoryDatabase::GetFactory("EcsPrimitiveInfoConfigurationId");
+
         Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;

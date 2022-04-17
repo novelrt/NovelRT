@@ -19,11 +19,13 @@ public:
 protected:
     void SetUp() override
     {
+        static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
         componentCache.RegisterComponentType(EntityGraphComponent{false});
-        parentId = NovelRT::Atom::GetNextEntityId();
-        childId = NovelRT::Atom::GetNextEntityId();
+        parentId = _entityIdFactory.GetNext();
+        childId = _entityIdFactory.GetNext();
         entityCache = EntityCache(1);
         componentCache.GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
             0, parentId, EntityGraphComponent{true, max, childId});

@@ -21,6 +21,7 @@ public:
     std::function<void(Timestamp, Catalogue)> sysOne;
     std::function<void(Timestamp, Catalogue)> sysTwo;
     std::function<void(Timestamp, Catalogue)> sysThree;
+    inline static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
 protected:
     void SetUp() override
@@ -72,7 +73,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanModifyValues)
 
 TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 {
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
@@ -122,7 +123,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
     cppScheduler->RegisterSystem(sysThree);
     scheduler = reinterpret_cast<NrtSystemSchedulerHandle>(cppScheduler);
 
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
@@ -214,7 +215,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
 TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
-    EntityId entity = Atom::GetNextEntityId();
+    EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
     reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
