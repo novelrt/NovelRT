@@ -24,7 +24,7 @@ The following is a set of guidelines for contributing to NovelRT, which is hoste
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [NovelRT Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [admin@novelrt.dev](mailto:admin@novelrt.dev) or message one of the maintainers on Discord.
+This project and everyone participating in it is governed by the [NovelRT Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behaviour to [admin@novelrt.dev](mailto:admin@novelrt.dev) or message one of the maintainers on Discord.
 
 ## I don't want to read this whole thing I just have a question!!!
 
@@ -45,7 +45,7 @@ When we make a decision in how we maintain the project and what we can or cannot
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report for NovelRT. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
+This section guides you through submitting a bug report for NovelRT. Following these guidelines helps maintainers and the community understand your report, reproduce the behaviour, and find related reports.
 
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. We currently do not have a bug report template, so when you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report).
 
@@ -66,8 +66,8 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Use a clear and descriptive title** for the issue to identify the problem.
 * **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you configured NovelRT, e.g. which command exactly you used in the terminal, or how you built NovelRT otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you built NovelRT using CMake, explain if you used Windows Command Prompt / Linux Terminal / Powershell, or a Developer Tools for VS window, and if so which version?
 * **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-* **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
-* **Explain which behavior you expected to see instead and why.**
+* **Describe the behaviour you observed after following the steps** and point out what exactly is the problem with that behaviour.
+* **Explain which behaviour you expected to see instead and why.**
 * **Include screenshots and/or animated GIFs if applicable** which show you following the described steps and clearly demonstrate the problem.
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
 
@@ -94,7 +94,7 @@ While we understand that not every issue may get resolved, we have a zero-tolera
 * Hateful/discriminatory language
 * Repeatedly reported non-issue
 
-Please note that while we will do our best to filter out these types of submissions, they may still pop up from time to time. If you notice that one of these types of issues are opened in _any_ of the NovelRT organisation's repositories, please e-mail [admin@novelrt.dev](mailto:admin@novelrt.dev) or message one of the maintainers in Discord. _Furthermore, any attempt to open an issue that falls under the above categories may result in disiplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation). The NovelRT team also reserves the right to enforce disiplinary action for **any** reason that may be perceived to violate our Code of Conduct at any time._
+Please note that while we will do our best to filter out these types of submissions, they may still pop up from time to time. If you notice that one of these types of issues are opened in _any_ of the NovelRT organisation's repositories, please e-mail [admin@novelrt.dev](mailto:admin@novelrt.dev) or message one of the maintainers in Discord. _Furthermore, any attempt to open an issue that falls under the above categories may result in disciplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation). The NovelRT team also reserves the right to enforce disciplinary action for **any** reason that may be perceived to violate our Code of Conduct at any time._
 
 ### Suggesting Enhancements
 
@@ -115,7 +115,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 * **Use a clear and descriptive title** for the issue to identify the suggestion.
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
 * **Provide specific examples to demonstrate the steps**. Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-* **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
+* **Describe the current behaviour** and **explain which behaviour you expected to see instead** and why.
 * **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of NovelRT which the suggestion is related to, if possible. (We understand that sometimes code changes can't be shown with a screenshot)
 * **Explain why this enhancement would be useful** to most NovelRT users as core functionality and isn't something that can or should be implemented as a community plugin.
 * **List some other game engines / examples where this enhancement exists (_if applicable_).**
@@ -159,7 +159,7 @@ While the prerequisites above must be satisfied prior to having your pull reques
 * Creating a pull request that purposefully breaks functionality / alters functionality in a negative manner
 * Creating a pull request to introduce spam into the repository
 
-_Attempts to perform the actions called out above will result in disiplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation)_.
+_Attempts to perform the actions called out above will result in disciplinary action by the NovelRT team up to and including a ban from interacting with the NovelRT repository (and other related repositories within the NovelRT organisation)_.
 
 ## Additional Notes
 
