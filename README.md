@@ -32,19 +32,19 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 ### Dependencies
 - CMake 3.19
-- Doxygen 1.8.8 (if building docs)
-- Freetype 2.8.1
-- GLFW 3.3.2
-- glm
+- Doxygen 1.8.17 (if building docs)
+- Freetype 2.10.1
+- GLFW 3.3.6
+- glm 0.9.9.7
 - gtest/gmock 1.10.0
-- libpng 1.6.34
-- libsndfile 1.0.28
+- libpng 1.6.37
+- libsndfile 1.0.30
 - Microsoft GSL 3.1.0
 - OneTBB 2021.3.0
 - OpenAL 1.21.1
 - spdlog 1.8.2
-- Vulkan SDK 1.2.170.0 (if you require debug/validation layers)
-- Vulkan Loader 1.2.182
+- Vulkan SDK 1.2.198.0 (if you require debug/validation layers)
+- Vulkan Loader 1.2.298
 - Vulkan Memory Allocator 2.3.0 (not directly used currently, but will be used in a future update)
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
