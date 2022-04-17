@@ -32,19 +32,19 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 ### Dependencies
 - CMake 3.19
-- Doxygen 1.8.8 (if building docs)
-- Freetype 2.8.1
-- GLFW 3.3.2
-- glm
+- Doxygen 1.8.17 (if building docs)
+- Freetype 2.10.1
+- GLFW 3.3.6
+- glm 0.9.9.7
 - gtest/gmock 1.10.0
-- libpng 1.6.34
-- libsndfile 1.0.28
+- libpng 1.6.37
+- libsndfile 1.0.30
 - Microsoft GSL 3.1.0
 - OneTBB 2021.3.0
 - OpenAL 1.21.1
 - spdlog 1.8.2
-- Vulkan SDK 1.2.170.0 (if you require debug/validation layers)
-- Vulkan Loader 1.2.182
+- Vulkan SDK 1.2.198.0 (if you require debug/validation layers)
+- Vulkan Loader 1.2.298
 - Vulkan Memory Allocator 2.3.0 (not directly used currently, but will be used in a future update)
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
@@ -145,7 +145,10 @@ Then regenerate the cmake by clicking regenerate on the yellow warning ribbon on
 Examples will be placed here when we have created some. In the meantime, we advise asking us directly on our discord (invite URL above and below).
 
 ## Contributing
-First off, if you want to contribute, thanks! Tickets that are not being resolved by the development team will be plainly marked as such via `Help Wanted` or something similar to that should it change. We also would greatly appreciate being reached out to via our discord to discuss what you could work on.
+First off, if you want to contribute, thanks!
+
+If you would like to contribute to the development of NovelRT, please see our [contribution guide here](Contributing.md).
+If this doesn't answer any questions that you have, feel free to reach out to us on Discord to discuss what you can work on - we greatly appreciate it!
 
 **NovelRT and everyone contributing (this includes issues, pull requests, the wiki, Discord in all forms, etc.) must abide by our code of conduct, which can be found [here](CODE_OF_CONDUCT.md). Instances of abuse, harrassment or otherwise unacceptable behaviour must either be reported to a NovelRT Developer via direct message on Discord or by contacting us via [email](mailto:admin%40novelrt.dev).**
 
