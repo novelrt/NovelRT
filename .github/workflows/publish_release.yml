@@ -47,7 +47,7 @@ jobs:
       run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
 
     - name: Copy Third Party Artifacts
-      run:
+      run: Get-ChildItem artifacts/build/${{ matrix.configuration }}/thirdparty -Filter *.dll | Copy-Item -Destination artifacts/install/${{ matrix.configuration }}/bin -Force -PassThru
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
