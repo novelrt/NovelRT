@@ -44,7 +44,7 @@ jobs:
     - uses: novelrt/setup-cpp@v1
 
     - name: Build NovelRT and Generate Artifacts
-      run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
+      run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
@@ -67,7 +67,7 @@ jobs:
     - uses: novelrt/setup-cpp@v1
 
     - name: Build NovelRT and Generate Artifacts
-      run: scripts/cibuild.sh --configuration ${{ matrix.configuration }}
+      run: scripts/cibuild.sh --configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
