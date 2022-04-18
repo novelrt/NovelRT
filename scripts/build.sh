@@ -98,18 +98,18 @@ function Generate {
   if [ -z "$remaining" ]; then
     cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
   else
-    defines = ''
-    remainder = ''
+    local defines=''
+    local remainder=''
     for val in ${remaining[@]}
     do
       if [[ val =~ .*"-D".* ]];
       then
-        defines = "$val $defines"
+        defines="$val $defines"
       else
-        remainder = "$val $remainder"
+        $remainder="$val $remainder"
       fi
     done
-    remaining = "$remainder"
+    remaining="$remainder"
     cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "$defines" "${remaining[@]}"
   fi
 
