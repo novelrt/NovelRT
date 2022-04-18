@@ -9,7 +9,7 @@ jobs:
 
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
-      id: $${{ steps.create_release.outputs.id }}
+      id: ${{ steps.create_release.outputs.id }}
 
     steps:
     - uses: actions/checkout@v2
@@ -45,6 +45,9 @@ jobs:
 
     - name: Build NovelRT and Generate Artifacts
       run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
+
+    - name: Copy Third Party Artifacts
+      run:
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
@@ -83,7 +86,7 @@ jobs:
         os: [ windows-latest, ubuntu-latest ]
 
     outputs:
-      release-id: $${{ needs.create-release.outputs.id }}
+      release-id: ${{ needs.create-release.outputs.id }}
 
     steps:
     - uses: actions/download-artifact@v2
@@ -110,6 +113,7 @@ jobs:
         cd merged
         zip -r "../NovelRT-${{ matrix.os }}.zip" .
         cd ..
+
     - name: Add merged artifacts to release
       run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ matrix.os }}.zip" --repo "$GITHUB_REPOSITORY"
       env:
