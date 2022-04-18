@@ -52,6 +52,7 @@ set(NOVELRT_VULKAN_VERSION "1.2.172" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 
 if (NOVELRT_INCLUDE_CONAN_PATHS)
+  set(CONAN_CMAKE_SILENT_OUTPUT ON)
   include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif()
 
