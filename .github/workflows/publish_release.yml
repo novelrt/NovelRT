@@ -1,0 +1,125 @@
+name: Publish NovelRT
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag: ${{ steps.tag_version.outputs.new_tag }}
+      id: $${{ steps.create_release.outputs.id }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: mathieudutour/github-tag-action@v6.0
+      id: tag_version
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: ncipollo/release-action@v1
+      id: create_release
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: Fabulist ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+        prerelease: true
+        draft: true
+
+  build:
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    container:
+      image: novelrt/novelrt-build:latest
+      if: ${{ matrix.os }} == ubuntu-latest
+    strategy:
+      matrix:
+      os: [ windows-latest, ubuntu-latest ]
+      configuration: [ RelWithDebInfo, MinSizeRel ]
+    steps:
+    - uses: actions/checkout@v2
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Run Prerequisite Setup
+      run: scripts/machine-setup.cmd
+      if: ${{ matrix.os }} == windows-latest
+
+    - uses: novelrt/setup-cpp@v1
+
+    - name: Build NovelRT and Generate Artifacts (Windows)
+      run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }}
+      if: ${{ matrix.os }} == windows-latest
+
+    - name: Build NovelRT and Generate Artifacts (Ubuntu)
+      run: scripts/cibuild.sh --configuration ${{ matrix.configuration }}
+      if: ${{ matrix.os }} == ubuntu-latest
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}
+        path: artifacts/install/${{ matrix.configuration }}
+
+  merge-artifacts:
+    needs: [ build, create-release ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
+
+    outputs:
+      release-id: $${{ needs.create-release.outputs.id }}
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Merge build artifacts
+      run: |
+        mkdir merged
+        for artifact in $(find ./artifacts/ -type d -name "novelrt-${{ matrix.os }}-*"); do
+            cp -RT "$artifact" merged/
+        done
+    - name: Upload merged artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: NovelRT-${{ matrix.os }}
+        path: merged
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: NovelRT-${{ matrix.os }}
+
+    - name: Create release artifact
+      run: |
+        cd merged
+        zip -r "../NovelRT-${{ matrix.os }}.zip" .
+        cd ..
+    - name: Add merged artifacts to release
+      run: gh release upload "${{ needs.create-release.outputs.tag }}" "fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    needs: merge-artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: gh api "repos/$GITHUB_REPOSITORY/releases/${{ needs.merge-artifacts.outputs.release-id }}" -X PATCH -F draft=false --silent
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  delete-release:
+    needs: [ build, create-release ]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: gh release delete "${{ needs.create-release.outputs.tag }}" -y --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
