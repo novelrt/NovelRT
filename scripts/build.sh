@@ -75,7 +75,7 @@ function Build {
   if [ -z "$remaining" ]; then
     cmake --build "$BuildDir" --config "$configuration"
   else
-    cmake --build "$BuildDir" --config "$configuration" "${remaining[@]}"
+    cmake --build "$BuildDir" --config "$configuration" $remaining
   fi
 
   LASTEXITCODE=$?
@@ -98,7 +98,7 @@ function Generate {
   if [ -z "$remaining" ]; then
     cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir"
   else
-    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" "${remaining[@]}"
+    cmake -S "$RepoRoot" -B "$BuildDir" -Wdev -Werror=dev -Wdeprecated -Werror=deprecated -DCMAKE_BUILD_TYPE="$configuration" -DCMAKE_INSTALL_PREFIX="$InstallDir" $remaining
   fi
 
   LASTEXITCODE=$?
@@ -142,7 +142,7 @@ function Install {
   if [ -z "$remaining" ]; then
     cmake --install "$BuildDir" --config "$configuration"
   else
-    cmake --install "$BuildDir" --config "$configuration" "${remaining[@]}"
+    cmake --install "$BuildDir" --config "$configuration" $remaining
   fi
 
   LASTEXITCODE=$?
@@ -159,7 +159,7 @@ function Test {
   if [ -z "$remaining" ]; then
     ctest --build-config "$configuration" --output-on-failure
   else
-    ctest --build-config "$configuration" --output-on-failure "${remaining[@]}"
+    ctest --build-config "$configuration" --output-on-failure $remaining
   fi
 
   LASTEXITCODE=$?

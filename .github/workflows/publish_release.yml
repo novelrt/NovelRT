@@ -73,8 +73,8 @@ jobs:
       run: |
         export CC=clang-10
         export CXX=clang++-10
-        scripts/build.sh --configuration ${{ matrix.configuration }} --generate -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
-        scripts/build.sh --configuration ${{ matrix.configuration }} --build --install
+        scripts/build.sh --configuration ${{ matrix.configuration }} --generate -DNOVELRT_BUILD_INTEROP=OFF -DNOVELRT_BUILD_SAMPLES=OFF -DNOVELRT_BUILD_DOCUMENTATION=OFF
+        scripts/build.sh --configuration ${{ matrix.configuration }} --build --install --test
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
