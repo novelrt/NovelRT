@@ -55,6 +55,8 @@ jobs:
   build-ubuntu:
     needs: create-release
     runs-on: ubuntu-latest
+    container:
+      image: novelrt/novelrt-build:latest
     strategy:
       matrix:
         configuration: [ RelWithDebInfo, MinSizeRel ]
