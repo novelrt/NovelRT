@@ -106,7 +106,7 @@ function Generate {
       then
         defines="$val $defines"
       else
-        $remainder="$val $remainder"
+        remainder="$val $remainder"
       fi
     done
     remaining="$remainder"
