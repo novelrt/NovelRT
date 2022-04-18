@@ -100,10 +100,9 @@ function Generate {
   else
     local defines=''
     local remainder=''
-    for val in ${remaining[@]}
+    for val in $remaining
     do
-      if [[ "$val" == *"-D"* ]];
-      then
+      if grep -q "-D" <<< "$val"; then
         defines="$val $defines"
       else
         remainder="$val $remainder"
