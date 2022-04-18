@@ -70,7 +70,9 @@ jobs:
     - uses: novelrt/setup-cpp@v1
 
     - name: Build NovelRT and Generate Artifacts
-      run: scripts/cibuild.sh --configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
+      run: |
+        scripts/build.sh --configuration ${{ matrix.configuration }} --generate -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
+        scripts/build.sh --configuration ${{ matrix.configuration }} --build --install
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
