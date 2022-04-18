@@ -102,7 +102,7 @@ function Generate {
     local remainder=''
     for val in ${remaining[@]}
     do
-      if [[ val =~ .*"-D".* ]];
+      if [[ val == *"-D"* ]];
       then
         defines="$val $defines"
       else
