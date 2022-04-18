@@ -23,7 +23,7 @@ jobs:
       id: create_release
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
-        name: Fabulist ${{ steps.tag_version.outputs.new_tag }}
+        name: NovelRT ${{ steps.tag_version.outputs.new_tag }}
         body: ${{ steps.tag_version.outputs.changelog }}
         prerelease: true
         draft: true
@@ -111,7 +111,7 @@ jobs:
         zip -r "../NovelRT-${{ matrix.os }}.zip" .
         cd ..
     - name: Add merged artifacts to release
-      run: gh release upload "${{ needs.create-release.outputs.tag }}" "fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" --repo "$GITHUB_REPOSITORY"
+      run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ matrix.os }}.zip" --repo "$GITHUB_REPOSITORY"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
