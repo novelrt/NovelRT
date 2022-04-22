@@ -48,6 +48,7 @@ jobs:
 
       - name: Generate and Build NovelRT - ${{ matrix.configuration }}
         run: |
+          export VERBOSE=1
           conan install . -if build --build=missing --profile ${{ matrix.profile }}
           conan build . --build-folder build
 
