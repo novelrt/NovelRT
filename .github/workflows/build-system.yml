@@ -34,8 +34,6 @@ jobs:
           defaults:
             run:
               shell: cmd
-        - os: macos-latest
-          profile: macos-appleclang13-amd64
 
     steps:
       - name: Checkout Code
