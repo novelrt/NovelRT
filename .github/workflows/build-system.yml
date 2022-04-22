@@ -65,11 +65,12 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Release, Debug]
-        os: [macos-latest, macos-10.15]
+        #os: [macos-latest, macos-10.15]
+        os: [macos-10.15]
         include:
-        - os: macos-latest
-          name: macOS Latest - AppleClang 13
-          profile: macos-appleclang13-amd64
+        #- os: macos-latest
+          #name: macOS Latest - AppleClang 13
+          #profile: macos-appleclang13-amd64
         - os: macos-10.15
           name: macOS 10.15 - AppleClang 12
           profile: macos-appleclang12-amd64
