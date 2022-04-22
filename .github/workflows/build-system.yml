@@ -3,7 +3,6 @@ name: Continuous Integration v2
 on:
   schedule:
     - cron: '0 0 * * *'
-  #REMOVE WHEN DONE DEBUGGING
   workflow_dispatch:
   pull_request:
 
@@ -14,6 +13,7 @@ jobs:
     container: ${{ matrix.container }}
 
     strategy:
+      fail-fast: false
       matrix:
         configuration: [RelWithDebInfo, MinSizeRel]
         os: [windows-latest, windows-2019, ubuntu-latest, macos-latest]
@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-#REVERT WHEN DONE DEBUGGING
+
       - name: Prepare build environment
         run: |
           pip3 install conan
@@ -48,6 +48,33 @@ jobs:
 
       - name: Generate Build System
         run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
+
+      - name: Build and Test NovelRT - ${{ matrix.configuration }}
+        run: conan build . --build-folder build
+
+      - name: Install NovelRT - ${{ matrix.configuration }}
+        run: cmake --install build --config "${{ matrix.configuration }}"
+
+  CI_Mac:
+    name: macOS-${{ matrix.configuration }}-x64
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Release, Debug]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Prepare build environment
+        run: |
+          pip3 install conan
+          conan config install https://github.com/capnkenny/ConanConfig.git
+
+      - name: Generate Build System
+        run: conan install . -if build --build=missing --profile macos-appleclang13-amd64-${{ matrix.configuration }}
 
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         run: conan build . --build-folder build
