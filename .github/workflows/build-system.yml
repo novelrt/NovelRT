@@ -11,8 +11,7 @@ jobs:
   CI:
     name: ${{ matrix.os }}-${{ matrix.configuration }}-x64
     runs-on: ${{ matrix.os }}-latest
-    container: novelrt/novelrt-build:latest
-      if: startsWith(matrix.os, 'ubuntu')
+    container: ${{ matrix.container }}
 
     strategy:
       matrix:
