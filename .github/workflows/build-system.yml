@@ -55,12 +55,18 @@ jobs:
 
   CI_Mac:
     name: macOS-${{ matrix.configuration }}-x64
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         configuration: [Release, Debug]
+        os: [macos-latest, macos-10.15]
+        include:
+        - os: macos-latest
+          profile: macos-appleclang13-amd64
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
 
     steps:
       - name: Checkout Code
@@ -72,7 +78,7 @@ jobs:
           conan config install https://github.com/capnkenny/ConanConfig.git
 
       - name: Generate Build System
-        run: conan install . -if build --build=missing --profile macos-appleclang13-amd64-${{ matrix.configuration }}
+        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         run: conan build . --build-folder build
