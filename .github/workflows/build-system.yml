@@ -1,0 +1,81 @@
+name: Continuous Integration v2
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  pull_request:
+
+jobs:
+  CI:
+    name: ${{ matrix.os }}-${{ matrix.configuration }}-x64
+    runs-on: ${{ matrix.os }}-latest
+
+    strategy:
+      matrix:
+        configuration: [RelWithDebInfo, MinSizeRel]
+        os: [windows, ubuntu]
+        include:
+        - os: ubuntu
+          container: novelrt/novelrt-build:latest
+          profile: linux-clang10-amd64
+          defaults:
+            run:
+              shell: bash
+        - os: windows
+          profile: windows-vs2019-amd64
+          defaults:
+            run:
+              shell: cmd
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Prepare build environment
+        run: |
+          pip3 install conan
+          conan config install https://github.com/novelrt/ConanConfig.git
+
+      - name: Generate Build System
+        run: |
+          conan install . -if build --build=missing --profile ${{ matrix.profile }}
+          conan build . --build-folder build
+
+      - name: Install NovelRT - Debug
+        run: cmake --install build --config "${{ matrix.configuration }}"
+
+      - name: Run Unit Tests
+        run: |
+          cd "build/test"
+          ctest --build-config ${{ matrix.configuration }} --output-on-failure
+
+
+  Formatting:
+    name: clang-format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Check Formatting
+        id: formatting
+        uses: DoozyX/clang-format-lint-action@v0.11
+        with:
+          source: 'src tests include samples'
+          extensions: 'h,cpp,c,hpp'
+          clangFormatVersion: 10
+          inplace: True
+          style: file
+
+      - name: Confirm Results
+        id: results
+        run: scripts/ci-checkdiff.sh
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v1
+        if: ${{ failure() }}
+        with:
+          name: clang-format-patch
+          path: artifacts/clang-format.patch
