@@ -18,7 +18,7 @@ jobs:
         configuration: [RelWithDebInfo, MinSizeRel]
         os: [windows-latest, windows-2019, ubuntu-latest, macos-latest]
         include:
-        - os: ubuntu
+        - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
           profile: linux-clang10-amd64
           defaults:
