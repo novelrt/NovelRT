@@ -3,6 +3,7 @@ name: Continuous Integration v2
 on:
   schedule:
     - cron: '0 0 * * *'
+  #REMOVE WHEN DONE DEBUGGING
   workflow_dispatch:
   pull_request:
 
@@ -31,11 +32,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-
+#REVERT WHEN DONE DEBUGGING
       - name: Prepare build environment
         run: |
           pip3 install conan
-          conan config install https://github.com/novelrt/ConanConfig.git
+          conan config install https://github.com/capnkenny/ConanConfig.git
 
       - name: Generate Build System
         run: |
