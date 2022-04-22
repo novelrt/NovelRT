@@ -84,7 +84,6 @@ class NovelRTConan(ConanFile):
             cmake.definitions["NOVELRT_BUILD_INTEROP"] = "On"
         else:
             cmake.definitions["NOVELRT_BUILD_INTEROP"] = "Off"
-        cmake.verbose = True
         cmake.configure()
         return cmake
 
