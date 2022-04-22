@@ -20,22 +20,22 @@ jobs:
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
-          profile: linux-clang10-amd64-${{ matrix.configuration }}
+          profile: linux-clang10-amd64
           defaults:
             run:
               shell: bash
         - os: windows-2019
-          profile: windows-vs2019-amd64-${{ matrix.configuration }}
+          profile: windows-vs2019-amd64
           defaults:
             run:
               shell: cmd
         - os: windows-latest
-          profile: windows-vs2022-amd64-${{ matrix.configuration }}
+          profile: windows-vs2022-amd64
           defaults:
             run:
               shell: cmd
         - os: macos-latest
-          profile: macos-appleclang13-amd64-${{ matrix.configuration }}
+          profile: macos-appleclang13-amd64
 
     steps:
       - name: Checkout Code
@@ -47,7 +47,7 @@ jobs:
           conan config install https://github.com/capnkenny/ConanConfig.git
 
       - name: Generate Build System
-        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}
+        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         run: conan build . --build-folder build
