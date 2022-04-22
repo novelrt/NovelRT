@@ -85,6 +85,7 @@ jobs:
   Formatting:
     name: clang-format
     runs-on: ubuntu-latest
+    if: "!contains(github.ref, 'main')"
 
     steps:
       - name: Checkout Code
