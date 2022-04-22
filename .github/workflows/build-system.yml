@@ -8,7 +8,7 @@ on:
 
 jobs:
   CI:
-    name: ${{ matrix.os }}-${{ matrix.configuration }}-x64
+    name: ${{ matrix.name }} x64 - ${{ matrix.configuration }}
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
 
@@ -21,16 +21,19 @@ jobs:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
           profile: linux-clang10-amd64
+          name: Ubuntu Latest
           defaults:
             run:
               shell: bash
         - os: windows-2019
           profile: windows-vs2019-amd64
+          name: Windows VS2019
           defaults:
             run:
               shell: cmd
         - os: windows-latest
           profile: windows-vs2022-amd64
+          name: Windows VS2022
           defaults:
             run:
               shell: cmd
@@ -47,6 +50,7 @@ jobs:
       - name: Generate Build System
         run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
+      - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         run: conan build . --build-folder build
 
@@ -54,7 +58,7 @@ jobs:
         run: cmake --install build --config "${{ matrix.configuration }}"
 
   CI_Mac:
-    name: macOS-${{ matrix.configuration }}-x64
+    name: ${{ matrix.name }} x64 - ${{ matrix.configuration }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -64,8 +68,10 @@ jobs:
         os: [macos-latest, macos-10.15]
         include:
         - os: macos-latest
+          name: macOS Latest - AppleClang 13
           profile: macos-appleclang13-amd64
         - os: macos-10.15
+          name: macOS 10.15 - AppleClang 12
           profile: macos-appleclang12-amd64
 
     steps:
@@ -80,6 +86,7 @@ jobs:
       - name: Generate Build System
         run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
+      - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         run: conan build . --build-folder build
 
