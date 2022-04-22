@@ -20,22 +20,22 @@ jobs:
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
-          profile: linux-clang10-amd64
+          profile: linux-clang10-amd64-${{ matrix.configuration }}
           defaults:
             run:
               shell: bash
         - os: windows-2019
-          profile: windows-vs2019-amd64
+          profile: windows-vs2019-amd64-${{ matrix.configuration }}
           defaults:
             run:
               shell: cmd
         - os: windows-latest
-          profile: windows-vs2022-amd64
+          profile: windows-vs2022-amd64-${{ matrix.configuration }}
           defaults:
             run:
               shell: cmd
         - os: macos-latest
-          profile: macos-appleclang13-amd64
+          profile: macos-appleclang13-amd64-${{ matrix.configuration }}
 
     steps:
       - name: Checkout Code
@@ -46,19 +46,14 @@ jobs:
           pip3 install conan
           conan config install https://github.com/capnkenny/ConanConfig.git
 
-      - name: Generate and Build NovelRT - ${{ matrix.configuration }}
-        run: |
-          conan install . -if build --build=missing --profile ${{ matrix.profile }}
-          conan build . --build-folder build
+      - name: Generate Build System
+        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}
+
+      - name: Build and Test NovelRT - ${{ matrix.configuration }}
+        run: conan build . --build-folder build
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         run: cmake --install build --config "${{ matrix.configuration }}"
-
-      - name: Run Unit Tests
-        run: |
-          cd "build/test"
-          ctest --build-config ${{ matrix.configuration }} --output-on-failure
-
 
   Formatting:
     name: clang-format
