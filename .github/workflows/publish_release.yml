@@ -76,7 +76,7 @@ jobs:
       run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
     - name: Build NovelRT
-      run: conan build . --build-folder build -o buildsamples=False -o buildinterop=False -o builddocumentation=False
+      run: conan build . --build-folder build -o novelrt:buildsamples=False -o novelrt:buildinterop=False -o novelrt:builddocumentation=False
 
     - name: Install NovelRT - ${{ matrix.configuration }}
       run: cmake --install build --config "${{ matrix.configuration }}"
