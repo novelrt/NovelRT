@@ -64,7 +64,7 @@ jobs:
     - name: Prepare build environment
       run: |
           pip3 install conan
-          conan config install https://github.com/capnkenny/ConanConfig.git
+          conan config install https://github.com/NovelRT/ConanConfig.git
 
     - name: Generate Build System
       run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
