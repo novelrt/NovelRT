@@ -32,6 +32,7 @@ jobs:
     needs: create-release
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
+
     strategy:
       matrix:
         configuration: [ RelWithDebInfo, MinSizeRel ]
