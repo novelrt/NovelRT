@@ -22,7 +22,6 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_WORKSPACE/secret.txt
 
       #Mandatory step it appears otherwise pushing the commit will fail
-      #Switched username and e-mail to something identifiable?
       - name: Configure Git
         run: |
           gh auth login --with-token < $GITHUB_WORKSPACE/secret.txt
