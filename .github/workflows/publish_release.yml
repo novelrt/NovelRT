@@ -88,7 +88,7 @@ jobs:
     - name: Copy Third Party Artifacts (macOS)
       run: |
           cp -v -f build/thirdparty/*.dylib build/package/lib
-          cp -v =f build/thirdparty/*.json build/package/bin
+          cp -v -f build/thirdparty/*.json build/package/bin
       if: "contains(matrix.os, 'macos')"
 
     - name: Upload Artifacts
