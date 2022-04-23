@@ -4,7 +4,8 @@ NovelRT
 NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
 
 [![Latest Nightly Build](https://img.shields.io/github/workflow/status/novelrt/NovelRT/Continuous%20Integration%20v2/main?label=Latest%20Build&style=plastic)](https://github.com/novelrt/NovelRT/actions/workflows/build-system.yml)
-[![Latest Release](https://img.shields.io/github/v/release/novelrt/NovelRT?include_prereleases&label=Latest%20Release&style=plastic)](https://github.com/novelrt/NovelRT/releases)
+
+[![Latest Release](https://img.shields.io/github/v/release/novelrt/NovelRT?color=blueviolet&include_prereleases&label=Latest%20Release&style=plastic)](https://github.com/novelrt/NovelRT/releases)
 
 [![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
