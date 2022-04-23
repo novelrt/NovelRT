@@ -28,66 +28,82 @@ jobs:
         prerelease: true
         draft: true
 
-  build-windows:
+  build-release:
     needs: create-release
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     strategy:
       matrix:
         configuration: [ RelWithDebInfo, MinSizeRel ]
+        os: [ ubuntu-latest, windows-latest, macos-10.15 ]
+        exclude:
+        - os: macos-10.15
+          configuration: [ RelWithDebInfo, MinSizeRel ]
+        include:
+        - os: ubuntu-latest
+          container: novelrt/novelrt-build:latest
+          profile: linux-clang10-amd64
+          name: Ubuntu
+          defaults:
+            run:
+              shell: bash
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
+          configuration: [ Release, Debug ]
+          name: macOS
+        - os: windows-latest
+          profile: windows-vs2022-amd64
+          name: Windows
+          defaults:
+            run:
+              shell: cmd
     steps:
     - uses: actions/checkout@v2
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-    - name: Run Prerequisite Setup
-      run: scripts/machine-setup.cmd
-
-    - uses: novelrt/setup-cpp@v1
-
-    - name: Build NovelRT and Generate Artifacts
-      run: scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -DNOVELRT_BUILD_INTEROP=Off -DNOVELRT_BUILD_SAMPLES=Off -DNOVELRT_BUILD_DOCUMENTATION=OFF
-
-    - name: Copy Third Party Artifacts
-      run: Get-ChildItem artifacts/build/${{ matrix.configuration }}/thirdparty -Filter *.dll | Copy-Item -Destination artifacts/install/${{ matrix.configuration }}/bin -Force -PassThru
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: novelrt-windows-latest-${{ matrix.configuration }}
-        path: artifacts/install/${{ matrix.configuration }}
-
-  build-ubuntu:
-    needs: create-release
-    runs-on: ubuntu-latest
-    container:
-      image: novelrt/novelrt-build:latest
-    strategy:
-      matrix:
-        configuration: [ RelWithDebInfo, MinSizeRel ]
-    steps:
-    - uses: actions/checkout@v2
-    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-    - uses: novelrt/setup-cpp@v1
-
-    - name: Build NovelRT and Generate Artifacts
+    - name: Prepare build environment
       run: |
-        export CC=clang-10
-        export CXX=clang++-10
-        scripts/build.sh --configuration ${{ matrix.configuration }} --generate -DNOVELRT_BUILD_INTEROP=OFF -DNOVELRT_BUILD_SAMPLES=OFF -DNOVELRT_BUILD_DOCUMENTATION=OFF
-        scripts/build.sh --configuration ${{ matrix.configuration }} --build --install --test
+          pip3 install conan
+          conan config install https://github.com/capnkenny/ConanConfig.git
+
+    - name: Generate Build System
+      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
+
+    - name: Build NovelRT
+      run: conan build . --build-folder build -o buildsamples=False -o buildinterop=False -o builddocumentation=False
+
+    - name: Install NovelRT - ${{ matrix.configuration }}
+      run: cmake --install build --config "${{ matrix.configuration }}"
+
+    - name: Copy Third Party Artifacts (Windows)
+      run: Get-ChildItem build/thirdparty -Filter *.dll | Copy-Item -Destination build/package/bin -Force -PassThru
+      if: "contains(matrix.os, 'windows')"
+
+    - name: Copy Third Party Artifacts (macOS)
+      run: |
+          cp -v -f build/thirdparty/*.dylib build/package/lib
+          cp -v =f build/thirdparty/*.json build/package/bin
+      if: "contains(matrix.os, 'macos')"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: novelrt-ubuntu-latest-${{ matrix.configuration }}
-        path: artifacts/install/${{ matrix.configuration }}
+        name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}
+        path: build/package
 
   merge-artifacts:
-    needs: [ build-windows, build-ubuntu, create-release ]
+    needs: [ build-release, create-release ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest ]
+        os: [ windows-latest, ubuntu-latest, macos-10.15]
+        include:
+        - os: windows-latest
+          name: Windows
+        - os: ubuntu-latest
+          name: Ubuntu
+        - os: macos-10.15
+          name: macOS
 
     outputs:
       release-id: ${{ needs.create-release.outputs.id }}
@@ -115,11 +131,11 @@ jobs:
     - name: Create release artifact
       run: |
         cd merged
-        zip -r "../NovelRT-${{ matrix.os }}.zip" .
+        zip -r "../NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" .
         cd ..
 
     - name: Add merged artifacts to release
-      run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ matrix.os }}.zip" --repo "$GITHUB_REPOSITORY"
+      run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" --repo "$GITHUB_REPOSITORY"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -133,7 +149,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   delete-release:
-    needs: [ build-windows, build-ubuntu, create-release ]
+    needs: [ build-release, create-release ]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
