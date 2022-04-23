@@ -47,9 +47,6 @@ jobs:
           container: novelrt/novelrt-build:latest
           profile: linux-clang10-amd64
           name: Ubuntu
-          defaults:
-            run:
-              shell: bash
         - os: macos-10.15
           profile: macos-appleclang12-amd64
           configuration: Release
@@ -61,9 +58,6 @@ jobs:
         - os: windows-latest
           profile: windows-vs2022-amd64
           name: Windows
-          defaults:
-            run:
-              shell: cmd
     steps:
     - uses: actions/checkout@v2
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
