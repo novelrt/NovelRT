@@ -22,21 +22,12 @@ jobs:
           container: novelrt/novelrt-build:latest
           profile: linux-clang10-amd64
           name: Ubuntu Latest
-          defaults:
-            run:
-              shell: bash
         - os: windows-2019
           profile: windows-vs2019-amd64
           name: Windows VS2019
-          defaults:
-            run:
-              shell: cmd
         - os: windows-latest
           profile: windows-vs2022-amd64
           name: Windows VS2022
-          defaults:
-            run:
-              shell: cmd
         - os: macos-10.15
           profile: macos-appleclang12-amd64
           name: macOS 10.15 - Apple-Clang 12
