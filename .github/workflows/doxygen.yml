@@ -17,7 +17,7 @@ jobs:
 
       - name: Create documentation branch
         run: git checkout -b gh-pages
-        
+
       - name: Prepare Secrets
         run: echo "${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_WORKSPACE/secret.txt
 
@@ -29,8 +29,18 @@ jobs:
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
 
+      - name: Prepare build environment
+        run: |
+          pip3 install conan
+          conan config install https://github.com/NovelRT/ConanConfig.git
+
+      - name: Generate Build System
+        run: conan install . -if build --build=missing --profile linux-clang10-amd64-RelWithDebInfo
+
       - name: Generate Documentation
-        run: scripts/cibuild.sh --documentation -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs
+          cmake --build build --config RelWithDebInfo --target Doxygen
 
       - name: Commit Documentation Updates
         if: ${{ success() }}
