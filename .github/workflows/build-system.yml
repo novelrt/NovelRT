@@ -60,7 +60,7 @@ jobs:
 
       - name: Publish Unit Test Results - ${{ matrix.name }} - ${{ matrix.configuration }}
         uses: EnricoMi/publish-unit-test-result-action/composite@v1
-        if: always() && (contains(matrix.os, 'ubuntu') || contains(matrix.os, 'windows'))
+        if: always()
         with:
           files: build/tests/results/*.xml
 
