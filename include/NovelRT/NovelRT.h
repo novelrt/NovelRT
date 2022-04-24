@@ -88,8 +88,11 @@
   //Maths types
   #include <NovelRT/Maths/Maths.h>
 
-  // Base Types
-  #include <NovelRT/LoggingService.h> // this isn't in the services section due to include order/dependencies.
+  // Persistence types
+#include <NovelRT/Persistence/Persistence.h>
+
+  //Misc types
+  #include <NovelRT/LoggingService.h>
   #include <NovelRT/Timing/StepTimer.h>
 
   // Audio types
@@ -109,7 +112,6 @@
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
   #include <NovelRT/Input/Input.h>
   #include <NovelRT/Input/Glfw/Input.Glfw.h>
-
 
   // Plugin Management types
   #include <NovelRT/PluginManagement/PluginManagement.h>
