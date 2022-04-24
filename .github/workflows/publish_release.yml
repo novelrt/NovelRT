@@ -86,11 +86,11 @@ jobs:
       run: |
           cp -v -f build/thirdparty/*.dylib build/package/lib
           cp -v -f build/thirdparty/*.json build/package/bin
-          cp -v -f ./LICENCE-DIST.md build/package/bin/LICENCE.md
+          cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
       if: "contains(matrix.os, 'macos')"
 
     - name: Copy Licence (Ubuntu)
-      run: cp -v -f ./LICENCE.md build/package/lib
+      run: cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
       if: "contains(matrix.os, 'ubuntu')"
 
     - name: Upload Artifacts
