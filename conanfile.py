@@ -44,7 +44,7 @@ class NovelRTConan(ConanFile):
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,
-        "buildinterop":False
+        "buildinterop":True
     }
     cmake = None
 
