@@ -39,8 +39,7 @@ protected:
                 auto intRhs = reinterpret_cast<const int32_t*>(rhs);
                 *intLhs += *intRhs;
             },
-            "THROW_AWAY",
-            nullptr, &intComponentTypeId);
+            "THROW_AWAY", nullptr, &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
             componentCache, sizeof(size_t), &sizeTDeleteState,
@@ -49,12 +48,11 @@ protected:
                 auto sizeTRhs = reinterpret_cast<const size_t*>(rhs);
                 *sizeTLhs += *sizeTRhs;
             },
-            "THROW_AWAY_AGAIN",
-            nullptr, &sizeTComponentTypeId);
+            "THROW_AWAY_AGAIN", nullptr, &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY_AGAIN_AGAIN", nullptr,
-            &charComponentTypeId);
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY_AGAIN_AGAIN",
+            nullptr, &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);

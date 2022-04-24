@@ -48,7 +48,8 @@ namespace NovelRT::Ecs
                   sizeof(T),
                   [](auto rootComponent, auto updateComponent, auto) {
                       *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                  }, serialisedTypeName))
+                  },
+                  serialisedTypeName))
         {
             static_assert(std::is_trivially_copyable<T>::value,
                           "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation "

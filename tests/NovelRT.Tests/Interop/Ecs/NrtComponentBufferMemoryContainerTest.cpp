@@ -55,8 +55,7 @@ TEST(InteropComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUp
         [](auto lhs, auto rhs, auto, auto) {
             *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs);
         },
-        "THROW_AWAY",
-        nullptr);
+        "THROW_AWAY", nullptr);
 
     ASSERT_EQ(Nrt_ComponentBufferMemoryContainer_PushComponentUpdateInstruction(container, 0, 0, &updateState),
               NRT_SUCCESS);
@@ -156,8 +155,7 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
         [](auto lhs, auto rhs, auto, auto) {
             *reinterpret_cast<int32_t*>(lhs) += *reinterpret_cast<const int32_t*>(rhs);
         },
-        "THROW_AWAY",
-        nullptr);
+        "THROW_AWAY", nullptr);
 
     for (int i = 0; i < 2000; ++i)
     {

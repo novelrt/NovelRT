@@ -23,8 +23,8 @@ extern "C"
     {
         auto func = [=](void* lhs, const void* rhs, size_t size) { fnPtr(lhs, rhs, size, context); };
 
-        return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
-            new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func, std::string(serialisedTypeName)));
+        return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(new ComponentBufferMemoryContainer(
+            poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func, std::string(serialisedTypeName)));
     }
 
     // TODO: Not sure if I should add safety here?

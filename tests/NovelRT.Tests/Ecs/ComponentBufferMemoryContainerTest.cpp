@@ -11,8 +11,9 @@ using namespace NovelRT::Ecs;
 TEST(ComponentBufferMemoryContainerTest, PrepComponentBuffersForFrameDoesNotThrow)
 {
     int32_t deleteState = -1;
-    EXPECT_NO_THROW(ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {
-                    }, "THROW_AWAY").PrepContainerForFrame(std::vector<EntityId>{}));
+    EXPECT_NO_THROW(ComponentBufferMemoryContainer(
+                        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY")
+                        .PrepContainerForFrame(std::vector<EntityId>{}));
 }
 
 TEST(ComponentBufferMemoryContainerTest, GetDeleteInstructionStateReturnsCorrectState)
@@ -25,7 +26,8 @@ TEST(ComponentBufferMemoryContainerTest, GetDeleteInstructionStateReturnsCorrect
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAddsNewEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
+    auto container = ComponentBufferMemoryContainer(
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{});
@@ -37,10 +39,12 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAddsNewEn
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesExistingEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container =
-        ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto) {
+    auto container = ComponentBufferMemoryContainer(
+        1, &deleteState, sizeof(int32_t),
+        [](auto intRoot, auto intUpdate, auto) {
             *reinterpret_cast<int32_t*>(intRoot) += *reinterpret_cast<const int32_t*>(intUpdate);
-        }, "THROW_AWAY");
+        },
+        "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{});
@@ -54,7 +58,8 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesEx
 TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEntryCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
+    auto container = ComponentBufferMemoryContainer(
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{});
@@ -67,7 +72,8 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEn
 TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
 {
     int32_t deleteState = -1;
-    auto container = ComponentBufferMemoryContainer(1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
+    auto container = ComponentBufferMemoryContainer(
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PushComponentUpdateInstruction(0, 1, &updateState);
@@ -83,10 +89,12 @@ TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
 TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
 {
     int32_t deleteState = -1;
-    auto container =
-        ComponentBufferMemoryContainer(2, &deleteState, sizeof(int32_t), [](auto intRoot, auto intUpdate, auto) {
+    auto container = ComponentBufferMemoryContainer(
+        2, &deleteState, sizeof(int32_t),
+        [](auto intRoot, auto intUpdate, auto) {
             *reinterpret_cast<int32_t*>(intRoot) += *reinterpret_cast<const int32_t*>(intUpdate);
-        }, "THROW_AWAY");
+        },
+        "THROW_AWAY");
     int32_t updateState = 10;
 
     for (size_t i = 0; i < 2000; ++i)

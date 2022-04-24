@@ -27,7 +27,8 @@ namespace NovelRT::Ecs
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
         const void* deleteInstructionState,
-        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic, const std::string& serialisedTypeName)
+        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+        const std::string& serialisedTypeName)
     {
         static AtomFactory& _componentTypeIdFactory = AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
