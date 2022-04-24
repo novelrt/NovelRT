@@ -59,8 +59,8 @@ jobs:
           profile: windows-vs2022-amd64
           name: Windows
     steps:
-    - uses: actions/checkout@v2
-    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+    - name: Checkout Code
+      uses: actions/checkout@v2
 
     - name: Prepare build environment
       run: |
