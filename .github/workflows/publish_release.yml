@@ -164,7 +164,7 @@ jobs:
     - run: gh release delete "${{ needs.create-release.outputs.tag }}" -y --repo "$GITHUB_REPOSITORY"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}"
+    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}" -X DELETE --silent
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
