@@ -4,6 +4,10 @@
 #ifndef NOVELRT_PERSISTENCE_CHAPTER_H
 #define NOVELRT_PERSISTENCE_CHAPTER_H
 
+#ifndef NOVELRT_PERSISTENCE_CHAPTER_H
+#error NovelRT does not support including types explicitly by default. Please include Persistence.h instead for the Persistence namespace subset.
+#endif
+
 namespace NovelRT::Persistence
 {
     class Chapter
@@ -12,7 +16,7 @@ namespace NovelRT::Persistence
         std::vector<Ecs::SparseSetMemoryContainer> _componentCacheData;
 
     public:
-        Chapter(gsl::span<Ecs::EntityId> entityCacheData, gsl::span<Ecs::SparseSetMemoryContainer> componentCacheData);
+        explicit Chapter(gsl::span<Ecs::SparseSetMemoryContainer> componentCacheData);
 
         void ToEcsInstance(Ecs::ComponentCache& componentCache) const;
 

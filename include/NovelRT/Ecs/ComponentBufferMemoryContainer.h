@@ -68,6 +68,11 @@ namespace NovelRT::Ecs
             return _serialisedTypeName;
         }
 
+        [[nodiscard]] inline const SparseSetMemoryContainer& GetReadOnlyContainer() const noexcept
+        {
+            return _rootSet;
+        }
+
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator begin() const noexcept;
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;
