@@ -1,0 +1,170 @@
+name: Publish NovelRT
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag: ${{ steps.tag_version.outputs.new_tag }}
+      id: ${{ steps.create_release.outputs.id }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: mathieudutour/github-tag-action@v6.0
+      id: tag_version
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: ncipollo/release-action@v1
+      id: create_release
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: NovelRT ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+        prerelease: true
+        draft: true
+
+  build-release:
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+
+    strategy:
+      matrix:
+        configuration: [ RelWithDebInfo, MinSizeRel ]
+        os: [ ubuntu-latest, windows-latest, macos-10.15 ]
+        exclude:
+        - os: macos-10.15
+          configuration: RelWithDebInfo
+        - os: macos-10.15
+          configuration: MinSizeRel
+        include:
+        - os: ubuntu-latest
+          container: novelrt/novelrt-build:latest
+          profile: linux-clang10-amd64
+          name: Ubuntu
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
+          configuration: Release
+          name: macOS
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
+          configuration: Debug
+          name: macOS
+        - os: windows-latest
+          profile: windows-vs2022-amd64
+          name: Windows
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Prepare build environment
+      run: |
+          pip3 install conan
+          conan config install https://github.com/NovelRT/ConanConfig.git
+
+    - name: Generate Build System
+      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o novelrt:buildsamples=False -o novelrt:buildinterop=False -o novelrt:documentation=False
+
+    - name: Build NovelRT
+      run: conan build . --build-folder build
+
+    - name: Install NovelRT - ${{ matrix.configuration }}
+      run: cmake --install build --config "${{ matrix.configuration }}"
+
+    - name: Copy Third Party Artifacts and Licence (Windows)
+      run: |
+        Get-ChildItem build/thirdparty -Filter *.dll | Copy-Item -Destination build/package/bin -Force -PassThru
+        Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
+      if: "contains(matrix.os, 'windows')"
+
+    - name: Copy Third Party Artifacts and Licence (macOS)
+      run: |
+          cp -v -f build/thirdparty/*.dylib build/package/lib
+          cp -v -f build/thirdparty/*.json build/package/bin
+          cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
+      if: "contains(matrix.os, 'macos')"
+
+    - name: Copy Licence (Ubuntu)
+      run: cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
+      if: "contains(matrix.os, 'ubuntu')"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}
+        path: build/package
+
+  merge-artifacts:
+    needs: [ build-release, create-release ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-10.15]
+        include:
+        - os: windows-latest
+          name: Windows
+        - os: ubuntu-latest
+          name: Ubuntu
+        - os: macos-10.15
+          name: macOS
+
+    outputs:
+      release-id: ${{ needs.create-release.outputs.id }}
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Merge build artifacts
+      run: |
+        mkdir merged
+        for artifact in $(find ./artifacts/ -type d -name "novelrt-${{ matrix.os }}-*"); do
+            cp -RT "$artifact" merged/
+        done
+    - name: Upload merged artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: NovelRT-${{ matrix.os }}
+        path: merged
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: NovelRT-${{ matrix.os }}
+
+    - name: Create release artifact
+      run: |
+        cd merged
+        zip -r "../NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" .
+        cd ..
+
+    - name: Add merged artifacts to release
+      run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    needs: merge-artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: gh api "repos/$GITHUB_REPOSITORY/releases/${{ needs.merge-artifacts.outputs.release-id }}" -X PATCH -F draft=false --silent
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  delete-release:
+    needs: [ build-release, create-release ]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: gh release delete "${{ needs.create-release.outputs.tag }}" -y --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}" -X DELETE --silent
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
