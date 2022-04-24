@@ -17,6 +17,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             const char* serialisedTypeName,
                                                              void* context,
                                                              NrtComponentTypeId* outputResult)
     {
@@ -39,7 +40,7 @@ extern "C"
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
                                         size, context);
-                        });
+                        }, std::string(serialisedTypeName));
 
             return NRT_SUCCESS;
         }

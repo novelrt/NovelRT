@@ -10,17 +10,17 @@ using namespace NovelRT::Ecs;
 
 TEST(ComponentBufferTest, PrepComponentBuffersForFrameDoesNotThrow)
 {
-    EXPECT_NO_THROW(ComponentBuffer<int32_t>(1, -1).PrepComponentBufferForFrame(std::vector<EntityId>{}));
+    EXPECT_NO_THROW(ComponentBuffer<int32_t>(1, -1, "THROW_AWAY").PrepComponentBufferForFrame(std::vector<EntityId>{}));
 }
 
 TEST(ComponentBufferTest, GetDeleteInstructionStateReturnsCorrectState)
 {
-    EXPECT_EQ(ComponentBuffer<int32_t>(1, -1).GetDeleteInstructionState(), -1);
+    EXPECT_EQ(ComponentBuffer<int32_t>(1, -1, "THROW_AWAY").GetDeleteInstructionState(), -1);
 }
 
 TEST(ComponentBufferTest, GetComponentUnsafeGetsComponentWithValidKey)
 {
-    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    auto buffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
     ASSERT_EQ(buffer.GetImmutableDataLength(), 1);
@@ -30,7 +30,7 @@ TEST(ComponentBufferTest, GetComponentUnsafeGetsComponentWithValidKey)
 
 TEST(ComponentBufferTest, PushComponentUpdateInstructionAddsNewEntryCorrectly)
 {
-    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    auto buffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
     ASSERT_EQ(buffer.GetImmutableDataLength(), 1);
@@ -40,7 +40,7 @@ TEST(ComponentBufferTest, PushComponentUpdateInstructionAddsNewEntryCorrectly)
 
 TEST(ComponentBufferTest, PushComponentUpdateInstructionUpdatesExistingEntryCorrectly)
 {
-    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    auto buffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
     buffer.PushComponentUpdateInstruction(0, 0, 10);
@@ -51,7 +51,7 @@ TEST(ComponentBufferTest, PushComponentUpdateInstructionUpdatesExistingEntryCorr
 
 TEST(ComponentBufferTest, PushComponentUpdateInstructionRemovesEntryCorrectly)
 {
-    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    auto buffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PrepComponentBufferForFrame(std::vector<EntityId>{});
     buffer.PushComponentUpdateInstruction(0, 0, -1);
@@ -61,7 +61,7 @@ TEST(ComponentBufferTest, PushComponentUpdateInstructionRemovesEntryCorrectly)
 
 TEST(ComponentBufferTest, ForRangeSupportWorksCorrectly)
 {
-    auto buffer = ComponentBuffer<int32_t>(1, -1);
+    auto buffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
     buffer.PushComponentUpdateInstruction(0, 0, 10);
     buffer.PushComponentUpdateInstruction(0, 1, 10);
     buffer.PushComponentUpdateInstruction(0, 2, 10);
@@ -75,7 +75,7 @@ TEST(ComponentBufferTest, ForRangeSupportWorksCorrectly)
 
 TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 {
-    auto container = ComponentBuffer<int32_t>(2, -1);
+    auto container = ComponentBuffer<int32_t>(2, -1, "THROW_AWAY");
 
     for (size_t i = 0; i < 2000; i++)
     {
@@ -111,7 +111,7 @@ TEST(ComponentBufferTest, ConcurrentAccessWorksCorrectly)
 
 TEST(ComponentBufferTest, CanAccessValidUnderlyingContainer)
 {
-    auto container = ComponentBuffer<int32_t>(1, -1);
+    auto container = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
 
     for (size_t i = 0; i < 10; i++)
     {

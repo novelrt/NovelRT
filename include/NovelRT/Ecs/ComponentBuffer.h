@@ -36,18 +36,19 @@ namespace NovelRT::Ecs
          *
          *
          * @param poolSize The amount of worker threads being utilised in this instance of the ECS.
+         * @param serialisedTypeName The type name to use for serialisation of this data type.
          * @param deleteInstructionState The component state to treat as the delete instruction. When this state is
          * passed in during an update, the ComponentBuffer will delete the component from the target entity during
          * resolution.
          */
-        ComponentBuffer(size_t poolSize, T deleteInstructionState) noexcept
+        ComponentBuffer(size_t poolSize, T deleteInstructionState, const std::string& serialisedTypeName) noexcept
             : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(
                   poolSize,
                   &deleteInstructionState,
                   sizeof(T),
                   [](auto rootComponent, auto updateComponent, auto) {
                       *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                  }))
+                  }, serialisedTypeName))
         {
             static_assert(std::is_trivially_copyable<T>::value,
                           "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation "
@@ -195,6 +196,16 @@ namespace NovelRT::Ecs
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
             return _innerContainer->HasComponent(entity);
+        }
+
+        /**
+         * @brief Gets the serialised type name used for the loading and unloading to and from serialised data.
+         *
+         * @return The serialised type name as a string.
+         */
+        [[nodiscard]] const std::string& GetSerialisedTypeName() const noexcept
+        {
+            return _innerContainer->GetSerialisedTypeName();
         }
 
         /**

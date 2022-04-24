@@ -28,22 +28,22 @@ namespace NovelRT::Ecs
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
-            target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true});
+            target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true}, "NovelRT::Ecs::Graphics::RenderComponent");
 
             target.GetComponentCache().RegisterComponentType(EntityGraphComponent{
-                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()}, "NovelRT::Ecs::EntityGraphComponent");
 
             target.GetComponentCache().RegisterComponentType(LinkedEntityListNodeComponent{
-                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()});
+                false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()}, "NovelRT::Ecs::LinkedEntityListNodeComponent");
 
             target.GetComponentCache().RegisterComponentType(
-                TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN});
+                TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN}, "NovelRT::Ecs::TransformComponent");
 
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
                 _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
 
             target.GetComponentCache().RegisterComponentType(
-                Ecs::Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0});
+                Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0}, "NovelRT::Ecs::Input::InputEventComponent");
 
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
@@ -179,12 +179,13 @@ namespace NovelRT::Ecs
          * This is the final method you should call to obtain the ECS instance.
          *
          * @tparam TComponentTypes List of component types to register with this ECS instance.
-         * @param deleteInstructionStates The state of the given component type that signals this component is to be
+         * @tparam Names List of the names to used for type serialisation.
+         * @param deleteInstructionStatesAndSerialisedTypeNames The state of the given component type that signals this component is to be, accompanied by the serialised type name.
          * deleted to the ECS.
          * @returns An instance of the ECS SystemScheduler root object based on the provided configuration.
          */
         template<typename... TComponentTypes>
-        [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents(TComponentTypes... deleteInstructionStates)
+        [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents(std::tuple<TComponentTypes, std::string>... deleteInstructionStatesAndSerialisedTypeNames)
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 
@@ -198,7 +199,7 @@ namespace NovelRT::Ecs
                 scheduler.RegisterSystem(system);
             }
 
-            scheduler.GetComponentCache().RegisterComponentType<TComponentTypes...>(deleteInstructionStates...);
+            scheduler.GetComponentCache().RegisterComponentType<TComponentTypes...>(std::get<0>(deleteInstructionStatesAndSerialisedTypeNames)..., std::get<1>(deleteInstructionStatesAndSerialisedTypeNames)...);
             scheduler.SpinThreads();
 
             return scheduler;

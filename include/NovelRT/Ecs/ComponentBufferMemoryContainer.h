@@ -18,6 +18,7 @@ namespace NovelRT::Ecs
         std::vector<uint8_t> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
         std::function<void(void*, const void*, size_t)> _componentUpdateLogic;
+        std::string _serialisedTypeName;
 
     public:
         class ImmutableDataView
@@ -46,7 +47,7 @@ namespace NovelRT::Ecs
         ComponentBufferMemoryContainer(size_t poolSize,
                                        const void* deleteInstructionState,
                                        size_t sizeOfDataTypeInBytes,
-                                       std::function<void(void*, const void*, size_t)> componentUpdateLogic) noexcept;
+                                       std::function<void(void*, const void*, size_t)> componentUpdateLogic, const std::string& serialisedTypeName) noexcept;
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;
 
@@ -60,6 +61,11 @@ namespace NovelRT::Ecs
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept;
 
         [[nodiscard]] size_t GetImmutableDataLength() const noexcept;
+
+        [[nodiscard]] inline const std::string& GetSerialisedTypeName() const noexcept
+        {
+            return _serialisedTypeName;
+        }
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator begin() const noexcept;
 

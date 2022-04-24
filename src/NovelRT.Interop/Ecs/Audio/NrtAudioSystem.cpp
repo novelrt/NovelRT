@@ -40,9 +40,9 @@ extern "C"
 
         auto sys = reinterpret_cast<Ecs::SystemScheduler*>(system);
         auto deleteState = Ecs::Audio::AudioEmitterComponent();
-        sys->GetComponentCache().RegisterComponentType(deleteState);
+        sys->GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
         sys->GetComponentCache().RegisterComponentType(
-            Ecs::Audio::AudioEmitterStateComponent{Ecs::Audio::AudioEmitterState::Done});
+            Ecs::Audio::AudioEmitterStateComponent{Ecs::Audio::AudioEmitterState::Done}, "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
         return NRT_SUCCESS;
     }
 
