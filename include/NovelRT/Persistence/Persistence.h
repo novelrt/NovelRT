@@ -4,11 +4,16 @@
 #ifndef NOVELRT_PERSISTENCE_H
 #define NOVELRT_PERSISTENCE_H
 
+// Persistence dependencies
+#include <vector>
+#include <gsl/span>
+#include "../Ecs/Ecs.h"
+
 namespace NovelRT::Persistence
 {
-    class EcsSnapshot;
+    class Chapter;
 }
 
-#include "EcsSnapshot.h"
+#include "Chapter.h"
 
 #endif // NOVELRT_PERSISTENCE_H
