@@ -1,0 +1,99 @@
+name: Continuous Integration v2
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  CI:
+    name: ${{ matrix.name }} - ${{ matrix.configuration }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [RelWithDebInfo, MinSizeRel]
+        os: [windows-latest, windows-2019, ubuntu-latest, macos-10.15]
+        include:
+        - os: ubuntu-latest
+          container: novelrt/novelrt-build:latest
+          profile: linux-clang10-amd64
+          name: Ubuntu - Clang 10
+        - os: windows-2019
+          profile: windows-vs2019-amd64
+          name: Windows - Visual Studio 2019
+        - os: windows-latest
+          profile: windows-vs2022-amd64
+          name: Windows - Visual Studio 2022
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
+          name: macOS 10.15 - Apple-Clang 12
+          configuration: Debug
+        - os: macos-10.15
+          profile: macos-appleclang12-amd64
+          name: macOS 10.15 - Apple-Clang 12
+          configuration: Release
+        exclude:
+        - os: macos-10.15
+          configuration: RelWithDebInfo
+        - os: macos-10.15
+          configuration: MinSizeRel
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Prepare build environment
+        run: |
+          pip3 install conan
+          conan config install https://github.com/NovelRT/ConanConfig.git
+
+      - name: Generate Build System
+        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
+
+      - uses: novelrt/setup-cpp@v1
+      - name: Build and Test NovelRT - ${{ matrix.configuration }}
+        run: conan build . --build-folder build
+
+      - name: Publish Unit Test Results - ${{ matrix.name }} - ${{ matrix.configuration }}
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        if: always()
+        with:
+          files: build/tests/results/*.xml
+
+      - name: Install NovelRT - ${{ matrix.configuration }}
+        run: cmake --install build --config "${{ matrix.configuration }}"
+
+  Formatting:
+    name: clang-format
+    runs-on: ubuntu-latest
+    if: "!contains(github.ref, 'main')"
+
+    steps:
+      - name: Checkout Code
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Check Formatting
+        id: formatting
+        uses: DoozyX/clang-format-lint-action@v0.11
+        with:
+          source: 'src tests include samples'
+          extensions: 'h,cpp,c,hpp'
+          clangFormatVersion: 10
+          inplace: True
+          style: file
+
+      - name: Confirm Results
+        id: results
+        run: scripts/ci-checkdiff.sh
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v1
+        if: ${{ failure() }}
+        with:
+          name: clang-format-patch
+          path: artifacts/clang-format.patch

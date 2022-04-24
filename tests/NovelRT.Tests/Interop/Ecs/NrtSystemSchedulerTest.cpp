@@ -76,7 +76,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
-    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
 
     NrtComponentBufferMemoryContainerHandle container = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, GetComponentTypeId<int32_t>(), &container), NRT_SUCCESS);
@@ -126,7 +126,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
     EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
-    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
 
     NrtComponentBufferMemoryContainerHandle container = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, GetComponentTypeId<int32_t>(), &container), NRT_SUCCESS);
@@ -218,7 +218,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     EntityId entity = entityIdFactory.GetNext();
 
     auto cache = Nrt_SystemScheduler_GetComponentCache(scheduler);
-    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    reinterpret_cast<SystemScheduler*>(scheduler)->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
 
     NrtComponentBufferMemoryContainerHandle container = nullptr;
     ASSERT_EQ(Nrt_ComponentCache_GetComponentBufferById(cache, GetComponentTypeId<int32_t>(), &container), NRT_SUCCESS);
