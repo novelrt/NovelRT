@@ -17,6 +17,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             const char* serialisedTypeName,
                                                              void* context,
                                                              NrtComponentTypeId* outputResult)
     {
@@ -35,11 +36,13 @@ extern "C"
             *outputResult =
                 reinterpret_cast<ComponentCache*>(componentCache)
                     ->RegisterComponentTypeUnsafe(
-                        sizeOfDataType, deleteInstructionState, [=](auto lhs, auto rhs, auto size) {
+                        sizeOfDataType, deleteInstructionState,
+                        [=](auto lhs, auto rhs, auto size) {
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
                                         size, context);
-                        });
+                        },
+                        std::string(serialisedTypeName));
 
             return NRT_SUCCESS;
         }

@@ -73,7 +73,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     bool isEqual = false;
 
     EntityId entity = entityIdFactory.GetNext();
-    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
     scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
@@ -102,7 +102,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
 
     EntityId entity = entityIdFactory.GetNext();
 
-    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
 
@@ -163,7 +163,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
 
     EntityId entity = entityIdFactory.GetNext();
 
-    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
 
@@ -219,7 +219,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 {
     EntityId entity = entityIdFactory.GetNext();
 
-    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1);
+    scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
 

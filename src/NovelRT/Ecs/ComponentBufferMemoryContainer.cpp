@@ -10,12 +10,14 @@ namespace NovelRT::Ecs
         size_t poolSize,
         const void* deleteInstructionState,
         size_t sizeOfDataTypeInBytes,
-        std::function<void(void*, const void*, size_t)> componentUpdateLogic) noexcept
+        std::function<void(void*, const void*, size_t)> componentUpdateLogic,
+        const std::string& serialisedTypeName) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
           _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
-          _componentUpdateLogic(std::move(componentUpdateLogic))
+          _componentUpdateLogic(std::move(componentUpdateLogic)),
+          _serialisedTypeName(serialisedTypeName)
     {
         std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
         for (size_t i = 0; i < poolSize; i++)

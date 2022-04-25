@@ -18,12 +18,13 @@ extern "C"
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
                                                                                       NrtComponentUpdateFnPtr fnPtr,
+                                                                                      const char* serialisedTypeName,
                                                                                       void* context)
     {
         auto func = [=](void* lhs, const void* rhs, size_t size) { fnPtr(lhs, rhs, size, context); };
 
-        return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(
-            new ComponentBufferMemoryContainer(poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func));
+        return reinterpret_cast<NrtComponentBufferMemoryContainerHandle>(new ComponentBufferMemoryContainer(
+            poolSize, deleteInstructionState, sizeOfDataTypeInBytes, func, std::string(serialisedTypeName)));
     }
 
     // TODO: Not sure if I should add safety here?

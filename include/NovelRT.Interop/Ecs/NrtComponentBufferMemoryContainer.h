@@ -15,6 +15,7 @@ extern "C"
                                                                                       void* deleteInstructionState,
                                                                                       size_t sizeOfDataTypeInBytes,
                                                                                       NrtComponentUpdateFnPtr fnPtr,
+                                                                                      const char* serialisedTypeName,
                                                                                       void* context);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
