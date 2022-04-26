@@ -21,7 +21,7 @@ protected:
         static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
         componentCache = ComponentCache(1);
-        componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
+        componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false}, "THROW_AWAY");
         rootListId = _entityIdFactory.GetNext();
         componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(
             0, rootListId, LinkedEntityListNodeComponent());

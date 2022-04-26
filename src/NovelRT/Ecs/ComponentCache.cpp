@@ -17,22 +17,24 @@ namespace NovelRT::Ecs
     std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(
         size_t sizeOfDataType,
         const void* deleteInstructionState,
-        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic) const
+        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+        const std::string& serialisedTypeName) const
     {
         return std::make_shared<ComponentBufferMemoryContainer>(_poolSize, deleteInstructionState, sizeOfDataType,
-                                                                componentUpdateLogic);
+                                                                componentUpdateLogic, serialisedTypeName);
     }
 
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
         const void* deleteInstructionState,
-        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic)
+        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+        const std::string& serialisedTypeName)
     {
         static AtomFactory& _componentTypeIdFactory = AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         ComponentTypeId returnId = _componentTypeIdFactory.GetNext();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-            CreateContainer(sizeOfDataType, deleteInstructionState, componentUpdateLogic);
+            CreateContainer(sizeOfDataType, deleteInstructionState, componentUpdateLogic, serialisedTypeName);
         _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
         _componentMap.emplace(returnId, ptr);
         return returnId;

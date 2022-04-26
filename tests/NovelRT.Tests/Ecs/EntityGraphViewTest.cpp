@@ -22,8 +22,8 @@ protected:
         static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
         componentCache = ComponentCache(1);
-        componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false});
-        componentCache.RegisterComponentType(EntityGraphComponent{false});
+        componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false}, "THROW_AWAY");
+        componentCache.RegisterComponentType(EntityGraphComponent{false}, "THROW_AWAY_AGAIN");
         parentId = _entityIdFactory.GetNext();
         childId = _entityIdFactory.GetNext();
         entityCache = EntityCache(1);
