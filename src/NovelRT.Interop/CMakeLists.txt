@@ -91,3 +91,15 @@ endif()
 target_link_libraries(Interop
   PUBLIC
     Engine)
+
+install(
+  TARGETS Interop
+  EXPORT NovelRT
+  DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT.Interop/
+  DESTINATION include/NovelRT.Interop
+  FILES_MATCHING PATTERN "*.h"
+)
