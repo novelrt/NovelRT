@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_TIMING_TIMESTAMP_H
 #define NOVELRT_INTEROP_TIMING_TIMESTAMP_H
 
-#include "../NrtTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"

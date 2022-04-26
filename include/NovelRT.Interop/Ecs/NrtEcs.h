@@ -4,13 +4,13 @@
 #ifndef NOVELRT_INTEROP_ECS_ECS_H
 #define NOVELRT_INTEROP_ECS_ECS_H
 
-#include "NrtCatalogue.h"
-#include "NrtComponentBufferMemoryContainer.h"
-#include "NrtComponentCache.h"
-#include "NrtEntityCache.h"
-#include "NrtEntityIdVector.h"
-#include "NrtSparseSetMemoryContainer.h"
-#include "NrtSystemScheduler.h"
-#include "NrtUnsafeComponentView.h"
+#include <NovelRT.Interop/Ecs/NrtCatalogue.h>
+#include <NovelRT.Interop/Ecs/NrtComponentBufferMemoryContainer.h>
+#include <NovelRT.Interop/Ecs/NrtComponentCache.h>
+#include <NovelRT.Interop/Ecs/NrtEntityCache.h>
+#include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
+#include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
+#include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
+#include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
 
 #endif // NOVELRT_INTEROP_ECS_ECS_H

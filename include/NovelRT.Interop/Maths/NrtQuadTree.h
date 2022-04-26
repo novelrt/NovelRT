@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_MATHS_QUADTREE_H
 #define NOVELRT_INTEROP_MATHS_QUADTREE_H
 
-#include "../NrtTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"

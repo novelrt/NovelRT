@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_MATHS_GEOMATRIX4X4F_H
 #define NOVELRT_INTEROP_MATHS_GEOMATRIX4X4F_H
 
-#include "NrtGeoVector4F.h"
+#include <NovelRT.Interop/Maths/NrtGeoVector4F.h>
 
 #ifdef __cplusplus
 extern "C"

@@ -4,8 +4,8 @@
 #ifndef NOVELRT_INTEROP_ECS_AUDIO_H
 #define NOVELRT_INTEROP_ECS_AUDIO_H
 
-#include "NrtAudioEmitterComponent.h"
-#include "NrtAudioEmitterStateComponent.h"
-#include "NrtAudioSystem.h"
+#include <NovelRT.Interop/Ecs/Audio/NrtAudioEmitterComponent.h>
+#include <NovelRT.Interop/Ecs/Audio/NrtAudioEmitterStateComponent.h>
+#include <NovelRT.Interop/Ecs/Audio/NrtAudioSystem.h>
 
 #endif // NOVELRT_INTEROP_ECS_AUDIO_H

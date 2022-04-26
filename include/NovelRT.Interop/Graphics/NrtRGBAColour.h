@@ -5,8 +5,8 @@
 #ifndef NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
 #define NOVELRT_INTEROP_GRAPHICS_RGBACOLOUR_H
 
-#include "../NrtTypedefs.h"
-#include "NrtGraphicsTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
+#include <NovelRT.Interop/Graphics/NrtGraphicsTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"

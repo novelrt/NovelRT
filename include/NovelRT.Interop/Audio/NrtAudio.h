@@ -4,6 +4,6 @@
 #ifndef NOVELRT_INTEROP_AUDIO_H
 #define NOVELRT_INTEROP_AUDIO_H
 
-#include "NrtAudioService.h"
+#include <NovelRT.Interop/Audio/NrtAudioService.h>
 
 #endif // NOVELRT_INTEROP_AUDIO_H

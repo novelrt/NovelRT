@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
 #define NOVELRT_INTEROP_MATHS_GEOVECTOR2F_H
 
-#include "../NrtTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"

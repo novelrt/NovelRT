@@ -4,7 +4,7 @@
 #ifndef NOVELRT_INTEROP_SCENEGRAPH_SCENENODEDEPTHFIRSTITERATOR_H
 #define NOVELRT_INTEROP_SCENEGRAPH_SCENENODEDEPTHFIRSTITERATOR_H
 
-#include "../NrtTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"

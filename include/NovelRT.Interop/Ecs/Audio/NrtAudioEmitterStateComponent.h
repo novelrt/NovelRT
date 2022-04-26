@@ -3,7 +3,7 @@
 #ifndef NOVELRT_INTEROP_ECS_AUDIO_AUDIOEMITTERSTATECOMPONENT_H
 #define NOVELRT_INTEROP_ECS_AUDIO_AUDIOEMITTERSTATECOMPONENT_H
 
-#include "../../NrtTypedefs.h"
+#include <NovelRT.Interop/NrtTypedefs.h>
 
 #ifdef __cplusplus
 extern "C"
