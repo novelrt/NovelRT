@@ -26,7 +26,8 @@ namespace NovelRT::Ecs
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,
             const void* deleteInstructionState,
-            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic) const;
+            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+            const std::string& serialisedTypeName) const;
 
     public:
         /**
@@ -49,6 +50,7 @@ namespace NovelRT::Ecs
          * @param sizeOfDataType The size of the object type, in bytes.
          * @param deleteInstructionState The object state that indicates that the component should be deleted.
          * @param componentUpdateLogic The function to use for concurrent update consolidation.
+         * @param serialisedTypeName The type name to use for data serialisation.
          * @return the ID of the new component type and associated ComponentBufferMemoryContainer
          * instance.
          *
@@ -58,7 +60,8 @@ namespace NovelRT::Ecs
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
             const void* deleteInstructionState,
-            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic);
+            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+            const std::string& serialisedTypeName);
 
         /**
          * @brief Registers a new component type to the cache.
@@ -74,12 +77,14 @@ namespace NovelRT::Ecs
          * @exception std::bad_alloc when a ComponentBuffer could not be allocated in memory for the given component
          * type.
          */
-        template<typename T> void RegisterComponentType(T deleteInstructionState)
+        template<typename T> void RegisterComponentType(T deleteInstructionState, const std::string& serialisedTypeName)
         {
-            std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-                CreateContainer(sizeof(T), &deleteInstructionState, [](auto rootComponent, auto updateComponent, auto) {
+            std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
+                sizeof(T), &deleteInstructionState,
+                [](auto rootComponent, auto updateComponent, auto) {
                     *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                });
+                },
+                serialisedTypeName);
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
