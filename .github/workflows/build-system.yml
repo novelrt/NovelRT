@@ -63,13 +63,6 @@ jobs:
         with:
           files: build/tests/results/*.xml
 
-      - name: Upload Unit Tests
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: TestResults-${{ matrix.os }}-${{ matrix.configuration }}
-          path: build/tests/results/*.xml
-
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         run: cmake --install build --config "${{ matrix.configuration }}"
