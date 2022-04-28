@@ -65,7 +65,7 @@ jobs:
           conan config install https://github.com/NovelRT/ConanConfig.git
 
     - name: Generate Build System
-      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o novelrt:buildsamples=False -o novelrt:documentation=False
+      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o NovelRT:buildsamples=False -o NovelRT:documentation=False
 
     - name: Build NovelRT
       run: conan build . --build-folder build
