@@ -79,6 +79,12 @@ jobs:
         Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
       if: "contains(matrix.os, 'windows')"
 
+    - name: Copy PDBs (Windows)
+      run: |
+        Get-ChildItem build/src/NovelRT/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+        Get-ChildItem build/src/NovelRT.Interop/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+      if: "contains(matrix.os, 'windows') && contains(matrix.configuration, 'RelWithDebInfo')"
+
     - name: Copy Third Party Artifacts and Licence (macOS)
       run: |
           cp -v -f build/thirdparty/*.dylib build/package/lib
