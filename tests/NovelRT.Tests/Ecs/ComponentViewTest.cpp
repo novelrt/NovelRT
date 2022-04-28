@@ -13,12 +13,12 @@ class ComponentViewTest : public testing::Test
 {
 public:
     ComponentView<int32_t>* testView = nullptr;
-    ComponentBuffer<int32_t> testBuffer = ComponentBuffer<int32_t>(1, -1);
+    ComponentBuffer<int32_t> testBuffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
 
 protected:
     void SetUp() override
     {
-        testBuffer = ComponentBuffer<int32_t>(1, -1);
+        testBuffer = ComponentBuffer<int32_t>(1, -1, "THROW_AWAY");
         testView = new ComponentView<int32_t>(0, testBuffer);
     }
 
