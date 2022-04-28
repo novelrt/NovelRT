@@ -35,13 +35,11 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [ RelWithDebInfo, MinSizeRel ]
+        configuration: [ RelWithDebInfo, Release ]
         os: [ ubuntu-latest, windows-latest, macos-10.15 ]
         exclude:
         - os: macos-10.15
           configuration: RelWithDebInfo
-        - os: macos-10.15
-          configuration: MinSizeRel
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
@@ -49,7 +47,6 @@ jobs:
           name: Ubuntu
         - os: macos-10.15
           profile: macos-appleclang12-amd64
-          configuration: Release
           name: macOS
         - os: macos-10.15
           profile: macos-appleclang12-amd64
