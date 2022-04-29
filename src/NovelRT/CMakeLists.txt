@@ -89,7 +89,7 @@ set(SOURCES
 
 add_library(Engine SHARED ${SOURCES})
 
-if(CMAKE_BUILD_TYPE MATCHES RELEASE)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
 else()
   set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT-$<CONFIG>")
