@@ -89,7 +89,11 @@ set(SOURCES
 
 add_library(Engine SHARED ${SOURCES})
 
-set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT-$<CONFIG>")
+if(CMAKE_BUILD_TYPE MATCHES RELEASE)
+  set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT")
+else()
+  set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT-$<CONFIG>")
+endif()
 
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
