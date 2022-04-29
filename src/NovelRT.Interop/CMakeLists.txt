@@ -43,7 +43,7 @@ set(SOURCES
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
 
-et_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
+set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
 
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
