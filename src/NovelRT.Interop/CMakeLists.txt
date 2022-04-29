@@ -43,11 +43,7 @@ set(SOURCES
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
 
-if(CMAKE_BUILD_TYPE MATCHES RELEASE)
-  set_property(TARGET Engine PROPERTY OUTPUT_NAME "NovelRT.Interop")
-else()
-  set_property(TARGET Interop PROPERTY OUTPUT_NAME "NovelRT.Interop-$<CONFIG>")
-endif()
+et_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
 
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
