@@ -43,7 +43,7 @@ set(SOURCES
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
 
-set_property(TARGET Interop PROPERTY OUTPUT_NAME "NovelRT.Interop")
+set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
 
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
@@ -91,3 +91,15 @@ endif()
 target_link_libraries(Interop
   PUBLIC
     Engine)
+
+install(
+  TARGETS Interop
+  EXPORT NovelRT
+  DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT.Interop/
+  DESTINATION include/NovelRT.Interop
+  FILES_MATCHING PATTERN "*.h"
+)

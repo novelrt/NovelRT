@@ -54,7 +54,7 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
-
+include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 if(NOVELRT_BUILD_INTEROP)
   copy_build_products(Engine_Tests
     DEPENDENCY Engine
@@ -64,7 +64,6 @@ if(NOVELRT_BUILD_INTEROP)
     TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
   )
 else()
-  include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
   copy_build_products(Engine_Tests
     DEPENDENCY Engine
     TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
