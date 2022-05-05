@@ -10,17 +10,21 @@
 
 namespace NovelRT::Persistence
 {
-    class Chapter
+    class Chapter final : public IPersistable
     {
     private:
-        std::vector<Ecs::SparseSetMemoryContainer> _componentCacheData;
+        std::map<std::string, Ecs::SparseSetMemoryContainer> _componentCacheData;
 
     public:
-        explicit Chapter(gsl::span<Ecs::SparseSetMemoryContainer> componentCacheData);
+        explicit Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept;
 
         void ToEcsInstance(Ecs::ComponentCache& componentCache) const;
 
-        [[nodiscard]] static Chapter FromEcsInstance(const Ecs::ComponentCache& componentCache);
+        [[nodiscard]] static Chapter FromEcsInstance(const Ecs::ComponentCache& componentCache) noexcept;
+
+        [[nodiscard]] std::map<std::string, ComponentBufferInformation> ToFileData() const noexcept final;
+
+        void LoadFileData(const std::map<std::string, ComponentBufferInformation>& data) noexcept final;
     };
 }
 

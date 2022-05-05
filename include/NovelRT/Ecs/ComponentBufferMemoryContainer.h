@@ -73,6 +73,11 @@ namespace NovelRT::Ecs
             return _rootSet;
         }
 
+        [[nodiscard]] inline size_t GetSizeOfDataTypeInBytes() const noexcept
+        {
+            return _sizeOfDataTypeInBytes;
+        }
+
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator begin() const noexcept;
 
         [[nodiscard]] SparseSetMemoryContainer::ConstIterator end() const noexcept;

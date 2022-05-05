@@ -5,15 +5,24 @@
 #define NOVELRT_PERSISTENCE_H
 
 // Persistence dependencies
-#include <vector>
+#include <map>
+#include <string>
 #include <gsl/span>
 #include "../Ecs/Ecs.h"
+#include "../ThirdParty/jsoncons/json.hpp"
+#include "../ThirdParty/jsoncons_ext/bson/bson.hpp"
 
 namespace NovelRT::Persistence
 {
     class Chapter;
+    class IPersistable;
 }
 
+// clang-format off
+
+#include "IPersistable.h"
 #include "Chapter.h"
+
+// clang-format on
 
 #endif // NOVELRT_PERSISTENCE_H

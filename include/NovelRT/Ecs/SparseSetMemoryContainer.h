@@ -222,6 +222,11 @@ namespace NovelRT::Ecs
 
         void Clear() noexcept;
 
+        [[nodiscard]] inline size_t GetSizeOfDataTypeInBytes() const noexcept
+        {
+            return _sizeOfDataTypeInBytes;
+        }
+
         [[nodiscard]] bool ContainsKey(size_t key) const noexcept;
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
