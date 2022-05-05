@@ -13,6 +13,7 @@ namespace NovelRT::Persistence
 
     void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache) const
     {
+
     }
 
     Chapter Chapter::FromEcsInstance(const Ecs::ComponentCache& componentCache)
