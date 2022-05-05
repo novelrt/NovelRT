@@ -35,13 +35,11 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [ RelWithDebInfo, MinSizeRel ]
+        configuration: [ RelWithDebInfo, Release ]
         os: [ ubuntu-latest, windows-latest, macos-10.15 ]
         exclude:
         - os: macos-10.15
           configuration: RelWithDebInfo
-        - os: macos-10.15
-          configuration: MinSizeRel
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
@@ -49,7 +47,6 @@ jobs:
           name: Ubuntu
         - os: macos-10.15
           profile: macos-appleclang12-amd64
-          configuration: Release
           name: macOS
         - os: macos-10.15
           profile: macos-appleclang12-amd64
@@ -68,7 +65,7 @@ jobs:
           conan config install https://github.com/NovelRT/ConanConfig.git
 
     - name: Generate Build System
-      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o novelrt:buildsamples=False -o novelrt:buildinterop=False -o novelrt:documentation=False
+      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o NovelRT:buildsamples=False -o NovelRT:documentation=False
 
     - name: Build NovelRT
       run: conan build . --build-folder build
@@ -81,6 +78,12 @@ jobs:
         Get-ChildItem build/thirdparty -Filter *.dll | Copy-Item -Destination build/package/bin -Force -PassThru
         Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
       if: "contains(matrix.os, 'windows')"
+
+    - name: Copy PDBs (Windows)
+      run: |
+        Get-ChildItem build/src/NovelRT/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+        Get-ChildItem build/src/NovelRT.Interop/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+      if: "contains(matrix.os, 'windows') && contains(matrix.configuration, 'RelWithDebInfo')"
 
     - name: Copy Third Party Artifacts and Licence (macOS)
       run: |
