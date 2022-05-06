@@ -9,15 +9,35 @@ namespace NovelRT::Persistence
     class IPersistable
     {
     public:
-        struct ComponentBufferInformation
+        enum class BinaryDataType : uint32_t
         {
-            size_t amountOfEntities;
-            size_t sizeOfComponentType;
-            std::vector<uint8_t> entityComponentData;
+            Null = 0,
+            Boolean = 1,
+            Int32 = 2,
+            Int64 = 3,
+            UInt32 = 4,
+            Unt64 = 5,
+            Double = 6,
+            String = 7,
+            Binary = 8
         };
 
-        [[nodiscard]] virtual std::map<std::string, ComponentBufferInformation> ToFileData() const noexcept = 0;
-        virtual void LoadFileData(const std::map<std::string, ComponentBufferInformation>& data) noexcept = 0;
+        struct BinaryMemberMetadata
+        {
+            std::string name;
+            BinaryDataType type;
+            size_t location;
+            size_t length;
+        };
+
+        struct BinaryPackage
+        {
+            std::vector<BinaryMemberMetadata> memberMetadata;
+            std::vector<uint8_t> data;
+        };
+
+        [[nodiscard]] virtual BinaryPackage ToFileData() const noexcept = 0;
+        virtual void LoadFileData(const BinaryPackage& data) noexcept = 0;
     };
 }
 

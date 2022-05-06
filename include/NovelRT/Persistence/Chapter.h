@@ -22,9 +22,9 @@ namespace NovelRT::Persistence
 
         [[nodiscard]] static Chapter FromEcsInstance(const Ecs::ComponentCache& componentCache) noexcept;
 
-        [[nodiscard]] std::map<std::string, ComponentBufferInformation> ToFileData() const noexcept final;
+        [[nodiscard]] BinaryPackage ToFileData() const noexcept final;
 
-        void LoadFileData(const std::map<std::string, ComponentBufferInformation>& data) noexcept final;
+        void LoadFileData(const BinaryPackage& data) noexcept final;
     };
 }
 

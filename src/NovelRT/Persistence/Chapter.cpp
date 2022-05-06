@@ -43,20 +43,22 @@ namespace NovelRT::Persistence
         return Chapter(buffers);
     }
 
-    std::map<std::string, IPersistable::ComponentBufferInformation> Chapter::ToFileData() const noexcept
+    IPersistable::BinaryPackage Chapter::ToFileData() const noexcept
     {
-        std::map<std::string, ComponentBufferInformation> data{};
+        BinaryPackage package{};
+
+        package.data = std::vector<uint8_t>{};
 
         for (auto&& dataPair : _componentCacheData)
         {
-            ComponentBufferInformation info{};
-            info.amountOfEntities = dataPair.second.Length();
-            info.entityComponentData = std::vector<uint8_t>{};
-            info.entityComponentData.reserve((sizeof(Ecs::EntityId) * info.amountOfEntities) + (dataPair.second.GetSizeOfDataTypeInBytes() * info.amountOfEntities));
-            info.sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
+            size_t amountOfEntities = dataPair.second.Length();
+            size_t oldLength = package.data.size();
+            package.memberMetadata.emplace_back(BinaryMemberMetadata { dataPair.first, BinaryDataType::Binary, oldLength, ( sizeof(Ecs::EntityId) * amountOfEntities) + (dataPair.second.GetSizeOfDataTypeInBytes() * amountOfEntities) });
+            package.data.resize(package.data.size() + (sizeof(Ecs::EntityId) * amountOfEntities) + (dataPair.second.GetSizeOfDataTypeInBytes() * amountOfEntities));
+            size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
-            auto entityPtr = reinterpret_cast<Ecs::EntityId*>(info.entityComponentData.data());
-            auto componentPtr = &info.entityComponentData[sizeof(Ecs::EntityId) * info.amountOfEntities];
+            auto entityPtr = reinterpret_cast<Ecs::EntityId*>(package.data.data() + oldLength);
+            auto componentPtr = package.data.data() + oldLength + (sizeof(Ecs::EntityId) * amountOfEntities);
 
             for (auto&& [entity, dataView] : dataPair.second)
             {
@@ -64,32 +66,15 @@ namespace NovelRT::Persistence
                 dataView.CopyFromLocation(componentPtr);
 
                 entityPtr++;
-                componentPtr += info.sizeOfComponentType;
+                componentPtr += sizeOfComponentType;
             }
-
-            data.emplace(dataPair.first, info);
         }
 
-        return data;
+        return package;
     }
 
-    void Chapter::LoadFileData(const std::map<std::string, ComponentBufferInformation>& data) noexcept
+    void Chapter::LoadFileData(const BinaryPackage& data) noexcept
     {
         _componentCacheData.clear();
-
-        for (auto&& pair : data)
-        {
-            Ecs::SparseSetMemoryContainer container(pair.second.sizeOfComponentType);
-
-            auto entityPtr = reinterpret_cast<const Ecs::EntityId*>(pair.second.entityComponentData.data());
-            auto componentPtr = &pair.second.entityComponentData[sizeof(Ecs::EntityId) * pair.second.amountOfEntities];
-
-            for (size_t index = 0; index < pair.second.amountOfEntities; index++)
-            {
-                container.Insert(entityPtr[index], &componentPtr[index * pair.second.sizeOfComponentType]);
-            }
-
-            _componentCacheData.emplace(pair.first, container);
-        }
     }
 }
