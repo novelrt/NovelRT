@@ -9,8 +9,8 @@
 #include <string>
 #include <gsl/span>
 #include "../Ecs/Ecs.h"
-#include "../ThirdParty/jsoncons/json.hpp"
-#include "../ThirdParty/jsoncons_ext/bson/bson.hpp"
+#include "../../ThirdParty/jsoncons/json.hpp"
+#include "../../ThirdParty/jsoncons_ext/bson/bson.hpp"
 
 namespace NovelRT::Persistence
 {
