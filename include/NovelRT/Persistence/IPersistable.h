@@ -16,7 +16,7 @@ namespace NovelRT::Persistence
             Int32 = 2,
             Int64 = 3,
             UInt32 = 4,
-            Unt64 = 5,
+            UInt64 = 5,
             Double = 6,
             String = 7,
             Binary = 8
@@ -27,6 +27,7 @@ namespace NovelRT::Persistence
             std::string name;
             BinaryDataType type;
             size_t location;
+            size_t sizeOfTypeInBytes;
             size_t length;
         };
 

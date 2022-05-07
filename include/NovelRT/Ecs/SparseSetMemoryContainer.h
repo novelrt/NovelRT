@@ -244,6 +244,10 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t Length() const noexcept;
 
+        void ResetAndWriteDenseData(gsl::span<const size_t> ids, gsl::span<const uint8_t> data);
+
+        void ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data);
+
         [[nodiscard]] ByteIteratorView operator[](size_t key) noexcept;
 
         [[nodiscard]] ConstByteIteratorView operator[](size_t key) const noexcept;

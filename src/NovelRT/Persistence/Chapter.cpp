@@ -53,12 +53,19 @@ namespace NovelRT::Persistence
         {
             size_t amountOfEntities = dataPair.second.Length();
             size_t oldLength = package.data.size();
-            package.memberMetadata.emplace_back(BinaryMemberMetadata { dataPair.first, BinaryDataType::Binary, oldLength, ( sizeof(Ecs::EntityId) * amountOfEntities) + (dataPair.second.GetSizeOfDataTypeInBytes() * amountOfEntities) });
-            package.data.resize(package.data.size() + (sizeof(Ecs::EntityId) * amountOfEntities) + (dataPair.second.GetSizeOfDataTypeInBytes() * amountOfEntities));
+
+            auto entityMetadata = BinaryMemberMetadata { dataPair.first + "_entities", BinaryDataType::Binary, oldLength, sizeof(Ecs::EntityId), amountOfEntities };
+            package.memberMetadata.emplace_back(entityMetadata);
+
+            auto componentMetadata = BinaryMemberMetadata { dataPair.first + "_components", BinaryDataType::Binary, oldLength + entityMetadata.length, sizeof(Ecs::EntityId), amountOfEntities };
+            package.memberMetadata.emplace_back(componentMetadata);
+
+            package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) + (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
+
             size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
             auto entityPtr = reinterpret_cast<Ecs::EntityId*>(package.data.data() + oldLength);
-            auto componentPtr = package.data.data() + oldLength + (sizeof(Ecs::EntityId) * amountOfEntities);
+            auto componentPtr = package.data.data() + oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes);
 
             for (auto&& [entity, dataView] : dataPair.second)
             {
@@ -76,5 +83,67 @@ namespace NovelRT::Persistence
     void Chapter::LoadFileData(const BinaryPackage& data) noexcept
     {
         _componentCacheData.clear();
+
+        struct PointerSpan
+        {
+            const Ecs::EntityId* entities = nullptr;
+            const uint8_t* components = nullptr;
+            size_t entityCount = 0;
+            size_t sizeOfComponentInBytes = 0;
+        };
+
+        std::map<std::string, PointerSpan> tempMap{};
+
+        for (auto&& metadata : data.memberMetadata)
+        {
+            std::istringstream iss(metadata.name);
+            std::vector<std::string> splitName{};
+            std::string item;
+
+            while(std::getline(iss, item, '_'))
+            {
+                splitName.emplace_back(item);
+            }
+
+            auto& bufferRootName = splitName[0];
+            auto& bufferPartName = splitName[1];
+
+            auto it = tempMap.find(bufferRootName);
+
+            if (it == tempMap.end())
+            {
+                tempMap[bufferRootName] = PointerSpan{};
+                it = tempMap.find(bufferRootName);
+            }
+
+            auto& span = it->second;
+
+            if (bufferPartName == "entities")
+            {
+                span.entities = reinterpret_cast<const Ecs::EntityId*>(&data.data[metadata.location]);
+                span.entityCount = metadata.length;
+            }
+            else if (bufferPartName == "components")
+            {
+                span.components = &data.data[metadata.location];
+                span.sizeOfComponentInBytes = metadata.sizeOfTypeInBytes;
+            }
+            else
+            {
+                // get upset, remove noexcept
+            }
+        }
+
+        std::map<std::string, Ecs::SparseSetMemoryContainer> newBufferState{};
+
+        for (auto&& pair : tempMap)
+        {
+            Ecs::SparseSetMemoryContainer container(pair.second.sizeOfComponentInBytes);
+            container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities), pair.second.entityCount, pair.second.components);
+
+            newBufferState.emplace(pair.first, container);
+        }
+
+        _componentCacheData = newBufferState;
     }
 }

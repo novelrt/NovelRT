@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <gsl/span>
+#include <sstream>
 #include "../Ecs/Ecs.h"
 #include "../../ThirdParty/jsoncons/json.hpp"
 #include "../../ThirdParty/jsoncons_ext/bson/bson.hpp"
