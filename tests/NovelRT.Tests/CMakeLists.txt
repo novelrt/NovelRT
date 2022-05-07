@@ -43,6 +43,8 @@ set(SOURCES
   Maths/QuadTreeTest.cpp
   Maths/UtilitiesTest.cpp
 
+  Persistence/ChapterTest.cpp
+
   SceneGraph/SceneNodeTest.cpp
 
   Timing/TimestampTest.cpp

@@ -16,6 +16,8 @@ namespace NovelRT::Persistence
         std::map<std::string, Ecs::SparseSetMemoryContainer> _componentCacheData;
 
     public:
+        Chapter() noexcept;
+
         explicit Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept;
 
         void ToEcsInstance(Ecs::ComponentCache& componentCache) const;
@@ -24,7 +26,7 @@ namespace NovelRT::Persistence
 
         [[nodiscard]] BinaryPackage ToFileData() const noexcept final;
 
-        void LoadFileData(const BinaryPackage& data) noexcept final;
+        void LoadFileData(const BinaryPackage& data) final;
     };
 }
 

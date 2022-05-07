@@ -10,8 +10,8 @@
 #include <gsl/span>
 #include <sstream>
 #include "../Ecs/Ecs.h"
-#include "../../ThirdParty/jsoncons/json.hpp"
-#include "../../ThirdParty/jsoncons_ext/bson/bson.hpp"
+#include "../../jsoncons/json.hpp"
+#include "../../jsoncons_ext/bson/bson.hpp"
 
 namespace NovelRT::Persistence
 {

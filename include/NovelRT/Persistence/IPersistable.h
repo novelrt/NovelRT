@@ -38,7 +38,7 @@ namespace NovelRT::Persistence
         };
 
         [[nodiscard]] virtual BinaryPackage ToFileData() const noexcept = 0;
-        virtual void LoadFileData(const BinaryPackage& data) noexcept = 0;
+        virtual void LoadFileData(const BinaryPackage& data) = 0;
     };
 }
 

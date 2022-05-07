@@ -6,6 +6,10 @@
 
 namespace NovelRT::Persistence
 {
+    Chapter::Chapter() noexcept : _componentCacheData{}
+    {
+    }
+
     Chapter::Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept
         : _componentCacheData{}
     {
@@ -80,7 +84,7 @@ namespace NovelRT::Persistence
         return package;
     }
 
-    void Chapter::LoadFileData(const BinaryPackage& data) noexcept
+    void Chapter::LoadFileData(const BinaryPackage& data)
     {
         _componentCacheData.clear();
 
@@ -130,7 +134,7 @@ namespace NovelRT::Persistence
             }
             else
             {
-                // get upset, remove noexcept
+                throw std::runtime_error("Invalid binary package member for Chapter");
             }
         }
 
