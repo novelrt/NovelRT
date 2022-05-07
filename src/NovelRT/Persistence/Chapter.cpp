@@ -61,7 +61,7 @@ namespace NovelRT::Persistence
             auto entityMetadata = BinaryMemberMetadata { dataPair.first + "_entities", BinaryDataType::Binary, oldLength, sizeof(Ecs::EntityId), amountOfEntities };
             package.memberMetadata.emplace_back(entityMetadata);
 
-            auto componentMetadata = BinaryMemberMetadata { dataPair.first + "_components", BinaryDataType::Binary, oldLength + entityMetadata.length, sizeof(Ecs::EntityId), amountOfEntities };
+            auto componentMetadata = BinaryMemberMetadata { dataPair.first + "_components", BinaryDataType::Binary, oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes), dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities };
             package.memberMetadata.emplace_back(componentMetadata);
 
             package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) + (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));

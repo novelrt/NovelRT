@@ -21,8 +21,16 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
     Chapter chapter(buffers);
 
     auto package = chapter.ToFileData();
+
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, -1);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 7, -1);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 15, -1);
+    cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+
     chapter.LoadFileData(package);
+
     chapter.ToEcsInstance(cache);
+    cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
     auto buffer = cache.GetComponentBuffer<int32_t>();
     EXPECT_EQ(buffer.GetComponentUnsafe(1), 10);
