@@ -56,13 +56,6 @@ jobs:
         id: build
         run: conan build . --build-folder build
 
-      - name: Publish Unit Test Results - ${{ matrix.name }} - ${{ matrix.configuration }}
-        id: pub-tests
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1
-        if: always()
-        with:
-          files: build/tests/results/*.xml
-
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         run: cmake --install build --config "${{ matrix.configuration }}"
