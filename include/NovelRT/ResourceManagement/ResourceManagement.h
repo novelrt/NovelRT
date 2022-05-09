@@ -6,11 +6,13 @@
 
 // ResourceManagement Dependencies
 #include "../Utilities/Misc.h"
-//#include "../Persistence/Persistence.h"
 #include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <vector>
+#include "../../jsoncons/json.hpp"
+#include "../../jsoncons_ext/jsonpath/jsonpath.hpp"
+#include "../../jsoncons_ext/bson/bson.hpp"
 
 /**
  * @brief The APIs for managing assets and other resources that reside in persisted storage.

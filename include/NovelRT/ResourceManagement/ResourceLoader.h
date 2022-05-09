@@ -12,10 +12,9 @@ namespace NovelRT::ResourceManagement
 {
     class ResourceLoader : public std::enable_shared_from_this<ResourceLoader>
     {
-    private:
+    protected:
         std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
 
-    protected:
         [[nodiscard]] virtual TextureMetadata LoadTexture(
             std::filesystem::path filePath) = 0; // TODO: I've realised these should probably be overloads, not internal
                                                  // methods. Monke brain. :(
@@ -43,7 +42,9 @@ namespace NovelRT::ResourceManagement
             return LoadShaderSourceInternal(_resourcesRootDirectory / "Shaders" / fileName);
         }
 
-        //[[nodiscard]] inline Persistence::BinaryPackage LoadPackage(const std::string& fileName) = 0;
+        [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
+
+        virtual void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) = 0;
 
         virtual ~ResourceLoader() = default;
     };

@@ -20,6 +20,8 @@ namespace NovelRT::ResourceManagement::Desktop
         [[nodiscard]] std::vector<uint8_t> LoadShaderSourceInternal(std::filesystem::path filePath) final;
 
     public:
+        [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
+        void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
         ~DesktopResourceLoader() final = default;
     };
 }
