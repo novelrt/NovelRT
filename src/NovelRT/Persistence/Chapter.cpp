@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Persistence/Persistence.h>
-#include "NovelRT/Persistence/Chapter.h"
 
 namespace NovelRT::Persistence
 {
