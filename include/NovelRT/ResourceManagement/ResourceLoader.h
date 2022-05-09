@@ -43,6 +43,8 @@ namespace NovelRT::ResourceManagement
             return LoadShaderSourceInternal(_resourcesRootDirectory / "Shaders" / fileName);
         }
 
+        //[[nodiscard]] inline Persistence::BinaryPackage LoadPackage(const std::string& fileName) = 0;
+
         virtual ~ResourceLoader() = default;
     };
 }

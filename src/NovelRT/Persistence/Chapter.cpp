@@ -47,7 +47,7 @@ namespace NovelRT::Persistence
         return Chapter(buffers);
     }
 
-    IPersistable::BinaryPackage Chapter::ToFileData() const noexcept
+    BinaryPackage Chapter::ToFileData() const noexcept
     {
         BinaryPackage package{};
 

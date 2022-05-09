@@ -6,6 +6,7 @@
 
 // ResourceManagement Dependencies
 #include "../Utilities/Misc.h"
+#include "../Persistence/Persistence.h"
 #include <cstdint>
 #include <filesystem>
 #include <memory>
