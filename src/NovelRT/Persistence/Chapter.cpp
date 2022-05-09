@@ -46,9 +46,9 @@ namespace NovelRT::Persistence
         return Chapter(buffers);
     }
 
-    BinaryPackage Chapter::ToFileData() const noexcept
+    ResourceManagement::BinaryPackage Chapter::ToFileData() const noexcept
     {
-        BinaryPackage package{};
+        ResourceManagement::BinaryPackage package{};
 
         package.data = std::vector<uint8_t>{};
 
@@ -57,10 +57,10 @@ namespace NovelRT::Persistence
             size_t amountOfEntities = dataPair.second.Length();
             size_t oldLength = package.data.size();
 
-            auto entityMetadata = BinaryMemberMetadata { dataPair.first + "_entities", BinaryDataType::Binary, oldLength, sizeof(Ecs::EntityId), amountOfEntities };
+            auto entityMetadata = ResourceManagement::BinaryMemberMetadata { dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength, sizeof(Ecs::EntityId), amountOfEntities };
             package.memberMetadata.emplace_back(entityMetadata);
 
-            auto componentMetadata = BinaryMemberMetadata { dataPair.first + "_components", BinaryDataType::Binary, oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes), dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities };
+            auto componentMetadata = ResourceManagement::BinaryMemberMetadata { dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary, oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes), dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities };
             package.memberMetadata.emplace_back(componentMetadata);
 
             package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) + (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
@@ -83,7 +83,7 @@ namespace NovelRT::Persistence
         return package;
     }
 
-    void Chapter::LoadFileData(const BinaryPackage& data)
+    void Chapter::LoadFileData(const ResourceManagement::BinaryPackage& data)
     {
         _componentCacheData.clear();
 

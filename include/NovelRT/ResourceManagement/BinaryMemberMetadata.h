@@ -4,11 +4,11 @@
 #ifndef NOVELRT_PERSISTENCE_BINARYMEMBERMETADATA_H
 #define NOVELRT_PERSISTENCE_BINARYMEMBERMETADATA_H
 
-#ifndef NOVELRT_PERSISTENCE_H
-#error NovelRT does not support including types explicitly by default. Please include Persistence.h instead for the Persistence namespace subset.
+#ifndef NOVELRT_RESOURCEMANAGEMENT_H
+#error NovelRT does not support including types explicitly by default. Please include ResourceManagement.h instead for the ResourceManagement namespace subset.
 #endif
 
-namespace NovelRT::Persistence
+namespace NovelRT::ResourceManagement
 {
     struct BinaryMemberMetadata
     {

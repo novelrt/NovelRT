@@ -19,11 +19,17 @@ namespace NovelRT::ResourceManagement
 {
     class ResourceLoader;
     struct TextureMetadata;
+    enum class BinaryDataType : uint32_t;
+    struct BinaryMemberMetadata;
+    struct BinaryPackage;
 }
 
 // clang-format off
 #include "TextureMetadata.h"
 #include "ResourceLoader.h"
+#include "BinaryDataType.h"
+#include "BinaryMemberMetadata.h"
+#include "BinaryPackage.h"
 // clang-format on
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_H

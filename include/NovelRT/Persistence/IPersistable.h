@@ -9,8 +9,8 @@ namespace NovelRT::Persistence
     class IPersistable
     {
     public:
-        [[nodiscard]] virtual BinaryPackage ToFileData() const noexcept = 0;
-        virtual void LoadFileData(const BinaryPackage& data) = 0;
+        [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const noexcept = 0;
+        virtual void LoadFileData(const ResourceManagement::BinaryPackage& data) = 0;
     };
 }
 

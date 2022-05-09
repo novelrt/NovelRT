@@ -10,23 +10,18 @@
 #include <gsl/span>
 #include <sstream>
 #include "../Ecs/Ecs.h"
+#include "../ResourceManagement/ResourceManagement.h"
 //#include "../../jsoncons/json.hpp"
 //#include "../../jsoncons_ext/bson/bson.hpp"
 
 namespace NovelRT::Persistence
 {
-    enum class BinaryDataType : uint32_t;
-    struct BinaryMemberMetadata;
-    struct BinaryPackage;
     class Chapter;
     class IPersistable;
 }
 
 // clang-format off
 
-#include "BinaryDataType.h"
-#include "BinaryMemberMetadata.h"
-#include "BinaryPackage.h"
 #include "IPersistable.h"
 #include "Chapter.h"
 
