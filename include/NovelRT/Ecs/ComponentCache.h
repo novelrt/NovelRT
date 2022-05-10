@@ -133,7 +133,8 @@ namespace NovelRT::Ecs
          *
          * @return A collection of pointers to the registered ComponentBufferMemoryContainer instances.
          */
-        [[nodiscard]] inline std::vector<std::shared_ptr<ComponentBufferMemoryContainer>> GetAllComponentBuffers() const noexcept
+        [[nodiscard]] inline std::vector<std::shared_ptr<ComponentBufferMemoryContainer>> GetAllComponentBuffers()
+            const noexcept
         {
             std::vector<std::shared_ptr<ComponentBufferMemoryContainer>> returnCollection{};
             returnCollection.reserve(_componentMap.size());

@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <gtest/gtest.h>
-#include <NovelRT/Persistence/Persistence.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Persistence/Persistence.h>
+#include <gtest/gtest.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Persistence;

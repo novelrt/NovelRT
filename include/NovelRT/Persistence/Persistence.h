@@ -5,12 +5,12 @@
 #define NOVELRT_PERSISTENCE_H
 
 // Persistence dependencies
-#include <map>
-#include <string>
-#include <gsl/span>
-#include <sstream>
 #include "../Ecs/Ecs.h"
 #include "../ResourceManagement/ResourceManagement.h"
+#include <gsl/span>
+#include <map>
+#include <sstream>
+#include <string>
 
 namespace NovelRT::Persistence
 {

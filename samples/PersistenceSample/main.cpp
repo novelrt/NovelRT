@@ -19,7 +19,8 @@ int main()
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
-    auto resourceManagementProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
+    auto resourceManagementProvider =
+        selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
 
     auto scheduler =
         Configurator()
@@ -62,33 +63,34 @@ int main()
     NovelRT::Timing::Timestamp secondsPassed(0);
     Chapter chapterToLoad;
 
-    scheduler.RegisterSystem(
-        [&](auto delta, auto catalogue)
+    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+        secondsPassed += delta;
+
+        if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
         {
-            secondsPassed += delta;
+            secondsPassed = NovelRT::Timing::Timestamp(0);
+            chapterToLoad = Chapter::FromEcsInstance(scheduler.GetComponentCache());
+            resourceManagementProvider->GetResourceLoader()->SavePackage("MyChapter.chapter",
+                                                                         chapterToLoad.ToFileData());
+            chapterToLoad.LoadFileData(
+                resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
+            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache()); IF YOU WANT TO SEE THE FILE SIZE GROW
+            // FOREVER, UNCOMMENT THIS!
+        }
+        else
+        {
+            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
 
-            if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
+            for (auto [entity, transform] : transforms)
             {
-                secondsPassed = NovelRT::Timing::Timestamp(0);
-                chapterToLoad = Chapter::FromEcsInstance(scheduler.GetComponentCache());
-                resourceManagementProvider->GetResourceLoader()->SavePackage("MyChapter.chapter", chapterToLoad.ToFileData());
-                chapterToLoad.LoadFileData(resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-                //chapterToLoad.ToEcsInstance(scheduler.GetComponentCache()); IF YOU WANT TO SEE THE FILE SIZE GROW FOREVER, UNCOMMENT THIS!
+                TransformComponent newComponent{};
+                newComponent.rotationInRadians =
+                    NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+                transforms.PushComponentUpdateInstruction(entity, newComponent);
             }
-            else
-            {
-                ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-
-                for (auto [entity, transform] : transforms)
-                {
-                    TransformComponent newComponent{};
-                    newComponent.rotationInRadians =
-                        NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-                    newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                    transforms.PushComponentUpdateInstruction(entity, newComponent);
-                }
-            }
-        });
+        }
+    });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 

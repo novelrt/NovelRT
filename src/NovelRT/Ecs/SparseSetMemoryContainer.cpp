@@ -221,7 +221,8 @@ namespace NovelRT::Ecs
 
     void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data)
     {
-        ResetAndWriteDenseData(gsl::span<const size_t>(ids, length), gsl::span<const uint8_t>(data, length * GetSizeOfDataTypeInBytes()));
+        ResetAndWriteDenseData(gsl::span<const size_t>(ids, length),
+                               gsl::span<const uint8_t>(data, length * GetSizeOfDataTypeInBytes()));
     }
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept

@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include "NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.h"
+#include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -188,13 +188,9 @@ namespace NovelRT::ResourceManagement::Desktop
 
         for (auto&& obj : metadata.array_value())
         {
-            BinaryMemberMetadata newMemberMetadata {
-               obj["name"].as<std::string>(),
-               static_cast<BinaryDataType>(obj["type"].as<uint32_t>()),
-               obj["location"].as<size_t>(),
-               obj["sizeOfTypeInBytes"].as<size_t>(),
-               obj["length"].as<size_t>()
-            };
+            BinaryMemberMetadata newMemberMetadata{
+                obj["name"].as<std::string>(), static_cast<BinaryDataType>(obj["type"].as<uint32_t>()),
+                obj["location"].as<size_t>(), obj["sizeOfTypeInBytes"].as<size_t>(), obj["length"].as<size_t>()};
 
             package.memberMetadata.emplace_back(newMemberMetadata);
         }

@@ -57,18 +57,25 @@ namespace NovelRT::Persistence
             size_t amountOfEntities = dataPair.second.Length();
             size_t oldLength = package.data.size();
 
-            auto entityMetadata = ResourceManagement::BinaryMemberMetadata { dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength, sizeof(Ecs::EntityId), amountOfEntities };
+            auto entityMetadata = ResourceManagement::BinaryMemberMetadata{
+                dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength,
+                sizeof(Ecs::EntityId), amountOfEntities};
             package.memberMetadata.emplace_back(entityMetadata);
 
-            auto componentMetadata = ResourceManagement::BinaryMemberMetadata { dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary, oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes), dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities };
+            auto componentMetadata = ResourceManagement::BinaryMemberMetadata{
+                dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary,
+                oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes),
+                dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities};
             package.memberMetadata.emplace_back(componentMetadata);
 
-            package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) + (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
+            package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
+                                (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
 
             size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
             auto entityPtr = reinterpret_cast<Ecs::EntityId*>(package.data.data() + oldLength);
-            auto componentPtr = package.data.data() + oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes);
+            auto componentPtr =
+                package.data.data() + oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes);
 
             for (auto&& [entity, dataView] : dataPair.second)
             {
@@ -103,7 +110,7 @@ namespace NovelRT::Persistence
             std::vector<std::string> splitName{};
             std::string item;
 
-            while(std::getline(iss, item, '_'))
+            while (std::getline(iss, item, '_'))
             {
                 splitName.emplace_back(item);
             }
@@ -142,7 +149,8 @@ namespace NovelRT::Persistence
         for (auto&& pair : tempMap)
         {
             Ecs::SparseSetMemoryContainer container(pair.second.sizeOfComponentInBytes);
-            container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities), pair.second.entityCount, pair.second.components);
+            container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
+                                             pair.second.entityCount, pair.second.components);
 
             newBufferState.emplace(pair.first, container);
         }
