@@ -2,7 +2,7 @@ include(FetchContent)
 
 FetchContent_Declare(Fabulist
         URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-        URL_HASH SHA512=ce4f2d4b2325534086a5e44c11c84aaa2188a4dedca7fa33884491653d11ddd9a68235832f263671eac73cdf251f4aea1eb514b18d7da444d1a1cd76d1f08457
+        URL_HASH SHA512=1dab11a62b9720eb82ab9f816c8f8c26c778338f6fe39a7d9df0444e74cf4e50a53ea77b1e52cd5ee02676d8bf841a94bfa3b98a49e9c743038045f53e76997a
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
