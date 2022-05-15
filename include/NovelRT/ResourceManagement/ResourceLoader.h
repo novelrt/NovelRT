@@ -43,6 +43,13 @@ namespace NovelRT::ResourceManagement
             return LoadShaderSourceInternal(_resourcesRootDirectory / "Shaders" / fileName);
         }
 
+        [[nodiscard]] virtual std::string LoadPlainText(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] inline virtual std::string LoadPlainText(const std::string& fileName)
+        {
+            return std::move(LoadPlainText(_resourcesRootDirectory / fileName));
+        }
+
         virtual ~ResourceLoader() = default;
     };
 }

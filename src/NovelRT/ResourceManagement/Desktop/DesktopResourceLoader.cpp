@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
+#include "NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.h"
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -160,5 +161,24 @@ namespace NovelRT::ResourceManagement::Desktop
         file.close();
 
         return buffer;
+    }
+
+    std::string DesktopResourceLoader::LoadPlainText(std::filesystem::path filePath)
+    {
+        std::ifstream file(filePath.string());
+        std::string returnValue;
+        std::string tempText;
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        while(std::getline(file, tempText))
+        {
+            returnValue += tempText;
+        }
+
+        return tempText;
     }
 }

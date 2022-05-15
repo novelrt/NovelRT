@@ -92,8 +92,11 @@
 
   #include <NovelRT/Graphics/RGBAColour.h>
 
-  //Maths types
+  // Maths types
   #include <NovelRT/Maths/Maths.h>
+
+  // Narrative types
+  #include <NovelRT/Narrative/Narrative.h>
 
   // Base Types
   #include <NovelRT/LoggingService.h> // this isn't in the services section due to include order/dependencies.
@@ -117,8 +120,7 @@
   #include <NovelRT/Input/Input.h>
   #include <NovelRT/Input/Glfw/Input.Glfw.h>
 
-
-  // Plugin Management types
+  // PluginManagement types
   #include <NovelRT/PluginManagement/PluginManagement.h>
 
  // ResourceManagement types
