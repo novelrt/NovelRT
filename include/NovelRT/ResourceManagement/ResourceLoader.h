@@ -47,7 +47,7 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] inline virtual std::string LoadPlainText(const std::string& fileName)
         {
-            return std::move(LoadPlainText(_resourcesRootDirectory / fileName));
+            return LoadPlainText(_resourcesRootDirectory / fileName);
         }
 
         virtual ~ResourceLoader() = default;
