@@ -22,6 +22,7 @@ namespace NovelRT::Ecs::Narrative
             currentState = other.currentState;
             sectionId = other.sectionId;
             characterId = other.characterId;
+            return *this;
         }
 
         inline bool operator==(const NarrativePlayerStateComponent& other) const noexcept
