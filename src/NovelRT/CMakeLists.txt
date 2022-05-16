@@ -35,6 +35,7 @@ set(SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
+  Ecs/Narrative/NarrativePlayerSystem.cpp
 
   EngineConfig.cpp
 
