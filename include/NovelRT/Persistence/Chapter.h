@@ -4,13 +4,13 @@
 #ifndef NOVELRT_PERSISTENCE_CHAPTER_H
 #define NOVELRT_PERSISTENCE_CHAPTER_H
 
-#ifndef NOVELRT_PERSISTENCE_CHAPTER_H
+#ifndef NOVELRT_PERSISTENCE_H
 #error NovelRT does not support including types explicitly by default. Please include Persistence.h instead for the Persistence namespace subset.
 #endif
 
 namespace NovelRT::Persistence
 {
-    class Chapter final : public IPersistable
+    class Chapter final : public Persistable
     {
     private:
         std::map<std::string, Ecs::SparseSetMemoryContainer> _componentCacheData;

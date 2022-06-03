@@ -15,13 +15,15 @@
 namespace NovelRT::Persistence
 {
     class Chapter;
-    class IPersistable;
+    class Persistable;
+    class ICustomSerialisationRule;
 }
 
 // clang-format off
 
-#include "IPersistable.h"
+#include "Persistable.h"
 #include "Chapter.h"
+#include "ICustomSerialisationRule.h"
 
 // clang-format on
 

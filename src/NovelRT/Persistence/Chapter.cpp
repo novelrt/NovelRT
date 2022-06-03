@@ -56,6 +56,7 @@ namespace NovelRT::Persistence
         {
             size_t amountOfEntities = dataPair.second.Length();
             size_t oldLength = package.data.size();
+            auto& rules = GetSerialisationRules();
 
             auto entityMetadata = ResourceManagement::BinaryMemberMetadata{
                 dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength,
@@ -66,6 +67,14 @@ namespace NovelRT::Persistence
                 dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary,
                 oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes),
                 dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities};
+
+            auto it = rules.find(dataPair.first);
+
+            if (it != rules.end())
+            {
+                componentMetadata.sizeOfTypeInBytes = it->second->GetSerialisedSize();
+            }
+
             package.memberMetadata.emplace_back(componentMetadata);
 
             package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
@@ -81,6 +90,7 @@ namespace NovelRT::Persistence
             {
                 std::memcpy(entityPtr, &entity, sizeof(Ecs::EntityId));
                 dataView.CopyFromLocation(componentPtr);
+                ApplySerialisationRule(dataPair.first, reinterpret_cast<uint8_t*>(componentPtr));
 
                 entityPtr++;
                 componentPtr += sizeOfComponentType;
