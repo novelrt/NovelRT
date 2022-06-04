@@ -43,6 +43,13 @@ namespace NovelRT::ResourceManagement
             return LoadShaderSourceInternal(_resourcesRootDirectory / "Shaders" / fileName);
         }
 
+        [[nodiscard]] virtual std::unique_ptr<std::istream> GetStreamToAsset(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] inline std::unique_ptr<std::istream> GetStreamToAssetRelativePath(const std::filesystem::path& relativeFilePath)
+        {
+            return GetStreamToAsset(ResourcesRootDirectory() / relativeFilePath);
+        }
+
         virtual ~ResourceLoader() = default;
     };
 }

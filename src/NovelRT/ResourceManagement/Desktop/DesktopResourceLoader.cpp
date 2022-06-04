@@ -161,4 +161,16 @@ namespace NovelRT::ResourceManagement::Desktop
 
         return buffer;
     }
+
+    std::unique_ptr<std::istream> DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
+    {
+        auto file = std::make_unique<std::ifstream>(filePath.string());
+
+        if (!file->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        return file;
+    }
 }

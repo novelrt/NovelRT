@@ -51,8 +51,14 @@ namespace NovelRT::Ecs
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
+            // You can register additional components here. - Matt
+            target.GetComponentCache().RegisterComponentType(
+                Narrative::NarrativePlayerStateComponent{Narrative::NarrativePlayerState::RequestDestroy,0, 0}, "NovelRT::Ecs::Narrative::NarrativePlayerStateComponent");
+
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
+
+            target.RegisterSystem(std::make_shared<Ecs::Narrative::NarrativePlayerSystem>());
         }
 
     public:
