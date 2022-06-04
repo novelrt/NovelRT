@@ -17,6 +17,7 @@ namespace NovelRT::ResourceManagement
         size_t location;
         size_t sizeOfTypeInBytes;
         size_t length;
+        size_t sizeOfSerialisedDataInBytes;
     };
 }
 

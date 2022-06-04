@@ -13,6 +13,66 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
+    struct TestStruct
+    {
+        int32_t value;
+        int32_t multiplier;
+        bool shouldDelete;
+
+        TestStruct& operator+=(const TestStruct& rhs)
+        {
+            value = rhs.value;
+            multiplier = rhs.multiplier;
+            shouldDelete = rhs.shouldDelete;
+
+            return *this;
+        }
+
+        bool operator==(const TestStruct& rhs)
+        {
+            return value == rhs.value && multiplier == rhs.multiplier && shouldDelete == rhs.shouldDelete;
+        }
+    };
+
+    class TestStructSerialisationRule final : public NovelRT::Persistence::ICustomSerialisationRule
+    {
+    public:
+        size_t GetSerialisedSize() const noexcept final
+        {
+            return sizeof(int32_t) * 2;
+        }
+
+        std::vector<uint8_t> ExecuteSerialiseModification(gsl::span<const uint8_t> component) const noexcept final
+        {
+            TestStruct componentStruct = *reinterpret_cast<const TestStruct*>(component.data());
+
+            std::vector<uint8_t> data{};
+            data.resize(GetSerialisedSize());
+            auto dataPtr = reinterpret_cast<int32_t*>(data.data());
+            dataPtr[0] = componentStruct.value;
+            dataPtr[1] = componentStruct.multiplier;
+
+            return data;
+        }
+
+        std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept final
+        {
+            auto dataPtr = reinterpret_cast<const int32_t*>(component.data());
+
+            TestStruct newData{};
+            std::vector<uint8_t> structData{};
+            structData.resize(sizeof(TestStruct));
+            newData.value = dataPtr[0];
+            newData.multiplier = dataPtr[1];
+            newData.shouldDelete = false;
+            *reinterpret_cast<TestStruct*>(structData.data()) = newData;
+
+            return structData;
+        }
+    };
+
+    NovelRT::Persistence::Persistable::GetSerialisationRules().emplace("TestStruct", std::unique_ptr<ICustomSerialisationRule>(new TestStructSerialisationRule()));
+
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
@@ -29,7 +89,7 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(resourceManagementProvider)
-            .InitialiseAndRegisterComponents();
+            .InitialiseAndRegisterComponents<TestStruct>(std::make_tuple(TestStruct{0, 0, true}, "TestStruct"));
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
@@ -41,6 +101,7 @@ int main()
 
     auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
     auto entityGraphBuffer = scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>();
+    auto testStructBuffer = scheduler.GetComponentCache().GetComponentBuffer<TestStruct>();
 
     EntityId parentEntity =
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
@@ -59,6 +120,10 @@ int main()
         TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
+
+    testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{2, 5, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{2, 10, false});
 
     NovelRT::Timing::Timestamp secondsPassed(0);
     Chapter chapterToLoad;

@@ -13,19 +13,18 @@ namespace NovelRT::Persistence
     class Persistable
     {
     private:
-        static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>> _serialisationRules;
 
     protected:
-        inline void ApplySerialisationRule(const std::string& serialisedName, uint8_t* componentData) const
-        {
+        void ApplySerialisationRule(const std::string& serialisedName,
+                                    gsl::span<const uint8_t> componentData,
+                                    gsl::span<uint8_t> writeToData) const;
 
-        }
+        void ApplyDeserialisationRule(const std::string& serialisedName,
+                                      gsl::span<const uint8_t> serialisedData,
+                                      gsl::span<uint8_t> writeToData) const;
 
     public:
-        [[nodiscard]] inline static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>& GetSerialisationRules() noexcept
-        {
-            return _serialisationRules;
-        }
+        [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>& GetSerialisationRules() noexcept;
 
         [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const noexcept = 0;
         virtual void LoadFileData(const ResourceManagement::BinaryPackage& data) = 0;

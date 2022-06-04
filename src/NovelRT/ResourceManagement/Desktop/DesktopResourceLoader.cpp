@@ -215,6 +215,7 @@ namespace NovelRT::ResourceManagement::Desktop
             newMemberJson["location"] = member.location;
             newMemberJson["sizeOfTypeInBytes"] = member.sizeOfTypeInBytes;
             newMemberJson["length"] = member.length;
+            newMemberJson["sizeOfSerialisedDataInBytes"] = member.sizeOfSerialisedDataInBytes;
 
             memberMetadataJson.emplace_back(newMemberJson);
         }

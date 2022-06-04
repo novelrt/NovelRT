@@ -21,9 +21,9 @@ namespace NovelRT::Persistence
 
 // clang-format off
 
+#include "ICustomSerialisationRule.h"
 #include "Persistable.h"
 #include "Chapter.h"
-#include "ICustomSerialisationRule.h"
 
 // clang-format on
 

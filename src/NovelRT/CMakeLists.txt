@@ -78,6 +78,7 @@ set(SOURCES
   Maths/QuadTree.cpp
 
   Persistence/Chapter.cpp
+  Persistence/Persistable.cpp
 
   PluginManagement/TemporaryFnPtrs.cpp
 

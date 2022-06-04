@@ -20,7 +20,6 @@ namespace NovelRT::Ecs
     private:
         std::vector<std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
-        Ecs::SparseSet<EntityId,
 
     public:
         /**

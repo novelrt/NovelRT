@@ -66,19 +66,19 @@ namespace NovelRT::Persistence
             auto componentMetadata = ResourceManagement::BinaryMemberMetadata{
                 dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary,
                 oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes),
-                dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities};
+                dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities, 0};
 
             auto it = rules.find(dataPair.first);
 
             if (it != rules.end())
             {
-                componentMetadata.sizeOfTypeInBytes = it->second->GetSerialisedSize();
+                componentMetadata.sizeOfSerialisedDataInBytes = it->second->GetSerialisedSize();
             }
 
             package.memberMetadata.emplace_back(componentMetadata);
 
             package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
-                                (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
+                                (componentMetadata.length * componentMetadata.sizeOfSerialisedDataInBytes));
 
             size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
@@ -90,7 +90,7 @@ namespace NovelRT::Persistence
             {
                 std::memcpy(entityPtr, &entity, sizeof(Ecs::EntityId));
                 dataView.CopyFromLocation(componentPtr);
-                ApplySerialisationRule(dataPair.first, reinterpret_cast<uint8_t*>(componentPtr));
+                ApplySerialisationRule(dataPair.first, gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()), dataPair.second.GetSizeOfDataTypeInBytes()), gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfTypeInBytes));
 
                 entityPtr++;
                 componentPtr += sizeOfComponentType;
@@ -110,6 +110,7 @@ namespace NovelRT::Persistence
             const uint8_t* components = nullptr;
             size_t entityCount = 0;
             size_t sizeOfComponentInBytes = 0;
+            size_t sizeOfSerialisedDataInBytes = 0;
         };
 
         std::map<std::string, PointerSpan> tempMap{};
@@ -147,6 +148,7 @@ namespace NovelRT::Persistence
             {
                 span.components = &data.data[metadata.location];
                 span.sizeOfComponentInBytes = metadata.sizeOfTypeInBytes;
+                span.sizeOfSerialisedDataInBytes = metadata.sizeOfSerialisedDataInBytes;
             }
             else
             {
@@ -155,12 +157,36 @@ namespace NovelRT::Persistence
         }
 
         std::map<std::string, Ecs::SparseSetMemoryContainer> newBufferState{};
+        auto& serialisationRules = GetSerialisationRules();
 
         for (auto&& pair : tempMap)
         {
             Ecs::SparseSetMemoryContainer container(pair.second.sizeOfComponentInBytes);
-            container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
-                                             pair.second.entityCount, pair.second.components);
+
+            if (serialisationRules.find(pair.first) != serialisationRules.end())
+            {
+                std::vector<uint8_t> newBufferData{};
+                newBufferData.resize(pair.second.sizeOfComponentInBytes * pair.second.entityCount);
+
+                auto bufferDataPtr = newBufferData.data();
+                auto serialisedDataPtr = pair.second.components;
+
+                for (size_t i = 0; i < pair.second.entityCount; i++)
+                {
+                    ApplyDeserialisationRule(pair.first, gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes), gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr), pair.second.sizeOfSerialisedDataInBytes));
+                    bufferDataPtr += pair.second.sizeOfComponentInBytes;
+                    serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
+                }
+
+                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
+                                                 pair.second.entityCount, newBufferData.data());
+            }
+            else
+            {
+                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
+                                                 pair.second.entityCount, pair.second.components);
+            }
+
 
             newBufferState.emplace(pair.first, container);
         }
