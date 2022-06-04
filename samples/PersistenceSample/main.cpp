@@ -122,8 +122,8 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
     testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{2, 5, false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{2, 10, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, false});
 
     NovelRT::Timing::Timestamp secondsPassed(0);
     Chapter chapterToLoad;

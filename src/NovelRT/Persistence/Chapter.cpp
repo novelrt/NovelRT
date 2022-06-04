@@ -77,8 +77,16 @@ namespace NovelRT::Persistence
 
             package.memberMetadata.emplace_back(componentMetadata);
 
-            package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
-                                (componentMetadata.length * componentMetadata.sizeOfSerialisedDataInBytes));
+            if (componentMetadata.sizeOfSerialisedDataInBytes != 0)
+            {
+                package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
+                                    (componentMetadata.length * componentMetadata.sizeOfSerialisedDataInBytes));
+            }
+            else
+            {
+                package.data.resize(package.data.size() + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes) +
+                                    (componentMetadata.length * componentMetadata.sizeOfTypeInBytes));
+            }
 
             size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
@@ -89,11 +97,20 @@ namespace NovelRT::Persistence
             for (auto&& [entity, dataView] : dataPair.second)
             {
                 std::memcpy(entityPtr, &entity, sizeof(Ecs::EntityId));
-                dataView.CopyFromLocation(componentPtr);
-                ApplySerialisationRule(dataPair.first, gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()), dataPair.second.GetSizeOfDataTypeInBytes()), gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfTypeInBytes));
+
+                size_t componentJumpValue = sizeOfComponentType;
+                if (componentMetadata.sizeOfSerialisedDataInBytes == 0)
+                {
+                    dataView.CopyFromLocation(componentPtr);
+                }
+                else
+                {
+                    componentJumpValue = componentMetadata.sizeOfSerialisedDataInBytes;
+                    ApplySerialisationRule(dataPair.first, gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()), dataPair.second.GetSizeOfDataTypeInBytes()), gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
+                }
 
                 entityPtr++;
-                componentPtr += sizeOfComponentType;
+                componentPtr += componentJumpValue;
             }
         }
 
@@ -173,7 +190,7 @@ namespace NovelRT::Persistence
 
                 for (size_t i = 0; i < pair.second.entityCount; i++)
                 {
-                    ApplyDeserialisationRule(pair.first, gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes), gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr), pair.second.sizeOfSerialisedDataInBytes));
+                    ApplyDeserialisationRule(pair.first, gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes), gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr), pair.second.sizeOfComponentInBytes));
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
                 }
