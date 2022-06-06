@@ -12,8 +12,6 @@ namespace NovelRT::Persistence
 {
     class Persistable
     {
-    private:
-
     protected:
         void ApplySerialisationRule(const std::string& serialisedName,
                                     gsl::span<const uint8_t> componentData,

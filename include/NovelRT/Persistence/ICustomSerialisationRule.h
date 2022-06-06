@@ -12,8 +12,9 @@ namespace NovelRT::Persistence
 {
     class ICustomSerialisationRule
     {
-    private:
     public:
+        virtual ~ICustomSerialisationRule() = default;
+
         [[nodiscard]] virtual size_t GetSerialisedSize() const noexcept = 0;
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteSerialiseModification(gsl::span<const uint8_t> component) const noexcept = 0;
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept = 0;
