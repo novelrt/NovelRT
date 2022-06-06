@@ -60,7 +60,7 @@ namespace NovelRT::Persistence
 
             auto entityMetadata = ResourceManagement::BinaryMemberMetadata{
                 dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength,
-                sizeof(Ecs::EntityId), amountOfEntities};
+                sizeof(Ecs::EntityId), amountOfEntities, 0};
             package.memberMetadata.emplace_back(entityMetadata);
 
             auto componentMetadata = ResourceManagement::BinaryMemberMetadata{
