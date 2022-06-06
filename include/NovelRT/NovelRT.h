@@ -41,6 +41,13 @@
 #include <type_traits>
 #include <vector>
 
+// Fabulist
+#include <fabulist/runtime/action.hpp>
+#include <fabulist/runtime/runtime.hpp>
+#include <fabulist/runtime/state.hpp>
+#include <fabulist/runtime/story.hpp>
+#include <fabulist/runtime/version.hpp>
+
 // Freetype
 #include <ft2build.h>
 #include FT_FREETYPE_H
