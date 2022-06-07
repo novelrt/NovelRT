@@ -70,7 +70,8 @@ int main()
         }
     };
 
-    NovelRT::Persistence::Persistable::GetSerialisationRules().emplace("TestStruct", std::unique_ptr<ICustomSerialisationRule>(new TestStructSerialisationRule()));
+    NovelRT::Persistence::Persistable::GetSerialisationRules().emplace(
+        "TestStruct", std::unique_ptr<ICustomSerialisationRule>(new TestStructSerialisationRule()));
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);

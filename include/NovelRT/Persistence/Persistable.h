@@ -22,7 +22,8 @@ namespace NovelRT::Persistence
                                       gsl::span<uint8_t> writeToData) const;
 
     public:
-        [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>& GetSerialisationRules() noexcept;
+        [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>&
+        GetSerialisationRules() noexcept;
 
         [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const noexcept = 0;
         virtual void LoadFileData(const ResourceManagement::BinaryPackage& data) = 0;

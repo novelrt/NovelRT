@@ -58,15 +58,21 @@ namespace NovelRT::Persistence
             size_t oldLength = package.data.size();
             auto& rules = GetSerialisationRules();
 
-            auto entityMetadata = ResourceManagement::BinaryMemberMetadata{
-                dataPair.first + "_entities", ResourceManagement::BinaryDataType::Binary, oldLength,
-                sizeof(Ecs::EntityId), amountOfEntities, 0};
+            auto entityMetadata = ResourceManagement::BinaryMemberMetadata{dataPair.first + "_entities",
+                                                                           ResourceManagement::BinaryDataType::Binary,
+                                                                           oldLength,
+                                                                           sizeof(Ecs::EntityId),
+                                                                           amountOfEntities,
+                                                                           0};
             package.memberMetadata.emplace_back(entityMetadata);
 
             auto componentMetadata = ResourceManagement::BinaryMemberMetadata{
-                dataPair.first + "_components", ResourceManagement::BinaryDataType::Binary,
+                dataPair.first + "_components",
+                ResourceManagement::BinaryDataType::Binary,
                 oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes),
-                dataPair.second.GetSizeOfDataTypeInBytes(), amountOfEntities, 0};
+                dataPair.second.GetSizeOfDataTypeInBytes(),
+                amountOfEntities,
+                0};
 
             auto it = rules.find(dataPair.first);
 
@@ -106,7 +112,11 @@ namespace NovelRT::Persistence
                 else
                 {
                     componentJumpValue = componentMetadata.sizeOfSerialisedDataInBytes;
-                    ApplySerialisationRule(dataPair.first, gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()), dataPair.second.GetSizeOfDataTypeInBytes()), gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
+                    ApplySerialisationRule(
+                        dataPair.first,
+                        gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()),
+                                                 dataPair.second.GetSizeOfDataTypeInBytes()),
+                        gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
                 }
 
                 entityPtr++;
@@ -190,7 +200,11 @@ namespace NovelRT::Persistence
 
                 for (size_t i = 0; i < pair.second.entityCount; i++)
                 {
-                    ApplyDeserialisationRule(pair.first, gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes), gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr), pair.second.sizeOfComponentInBytes));
+                    ApplyDeserialisationRule(
+                        pair.first,
+                        gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes),
+                        gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
+                                           pair.second.sizeOfComponentInBytes));
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
                 }
@@ -203,7 +217,6 @@ namespace NovelRT::Persistence
                 container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
                                                  pair.second.entityCount, pair.second.components);
             }
-
 
             newBufferState.emplace(pair.first, container);
         }

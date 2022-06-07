@@ -189,7 +189,8 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             BinaryMemberMetadata newMemberMetadata{
                 obj["name"].as<std::string>(), static_cast<BinaryDataType>(obj["type"].as<uint32_t>()),
-                obj["location"].as<size_t>(), obj["sizeOfTypeInBytes"].as<size_t>(), obj["length"].as<size_t>(), obj["sizeOfSerialisedDataInBytes"].as<size_t>()};
+                obj["location"].as<size_t>(),  obj["sizeOfTypeInBytes"].as<size_t>(),
+                obj["length"].as<size_t>(),    obj["sizeOfSerialisedDataInBytes"].as<size_t>()};
 
             package.memberMetadata.emplace_back(newMemberMetadata);
         }

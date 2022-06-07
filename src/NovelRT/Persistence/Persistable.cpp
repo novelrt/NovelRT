@@ -6,7 +6,7 @@
 namespace NovelRT::Persistence
 {
     std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>& Persistable::
-    GetSerialisationRules() noexcept
+        GetSerialisationRules() noexcept
     {
         static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>> _serialisationRules;
         return _serialisationRules;
