@@ -72,9 +72,10 @@ jobs:
 
       - name: Check Formatting
         id: formatting
-        uses: DoozyX/clang-format-lint-action@v0.11
+        uses: DoozyX/clang-format-lint-action@v0.13
         with:
           source: 'src tests include samples'
+          exclude: 'include/jsoncons include/jsoncons_ext'
           extensions: 'h,cpp,c,hpp'
           clangFormatVersion: 10
           inplace: True

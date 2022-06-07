@@ -77,6 +77,9 @@ set(SOURCES
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
 
+  Persistence/Chapter.cpp
+  Persistence/Persistable.cpp
+
   PluginManagement/TemporaryFnPtrs.cpp
 
   ResourceManagement/Desktop/DesktopResourceLoader.cpp

@@ -222,6 +222,11 @@ namespace NovelRT::Ecs
 
         void Clear() noexcept;
 
+        [[nodiscard]] inline size_t GetSizeOfDataTypeInBytes() const noexcept
+        {
+            return _sizeOfDataTypeInBytes;
+        }
+
         [[nodiscard]] bool ContainsKey(size_t key) const noexcept;
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
@@ -238,6 +243,10 @@ namespace NovelRT::Ecs
             size_t denseIndex) const noexcept;
 
         [[nodiscard]] size_t Length() const noexcept;
+
+        void ResetAndWriteDenseData(gsl::span<const size_t> ids, gsl::span<const uint8_t> data);
+
+        void ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data);
 
         [[nodiscard]] ByteIteratorView operator[](size_t key) noexcept;
 

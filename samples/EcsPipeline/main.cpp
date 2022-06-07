@@ -1,25 +1,29 @@
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
-// for more information.
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository
+// root for more information.
 
 #include <NovelRT/NovelRT.h>
 
 using namespace NovelRT::Ecs;
+using namespace NovelRT::Input;
 using namespace NovelRT::PluginManagement;
 
 NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
+    NovelRT::LoggingService logger = NovelRT::LoggingService();
+    logger.setLogLevel(NovelRT::LogLevel::Info);
+
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-
+    auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
             .WithPluginProvider(windowingProvider)
+            .WithPluginProvider(inputProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
             .InitialiseAndRegisterComponents();
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
@@ -65,12 +69,15 @@ int main()
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
-    DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
-
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
-    windowPtr->SetWindowTitle("ECS Test");
+    windowPtr->SetWindowTitle("ECS Render Pipeline Test");
+
+    std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem =
+        scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>();
+
+    DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
     while (!windowPtr->GetShouldClose())
     {

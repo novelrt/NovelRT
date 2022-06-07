@@ -161,4 +161,80 @@ namespace NovelRT::ResourceManagement::Desktop
 
         return buffer;
     }
+
+    BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
+    {
+        filePath = _resourcesRootDirectory / filePath;
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize));
+        file.close();
+
+        BinaryPackage package{};
+        package.memberMetadata = {};
+
+        jsoncons::json j = jsoncons::bson::decode_bson<jsoncons::json>(buffer);
+        jsoncons::json metadata = j["memberMetadata"];
+
+        for (auto&& obj : metadata.array_value())
+        {
+            BinaryMemberMetadata newMemberMetadata{
+                obj["name"].as<std::string>(), static_cast<BinaryDataType>(obj["type"].as<uint32_t>()),
+                obj["location"].as<size_t>(),  obj["sizeOfTypeInBytes"].as<size_t>(),
+                obj["length"].as<size_t>(),    obj["sizeOfSerialisedDataInBytes"].as<size_t>()};
+
+            package.memberMetadata.emplace_back(newMemberMetadata);
+        }
+
+        package.data = j["data"].as<std::vector<uint8_t>>();
+
+        return package;
+    }
+
+    void DesktopResourceLoader::SavePackage(std::filesystem::path filePath, const BinaryPackage& package)
+    {
+        filePath = _resourcesRootDirectory / filePath;
+
+        jsoncons::json j(jsoncons::json_object_arg);
+        std::vector<jsoncons::json> memberMetadataJson{};
+
+        for (auto&& member : package.memberMetadata)
+        {
+            jsoncons::json newMemberJson(jsoncons::json_object_arg);
+
+            newMemberJson["name"] = member.name;
+            newMemberJson["type"] = static_cast<uint32_t>(member.type);
+            newMemberJson["location"] = member.location;
+            newMemberJson["sizeOfTypeInBytes"] = member.sizeOfTypeInBytes;
+            newMemberJson["length"] = member.length;
+            newMemberJson["sizeOfSerialisedDataInBytes"] = member.sizeOfSerialisedDataInBytes;
+
+            memberMetadataJson.emplace_back(newMemberJson);
+        }
+
+        j["memberMetadata"] = memberMetadataJson;
+        j["data"] = package.data;
+
+        std::vector<uint8_t> buffer{};
+        jsoncons::bson::encode_bson(j, buffer);
+
+        std::ofstream file(filePath.string(), std::ios::out | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::InvalidOperationException("Unable to create file at " + filePath.string());
+        }
+
+        file.write(reinterpret_cast<const char*>(buffer.data()), std::streamsize(buffer.size()));
+        file.close();
+    }
 }
