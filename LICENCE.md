@@ -1,6 +1,3 @@
-NovelRT licence
-===============
-
 MIT Licence
 
 Copyright (c) 2022 Matt Jones and Contributors
