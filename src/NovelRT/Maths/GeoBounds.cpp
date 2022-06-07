@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/NovelRT.h>
+#include <fabulist/runtime/action.hpp>
 
 namespace NovelRT::Maths
 {
