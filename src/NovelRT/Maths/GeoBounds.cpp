@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/NovelRT.h>
+#include <crossguid/guid.hpp>
 #include <fabulist/runtime/action.hpp>
 
 namespace NovelRT::Maths
@@ -9,6 +10,8 @@ namespace NovelRT::Maths
     GeoBounds::GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept
         : position(position), size(size), rotation(rotation)
     {
+        auto g = xg::newGuid();
+        (void)g;
     }
 
     bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const noexcept
