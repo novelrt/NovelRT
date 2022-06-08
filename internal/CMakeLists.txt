@@ -1,2 +1,2 @@
-add_subdirectory(Fabulist)
 add_subdirectory(CrossGuid)
+add_subdirectory(Fabulist)

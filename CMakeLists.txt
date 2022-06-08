@@ -64,8 +64,8 @@ if(NOT DOXYGEN_FOUND)
   set(NOVELRT_BUILD_DOCUMENTATION OFF)
 endif()
 
-add_subdirectory(resources)
 add_subdirectory(internal)
+add_subdirectory(resources)
 add_subdirectory(src)
 
 if(NOT NOVELRT_BUILD_INTEROP)

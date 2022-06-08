@@ -1,8 +1,8 @@
 include(FetchContent)
 
 FetchContent_Declare(CrossGuid
-        URL https://github.com/novelrt/crossguid/archive/refs/tags/v0.2.4-alpha.zip
-        URL_HASH SHA512=114da82ecb1061c51c27729c687ac90f370f14e0b10de9439605153079646ddf3af9d2afde511f704c30e79e93f622ee31ed3bc4dd7fa2339629763440e02eca
+        URL https://github.com/novelrt/crossguid/archive/refs/tags/v0.2.5-alpha.zip
+        URL_HASH SHA512=8328a130b71a3f305959318421d607b24b07a4f61340675785d9728d45a89afdc7e989ffc08ed558cbb3073c35954aa35be428f791e4c0b3eba4413b32b63ddb
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
