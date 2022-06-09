@@ -1,7 +1,5 @@
 include(GoogleTest)
 
-enable_testing()
-
 set(SOURCES
   Ecs/CatalogueTest.cpp
   Ecs/ComponentBufferMemoryContainerTest.cpp
