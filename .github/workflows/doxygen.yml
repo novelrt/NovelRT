@@ -14,7 +14,7 @@ jobs:
       image: novelrt/novelrt-build:latest
     steps:
       - name: Allow Repository Changes
-        run: git config --global --add safe.directory /__w/NovelRT/NovelRT
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Checkout Code
         uses: actions/checkout@v2
