@@ -10,7 +10,6 @@ class NovelRTConan(ConanFile):
     requires = [
         ("freetype/2.10.1"),
         ("glfw/3.3.6"),
-        ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
         ("libsndfile/1.0.30"),
         ("ms-gsl/3.1.0"),
