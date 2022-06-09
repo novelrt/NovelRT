@@ -1,8 +1,6 @@
-find_package(GTest ${NOVELRT_GTEST_VERSION} REQUIRED
-  COMPONENTS gtest_main
-)
-
 include(GoogleTest)
+
+enable_testing()
 
 set(SOURCES
   Ecs/CatalogueTest.cpp
@@ -76,8 +74,7 @@ target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
-    GTest::gtest
-    GTest::gtest_main
+    gtest_main
 )
 
 gtest_discover_tests(Engine_Tests
