@@ -1,7 +1,6 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
@@ -144,7 +143,6 @@ target_link_libraries(Engine
     FLAC::FLAC
     Freetype::Freetype
     glfw
-    glm::glm
     Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
     OpenAL::OpenAL
