@@ -157,6 +157,7 @@ target_link_libraries(Engine
     Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
+    jsoncons
 )
 
 install(
