@@ -54,7 +54,11 @@ jobs:
       - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         id: build
-        run: conan build . --build-folder build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          cmake --build build --config ${{ matrix.configuration }}
+          cd build/tests/NovelRT.Tests
+          ctest
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
