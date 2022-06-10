@@ -15,4 +15,3 @@ FetchContent_Declare(glm
         )
 
 FetchContent_MakeAvailable(glm)
-
