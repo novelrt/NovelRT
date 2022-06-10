@@ -14,6 +14,8 @@ if(APPLE)
   find_package(moltenvk REQUIRED)
 endif()
 
+
+
 set(SOURCES
   Atom.cpp
 
@@ -94,11 +96,11 @@ set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
-
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
 
