@@ -2,3 +2,7 @@ add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(jsoncons)
 add_subdirectory(spdlog)
+
+if(NOVELRT_BUILD_TESTS)
+  add_subdirectory(gtest)
+endif()
