@@ -8,7 +8,6 @@ find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
@@ -152,7 +151,7 @@ target_link_libraries(Engine
     Opus::Opus
     PNG::PNG
     SndFile::SndFile
-    spdlog::spdlog
+    spdlog
     TBB::TBB
     Vorbis::Vorbis
     Vulkan::Vulkan
