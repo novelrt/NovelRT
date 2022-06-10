@@ -12,7 +12,6 @@ class NovelRTConan(ConanFile):
         ("glm/0.9.9.7"),
         ("libsndfile/1.0.30"),
         ("ms-gsl/3.1.0"),
-        ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("vulkan-loader/1.2.198.0"),
         #("vulkan-memory-allocator/2.3.0")
@@ -27,7 +26,6 @@ class NovelRTConan(ConanFile):
     default_options = {
         "freetype:shared":True,
         "libsndfile:shared":True,
-        "openal:shared":True,
         "PNG:shared":True,
         "BZip2:shared":True,
         "flac:shared":True,

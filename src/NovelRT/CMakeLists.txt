@@ -4,7 +4,6 @@ find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
-find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
@@ -147,7 +146,6 @@ target_link_libraries(Engine
     glm::glm
     Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
-    OpenAL::OpenAL
     Opus::Opus
     PNG::PNG
     SndFile::SndFile
