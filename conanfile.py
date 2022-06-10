@@ -8,7 +8,6 @@ class NovelRTConan(ConanFile):
     description = "A cross-platform 2D game engine accompanied by a strong toolset for visual novels."
     settings = "os", "compiler", "build_type", "arch"
     requires = [
-        ("freetype/2.10.1"),
         ("glfw/3.3.6"),
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
@@ -28,7 +27,6 @@ class NovelRTConan(ConanFile):
         "buildinterop": [True, False]
     }
     default_options = {
-        "freetype:shared":True,
         "glfw:shared":True,
         "libsndfile:shared":True,
         "openal:shared":True,
