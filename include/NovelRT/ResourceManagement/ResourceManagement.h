@@ -5,12 +5,12 @@
 #define NOVELRT_RESOURCEMANAGEMENT_H
 
 // ResourceManagement Dependencies
-#include "../../jsoncons/json.hpp"
-#include "../../jsoncons_ext/bson/bson.hpp"
-#include "../../jsoncons_ext/jsonpath/jsonpath.hpp"
 #include "../Utilities/Misc.h"
 #include <cstdint>
 #include <filesystem>
+#include <jsoncons/json.hpp>
+#include <jsoncons_ext/bson/bson.hpp>
+#include <jsoncons_ext/jsonpath/jsonpath.hpp>
 #include <memory>
 #include <vector>
 
