@@ -22,6 +22,8 @@ jobs:
           container: novelrt/novelrt-build:latest
           profile: linux-clang10-amd64
           name: Ubuntu - Clang 10
+          c: CC=clang-10
+          cxx: CXX=clang++-10
         - os: windows-2019
           profile: windows-vs2019-amd64
           name: Windows - Visual Studio 2019
@@ -55,7 +57,7 @@ jobs:
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }}
           cd build/tests/NovelRT.Tests
           ctest
