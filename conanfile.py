@@ -12,7 +12,6 @@ class NovelRTConan(ConanFile):
         ("glm/0.9.9.7"),
         ("gtest/1.10.0"),
         ("libsndfile/1.0.30"),
-        ("ms-gsl/3.1.0"),
         ("openal/1.21.1"),
         ("onetbb/2021.3.0"),
         ("vulkan-loader/1.2.198.0"),
