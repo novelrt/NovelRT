@@ -17,3 +17,4 @@ FetchContent_Declare(spdlog
 
 set(SPDLOG_INSTALL ON)
 FetchContent_MakeAvailable(spdlog)
+set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)
