@@ -35,7 +35,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - Freetype 2.10.1
 - GLFW 3.3.6
 - glm 0.9.9.7
-- gtest/gmock 1.10.0
+- gtest/gmock 1.11.0
 - libpng 1.6.37
 - libsndfile 1.0.30
 - Microsoft GSL 3.1.0
