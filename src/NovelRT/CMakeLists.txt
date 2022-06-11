@@ -2,7 +2,6 @@ find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
@@ -100,6 +99,7 @@ target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -145,7 +145,6 @@ target_link_libraries(Engine
     Freetype::Freetype
     glfw
     glm::glm
-    Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
     OpenAL::OpenAL
     Opus::Opus
