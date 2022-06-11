@@ -15,6 +15,7 @@ FetchContent_Declare(spdlog
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
         )
 
-set(SPDLOG_INSTALL ON)
+set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
+set(SPDLOG_ENABLE_PCH ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(spdlog)
 set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)

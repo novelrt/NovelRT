@@ -37,7 +37,6 @@ set(NOVELRT_FLAC_VERSION "1.3.3" CACHE STRING "FLAC version")
 set(NOVELRT_FREETYPE_VERSION "2.10.1" CACHE STRING "Freetype version")
 set(NOVELRT_GLM_VERSION "0.9.9.7" CACHE STRING "GLM version")
 set(NOVELRT_GSL_VERSION "3.1.0" CACHE STRING "ms-gsl version")
-set(NOVELRT_GTEST_VERSION "1.10.0" CACHE STRING "GTest version")
 set(NOVELRT_OGG_VERSION "1.3.5" CACHE STRING "Ogg version")
 set(NOVELRT_ONETBB_VERSION "2021.3.0" CACHE STRING "OneTBB version")
 set(NOVELRT_OPENAL_VERSION "1.21.1" CACHE STRING "OpenAL version")
@@ -79,8 +78,6 @@ if(NOVELRT_BUILD_DOCUMENTATION)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
-  enable_testing()
-
   add_subdirectory(tests)
 endif()
 
