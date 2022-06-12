@@ -9,9 +9,7 @@ class NovelRTConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = [
         ("freetype/2.10.1"),
-        ("glm/0.9.9.7"),
         ("libsndfile/1.0.30"),
-        ("ms-gsl/3.1.0"),
         ("openal/1.21.1"),
         ("vulkan-loader/1.2.198.0"),
         #("vulkan-memory-allocator/2.3.0")
