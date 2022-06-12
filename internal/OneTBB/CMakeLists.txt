@@ -21,6 +21,8 @@ FetchContent_Declare(TBB
 
         PATCH_COMMAND git apply --ignore-space-change --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/v202150-01.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-02.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-03.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-04.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-05.patch"
         )
-set(TBB_FIND_RELEASE_ONLY ON CACHE BOOL "")
-
 FetchContent_MakeAvailable(TBB)
+#set(TBB_FIND_RELEASE_ONLY ON CACHE BOOL "")
+#add_definitions(-DGSL_USE_STATIC_CONSTEXPR_WORKAROUND=1)
+
+
