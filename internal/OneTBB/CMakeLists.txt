@@ -1,0 +1,21 @@
+include(FetchContent)
+
+
+FetchContent_Declare(OneTBB
+        URL https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
+        URL_HASH SHA512=fde7eb56b46fa86b619eb60e587728d19f31639ec06dfd5d7af0dab00ffba38606d7a89dcf050c4cdfa8896560a7424a3431619108f395348dadf60ad6b67a1b
+
+        PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
+        TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
+        STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/stamp"
+        DOWNLOAD_DIR "${CMAKE_CURRENT_BINARY_DIR}/dl"
+        SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src"
+        SUBBUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/build"
+        BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
+        INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
+        LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
+
+        CONFIGURE_COMMAND CMAKE_CACHE_DEFAULT_ARGS -DBUILD_SHARED_LIBS=ON
+        )
+#set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(OneTBB)
