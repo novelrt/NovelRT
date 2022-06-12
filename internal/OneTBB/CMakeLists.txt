@@ -1,7 +1,8 @@
 include(FetchContent)
 
+set(TBB_TEST OFF CACHE BOOL "" FORCE)
 
-FetchContent_Declare(OneTBB
+FetchContent_Declare(TBB
         URL https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         URL_HASH SHA512=fde7eb56b46fa86b619eb60e587728d19f31639ec06dfd5d7af0dab00ffba38606d7a89dcf050c4cdfa8896560a7424a3431619108f395348dadf60ad6b67a1b
 
@@ -14,8 +15,13 @@ FetchContent_Declare(OneTBB
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
-
-        CONFIGURE_COMMAND CMAKE_CACHE_DEFAULT_ARGS -DBUILD_SHARED_LIBS=ON
         )
-#set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(OneTBB)
+
+if(NOT TBB_POPULATED)
+    FetchContent_Populate(TBB)
+    set(TBB_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+    set(BUILD_SHARED_LIBS ON CACHE INTERNAL "")
+    set(TBB_OUTPUT_DIR_BASE "${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
+    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/bin)
+    set(BUILD_SHARED_LIBS ${TBB_BUILD_SHARED_LIBS} CACHE BOOL "" FORCE)
+endif()
