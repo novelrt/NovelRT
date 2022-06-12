@@ -1,6 +1,7 @@
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(jsoncons)
+add_subdirectory(OpenAL)
 add_subdirectory(spdlog)
 
 if(NOVELRT_BUILD_TESTS)

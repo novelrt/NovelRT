@@ -92,13 +92,15 @@ add_library(Engine SHARED ${SOURCES})
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(WIN32)
-  set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  #set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  set_property(TARGET Engine PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${spdlog_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -146,10 +148,10 @@ target_link_libraries(Engine
     glm::glm
     Microsoft.GSL::Microsoft.GSL
     Ogg::Ogg
+    OpenAL
     Opus::Opus
     PNG::PNG
     SndFile::SndFile
-    spdlog
     TBB::TBB
     Vorbis::Vorbis
     Vulkan::Vulkan
