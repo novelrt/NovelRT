@@ -88,7 +88,6 @@ set(SOURCES
   )
 
 add_library(Engine SHARED ${SOURCES})
-
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(WIN32)
@@ -182,13 +181,17 @@ if(WIN32)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+      "${TBB_BINARY_DIR}/src/tbb/$<CONFIG>/tbb12.dll"
+      $<TARGET_FILE_DIR:Engine>/tbb12.dll)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};tbb12.dll")
+
 elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_BINARY_DIR}/thirdparty
           $<TARGET_FILE_DIR:Engine>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};tbb12.dylib")
 endif()
 
