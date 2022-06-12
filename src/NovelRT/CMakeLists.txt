@@ -170,11 +170,6 @@ install(
   DESTINATION include/NovelRT
   FILES_MATCHING PATTERN "*.h"
 )
-install(
-  DIRECTORY ${glm_SOURCE_DIR}/glm/
-  DESTINATION include/glm
-  PATTERN "CMakeLists.txt" EXCLUDE
-)
 
 if(WIN32)
   target_link_libraries(Engine

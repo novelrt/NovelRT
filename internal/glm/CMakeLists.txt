@@ -15,3 +15,8 @@ FetchContent_Declare(glm
         )
 
 FetchContent_MakeAvailable(glm)
+install(
+  DIRECTORY ${glm_SOURCE_DIR}/glm/
+  DESTINATION include/glm
+  PATTERN "CMakeLists.txt" EXCLUDE
+)
