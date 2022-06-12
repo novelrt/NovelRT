@@ -16,6 +16,4 @@ FetchContent_Declare(spdlog
         )
 
 set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
-set(SPDLOG_ENABLE_PCH ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(spdlog)
-set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)

@@ -190,6 +190,9 @@ elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_BINARY_DIR}/thirdparty
           $<TARGET_FILE_DIR:Engine>)
+          add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+          "${TBB_BINARY_DIR}/src/tbb/$<CONFIG>/tbb12.dylib"
+          $<TARGET_FILE_DIR:Engine>/tbb12.dylib)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
   set_target_properties(Engine PROPERTIES RESOURCE "${libs};tbb12.dylib")
 endif()

@@ -3,7 +3,6 @@ include(FindGit)
 if(NOT GIT_FOUND)
   message(FATAL "Git is required to fetch and build oneTBB properly!")
 endif()
-# set(TBB_TEST OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(TBB
         URL https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
@@ -19,10 +18,8 @@ FetchContent_Declare(TBB
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 
-        PATCH_COMMAND git apply --ignore-space-change --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/v202150-01.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-02.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-03.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-04.patch" "${CMAKE_CURRENT_LIST_DIR}/v202150-05.patch"
+        PATCH_COMMAND git apply --ignore-space-change --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/PatchForSharedLib.patch"
         )
 FetchContent_MakeAvailable(TBB)
-#set(TBB_FIND_RELEASE_ONLY ON CACHE BOOL "")
-#add_definitions(-DGSL_USE_STATIC_CONSTEXPR_WORKAROUND=1)
 
 

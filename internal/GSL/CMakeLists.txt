@@ -21,3 +21,4 @@ install(
         DESTINATION include
         PATTERN "CMakeLists.txt" EXCLUDE
 )
+set(GSL_CXX_STANDARD 17)
