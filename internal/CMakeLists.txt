@@ -1,6 +1,7 @@
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(glm)
+add_subdirectory(GSL)
 add_subdirectory(jsoncons)
 add_subdirectory(spdlog)
 
