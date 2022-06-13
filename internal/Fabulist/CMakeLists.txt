@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching Fabulist")
 
 FetchContent_Declare(Fabulist
         URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip

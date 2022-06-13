@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching GLFW")
 
 FetchContent_Declare(glfw
         URL https://github.com/glfw/glfw/archive/refs/tags/3.3.7.zip

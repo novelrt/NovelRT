@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching jsoncons")
 
 FetchContent_Declare(jsoncons
         URL https://github.com/danielaparker/jsoncons/archive/refs/tags/v0.168.7.zip
