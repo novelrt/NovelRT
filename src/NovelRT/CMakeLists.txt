@@ -6,7 +6,6 @@ find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(APPLE)
@@ -151,7 +150,6 @@ target_link_libraries(Engine
     PNG::PNG
     SndFile::SndFile
     spdlog
-    TBB::TBB
     Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
