@@ -3,14 +3,18 @@
 # We can also allow users to specify NOVELRT_TBB_PATH which should be the "tbb" folder inside of
 # the oneAPI installation.
 message(STATUS "Locating oneTBB")
+
 if(NOT DEFINED TBB_DIR)
   if(DEFINED ENV{ONEAPI_ROOT})
     set(TBB_DIR "$ENV{ONEAPI_ROOT}/tbb/latest/lib/cmake")
+  elseif(DEFINED ENV{TBBROOT})
+    set(TBB_DIR "$ENV{TBBROOT}/latest/lib/cmake")
   elseif(DEFINED NOVELRT_TBB_PATH)
     set(TBB_DIR "${NOVELRT_TBB_PATH}/latest/lib/cmake")
   else()
-    message(FATAL "Could not find oneTBB directory! Please define path to oneTBB via NOVELRT_TBB_PATH or the explicit TBB_DIR variables.")
+    message(FATAL_ERROR "Could not find oneTBB directory! Please define path to oneTBB via NOVELRT_TBB_PATH or the explicit TBB_DIR variables.")
   endif()
 endif()
 
-find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
+message(STATUS "Found oneTBB installation")
+set(TBB_FIND_RELEASE_ONLY TRUE)
