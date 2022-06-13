@@ -17,4 +17,4 @@ if(NOT DEFINED TBB_DIR)
 endif()
 
 message(STATUS "Found oneTBB installation")
-set(TBB_FIND_RELEASE_ONLY TRUE)
+set(TBB_FIND_RELEASE_ONLY ON)
