@@ -150,6 +150,7 @@ target_link_libraries(Engine
     PNG::PNG
     SndFile::SndFile
     spdlog
+    TBB::tbb
     Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
