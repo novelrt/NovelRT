@@ -1,7 +1,7 @@
 # TBB_DIR needs to be set to the path where the TBBConfig.cmake files are located.
 # Without this, we'll have to assume that TBB needs to be located using the ONEAPI_ROOT variable
 # We can also allow users to specify NOVELRT_TBB_PATH which should be the "tbb" folder inside of
-# the oneAPI installation.
+# the oneAPI installation - this is the equivalent of TBBROOT as well.
 message(STATUS "Locating oneTBB")
 
 if(NOT DEFINED TBB_DIR)
