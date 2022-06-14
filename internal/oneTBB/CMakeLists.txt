@@ -25,6 +25,8 @@ if(NOT TBB_POPULATED)
   FetchContent_Populate(TBB)
 
   # Manually change the output directory so folders don't spawn randomly in the build env
+  # This gets appended to "${CMAKE_BINARY_DIR}/" so we want to redirect it back into the
+  # internal folder without modifying the logic too much.
   set(TBB_OUTPUT_DIR_BASE "internal/oneTBB/build/" CACHE INTERNAL "Set output directory for oneTBB")
 
   # Workaround to force oneTBB to build shared and not always export symbols
