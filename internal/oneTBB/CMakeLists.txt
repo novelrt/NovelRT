@@ -31,6 +31,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS})
 set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF CACHE INTERNAL "Don't export symbols for Windows")
 add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/bin)
+# Set the values back to what they originally were
 set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
 
