@@ -19,6 +19,8 @@ FetchContent_Declare(TBB
         INSTALL_COMMAND "${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/build --prefix \"${CMAKE_CURRENT_BINARY_DIR}/inst\""
 )
 FetchContent_Populate(TBB)
+# Manually change the output directory so folders don't spawn randomly in the build env
+set(TBB_OUTPUT_DIR_BASE "internal/oneTBB/build/" CACHE INTERNAL "Set output directory for oneTBB")
 
 # Workaround to force oneTBB to build shared and not always export symbols
 # Causes failures during builds so we forcefully change these for oneTBB only
@@ -29,8 +31,8 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS})
 set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF CACHE INTERNAL "Don't export symbols for Windows")
 add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/bin)
-
 set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
+
 set(TBB_TEST OFF CACHE BOOL "Build TBB Tests" FORCE)
 set(TBBMALLOC_BUILD OFF CACHE BOOL "Build tbbmalloc" FORCE)
