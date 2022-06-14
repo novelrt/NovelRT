@@ -142,4 +142,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
+### generic cache folders e.g. neovim ###
+.cache/*
+
 # End of https://www.gitignore.io/api/c++,cmake,clion
