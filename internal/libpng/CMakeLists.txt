@@ -20,4 +20,4 @@ FetchContent_Declare(libpng
 set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(libpng)
 
-set_propert(TARGET png_static PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET png_static PROPERTY POSITION_INDEPENDENT_CODE ON)
