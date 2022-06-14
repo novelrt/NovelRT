@@ -21,6 +21,7 @@ FetchContent_Declare(TBB
         INSTALL_COMMAND "${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/build --prefix \"${CMAKE_CURRENT_BINARY_DIR}/inst\""
 )
 
+FetchContent_GetProperties(TBB)
 if(NOT TBB_POPULATED)
   FetchContent_Populate(TBB)
 
