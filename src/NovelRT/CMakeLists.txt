@@ -1,21 +1,17 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(glfw3 ${NOVELRT_GLFW_VERSION} REQUIRED)
-find_package(glm ${NOVELRT_GLM_VERSION} REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
-find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
-find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(APPLE)
   find_package(moltenvk REQUIRED)
 endif()
+
+
 
 set(SOURCES
   Atom.cpp
@@ -97,15 +93,17 @@ set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
-
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
 if(MSVC)
+  target_compile_definitions(Engine PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
   target_compile_options(Engine
     PRIVATE
       /W4
@@ -145,19 +143,18 @@ target_link_libraries(Engine
     BZip2::BZip2
     FLAC::FLAC
     Freetype::Freetype
-    glfw::glfw
-    glm::glm
-    Microsoft.GSL::Microsoft.GSL
+    glfw
     Ogg::Ogg
     OpenAL::OpenAL
     Opus::Opus
-    PNG::PNG
+    png_static
     SndFile::SndFile
-    spdlog::spdlog
-    TBB::TBB
+    spdlog
+    TBB::tbb
     Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
+    jsoncons
 )
 
 install(
@@ -184,13 +181,19 @@ if(WIN32)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:tbb>
+    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
 elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_BINARY_DIR}/thirdparty
           $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+          $<TARGET_FILE:tbb>
+          $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
 endif()
 

@@ -8,14 +8,9 @@ class NovelRTConan(ConanFile):
     description = "A cross-platform 2D game engine accompanied by a strong toolset for visual novels."
     settings = "os", "compiler", "build_type", "arch"
     requires = [
-        ("glfw/3.3.6"),
-        ("glm/0.9.9.7"),
-        ("gtest/1.10.0"),
+        ("zlib/1.2.12"),
         ("libsndfile/1.0.30"),
-        ("ms-gsl/3.1.0"),
         ("openal/1.21.1"),
-        ("onetbb/2021.3.0"),
-        ("spdlog/1.8.2"),
         ("vulkan-loader/1.2.198.0"),
         #("vulkan-memory-allocator/2.3.0")
     ]
@@ -27,7 +22,6 @@ class NovelRTConan(ConanFile):
         "buildinterop": [True, False]
     }
     default_options = {
-        "glfw:shared":True,
         "libsndfile:shared":True,
         "openal:shared":True,
         "PNG:shared":True,
@@ -38,7 +32,6 @@ class NovelRTConan(ConanFile):
         "Ogg:shared":True,
         "Vorbis:shared":True,
         "vulkan-loader:shared":True,
-        "spdlog:header_only":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,

@@ -1,9 +1,9 @@
 include(FetchContent)
-message(STATUS "Fetching Fabulist")
+message(STATUS "Fetching spdlog")
 
-FetchContent_Declare(Fabulist
-        URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-        URL_HASH SHA512=ae6d21988825097bf312e38bd5ed3cbe075cc9e9655637caa25dd63218927c167ee6b55af9bf62c246a41a44d6f5483a27b769bc2f846ac2fb96ae32e9db7c05
+FetchContent_Declare(spdlog
+        URL https://github.com/gabime/spdlog/archive/refs/tags/v1.10.0.zip
+        URL_HASH SHA512=9f1c778482446f52fb6e35f752226715412011f608bdcbfc87be5ae4a246d6733179a910fce09c2609e4dc1ba50664a6b0c3421749a7a12d8648dcf2b61c0b99
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -14,6 +14,9 @@ FetchContent_Declare(Fabulist
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
-)
+        )
 
-FetchContent_MakeAvailable(Fabulist)
+set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
+set(SPDLOG_ENABLE_PCH ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(spdlog)
+set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)

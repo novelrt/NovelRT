@@ -1,9 +1,9 @@
 include(FetchContent)
-message(STATUS "Fetching Fabulist")
+message(STATUS "Fetching jsoncons")
 
-FetchContent_Declare(Fabulist
-        URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-        URL_HASH SHA512=ae6d21988825097bf312e38bd5ed3cbe075cc9e9655637caa25dd63218927c167ee6b55af9bf62c246a41a44d6f5483a27b769bc2f846ac2fb96ae32e9db7c05
+FetchContent_Declare(jsoncons
+        URL https://github.com/danielaparker/jsoncons/archive/refs/tags/v0.168.7.zip
+        URL_HASH SHA512=610f30b8a388c3f865d7dfd1444168f2e3a1a93c02545f54f5bb535467346159aeb0d2746b797cf34d165bb8dfb878e27829469470bc5af93904d66669fc4692
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -14,6 +14,6 @@ FetchContent_Declare(Fabulist
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
-)
-
-FetchContent_MakeAvailable(Fabulist)
+        )
+set(JSONCONS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(jsoncons)
