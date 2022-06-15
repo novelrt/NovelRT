@@ -1,6 +1,6 @@
 include(FetchContent)
 
-FIND_PACKAGE(ZLIB)
+FIND_PACKAGE(ZLIB REQUIRED)
 
 FetchContent_Declare(libpng
         URL https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip 
