@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching GLM")
 
 FetchContent_Declare(glm
         URL https://github.com/novelrt/glm/archive/refs/heads/master.zip
