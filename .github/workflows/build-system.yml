@@ -53,6 +53,16 @@ jobs:
       - name: Generate Build System
         run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
+      - name: Cache Vendored Dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        env:
+          cache-name: engine-deps
+        with:
+          path: |
+            ~/build/internal
+          key: ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.configuration }}
+
       - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         id: build
