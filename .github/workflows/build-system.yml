@@ -50,10 +50,7 @@ jobs:
           pip3 install conan
           conan config install https://github.com/NovelRT/ConanConfig.git
 
-      - name: Generate Build System
-        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
-
-      - name: Cache Vendored Dependencies
+      - name: Cache Dependencies
         id: cache-deps
         uses: actions/cache@v3
         env:
@@ -61,7 +58,11 @@ jobs:
         with:
           path: |
             ~/build/internal
+            $HOME/.conan/data
           key: ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.configuration }}
+
+      - name: Generate Build System
+        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
       - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
