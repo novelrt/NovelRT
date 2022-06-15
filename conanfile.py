@@ -8,6 +8,7 @@ class NovelRTConan(ConanFile):
     description = "A cross-platform 2D game engine accompanied by a strong toolset for visual novels."
     settings = "os", "compiler", "build_type", "arch"
     requires = [
+        ("zlib/1.2.12"),
         ("freetype/2.10.1"),
         ("libsndfile/1.0.30"),
         ("openal/1.21.1"),
