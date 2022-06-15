@@ -5,7 +5,6 @@ find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(TBB ${NOVELRT_ONETBB_VERSION} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(APPLE)
@@ -104,6 +103,7 @@ target_include_directories(Engine
 )
 
 if(MSVC)
+  target_compile_definitions(Engine PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
   target_compile_options(Engine
     PRIVATE
       /W4
@@ -150,7 +150,7 @@ target_link_libraries(Engine
     png_static
     SndFile::SndFile
     spdlog
-    TBB::TBB
+    TBB::tbb
     Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
@@ -181,13 +181,19 @@ if(WIN32)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:tbb>
+    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
 elseif(APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_BINARY_DIR}/thirdparty
           $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+          $<TARGET_FILE:tbb>
+          $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs}")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
 endif()
 

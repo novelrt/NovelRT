@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching GSL")
 
 FetchContent_Declare(GSL
         URL https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.zip

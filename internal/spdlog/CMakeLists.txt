@@ -1,4 +1,5 @@
 include(FetchContent)
+message(STATUS "Fetching spdlog")
 
 FetchContent_Declare(spdlog
         URL https://github.com/gabime/spdlog/archive/refs/tags/v1.10.0.zip
