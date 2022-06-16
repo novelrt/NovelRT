@@ -4,7 +4,6 @@ find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
-find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
@@ -148,7 +147,7 @@ target_link_libraries(Engine
     Ogg::Ogg
     OpenAL::OpenAL
     Opus::Opus
-    PNG::PNG
+    png_static
     SndFile::SndFile
     spdlog
     TBB::tbb
