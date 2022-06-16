@@ -88,6 +88,10 @@ namespace NovelRT::Windowing::Glfw
            {
                throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", "Attempting to fetch the required Vulkan extensions failed with a count of zero.");
            }
+           else
+           {
+               throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", "Attempting to fetch the required Vulkan extensions failed with a count of zero.");
+           }
         }
 
         for (size_t i = 0; i < extensionCount; i++)
