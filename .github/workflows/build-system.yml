@@ -57,7 +57,7 @@ jobs:
           cache-name: engine-deps
         with:
           path: |
-            $GITUB_WORKSPACE/build/internal
+            $GITHUB_WORKSPACE/build/internal
           key: ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.configuration }}
 
       - name: Generate Build System
