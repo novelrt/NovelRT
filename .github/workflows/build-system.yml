@@ -57,8 +57,7 @@ jobs:
           cache-name: engine-deps
         with:
           path: |
-            ~/build/internal
-            $HOME/.conan/data
+            $GITUB_WORKSPACE/build/internal
           key: ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.configuration }}
 
       - name: Generate Build System
