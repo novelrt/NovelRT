@@ -16,7 +16,7 @@ FetchContent_Declare(libpng
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
-
+set(PNG_ARM_NEON "off" CACHE STRING "" FORCE)
 set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(libpng)
 
