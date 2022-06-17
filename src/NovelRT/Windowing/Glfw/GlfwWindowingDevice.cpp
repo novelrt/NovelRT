@@ -49,7 +49,10 @@ namespace NovelRT::Windowing::Glfw
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
+#ifndef __APPLE__
         glfwSetWindowAttrib(window, GLFW_VISIBLE, GLFW_TRUE);
+#endif
+
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
         glfwSetWindowUserPointer(window, this);
 
@@ -73,7 +76,16 @@ namespace NovelRT::Windowing::Glfw
         {
             const char* output = nullptr;
             glfwGetError(&output);
-            throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            if (output != nullptr)
+            {
+                throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            }
+            else
+            {
+                throw Exceptions::InitialisationFailureException(
+                    "GLFW3 failed to initialise.",
+                    "Attempting to fetch the required Vulkan extensions failed with a count of zero.");
+            }
         }
 
         for (size_t i = 0; i < extensionCount; i++)
