@@ -4,7 +4,7 @@ set(TBB_TEST OFF CACHE BOOL "Build TBB Tests" FORCE)
 set(TBBMALLOC_BUILD OFF CACHE BOOL "Build tbbmalloc" FORCE)
 
 FetchContent_Declare(TBB
-  URL https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
+  URL https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${NOVELRT_ONETBB_VERSION}.zip
   URL_HASH SHA512=fde7eb56b46fa86b619eb60e587728d19f31639ec06dfd5d7af0dab00ffba38606d7a89dcf050c4cdfa8896560a7424a3431619108f395348dadf60ad6b67a1b
 
   PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
