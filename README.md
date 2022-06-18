@@ -175,15 +175,16 @@ If you would like to change any of the settings prior to building, pass them in 
 conan install .. --build=missing --profile macos-appleclang12-amd64 -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False -o NovelRT:buildinterop=False
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
-If you have an intel mac system, then configure the cmake files like so:
+
+If you have a mac with an intel chip configure the cmake files like so:
 ```
 cmake ..
 ```
-If you have an apple-silicon (m1 or m2 or etc) system, you must add this flag after the `cmake ..` like so:
+If you have a mac with apple-silicon (m1 or m2 or etc), you must add an additional flag to the configuration command, like so:
 ```
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
-Then you can build it like so:
+Then you can build it, like so:
 ```
 cmake --build . -j
 ```
