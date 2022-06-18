@@ -1,12 +1,12 @@
 find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
-find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
+#find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
-find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
+#find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
-find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
+#find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
+#find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(APPLE)
   find_package(moltenvk REQUIRED)
@@ -142,17 +142,17 @@ endif()
 target_link_libraries(Engine
   PUBLIC
     BZip2::BZip2
-    FLAC::FLAC
+    #FLAC::FLAC
     Freetype::Freetype
     glfw
-    Ogg::Ogg
+    #Ogg::Ogg
     OpenAL::OpenAL
-    Opus::Opus
+    #Opus::Opus
     PNG::PNG
     SndFile::SndFile
     spdlog
     TBB::tbb
-    Vorbis::Vorbis
+    #Vorbis::Vorbis
     Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
