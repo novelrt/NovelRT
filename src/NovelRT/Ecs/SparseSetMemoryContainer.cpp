@@ -102,9 +102,10 @@ namespace NovelRT::Ecs
             _sparse.erase(_sparse.begin() + key, _sparse.end());
         }
 
+        
         for (auto&& index : _sparse)
         {
-            if (index < indexCutoff)
+            if (index < indexCutoff || index == 0)
             {
                 continue;
             }
