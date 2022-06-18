@@ -56,8 +56,7 @@ jobs:
         env:
           cache-name: engine-deps
         with:
-          path: |
-            $GITHUB_WORKSPACE/build/internal
+          path: ${{ github.workspace }}/build/internal
           key: ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.configuration }}
 
       - name: Generate Build System
@@ -67,14 +66,19 @@ jobs:
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
-          ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-          cmake --build build --config ${{ matrix.configuration }}
-          cd build/tests/NovelRT.Tests
+          ${{ matrix.c }} ${{ matrix.cxx }} cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          cmake --build ${{ github.workspace }}/build --config ${{ matrix.configuration }}
+      
+      - name: Test NovelRT - ${{ matrix.configuration }}
+        id: test
+        if: steps.build.outcome == 'success'
+        run: |
+          cd ${{ github.workspace }}/build/tests/NovelRT.Tests
           ctest
 
       - name: Install NovelRT - ${{ matrix.configuration }}
-        if: steps.build.outcome == 'success'
-        run: cmake --install build --config "${{ matrix.configuration }}"
+        if: steps.test.outcome == 'success'
+        run: cmake --install ${{ github.workspace }}/build --config "${{ matrix.configuration }}"
 
   Formatting:
     name: clang-format
