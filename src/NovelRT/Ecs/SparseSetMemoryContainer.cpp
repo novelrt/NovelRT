@@ -104,7 +104,7 @@ namespace NovelRT::Ecs
 
         for (auto&& index : _sparse)
         {
-            if (index < indexCutoff)
+            if (index < indexCutoff || index == 0)
             {
                 continue;
             }
