@@ -1,17 +1,18 @@
-find_package(BZip2 ${NOVELRT_BZIP2_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
-find_package(Freetype ${NOVELRT_FREETYPE_VERSION} REQUIRED)
 find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-if(APPLE)
-  find_package(moltenvk REQUIRED)
+if(NOT DEFINED NOVELRT_LIB_SUFFIX)
+  set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
 
-
+if(APPLE)
+  set(NOVELRT_LIB_SUFFIX "dylib")
+  find_package(moltenvk REQUIRED)
+endif()
 
 set(SOURCES
   Atom.cpp
@@ -92,6 +93,11 @@ set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,
 
 if(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  target_link_libraries(Engine
+    PUBLIC
+      Winmm
+  )
+  set(NOVELRT_LIB_SUFFIX "dll")
 endif()
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
@@ -99,6 +105,8 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
     $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -140,9 +148,8 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    BZip2::BZip2
     FLAC::FLAC
-    Freetype::Freetype
+    freetype
     glfw
     Ogg::Ogg
     OpenAL::OpenAL
@@ -170,30 +177,16 @@ install(
   FILES_MATCHING PATTERN "*.h"
 )
 
-if(WIN32)
-  target_link_libraries(Engine
-    PUBLIC
-      Winmm
-  )
-
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
+if(WIN32 OR APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:tbb>
     $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
-  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dll)
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
-elseif(APPLE)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-          ${CMAKE_BINARY_DIR}/thirdparty
-          $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-          $<TARGET_FILE:tbb>
-          $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
-  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.dylib)
+  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
   set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
 endif()
 
