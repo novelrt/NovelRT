@@ -19,7 +19,6 @@ set(ZLIB_ENABLE_TESTS OFF CACHE BOOL "Build test binaries" FORCE)
 set(INC_INSTALL_DIR "include" CACHE STRING "Relocate includes installation folder" FORCE)
 set(LIB_INSTALL_DIR "lib" CACHE STRING "Relocate libraries installation folder" FORCE)
 FetchContent_MakeAvailable(zlib)
-#set(SKIP_INSTALL_ALL ON CACHE BOOL "Skips default ZLIB installation" FORCE)
 set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src;${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
 set(ZLIB_LIBRARY "zlibstatic" CACHE STRING "" FORCE)
 install(EXPORT ZLIB
