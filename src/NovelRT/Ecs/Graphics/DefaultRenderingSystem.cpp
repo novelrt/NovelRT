@@ -427,7 +427,7 @@ namespace NovelRT::Ecs::Graphics
             concurrentPtr->ecsId = _textureIdFactory.GetNext();
 
             _texturesToInitialise.push(concurrentPtr);
-            return Threading::FutureResult<TextureInfo>(concurrentPtr, TextureInfo{});
+            return Threading::FutureResult<TextureInfo>(concurrentPtr, *concurrentPtr);
         }
 
         return Threading::FutureResult<TextureInfo>(resultIterator->second, TextureInfo{});
@@ -456,7 +456,7 @@ namespace NovelRT::Ecs::Graphics
         ptr->ecsId = _textureIdFactory.GetNext();
         _texturesToInitialise.push(ptr);
 
-        return Threading::FutureResult<TextureInfo>(ptr, TextureInfo{});
+        return Threading::FutureResult<TextureInfo>(ptr, *ptr);
     }
 
     Threading::ConcurrentSharedPtr<TextureInfo> DefaultRenderingSystem::GetExistingTexture(Atom ecsId)
