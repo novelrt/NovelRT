@@ -107,7 +107,7 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
     $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
-    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -160,7 +160,7 @@ target_link_libraries(Engine
     spdlog
     TBB::tbb
     Vorbis::Vorbis
-    #Vulkan::Vulkan
+    $<TARGET_LINKER_FILE:vulkan>
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
 )
@@ -187,7 +187,12 @@ if(WIN32 OR APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:tbb>
     $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
+  if(WIN32)
+    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_FILE:vulkan>
+      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:vulkan>)
+  endif()
   file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
+  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<TARGET_FILE_NAME:vulkan>")
 endif()
 

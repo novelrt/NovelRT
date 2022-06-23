@@ -9,6 +9,8 @@ add_subdirectory(libpng)
 add_subdirectory(freetype)
 add_subdirectory(oneTBB)
 add_subdirectory(spdlog)
+add_subdirectory(vulkan-headers)
+add_subdirectory(vulkan-loader)
 
 if(NOVELRT_BUILD_TESTS)
   add_subdirectory(gtest)
