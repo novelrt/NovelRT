@@ -10,7 +10,7 @@ class NovelRTConan(ConanFile):
     requires = [
         ("libsndfile/1.0.30"),
         ("openal/1.21.1"),
-        ("vulkan-loader/1.2.198.0"),
+        #("vulkan-loader/1.2.198.0"),
         #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
@@ -27,7 +27,7 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
-        "vulkan-loader:shared":True,
+        #"vulkan-loader:shared":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,

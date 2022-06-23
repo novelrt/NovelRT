@@ -4,7 +4,7 @@ find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
+#find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
@@ -107,6 +107,7 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
     $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -159,7 +160,7 @@ target_link_libraries(Engine
     spdlog
     TBB::tbb
     Vorbis::Vorbis
-    Vulkan::Vulkan
+    #Vulkan::Vulkan
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
 )
