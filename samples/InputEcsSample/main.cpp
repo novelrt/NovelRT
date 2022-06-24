@@ -16,9 +16,9 @@ int main()
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
     #ifdef NOVELRT_MOLTENVK_VENDORED
-        auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd";
-        setenv("VK_ICD_FILENAMES", icdPath.c_str(), 0);
-        logger.logInfo("macOS detected - setting VK_ICD_FILENAMES to path: {}", icdPath.c_str());
+    auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd.json";
+    setenv("VK_ICD_FILENAMES", icdPath.c_str(), 0);
+    logger.logInfo("macOS detected - setting VK_ICD_FILENAMES to path: {}", icdPath.c_str());
     #endif
 
     DefaultPluginSelector selector;

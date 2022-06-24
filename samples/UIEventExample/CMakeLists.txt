@@ -8,7 +8,7 @@ target_link_libraries(UIEventExample
         PRIVATE
         Engine
         )
-target_compile_definitions(UIEventSample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:NOVELRT_MOLTENVK_VENDORED>,1,0>)
+target_compile_definitions(UIEventExample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:NOVELRT_MOLTENVK_VENDORED>,1,0>)
 
 copy_build_products(UIEventExample
         DEPENDENCY Resources

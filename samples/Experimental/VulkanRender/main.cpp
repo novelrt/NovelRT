@@ -11,6 +11,7 @@ using namespace NovelRT::Graphics;
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
+    
     std::filesystem::path finalPath =
         NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
     std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
@@ -39,6 +40,15 @@ int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+
+    NovelRT::LoggingService logger = NovelRT::LoggingService();
+    logger.setLogLevel(NovelRT::LogLevel::Info);
+    
+    #ifdef NOVELRT_MOLTENVK_VENDORED
+    auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd.json";
+    setenv("VK_ICD_FILENAMES", icdPath.c_str(), 0);
+    logger.logInfo("macOS detected - setting VK_ICD_FILENAMES to path: {}", icdPath.c_str());
+    #endif
 
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);

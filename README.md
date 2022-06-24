@@ -176,11 +176,11 @@ conan install .. --build=missing --profile macos-appleclang12-amd64 -o NovelRT:b
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 
-If you have a mac with an intel chip configure the cmake files like so:
+If you have an Intel Mac you can configure the cmake files like so:
 ```
 cmake ..
 ```
-If you have a mac with apple-silicon (m1 or m2 or etc), you must add an additional flag to the configuration command, like so:
+However, if you have Apple-Silicon Mac (M1, M2, etc), you must add an additional flag to the configuration command, like so:
 ```
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
@@ -188,6 +188,9 @@ Then you can build it, like so:
 ```
 cmake --build . -j
 ```
+
+To run the samples, you will need to navigate to the folder the executable resides in, and 
+launch from there. This is due to how macOS and CMake handle's RPATHs.
 
 
 ## Example
