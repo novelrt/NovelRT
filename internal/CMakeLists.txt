@@ -12,6 +12,10 @@ add_subdirectory(spdlog)
 add_subdirectory(vulkan-headers)
 add_subdirectory(vulkan-loader)
 
+if(APPLE)
+  add_subdirectory(moltenvk)
+endif()
+
 if(NOVELRT_BUILD_TESTS)
   add_subdirectory(gtest)
 endif()

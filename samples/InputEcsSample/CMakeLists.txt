@@ -8,6 +8,7 @@ target_link_libraries(InputEcsSample
         PRIVATE
         Engine
         )
+target_compile_definitions(InputEcsSample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:NOVELRT_MOLTENVK_VENDORED>,1,0>)
 
 copy_build_products(InputEcsSample
         DEPENDENCY Resources

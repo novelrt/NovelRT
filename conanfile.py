@@ -35,11 +35,11 @@ class NovelRTConan(ConanFile):
     }
     cmake = None
 
-    def requirements(self):
-        if self.settings.os == "Macos":
-            self.requires("moltenvk/1.1.6")
-            self.options["moltenvk"].shared = True
-            self.output.info("Generating for MacOS with MoltenVK support")
+    #def requirements(self):
+        #if self.settings.os == "Macos":
+            #self.requires("moltenvk/1.1.6")
+            #self.options["moltenvk"].shared = True
+            #self.output.info("Generating for MacOS with MoltenVK support")
 
     def imports(self):
         if self.settings.os == "Windows":
@@ -47,7 +47,7 @@ class NovelRTConan(ConanFile):
             self.copy("*.dll", dst="thirdparty", src="lib")
         if self.settings.os == "Macos":
             self.copy("*.dylib", dst="thirdparty", src="lib")
-            self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
+            #self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
 
 
     def source(self):

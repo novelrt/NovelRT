@@ -4,14 +4,12 @@ find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-#find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
 
 if(APPLE)
   set(NOVELRT_LIB_SUFFIX "dylib")
-  find_package(moltenvk REQUIRED)
 endif()
 
 set(SOURCES
@@ -88,6 +86,14 @@ set(SOURCES
   )
 
 add_library(Engine SHARED ${SOURCES})
+
+if(APPLE)
+  #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
+  add_dependencies(Engine vulkan moltenvk)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${NOVELRT_MOLTENVK_DYLIB_PATH}
+      $<TARGET_FILE_DIR:Engine>)
+endif()
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
@@ -184,15 +190,16 @@ if(WIN32 OR APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:tbb>
+    $<TARGET_FILE_DIR:Engine>)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-    $<TARGET_FILE:tbb>
-    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
-  if(WIN32)
-    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
       $<TARGET_FILE:vulkan>
       $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:vulkan>)
-  endif()
-  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<TARGET_FILE_NAME:vulkan>")
+  file(GLOB libs RELATIVE 
+    ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
+  set_target_properties(Engine 
+    PROPERTIES 
+      RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<TARGET_FILE_NAME:vulkan>;$<$<BOOL:APPLE>:${NOVELRT_MOLTENVK_LIBTOCOPY}>;$<$<BOOL:APPLE>:${NOVELRT_MOLTENVK_ICDTOCOPY}>")
 endif()
 
