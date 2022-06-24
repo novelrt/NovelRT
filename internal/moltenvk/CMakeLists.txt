@@ -1,6 +1,12 @@
 include(ExternalProject)
 message(STATUS "Fetching MoltenVK")
-message(WARNING "Building MoltenVK requires that 'xcodebuild' is set as the default tool in xcode-select, and that the XCode Licence Agreements have been accepted. Otherwise, building MoltenVK will fail. Please make any changes prior to building NovelRT to ensure a smoother experience.")
+message(WARNING 
+        " NovelRT is set to build MoltenVK which can take upwards" 
+        " of 30+ minutes on certain devices. Also, building MoltenVK"
+        " requires that 'xcodebuild' is set as the default tool in xcode-select,"
+        " and that the XCode Licence Agreements have been accepted. Otherwise,"
+        " building MoltenVK will fail. Please make any changes prior to building"
+        " NovelRT to ensure a smoother experience.")
 
 ExternalProject_Add(moltenvk
         URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.6.tar.gz
