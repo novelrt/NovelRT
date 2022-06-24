@@ -18,7 +18,6 @@ namespace NovelRT::UI
         }
 
         virtual void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
-                                std::shared_ptr<Graphics::GraphicsProvider> graphicsProvider,
                                 std::shared_ptr<Input::IInputDevice> inputDevice) = 0;
 
         virtual void BeginFrame(double deltaTime) = 0;

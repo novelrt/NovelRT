@@ -19,7 +19,6 @@ namespace NovelRT::UI::DearImGui
         LoggingService _logger;
 
         std::shared_ptr<Windowing::IWindowingDevice> _windowingDevice;
-        std::shared_ptr<Graphics::GraphicsProvider> _graphicsProvider;
         std::shared_ptr<Input::IInputDevice> _inputDevice;
 
     public:
@@ -31,7 +30,6 @@ namespace NovelRT::UI::DearImGui
         }
 
         void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
-                        std::shared_ptr<Graphics::GraphicsProvider> graphicsProvider,
                         std::shared_ptr<Input::IInputDevice> inputDevice) final;
 
         void BeginFrame(double deltaTime) final;

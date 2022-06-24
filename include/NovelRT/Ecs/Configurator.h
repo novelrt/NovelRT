@@ -49,14 +49,17 @@ namespace NovelRT::Ecs
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
-            target.RegisterSystem(
-                std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
+            auto defaultRenderingSystem = std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
+                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider);
+            target.RegisterSystem(defaultRenderingSystem);
 
-            target.RegisterSystem(std::make_shared<Ecs::UI::UISystem>(_uiPluginProvider, _windowingPluginProvider,
-                                                                      _graphicsPluginProvider, _inputPluginProvider));
+            auto defaultInputSystem =
+                std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider);
+            target.RegisterSystem(defaultInputSystem);
 
-            target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
-                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
+            auto defaultUISystem = std::make_shared<Ecs::UI::UISystem>(_uiPluginProvider, _windowingPluginProvider,
+                                                                       _inputPluginProvider, defaultRenderingSystem);
+            target.RegisterSystem(defaultUISystem);
         }
 
     public:

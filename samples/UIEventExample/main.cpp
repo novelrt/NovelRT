@@ -3,6 +3,7 @@
 
 #include <NovelRT/NovelRT.h>
 #include <memory>
+#include <imgui.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Input;
@@ -16,12 +17,14 @@ int main()
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
     DefaultPluginSelector selector;
+    auto uiProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>();
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
+            .WithPluginProvider(uiProvider)
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
@@ -73,60 +76,8 @@ int main()
     std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive> primitive = nullptr;
 
     renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args) {
-        inputResourceRegions.clear();
-        if (!squareVertexFuture.IsValid() || !squareVertexFuture.IsValueCreated())
-        {
-            return;
-        }
-
-        if (!redTextureFuture.IsValid() || !redTextureFuture.IsValueCreated())
-        {
-            return;
-        }
-
-        auto dummyRegion = NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>(
-            0, nullptr, args.graphicsDevice, false, 0, 0);
-
-        auto& systemRef = system.get();
-        auto pipeline = systemRef.GetExistingPipelineInfo("default");
-
-        if (!transformRegion.has_value())
-        {
-            // this is the quickest way to get the constant buffer region that the shader expects since we don't rely on
-            // ECS transform data here.
-            transformRegion =
-                args.resourceManager.AllocateConstantBufferRegion(sizeof(NovelRT::Maths::GeoMatrix4x4F) * 1000);
-            auto ptr = args.resourceManager.MapConstantBufferRegionForWriting<NovelRT::Maths::GeoMatrix4x4F>(
-                transformRegion.value());
-
-            // im only adding 3 transforms for this example.
-            auto matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
-            matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(0, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
-            ptr[0] = matrixToInsert;
-            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
-            matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, -300, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
-            ptr[1] = matrixToInsert;
-            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
-            matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
-            ptr[2] = matrixToInsert;
-
-            args.resourceManager.UnmapAndWriteAllConstantBuffers();
-        }
-
-        inputResourceRegions.emplace_back(args.frameMatrixConstantBufferRegion);
-        inputResourceRegions.emplace_back(transformRegion.value());
-
-        // nothing else will touch this so we can just access the concurrent pointer in this example without a lock.
-        // Usually you'd need a std::scoped_guard however.
-        inputResourceRegions.emplace_back(redTextureFuture.GetValue().gpuTextureRegion);
-
-        primitive = args.graphicsDevice->CreatePrimitive(pipeline->gpuPipeline.GetUnderlyingSharedPtr(),
-                                                         squareVertexFuture.GetValue().gpuVertexRegion,
-                                                         sizeof(TexturedVertex), dummyRegion, 0, inputResourceRegions);
-        args.graphicsContext->Draw(primitive, 3);
+        ImGui::Begin("Hello, Novel-Chan");
+        ImGui::End();
     };
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});

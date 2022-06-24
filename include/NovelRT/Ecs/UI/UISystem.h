@@ -19,8 +19,10 @@ namespace NovelRT::Ecs::UI
     public:
         UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
                  std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
-                 std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
-                 std::shared_ptr<PluginManagement::IInputPluginProvider> inputPluginProvider);
+                 std::shared_ptr<PluginManagement::IInputPluginProvider> inputPluginProvider,
+                 std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> defaultRenderingSystem);
+
+        Utilities::Event<std::reference_wrapper<UISystem>, Timing::Timestamp, Ecs::Catalogue> Draw;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
     };

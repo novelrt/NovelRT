@@ -5,6 +5,7 @@
 #define NOVELRT_UI_H
 
 // UI dependencies
+#include "NovelRT/Ecs/Ecs.h"
 #include "NovelRT/Graphics/Graphics.h"
 #include "NovelRT/Input/Input.h"
 #include "NovelRT/Windowing/Windowing.h"
