@@ -241,6 +241,7 @@ namespace NovelRT::Graphics::Vulkan
         createInfo.ppEnabledExtensionNames = allExtensionullptrs.data();
         createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayerLength);
+        createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 
