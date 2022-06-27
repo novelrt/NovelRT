@@ -21,6 +21,6 @@ TEST(VulkanInstanceTest, canCreateVulkanInstance)
     createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
     VkInstance instance = VK_NULL_HANDLE;
-    ASSERT_NO_THROW(vkCreateInstance(&createInfo, nullptr, &instance));
-    ASSERT_NO_THROW(vkDestroyInstance(instance, nullptr));
+    ASSERT_EQ(VK_SUCCESS, vkCreateInstance(&createInfo, nullptr, &instance));
+    EXPECT_NO_THROW(vkDestroyInstance(instance, nullptr));
 }

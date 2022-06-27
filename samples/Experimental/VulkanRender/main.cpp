@@ -11,7 +11,6 @@ using namespace NovelRT::Graphics;
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
-
     std::filesystem::path finalPath =
         NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
     std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
