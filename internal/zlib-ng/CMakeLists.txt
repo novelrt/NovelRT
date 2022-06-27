@@ -21,6 +21,7 @@ set(LIB_INSTALL_DIR "lib" CACHE STRING "Relocate libraries installation folder" 
 FetchContent_MakeAvailable(zlib)
 set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src;${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
 set(ZLIB_LIBRARY "zlibstatic" CACHE STRING "" FORCE)
+set_property(TARGET zlibstatic PROPERTY POSITION_INDEPENDENT_CODE ON)
 install(EXPORT ZLIB
   DESTINATION lib
   NAMESPACE ZLIB::)
