@@ -14,7 +14,7 @@ TEST(VulkanInstanceTest, canCreateVulkanInstance)
     appInfo.pApplicationName = "Engine_Tests";
     appInfo.pEngineName = "NovelRT";
     appInfo.apiVersion = VK_API_VERSION_1_2;
-    
+
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;

@@ -93,8 +93,8 @@ namespace NovelRT::Windowing::Glfw
             EngineConfig::RequiredVulkanInstanceExtensions().emplace_back(extensions[i]);
         }
 
-        //As of VulkanSDK 1.3.216, we need to opt-in to non-conformant drivers otherwise we'll get Error -9:
-        //VK_ERROR_INCOMPATIBLE_DRIVER - This affects MoltenVK
+        // As of VulkanSDK 1.3.216, we need to opt-in to non-conformant drivers otherwise we'll get Error -9:
+        // VK_ERROR_INCOMPATIBLE_DRIVER - This affects MoltenVK
         EngineConfig::RequiredVulkanInstanceExtensions().emplace_back("VK_KHR_portability_enumeration");
         EngineConfig::RequiredVulkanInstanceExtensions().emplace_back("VK_KHR_get_physical_device_properties2");
     }
