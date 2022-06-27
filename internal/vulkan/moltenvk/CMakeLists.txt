@@ -9,8 +9,8 @@ message(WARNING
         "NovelRT to ensure a smoother experience.")
 
 ExternalProject_Add(moltenvk
-        URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.6.tar.gz
-        URL_HASH SHA512=854042934712cd6f30cd447a6d1cd35cc50a6abe405d1b33044e96cca3e05e9ab4fb7dc3f52c00dad5c1c87b59de59e88bd25575470e3159e83ade60884750c9
+        URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.10.tar.gz
+        URL_HASH SHA512=d712ffcbdd55d91d3ae2e2b7302838d98fdcd185e078a6a6c0337a08e257443d05b0c529d678fab69ff2c66608fde23d978604aed2052a52231c97416209b2d8
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"

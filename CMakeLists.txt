@@ -43,7 +43,7 @@ set(NOVELRT_OPUS_VERSION "1.3.1" CACHE STRING "Opus version")
 set(NOVELRT_PNG_VERSION "1.6.37" CACHE STRING "PNG version")
 set(NOVELRT_SNDFILE_VERSION "1.0.30" CACHE STRING "Sndfile version")
 set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Opus version")
-set(NOVELRT_VULKAN_VERSION "1.2.198" CACHE STRING "Vulkan version")
+set(NOVELRT_VULKAN_VERSION "1.3.216" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 set(NOVELRT_VULKAN_SDK_PATH "" CACHE STRING "Directory for NovelRT to find the Vulkan SDK (mainly for macOS support)")
 
