@@ -45,6 +45,21 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        if: "contains(matrix.os, 'macos')"
+        with:
+          version: 1.3.216.0
+          cache: true
+
+      - name: Install Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        if: "!contains(matrix.os, 'macos')"
+        with:
+          vulkan-query-version: 1.3.216.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
       - name: Prepare build environment
         run: |
           pip3 install conan
