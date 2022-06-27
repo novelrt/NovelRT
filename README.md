@@ -30,11 +30,11 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- CMake 3.19
+- CMake 3.19.8
 - Doxygen 1.8.17 (if building docs)
 - Freetype 2.10.1
 - GLFW 3.3.6
-- glm 0.9.9.7
+- glm 0.9.9.9
 - gtest/gmock 1.11.0
 - libpng 1.6.37
 - libsndfile 1.0.30
@@ -42,9 +42,9 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OneTBB 2021.3.0
 - OpenAL 1.21.1
 - spdlog 1.8.2
-- Vulkan SDK 1.2.198.0 (if you require debug/validation layers)
-- Vulkan Loader 1.2.298
-- Vulkan Memory Allocator 2.3.0 (not directly used currently, but will be used in a future update)
+- Vulkan SDK 1.3.216.0 (if you require debug/validation layers)
+  OR
+- Vulkan Loader 1.3.216 + Vulkan Headers 1.3.216 (+ MoltenVK 1.1.10 - macOS only)
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
@@ -154,7 +154,9 @@ _Prerequisites:_
 - Python 3 x64 (installed via Homebrew _or_ run as any user other than root)
 - XCode 12
 - XCode Command Line Tools matching the installed version
-- CMake 3.19
+- CMake 3.19.8
+
+**NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
 
 First, install Conan and our configurations should you require them:
 ```
@@ -176,6 +178,8 @@ conan install .. --build=missing --profile macos-appleclang12-amd64 -o NovelRT:b
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 
+Once you have installed the Conan dependencies, ensure that the terminal performing configuration of NovelRT runs the `source setup-env.sh` from within the VulkanSDK directory.
+
 If you have an Intel Mac you can configure the cmake files like so:
 ```
 cmake ..
@@ -184,7 +188,14 @@ However, if you have Apple-Silicon Mac (M1, M2, etc), you must add an additional
 ```
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
-Then you can build it, like so:
+
+If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `NOVELRT_VULKAN_SDK_PATH` to your local Vulkan SDK location as such:
+```
+cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/VulkanSDK/1.3.216.0/macOS
+```
+Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
+
+Once NovelRT is configured, you can build it like so:
 ```
 cmake --build . -j
 ```
