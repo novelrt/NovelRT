@@ -178,7 +178,7 @@ conan install .. --build=missing --profile macos-appleclang12-amd64 -o NovelRT:b
 ```
 (Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
 
-Once you have installed the Conan dependencies, ensure that the terminal performing configuration of NovelRT runs the `source setup-env.sh` from within the VulkanSDK directory.
+Once you have installed the Conan dependencies, ensure that the terminal performing configuration of NovelRT runs the `source setup-env.sh` from within the Vulkan SDK directory.
 
 If you have an Intel Mac you can configure the cmake files like so:
 ```
@@ -191,7 +191,7 @@ cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 
 If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `NOVELRT_VULKAN_SDK_PATH` to your local Vulkan SDK location as such:
 ```
-cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/VulkanSDK/1.3.216.0/macOS
+cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/Vulkan SDK/1.3.216.0/macOS
 ```
 Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
 
