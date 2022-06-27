@@ -27,5 +27,3 @@ else()
   set(NOVELRT_VULKAN_TARGET "Vulkan::Vulkan" CACHE STRING "Vulkan Dependencies to attach to NovelRT Engine" FORCE)
   set(NOVELRT_MOLTENVK_VENDORED OFF CACHE BOOL "Setting to indicate if NovelRT is vendoring MoltenVK" FORCE)
 endif()
-
-

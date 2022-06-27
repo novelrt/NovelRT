@@ -15,6 +15,7 @@ FetchContent_Declare(freetype
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
         )
+        
 set(FT_DISABLE_BZIP2 TRUE CACHE BOOL "Disable BZip2 dependency" FORCE)
 set(FT_DISABLE_HARFBUZZ TRUE CACHE BOOL "Disable Harfbuzz dependency" FORCE)
 set(FT_DISABLE_BROTLI TRUE CACHE BOOL "Disable Brotli dependency" FORCE)

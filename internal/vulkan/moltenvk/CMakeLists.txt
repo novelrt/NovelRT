@@ -6,7 +6,8 @@ message(WARNING
         "requires that 'xcodebuild' is set as the default tool in xcode-select, "
         "and that the XCode Licence Agreements have been accepted. Otherwise, "
         "building MoltenVK will fail. Please make any changes prior to building "
-        "NovelRT to ensure a smoother experience.")
+        "NovelRT to ensure a smoother experience."
+)
 
 ExternalProject_Add(moltenvk
         URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.10.tar.gz

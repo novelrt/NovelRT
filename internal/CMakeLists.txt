@@ -11,7 +11,6 @@ add_subdirectory(oneTBB)
 add_subdirectory(spdlog)
 add_subdirectory(vulkan)
 
-
 if(NOVELRT_BUILD_TESTS)
   add_subdirectory(gtest)
 endif()

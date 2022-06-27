@@ -12,10 +12,6 @@ if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
 
-if(APPLE)
-  set(NOVELRT_LIB_SUFFIX "dylib")
-endif()
-
 set(SOURCES
   Atom.cpp
 
@@ -87,18 +83,17 @@ set(SOURCES
   Timing/StepTimer.cpp
 
   Utilities/Misc.cpp
-  )
+)
 
 add_library(Engine SHARED ${SOURCES})
+
+set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)
   #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
   add_dependencies(Engine ${NOVELRT_VULKAN_DEPS})
-endif()
-
-set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
-
-if(WIN32)
+  set(NOVELRT_LIB_SUFFIX "dylib")
+elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
   target_link_libraries(Engine
     PUBLIC
@@ -106,6 +101,7 @@ if(WIN32)
   )
   set(NOVELRT_LIB_SUFFIX "dll")
 endif()
+
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC

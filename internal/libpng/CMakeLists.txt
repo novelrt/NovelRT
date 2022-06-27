@@ -16,9 +16,11 @@ FetchContent_Declare(libpng
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
+
 if(CMAKE_APPLE_SILICON_PROCESSOR STREQUAL "arm64")
         set(PNG_ARM_NEON "off" CACHE STRING "" FORCE)
 endif()
+
 set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(libpng)
 
