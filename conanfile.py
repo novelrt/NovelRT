@@ -10,8 +10,6 @@ class NovelRTConan(ConanFile):
     requires = [
         ("libsndfile/1.0.30"),
         ("openal/1.21.1"),
-        #("vulkan-loader/1.2.198.0"),
-        #("vulkan-memory-allocator/2.3.0")
     ]
     generators = "cmake_find_package", "cmake_paths"
     options = {
@@ -27,7 +25,6 @@ class NovelRTConan(ConanFile):
         "Opus:shared":True,
         "Ogg:shared":True,
         "Vorbis:shared":True,
-        #"vulkan-loader:shared":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,
@@ -35,21 +32,13 @@ class NovelRTConan(ConanFile):
     }
     cmake = None
 
-    #def requirements(self):
-        #if self.settings.os == "Macos":
-            #self.requires("moltenvk/1.1.6")
-            #self.options["moltenvk"].shared = True
-            #self.output.info("Generating for MacOS with MoltenVK support")
-
     def imports(self):
         if self.settings.os == "Windows":
             self.copy("*.dll", dst="thirdparty", src="bin")
             self.copy("*.dll", dst="thirdparty", src="lib")
         if self.settings.os == "Macos":
             self.copy("*.dylib", dst="thirdparty", src="lib")
-            #self.copy("*MoltenVK_icd.json", dst="thirdparty", src="lib")
-
-
+    
     def source(self):
         self.run("git clone https://github.com/novelrt/NovelRT.git")
 
