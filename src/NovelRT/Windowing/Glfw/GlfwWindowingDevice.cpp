@@ -95,10 +95,12 @@ namespace NovelRT::Windowing::Glfw
             requiredExtensions.emplace_back(extensions[i]);
         }
 
+#ifdef __APPLE__
         // As of VulkanSDK 1.3.216, we need to opt-in to non-conformant drivers otherwise we'll get Error -9:
         // VK_ERROR_INCOMPATIBLE_DRIVER - This affects MoltenVK
         requiredExtensions.emplace_back("VK_KHR_portability_enumeration");
         requiredExtensions.emplace_back("VK_KHR_get_physical_device_properties2");
+#endif
     }
 
     void GlfwWindowingDevice::TearDown() noexcept
