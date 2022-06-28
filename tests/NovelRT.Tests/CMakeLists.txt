@@ -17,8 +17,6 @@ set(SOURCES
   Ecs/SystemSchedulerTest.cpp
   Ecs/SparseSetMemoryContainerTest.cpp
 
-  Graphics/Vulkan/VulkanInstanceTest.cpp
-
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/NovelRTInteropUtilsTest.cpp>
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtCatalogueTest.cpp>
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Ecs/NrtComponentBufferMemoryContainerTest.cpp>

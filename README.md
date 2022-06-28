@@ -42,9 +42,9 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
-- Vulkan SDK 1.3.216.0 (if you require debug/validation layers)
+- Vulkan SDK 1.3.211.0 (if you require debug/validation layers)
   OR
-- Vulkan Loader 1.3.216 + Vulkan Headers 1.3.216 (+ MoltenVK 1.1.10 - macOS only)
+- Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.10 - macOS only)
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
@@ -156,7 +156,7 @@ _Prerequisites:_
 - XCode Command Line Tools matching the installed version
 - CMake 3.19.8
 
-**NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
+**NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK version 1.3.211.0 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
 
 First, install Conan and our configurations should you require them:
 ```
@@ -200,7 +200,7 @@ Once NovelRT is configured, you can build it like so:
 cmake --build . -j
 ```
 
-To run the samples, you will need to navigate to the folder the executable resides in, and 
+To run the samples, you will need to navigate to the folder the executable resides in, and
 launch from there. This is due to how macOS and CMake handle's RPATHs.
 
 
