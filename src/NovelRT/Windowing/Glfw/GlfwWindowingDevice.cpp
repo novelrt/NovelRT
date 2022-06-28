@@ -94,7 +94,6 @@ namespace NovelRT::Windowing::Glfw
         {
             requiredExtensions.emplace_back(extensions[i]);
         }
-
     }
 
     void GlfwWindowingDevice::TearDown() noexcept
