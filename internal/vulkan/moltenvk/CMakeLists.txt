@@ -27,7 +27,7 @@ ExternalProject_Add(moltenvk
         BUILD_COMMAND <SOURCE_DIR>/fetchDependencies "--macos" COMMAND xcodebuild build -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package (macOS only)"
 )
 
-set(NOVELRT_MOLTENVK_DYLIB_PATH "${CMAKE_CURRENT_BINARY_DIR}/src/MoltenVK/dylib/macOS" CACHE STRING "Path to MoltenVK directory for generated ICD/Loader")
+set(NOVELRT_MOLTENVK_DYLIB_PATH "${CMAKE_CURRENT_BINARY_DIR}/src/MoltenVK/dylib/macOS" CACHE STRING "Path to MoltenVK directory for generated ICD and Loader")
 set(NOVELRT_MOLTENVK_LIB "${NOVELRT_MOLTENVK_DYLIB_PATH}/libMoltenVK.dylib" CACHE STRING "File path to MoltenVK library for NovelRT" FORCE)
 set(NOVELRT_MOLTENVK_LIBTOCOPY "libMoltenVK.dylib" CACHE STRING "MoltenVK Library to be copied for NovelRT" FORCE)
 set(NOVELRT_MOLTENVK_ICDTOCOPY "MoltenVK_icd.json" CACHE STRING "MoltenVK ICD to be copied for NovelRT" FORCE)
