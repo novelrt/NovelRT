@@ -157,6 +157,7 @@ target_link_libraries(Engine
     png_static
     SndFile::SndFile
     spdlog
+    stduuid
     TBB::tbb
     Vorbis::Vorbis
     Vulkan::Vulkan
