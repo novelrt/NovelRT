@@ -26,8 +26,7 @@ TEST(VulkanInstanceTest, canCreateVulkanInstance)
     extensions.emplace_back("VK_KHR_portability_enumeration");
     extensions.emplace_back("VK_KHR_get_physical_device_properties2");
 #endif
-    std::vector<const char*> allExtensionptrs =
-        NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(extensions);
+    std::vector<const char*> allExtensionptrs = NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(extensions);
     size_t extensionLength = allExtensionptrs.size();
 
     createInfo.enabledExtensionCount = extensionLength;
