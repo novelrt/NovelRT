@@ -2,8 +2,8 @@ include(FetchContent)
 message(STATUS "Fetching Vulkan Headers")
 
 FetchContent_Declare(vulkan-headers
-        URL https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.216.tar.gz
-        URL_HASH SHA512=25bd561227145e144866749c6a8b83eab9f67a03d62b5277758d93125b2283facff74ad1876280d357a4ae67f20b5b17a2a6168514c4b7fad3d9c3ff8a2ba51f
+        URL https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.211.tar.gz
+        URL_HASH SHA512=95fb29ad5c79809506ce3587f974baf360d21d036995dd7297f966962380cd0504e9886a549ca34dfd5e051ccc2bf96bd0401eeac9c37ae76a2979d921572398
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"

@@ -1,7 +1,7 @@
 include(ExternalProject)
 message(STATUS "Fetching MoltenVK")
-message(WARNING 
-        "NovelRT is set to build MoltenVK which can take upwards " 
+message(WARNING
+        "NovelRT is set to build MoltenVK which can take upwards "
         "of 30+ minutes on certain devices. Also, building MoltenVK "
         "requires that 'xcodebuild' is set as the default tool in xcode-select, "
         "and that the XCode Licence Agreements have been accepted. Otherwise, "
@@ -10,8 +10,8 @@ message(WARNING
 )
 
 ExternalProject_Add(moltenvk
-        URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.10.tar.gz
-        URL_HASH SHA512=d712ffcbdd55d91d3ae2e2b7302838d98fdcd185e078a6a6c0337a08e257443d05b0c529d678fab69ff2c66608fde23d978604aed2052a52231c97416209b2d8
+        URL https://github.com/KhronosGroup/MoltenVK/archive/refs/tags/v1.1.9.tar.gz
+        URL_HASH SHA512=d672ef6a6ba72dfeb9c3990067e7b99c9aa5743b581a33df37e866783e3af027d47d80292a351b86b663efb2d115695e951a552ff4efe2ea965b1abac471e1e2
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"

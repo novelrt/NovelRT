@@ -2,8 +2,8 @@ include(FetchContent)
 message(STATUS "Fetching Vulkan Loader")
 
 FetchContent_Declare(vulkan-loader
-        URL https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.3.216.tar.gz
-        URL_HASH SHA512=a42e1c48a5c2832df7ee94aaa0a7c517b9f5d3289df91ba52157db44f20757d904f552ddd9b1720fc5752303ef390e637de107308b119d52edecda2d70229049
+        URL https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.3.211.tar.gz
+        URL_HASH SHA512=95fb29ad5c79809506ce3587f974baf360d21d036995dd7297f966962380cd0504e9886a549ca34dfd5e051ccc2bf96bd0401eeac9c37ae76a2979d921572398
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"

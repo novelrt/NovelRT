@@ -242,9 +242,6 @@ namespace NovelRT::Graphics::Vulkan
         createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayerLength);
 
-#ifdef __APPLE__
-        createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-#endif
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
