@@ -75,7 +75,7 @@ jobs:
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }}
           cd build/tests/NovelRT.Tests
-          ctest
+          ctest --output-on-failure
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
