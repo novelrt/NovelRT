@@ -19,8 +19,8 @@ FetchContent_GetProperties(vulkan-headers)
 if(NOT vulkan-headers_POPULATED)
   FetchContent_Populate(vulkan-headers)
 
-  # Workaround to force onevulkan-headers to build shared and not always export symbols
-  # Causes failures during builds so we forcefully change these for onevulkan-headers only
+  # Workaround to force vulkan-headers to build shared and not always export symbols
+  # Causes failures during builds so we forcefully change these for vulkan-headers only
   # Credit: https://stackoverflow.com/a/62103349
   set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
   # Make subproject to use 'BUILD_SHARED_LIBS=ON' setting.

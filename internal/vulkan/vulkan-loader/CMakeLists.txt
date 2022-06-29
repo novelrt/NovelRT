@@ -20,8 +20,8 @@ FetchContent_GetProperties(vulkan-loader)
 if(NOT vulkan-loader_POPULATED)
   FetchContent_Populate(vulkan-loader)
 
-  # Workaround to force onevulkanloader to build shared and not always export symbols
-  # Causes failures during builds so we forcefully change these for onevulkanloader only
+  # Workaround to force vulkan-loader to build shared and not always export symbols
+  # Causes failures during builds so we forcefully change these for vulkan-loader only
   # Credit: https://stackoverflow.com/a/62103349
   set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
   # Make subproject to use 'BUILD_SHARED_LIBS=ON' setting.

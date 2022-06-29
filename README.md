@@ -44,7 +44,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - spdlog 1.10.0
 - Vulkan SDK 1.3.211.0 (if you require debug/validation layers)
   OR
-- Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.10 - macOS only)
+- Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.9 - macOS only)
 
 **If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
 
