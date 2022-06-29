@@ -2,8 +2,8 @@ include(FetchContent)
 message(STATUS "Fetching Freetype")
 
 FetchContent_Declare(freetype
-        URL https://gitlab.freedesktop.org/freetype/freetype/-/archive/VER-2-12-1/freetype-VER-2-12-1.tar.gz
-        URL_HASH SHA512=d2c6e8af7f25fef12222405c0825fa9d96d724d4633435a736da53b74ef9ea9079ec64c08172f908e2a6af23305cb8743636fa5ca51b36d7a839c89c780e33e0
+        URL https://github.com/freetype/freetype/archive/refs/tags/VER-2-12-1.zip
+        URL_HASH SHA512=3ef3e47752b7c3cd158c738d7e0194f1c9f97ac85c754b02be6ee0f7999c3c19050f713d1e975f5310a4689337463e7b54450ef62e02c3f09864f4c6b13740d9
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -15,6 +15,7 @@ FetchContent_Declare(freetype
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
         )
+
 set(FT_DISABLE_BZIP2 TRUE CACHE BOOL "Disable BZip2 dependency" FORCE)
 set(FT_DISABLE_HARFBUZZ TRUE CACHE BOOL "Disable Harfbuzz dependency" FORCE)
 set(FT_DISABLE_BROTLI TRUE CACHE BOOL "Disable Brotli dependency" FORCE)

@@ -14,6 +14,7 @@ FetchContent_Declare(jsoncons
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
-        )
+)
+
 set(JSONCONS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(jsoncons)

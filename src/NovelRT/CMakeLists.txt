@@ -4,14 +4,12 @@ find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
 find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
 find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-if(NOT DEFINED NOVELRT_LIB_SUFFIX)
-  set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
+if(NOVELRT_VULKAN_SDK)
+  find_dependency(Vulkan REQUIRED)
 endif()
 
-if(APPLE)
-  set(NOVELRT_LIB_SUFFIX "dylib")
-  find_package(moltenvk REQUIRED)
+if(NOT DEFINED NOVELRT_LIB_SUFFIX)
+  set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
 
 set(SOURCES
@@ -85,13 +83,17 @@ set(SOURCES
   Timing/StepTimer.cpp
 
   Utilities/Misc.cpp
-  )
+)
 
 add_library(Engine SHARED ${SOURCES})
 
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
-if(WIN32)
+if(APPLE)
+  #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
+  add_dependencies(Engine ${NOVELRT_VULKAN_DEPS})
+  set(NOVELRT_LIB_SUFFIX "dylib")
+elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
   target_link_libraries(Engine
     PUBLIC
@@ -99,6 +101,7 @@ if(WIN32)
   )
   set(NOVELRT_LIB_SUFFIX "dll")
 endif()
+
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
@@ -108,6 +111,7 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
     $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -160,7 +164,7 @@ target_link_libraries(Engine
     spdlog
     TBB::tbb
     Vorbis::Vorbis
-    Vulkan::Vulkan
+    $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
 )
@@ -184,10 +188,25 @@ if(WIN32 OR APPLE)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
       ${CMAKE_BINARY_DIR}/thirdparty
       $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-    $<TARGET_FILE:tbb>
-    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:tbb>)
-  file(GLOB libs RELATIVE ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine PROPERTIES RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>")
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:tbb>
+    $<TARGET_FILE_DIR:Engine>)
+  if(NOT NOVELRT_VULKAN_SDK)
+    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
+      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
+    if(APPLE)
+      add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${NOVELRT_MOLTENVK_DYLIB_PATH}
+        $<TARGET_FILE_DIR:Engine>)
+      set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
+      set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
+    endif()
+  endif()
+  file(GLOB libs RELATIVE 
+    ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
+  set_target_properties(Engine 
+    PROPERTIES 
+      RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
 endif()
 

@@ -88,9 +88,11 @@ namespace NovelRT::Windowing::Glfw
             }
         }
 
+        auto& requiredExtensions = EngineConfig::RequiredVulkanInstanceExtensions();
+
         for (size_t i = 0; i < extensionCount; i++)
         {
-            EngineConfig::RequiredVulkanInstanceExtensions().emplace_back(extensions[i]);
+            requiredExtensions.emplace_back(extensions[i]);
         }
     }
 

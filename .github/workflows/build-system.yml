@@ -45,6 +45,21 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Install Vulkan SDK (Linux / macOS)
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        if: "!contains(matrix.os, 'windows')"
+        with:
+          version: 1.3.211.0
+          cache: true
+
+      - name: Install Vulkan SDK (Windows)
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        if: "contains(matrix.os, 'windows')"
+        with:
+          vulkan-query-version: 1.3.211.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
       - name: Prepare build environment
         run: |
           pip3 install conan
@@ -60,7 +75,7 @@ jobs:
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }}
           cd build/tests/NovelRT.Tests
-          ctest
+          ctest --output-on-failure
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'

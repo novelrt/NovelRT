@@ -1,3 +1,7 @@
+if(NOVELRT_VULKAN_SDK)
+  find_dependency(Vulkan REQUIRED)
+endif()
+
 set(SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
