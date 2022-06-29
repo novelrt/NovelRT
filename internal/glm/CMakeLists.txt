@@ -13,7 +13,7 @@ FetchContent_Declare(glm
         SUBBUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
-        )
+)
 
 FetchContent_MakeAvailable(glm)
 install(

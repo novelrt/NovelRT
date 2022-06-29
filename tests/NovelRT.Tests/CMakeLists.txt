@@ -1,4 +1,7 @@
 include(GoogleTest)
+if(NOVELRT_VULKAN_SDK)
+  find_dependency(Vulkan REQUIRED)
+endif()
 
 set(SOURCES
   Ecs/CatalogueTest.cpp
