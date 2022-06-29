@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtEntityIdVector.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 #include <algorithm>
 #include <vector>
@@ -20,6 +21,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -32,6 +34,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -52,6 +55,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

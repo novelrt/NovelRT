@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtComponentCache.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::Ecs;
 
@@ -23,11 +24,13 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (deleteInstructionState == nullptr || outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -48,6 +51,7 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
     }
@@ -58,11 +62,13 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -83,6 +89,7 @@ extern "C"
     {
         if (componentCache == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

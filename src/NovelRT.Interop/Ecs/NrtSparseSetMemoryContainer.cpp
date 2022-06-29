@@ -3,6 +3,7 @@
 
 #include <NovelRT.Interop/Ecs/NrtSparseSetMemoryContainer.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Exceptions;
@@ -23,11 +24,13 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (value == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -39,14 +42,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
+            Nrt_setErrMsgDupKeyGiven();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::exception&)
         {
+            Nrt_setErrMsgErrorUnknown();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -62,6 +68,7 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -72,6 +79,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
+            Nrt_setErrMsgKeyNotFound();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -97,11 +105,13 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -113,6 +123,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -130,11 +141,13 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -148,6 +161,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -169,11 +183,13 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -187,6 +203,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -275,6 +292,7 @@ extern "C"
     {
         if (container == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -313,6 +331,7 @@ extern "C"
     {
         if (view == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -346,6 +365,7 @@ extern "C"
     {
         if (view == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -384,11 +404,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -404,10 +426,12 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const std::exception&) // TODO: I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
+            Nrt_setErrMsgErrorUnknown();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -416,6 +440,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -454,11 +479,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -474,10 +501,12 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const std::exception&) // I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
+            Nrt_setErrMsgErrorUnknown();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -486,6 +515,7 @@ NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryC
 {
     if (iterator == nullptr)
     {
+        Nrt_setErrIsNullInstanceProvided();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
