@@ -3,7 +3,7 @@ message(STATUS "Fetching Vulkan Loader")
 
 FetchContent_Declare(vulkan-loader
         URL https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.3.211.tar.gz
-        URL_HASH SHA512=95fb29ad5c79809506ce3587f974baf360d21d036995dd7297f966962380cd0504e9886a549ca34dfd5e051ccc2bf96bd0401eeac9c37ae76a2979d921572398
+        URL_HASH SHA512=b4c9716a0cb3d6748f69b91735e43a5fe51599f44c21f9c4d90e69daa05bddcfd354978e53e95d64cb6a6bcca640c48974d61893590ab443b230294d4668f245
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
