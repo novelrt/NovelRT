@@ -42,6 +42,7 @@ namespace NovelRT::Audio
           _soundSourceState(0),
           _soundStorage(),
           _bufferStorage(),
+          _supportsFloatBuffers(false),
           isInitialised(false)
     {
     }
@@ -53,39 +54,68 @@ namespace NovelRT::Audio
         alGenSources(1, &_musicSource);
         alSourcef(_musicSource, AL_GAIN, 0.75f);
         alSourcef(_musicSource, AL_PITCH, _pitch);
+        std::string extensions = std::string(alGetString(AL_EXTENSIONS));
+        if(extensions.find("FLOAT32"))
+        {
+            _supportsFloatBuffers = true;
+        }
 
         return isInitialised;
     }
 
     ALuint AudioService::ReadFile(std::string input)
     {
-        SF_INFO info;
-        info.format = 0;
-        SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
+        nqr::NyquistIO loader;
+        std::shared_ptr<nqr::AudioData> fileData = std::make_shared<nqr::AudioData>();
 
-        if (file == nullptr)
+        if(!loader.IsFileSupported(input))
         {
-            _logger.logWarning(std::string(sf_strerror(nullptr)));
-            return _noBuffer;
+            _logger.logWarning("{} is not a supported filetype!", input);
+            return _noBuffer;    
         }
 
-        std::vector<uint16_t> data;
-        std::vector<short> readBuffer;
-        readBuffer.resize(_bufferSize);
-
-        sf_count_t readSize = 0;
-
-        while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
+        loader.Load(fileData.get(), input);
+        
+        if(_supportsFloatBuffers)
         {
-            data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
+            ALuint buffer;
+            alGenBuffers(1, &buffer);
+            alBufferData(buffer, fileData->channelCount == 1 ? AL_FORMAT_MONO_FLOAT32 : AL_FORMAT_STEREO_FLOAT32, &fileData->samples.front(),
+                     static_cast<ALsizei>(fileData->samples.size() * sizeof(float)), fileData->sampleRate);
+            return buffer;
+        }
+        else
+        {
+            _logger.logWarningLine("Did not find FLOAT32 sample extension!");
         }
 
-        ALuint buffer;
-        alGenBuffers(1, &buffer);
-        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
-                     static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
-        sf_close(file);
-        return buffer;
+        //SF_INFO info;
+        //info.format = 0;
+        //SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
+
+        // if (file == nullptr)
+        // {
+        //     _logger.logWarning(std::string(sf_strerror(nullptr)));
+        //     return _noBuffer;
+        // }
+
+        //std::vector<uint16_t> data;
+        //std::vector<short> readBuffer;
+        //readBuffer.resize(_bufferSize);
+
+        //sf_count_t readSize = 0;
+
+        //while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
+        //{
+        //    data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
+        //}
+
+        //ALuint buffer;
+        //alGenBuffers(1, &buffer);
+        //alBufferData(buffer, fileData.get()->channelCount == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
+        //             static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
+        //sf_close(file);
+        return _noBuffer;
     }
 
     /*Note: Due to the current design, this will currently block the thread it is being called on.

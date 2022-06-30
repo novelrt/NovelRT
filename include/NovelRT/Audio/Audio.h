@@ -10,9 +10,10 @@
 #include "../Utilities/Lazy.h"
 #include "../Utilities/Misc.h"
 #include <AL/al.h>
-#include <AL/alc.h>
+//#include <AL/alc.h>
+#include <AL/alext.h>
 #include <cstdint>
-#include <sndfile.h>
+#include <libnyquist/Decoders.h>
 #include <vector>
 
 /***

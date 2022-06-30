@@ -8,7 +8,6 @@ class NovelRTConan(ConanFile):
     description = "A cross-platform 2D game engine accompanied by a strong toolset for visual novels."
     settings = "os", "compiler", "build_type", "arch"
     requires = [
-        ("libsndfile/1.0.30"),
         ("openal/1.21.1"),
     ]
     generators = "cmake_find_package", "cmake_paths"
@@ -19,12 +18,7 @@ class NovelRTConan(ConanFile):
         "buildinterop": [True, False]
     }
     default_options = {
-        "libsndfile:shared":True,
         "openal:shared":True,
-        "flac:shared":True,
-        "Opus:shared":True,
-        "Ogg:shared":True,
-        "Vorbis:shared":True,
         "documentation": False,
         "buildtests":True,
         "buildsamples":True,

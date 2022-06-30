@@ -1,9 +1,4 @@
-find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
-find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
-find_package(Opus ${NOVELRT_Opus_VERSION} REQUIRED)
-find_package(SndFile ${NOVELRT_SNDFILE_VERISON} REQUIRED)
-find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 if(NOVELRT_VULKAN_SDK)
   find_dependency(Vulkan REQUIRED)
 endif()
@@ -153,17 +148,13 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    FLAC::FLAC
     freetype
     glfw
-    Ogg::Ogg
+    libnyquist
     OpenAL::OpenAL
-    Opus::Opus
     png_static
-    SndFile::SndFile
     spdlog
     TBB::tbb
-    Vorbis::Vorbis
     $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons

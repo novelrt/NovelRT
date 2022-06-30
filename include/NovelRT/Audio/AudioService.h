@@ -14,7 +14,7 @@ namespace NovelRT::Audio
     class AudioService
     {
     private:
-        const size_t _bufferSize = 2048;
+        //const size_t _bufferSize = 2048;
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
 
@@ -32,6 +32,7 @@ namespace NovelRT::Audio
         ALint _soundSourceState;
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
+        bool _supportsFloatBuffers;
 
         ALuint ReadFile(std::string input);
         std::string GetALError();
