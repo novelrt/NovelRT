@@ -351,6 +351,7 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
+        presentCompletionGraphicsFence->Wait();
 
         if (!_isAttachedToResizeEvent)
         {
@@ -525,6 +526,7 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
+        presentCompletionGraphicsFence->Wait();
 
         _contextIndex = contextIndex;
     }
