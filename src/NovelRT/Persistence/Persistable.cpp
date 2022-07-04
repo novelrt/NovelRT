@@ -30,7 +30,7 @@ namespace NovelRT::Persistence
 
     void Persistable::ApplyDeserialisationRule(const std::string& serialisedName,
                                                gsl::span<const uint8_t> serialisedData,
-                                               gsl::span<uint8_t> writeToData) const
+                                               gsl::span<uint8_t> writeToData, const std::unordered_map<uuids::uuid, Ecs::EntityId>& uuidToEntityMap) const
     {
         auto& serialisationRules = GetSerialisationRules();
         auto it = serialisationRules.find(serialisedName);
@@ -40,7 +40,7 @@ namespace NovelRT::Persistence
             return;
         }
 
-        auto newData = it->second->ExecuteDeserialiseModification(serialisedData);
+        auto newData = it->second->ExecuteDeserialiseModification(serialisedData, uuidToEntityMap);
         memcpy(writeToData.data(), newData.data(), writeToData.size());
     }
 }

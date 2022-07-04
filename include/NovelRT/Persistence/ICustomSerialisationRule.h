@@ -19,7 +19,7 @@ namespace NovelRT::Persistence
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteSerialiseModification(
             gsl::span<const uint8_t> component) const noexcept = 0;
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteDeserialiseModification(
-            gsl::span<const uint8_t> component) const noexcept = 0;
+            gsl::span<const uint8_t> component, const std::unordered_map<uuids::uuid, Ecs::EntityId>& uuidsToEntitiesMap) const noexcept = 0;
     };
 }
 #endif // NOVELRT_PERSISTENCE_ICUSTOMSERIALISATIONRULE_H

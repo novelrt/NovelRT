@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Persistence/Persistence.h>
+#include <algorithm>
 
 namespace NovelRT::Persistence
 {
@@ -48,6 +49,8 @@ namespace NovelRT::Persistence
 
     ResourceManagement::BinaryPackage Chapter::ToFileData() const noexcept
     {
+        std::vector<uuids::uuid> usedIds{};
+
         ResourceManagement::BinaryPackage package{};
 
         package.data = std::vector<uint8_t>{};
@@ -61,9 +64,10 @@ namespace NovelRT::Persistence
             auto entityMetadata = ResourceManagement::BinaryMemberMetadata{dataPair.first + "_entities",
                                                                            ResourceManagement::BinaryDataType::Binary,
                                                                            oldLength,
-                                                                           sizeof(Ecs::EntityId),
+                                                                           sizeof(uuids::uuid),
                                                                            amountOfEntities,
                                                                            0};
+            
             package.memberMetadata.emplace_back(entityMetadata);
 
             auto componentMetadata = ResourceManagement::BinaryMemberMetadata{
@@ -96,13 +100,30 @@ namespace NovelRT::Persistence
 
             size_t sizeOfComponentType = dataPair.second.GetSizeOfDataTypeInBytes();
 
-            auto entityPtr = reinterpret_cast<Ecs::EntityId*>(package.data.data() + oldLength);
+            auto entityPtr = reinterpret_cast<uuids::uuid*>(package.data.data() + oldLength);
             auto componentPtr =
                 package.data.data() + oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes);
+                
+            std::random_device rd;
+            auto seedData = std::array<int, std::mt19937::state_size> {};
+            std::generate(std::begin(seedData), std::end(seedData), std::ref(rd));
+            std::seed_seq seq(std::begin(seedData), std::end(seedData));
+            std::mt19937 generator(seq);
+            uuids::uuid_random_generator gen{generator};
+
 
             for (auto&& [entity, dataView] : dataPair.second)
             {
-                std::memcpy(entityPtr, &entity, sizeof(Ecs::EntityId));
+                uuids::uuid id = gen();
+
+                std::memcpy(entityPtr, &id, sizeof(uuids::uuid));
+
+                while (std::find(usedIds.begin(), usedIds.end(), id) != usedIds.end()) 
+                {
+                    id = gen();
+                }
+
+                usedIds.emplace_back(id);
 
                 size_t componentJumpValue = sizeOfComponentType;
                 if (componentMetadata.sizeOfSerialisedDataInBytes == 0)
@@ -133,7 +154,7 @@ namespace NovelRT::Persistence
 
         struct PointerSpan
         {
-            const Ecs::EntityId* entities = nullptr;
+            const uuids::uuid* entities = nullptr;
             const uint8_t* components = nullptr;
             size_t entityCount = 0;
             size_t sizeOfComponentInBytes = 0;
@@ -168,7 +189,7 @@ namespace NovelRT::Persistence
 
             if (bufferPartName == "entities")
             {
-                span.entities = reinterpret_cast<const Ecs::EntityId*>(&data.data[metadata.location]);
+                span.entities = reinterpret_cast<const uuids::uuid*>(&data.data[metadata.location]);
                 span.entityCount = metadata.length;
             }
             else if (bufferPartName == "components")
@@ -190,6 +211,19 @@ namespace NovelRT::Persistence
         {
             Ecs::SparseSetMemoryContainer container(pair.second.sizeOfComponentInBytes);
 
+            
+            std::unordered_map<uuids::uuid, Ecs::EntityId> unpackedEntityMap{};
+            std::vector<Ecs::EntityId> unpackedEntities{};
+
+            auto& entityFactory = AtomFactoryDatabase::GetFactory("EntityId");
+
+            for (size_t i = 0; i < pair.second.entityCount; i++)
+            {
+                Ecs::EntityId id = entityFactory.GetNext();
+                unpackedEntityMap.emplace(pair.second.entities[i], id);
+                unpackedEntities.emplace_back(id);
+            }
+
             if (serialisationRules.find(pair.first) != serialisationRules.end())
             {
                 std::vector<uint8_t> newBufferData{};
@@ -204,17 +238,18 @@ namespace NovelRT::Persistence
                         pair.first,
                         gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes),
                         gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
-                                           pair.second.sizeOfComponentInBytes));
+                                           pair.second.sizeOfComponentInBytes), unpackedEntityMap);
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
                 }
 
-                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
+
+                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(unpackedEntities.data()),
                                                  pair.second.entityCount, newBufferData.data());
             }
             else
             {
-                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(pair.second.entities),
+                container.ResetAndWriteDenseData(reinterpret_cast<const size_t*>(unpackedEntities.data()),
                                                  pair.second.entityCount, pair.second.components);
             }
 

@@ -19,7 +19,7 @@ namespace NovelRT::Persistence
 
         void ApplyDeserialisationRule(const std::string& serialisedName,
                                       gsl::span<const uint8_t> serialisedData,
-                                      gsl::span<uint8_t> writeToData) const;
+                                      gsl::span<uint8_t> writeToData, const std::unordered_map<uuids::uuid, Ecs::EntityId>& uuidsToEntitiesMap) const;
 
     public:
         [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>&

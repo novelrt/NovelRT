@@ -24,6 +24,10 @@ int main()
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
+    
+    //[NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    //NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
+
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()

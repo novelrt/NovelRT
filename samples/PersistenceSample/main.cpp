@@ -54,7 +54,7 @@ int main()
             return data;
         }
 
-        std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept final
+        std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component, const std::unordered_map<uuids::uuid, NovelRT::Ecs::EntityId>&) const noexcept final
         {
             auto dataPtr = reinterpret_cast<const int32_t*>(component.data());
 
