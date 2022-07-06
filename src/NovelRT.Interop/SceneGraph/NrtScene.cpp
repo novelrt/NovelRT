@@ -21,13 +21,13 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -58,7 +58,7 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

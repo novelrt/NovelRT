@@ -25,7 +25,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -38,7 +38,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -66,7 +66,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -79,7 +79,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -107,13 +107,13 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (str == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -141,13 +141,13 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputInkService == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

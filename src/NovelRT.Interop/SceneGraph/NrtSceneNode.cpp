@@ -41,13 +41,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -62,13 +62,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -106,13 +106,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -129,7 +129,7 @@ extern "C"
     {
         if (node == nullptr || action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -149,13 +149,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -173,13 +173,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -204,7 +204,7 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -224,7 +224,7 @@ extern "C"
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -243,13 +243,13 @@ extern "C"
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvided();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSceneNode == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvided();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
