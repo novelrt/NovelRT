@@ -5,8 +5,13 @@
 
 namespace NovelRT::ResourceManagement::Desktop
 {
-    TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
+    TextureMetadata DesktopResourceLoader::LoadTextureFromFile(std::filesystem::path filePath)
     {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Images" / filePath;
+        }
+
         std::string filePathStr = filePath.string();
         FILE* cFile;
 #if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
@@ -143,8 +148,13 @@ namespace NovelRT::ResourceManagement::Desktop
         return TextureMetadata{returnImage, data.width, data.height, finalLength};
     }
 
-    std::vector<uint8_t> DesktopResourceLoader::LoadShaderSourceInternal(std::filesystem::path filePath)
+    std::vector<uint8_t> DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Shaders" / filePath;
+        }
+
         std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
 
         if (!file.is_open())

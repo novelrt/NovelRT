@@ -15,11 +15,9 @@ namespace NovelRT::ResourceManagement::Desktop
     private:
         LoggingService _logger;
 
-    protected:
-        [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;
-        [[nodiscard]] std::vector<uint8_t> LoadShaderSourceInternal(std::filesystem::path filePath) final;
-
     public:
+        [[nodiscard]] TextureMetadata LoadTextureFromFile(std::filesystem::path filePath) final;
+        [[nodiscard]] std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
         ~DesktopResourceLoader() final = default;
