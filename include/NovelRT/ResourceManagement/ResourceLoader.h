@@ -27,24 +27,24 @@ namespace NovelRT::ResourceManagement
         }
 
         /**
-         * @brief Loads texture from file on given path.
+         * @brief Loads a texture from a file on a given path.
          *
-         * Path can both be relative as well as absolute.
-         * When using relative path it will look in the Resources + Images directory
+         * The path can be either relative or absolute.
+         * When using a relative path it will look in the Resources/Images directory.
          *
-         * @param filePath Relative or absolute path to the texture
-         * @return TextureMetadata of the file that was requested to load
+         * @param filePath Relative or absolute path to the texture.
+         * @returns TextureMetadata The texture data contained in the file.
          */
         [[nodiscard]] virtual TextureMetadata LoadTextureFromFile(std::filesystem::path filePath) = 0;
 
         /**
-         * @brief Loads shader from file on given path.
+         * @brief Loads shader from a file on a given path.
          *
-         * Path can both be relative as well as absolute.
-         * When using relative path it will look in the Resources + Shaders directory
+         * The path can be either relative or absolute.
+         * When using a relative path it will look in the Resources/Shaders directory.
          *
-         * @param filePath Relative or absolute path to the texture
-         * @return TextureMetadata of the file that was requested to load
+         * @param filePath Relative or absolute path to the shader.
+         * @returns std::vector<uint8_t> Shader data as a memory block that was contained in the file.
          */
         [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) = 0;
 
