@@ -15,11 +15,6 @@ namespace NovelRT::ResourceManagement
     protected:
         std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
 
-        [[nodiscard]] virtual TextureMetadata LoadTexture(
-            std::filesystem::path filePath) = 0; // TODO: I've realised these should probably be overloads, not internal
-                                                 // methods. Monke brain. :(
-        [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSourceInternal(std::filesystem::path filePath) = 0;
-
     public:
         [[nodiscard]] inline std::filesystem::path& ResourcesRootDirectory() noexcept
         {
@@ -31,16 +26,27 @@ namespace NovelRT::ResourceManagement
             return _resourcesRootDirectory;
         }
 
-        [[nodiscard]] inline TextureMetadata LoadTextureFromFile(const std::string& fileName)
-        {
-            return LoadTexture(_resourcesRootDirectory / "Images" /
-                               fileName); // TODO: This should probably either be textures or sprites, not image? Thonk.
-        }
+        /**
+         * @brief Loads texture from file on given path.
+         *
+         * Path can both be relative as well as absolute.
+         * When using relative path it will look in the Resources + Images directory
+         *
+         * @param filePath Relative or absolute path to the texture
+         * @return TextureMetadata of the file that was requested to load
+         */
+        [[nodiscard]] virtual TextureMetadata LoadTextureFromFile(std::filesystem::path filePath) = 0;
 
-        [[nodiscard]] inline std::vector<uint8_t> LoadShaderSource(const std::string& fileName)
-        {
-            return LoadShaderSourceInternal(_resourcesRootDirectory / "Shaders" / fileName);
-        }
+        /**
+         * @brief Loads shader from file on given path.
+         *
+         * Path can both be relative as well as absolute.
+         * When using relative path it will look in the Resources + Shaders directory
+         *
+         * @param filePath Relative or absolute path to the texture
+         * @return TextureMetadata of the file that was requested to load
+         */
+        [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
 
