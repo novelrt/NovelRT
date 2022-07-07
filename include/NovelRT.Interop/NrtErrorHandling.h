@@ -15,11 +15,11 @@ extern "C"
 
     // Internal
     const char* Nrt_getLastErrorInternal();
-    void Nrt_setErrIsNullInstanceProvided();
-    void Nrt_setErrIsNullArgProvided();
+    void Nrt_setErrIsNullInstanceProvidedInternal();
+    void Nrt_setErrIsNullArgProvidedInternal();
     void Nrt_setErrMsgIsNaNInternal();
-    void Nrt_setErrMsgDupKeyGiven();
-    void Nrt_setErrMsgCompilationError();
+    void Nrt_setErrMsgDupKeyGivenInternal();
+    void Nrt_setErrMsgCompilationErrorInternal();
     void Nrt_setErrMsgIsFileNotFoundInternal();
     void Nrt_setErrMsgIsDivideByZeroInternal();
     void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
@@ -31,9 +31,9 @@ extern "C"
     void Nrt_setErrMsgIsInvalidOperationInternal();
     void Nrt_setErrMsgIsCharacterNotFoundInternal();
     void Nrt_setErrMsgIsOutOfMemoryInternal();
-    void Nrt_setErrMsgKeyNotFound();
-    void Nrt_setErrMsgRuntimeNotFound();
-    void Nrt_setErrMsgErrorUnknown();
+    void Nrt_setErrMsgKeyNotFoundInternal();
+    void Nrt_setErrMsgRuntimeNotFoundInternal();
+    void Nrt_setErrMsgErrorUnknownInternal();
     void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus

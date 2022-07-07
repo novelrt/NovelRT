@@ -24,13 +24,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (value == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -42,7 +42,7 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGiven();
+            Nrt_setErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
@@ -52,7 +52,7 @@ extern "C"
         }
         catch (const std::exception&)
         {
-            Nrt_setErrMsgErrorUnknown();
+            Nrt_setErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -68,7 +68,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -79,7 +79,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFound();
+            Nrt_setErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -105,13 +105,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -141,13 +141,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -183,13 +183,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -292,7 +292,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -331,7 +331,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -365,7 +365,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -404,13 +404,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -431,7 +431,7 @@ extern "C"
         }
         catch (const std::exception&) // TODO: I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
-            Nrt_setErrMsgErrorUnknown();
+            Nrt_setErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -440,7 +440,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -479,13 +479,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -506,7 +506,7 @@ extern "C"
         }
         catch (const std::exception&) // I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
-            Nrt_setErrMsgErrorUnknown();
+            Nrt_setErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -515,7 +515,7 @@ NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryC
 {
     if (iterator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvided();
+        Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

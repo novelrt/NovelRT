@@ -15,7 +15,7 @@ extern "C"
     {
         if (points == nullptr || outputNode == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -30,13 +30,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputPoint == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -51,13 +51,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputPoint == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -72,13 +72,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputPoint == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -93,13 +93,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputPoint == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -119,7 +119,7 @@ extern "C"
         if (pointOne == nullptr || pointTwo == nullptr || pointThree == nullptr || pointFour == nullptr ||
             outputArray == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

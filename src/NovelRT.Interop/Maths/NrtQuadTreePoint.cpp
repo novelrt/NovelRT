@@ -40,7 +40,7 @@ extern "C"
     {
         if (point == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

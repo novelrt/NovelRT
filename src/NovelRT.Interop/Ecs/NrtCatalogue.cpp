@@ -24,13 +24,13 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -70,7 +70,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -83,7 +83,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

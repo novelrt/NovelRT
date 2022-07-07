@@ -58,19 +58,19 @@ extern "C"
         customMessageSet = false;
     }
 
-    void Nrt_setErrIsNullInstanceProvided()
+    void Nrt_setErrIsNullInstanceProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullInstanceProvided;
     }
 
-    void Nrt_setErrMsgKeyNotFound()
+    void Nrt_setErrMsgKeyNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgKeyNotFound;
     }
 
-    void Nrt_setErrMsgErrorUnknown()
+    void Nrt_setErrMsgErrorUnknownInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgErrorUnknown;
@@ -81,19 +81,20 @@ extern "C"
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsFileNotFound;
     }
-    void Nrt_setErrMsgDupKeyGiven()
+    
+    void Nrt_setErrMsgDupKeyGivenInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgDupKeyGiven;
     }
 
-    void Nrt_setErrMsgCompilationError()
+    void Nrt_setErrMsgCompilationErrorInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgCompilationError;
     }
 
-    void Nrt_setErrIsNullArgProvided()
+    void Nrt_setErrIsNullArgProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullArg;
@@ -129,7 +130,7 @@ extern "C"
         currentErrorMessage = errMsgIsNotSupportedInternal;
     }
 
-    void Nrt_setErrMsgRuntimeNotFound()
+    void Nrt_setErrMsgRuntimeNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgRuntimeNotFound;

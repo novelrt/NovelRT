@@ -53,13 +53,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (componentData == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -76,7 +76,7 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGiven();
+            Nrt_setErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
     }
@@ -88,13 +88,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvided();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -108,7 +108,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFound();
+            Nrt_setErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -159,7 +159,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -179,7 +179,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvided();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
