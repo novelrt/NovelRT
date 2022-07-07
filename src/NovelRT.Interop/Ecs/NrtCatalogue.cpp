@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtCatalogue.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
@@ -23,11 +24,13 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -41,6 +44,7 @@ extern "C"
         catch (const std::out_of_range&)
         {
             delete returnPtr;
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
 
@@ -66,6 +70,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -78,6 +83,7 @@ extern "C"
     {
         if (catalogue == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
