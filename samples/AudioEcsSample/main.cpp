@@ -88,20 +88,39 @@ int main()
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
     NovelRT::Maths::GeoBounds uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(), NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width, textureFuture.GetBackingConcurrentSharedPtr()->height), 0);
+    bool uwuFlip = false;
 
     transformBuffer.PushComponentUpdateInstruction(
         0, parentEntity,
         TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
 
-    scheduler.RegisterSystem([&uwuBounds](auto delta, auto catalogue) {
+    scheduler.RegisterSystem([&uwuBounds, &uwuFlip](auto delta, auto catalogue) {
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
 
         for (auto [entity, transform] : transforms)
         {
-            uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
             TransformComponent newComponent{};
-            //newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+            newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::zero();
+            if(uwuFlip)
+            {
+                newComponent.positionAndLayer.x = 2;
+                uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x+2, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
+                if (transform.positionAndLayer.x >= 480)
+                {
+                    uwuFlip = false;
+                }
+            }
+            else
+            {
+                newComponent.positionAndLayer.x = -2;
+                uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x-2, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
+                if (transform.positionAndLayer.x <= -480)
+                {
+                    uwuFlip = true;
+                }
+            }
             newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            newComponent.rotationInRadians = 0;
             transforms.PushComponentUpdateInstruction(entity, newComponent);
         }
     });
@@ -151,7 +170,6 @@ int main()
             (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             triggered = uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
-            logger.logInfo("Mouse Position: {}, {}", input.mousePositionX, input.mousePositionY);
         }
 
         if(triggered)
