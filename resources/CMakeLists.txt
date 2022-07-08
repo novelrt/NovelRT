@@ -20,8 +20,8 @@ set(RESOURCES_FILES
   Shaders/frag.spv
   Shaders/vert.spv
 
+  Sounds/goat.wav
   Sounds/uwu.ogg
-  Sounds/goat.ogg
 )
 
 foreach(resource ${RESOURCES_FILES})

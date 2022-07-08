@@ -14,7 +14,7 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 int main()
 {
     NovelRT::LoggingService logger = NovelRT::LoggingService();
-    logger.setLogLevel(NovelRT::LogLevel::Info);
+
 
 #if NOVELRT_MOLTENVK_VENDORED
     auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd.json";
@@ -36,11 +36,14 @@ int main()
             .InitialiseAndRegisterComponents();
 
 // Initialisation of ECS Audio System
-    auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>();
+    auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>(false);
     scheduler.RegisterSystem(audioSystem);
     auto deleteState = AudioEmitterComponent();
     scheduler.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
     scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done}, "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
+
+// Set global logging level
+    logger.setLogLevel(NovelRT::LogLevel::Info);
 
 // Get the Sounds resource directory
     auto rootDir = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()->GetResourceLoader()->ResourcesRootDirectory();
@@ -50,12 +53,12 @@ int main()
     std::string uwu = (soundDir / "uwu.ogg").string();
     auto uwuHandle = audioSystem->CreateAudio(uwu, true);
     AudioEmitterComponent uwuComponent = AudioEmitterComponent{uwuHandle, true, -1, 0.75f};
-    AudioEmitterStateComponent uwuState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
+    AudioEmitterStateComponent uwuState = AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 3.0f, 0.75f};
 
     std::string ahh = (soundDir / "goat.ogg").string();
     auto goatHandle = audioSystem->CreateAudio(ahh, false);
     AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, -1, 0.75f};
-    AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
+    AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 0, 0};
 
 // Assign the entities holding the components
     auto& entityFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
@@ -63,13 +66,13 @@ int main()
     auto soundEnt = entityFactory.GetNext();
 
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-        musicEnt, 0, uwuComponent);
+        0, musicEnt, uwuComponent);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-        musicEnt, 0, uwuState);
+        0, musicEnt, uwuState);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-        soundEnt, 0, goatComponent);
+        0, soundEnt, goatComponent);
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-        soundEnt, 0, goatState);
+        0, soundEnt, goatState);
 
 // Rendering Initialisation
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
@@ -92,7 +95,7 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, parentEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(0, 0, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
 
     scheduler.RegisterSystem([&uwuBounds, &uwuFlip](auto delta, auto catalogue) {
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
@@ -140,24 +143,24 @@ int main()
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
 // Register system to restart music if it stops
-    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-        auto [emitters, states] = catalogue.template GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
-        for (auto [entity, emitter] : emitters)
-        {
-            if(emitter.isMusic)
-            {
-                auto state = states.GetComponent(entity);
-                if(state.state == AudioEmitterState::Stopped)
-                {
-                    AudioEmitterStateComponent newState{};
-                    newState.fadeDuration = 3.0f;
-                    newState.fadeExpectedVolume = 0.75f;
-                    newState.state = AudioEmitterState::ToFadeIn;
-                    states.PushComponentUpdateInstruction(entity, newState);
-                }
-            }
-        }
-    });
+    // scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+    //     auto [emitters, states] = catalogue.template GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
+    //     for (auto [entity, emitter] : emitters)
+    //     {
+    //         if(emitter.isMusic)
+    //         {
+    //             auto state = states.GetComponent(entity);
+    //             if(state.state == AudioEmitterState::Stopped)
+    //             {
+    //                 AudioEmitterStateComponent newState{};
+    //                 newState.fadeDuration = 3.0f;
+    //                 newState.fadeExpectedVolume = 0.75f;
+    //                 newState.state = AudioEmitterState::ToFadeIn;
+    //                 states.PushComponentUpdateInstruction(entity, newState);
+    //             }
+    //         }
+    //     }
+    // });
 
 // Register system to trigger sound when something is clicked
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {

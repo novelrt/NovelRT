@@ -25,6 +25,7 @@ namespace NovelRT::Ecs::Audio
 
     public:
         AudioSystem();
+        AudioSystem(bool verbose);
         ~AudioSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;

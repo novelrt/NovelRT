@@ -22,7 +22,7 @@ namespace NovelRT::Ecs::Audio
             bool handleChanged = (handle == other.handle);
             handle = handleChanged ? other.handle : handle;
             // isMusic should never change otherwise the component may be being abused.
-            numberOfLoops = handleChanged ? other.numberOfLoops : numberOfLoops + other.numberOfLoops;
+            numberOfLoops = handleChanged ? other.numberOfLoops : numberOfLoops;
             volume = handleChanged ? other.volume : volume + other.volume;
             return *this;
         };
