@@ -52,14 +52,6 @@ jobs:
           version: 1.3.211.0
           cache: true
 
-      - name: Install Vulkan SDK (Windows)
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        if: "contains(matrix.os, 'windows')"
-        with:
-          vulkan-query-version: 1.3.211.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          vulkan-use-cache: true
-
       - name: Prepare build environment
         run: |
           pip3 install conan
