@@ -20,14 +20,12 @@
  */
 namespace NovelRT::Audio
 {
-    struct AudioFileInfo;
     typedef std::vector<ALuint> SoundBank;
     typedef std::vector<ALuint> MusicBank;
     typedef class AudioService AudioService;
 }
 
 // Audio Types
-#include "AudioFileInfo.h"
 #include "AudioService.h"
 
 #endif // NOVELRT_AUDIO_H
