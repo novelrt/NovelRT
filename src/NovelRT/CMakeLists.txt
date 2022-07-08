@@ -81,7 +81,6 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
-add_dependencies(Engine vorbisfile)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)
@@ -111,6 +110,7 @@ target_include_directories(Engine
 )
 
 if(MSVC)
+  set_property(TARGET Engine PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
   target_compile_definitions(Engine PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
   target_compile_options(Engine
     PRIVATE
@@ -148,6 +148,7 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
+    runtime # Fabulist support - target name is vague. Fix later. :]
     freetype
     glfw
     OpenAL
@@ -155,9 +156,8 @@ target_link_libraries(Engine
     spdlog
     TBB::tbb
     $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
-    vorbisfile
-    runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
+    sndfile
 )
 
 install(
@@ -183,6 +183,9 @@ if(WIN32 OR APPLE)
     $<TARGET_FILE_DIR:OpenAL>
     $<TARGET_FILE_DIR:Engine>)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:sndfile>
+    $<TARGET_FILE_DIR:Engine>)
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:tbb>
     $<TARGET_FILE_DIR:Engine>)
   if(NOT NOVELRT_VULKAN_SDK)
@@ -201,6 +204,6 @@ if(WIN32 OR APPLE)
   #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
   set_target_properties(Engine
     PROPERTIES
-      RESOURCE "$<TARGET_FILE_NAME:tbb>;$<TARGET_FILE_NAME:OpenAL>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
+      RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
 endif()
 

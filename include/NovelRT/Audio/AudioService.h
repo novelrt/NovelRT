@@ -14,6 +14,7 @@ namespace NovelRT::Audio
     class AudioService
     {
     private:
+        const size_t _bufferSize = 4096;
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
 
@@ -34,8 +35,6 @@ namespace NovelRT::Audio
 
         ALuint ReadFile(std::string input);
         std::string GetALError();
-        void LoadWaveFile(std::string input, AudioFileInfo& output);
-        void LoadVorbisFile(std::string input, AudioFileInfo& output);
 
     public:
         bool isInitialised;

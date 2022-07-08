@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Audio/Audio.h>
+#include <sndfile.h>
 
 namespace NovelRT::Audio
 {
@@ -59,33 +60,32 @@ namespace NovelRT::Audio
 
     ALuint AudioService::ReadFile(std::string input)
     {
-        std::filesystem::path inputPath = std::filesystem::path(input);
-        AudioFileInfo info = AudioFileInfo{};
+        SF_INFO info;
+        info.format = 0;
+        SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
-        if (inputPath.extension() == ".ogg")
+        if (file == nullptr)
         {
-            LoadVorbisFile(input, info);
-        }
-        else if (inputPath.extension() == ".wav")
-        {
-            LoadWaveFile(input, info);
-        }
-        else
-        {
-            _logger.logError("File specified at {} is not in a supported format!", input);
+            _logger.logWarning(std::string(sf_strerror(nullptr)));
             return _noBuffer;
+        }
+
+        std::vector<uint16_t> data;
+        std::vector<short> readBuffer;
+        readBuffer.resize(_bufferSize);
+
+        sf_count_t readSize = 0;
+
+        while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
+        {
+            data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
         }
 
         ALuint buffer;
         alGenBuffers(1, &buffer);
-        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, info.data,
-                     static_cast<ALsizei>(info.size), static_cast<ALsizei>(info.frequency));
-        _logger.logDebugLine(GetALError());
-
-        _logger.logDebug("Loaded {}\nChannels: {}, Sample Rate: {},\nSamples: {}, Buffer ID: {}", input, info.channels,
-                         info.frequency, info.size, buffer);
-
-        free(info.data);
+        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
+                     static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
+        sf_close(file);
         return buffer;
     }
 
@@ -488,185 +488,6 @@ namespace NovelRT::Audio
         float result = 0.0f;
         alGetSourcef(handle, AL_GAIN, &result);
         return result;
-    }
-
-    // These are required to _not_ be defined as a member-bound function for ov_callbacks
-
-    size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource)
-    {
-        assert(elementSize == 1);
-        unused(elementSize);
-        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
-        stream.read(static_cast<char*>(buffer), elementCount);
-        const std::streamsize bytesRead = stream.gcount();
-        stream.clear();
-        return static_cast<size_t>(bytesRead);
-    }
-
-    int StreamSeek(void* dataSource, ogg_int64_t offset, int origin)
-    {
-        static const std::vector<std::ios_base::seekdir> seekDirections{std::ios_base::beg, std::ios_base::cur,
-                                                                        std::ios_base::end};
-        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
-        stream.seekg(offset, seekDirections.at(origin));
-        stream.clear();
-        return 0;
-    }
-
-    long StreamTell(void* dataSource)
-    {
-        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
-        const auto position = stream.tellg();
-        assert(position >= 0);
-        return static_cast<long>(position);
-    }
-
-    void AudioService::LoadVorbisFile(std::string input, AudioFileInfo& output)
-    {
-        OggVorbis_File file;
-        vorbis_info* info = nullptr;
-        std::ifstream stream(input, std::ios::binary);
-
-        if (!stream.is_open())
-        {
-            throw NovelRT::Exceptions::FileNotFoundException(input);
-        }
-
-        const ov_callbacks callbacks{StreamRead, StreamSeek, nullptr, StreamTell};
-
-        // Open the Vorbis file via ov_open_callbacks with OV_CALLBACKS_NOCLOSE to ensure the file doesn't disappear
-        // on Windows devices
-        if (ov_open_callbacks(&stream, &file, nullptr, 0, callbacks) < 0)
-        {
-            throw NovelRT::Exceptions::IOException(input, "File provided does not contain a valid Ogg Vorbis stream.");
-        }
-
-        // Get the info struct from Ogg Vorbis
-        info = ov_info(&file, -1);
-        output.channels = info->channels;
-        output.frequency = info->rate;
-
-        // Get the size of data to read
-        size_t length = ov_pcm_total(&file, -1) * info->channels * 2;
-        output.size = static_cast<size_t>(length);
-
-        // Allocate a buffer for the samples data
-        output.data = malloc(length);
-        if (output.data == 0)
-        {
-            throw NovelRT::Exceptions::NullPointerException("Unable to allocate memory when reading the sound file.");
-        }
-
-        // Read the samples at a sample size of 4096
-        for (size_t sz = 0, offset = 0, sel = 0;
-             (sz = ov_read(&file, (char*)output.data + offset, 4096, 0, sizeof(int16_t), 1, (int*)&sel)) != 0;
-             offset += sz)
-        {
-            if (sz < 0)
-            {
-                int32_t errorCode = static_cast<int32_t>(sz);
-                if (errorCode == OV_HOLE)
-                {
-                    throw NovelRT::Exceptions::IOException(
-                        input, "Vorbis: Interruption in data while retrieving next packet.");
-                }
-                else if (errorCode == OV_EBADLINK)
-                {
-                    throw NovelRT::Exceptions::IOException(
-                        input, "Vorbis: Invalid stream section, or the requested link is corrupt.");
-                }
-                else // If its not the top two, it's OV_EINVAL
-                {
-                    throw NovelRT::Exceptions::IOException(input,
-                                                           "Vorbis: file headers are corrupt or could not be read.");
-                }
-            }
-        }
-
-        ov_clear(&file);
-        stream.close();
-    }
-
-    void AudioService::LoadWaveFile(std::string input, AudioFileInfo& output)
-    {
-        std::ifstream stream(input, std::ios::binary);
-
-        if (!stream.is_open())
-        {
-            throw NovelRT::Exceptions::FileNotFoundException(input);
-        }
-
-        stream.seekg(0, std::ios::beg);
-
-        std::string headerId(4, ' ');
-        std::string format(4, ' ');
-        stream.read(&headerId[0], 4);
-
-        stream.seekg(4, std::ios_base::cur);
-        stream.read(&format[0], 4);
-
-        if (headerId != "RIFF" || format != "WAVE")
-        {
-            throw NovelRT::Exceptions::NotSupportedException("The file format provided is not supported.");
-        }
-
-        std::string fmtHeader(4, ' ');
-        stream.read(&fmtHeader[0], 4);
-
-        if (fmtHeader != "fmt ")
-        {
-            throw NovelRT::Exceptions::NotSupportedException(
-                "The provided WAV file has an invalid or unsupported fmt subchunk.");
-        }
-
-        stream.seekg(4, std::ios_base::cur);
-
-        int32_t fmtFormat = 0;
-        stream.read(reinterpret_cast<char*>(&fmtFormat), 2);
-
-        if (fmtFormat != 1)
-        {
-            throw NovelRT::Exceptions::NotSupportedException(
-                "The provided WAV file is in an unsupported format - NovelRT only supports PCM formatted WAV files at "
-                "this time.");
-        }
-
-        int32_t channels = 0;
-        stream.read(reinterpret_cast<char*>(&channels), 2);
-        int32_t sampleRate = 0;
-        stream.read(reinterpret_cast<char*>(&sampleRate), 4);
-
-        stream.seekg(6, std::ios_base::cur);
-        int32_t bitsPerSample = 0;
-        stream.read(reinterpret_cast<char*>(&bitsPerSample), 2);
-
-        if (bitsPerSample != 16)
-        {
-            throw NovelRT::Exceptions::NotSupportedException(
-                "The provided WAV file is in an unsupported format - NovelRT only supports 16-bit samples for WAV "
-                "files at this time.");
-        }
-
-        std::string dataHeader(4, ' ');
-        stream.read(&dataHeader[0], 4);
-
-        if (dataHeader != "data")
-        {
-            throw NovelRT::Exceptions::NotSupportedException(
-                "The provided WAV file has an invalid or unsupported data subchunk.");
-        }
-
-        size_t size = 0;
-        stream.read(reinterpret_cast<char*>(&size), 4);
-
-        output.data = malloc(size);
-        stream.read(reinterpret_cast<char*>(output.data), size);
-
-        output.channels = channels;
-        output.frequency = sampleRate;
-        output.size = size;
-
-        stream.close();
     }
 
 } // namespace NovelRT::Audio

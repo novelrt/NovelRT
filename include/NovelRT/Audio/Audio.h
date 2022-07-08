@@ -14,7 +14,6 @@
 #include <cstdint>
 #include <fstream>
 #include <vector>
-#include <vorbis/vorbisfile.h>
 
 /***
  * @brief Contains audio features, such as playing audio, and managing audio resources.
