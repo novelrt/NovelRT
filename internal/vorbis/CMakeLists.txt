@@ -1,6 +1,8 @@
 include(FetchContent)
 message(STATUS "Fetching Vorbis...")
 
+cmake_policy(SET CMP0048 NEW)
+
 FetchContent_Declare(vorbis
         URL https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz
         URL_HASH SHA256=0e982409a9c3fc82ee06e08205b1355e5c6aa4c36bca58146ef399621b0ce5ab

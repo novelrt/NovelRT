@@ -160,11 +160,13 @@ int main()
             logger.logInfoLine("Clicked!");
             auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
             AudioEmitterStateComponent state;
-            states.TryGetComponent(soundEnt, state);
-            if(state.state == AudioEmitterState::Stopped)
+            if(states.TryGetComponent(soundEnt, state))
             {
-                state.state = AudioEmitterState::ToPlay;
-                states.PushComponentUpdateInstruction(soundEnt, state);
+                if(state.state == AudioEmitterState::Stopped)
+                {
+                    state.state = AudioEmitterState::ToPlay;
+                    states.PushComponentUpdateInstruction(soundEnt, state);
+                }
             }
         }
     });

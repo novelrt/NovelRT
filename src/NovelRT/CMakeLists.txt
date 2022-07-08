@@ -1,4 +1,3 @@
-find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 if(NOVELRT_VULKAN_SDK)
   include(CMakeFindDependencyMacro)
   find_dependency(Vulkan REQUIRED)
@@ -151,7 +150,7 @@ target_link_libraries(Engine
   PUBLIC
     freetype
     glfw
-    OpenAL::OpenAL
+    OpenAL
     png_static
     spdlog
     TBB::tbb
@@ -177,9 +176,12 @@ install(
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
 if(WIN32 OR APPLE)
+  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #    ${CMAKE_BINARY_DIR}/thirdparty
+  #    $<TARGET_FILE_DIR:Engine>)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${CMAKE_BINARY_DIR}/thirdparty
-      $<TARGET_FILE_DIR:Engine>)
+    $<TARGET_FILE_DIR:OpenAL>
+    $<TARGET_FILE_DIR:Engine>)
   add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:tbb>
     $<TARGET_FILE_DIR:Engine>)
@@ -195,10 +197,10 @@ if(WIN32 OR APPLE)
       set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
     endif()
   endif()
-  file(GLOB libs RELATIVE
-    ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
+  #file(GLOB libs RELATIVE
+  #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
   set_target_properties(Engine
     PROPERTIES
-      RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
+      RESOURCE "$<TARGET_FILE_NAME:tbb>;$<TARGET_FILE_NAME:OpenAL>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
 endif()
 
