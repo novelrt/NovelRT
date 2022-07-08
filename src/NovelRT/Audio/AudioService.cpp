@@ -62,11 +62,11 @@ namespace NovelRT::Audio
         std::filesystem::path inputPath = std::filesystem::path(input);
         AudioFileInfo info = AudioFileInfo{};
 
-        if(inputPath.extension() == ".ogg")
+        if (inputPath.extension() == ".ogg")
         {
             LoadVorbisFile(input, info);
         }
-        else if(inputPath.extension() == ".wav")
+        else if (inputPath.extension() == ".wav")
         {
             LoadWaveFile(input, info);
         }
@@ -76,15 +76,16 @@ namespace NovelRT::Audio
             return _noBuffer;
         }
 
-
         ALuint buffer;
         alGenBuffers(1, &buffer);
-        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, info.data, static_cast<ALsizei>(info.size), static_cast<ALsizei>(info.frequency));
+        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, info.data,
+                     static_cast<ALsizei>(info.size), static_cast<ALsizei>(info.frequency));
         _logger.logDebugLine(GetALError());
 
-        _logger.logDebug("Loaded {}\nChannels: {}, Sample Rate: {},\nSamples: {}, Buffer ID: {}", input, info.channels, info.frequency, info.size, buffer);
+        _logger.logDebug("Loaded {}\nChannels: {}, Sample Rate: {},\nSamples: {}, Buffer ID: {}", input, info.channels,
+                         info.frequency, info.size, buffer);
 
-        delete(info.data);
+        delete (info.data);
         return buffer;
     }
 
@@ -489,7 +490,7 @@ namespace NovelRT::Audio
         return result;
     }
 
-    //These are required to _not_ be defined as a member-bound function for ov_callbacks
+    // These are required to _not_ be defined as a member-bound function for ov_callbacks
 
     size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource)
     {
@@ -504,7 +505,8 @@ namespace NovelRT::Audio
 
     int StreamSeek(void* dataSource, ogg_int64_t offset, int origin)
     {
-        static const std::vector<std::ios_base::seekdir> seekDirections{std::ios_base::beg, std::ios_base::cur, std::ios_base::end};
+        static const std::vector<std::ios_base::seekdir> seekDirections{std::ios_base::beg, std::ios_base::cur,
+                                                                        std::ios_base::end};
         std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
         stream.seekg(offset, seekDirections.at(origin));
         stream.clear();
@@ -522,7 +524,7 @@ namespace NovelRT::Audio
     void AudioService::LoadVorbisFile(std::string input, AudioFileInfo& output)
     {
         OggVorbis_File file;
-	    vorbis_info* info = nullptr;
+        vorbis_info* info = nullptr;
         std::ifstream stream(input, std::ios::binary);
 
         if (!stream.is_open())
@@ -534,7 +536,7 @@ namespace NovelRT::Audio
 
         // Open the Vorbis file via ov_open_callbacks with OV_CALLBACKS_NOCLOSE to ensure the file doesn't disappear
         // on Windows devices
-        if(ov_open_callbacks(&stream, &file, nullptr, 0, callbacks) < 0)
+        if (ov_open_callbacks(&stream, &file, nullptr, 0, callbacks) < 0)
         {
             throw NovelRT::Exceptions::IOException(input, "File provided does not contain a valid Ogg Vorbis stream.");
         }
@@ -548,29 +550,34 @@ namespace NovelRT::Audio
         size_t length = ov_pcm_total(&file, -1) * info->channels * 2;
         output.size = static_cast<size_t>(length);
 
-        //Allocate a buffer for the samples data
+        // Allocate a buffer for the samples data
         output.data = malloc(length);
-        if(output.data == 0)
+        if (output.data == 0)
         {
             throw NovelRT::Exceptions::NullPointerException("Unable to allocate memory when reading the sound file.");
         }
 
         // Read the samples at a sample size of 4096
-        for(size_t sz = 0, offset = 0, sel = 0; (sz = ov_read(&file, (char*)output.data + offset, 4096, 0, sizeof(int16_t), 1, (int*)&sel)) != 0; offset += sz)
+        for (size_t sz = 0, offset = 0, sel = 0;
+             (sz = ov_read(&file, (char*)output.data + offset, 4096, 0, sizeof(int16_t), 1, (int*)&sel)) != 0;
+             offset += sz)
         {
-            if(sz < 0)
+            if (sz < 0)
             {
-                if(sz == OV_HOLE)
+                if (sz == OV_HOLE)
                 {
-                    throw NovelRT::Exceptions::IOException(input, "Vorbis: Interruption in data while retrieving next packet.");
+                    throw NovelRT::Exceptions::IOException(
+                        input, "Vorbis: Interruption in data while retrieving next packet.");
                 }
-                else if(sz == OV_EBADLINK)
+                else if (sz == OV_EBADLINK)
                 {
-                    throw NovelRT::Exceptions::IOException(input, "Vorbis: Invalid stream section, or the requested link is corrupt.");
+                    throw NovelRT::Exceptions::IOException(
+                        input, "Vorbis: Invalid stream section, or the requested link is corrupt.");
                 }
-                else //If its not the top two, it's OV_EINVAL
+                else // If its not the top two, it's OV_EINVAL
                 {
-                    throw NovelRT::Exceptions::IOException(input, "Vorbis: file headers are corrupt or could not be read.");
+                    throw NovelRT::Exceptions::IOException(input,
+                                                           "Vorbis: file headers are corrupt or could not be read.");
                 }
             }
         }
@@ -594,10 +601,10 @@ namespace NovelRT::Audio
         std::string format(4, ' ');
         stream.read(&headerId[0], 4);
 
-        stream.seekg(4,std::ios_base::cur);
+        stream.seekg(4, std::ios_base::cur);
         stream.read(&format[0], 4);
 
-        if(headerId != "RIFF" || format != "WAVE")
+        if (headerId != "RIFF" || format != "WAVE")
         {
             throw NovelRT::Exceptions::NotSupportedException("The file format provided is not supported.");
         }
@@ -605,9 +612,10 @@ namespace NovelRT::Audio
         std::string fmtHeader(4, ' ');
         stream.read(&fmtHeader[0], 4);
 
-        if(fmtHeader != "fmt ")
+        if (fmtHeader != "fmt ")
         {
-            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file has an invalid or unsupported fmt subchunk.");
+            throw NovelRT::Exceptions::NotSupportedException(
+                "The provided WAV file has an invalid or unsupported fmt subchunk.");
         }
 
         stream.seekg(4, std::ios_base::cur);
@@ -615,9 +623,11 @@ namespace NovelRT::Audio
         int32_t fmtFormat = 0;
         stream.read(reinterpret_cast<char*>(&fmtFormat), 2);
 
-        if(fmtFormat != 1)
+        if (fmtFormat != 1)
         {
-            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file is in an unsupported format - NovelRT only supports PCM formatted WAV files at this time.");
+            throw NovelRT::Exceptions::NotSupportedException(
+                "The provided WAV file is in an unsupported format - NovelRT only supports PCM formatted WAV files at "
+                "this time.");
         }
 
         int32_t channels = 0;
@@ -629,17 +639,20 @@ namespace NovelRT::Audio
         int32_t bitsPerSample = 0;
         stream.read(reinterpret_cast<char*>(&bitsPerSample), 2);
 
-        if(bitsPerSample != 16)
+        if (bitsPerSample != 16)
         {
-            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file is in an unsupported format - NovelRT only supports 16-bit samples for WAV files at this time.");
+            throw NovelRT::Exceptions::NotSupportedException(
+                "The provided WAV file is in an unsupported format - NovelRT only supports 16-bit samples for WAV "
+                "files at this time.");
         }
 
         std::string dataHeader(4, ' ');
         stream.read(&dataHeader[0], 4);
 
-        if(dataHeader != "data")
+        if (dataHeader != "data")
         {
-            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file has an invalid or unsupported data subchunk.");
+            throw NovelRT::Exceptions::NotSupportedException(
+                "The provided WAV file has an invalid or unsupported data subchunk.");
         }
 
         size_t size = 0;

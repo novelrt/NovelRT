@@ -12,10 +12,9 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <cstdint>
-#include <vector>
 #include <fstream>
+#include <vector>
 #include <vorbis/vorbisfile.h>
-
 
 /***
  * @brief Contains audio features, such as playing audio, and managing audio resources.

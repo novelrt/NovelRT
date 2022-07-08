@@ -15,14 +15,13 @@ int main()
 {
     NovelRT::LoggingService logger = NovelRT::LoggingService();
 
-
 #if NOVELRT_MOLTENVK_VENDORED
     auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd.json";
     setenv("VK_ICD_FILENAMES", icdPath.c_str(), 0);
     logger.logInfo("macOS detected - setting VK_ICD_FILENAMES to path: {}", icdPath.c_str());
 #endif
 
-// Default Provider Initialisation
+    // Default Provider Initialisation
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
@@ -35,21 +34,24 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
 
-// Initialisation of ECS Audio System
+    // Initialisation of ECS Audio System
     auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>(false);
     scheduler.RegisterSystem(audioSystem);
     auto deleteState = AudioEmitterComponent();
     scheduler.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
-    scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done}, "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
+    scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done},
+                                                        "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
-// Set global logging level
+    // Set global logging level
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
-// Get the Sounds resource directory
-    auto rootDir = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()->GetResourceLoader()->ResourcesRootDirectory();
+    // Get the Sounds resource directory
+    auto rootDir = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()
+                       ->GetResourceLoader()
+                       ->ResourcesRootDirectory();
     auto soundDir = rootDir / "Sounds";
 
-// Create the sound components
+    // Create the sound components
     std::string uwu = (soundDir / "uwu.ogg").string();
     auto uwuHandle = audioSystem->CreateAudio(uwu, true);
     AudioEmitterComponent uwuComponent = AudioEmitterComponent{uwuHandle, true, -1, 0.75f};
@@ -60,7 +62,7 @@ int main()
     AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, 0, 0.75f};
     AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 0, 0};
 
-// Assign the entities holding the components
+    // Assign the entities holding the components
     auto& entityFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
     auto musicEnt = entityFactory.GetNext();
     auto soundEnt = entityFactory.GetNext();
@@ -74,11 +76,11 @@ int main()
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
         0, soundEnt, goatState);
 
-// Rendering Initialisation
+    // Rendering Initialisation
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
-    renderingSystem->BackgroundColour() = NovelRT::Graphics::RGBAColour(248,248,255,255);
+    renderingSystem->BackgroundColour() = NovelRT::Graphics::RGBAColour(248, 248, 255, 255);
 
     NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
         renderingSystem->GetOrLoadTexture("uwu");
@@ -90,7 +92,11 @@ int main()
     EntityId parentEntity =
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
-    NovelRT::Maths::GeoBounds uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(), NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width, textureFuture.GetBackingConcurrentSharedPtr()->height), 0);
+    NovelRT::Maths::GeoBounds uwuBounds =
+        NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(),
+                                  NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width,
+                                                              textureFuture.GetBackingConcurrentSharedPtr()->height),
+                                  0);
     bool uwuFlip = false;
 
     transformBuffer.PushComponentUpdateInstruction(
@@ -104,10 +110,12 @@ int main()
         {
             TransformComponent newComponent{};
             newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::zero();
-            if(uwuFlip)
+            if (uwuFlip)
             {
                 newComponent.positionAndLayer.x = 2;
-                uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x+2, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
+                uwuBounds = NovelRT::Maths::GeoBounds(
+                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x + 2, transform.positionAndLayer.y),
+                    uwuBounds.size, transform.rotationInRadians);
                 if (transform.positionAndLayer.x >= 480)
                 {
                     uwuFlip = false;
@@ -116,7 +124,9 @@ int main()
             else
             {
                 newComponent.positionAndLayer.x = -2;
-                uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x-2, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
+                uwuBounds = NovelRT::Maths::GeoBounds(
+                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x - 2, transform.positionAndLayer.y),
+                    uwuBounds.size, transform.rotationInRadians);
                 if (transform.positionAndLayer.x <= -480)
                 {
                     uwuFlip = true;
@@ -135,34 +145,34 @@ int main()
     auto windowPtr = windowingProvider->GetWindowingDevice();
     windowPtr->SetWindowTitle("ECS Audio Test");
 
-// Input initialisation
+    // Input initialisation
     std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>();
 
     inputSystem->AddDefaultKBMMapping();
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
-// Register system to trigger sound when something is clicked
+    // Register system to trigger sound when something is clicked
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
             catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
 
         NovelRT::Ecs::Input::InputEventComponent input;
         bool triggered = false;
-        if (events.TryGetComponent(mouseClick, input) &&
-            (input.state == KeyState::KeyDown))
+        if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
         {
-            triggered = uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+            triggered =
+                uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
         }
 
-        if(triggered)
+        if (triggered)
         {
             logger.logInfoLine("Clicked!");
             auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
             AudioEmitterStateComponent state;
-            if(states.TryGetComponent(soundEnt, state))
+            if (states.TryGetComponent(soundEnt, state))
             {
-                if(state.state == AudioEmitterState::Stopped)
+                if (state.state == AudioEmitterState::Stopped)
                 {
                     state.state = AudioEmitterState::ToPlay;
                     states.PushComponentUpdateInstruction(soundEnt, state);
@@ -171,7 +181,7 @@ int main()
         }
     });
 
-// Additional setup to ensure ECS works
+    // Additional setup to ensure ECS works
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
     logger.logInfoLine("Click within the UwU face!");

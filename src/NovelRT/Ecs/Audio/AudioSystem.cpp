@@ -243,9 +243,10 @@ namespace NovelRT::Ecs::Audio
                             _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
                                              emitter.volume);
                         }
-                        if(!_service->IsMusicPlaying())
+                        if (!_service->IsMusicPlaying())
                         {
-                            states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
+                            states.PushComponentUpdateInstruction(
+                                entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
                         }
                     }
                     else
@@ -257,9 +258,10 @@ namespace NovelRT::Ecs::Audio
                             _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
                                              emitter.volume);
                         }
-                        if(!_service->IsSoundPlaying(_soundCache.at(emitter.handle)))
+                        if (!_service->IsSoundPlaying(_soundCache.at(emitter.handle)))
                         {
-                            states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
+                            states.PushComponentUpdateInstruction(
+                                entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
                         }
                     }
                     break;
