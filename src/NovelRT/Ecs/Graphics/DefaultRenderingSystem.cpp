@@ -128,7 +128,8 @@ namespace NovelRT::Ecs::Graphics
           _defaultSpriteMeshPtr(nullptr),
           _namedGraphicsPipelineInfoObjects{},
           _defaultGraphicsPipelinePtr(nullptr),
-          _renderScene()
+          _renderScene(),
+          _backgroundColour(NovelRT::Graphics::RGBAColour(0, 0, 255, 255))
     {
         _windowingDevice = _windowingPluginProvider->GetWindowingDevice();
         _windowingDevice->Initialise(Windowing::WindowMode::Windowed, Maths::GeoVector2F(1920, 1080));
@@ -255,7 +256,7 @@ namespace NovelRT::Ecs::Graphics
         ResolveGpuResourceCleanup();
         ResolveGpuFutures();
 
-        context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
+        context->BeginDrawing(_backgroundColour);
 
         auto [renderComponents, transformComponents, entityGraphComponents] =
             catalogue.GetComponentViews<RenderComponent, TransformComponent, EntityGraphComponent>();
