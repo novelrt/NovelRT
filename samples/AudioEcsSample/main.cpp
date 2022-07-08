@@ -55,9 +55,9 @@ int main()
     AudioEmitterComponent uwuComponent = AudioEmitterComponent{uwuHandle, true, -1, 0.75f};
     AudioEmitterStateComponent uwuState = AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 3.0f, 0.75f};
 
-    std::string ahh = (soundDir / "goat.ogg").string();
+    std::string ahh = (soundDir / "goat.wav").string();
     auto goatHandle = audioSystem->CreateAudio(ahh, false);
-    AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, -1, 0.75f};
+    AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, 0, 0.75f};
     AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 0, 0};
 
 // Assign the entities holding the components
@@ -142,26 +142,6 @@ int main()
     inputSystem->AddDefaultKBMMapping();
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
-// Register system to restart music if it stops
-    // scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-    //     auto [emitters, states] = catalogue.template GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
-    //     for (auto [entity, emitter] : emitters)
-    //     {
-    //         if(emitter.isMusic)
-    //         {
-    //             auto state = states.GetComponent(entity);
-    //             if(state.state == AudioEmitterState::Stopped)
-    //             {
-    //                 AudioEmitterStateComponent newState{};
-    //                 newState.fadeDuration = 3.0f;
-    //                 newState.fadeExpectedVolume = 0.75f;
-    //                 newState.state = AudioEmitterState::ToFadeIn;
-    //                 states.PushComponentUpdateInstruction(entity, newState);
-    //             }
-    //         }
-    //     }
-    // });
-
 // Register system to trigger sound when something is clicked
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
@@ -170,7 +150,7 @@ int main()
         NovelRT::Ecs::Input::InputEventComponent input;
         bool triggered = false;
         if (events.TryGetComponent(mouseClick, input) &&
-            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            (input.state == KeyState::KeyDown))
         {
             triggered = uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
         }
@@ -178,32 +158,21 @@ int main()
         if(triggered)
         {
             logger.logInfoLine("Clicked!");
-            //auto emitters = catalogue.template GetComponentView<AudioEmitterComponent>();
-            //auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
-            // for(auto [entity, emitter] : emitters)
-            // {
-            //     if(!emitter.isMusic)
-            //     {
-            //         AudioEmitterStateComponent state;
-            //         if(states.TryGetComponent(entity, state))
-            //         {
-            //             if(state.state == AudioEmitterState::Stopped)
-            //             {
-            //                 state.state = AudioEmitterState::ToPlay;
-            //                 states.PushComponentUpdateInstruction(entity, state);
-            //                 logger.logDebugLine("Setting back to play!");
-            //             }
-            //         }
-            //     }
-            // }
-
+            auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
+            AudioEmitterStateComponent state;
+            states.TryGetComponent(soundEnt, state);
+            if(state.state == AudioEmitterState::Stopped)
+            {
+                state.state = AudioEmitterState::ToPlay;
+                states.PushComponentUpdateInstruction(soundEnt, state);
+            }
         }
     });
 
 // Additional setup to ensure ECS works
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
-    logger.logInfoLine("Click within the UwU face to play your sound!");
+    logger.logInfoLine("Click within the UwU face!");
 
     while (!windowPtr->GetShouldClose())
     {

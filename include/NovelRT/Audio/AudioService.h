@@ -34,11 +34,8 @@ namespace NovelRT::Audio
 
         ALuint ReadFile(std::string input);
         std::string GetALError();
-        //void LoadWaveFile(std::filesystem::path& input, AudioFileInfo& output);
+        void LoadWaveFile(std::string input, AudioFileInfo& output);
         void LoadVorbisFile(std::string input, AudioFileInfo& output);
-        // [[nodiscard]] size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource);
-        // [[nodiscard]] int StreamSeek(void* dataSource, ogg_int64_t offset, int origin);
-        // [[nodiscard]] long StreamTell(void* dataSource);
 
     public:
         bool isInitialised;

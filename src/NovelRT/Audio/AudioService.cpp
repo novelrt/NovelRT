@@ -66,6 +66,10 @@ namespace NovelRT::Audio
         {
             LoadVorbisFile(input, info);
         }
+        else if(inputPath.extension() == ".wav")
+        {
+            LoadWaveFile(input, info);
+        }
         else
         {
             _logger.logError("File specified at {} is not in a supported format!", input);
@@ -448,13 +452,13 @@ namespace NovelRT::Audio
     bool AudioService::IsMusicPlaying()
     {
         alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-        return (_musicSourceState == AL_PLAYING);
+        return (_musicSourceState == AL_PLAYING || _musicSourceState == AL_PAUSED);
     }
 
     bool AudioService::IsSoundPlaying(ALuint handle)
     {
         alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
-        return (_soundSourceState == AL_PLAYING);
+        return (_soundSourceState == AL_PLAYING || _soundSourceState == AL_PAUSED);
     }
 
     float AudioService::GetMusicVolume()
@@ -572,6 +576,82 @@ namespace NovelRT::Audio
         }
 
         ov_clear(&file);
+        stream.close();
+    }
+
+    void AudioService::LoadWaveFile(std::string input, AudioFileInfo& output)
+    {
+        std::ifstream stream(input, std::ios::binary);
+
+        if (!stream.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(input);
+        }
+
+        stream.seekg(0, std::ios::beg);
+
+        std::string headerId(4, ' ');
+        std::string format(4, ' ');
+        stream.read(&headerId[0], 4);
+
+        stream.seekg(4,std::ios_base::cur);
+        stream.read(&format[0], 4);
+
+        if(headerId != "RIFF" || format != "WAVE")
+        {
+            throw NovelRT::Exceptions::NotSupportedException("The file format provided is not supported.");
+        }
+
+        std::string fmtHeader(4, ' ');
+        stream.read(&fmtHeader[0], 4);
+
+        if(fmtHeader != "fmt ")
+        {
+            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file has an invalid or unsupported fmt subchunk.");
+        }
+
+        stream.seekg(4, std::ios_base::cur);
+
+        int32_t fmtFormat = 0;
+        stream.read(reinterpret_cast<char*>(&fmtFormat), 2);
+
+        if(fmtFormat != 1)
+        {
+            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file is in an unsupported format - NovelRT only supports PCM formatted WAV files at this time.");
+        }
+
+        int32_t channels = 0;
+        stream.read(reinterpret_cast<char*>(&channels), 2);
+        int32_t sampleRate = 0;
+        stream.read(reinterpret_cast<char*>(&sampleRate), 4);
+
+        stream.seekg(6, std::ios_base::cur);
+        int32_t bitsPerSample = 0;
+        stream.read(reinterpret_cast<char*>(&bitsPerSample), 2);
+
+        if(bitsPerSample != 16)
+        {
+            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file is in an unsupported format - NovelRT only supports 16-bit samples for WAV files at this time.");
+        }
+
+        std::string dataHeader(4, ' ');
+        stream.read(&dataHeader[0], 4);
+
+        if(dataHeader != "data")
+        {
+            throw NovelRT::Exceptions::NotSupportedException("The provided WAV file has an invalid or unsupported data subchunk.");
+        }
+
+        size_t size = 0;
+        stream.read(reinterpret_cast<char*>(&size), 4);
+
+        output.data = malloc(size);
+        stream.read(reinterpret_cast<char*>(output.data), size);
+
+        output.channels = channels;
+        output.frequency = sampleRate;
+        output.size = size;
+
         stream.close();
     }
 
