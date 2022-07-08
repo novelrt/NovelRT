@@ -14,7 +14,7 @@ extern "C"
     {
         if (output == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -59,7 +59,7 @@ extern "C"
     {
         if (timer == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -79,7 +79,7 @@ extern "C"
     {
         if (timer == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -110,7 +110,7 @@ extern "C"
     {
         if (timer == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -123,7 +123,7 @@ extern "C"
     {
         if (timer == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -136,7 +136,7 @@ extern "C"
     {
         if (event == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

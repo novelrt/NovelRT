@@ -28,7 +28,7 @@ extern "C"
     {
         if (node == nullptr || action == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -46,7 +46,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -60,7 +60,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullptrInternal();
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
