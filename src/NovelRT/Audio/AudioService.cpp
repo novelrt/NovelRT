@@ -85,7 +85,7 @@ namespace NovelRT::Audio
         _logger.logDebug("Loaded {}\nChannels: {}, Sample Rate: {},\nSamples: {}, Buffer ID: {}", input, info.channels,
                          info.frequency, info.size, buffer);
 
-        delete (info.data);
+        free(info.data);
         return buffer;
     }
 
@@ -495,7 +495,7 @@ namespace NovelRT::Audio
     size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource)
     {
         assert(elementSize == 1);
-
+        unused(elementSize);
         std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
         stream.read(static_cast<char*>(buffer), elementCount);
         const std::streamsize bytesRead = stream.gcount();
@@ -564,12 +564,13 @@ namespace NovelRT::Audio
         {
             if (sz < 0)
             {
-                if (sz == OV_HOLE)
+                int32_t errorCode = static_cast<int32_t>(sz);
+                if (errorCode == OV_HOLE)
                 {
                     throw NovelRT::Exceptions::IOException(
                         input, "Vorbis: Interruption in data while retrieving next packet.");
                 }
-                else if (sz == OV_EBADLINK)
+                else if (errorCode == OV_EBADLINK)
                 {
                     throw NovelRT::Exceptions::IOException(
                         input, "Vorbis: Invalid stream section, or the requested link is corrupt.");
