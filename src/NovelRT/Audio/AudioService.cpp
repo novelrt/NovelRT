@@ -42,7 +42,6 @@ namespace NovelRT::Audio
           _soundSourceState(0),
           _soundStorage(),
           _bufferStorage(),
-          _supportsFloatBuffers(false),
           isInitialised(false)
     {
     }
@@ -54,68 +53,35 @@ namespace NovelRT::Audio
         alGenSources(1, &_musicSource);
         alSourcef(_musicSource, AL_GAIN, 0.75f);
         alSourcef(_musicSource, AL_PITCH, _pitch);
-        std::string extensions = std::string(alGetString(AL_EXTENSIONS));
-        if(extensions.find("FLOAT32"))
-        {
-            _supportsFloatBuffers = true;
-        }
 
         return isInitialised;
     }
 
     ALuint AudioService::ReadFile(std::string input)
     {
-        nqr::NyquistIO loader;
-        std::shared_ptr<nqr::AudioData> fileData = std::make_shared<nqr::AudioData>();
+        std::filesystem::path inputPath = std::filesystem::path(input);
+        AudioFileInfo info = AudioFileInfo{};
 
-        if(!loader.IsFileSupported(input))
+        if(inputPath.extension() == ".ogg")
         {
-            _logger.logWarning("{} is not a supported filetype!", input);
-            return _noBuffer;    
-        }
-
-        loader.Load(fileData.get(), input);
-        
-        if(_supportsFloatBuffers)
-        {
-            ALuint buffer;
-            alGenBuffers(1, &buffer);
-            alBufferData(buffer, fileData->channelCount == 1 ? AL_FORMAT_MONO_FLOAT32 : AL_FORMAT_STEREO_FLOAT32, &fileData->samples.front(),
-                     static_cast<ALsizei>(fileData->samples.size() * sizeof(float)), fileData->sampleRate);
-            return buffer;
+            LoadVorbisFile(input, info);
         }
         else
         {
-            _logger.logWarningLine("Did not find FLOAT32 sample extension!");
+            _logger.logError("File specified at {} is not in a supported format!", input);
+            return _noBuffer;
         }
 
-        //SF_INFO info;
-        //info.format = 0;
-        //SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
 
-        // if (file == nullptr)
-        // {
-        //     _logger.logWarning(std::string(sf_strerror(nullptr)));
-        //     return _noBuffer;
-        // }
+        ALuint buffer;
+        alGenBuffers(1, &buffer);
+        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, info.data, static_cast<ALsizei>(info.size), static_cast<ALsizei>(info.frequency));
+        _logger.logDebugLine(GetALError());
 
-        //std::vector<uint16_t> data;
-        //std::vector<short> readBuffer;
-        //readBuffer.resize(_bufferSize);
+        _logger.logDebug("Loaded {}\nChannels: {}, Sample Rate: {},\nSamples: {}, Buffer ID: {}", input, info.channels, info.frequency, info.size, buffer);
 
-        //sf_count_t readSize = 0;
-
-        //while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
-        //{
-        //    data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
-        //}
-
-        //ALuint buffer;
-        //alGenBuffers(1, &buffer);
-        //alBufferData(buffer, fileData.get()->channelCount == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
-        //             static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
-        //sf_close(file);
-        return _noBuffer;
+        delete(info.data);
+        return buffer;
     }
 
     /*Note: Due to the current design, this will currently block the thread it is being called on.
@@ -517,6 +483,96 @@ namespace NovelRT::Audio
         float result = 0.0f;
         alGetSourcef(handle, AL_GAIN, &result);
         return result;
+    }
+
+    //These are required to _not_ be defined as a member-bound function for ov_callbacks
+
+    size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource)
+    {
+        assert(elementSize == 1);
+
+        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
+        stream.read(static_cast<char*>(buffer), elementCount);
+        const std::streamsize bytesRead = stream.gcount();
+        stream.clear();
+        return static_cast<size_t>(bytesRead);
+    }
+
+    int StreamSeek(void* dataSource, ogg_int64_t offset, int origin)
+    {
+        static const std::vector<std::ios_base::seekdir> seekDirections{std::ios_base::beg, std::ios_base::cur, std::ios_base::end};
+        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
+        stream.seekg(offset, seekDirections.at(origin));
+        stream.clear();
+        return 0;
+    }
+
+    long StreamTell(void* dataSource)
+    {
+        std::ifstream& stream = *static_cast<std::ifstream*>(dataSource);
+        const auto position = stream.tellg();
+        assert(position >= 0);
+        return static_cast<long>(position);
+    }
+
+    void AudioService::LoadVorbisFile(std::string input, AudioFileInfo& output)
+    {
+        OggVorbis_File file;
+	    vorbis_info* info = nullptr;
+        std::ifstream stream(input, std::ios::binary);
+
+        if (!stream.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(input);
+        }
+
+        const ov_callbacks callbacks{StreamRead, StreamSeek, nullptr, StreamTell};
+
+        // Open the Vorbis file via ov_open_callbacks with OV_CALLBACKS_NOCLOSE to ensure the file doesn't disappear
+        // on Windows devices
+        if(ov_open_callbacks(&stream, &file, nullptr, 0, callbacks) < 0)
+        {
+            throw NovelRT::Exceptions::IOException(input, "File provided does not contain a valid Ogg Vorbis stream.");
+        }
+
+        // Get the info struct from Ogg Vorbis
+        info = ov_info(&file, -1);
+        output.channels = info->channels;
+        output.frequency = info->rate;
+
+        // Get the size of data to read
+        size_t length = ov_pcm_total(&file, -1) * info->channels * 2;
+        output.size = static_cast<size_t>(length);
+
+        //Allocate a buffer for the samples data
+        output.data = malloc(length);
+        if(output.data == 0)
+        {
+            throw NovelRT::Exceptions::NullPointerException("Unable to allocate memory when reading the sound file.");
+        }
+
+        // Read the samples at a sample size of 4096
+        for(size_t sz = 0, offset = 0, sel = 0; (sz = ov_read(&file, (char*)output.data + offset, 4096, 0, sizeof(int16_t), 1, (int*)&sel)) != 0; offset += sz)
+        {
+            if(sz < 0)
+            {
+                if(sz == OV_HOLE)
+                {
+                    throw NovelRT::Exceptions::IOException(input, "Vorbis: Interruption in data while retrieving next packet.");
+                }
+                else if(sz == OV_EBADLINK)
+                {
+                    throw NovelRT::Exceptions::IOException(input, "Vorbis: Invalid stream section, or the requested link is corrupt.");
+                }
+                else //If its not the top two, it's OV_EINVAL
+                {
+                    throw NovelRT::Exceptions::IOException(input, "Vorbis: file headers are corrupt or could not be read.");
+                }
+            }
+        }
+
+        ov_clear(&file);
+        stream.close();
     }
 
 } // namespace NovelRT::Audio

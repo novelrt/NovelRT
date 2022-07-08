@@ -1,5 +1,6 @@
 find_package(OpenAL ${NOVELRT_OPENAL_VERSION} REQUIRED)
 if(NOVELRT_VULKAN_SDK)
+  include(CMakeFindDependencyMacro)
   find_dependency(Vulkan REQUIRED)
 endif()
 
@@ -81,7 +82,7 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
-
+add_dependencies(Engine vorbisfile)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)
@@ -150,12 +151,12 @@ target_link_libraries(Engine
   PUBLIC
     freetype
     glfw
-    libnyquist
     OpenAL::OpenAL
     png_static
     spdlog
     TBB::tbb
     $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
+    vorbisfile
     runtime # Fabulist support - target name is vague. Fix later. :]
     jsoncons
 )
@@ -194,10 +195,10 @@ if(WIN32 OR APPLE)
       set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
     endif()
   endif()
-  file(GLOB libs RELATIVE 
+  file(GLOB libs RELATIVE
     ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine 
-    PROPERTIES 
+  set_target_properties(Engine
+    PROPERTIES
       RESOURCE "${libs};$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
 endif()
 

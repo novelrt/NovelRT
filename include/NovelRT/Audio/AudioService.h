@@ -14,7 +14,6 @@ namespace NovelRT::Audio
     class AudioService
     {
     private:
-        //const size_t _bufferSize = 2048;
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
 
@@ -32,10 +31,14 @@ namespace NovelRT::Audio
         ALint _soundSourceState;
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
-        bool _supportsFloatBuffers;
 
         ALuint ReadFile(std::string input);
         std::string GetALError();
+        //void LoadWaveFile(std::filesystem::path& input, AudioFileInfo& output);
+        void LoadVorbisFile(std::string input, AudioFileInfo& output);
+        // [[nodiscard]] size_t StreamRead(void* buffer, size_t elementSize, size_t elementCount, void* dataSource);
+        // [[nodiscard]] int StreamSeek(void* dataSource, ogg_int64_t offset, int origin);
+        // [[nodiscard]] long StreamTell(void* dataSource);
 
     public:
         bool isInitialised;

@@ -41,25 +41,38 @@ int main()
     scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done}, "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
     auto rootDir = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()->GetResourceLoader()->ResourcesRootDirectory();
-    auto soundDir = rootDir / "sounds";
+    auto soundDir = rootDir / "Sounds";
 
     std::string uwu = (soundDir / "uwu.ogg").string();
     auto uwuHandle = audioSystem->CreateAudio(uwu, true);
     AudioEmitterComponent uwuComponent = AudioEmitterComponent{uwuHandle, true, -1, 0.75f};
     AudioEmitterStateComponent uwuState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
 
-    auto entities = NovelRT::Ecs::EntityCache(1);
-    scheduler.GetEntityCache() = entities;
+    std::string ahh = (soundDir / "goat.ogg").string();
+    auto goatHandle = audioSystem->CreateAudio(ahh, false);
+    AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, -1, 0.75f};
+    AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 5.0};
+
+    auto& entityFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+    auto musicEnt = entityFactory.GetNext();
+    auto soundEnt = entityFactory.GetNext();
+
     scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
-        0, 0, uwuComponent);
-        scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
-        0, 0, uwuState);
+        musicEnt, 0, uwuComponent);
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+        musicEnt, 0, uwuState);
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterComponent>().PushComponentUpdateInstruction(
+        soundEnt, 0, goatComponent);
+    scheduler.GetComponentCache().GetComponentBuffer<AudioEmitterStateComponent>().PushComponentUpdateInstruction(
+        soundEnt, 0, goatState);
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
+    renderingSystem->BackgroundColour() = NovelRT::Graphics::RGBAColour(248,248,255,255);
+
     NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
-        renderingSystem->GetOrLoadTexture("novel-chan");
+        renderingSystem->GetOrLoadTexture("uwu");
 
     renderingSystem->ForceVertexTextureFutureResolution();
 
@@ -90,7 +103,7 @@ int main()
         for (auto [entity, transform] : transforms)
         {
             TransformComponent newComponent{};
-            newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+            //newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
             newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
             transforms.PushComponentUpdateInstruction(entity, newComponent);
         }
@@ -101,13 +114,32 @@ int main()
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
-    windowPtr->SetWindowTitle("ECS Input Test");
+    windowPtr->SetWindowTitle("ECS Audio Test");
 
     std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>();
 
     inputSystem->AddDefaultKBMMapping();
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
+
+    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+        auto [emitters, states] = catalogue.template GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
+        for (auto [entity, emitter] : emitters)
+        {
+            if(emitter.isMusic)
+            {
+                auto state = states.GetComponent(entity);
+                if(state.state == AudioEmitterState::Stopped)
+                {
+                    AudioEmitterStateComponent newState{};
+                    newState.fadeDuration = 3.0f;
+                    newState.fadeExpectedVolume = 0.75f;
+                    newState.state = AudioEmitterState::ToFadeIn;
+                    states.PushComponentUpdateInstruction(entity, newState);
+                }
+            }
+        }
+    });
 
     scheduler.RegisterSystem([&](auto delta, auto catalogue) {
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
@@ -158,28 +190,32 @@ int main()
 
         if(triggered)
         {
-            catalogue.template GetComponentView<NovelRT::Ecs::Audio::AudioEmitterStateComponent>();
-            ComponentView<AudioEmitterStateComponent> states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
-            for(auto [entity, state] : states)
-            {
-                if(state.state == AudioEmitterState::Playing)
-                {
-                    states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 5.0f, 0.75f});
-                    logger.logDebugLine("Now fading in!");
-                }
-                else if(state.state == AudioEmitterState::Stopped)
-                {
-                    states.PushComponentUpdateInstruction(entity, AudioEmitterStateComponent{AudioEmitterState::ToFadeOut, 5.0f, 0.0f});
-                    logger.logDebugLine("Now fading out!");
-                }
-            }
+            //auto emitters = catalogue.template GetComponentView<AudioEmitterComponent>();
+            //auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
+            // for(auto [entity, emitter] : emitters)
+            // {
+            //     if(!emitter.isMusic)
+            //     {
+            //         AudioEmitterStateComponent state;
+            //         if(states.TryGetComponent(entity, state))
+            //         {
+            //             if(state.state == AudioEmitterState::Stopped)
+            //             {
+            //                 state.state = AudioEmitterState::ToPlay;
+            //                 states.PushComponentUpdateInstruction(entity, state);
+            //                 logger.logDebugLine("Setting back to play!");
+            //             }
+            //         }
+            //     }
+            // }
+
         }
     });
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
-    logger.logInfoLine("Click within the Novel-chan triad to play your sound!");
-    
+    logger.logInfoLine("Click within the UwU face to play your sound!");
+
     while (!windowPtr->GetShouldClose())
     {
         windowPtr->ProcessAllMessages();
