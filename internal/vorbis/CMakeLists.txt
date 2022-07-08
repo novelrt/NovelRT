@@ -19,4 +19,5 @@ FetchContent_Declare(vorbis
 )
 
 FetchContent_MakeAvailable(vorbis)
+set_property(TARGET vorbis PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_property(TARGET vorbisfile PROPERTY POSITION_INDEPENDENT_CODE ON)

@@ -21,3 +21,4 @@ FetchContent_Declare(ogg
 FetchContent_MakeAvailable(ogg)
 set(OGG_LIBRARY "ogg" CACHE STRING "Set OGG libraries" FORCE)
 set(OGG_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" CACHE STRING "Set OGG include dirs" FORCE)
+set_property(TARGET ogg PROPERTY POSITION_INDEPENDENT_CODE ON)
