@@ -80,14 +80,14 @@ int main()
     NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
         renderingSystem->GetOrLoadTexture("uwu");
 
-    NovelRT::Maths::GeoBounds uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(), NovelRT::Maths::GeoVector2F::zero(), 0);
-
     renderingSystem->ForceVertexTextureFutureResolution();
 
     auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
 
     EntityId parentEntity =
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
+
+    NovelRT::Maths::GeoBounds uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(), NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width, textureFuture.GetBackingConcurrentSharedPtr()->height), 0);
 
     transformBuffer.PushComponentUpdateInstruction(
         0, parentEntity,
@@ -98,7 +98,7 @@ int main()
 
         for (auto [entity, transform] : transforms)
         {
-            uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x, transform.positionAndLayer.y),transform.scale, transform.rotationInRadians);
+            uwuBounds = NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x, transform.positionAndLayer.y), uwuBounds.size, transform.rotationInRadians);
             TransformComponent newComponent{};
             //newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
             newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
@@ -151,6 +151,7 @@ int main()
             (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
         {
             triggered = uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+            logger.logInfo("Mouse Position: {}, {}", input.mousePositionX, input.mousePositionY);
         }
 
         if(triggered)
