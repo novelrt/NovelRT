@@ -17,18 +17,6 @@ namespace NovelRT::Ecs::Audio
         _service->InitializeAudio();
     }
 
-    AudioSystem::AudioSystem(bool verbose)
-        : _counter(1),
-          _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
-          _logger(Utilities::Misc::CONSOLE_LOG_AUDIO, verbose ? LogLevel::Debug : LogLevel::Info),
-          _musicCache(std::map<uint32_t, std::vector<ALuint>::iterator>()),
-          _service(std::make_shared<NovelRT::Audio::AudioService>()),
-          _soundCache(std::map<uint32_t, ALuint>()),
-          _systemTime(Timing::Timestamp::zero())
-    {
-        _service->InitializeAudio();
-    }
-
     void AudioSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
         _systemTime += delta;
