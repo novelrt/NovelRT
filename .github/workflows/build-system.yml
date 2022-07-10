@@ -52,13 +52,13 @@ jobs:
           version: 1.3.211.0
           cache: true
 
-      - name: Prepare build environment
-        run: |
-          pip3 install conan
-          conan config install https://github.com/NovelRT/ConanConfig.git
+      #- name: Prepare build environment
+      #  run: |
+      #    pip3 install conan
+      #    conan config install https://github.com/NovelRT/ConanConfig.git
 
-      - name: Generate Build System
-        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
+      #- name: Generate Build System
+      #  run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
 
       - uses: novelrt/setup-cpp@v1
       - name: Build and Test NovelRT - ${{ matrix.configuration }}
