@@ -143,19 +143,19 @@ namespace NovelRT
         switch (level)
         {
             case LogLevel::Debug:
-                spdlog::set_level(spdlog::level::level_enum::debug);
+                _logger->set_level(spdlog::level::level_enum::debug);
                 break;
             case LogLevel::Info:
-                spdlog::set_level(spdlog::level::level_enum::info);
+                _logger->set_level(spdlog::level::level_enum::info);
                 break;
             case LogLevel::Warn:
-                spdlog::set_level(spdlog::level::level_enum::warn);
+                _logger->set_level(spdlog::level::level_enum::warn);
                 break;
             case LogLevel::Err:
-                spdlog::set_level(spdlog::level::level_enum::err);
+                _logger->set_level(spdlog::level::level_enum::err);
                 break;
             case LogLevel::Off:
-                spdlog::set_level(spdlog::level::level_enum::off);
+                _logger->set_level(spdlog::level::level_enum::off);
                 break;
         }
     }
