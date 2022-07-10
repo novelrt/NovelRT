@@ -19,7 +19,6 @@ endif()
 
 if(WIN32)
   # this is needed, because Windows can be weird, man.
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
