@@ -16,6 +16,7 @@ FetchContent_Declare(flac
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
+set(BUILD_CXXLIBS OFF CACHE BOOL "" FORCE)
 set(BUILD_PROGRAMS OFF CACHE BOOL "Build and install programs" FORCE)
 set(BUILD_EXAMPLES OFF CACHE BOOL "Build and install examples" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "Build tests" FORCE)
