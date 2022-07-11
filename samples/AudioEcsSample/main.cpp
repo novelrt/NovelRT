@@ -35,7 +35,7 @@ int main()
             .InitialiseAndRegisterComponents();
 
     // Initialisation of ECS Audio System
-    auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>(false);
+    auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>();
     scheduler.RegisterSystem(audioSystem);
     auto deleteState = AudioEmitterComponent();
     scheduler.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
