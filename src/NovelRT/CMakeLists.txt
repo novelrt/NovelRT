@@ -81,6 +81,7 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
+add_dependencies(Engine runtime freetype glfw OpenAL png_static spdlog TBB::tbb jsoncons sndfile)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)
