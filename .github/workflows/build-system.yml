@@ -65,7 +65,7 @@ jobs:
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-          cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples
+          cmake --build build --config ${{ matrix.configuration }} --target compiler Engine Interop Samples
 
       - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
