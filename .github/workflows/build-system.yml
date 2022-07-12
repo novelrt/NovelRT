@@ -56,18 +56,28 @@ jobs:
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-          cmake --build build --config ${{ matrix.configuration }}
+          cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples
 
       - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         id: test
         run: |
+          cmake --build build --config ${{ matrix.configuration }} --target Engine_Tests
           cd build/tests/NovelRT.Tests
           ctest --output-on-failure -C ${{ matrix.configuration }}
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.test.outcome == 'success'
         run: cmake --install build --config "${{ matrix.configuration }}"
+
+      - name: (Temp) Upload Test Artifacts on Failure
+        uses: actions/upload-artifact@v3
+        if: steps.test.outcome == 'failure'
+        with:
+          name: Engine_Tests-${{ matrix.os }}-${{ github.run_id }}
+          path: build/tests/NovelRT.Tests/
+          if-no-files-found: warn
+
 
   Formatting:
     name: clang-format
@@ -95,7 +105,7 @@ jobs:
         run: scripts/ci-checkdiff.sh
 
       - name: Upload Patch
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
           name: clang-format-patch
