@@ -51,25 +51,23 @@ jobs:
           version: 1.3.211.0
           cache: true
 
-      #- name: Prepare build environment
-      #  run: |
-      #    pip3 install conan
-      #    conan config install https://github.com/NovelRT/ConanConfig.git
-
-      #- name: Generate Build System
-      #  run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
-
       - uses: novelrt/setup-cpp@v1
-      - name: Build and Test NovelRT - ${{ matrix.configuration }}
+      - name: Build NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }}
+
+      - uses: novelrt/setup-cpp@v1
+      - name: Test NovelRT - ${{ matrix.configuration }}
+        if: steps.build.outcome == 'success'
+        id: test
+        run: |
           cd build/tests/NovelRT.Tests
           ctest --output-on-failure
 
       - name: Install NovelRT - ${{ matrix.configuration }}
-        if: steps.build.outcome == 'success'
+        if: steps.test.outcome == 'success'
         run: cmake --install build --config "${{ matrix.configuration }}"
 
   Formatting:
