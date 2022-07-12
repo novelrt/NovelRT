@@ -58,13 +58,12 @@ jobs:
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }}
 
-      - uses: novelrt/setup-cpp@v1
       - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         id: test
         run: |
           cd build/tests/NovelRT.Tests
-          ctest --output-on-failure
+          ctest --output-on-failure -C ${{ matrix.configuration }}
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         if: steps.test.outcome == 'success'
