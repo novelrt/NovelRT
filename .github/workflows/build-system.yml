@@ -75,19 +75,6 @@ jobs:
           cd build/tests/NovelRT.Tests
           ctest --output-on-failure -C ${{ matrix.configuration }}
 
-      - name: Install NovelRT - ${{ matrix.configuration }}
-        if: steps.test.outcome == 'success'
-        run: cmake --install build --config "${{ matrix.configuration }}"
-
-      - name: (Temp) Upload Test Artifacts on Failure
-        uses: actions/upload-artifact@v3
-        if: ${{ failure() }}
-        with:
-          name: Engine_Tests-${{ matrix.os }}-${{ github.run_id }}
-          path: build/tests/NovelRT.Tests/
-          if-no-files-found: warn
-
-
   Formatting:
     name: clang-format
     runs-on: ubuntu-latest
