@@ -55,7 +55,7 @@ These instructions are based on the CMake build system generator. You can downlo
 
 #### Linux
 
-First, you must install the dependencies. Using Ubuntu 20.04 there are extra requirements on top of Conan. With those dependencies, it looks something like this:
+First, you must install the dependencies. On Ubuntu 20.04, it looks like this:
 ```
 sudo apt install clang  libgl-dev xorg-dev libx11-xcb-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
 libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \

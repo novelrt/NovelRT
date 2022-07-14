@@ -59,16 +59,10 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: Prepare build environment
-      run: |
-          pip3 install conan
-          conan config install https://github.com/NovelRT/ConanConfig.git
-
-    - name: Generate Build System
-      run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }} -o NovelRT:buildsamples=False -o NovelRT:documentation=False
-
     - name: Build NovelRT
-      run: conan build . --build-folder build
+      run: |
+        ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        cmake --build build --config ${{ matrix.configuration }} --target compiler Engine Interop
 
     - name: Install NovelRT - ${{ matrix.configuration }}
       run: cmake --install build --config "${{ matrix.configuration }}"
