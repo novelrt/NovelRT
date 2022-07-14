@@ -28,7 +28,6 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
-option(NOVELRT_INCLUDE_CONAN_PATHS "Include conan_paths toolchain" OFF)
 
 set(NOVELRT_BZIP2_VERSION "1.0.8" CACHE STRING "BZip2 version")
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
@@ -40,11 +39,6 @@ set(NOVELRT_PNG_VERSION "1.6.35" CACHE STRING "PNG version")
 set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 set(NOVELRT_VULKAN_SDK_PATH "" CACHE STRING "Directory for NovelRT to find the Vulkan SDK (mainly for macOS support)")
-
-if (NOVELRT_INCLUDE_CONAN_PATHS)
-  set(CONAN_CMAKE_SILENT_OUTPUT ON)
-  include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-endif()
 
 find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
   COMPONENTS dot
