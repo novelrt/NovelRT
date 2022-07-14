@@ -20,22 +20,17 @@ jobs:
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
-          profile: linux-clang10-amd64
           name: Ubuntu - Clang 10
           c: CC=clang-10
           cxx: CXX=clang++-10
         - os: windows-2019
-          profile: windows-vs2019-amd64
           name: Windows - Visual Studio 2019
         - os: windows-latest
-          profile: windows-vs2022-amd64
           name: Windows - Visual Studio 2022
         - os: macos-10.15
-          profile: macos-appleclang12-amd64
           name: macOS 10.15 - Apple-Clang 12
           configuration: Debug
         - os: macos-10.15
-          profile: macos-appleclang12-amd64
           name: macOS 10.15 - Apple-Clang 12
         exclude:
         - os: macos-10.15
