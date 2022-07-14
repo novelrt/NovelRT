@@ -46,13 +46,15 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
   OR
 - Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.9 - macOS only)
 
-**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang instead. Please also note all supported compiler profiles can be found [here.](https://github.com/novelrt/ConanConfig) Contributions for new profiles are welcome, however we will only be accepting profiles for first-party platforms.**
-
 ### Build instructions
 
-These instructions are based on the Conan package manager. you can download Conan from [here.](https://conan.io/)
+These instructions are based on the CMake build system generator. You can download the latest version here [here.](https://cmake.org/download/)
+
+**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang 10+ instead. We will gladly accept contributions towards making GCC compatible, but until support is guaranteed we will _only_ officially support first-party compilers as described in our CI builds found** [here.](https://github.com/novelrt/NovelRT/blob/6d9caf2cb2426f6d3661575c7dbd24014d4260b9/.github/workflows/build-system.yml)
+
 
 #### Linux
+
 First, you must install the dependencies. Using Ubuntu 20.04 there are extra requirements on top of Conan. With those dependencies, it looks something like this:
 ```
 sudo apt install clang  libgl-dev xorg-dev libx11-xcb-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
