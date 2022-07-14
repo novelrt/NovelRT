@@ -60,33 +60,14 @@ libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb
 libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev python3-pip \
 ```
 
-Then, install Conan and our configurations should you require them:
-```
-pip3 install conan
-conan config install https://github.com/novelrt/ConanConfig.git
-```
-
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
 cd NovelRT/build
-conan install .. --build=missing --profile linux-clang10-amd64
 ```
 
-If you would like to change any of the settings prior to building, pass them in like so:
-```
-conan install .. --build=missing --profile linux-clang10-amd64 -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False -o NovelRT:buildinterop=False
-```
-(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
-
-
-Then you should be able to configure and build the default setup, like so:
-```
-conan build .. --build-folder .
-```
-
-If you would like to build using CMake instead, you can configure and build, like so:
+Then, you can configure and build using CMake, like so:
 ```
 cmake ..
 cmake --build . -j
@@ -106,34 +87,15 @@ _(note: Do not use the included one with Visual Studio at this time! It is outda
 
 (32-bit builds _will not be supported at this time_.)
 
-Please download [Python 3 (x64) from here](https://www.python.org/downloads/) or from the Microsoft Store. Once that is done,
-install conan and our configurations should you require them:
-```
-pip install conan
-conan config install https://github.com/novelrt/ConanConfig.git
-```
-
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 cd NovelRT
 mkdir build
 cd build
-conan install .. --build=missing --profile windows-vs2022-amd64
 ```
 
-If you would like to change any of the settings prior to building, pass them in like so:
-```
-conan install .. --build=missing --profile windows-vs2022-amd64 -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False -o NovelRT:buildinterop=False
-```
-(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
-
-Then you should be able to configure and build the default setup, like so:
-```
-conan build .. --build-folder .
-```
-
-If you would like to build using CMake instead, you can configure and build, like so:
+Then, you can configure and build using CMake, like so:
 ```
 cmake ..
 cmake --build . -j
@@ -144,41 +106,25 @@ cmake --build . -j
 When you open the NovelRT folder in VS2019 or VS2022 for the first time the CMakeSettings.json file will contain incorrect values.
 Change the buildRoot value to `${projectDir}\\build` and the installRoot to `${projectDir}\\install` and restart Visual Studio this will make sure that it uses the same build path as the CLI commands.
 You can delete the `out` folder in the NovelRT root as well as we won't use it anymore.
-Afterwards right click on the `conanfile.py` file in the root and click the `Run conan install windows-vs2022-amd64` option. (Respectfully, use the `windows-vs2019-amd64` option when building with VS2019.)
-This runs the conan install command from the section above to regenerate the files we need to build with cmake as Visual Studio wiped the output from earlier.
 Then regenerate the cmake by clicking regenerate on the yellow warning ribbon on the top of Visual Studio.
 
 
 #### macOS 10.15 (and above)
 _Prerequisites:_
-- Python 3 x64 (installed via Homebrew _or_ run as any user other than root)
 - XCode 12
 - XCode Command Line Tools matching the installed version
 - CMake 3.19.8
 
 **NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK version 1.3.211.0 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
 
-First, install Conan and our configurations should you require them:
-```
-pip3 install conan
-conan config install https://github.com/novelrt/ConanConfig.git
-```
-
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
 git clone https://github.com/NovelRT/NovelRT.git
 mkdir -p NovelRT/build
 cd NovelRT/build
-conan install .. --build=missing --profile macos-appleclang12-amd64
 ```
 
-If you would like to change any of the settings prior to building, pass them in like so:
-```
-conan install .. --build=missing --profile macos-appleclang12-amd64 -o NovelRT:buildtests=False -o NovelRT:documentation=False -o NovelRT:buildsamples=False -o NovelRT:buildinterop=False
-```
-(Please note: the above command shows the only four options we support at the moment - anything else is considered unsupported at this time.)
-
-Once you have installed the Conan dependencies, ensure that the terminal performing configuration of NovelRT runs the `source setup-env.sh` from within the Vulkan SDK directory.
+Once you have cloned the repository, ensure that the terminal performing configuration of NovelRT runs the `source setup-env.sh` from within the Vulkan SDK directory.
 
 If you have an Intel Mac you can configure the cmake files like so:
 ```
