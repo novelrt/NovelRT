@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Audio/Audio.h>
+#include <sndfile.h>
 
 namespace NovelRT::Audio
 {
@@ -69,9 +70,11 @@ namespace NovelRT::Audio
             return _noBuffer;
         }
 
-        std::vector<uint16_t> data;
+        std::vector<int16_t> data;
         std::vector<short> readBuffer;
         readBuffer.resize(_bufferSize);
+
+        sf_command(file, SFC_SET_SCALE_FLOAT_INT_READ, NULL, SF_TRUE);
 
         sf_count_t readSize = 0;
 
@@ -83,7 +86,7 @@ namespace NovelRT::Audio
         ALuint buffer;
         alGenBuffers(1, &buffer);
         alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
-                     static_cast<ALsizei>(data.size() * sizeof(uint16_t)), info.samplerate);
+                     static_cast<ALsizei>(data.size() * sizeof(int16_t)), info.samplerate);
         sf_close(file);
         return buffer;
     }
@@ -452,13 +455,13 @@ namespace NovelRT::Audio
     bool AudioService::IsMusicPlaying()
     {
         alGetSourcei(_musicSource, AL_SOURCE_STATE, &_musicSourceState);
-        return (_musicSourceState == AL_PLAYING);
+        return (_musicSourceState == AL_PLAYING || _musicSourceState == AL_PAUSED);
     }
 
     bool AudioService::IsSoundPlaying(ALuint handle)
     {
         alGetSourcei(handle, AL_SOURCE_STATE, &_soundSourceState);
-        return (_soundSourceState == AL_PLAYING);
+        return (_soundSourceState == AL_PLAYING || _soundSourceState == AL_PAUSED);
     }
 
     float AudioService::GetMusicVolume()

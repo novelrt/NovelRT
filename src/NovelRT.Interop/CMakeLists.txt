@@ -57,6 +57,7 @@ target_include_directories(Interop
 )
 
 if(MSVC)
+  set_property(TARGET Interop PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
   target_compile_options(Interop
     PRIVATE
       /W4

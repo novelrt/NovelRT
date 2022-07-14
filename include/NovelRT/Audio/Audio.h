@@ -12,7 +12,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <cstdint>
-#include <sndfile.h>
+#include <fstream>
 #include <vector>
 
 /***
