@@ -38,9 +38,7 @@ if(NOT sndfile_POPULATED)
 
   set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 endif()
- install(EXPORT SndFile
-   DESTINATION lib
-   NAMESPACE SndFile::)
- install(TARGETS sndfile
-   EXPORT SndFile
+
+install(TARGETS sndfile
+   EXPORT NovelRT
    LIBRARY DESTINATION lib)
