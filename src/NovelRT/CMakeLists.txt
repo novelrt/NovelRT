@@ -81,6 +81,7 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
+add_dependencies(Engine compiler runtime)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)

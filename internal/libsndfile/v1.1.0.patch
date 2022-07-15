@@ -28,3 +28,14 @@
  		$<$<BOOL:${HAVE_MPEG}>:Lame::Lame>
  	)
 
+--- a/CMakeLists.txt	Fri Jul 15 09:25:09 2022
++++ b/CMakeLists.txt	Fri Jul 15 09:27:48 2022
+@@ -263,7 +263,7 @@
+
+ # Public libsndfile headers
+ set (sndfile_HDRS
+-	include/sndfile.hh
++	${CMAKE_CURRENT_SOURCE_DIR}/include/sndfile.hh
+ 	${CMAKE_CURRENT_BINARY_DIR}/include/sndfile.h
+ 	)
+

@@ -40,6 +40,8 @@ set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 set(NOVELRT_VULKAN_SDK_PATH "" CACHE STRING "Directory for NovelRT to find the Vulkan SDK (mainly for macOS support)")
 
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
+
 find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
   COMPONENTS dot
 )

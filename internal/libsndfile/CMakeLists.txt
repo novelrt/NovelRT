@@ -18,22 +18,29 @@ FetchContent_Declare(sndfile
         PATCH_COMMAND git apply "${CMAKE_CURRENT_LIST_DIR}/v1.1.0.patch"
 )
 
-set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
-set(ENABLE_PACKAGE_CONFIG OFF CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(sndfile)
+#FetchContent_MakeAvailable(sndfile)
 
+FetchContent_GetProperties(sndfile)
+if(NOT sndfile_POPULATED)
+  FetchContent_Populate(sndfile)
+
+  set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
+  set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
+  set(ENABLE_PACKAGE_CONFIG OFF CACHE BOOL "" FORCE)
+
+  add_subdirectory(${sndfile_SOURCE_DIR} ${sndfile_BINARY_DIR} EXCLUDE_FROM_ALL)
 # Due to the CMakeLists patch, we define the deps, and target includes/link libs so that it'll
 # use the ones we're vendoring w/o issue
-add_dependencies(sndfile FLAC ogg opus vorbis vorbisenc)
-target_include_directories(sndfile PRIVATE ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR} ${FLAC_INCLUDE_DIR} ${Vorbis_Vorbis_INCLUDE_DIR})
-target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
-set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
+  add_dependencies(sndfile FLAC ogg opus vorbis vorbisenc)
+  target_include_directories(sndfile PRIVATE ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR} ${FLAC_INCLUDE_DIR} ${Vorbis_Vorbis_INCLUDE_DIR})
+  target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
 
-install(EXPORT SndFile
-  DESTINATION lib
-  NAMESPACE SndFile::)
-install(TARGETS sndfile
-  EXPORT SndFile
-  LIBRARY DESTINATION lib)
+  set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
+endif()
+ install(EXPORT SndFile
+   DESTINATION lib
+   NAMESPACE SndFile::)
+ install(TARGETS sndfile
+   EXPORT SndFile
+   LIBRARY DESTINATION lib)
