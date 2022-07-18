@@ -10,6 +10,9 @@
 
 namespace NovelRT::Maths
 {
+    /**
+     * @brief A 4x4 float-based Matrix.
+     */
     class GeoMatrix4x4F
     {
     private:
@@ -22,43 +25,88 @@ namespace NovelRT::Maths
         }
 
     public:
+        /// @brief The first column in the matrix.
         GeoVector4F x;
+        /// @brief The second column in the matrix.
         GeoVector4F y;
+        /// @brief The third column in the matrix.
         GeoVector4F z;
+        /// @brief The fourth column in the matrix.
         GeoVector4F w;
 
+        /**
+         * @brief Constructs a 4x4 Matrix with all components being set to zero.
+         *
+         * @returns The newly instantiated GeoMatrix4x4F object.
+         */
         GeoMatrix4x4F() noexcept
             : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
         {
         }
 
+        /**
+         * @brief Constructs a 4x4 Matrix based on the provided X, Y, Z, W components.
+         *
+         * @param x The first column in the matrix.
+         * @param y The second column in the matrix.
+         * @param z The third column in the matrix.
+         * @param w The fourth column in the matrix.
+         * @return The newly instantiated GeoMatrix4x4F object.
+         */
         GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
+        /**
+         * @brief Moves the matrix by the translation vector.
+         *
+         * @param vector The direction and distance the matrix should be moved by.
+         */
         inline void Translate(Maths::GeoVector3F vector)
         {
             *reinterpret_cast<glm::mat4*>(this) =
                 glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
         }
 
+        /**
+         * @brief Rotates the matrix by a given angle around a set axis.
+         *
+         * @param angleInRadians The angle to rotate by in radians.
+         * @param rotationAngle The axis to rotate on. When left empty it will rotate clockwise around the Z axis.
+         */
         inline void Rotate(float angleInRadians, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
             *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInRadians,
                                                               *reinterpret_cast<glm::vec3*>(&rotationAngle));
         }
 
+        /**
+         * @brief Rotates the matrix by a given angle around a set axis.
+         *
+         * @param angleInDegrees The angle to rotate by in degrees.
+         * @param rotationAngle The axis to rotate on. When left empty it will rotate clockwise around the Z axis.
+         */
         inline void RotateUsingDegrees(float angleInDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
             Rotate(Utilities::DegreesToRadians(angleInDegrees), rotationAngle);
         }
 
+        /**
+         * @brief Scales the matrix by it's X, Y and Z axis with the given scalar vector.
+         *
+         * @param scaleValue The scalar vector with X, Y and Z components.
+         */
         inline void Scale(GeoVector3F scaleValue)
         {
             *reinterpret_cast<glm::mat4*>(this) =
                 glm::scale(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&scaleValue));
         }
 
+        /**
+         * @brief Scales the matrix by it's X and Y axis with the given scalar vector.
+         *
+         * @param scaleValue The scalar vector with X and Y components.
+         */
         inline void Scale(GeoVector2F scaleValue)
         {
             auto vec3 = GeoVector3F(scaleValue);
@@ -66,95 +114,635 @@ namespace NovelRT::Maths
             Scale(vec3);
         }
 
+        /**
+         * @brief Flips the matrix alongside it's descending diagonal.
+         *
+         * @details
+         * An example of transposing a matrix: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1 & 2 & 3 & 4\\
+         *      7 & 1 & 5 & 6\\
+         *      6 & 4 & 1 & 7\\
+         *      5 & 3 & 2 & 1
+         *      \end{bmatrix}
+         * \f]
+         */
         inline void Transpose()
         {
             *reinterpret_cast<glm::mat4*>(this) = glm::transpose(*reinterpret_cast<glm::mat4*>(this));
         }
 
+        /**
+         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components match.
+         *
+         * @returns true if all components matched, otherwise false.
+         */
         inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
         }
 
+        /**
+         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any or all components do not
+         * match.
+         *
+         * @returns true if any of the components do not match, otherwise false.
+         */
         inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) != *reinterpret_cast<const glm::mat4*>(&other);
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise sum of this and another GeoMatrix4x4F.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise sum: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      +
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1+4 & 7+7 & 6+2 & 5+5\\
+         *      2+5 & 1+1 & 4+8 & 3+4\\
+         *      3+8 & 5+3 & 1+2 & 2+2\\
+         *      4+6 & 6+7 & 7+6 & 1+8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      5 & 14 & 8 & 10\\
+         *      7 & 2 & 12 & 7\\
+         *      11 & 8 & 3 & 4\\
+         *      10 & 13 & 13 & 9
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's components get added together with this matrix.
+         * @return A matrix who's components consist of the entrywise sum of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) +
                                  *reinterpret_cast<const glm::mat4*>(&other));
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise difference of this and another GeoMatrix4x4F.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise difference: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1-4 & 7-7 & 6-2 & 5-5\\
+         *      2-5 & 1-1 & 4-8 & 3-4\\
+         *      3-8 & 5-3 & 1-2 & 2-2\\
+         *      4-6 & 6-7 & 7-6 & 1-8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      -3 & 0 & 4 & 0\\
+         *      -3 & 0 & -4 & 1\\
+         *      -5 & 2 & -1 & 0\\
+         *      -2 & -1 & 13 & -7
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's components get subtracted from this matrix.
+         * @return A matrix who's components consist of the entrywise difference of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) -
                                  *reinterpret_cast<const glm::mat4*>(&other));
         }
 
+        /**
+         * @brief Constructs a matrix containing the product of this and another GeoMatrix4x4F.
+         *
+         * @details
+         * An example of a matrix that would be constructed from multiplying two matrices: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1*4+7*5+6*8+5*6 & 1*7+7*1+6*3+5*7 & 1*2+7*8+6*2+5*6 & 1*5+7*4+6*2+5*8\\
+         *      2*4+1*5+4*8+3*6 & 2*7+1*1+4*3+3*7 & 2*2+1*8+4*2+3*6 & 2*5+1*4+4*2+3*8\\
+         *      3*4+5*5+1*8+2*6 & 3*7+5*1+1*3+2*7 & 3*2+5*8+1*2+2*6 & 3*5+5*4+1*2+2*8\\
+         *      4*4+6*5+7*8+1*6 & 4*7+6*1+7*3+1*7 & 4*2+6*8+7*2+1*6 & 4*5+6*4+7*2+1*8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      117 & 67 & 100 & 85\\
+         *      63 & 48 & 38 & 46\\
+         *      57 & 43 & 60 & 53\\
+         *      108 & 62 & 76 & 66
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
+         * @return a matrix who's components consist of the product of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) *
                                  *reinterpret_cast<const glm::mat4*>(&other));
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise sum of this and another GeoMatrix4x4F and applies it to
+         * this instance.
+         * @details
+         * An example of a matrix that would be constructed from an entrywise sum: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      +
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1+4 & 7+7 & 6+2 & 5+5\\
+         *      2+5 & 1+1 & 4+8 & 3+4\\
+         *      3+8 & 5+3 & 1+2 & 2+2\\
+         *      4+6 & 6+7 & 7+6 & 1+8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      5 & 14 & 8 & 10\\
+         *      7 & 2 & 12 & 7\\
+         *      11 & 8 & 3 & 4\\
+         *      10 & 13 & 13 & 9
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's components get added together with this matrix.
+         * @return This matrix who's components consist of the entrywise sum of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator+=(GeoMatrix4x4F other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) += *reinterpret_cast<const glm::mat4*>(&other);
             return *this;
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise difference of this and another GeoMatrix4x4F and applies
+         * it to this instance.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise difference: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1-4 & 7-7 & 6-2 & 5-5\\
+         *      2-5 & 1-1 & 4-8 & 3-4\\
+         *      3-8 & 5-3 & 1-2 & 2-2\\
+         *      4-6 & 6-7 & 7-6 & 1-8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      -3 & 0 & 4 & 0\\
+         *      -3 & 0 & -4 & 1\\
+         *      -5 & 2 & -1 & 0\\
+         *      -2 & -1 & 13 & -7
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's components get subtracted from this matrix.
+         * @return This matrix who's components consist of the entrywise difference of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator-=(GeoMatrix4x4F other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) -= *reinterpret_cast<const glm::mat4*>(&other);
             return *this;
         }
 
+        /**
+         * @brief Constructs a matrix containing the product of this and another GeoMatrix4x4F and applies it to this
+         * instance.
+         *
+         * @details
+         * An example of a matrix that would be constructed from multiplying two matrices: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot
+         *      \begin{bmatrix}
+         *      4 & 7 & 2 & 5\\
+         *      5 & 1 & 8 & 4\\
+         *      8 & 3 & 2 & 2\\
+         *      6 & 7 & 6 & 8
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1*4+7*5+6*8+5*6 & 1*7+7*1+6*3+5*7 & 1*2+7*8+6*2+5*6 & 1*5+7*4+6*2+5*8\\
+         *      2*4+1*5+4*8+3*6 & 2*7+1*1+4*3+3*7 & 2*2+1*8+4*2+3*6 & 2*5+1*4+4*2+3*8\\
+         *      3*4+5*5+1*8+2*6 & 3*7+5*1+1*3+2*7 & 3*2+5*8+1*2+2*6 & 3*5+5*4+1*2+2*8\\
+         *      4*4+6*5+7*8+1*6 & 4*7+6*1+7*3+1*7 & 4*2+6*8+7*2+1*6 & 4*5+6*4+7*2+1*8
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      117 & 67 & 100 & 85\\
+         *      63 & 48 & 38 & 46\\
+         *      57 & 43 & 60 & 53\\
+         *      108 & 62 & 76 & 66
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
+         * @return This matrix who's components consist of the product of this and another GeoMatrix4x4F.
+         */
         inline GeoMatrix4x4F operator*=(GeoMatrix4x4F other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) *= *reinterpret_cast<const glm::mat4*>(&other);
             return *this;
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise sum of this and another scalar.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      + 6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      +
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1+6 & 7+6 & 6+6 & 5+6\\
+         *      2+6 & 1+6 & 4+6 & 3+6\\
+         *      3+6 & 5+6 & 1+6 & 2+6\\
+         *      4+6 & 6+6 & 7+6 & 1+6\\
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      7 & 13 & 12 & 11\\
+         *      8 & 7 & 10 & 9\\
+         *      9 & 11 & 7 & 8\\
+         *      10& 12 & 13 & 7
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets added together with this matrix.
+         * @return A matrix who's components consist of the entrywise sum of this and another scalar.
+         */
         inline GeoMatrix4x4F operator+(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) + other);
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise difference of this and another scalar.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1-6 & 7-6 & 6-6 & 5-6\\
+         *      2-6 & 1-6 & 4-6 & 3-6\\
+         *      3-6 & 5-6 & 1-6 & 2-6\\
+         *      4-6 & 6-6 & 7-6 & 1-6\\
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      -5 & 1 & 0 & -1\\
+         *      -4 & -5 & -2 & -3\\
+         *      -3 & -1 & -5 & -4\\
+         *      -2 & 0 & 1 & -5\\
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets subtracted from this matrix.
+         * @return A matrix who's components consist of the entrywise difference of this and another scalar.
+         */
         inline GeoMatrix4x4F operator-(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) - other);
         }
 
+        /**
+         * @brief Constructs a matrix containing the product of this and another scalar.
+         *
+         * @details
+         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot 6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6\\
+         *      2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6\\
+         *      3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6\\
+         *      4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      114 & 114 & 114 & 114\\
+         *      60 & 60 & 60 & 60\\
+         *      66 & 66 & 66 & 66\\
+         *      108 & 108 & 108 & 108
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets multiplied by this matrix.
+         * @return a matrix who's components consist of the product of this and another scalar.
+         */
         inline GeoMatrix4x4F operator*(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * other);
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise sum of this and another scalar and applies it to this
+         * instance.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      + 6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      +
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1+6 & 7+6 & 6+6 & 5+6\\
+         *      2+6 & 1+6 & 4+6 & 3+6\\
+         *      3+6 & 5+6 & 1+6 & 2+6\\
+         *      4+6 & 6+6 & 7+6 & 1+6\\
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      7 & 13 & 12 & 11\\
+         *      8 & 7 & 10 & 9\\
+         *      9 & 11 & 7 & 8\\
+         *      10& 12 & 13 & 7
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets added together with this matrix.
+         * @return This matrix who's components consist of the entrywise sum of this and another scalar.
+         */
         inline GeoMatrix4x4F operator+=(float other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) += other;
             return *this;
         }
 
+        /**
+         * @brief Constructs a matrix containing the entrywise difference of this and another scalar and applies it to
+         * this instance.
+         *
+         * @details
+         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      -
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1-6 & 7-6 & 6-6 & 5-6\\
+         *      2-6 & 1-6 & 4-6 & 3-6\\
+         *      3-6 & 5-6 & 1-6 & 2-6\\
+         *      4-6 & 6-6 & 7-6 & 1-6\\
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      -5 & 1 & 0 & -1\\
+         *      -4 & -5 & -2 & -3\\
+         *      -3 & -1 & -5 & -4\\
+         *      -2 & 0 & 1 & -5\\
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets subtracted from this matrix.
+         * @return This matrix who's components consist of the entrywise difference of this and another scalar.
+         */
         inline GeoMatrix4x4F operator-=(float other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) -= other;
             return *this;
         }
 
+        /**
+         * @brief Constructs a matrix containing the product of this and another scalar and applies it to this instance.
+         *
+         * @details
+         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot 6
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      1 & 7 & 6 & 5\\
+         *      2 & 1 & 4 & 3\\
+         *      3 & 5 & 1 & 2\\
+         *      4 & 6 & 7 & 1
+         *      \end{bmatrix}
+         *      \cdot
+         *      \begin{bmatrix}
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6\\
+         *      6 & 6 & 6 & 6
+         *      \end{bmatrix}
+         *      =
+         *      \begin{bmatrix}
+         *      1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6 & 1*6+7*6+6*6+5*6\\
+         *      2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6 & 2*6+1*6+4*6+3*6\\
+         *      3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6 & 3*6+5*6+1*6+2*6\\
+         *      4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6 & 4*6+6*6+7*6+1*6
+         *      \end{bmatrix}
+         *      \rightarrow
+         *      \begin{bmatrix}
+         *      114 & 114 & 114 & 114\\
+         *      60 & 60 & 60 & 60\\
+         *      66 & 66 & 66 & 66\\
+         *      108 & 108 & 108 & 108
+         *      \end{bmatrix}
+         * \f]
+         * @param other The other scalar that gets multiplied by this matrix.
+         * @return This matrix who's components consist of the product of this and another scalar.
+         */
         inline GeoMatrix4x4F operator*=(float other) noexcept
         {
             *reinterpret_cast<glm::mat4*>(this) *= other;
             return *this;
         }
 
+        /**
+         * @brief Get an identity matrix, with it´s descending diagonals set to 1.
+         *
+         * @details
+         * An identity matrix that is as followed: \f[
+         *      \begin{bmatrix}
+         *      1 & 0 & 0 & 0\\
+         *      0 & 1 & 0 & 0\\
+         *      0 & 0 & 1 & 0\\
+         *      0 & 0 & 0 & 1
+         *      \end{bmatrix}
+         * \f]
+         * @returns An Identity GeoMatrix4x4F.
+         */
         static GeoMatrix4x4F getDefaultIdentity() noexcept
         {
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }
 
+        /**
+         * @brief Creates a matrix for projecting a 3D space onto a plane.
+         *
+         * @param left Farthest left on the x-axis.
+         * @param right Farthest right on the x-axis.
+         * @param bottom Farthest down on the y-axis.
+         * @param top Farthest up on the y-axis.
+         * @param zNear Distance to the near clipping plane along the -Z axis.
+         * @param zFar Distance to the far clipping plane along the -Z axis.
+         * @returns A projection GeoMatrix4x4F for projecting a 3D space onto a plane.
+         */
         static GeoMatrix4x4F CreateOrthographic(float left,
                                                 float right,
                                                 float bottom,
@@ -165,11 +753,36 @@ namespace NovelRT::Maths
             return GeoMatrix4x4F(glm::ortho(left, right, bottom, top, zNear, zFar));
         }
 
+        /**
+         * @brief Creates a matrix with the given scale components.
+         *
+         * @details
+         * The scale components are placed in the decending diagonal of the matrix: \f[
+         *      \begin{bmatrix}
+         *      x & 0 & 0 & 0\\
+         *      0 & y & 0 & 0\\
+         *      0 & 0 & z & 0\\
+         *      0 & 0 & 0 & 1
+         *      \end{bmatrix}
+         * \f]
+         * @param x The scale component over the X axis.
+         * @param y The scale component over the Y axis.
+         * @param z The scale component over the Z axis.
+         * @returns A matrix with scale components applied.
+         */
         static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
         {
             return GeoMatrix4x4F(glm::scale(glm::vec3(x, y, z)));
         }
 
+        /**
+         * @brief Creates a matrix for observing a point in space from a given location.
+         *
+         * @param eye The position of the observer.
+         * @param centre The position the observer should look towards.
+         * @param up The updirection for the observer.
+         * @returns
+         */
         static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
         {
             return GeoMatrix4x4F(glm::lookAt(*reinterpret_cast<glm::vec3*>(&eye),
