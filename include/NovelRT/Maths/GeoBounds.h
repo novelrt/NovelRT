@@ -16,9 +16,11 @@ namespace NovelRT::Maths
     class GeoBounds
     {
     public:
-        /// @brief The centre of the GeoBounds instance as a position in X,Y coordinates in the space used during its creation.
+        /// @brief The centre of the GeoBounds instance as a position in X,Y coordinates in the space used during its
+        /// creation.
         GeoVector2F position;
-        /// @brief The size represented by Width and Height. This is subject to the space used during the creation of the GeoBounds instance.
+        /// @brief The size represented by width and height. This is subject to the space used during the creation of
+        /// the GeoBounds instance.
         GeoVector2F size;
         /// @brief The rotation of the GeoBounds instance represented in Degrees.
         float rotation;
@@ -41,34 +43,39 @@ namespace NovelRT::Maths
         [[nodiscard]] bool pointIsWithinBounds(GeoVector2F point) const noexcept;
 
         /**
-         * @brief Evaluates whether or not if another GeoBounds instance intersects with this GeoBounds. 
+         * @brief Evaluates whether another GeoBounds instance intersects with this GeoBounds instance or not.
          *
          * This implementation does not support rotation, so only AABB intersection computation is allowed.
          *
-         * @param otherBounds the other GeoBounds instance to evaluate against this GeoBounds instance.
-         * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than 0.
          * @return true if the otherBounds intersects with this bounding box, otherwise false.
+         * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than 0.
          */
         [[nodiscard]] bool intersectsWith(GeoBounds otherBounds) const;
 
         /**
          * @brief Gets the specified corner, relative to the rotation and size of this GeoBounds instance.
          *
-         * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right corner.
-         * @return A GeoVector2F representing the local space position of the corner relative to the rotation and size of the GeoBounds instance.
+         * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right
+         * corner.
+         * @return A GeoVector2F representing the local space position of the corner relative to the rotation and size
+         * of the GeoBounds instance.
          */
         [[nodiscard]] GeoVector2F getCornerInLocalSpace(int32_t index) const noexcept;
-        
+
         /**
-         * @brief Gets the specified corner in world space, relative to the position, rotation and size of this GeoBounds instance.
+         * @brief Gets the specified corner in world space, relative to the position, rotation and size of this
+         * GeoBounds instance.
          *
-         * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right corner.
-         * @return A GeoVector2F representing the world space position of the corner relative to the position, size and rotation of the GeoBounds instance.
+         * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right
+         * corner.
+         * @return A GeoVector2F representing the world space position of the corner relative to the position, size and
+         * rotation of the GeoBounds instance.
          */
         [[nodiscard]] GeoVector2F getCornerInWorldSpace(int32_t index) const noexcept;
 
         /**
-         * @brief Gets the extent of this GeoBounds instance that is represented by the Width and Height as a GeoVector2F. The extents are always half the size of the GeoBounds instance.
+         * @brief Gets the extent of this GeoBounds instance that is represented by the width and height as a
+         * GeoVector2F. The extents are always half the size of the GeoBounds instance.
          *
          * @return Returns a GeoVector2F that containts the width and height of the extents.
          */
