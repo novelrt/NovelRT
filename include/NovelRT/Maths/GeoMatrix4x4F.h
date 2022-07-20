@@ -142,6 +142,7 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components match.
          *
+         * @param other The other GeoMatrix4x4F to evaluate against.
          * @returns true if all components matched, otherwise false.
          */
         inline bool operator==(GeoMatrix4x4F other) const noexcept
@@ -153,6 +154,7 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any or all components do not
          * match.
          *
+         * @param other The other GeoMatrix4x4F to evaluate against.
          * @returns true if any of the components do not match, otherwise false.
          */
         inline bool operator!=(GeoMatrix4x4F other) const noexcept
