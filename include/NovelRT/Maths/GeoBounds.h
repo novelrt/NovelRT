@@ -48,7 +48,8 @@ namespace NovelRT::Maths
          * This implementation does not support rotation, so only AABB intersection computation is allowed.
          *
          * @return true if the otherBounds intersects with this bounding box, otherwise false.
-         * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than 0.
+         * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than
+         * 0.
          */
         [[nodiscard]] bool intersectsWith(GeoBounds otherBounds) const;
 
