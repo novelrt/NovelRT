@@ -9,6 +9,8 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
+set(BUILD_SHARED_LIBS OFF)
+
 if(MSVC)
   # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
@@ -40,14 +42,7 @@ set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 set(NOVELRT_VULKAN_SDK_PATH "" CACHE STRING "Directory for NovelRT to find the Vulkan SDK (mainly for macOS support)")
 
-find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-  COMPONENTS dot
-)
 
-if(NOT DOXYGEN_FOUND)
-  message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
-  set(NOVELRT_BUILD_DOCUMENTATION OFF)
-endif()
 
 add_subdirectory(resources)
 add_subdirectory(internal)
@@ -62,7 +57,16 @@ if(NOVELRT_BUILD_SAMPLES)
 endif()
 
 if(NOVELRT_BUILD_DOCUMENTATION)
-  add_subdirectory(doxygen)
+  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+    COMPONENTS dot
+  )
+
+  if(NOT DOXYGEN_FOUND)
+    message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
+    set(NOVELRT_BUILD_DOCUMENTATION OFF)
+  else()
+    add_subdirectory(doxygen)
+  endif()
 endif()
 
 if(NOVELRT_BUILD_TESTS)
