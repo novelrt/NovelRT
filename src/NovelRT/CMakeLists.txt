@@ -81,6 +81,8 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
+add_custom_target(EngineResources)
+add_dependencies(Engine EngineResources)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 
 if(APPLE)
@@ -101,12 +103,16 @@ target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${gsl_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
     $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${sndfile_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:TBB::tbb,INTERFACE_INCLUDE_DIRECTORIES>>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/glm>
+    $<INSTALL_INTERFACE:include/gsl>
+    $<INSTALL_INTERFACE:include/stduuid>
 )
 
 if(MSVC)
@@ -148,23 +154,57 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    runtime # Fabulist support - target name is vague. Fix later. :]
-    freetype
-    glfw
-    OpenAL
-    png_static
-    spdlog
-    TBB::tbb
-    $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
-    jsoncons
-    sndfile
+    $<BUILD_INTERFACE:runtime> # Fabulist support - target name is vague. Fix later. :]
+    $<BUILD_INTERFACE:freetype>
+    $<BUILD_INTERFACE:glfw>
+    $<BUILD_INTERFACE:png_static>
+    $<BUILD_INTERFACE:spdlog>
+    $<BUILD_INTERFACE:TBB::tbb>
+    $<BUILD_INTERFACE:jsoncons>
+    $<BUILD_INTERFACE:$<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>>
+    $<BUILD_INTERFACE:$<TARGET_LINKER_FILE:sndfile>>
+    $<BUILD_INTERFACE:OpenAL>
 )
+
+  # I hate CMake I hate it I hate it I hate it
+  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
+  if(WIN32 OR APPLE)
+  list(APPEND ENGINE_RESOURCES "$<TARGET_FILE_NAME:OpenAL>")
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:OpenAL>
+    $<TARGET_FILE_DIR:Engine>)
+  list(APPEND ENGINE_RESOURCES "$<TARGET_FILE_NAME:sndfile>")
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:sndfile>
+    $<TARGET_FILE_DIR:Engine>)
+  list(APPEND ENGINE_RESOURCES "$<TARGET_FILE_NAME:tbb>")
+  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:tbb>
+    $<TARGET_FILE_DIR:Engine>)
+  if(NOT NOVELRT_VULKAN_SDK)
+    list(APPEND ENGINE_RESOURCES "$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>")
+    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
+      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
+    if(APPLE)
+      list(APPEND ENGINE_RESOURCES "${NOVELRT_MOLTENVK_LIB};${NOVELRT_MOLTENVK_ICDPATH}")
+      add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${NOVELRT_MOLTENVK_DYLIB_PATH}
+        $<TARGET_FILE_DIR:Engine>)
+    endif()
+  endif()
+  set_target_properties(EngineResources PROPERTIES RESOURCE "${ENGINE_RESOURCES}")
+endif()
+
+
 
 install(
   TARGETS Engine
   EXPORT NovelRT
   DESTINATION lib
   RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION bin
+  LIBRARY DESTINATION lib
 )
 #Workaround due to hierarchy destruction when installing by TARGETS
 install(
@@ -172,38 +212,3 @@ install(
   DESTINATION include/NovelRT
   FILES_MATCHING PATTERN "*.h"
 )
-
-  # I hate CMake I hate it I hate it I hate it
-  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-if(WIN32 OR APPLE)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #    ${CMAKE_BINARY_DIR}/thirdparty
-  #    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:OpenAL>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:sndfile>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:tbb>
-    $<TARGET_FILE_DIR:Engine>)
-  if(NOT NOVELRT_VULKAN_SDK)
-    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-      $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
-      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
-    if(APPLE)
-      add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${NOVELRT_MOLTENVK_DYLIB_PATH}
-        $<TARGET_FILE_DIR:Engine>)
-      set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
-      set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
-    endif()
-  endif()
-  #file(GLOB libs RELATIVE
-  #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine
-    PROPERTIES
-      RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
-endif()
-
