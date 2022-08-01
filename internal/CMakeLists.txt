@@ -1,3 +1,9 @@
+include(FetchContent)
+include(../cmake/NovelRTDeps_Populate.cmake)
+include(../cmake/NovelRTDeps_AddEngineResource.cmake)
+
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(glm)

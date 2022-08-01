@@ -16,22 +16,12 @@ FetchContent_Declare(vulkan-loader
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-FetchContent_GetProperties(vulkan-loader)
-if(NOT vulkan-loader_POPULATED)
-  FetchContent_Populate(vulkan-loader)
+set(BUILD_WSI_WAYLAND_SUPPORT OFF CACHE INTERNAL "Enable Wayland support for OSes that support it")
+set(ENABLE_WERROR OFF CACHE BOOL "Enable warnings as errors" FORCE)
 
-  # Workaround to force vulkan-loader to build shared and not always export symbols
-  # Causes failures during builds so we forcefully change these for vulkan-loader only
-  # Credit: https://stackoverflow.com/a/62103349
-  set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-  # Make subproject to use 'BUILD_SHARED_LIBS=ON' setting.
-  set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
-  set(BUILD_WSI_WAYLAND_SUPPORT OFF CACHE INTERNAL "")
-  add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/bin)
-  # Set the values back to what they originally were
-  set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
+NovelRTDeps_PopulateShared(vulkan-loader)
 
-  #For 1.3.211 - Vulkan is specifying C99 to compile its ASM target which breaks due to redefinitions.
-  target_compile_features(loader_common_options INTERFACE c_std_11)
-  set(LOADER_STANDARD_C_PROPERTIES PROPERTIES C_STANDARD 11)
-endif()
+# Vulkan-loader's common options cause redefs if not explicitly defined like this for 1.3.211
+target_compile_features(loader_common_options INTERFACE c_std_11)
+set(LOADER_STANDARD_C_PROPERTIES PROPERTIES C_STANDARD 11)
+

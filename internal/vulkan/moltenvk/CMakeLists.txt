@@ -1,5 +1,5 @@
 include(ExternalProject)
-message(STATUS "Fetching MoltenVK")
+message(STATUS "Fetching MoltenVK...")
 message(WARNING
         "NovelRT is set to build MoltenVK which can take upwards "
         "of 30+ minutes on certain devices. Also, building MoltenVK "
@@ -29,6 +29,5 @@ ExternalProject_Add(moltenvk
 
 set(NOVELRT_MOLTENVK_DYLIB_PATH "${CMAKE_CURRENT_BINARY_DIR}/src/MoltenVK/dylib/macOS" CACHE STRING "Path to MoltenVK directory for generated ICD and Loader")
 set(NOVELRT_MOLTENVK_LIB "${NOVELRT_MOLTENVK_DYLIB_PATH}/libMoltenVK.dylib" CACHE STRING "File path to MoltenVK library for NovelRT" FORCE)
-set(NOVELRT_MOLTENVK_LIBTOCOPY "libMoltenVK.dylib" CACHE STRING "MoltenVK Library to be copied for NovelRT" FORCE)
-set(NOVELRT_MOLTENVK_ICDTOCOPY "MoltenVK_icd.json" CACHE STRING "MoltenVK ICD to be copied for NovelRT" FORCE)
+set(NOVELRT_MOLTENVK_ICDPATH "${NOVELRT_MOLTENVK_DYLIB_PATH}/MoltenVK_icd.json" CACHE STRING "Path to MoltenVK_icd.json" FORCE)
 set(NOVELRT_MOLTENVK_VENDORED ON CACHE BOOL "MoltenVK is being vendored by the NovelRT project" FORCE)
