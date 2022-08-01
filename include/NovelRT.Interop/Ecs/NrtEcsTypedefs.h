@@ -10,6 +10,7 @@ extern "C"
 #endif
 
     typedef struct NrtCatalogue* NrtCatalogueHandle;
+    typedef struct NrtConfigurator* NrtConfiguratorHandle;
     typedef struct NrtComponentBufferMemoryContainer* NrtComponentBufferMemoryContainerHandle;
     typedef struct NrtComponentBufferMemoryContainer_ImmutableDataView*
         NrtComponentBufferMemoryContainer_ImmutableDataViewHandle;
