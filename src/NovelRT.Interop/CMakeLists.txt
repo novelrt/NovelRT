@@ -21,6 +21,8 @@ set(SOURCES
   Ecs/Audio/NrtAudioEmitterComponent.cpp
   Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
+  Ecs/Graphics/NrtDefaultRenderingSystem.cpp
+
   Graphics/NrtRGBAColour.cpp
 
   Maths/NrtGeoBounds.cpp
