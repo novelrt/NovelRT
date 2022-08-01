@@ -71,6 +71,11 @@ extern "C"
 #include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
+#include "Graphics/NrtGraphicsTypedefs.h"
+#include "Input/NrtInputTypedefs.h"
+#include "Windowing/NrtWindowingTypedefs.h"
+#include "ResourceManagement/NrtResourceManagementTypedefs.h"
+#include "PluginManagement/NrtPluginManagementTypedefs.h"
 
 #ifdef __cplusplus
 }
