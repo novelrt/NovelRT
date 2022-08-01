@@ -28,4 +28,3 @@ FetchContent_Declare(oneTBB
 )
 
 NovelRTDeps_PopulateShared(oneTBB)
-#NovelRTDeps_AddEngineResource(tbb)
