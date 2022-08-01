@@ -42,6 +42,7 @@ set(SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
+  Utilities/NrtEvent.cpp
 )
 
 add_library(Interop SHARED ${SOURCES})
