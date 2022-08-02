@@ -24,9 +24,13 @@ namespace NovelRT::Maths
         }
 
     public:
-        /// @brief The X component of the vector.
+        /**
+         * @brief The X component of the vector.
+         */
         float x;
-        /// @brief The Y component of the vector.
+        /**
+         * @brief The Y component of the vector.
+         */
         float y;
 
         /**

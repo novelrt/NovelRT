@@ -25,13 +25,21 @@ namespace NovelRT::Maths
         }
 
     public:
-        /// @brief The first row in the matrix.
+        /**
+         * @brief The first row in the matrix.
+         */
         GeoVector4F x;
-        /// @brief The second row in the matrix.
+        /**
+         * @brief The second row in the matrix.
+         */
         GeoVector4F y;
-        /// @brief The third row in the matrix.
+        /**
+         * @brief The third row in the matrix.
+         */
         GeoVector4F z;
-        /// @brief The fourth row in the matrix.
+        /**
+         * @brief The fourth row in the matrix.
+         */
         GeoVector4F w;
 
         /**
