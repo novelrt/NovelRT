@@ -100,8 +100,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the length of this GeoVector2F using it's components.This is the same as the
-         * calculating the vector's magnitude.
+         * @brief Calculates the length of this GeoVector2F using it's components. This is the same as calculating the
+         * vector's magnitude.
          *
          * @details
          * To find a vector's length you can use the Pythagorean theorem:\f[
@@ -120,9 +120,9 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components match.
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components match.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if all components matched, otherwise false.
          */
         inline bool operator==(GeoVector2F other) const noexcept
@@ -131,9 +131,9 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components do not match.
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components do not match.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
         inline bool operator!=(GeoVector2F other) const noexcept
@@ -142,11 +142,11 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any of it's components is less
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is less
          * than the other's components.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
-         * @return true if any of the components is less than the other GeoMatrix4x4F's components, otherwise false.
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
+         * @return true if any of the components is less than the other GeoVector2F's components, otherwise false.
          */
         inline bool operator<(GeoVector2F other) const noexcept
         {
@@ -155,11 +155,11 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any of it's components is less
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is less
          * than or equal to the other's components.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
-         * @return true if any of the components is less than or equal to the other GeoMatrix4x4F's components,
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
+         * @return true if any of the components is less than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
         inline bool operator<=(GeoVector2F other) const noexcept
@@ -169,11 +169,11 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any of it's components is
-         * greater than the other's components.
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is greater
+         * than the other's components.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
-         * @return true if any of the components is greater than the other GeoMatrix4x4F's components, otherwise false.
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
+         * @return true if any of the components is greater than the other GeoVector2F's components, otherwise false.
          */
         inline bool operator>(GeoVector2F other) const noexcept
         {
@@ -182,11 +182,11 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any of it's components is
-         * greater than or equal to the other's components.
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is greater
+         * than or equal to the other's components.
          *
-         * @param other The GeoMatrix4x4F who's components are evaluated against this GeoMatrix4x4F's components.
-         * @return true if any of the components is greater than or equal to the other GeoMatrix4x4F's components,
+         * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
+         * @return true if any of the components is greater than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
         inline bool operator>=(GeoVector2F other) const noexcept
@@ -196,7 +196,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise sum of this and another GeoVector2F.
+         * @brief Calculate the entrywise sum of this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of an entrywise addition using 2 dimensional vectors: \f[
@@ -221,8 +221,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector who's components get added together with this vector.
-         * @return A GeoVecor2F who's components consist of the entrywise sum of this and another GeoVector2F.
+         * @param other The other vector whose components get added together with this vector.
+         * @return A GeoVecor2F where the components consist of the entrywise sum of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F operator+(GeoVector2F other) const noexcept
         {
@@ -230,7 +231,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise difference of this and another GeoVector2F.
+         * @brief Calculates the entrywise difference of this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of an entrywise subtraction using 2 dimensional vectors: \f[
@@ -255,8 +256,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector who's components get subtracted from this vector.
-         * @return A GeoVecor2F who's components consist of the entrywise difference of this and another GeoVector2F.
+         * @param other The other vector whose components get subtracted from this vector.
+         * @return A GeoVecor2F where the components consist of the entrywise difference of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F operator-(GeoVector2F other) const noexcept
         {
@@ -264,7 +266,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the Hadamard product of this and another GeoVector2F.
+         * @brief Calculates the Hadamard product of this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of a Hadamard product of two vectors: \f[
@@ -288,8 +290,9 @@ namespace NovelRT::Maths
          *      15
          *      \end{pmatrix}
          * \f]
-         * @param other The other vector who's components get multiplied by this vector's components.
-         * @return A GeoVecor2F who's components consist of the Hadamard product of this and another GeoVector2F.
+         * @param other The other vector whose components get multiplied by this vector's components.
+         * @return A GeoVecor2F where the components consist of the Hadamard product of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F operator*(GeoVector2F other) const noexcept
         {
@@ -297,8 +300,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the quotents of a Hadamard division using this and another
-         * GeoVector2F.
+         * @brief Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of a Hadamard division of two vectors: \f[
@@ -322,8 +324,9 @@ namespace NovelRT::Maths
          *      2
          *      \end{pmatrix}
          * \f]
-         * @param other The other vector who's component act as a divisor for this vector's components.
-         * @return A GeoVecor2F who's components consist of the entrywise quotent of this and another GeoVector2F.
+         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @return A GeoVecor2F where the components consist of the entrywise quotient of this GeoVector2F and another
+         * GeoVector2F.
          */
         GeoVector2F operator/(GeoVector2F other) const noexcept
         {
@@ -331,7 +334,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise sum of this and another scalar.
+         * @brief Calculates the entrywise sum of this GeoVector2F and the provided scalar.
          *
          * @details
          * An example of summing up a vector and a scalar: \f[
@@ -363,7 +366,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that gets added up with each component of this vector.
-         * @return A GeoVecor2F who's components consist of the entrywise sum of this and another scalar.
+         * @return A GeoVecor2F where the components consist of the entrywise sum of this GeoVector2F and the provided
+         * scalar.
          */
         inline GeoVector2F operator+(float other) const noexcept
         {
@@ -371,7 +375,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise difference of this and another scalar.
+         * @brief  Calculates the entrywise difference of this GeoVector2F and the provided scalar.
          *
          * @details
          * An example of subtracting a scalar from a vector: \f[
@@ -403,7 +407,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that gets subtracted from each component of this vector.
-         * @return A GeoVector2F who's components consist of the entrywise difference of this and another scalar.
+         * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and the
+         * provided scalar.
          */
         inline GeoVector2F operator-(float other) const noexcept
         {
@@ -411,7 +416,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the Hadamard product of this and another scalar.
+         * @brief Calculates the Hadamard product of this GeoVector2F and the provided scalar.
          *
          * @details
          * An example of a multiplication between a vector and a scalar: \f[
@@ -443,7 +448,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar who get multiplied by this vector's components.
-         * @return A GeoVecor2F who's components consist of the Hadamard product of this and another scalar.
+         * @return A GeoVecor2F where the components consist of the Hadamard product of this GeoVector2F and the
+         * provided scalar.
          */
         inline GeoVector2F operator*(float other) const noexcept
         {
@@ -451,7 +457,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the quotents of a Hadamard division using this and another scalar.
+         * @brief Calculates the quotients of a Hadamard division using this GeoVector2F and the provided scalar.
          *
          * @details
          * An example of a division between a vector and a scalar: \f[
@@ -483,7 +489,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that acts as the divisor for each component of this vector.
-         * @return A GeoVecor2F who's components consist of the entrywise quotent of this and another scalar.
+         * @return A GeoVecor2F where the components consist of the entrywise quotient of this GeoVector2F and the
+         * provided scalar.
          */
         GeoVector2F operator/(float other) const noexcept
         {
@@ -491,8 +498,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise sum of this and another GeoVector2F and applies it
-         * to this instance.
+         * @brief Calculates the entrywise sum of this GeoVector2F and another GeoVector2F and overwrites this instance
+         * with the result.
          *
          * @details
          * An example of an entrywise addition using 2 dimensional vectors: \f[
@@ -517,8 +524,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector who's components get added together with this vector.
-         * @return This GeoVecor2F who's components consist of the entrywise sum of this and another GeoVector2F.
+         * @param other The other vector whose components get added together with this vector.
+         * @return This GeoVecor2F where the components consist of the entrywise sum of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F& operator+=(GeoVector2F other) noexcept
         {
@@ -528,8 +536,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise difference of this and another GeoVector2F and
-         * applies it to this instance.
+         * @brief Calculates the entrywise difference of this GeoVector2F and another GeoVector2F and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of an entrywise subtraction using 2 dimensional vectors: \f[
@@ -554,8 +562,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector who's components get subtracted from this vector.
-         * @return This GeoVecor2F who's components consist of the entrywise difference of this and another GeoVector2F.
+         * @param other The other vector whose components get subtracted from this vector.
+         * @return This GeoVecor2F where components consist of the entrywise difference of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F& operator-=(GeoVector2F other) noexcept
         {
@@ -565,7 +574,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the Hadamard product of this and another GeoVector2F.
+         * @brief Calculates the Hadamard product of this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of a Hadamard product of two vectors: \f[
@@ -589,8 +598,9 @@ namespace NovelRT::Maths
          *      15
          *      \end{pmatrix}
          * \f]
-         * @param other The other vector who's components get multiplied by this vector's components.
-         * @return A GeoVecor2F who's components consist of the Hadamard product of this and another GeoVector2F.
+         * @param other The other vector whose components get multiplied by this vector's components.
+         * @return This GeoVecor2F where the components consist of the Hadamard product of this GeoVector2F and another
+         * GeoVector2F.
          */
         inline GeoVector2F operator*=(GeoVector2F other) noexcept
         {
@@ -600,8 +610,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the quotents of a Hadamard division using this and another
-         * GeoVector2F.
+         * @brief Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of a Hadamard division of two vectors: \f[
@@ -625,8 +634,9 @@ namespace NovelRT::Maths
          *      2
          *      \end{pmatrix}
          * \f]
-         * @param other The other vector who's component act as a divisor for this vector's components.
-         * @return A GeoVecor2F who's components consist of the entrywise quotent of this and another GeoVector2F.
+         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @return This GeoVecor2F where the components consist of the entrywise quotient of this GeoVector2F and
+         * another GeoVector2F.
          */
         GeoVector2F operator/=(GeoVector2F other) noexcept
         {
@@ -636,8 +646,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise sum of this and another scalar and applies it to
-         * this instance.
+         * @brief Calculates the entrywise sum of this GeoVector2F and the provided scalar and overwrites this instance
+         * with the result.
          *
          * @details
          * An example of summing up a vector and a scalar: \f[
@@ -669,7 +679,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that gets added up with each component of this vector.
-         * @return This GeoVecor2F who's components consist of the entrywise sum of this and another scalar.
+         * @return This GeoVecor2F where the components consist of the entrywise sum of this GeoVector2F and the
+         * provided scalar.
          */
         inline GeoVector2F operator+=(float other) noexcept
         {
@@ -678,8 +689,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the entrywise difference of this and another scalar and applies it
-         * to this instance.
+         * @brief Calculates the entrywise difference of this GeoVector2F and the provided scalar and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of subtracting a scalar from a vector: \f[
@@ -711,7 +722,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that gets subtracted from each component of this vector.
-         * @return This GeoVector2F who's components consist of the entrywise difference of this and another scalar.
+         * @return This GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and the
+         * provided scalar.
          */
         inline GeoVector2F operator-=(float other) noexcept
         {
@@ -720,7 +732,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the product of this and another scalar.
+         * @brief Calculates the product of this and the provided scalar.
          *
          * @details
          * An example of a multiplication between a vector and a scalar: \f[
@@ -752,7 +764,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar who get multiplied by this vector's components.
-         * @return A GeoVecor2F who's components consist of the product of this and another scalar.
+         * @return This GeoVecor2F where the components consist of the product of this GeoVector2F and the provided
+         * scalar.
          */
         inline GeoVector2F operator*=(float other) noexcept
         {
@@ -761,8 +774,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a GeoVector2F containing the quotents of a division using this and another scalar
-         * And applies it to this instance.
+         * @brief Calculates the quotients of a division using this GeoVector2F and the provided scalar and overwrites
+         * this instance with the result.
          *
          * @details
          * An example of a division between a vector and a scalar: \f[
@@ -794,7 +807,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          * @param other The other scalar that acts as the divisor for each component of this vector.
-         * @return This GeoVecor2F who's components consist of the entrywise quotent of this and another scalar.
+         * @return This GeoVecor2F where the components consist of the entrywise quotient of this GeoVector2F and the
+         * provided scalar.
          */
         inline GeoVector2F operator/=(float other) noexcept
         {
@@ -804,6 +818,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Rotates this vector around a given point by a given angle in degrees.
+         *
          * @param angleRotationValue The angle in degrees to rotate by.
          * @param point The point that acts as this vectors origin point to rotate around.
          */
@@ -819,6 +834,7 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components are within a given
          * range of tolerance.
+         *
          * @param other The other GeoVector2F whos components are evaluated against this GeoVector2F's components.
          * @param epsilonValue The vector determining the tolerance per component.
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
@@ -833,6 +849,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Creates a new GeoVector2F instance with a uniform value of zero.
+         *
          * @return A new GeoVector2F instance with all components set to zero.
          */
         static GeoVector2F zero() noexcept
@@ -842,6 +859,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Creates a new GeoVector2F instance with a uniform value of one.
+         *
          * @return A new GeoVector2F instance with all components set to one.
          */
         static GeoVector2F one() noexcept
@@ -851,6 +869,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Creates a new uniform GeoVector2F based on the specified value.
+         *
          * @param The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
@@ -861,7 +880,7 @@ namespace NovelRT::Maths
     };
 
     /**
-     * @brief Constructs a GeoVector2F containing the product of this and another scalar.
+     * @brief Calculates the product of this and the provided scalar.
      *
      * @details
      * An example of a multiplication between a vector and a scalar: \f[
@@ -894,7 +913,7 @@ namespace NovelRT::Maths
      * \f]
      * @param lhs The scalar that gets multiplied by the GeoVector2F's components.
      * @param rhs The GeoVector2F whos components get multiplied by the scalar.
-     * @return A GeoVecor2F who's components consist of the product of this and another scalar.
+     * @return A GeoVecor2F where the components consist of the product of this and the provided scalar.
      */
     inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
     {

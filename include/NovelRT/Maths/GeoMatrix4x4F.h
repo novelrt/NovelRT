@@ -163,7 +163,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise sum of this and another GeoMatrix4x4F.
+         * @brief Calculates the entrywise sum of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum: \f[
@@ -195,8 +195,8 @@ namespace NovelRT::Maths
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's components get added together with this matrix.
-         * @return A matrix who's components consist of the entrywise sum of this GeoMatrix4x4F and another
+         * @param other The other matrix whose components get added together with this matrix.
+         * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
@@ -206,7 +206,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise difference of this and another GeoMatrix4x4F.
+         * @brief Calculates the entrywise difference of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference: \f[
@@ -238,8 +238,8 @@ namespace NovelRT::Maths
          *      -2 & -1 & 13 & -7
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's components get subtracted from this matrix.
-         * @return A matrix who's components consist of the entrywise difference of this GeoMatrix4x4F and another
+         * @param other The other matrix whose components get subtracted from this matrix.
+         * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
@@ -249,7 +249,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the product of this and another GeoMatrix4x4F.
+         * @brief Calculates the product of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying two matrices: \f[
@@ -281,9 +281,9 @@ namespace NovelRT::Maths
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
-         * @return A matrix product who's components consist of the sum of the products of this GeoMatrix4x4F's rows and
-         * another GeoMatrix4x4F's columns.
+         * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
+         * @return A matrix product where the components consist of the sum of the products of this GeoMatrix4x4F's rows
+         * and another GeoMatrix4x4F's columns.
          */
         inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
         {
@@ -292,7 +292,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise sum of this and another GeoMatrix4x4F and applies it to this instance.
+         * @brief Calculates the entrywise sum of this GeoMatrix4x4F and another GeoMatrix4x4F and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum: \f[
@@ -324,8 +325,8 @@ namespace NovelRT::Maths
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's components get added together with this matrix.
-         * @return This matrix who's components consist of the entrywise sum of this GeoMatrix4x4F and another
+         * @param other The other matrix whose components get added together with this matrix.
+         * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator+=(GeoMatrix4x4F other) noexcept
@@ -335,7 +336,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise difference of this and another GeoMatrix4x4F and applies it to this instance.
+         * @brief Calculates the entrywise difference of this GeoMatrix4x4F and another GeoMatrix4x4F and overwrites
+         * this instance with the result.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference: \f[
@@ -367,8 +369,9 @@ namespace NovelRT::Maths
          *      -2 & -1 & 13 & -7
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's components get subtracted from this matrix.
-         * @return This matrix who's components consist of the entrywise difference of this and another GeoMatrix4x4F.
+         * @param other The other matrix whose components get subtracted from this matrix.
+         * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and
+         * another GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator-=(GeoMatrix4x4F other) noexcept
         {
@@ -377,7 +380,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculate the product of this and another GeoMatrix4x4F and applies it to this instance.
+         * @brief Calculate the product of this GeoMatrix4x4F and another GeoMatrix4x4F and overwrites this instance
+         * with the result.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying two matrices: \f[
@@ -409,8 +413,8 @@ namespace NovelRT::Maths
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
          * \f]
-         * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
-         * @return This matrix who's components consist of the sum of the products of this GeoMatrix4x4F's rows and
+         * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
+         * @return This matrix where the components consist of the sum of the products of this GeoMatrix4x4F's rows and
          * another GeoMatrix4x4F's columns.
          */
         inline GeoMatrix4x4F operator*=(GeoMatrix4x4F other) noexcept
@@ -420,7 +424,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise sum of this and another scalar.
+         * @brief Calculates the entrywise sum of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
@@ -461,7 +465,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets added together with this matrix.
-         * @return A matrix who's components consist of the entrywise sum of this and another scalar.
+         * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
+         * scalar.
          */
         inline GeoMatrix4x4F operator+(float other) const noexcept
         {
@@ -469,7 +474,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise difference of this and another scalar.
+         * @brief Calculates the entrywise difference of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
@@ -510,7 +515,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets subtracted from this matrix.
-         * @return A matrix who's components consist of the entrywise difference of this and another scalar.
+         * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
+         * provided scalar.
          */
         inline GeoMatrix4x4F operator-(float other) const noexcept
         {
@@ -518,7 +524,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the product of this and another scalar.
+         * @brief Calculates the product of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
@@ -559,7 +565,7 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets multiplied by this matrix.
-         * @return a matrix who's components consist of the product of this and another scalar.
+         * @return a matrix where the components consist of the product of this GeoMatrix4x4F and the provided scalar.
          */
         inline GeoMatrix4x4F operator*(float other) const noexcept
         {
@@ -567,7 +573,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise sum of this and another scalar and applies it to this instance.
+         * @brief Calculates the entrywise sum of this GeoMatrix4x4F and the provided scalar and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
@@ -608,7 +615,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets added together with this matrix.
-         * @return This matrix who's components consist of the entrywise sum of this and another scalar.
+         * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
+         * scalar.
          */
         inline GeoMatrix4x4F operator+=(float other) noexcept
         {
@@ -617,7 +625,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the entrywise difference of this and another scalar and applies it to this instance.
+         * @brief Calculates the entrywise difference of this GeoMatrix4x4F and the provided scalar and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
@@ -658,7 +667,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets subtracted from this matrix.
-         * @return This matrix who's components consist of the entrywise difference of this and another scalar.
+         * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
+         * provided scalar.
          */
         inline GeoMatrix4x4F operator-=(float other) noexcept
         {
@@ -667,7 +677,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the product of this and another scalar and applies it to this instance.
+         * @brief Calculates the product of this GeoMatrix4x4F and the provided scalar and overwrites this instance with
+         * the result.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
@@ -708,7 +719,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other scalar that gets multiplied by this matrix.
-         * @return This matrix who's components consist of the product of this and another scalar.
+         * @return This matrix where the components consist of the product of this GeoMatrix4x4F and the provided
+         * scalar.
          */
         inline GeoMatrix4x4F operator*=(float other) noexcept
         {

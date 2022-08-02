@@ -27,7 +27,7 @@ namespace NovelRT::Maths
          */
         GeoVector2F size;
         /**
-         *@brief The rotation of the GeoBounds instance represented in Degrees.
+         * @brief The rotation of the GeoBounds instance represented in Degrees.
          */
         float rotation;
 
