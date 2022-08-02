@@ -47,7 +47,7 @@ char* Nrt_IWindowingDevice_GetWindowTitle(NrtIWindowingDeviceHandle device)
     char* result = reinterpret_cast<char*>(malloc(size));
     strcpy_s(result, size, title.c_str());
 #else
-    result = strdup(title.c_str());
+    char* result = strdup(title.c_str());
 #endif
 
     return result;
