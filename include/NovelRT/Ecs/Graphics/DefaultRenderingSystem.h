@@ -125,7 +125,7 @@ namespace NovelRT::Ecs::Graphics
         // TODO: in the future when we have mesh loading capabilities these will be replaced with similar mechanisms to
         // texture loading. End-users shouldn't need to manually hard-code the data.
         template<typename TSpanType>
-        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(const std::string& vertexDataName,
+        [[nodiscard]] Threading::FutureResult<VertexInfo> (const std::string& vertexDataName,
                                                                             gsl::span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
