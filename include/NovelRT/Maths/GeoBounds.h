@@ -16,20 +16,26 @@ namespace NovelRT::Maths
     class GeoBounds
     {
     public:
-        /// @brief The centre of the GeoBounds instance as a position in X,Y coordinates in the space used during its
-        /// creation.
+        /**
+         * @brief The centre of the GeoBounds instance as a position in X,Y coordinates in the space used during its
+         * creation.
+         */
         GeoVector2F position;
-        /// @brief The size represented by width and height. This is subject to the space used during the creation of
-        /// the GeoBounds instance.
+        /**
+         * @brief The size represented by width and height. This is subject to the space used during the creation of
+         * the GeoBounds instance.
+         */
         GeoVector2F size;
-        /// @brief The rotation of the GeoBounds instance represented in Degrees.
+        /**
+         *@brief The rotation of the GeoBounds instance represented in Degrees.
+         */
         float rotation;
 
         /**
          * @brief Instantiates a GeoBounds instance with the specified position, size and rotation.
          *
          * @param position A starting point represented by X and Y in a given space.
-         * @param size A size represented by Width and Height in a given space.
+         * @param size A size represented by width and height in a given space.
          * @param rotation A starting rotation for the GeoBounds instance that is represented in degrees.
          * @return Newly constructed GeoBounds object containing the position, size, and rotation components.
          */
