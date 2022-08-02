@@ -25,19 +25,19 @@ namespace NovelRT::Maths
         }
 
     public:
-        /// @brief The first column in the matrix.
+        /// @brief The first row in the matrix.
         GeoVector4F x;
-        /// @brief The second column in the matrix.
+        /// @brief The second row in the matrix.
         GeoVector4F y;
-        /// @brief The third column in the matrix.
+        /// @brief The third row in the matrix.
         GeoVector4F z;
-        /// @brief The fourth column in the matrix.
+        /// @brief The fourth row in the matrix.
         GeoVector4F w;
 
         /**
          * @brief Constructs a 4x4 Matrix with all components being set to zero.
          *
-         * @returns The newly instantiated GeoMatrix4x4F object.
+         * @return The newly instantiated GeoMatrix4x4F object.
          */
         GeoMatrix4x4F() noexcept
             : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
@@ -47,10 +47,10 @@ namespace NovelRT::Maths
         /**
          * @brief Constructs a 4x4 Matrix based on the provided X, Y, Z, W components.
          *
-         * @param x The first column in the matrix.
-         * @param y The second column in the matrix.
-         * @param z The third column in the matrix.
-         * @param w The fourth column in the matrix.
+         * @param x The first row in the matrix.
+         * @param y The second row in the matrix.
+         * @param z The third row in the matrix.
+         * @param w The fourth row in the matrix.
          * @return The newly instantiated GeoMatrix4x4F object.
          */
         GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
@@ -72,7 +72,7 @@ namespace NovelRT::Maths
          * @brief Rotates the matrix by a given angle around a set axis.
          *
          * @param angleInRadians The angle to rotate by in radians.
-         * @param rotationAngle The axis to rotate on. When left empty it will rotate clockwise around the Z axis.
+         * @param rotationAngle The axis to rotate on. If none is provided, it will rotate clockwise around the Z axis.
          */
         inline void Rotate(float angleInRadians, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
@@ -84,7 +84,7 @@ namespace NovelRT::Maths
          * @brief Rotates the matrix by a given angle around a set axis.
          *
          * @param angleInDegrees The angle to rotate by in degrees.
-         * @param rotationAngle The axis to rotate on. When left empty it will rotate clockwise around the Z axis.
+         * @param rotationAngle The axis to rotate on. If none is provided, it will rotate clockwise around the Z axis.
          */
         inline void RotateUsingDegrees(float angleInDegrees, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
@@ -92,9 +92,9 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Scales the matrix by it's X, Y and Z axis with the given scalar vector.
+         * @brief Scales the matrix by the given vector.
          *
-         * @param scaleValue The scalar vector with X, Y and Z components.
+         * @param scaleValue The vector to scale by.
          */
         inline void Scale(GeoVector3F scaleValue)
         {
@@ -143,7 +143,7 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components match.
          *
          * @param other The other GeoMatrix4x4F to evaluate against.
-         * @returns true if all components matched, otherwise false.
+         * @return true if all components matched, otherwise false.
          */
         inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
@@ -155,7 +155,7 @@ namespace NovelRT::Maths
          * match.
          *
          * @param other The other GeoMatrix4x4F to evaluate against.
-         * @returns true if any of the components do not match, otherwise false.
+         * @return true if any of the components do not match, otherwise false.
          */
         inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
@@ -163,7 +163,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise sum of this and another GeoMatrix4x4F.
+         * @brief Calculates the entrywise sum of this and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum: \f[
@@ -196,7 +196,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other matrix who's components get added together with this matrix.
-         * @return A matrix who's components consist of the entrywise sum of this and another GeoMatrix4x4F.
+         * @return A matrix who's components consist of the entrywise sum of this GeoMatrix4x4F and another
+         * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
         {
@@ -205,7 +206,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise difference of this and another GeoMatrix4x4F.
+         * @brief Calculates the entrywise difference of this and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference: \f[
@@ -238,7 +239,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other matrix who's components get subtracted from this matrix.
-         * @return A matrix who's components consist of the entrywise difference of this and another GeoMatrix4x4F.
+         * @return A matrix who's components consist of the entrywise difference of this GeoMatrix4x4F and another
+         * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
         {
@@ -247,7 +249,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the product of this and another GeoMatrix4x4F.
+         * @brief Calculates the product of this and another GeoMatrix4x4F.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying two matrices: \f[
@@ -280,7 +282,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
-         * @return a matrix who's components consist of the product of this and another GeoMatrix4x4F.
+         * @return A matrix product who's components consist of the sum of the products of this GeoMatrix4x4F's rows and
+         * another GeoMatrix4x4F's columns.
          */
         inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
         {
@@ -289,8 +292,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise sum of this and another GeoMatrix4x4F and applies it to
-         * this instance.
+         * @brief Calculates the entrywise sum of this and another GeoMatrix4x4F and applies it to this instance.
+         *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum: \f[
          *      \begin{bmatrix}
@@ -322,7 +325,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other matrix who's components get added together with this matrix.
-         * @return This matrix who's components consist of the entrywise sum of this and another GeoMatrix4x4F.
+         * @return This matrix who's components consist of the entrywise sum of this GeoMatrix4x4F and another
+         * GeoMatrix4x4F.
          */
         inline GeoMatrix4x4F operator+=(GeoMatrix4x4F other) noexcept
         {
@@ -331,8 +335,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise difference of this and another GeoMatrix4x4F and applies
-         * it to this instance.
+         * @brief Calculates the entrywise difference of this and another GeoMatrix4x4F and applies it to this instance.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference: \f[
@@ -374,8 +377,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the product of this and another GeoMatrix4x4F and applies it to this
-         * instance.
+         * @brief Calculate the product of this and another GeoMatrix4x4F and applies it to this instance.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying two matrices: \f[
@@ -408,7 +410,8 @@ namespace NovelRT::Maths
          *      \end{bmatrix}
          * \f]
          * @param other The other matrix who's columns are multiplied and summed up by this matrix's rows.
-         * @return This matrix who's components consist of the product of this and another GeoMatrix4x4F.
+         * @return This matrix who's components consist of the sum of the products of this GeoMatrix4x4F's rows and
+         * another GeoMatrix4x4F's columns.
          */
         inline GeoMatrix4x4F operator*=(GeoMatrix4x4F other) noexcept
         {
@@ -417,7 +420,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise sum of this and another scalar.
+         * @brief Calculates the entrywise sum of this and another scalar.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
@@ -466,7 +469,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise difference of this and another scalar.
+         * @brief Calculates the entrywise difference of this and another scalar.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
@@ -515,7 +518,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the product of this and another scalar.
+         * @brief Calculates the product of this and another scalar.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
@@ -564,8 +567,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise sum of this and another scalar and applies it to this
-         * instance.
+         * @brief Calculates the entrywise sum of this and another scalar and applies it to this instance.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
@@ -615,8 +617,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the entrywise difference of this and another scalar and applies it to
-         * this instance.
+         * @brief Calculates the entrywise difference of this and another scalar and applies it to this instance.
          *
          * @details
          * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
@@ -666,7 +667,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a matrix containing the product of this and another scalar and applies it to this instance.
+         * @brief Calculates the product of this and another scalar and applies it to this instance.
          *
          * @details
          * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
@@ -727,7 +728,7 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
-         * @returns An Identity GeoMatrix4x4F.
+         * @return An Identity GeoMatrix4x4F.
          */
         static GeoMatrix4x4F getDefaultIdentity() noexcept
         {
@@ -735,7 +736,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Creates a matrix for projecting a 3D space onto a plane.
+         * @brief Creates a matrix for projecting a three-dimensional space onto a plane.
          *
          * @param left Farthest left on the x-axis.
          * @param right Farthest right on the x-axis.
@@ -743,7 +744,7 @@ namespace NovelRT::Maths
          * @param top Farthest up on the y-axis.
          * @param zNear Distance to the near clipping plane along the -Z axis.
          * @param zFar Distance to the far clipping plane along the -Z axis.
-         * @returns A projection GeoMatrix4x4F for projecting a 3D space onto a plane.
+         * @return A projection GeoMatrix4x4F for projecting a three-dimensional space onto a plane.
          */
         static GeoMatrix4x4F CreateOrthographic(float left,
                                                 float right,
@@ -770,7 +771,7 @@ namespace NovelRT::Maths
          * @param x The scale component over the X axis.
          * @param y The scale component over the Y axis.
          * @param z The scale component over the Z axis.
-         * @returns A matrix with scale components applied.
+         * @return A matrix with scale components applied.
          */
         static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
         {
@@ -781,9 +782,9 @@ namespace NovelRT::Maths
          * @brief Creates a matrix for observing a point in space from a given location.
          *
          * @param eye The position of the observer.
-         * @param centre The position the observer should look towards.
-         * @param up The updirection for the observer.
-         * @returns
+         * @param centre The position of the reference point the observer should look towards.
+         * @param up Specifies the direction of the up vector of the observer.
+         * @return A view matrix looking towards a reference point from the given eye position.
          */
         static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
         {
