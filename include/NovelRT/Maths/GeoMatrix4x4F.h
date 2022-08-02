@@ -111,9 +111,9 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Scales the matrix by it's X and Y axis with the given scalar vector.
+         * @brief Scales the matrix by the given vector.
          *
-         * @param scaleValue The scalar vector with X and Y components.
+         * @param scaleValue The vector to scale by.
          */
         inline void Scale(GeoVector2F scaleValue)
         {
