@@ -42,9 +42,13 @@ char* Nrt_IWindowingDevice_GetWindowTitle(NrtIWindowingDeviceHandle device)
 {
     auto title = reinterpret_cast<IWindowingDevice*>(device)->GetWindowTitle();
 
+#ifdef WIN32
     size_t size = strlen(title.c_str()) + 1;
     char* result = reinterpret_cast<char*>(malloc(size));
     strcpy_s(result, size, title.c_str());
+#else
+    result = strdup(title.c_str());
+#endif
 
     return result;
 }
