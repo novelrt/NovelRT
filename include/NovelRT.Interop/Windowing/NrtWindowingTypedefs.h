@@ -14,5 +14,4 @@ extern "C"
 }
 #endif
 
-
 #endif // NOVELRT_INTEROP_WINDOWING_NRTWINDOWINGTYPEDEFS_H

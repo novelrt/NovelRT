@@ -11,12 +11,14 @@ using namespace NovelRT::Interop;
 
 NrtResult Nrt_ResourceLoader_GetResourcePath(NrtResourceLoaderHandle loader, char** outputPath)
 {
-    if (loader == nullptr) {
+    if (loader == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (outputPath == nullptr) {
+    if (outputPath == nullptr)
+    {
         Nrt_setErrIsNullArgProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
@@ -37,12 +39,14 @@ NrtResult Nrt_ResourceLoader_GetResourcePath(NrtResourceLoaderHandle loader, cha
 
 NrtResult Nrt_ResourceLoader_SetResourcePath(NrtResourceLoaderHandle loader, const char* newPath)
 {
-    if (loader == nullptr) {
+    if (loader == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (newPath == nullptr) {
+    if (newPath == nullptr)
+    {
         Nrt_setErrIsNullArgProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
@@ -54,14 +58,18 @@ NrtResult Nrt_ResourceLoader_SetResourcePath(NrtResourceLoaderHandle loader, con
 
 NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle loader)
 {
-    if (loader == nullptr) {
+    if (loader == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (Lifetime::Release(reinterpret_cast<ResourceLoader*>(loader))) {
+    if (Lifetime::Release(reinterpret_cast<ResourceLoader*>(loader)))
+    {
         return NRT_SUCCESS;
-    } else {
+    }
+    else
+    {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }

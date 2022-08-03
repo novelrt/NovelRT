@@ -31,12 +31,14 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
 NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceManagementPluginProviderHandle plugin,
                                                                   NrtResourceLoaderHandle* outputLoader)
 {
-    if (plugin == nullptr) {
+    if (plugin == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (outputLoader == nullptr) {
+    if (outputLoader == nullptr)
+    {
         Nrt_setErrIsNullArgProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }

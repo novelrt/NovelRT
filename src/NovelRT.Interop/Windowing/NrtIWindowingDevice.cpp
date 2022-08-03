@@ -55,7 +55,8 @@ char* Nrt_IWindowingDevice_GetWindowTitle(NrtIWindowingDeviceHandle device)
 
 NrtResult Nrt_IWindowingDevice_SetWindowTitle(NrtIWindowingDeviceHandle device, const char* newTitle)
 {
-    if (device == nullptr) {
+    if (device == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
@@ -67,7 +68,8 @@ NrtResult Nrt_IWindowingDevice_SetWindowTitle(NrtIWindowingDeviceHandle device, 
 
 NrtResult Nrt_IWindowingDevice_ProcessAllMessages(NrtIWindowingDeviceHandle device)
 {
-    if (device == nullptr) {
+    if (device == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }

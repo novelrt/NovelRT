@@ -30,12 +30,14 @@ NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderHandle plugin)
 NrtResult Nrt_IInputPluginProvider_GetInputDevice(NrtIInputPluginProviderHandle plugin,
                                                   NrtIInputDeviceHandle* outputDevice)
 {
-    if (plugin == nullptr) {
+    if (plugin == nullptr)
+    {
         Nrt_setErrIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (outputDevice == nullptr) {
+    if (outputDevice == nullptr)
+    {
         Nrt_setErrIsNullArgProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }

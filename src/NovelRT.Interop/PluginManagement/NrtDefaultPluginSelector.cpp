@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "../LifetimeExtender.h"
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/PluginManagement/NrtDefaultPluginSelector.h>
 #include <NovelRT/PluginManagement/PluginManagement.h>
-#include "../LifetimeExtender.h"
 
 using namespace NovelRT::PluginManagement;
 using namespace NovelRT::Interop;
