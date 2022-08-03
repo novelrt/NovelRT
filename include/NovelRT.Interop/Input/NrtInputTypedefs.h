@@ -20,7 +20,8 @@ extern "C"
         KeyDownHeld = 3
     } NrtKeyState;
 
-    typedef struct {
+    typedef struct
+    {
         NrtInputActionHandle begin;
         NrtInputActionHandle end;
         intptr_t increment;
@@ -29,13 +30,15 @@ extern "C"
     // Info-structs: those serve as a convenient read-only model for the C API, without
     // needing to call each getter separately.
 
-    typedef struct {
+    typedef struct
+    {
         const char* keyName;
         int32_t externalKeyCode;
         int32_t externalModifierCode;
     } NrtNovelKeyInfo;
 
-    typedef struct {
+    typedef struct
+    {
         const char* actionName;
         NrtNovelKeyInfo pairedKey;
         NrtKeyState state;

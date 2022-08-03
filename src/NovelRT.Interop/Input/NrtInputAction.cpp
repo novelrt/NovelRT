@@ -1,7 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
 #include <NovelRT.Interop/Input/NrtInputAction.h>
 #include <NovelRT.Interop/Input/NrtNovelKey.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>

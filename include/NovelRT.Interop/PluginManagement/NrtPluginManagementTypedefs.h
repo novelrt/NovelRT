@@ -17,5 +17,4 @@ extern "C"
 }
 #endif
 
-
 #endif // NOVELRT_INTEROP_ECS_NRTPLUGINMANAGEMENTTYPEDEFS_H
