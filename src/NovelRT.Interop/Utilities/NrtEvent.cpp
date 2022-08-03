@@ -4,7 +4,6 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtEvent.h>
 #include <NovelRT/Timing/Timestamp.h>
-#include <vector> // Maybe this should fix the Apple issue?
 #include <NovelRT/Utilities/Event.h>
 
 using namespace NovelRT::Utilities;

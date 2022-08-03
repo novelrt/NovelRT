@@ -5,6 +5,7 @@
 // Original code is available under the MIT Licence
 
 #include "Timestamp.h"
+#include "../Utilities/Event.h"
 
 #ifndef NOVELRT_TIMING_STEPTIMER_H
 #define NOVELRT_TIMING_STEPTIMER_H
