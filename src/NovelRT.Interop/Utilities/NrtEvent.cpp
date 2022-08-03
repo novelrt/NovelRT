@@ -4,6 +4,7 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtEvent.h>
 #include <NovelRT/Timing/Timestamp.h>
+#include <vector> // Maybe this should fix the Apple issue?
 #include <NovelRT/Utilities/Event.h>
 
 using namespace NovelRT::Utilities;
@@ -156,8 +157,8 @@ template<> struct EventImplementationDetails<Event<NovelRT::Timing::Timestamp>>
 
     static auto MakeEventHandler(Function func, void* context)
     {
-        return EventHandler<NovelRT::Timing::Timestamp>([func, context](auto time)
-                                                        { func(reinterpret_cast<NrtTimestamp&>(time), context); });
+        return EventHandler<NovelRT::Timing::Timestamp>(
+            [func, context](auto time) { func(reinterpret_cast<NrtTimestamp&>(time), context); });
     }
     static void Invoke(const Event<NovelRT::Timing::Timestamp>& event, NrtTimestamp timestamp)
     {
