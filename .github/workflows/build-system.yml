@@ -28,10 +28,10 @@ jobs:
         - os: windows-latest
           name: Windows - Visual Studio 2022
         - os: macos-11
-          name: macOS 11 - Apple-Clang 12
+          name: macOS 11 - Apple-Clang 13
           configuration: Debug
         - os: macos-11
-          name: macOS 10.15 - Apple-Clang 12
+          name: macOS 11 - Apple-Clang 13
         exclude:
         - os: macos-11
           configuration: RelWithDebInfo
