@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [RelWithDebInfo, Release]
-        os: [windows-latest, windows-2019, ubuntu-latest, macos-10.15]
+        os: [windows-latest, windows-2019, ubuntu-latest, macos-11]
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
@@ -27,13 +27,13 @@ jobs:
           name: Windows - Visual Studio 2019
         - os: windows-latest
           name: Windows - Visual Studio 2022
-        - os: macos-10.15
-          name: macOS 10.15 - Apple-Clang 12
+        - os: macos-11
+          name: macOS 11 - Apple-Clang 12
           configuration: Debug
-        - os: macos-10.15
+        - os: macos-11
           name: macOS 10.15 - Apple-Clang 12
         exclude:
-        - os: macos-10.15
+        - os: macos-11
           configuration: RelWithDebInfo
 
     steps:
