@@ -1,4 +1,6 @@
-include(CopyBuildProducts)
+include(functions/CopyBuildProducts)
+include(functions/CopyRuntimeDependencies)
+
 add_subdirectory(Experimental)
 add_subdirectory(EcsPipeline)
 add_subdirectory(InputEcsSample)

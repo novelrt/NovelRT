@@ -1,5 +1,9 @@
+# Perma-set this for now until Fabulist supports shared builds.
+set(BUILD_SHARED_LIBS OFF)
+
 include(FetchContent)
-message(STATUS "Fetching Fabulist")
+include(functions/NovelRTDeps_Populate)
+message(STATUS "Fetching Fabulist...")
 
 FetchContent_Declare(Fabulist
         URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
@@ -16,4 +20,7 @@ FetchContent_Declare(Fabulist
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-FetchContent_MakeAvailable(Fabulist)
+NovelRTDeps_Populate(Fabulist)
+
+add_library(Fabulist::Runtime ALIAS runtime)
+add_library(Fabulist::Compiler ALIAS compiler)

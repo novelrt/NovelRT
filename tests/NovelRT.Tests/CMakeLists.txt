@@ -1,8 +1,4 @@
 include(GoogleTest)
-if(NOVELRT_VULKAN_SDK)
-  find_dependency(Vulkan REQUIRED)
-endif()
-
 set(SOURCES
   Ecs/CatalogueTest.cpp
   Ecs/ComponentBufferMemoryContainerTest.cpp
@@ -55,7 +51,7 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
-include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
+include(functions/CopyBuildProducts)
 if(NOVELRT_BUILD_INTEROP)
   copy_build_products(Engine_Tests
     DEPENDENCY Engine
