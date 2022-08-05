@@ -14,4 +14,4 @@ copy_build_products(AudioEcsSample
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>/Resources
 )
-CopyRuntimeDependencies(AudioEcsSample Engine)
+CopyRuntimeDependencies(AudioEcsSample DEPENDENCY Engine)

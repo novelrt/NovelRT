@@ -14,5 +14,6 @@ copy_build_products(EcsPipeline
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
 )
-CopyRuntimeDependencies(EcsPipeline Engine)
+CopyRuntimeDependencies(EcsPipeline
+  DEPENDENCY Engine)
 

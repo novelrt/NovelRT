@@ -14,4 +14,4 @@ copy_build_products(PersistenceSample
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:PersistenceSample>/Resources
 )
-CopyRuntimeDependencies(PersistenceSample Engine)
+CopyRuntimeDependencies(PersistenceSample DEPENDENCY Engine)

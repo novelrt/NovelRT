@@ -94,8 +94,8 @@ int main()
 
     NovelRT::Maths::GeoBounds uwuBounds =
         NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(),
-                                  NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width,
-                                                              textureFuture.GetBackingConcurrentSharedPtr()->height),
+                                  NovelRT::Maths::GeoVector2F(static_cast<float>(textureFuture.GetBackingConcurrentSharedPtr()->width),
+                                                              static_cast<float>(textureFuture.GetBackingConcurrentSharedPtr()->height)),
                                   0);
     bool uwuFlip = false;
 

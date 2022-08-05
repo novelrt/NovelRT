@@ -14,4 +14,4 @@ copy_build_products(VulkanRender
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
 )
-CopyRuntimeDependencies(VulkanRender Engine)
+CopyRuntimeDependencies(VulkanRender DEPENDENCY Engine)

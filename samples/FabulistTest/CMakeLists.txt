@@ -14,4 +14,4 @@ copy_build_products(FabulistTest
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:FabulistTest>/Resources
 )
-CopyRuntimeDependencies(FabulistTest Engine)
+CopyRuntimeDependencies(FabulistTest DEPENDENCY Engine)

@@ -14,4 +14,4 @@ copy_build_products(UIEventExample
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>/Resources
 )
-CopyRuntimeDependencies(UIEventExample Engine)
+CopyRuntimeDependencies(UIEventExample DEPENDENCY Engine)

@@ -14,4 +14,4 @@ copy_build_products(InputEcsSample
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:InputEcsSample>/Resources
 )
-CopyRuntimeDependencies(InputEcsSample Engine)
+CopyRuntimeDependencies(InputEcsSample DEPENDENCY Engine)
