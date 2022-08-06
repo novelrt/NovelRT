@@ -18,8 +18,10 @@ FetchContent_Declare(glm
 
 NovelRTDeps_PopulateHeaderOnly(glm)
 
-install(
-  DIRECTORY ${glm_SOURCE_DIR}/glm/
-  DESTINATION include/glm
-  PATTERN "CMakeLists.txt" EXCLUDE
-)
+if(NOVELRT_INSTALL)
+  install(
+    DIRECTORY ${glm_SOURCE_DIR}/glm/
+    DESTINATION include/glm
+    PATTERN "CMakeLists.txt" EXCLUDE
+  )
+endif()

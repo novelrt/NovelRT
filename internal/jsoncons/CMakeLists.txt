@@ -19,4 +19,8 @@ FetchContent_Declare(jsoncons
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(jsoncons)
+NovelRTDeps_PopulateHeaderOnly(jsoncons)
+
+if(NOVELRT_INSTALL)
+  #install jsoncons headers
+endif()

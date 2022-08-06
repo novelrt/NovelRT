@@ -21,7 +21,7 @@ FetchContent_Declare(zlib
 set(CMAKE_C_STANDARD 11)
 NovelRTDeps_Populate(zlib)
 
-if(NOVELRT_SHARED_ZLIB)
+if(NOVELRT_SHARED_ZLIB OR NOVELRT_BUILD_SHARED_LIBS)
   set(type SHARED)
 else()
   set(type STATIC)
@@ -95,7 +95,10 @@ set(ZLIB_ALL_SRCS
 
 add_library(ZLIB ${type} ${ZLIB_ALL_SRCS})
 
-set_target_properties(ZLIB PROPERTIES SUFFIX "1.dll")
+set_target_properties(ZLIB
+  PROPERTIES
+  SUFFIX "1.${NOVELRT_LIB_SUFFIX}"
+  OUTPUT_NAME "zlib")
 target_include_directories(ZLIB PUBLIC ${zlib_SOURCE_DIR})
 target_include_directories(ZLIB PUBLIC ${zlib_BINARY_DIR})
 set_target_properties(ZLIB PROPERTIES SOVERSION 1)
@@ -104,5 +107,11 @@ target_compile_definitions(ZLIB PUBLIC -DZLIB_COMPAT)
 add_library(ZLIB::ZLIB ALIAS ZLIB)
 
 set(ZLIB_LIBRARY ZLIB::ZLIB PARENT_SCOPE)
-set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR};${zlib_BINARY_DIR} PARENT_SCOPE)
-set(ZLIB_FOUND TRUE PARENT_SCOPE)
+
+if(NOT DEFINED ZLIB_INCLUDE_DIR)
+  list(APPEND ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  # Finding zlib in Freetype appears to be sporatic in success unless we define these forcefully
+  set(ZLIB_INCLUDE_DIR ${ZLIB_INCLUDE_DIR} CACHE STRING "Where to find zlib.h, etc." FORCE)
+  set(ZLIB_FOUND TRUE PARENT_SCOPE)
+endif()
+

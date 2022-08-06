@@ -152,6 +152,9 @@ add_library (SNDFILE ${type}
 )
 
 add_library (Sndfile::sndfile ALIAS SNDFILE)
+set_target_properties(SNDFILE
+  PROPERTIES
+    OUTPUT_NAME "sndfile")
 target_include_directories (SNDFILE
 	PUBLIC
 		$<BUILD_INTERFACE:${sndfile_SOURCE_DIR}/include>
@@ -168,18 +171,3 @@ target_link_libraries (SNDFILE
 		FLAC::FLAC
 		Opus::Opus
 )
-
-
-# # Due to the CMakeLists patch, we define the deps, and target includes/link libs so that it'll
-# # use the ones we're vendoring w/o issue
-# add_dependencies(sndfile FLAC ogg opus vorbis vorbisenc)
-# target_include_directories(sndfile PRIVATE ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR} ${FLAC_INCLUDE_DIR} ${Vorbis_Vorbis_INCLUDE_DIR})
-# target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
-# set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
-
-# install(EXPORT SndFile
-#   DESTINATION lib
-#   NAMESPACE SndFile::)
-# install(TARGETS sndfile
-#   EXPORT SndFile
-#   LIBRARY DESTINATION lib)

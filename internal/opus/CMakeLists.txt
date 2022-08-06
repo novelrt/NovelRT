@@ -5,6 +5,12 @@ message(STATUS "Fetching Opus...")
 set(OPUS_INSTALL_PKG_CONFIG_MODULE OFF CACHE BOOL "" FORCE)
 set(OPUS_INSTALL_CMAKE_CONFIG_MODULE OFF CACHE BOOL "" FORCE)
 
+if(NOVELRT_SHARED_OPUS OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(opus
   URL https://github.com/xiph/opus/archive/refs/tags/v1.3.1.zip
   URL_HASH SHA512=574382c898fcc644d6cfd061841b4e9fb24162ff680ec82620a9bd29d7ac3c3fcefac25bd45fa7f7310b7461bafeda9ca05f473c791fdbb4ee446e50a7a889a0
@@ -20,9 +26,8 @@ FetchContent_Declare(opus
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(opus)
+NovelRTDeps_PopulateExplicit(opus ${type})
 
 add_library(Opus::Opus ALIAS opus)
 set(OPUS_LIBRARY "Opus::Opus" PARENT_SCOPE)
 set(OPUS_INCLUDE_DIR "${opus_SOURCE_DIR}/include" PARENT_SCOPE)
-# set_property(TARGET opus PROPERTY POSITION_INDEPENDENT_CODE ON)

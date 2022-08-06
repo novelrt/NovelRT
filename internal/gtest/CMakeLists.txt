@@ -10,6 +10,12 @@ endif()
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 
+if(NOVELRT_SHARED_GTEST OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(GoogleTest
   URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
   URL_HASH SHA512=5d8518ccd783943a03dfbbc06c9001d2a657dfae531e2353ca9b557cf4eac02399a6a2d661500ad5e57fd93b8cd257b6d4a5e8b703d30bd9a9b5fbb85d451b5e
@@ -25,4 +31,4 @@ FetchContent_Declare(GoogleTest
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(GoogleTest)
+NovelRTDeps_PopulateExplicit(GoogleTest ${type})

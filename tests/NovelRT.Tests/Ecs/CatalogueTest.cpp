@@ -21,7 +21,7 @@ protected:
         componentCache = ComponentCache(1);
         entityCache = EntityCache(1);
         componentCache.RegisterComponentType<int32_t>(-1, "THROW_AWAY");
-        componentCache.RegisterComponentType<size_t>(-1, "THROW_AWAY_AGAIN");
+        componentCache.RegisterComponentType<size_t>(static_cast<size_t>(-1), "THROW_AWAY_AGAIN");
         componentCache.RegisterComponentType<char>('e', "THROW_AWAY_AGAIN_AGAIN");
 
         componentCache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 0, 10);

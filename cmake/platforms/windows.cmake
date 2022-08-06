@@ -37,5 +37,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   )
 endif()
 
+# _insert_dependency_here_ had defined this but Windows does not require it so
+# we redefine it to ensure Windows does not try to link it
 set(LIBM_REQUIRED FALSE)
-

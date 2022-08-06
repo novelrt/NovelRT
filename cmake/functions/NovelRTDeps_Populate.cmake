@@ -1,34 +1,3 @@
-macro(NovelRTDeps_PopulateShared)
-  foreach(NAME IN ITEMS ${ARGV})
-    string(TOLOWER ${NAME} lowername)
-    FetchContent_GetProperties(${NAME})
-    if(NOT ${lowername}_POPULATED)
-      FetchContent_Populate(${NAME})
-    # Workaround to force libraries to build shared and not always export symbols
-    # Mainly used for OneTBB, OpenAL, or any LGPL'ed library
-    # Credit: https://stackoverflow.com/a/62103349
-      set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-      set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS})
-    # Make subproject to use 'BUILD_SHARED_LIBS=ON' setting.
-      set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
-      set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF CACHE INTERNAL "Don't export symbols for Windows")
-      add_subdirectory(${${lowername}_SOURCE_DIR} ${${lowername}_BINARY_DIR} EXCLUDE_FROM_ALL)
-    # Set the values back to what they originally were
-      set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
-      set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
-    endif()
-  endforeach()
-endmacro()
-
-macro(NovelRTDeps_PopulateStatic NAME)
-  string(TOLOWER ${NAME} lowername)
-  FetchContent_GetProperties(${NAME})
-  if(NOT ${lowername}_POPULATED)
-    FetchContent_Populate(${NAME})
-    add_subdirectory(${${lowername}_SOURCE_DIR} ${${lowername}_BINARY_DIR} EXCLUDE_FROM_ALL)
-  endif()
-endmacro()
-
 macro(NovelRTDeps_PopulateHeaderOnly)
   foreach(NAME IN ITEMS ${ARGV})
     string(TOLOWER ${NAME} lowername)

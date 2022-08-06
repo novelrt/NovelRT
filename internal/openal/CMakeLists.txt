@@ -9,6 +9,12 @@ set(ALSOFT_INSTALL_EXAMPLES OFF)
 set(ALSOFT_INSTALL_UTILS OFF)
 set(ALSOFT_TESTS OFF)
 
+if(NOVELRT_SHARED_OPENAL OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(OpenAL
   URL https://github.com/kcat/openal-soft/archive/refs/tags/1.21.1.zip
   URL_HASH SHA512=bc17d628548e59d0db3996917d207a4af0bbbf615ba3ba10ae8e99b28213e845e967a0510c8aad74e551aa66ddfb11499fe26082725af82160ac5d2db4e7e69d
@@ -26,6 +32,7 @@ FetchContent_Declare(OpenAL
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 
-NovelRTDeps_PopulateExplicit(OpenAL SHARED)
+NovelRTDeps_PopulateExplicit(OpenAL ${type})
 
+set_target_properties(OpenAL PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 add_library(OpenAL::OpenAL ALIAS OpenAL)

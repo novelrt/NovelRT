@@ -2,16 +2,20 @@ include(FetchContent)
 include(functions/NovelRTDeps_Options)
 include(functions/NovelRTDeps_Populate)
 
-#Make an exception for Fabulist as we want it static all the time
-set(NOVELRT_STATIC_FABULIST ON)
-NovelRTDeps_Options("Fabulist" NOVELRT_SYSTEM_FABULIST ON NOVELRT_STATIC_FABULIST NOVELRT_SHARED_FABULIST)
-add_subdirectory(internal/Fabulist)
+# Header-only Libraries
+add_subdirectory(internal/glm)
+add_subdirectory(internal/GSL)
+add_subdirectory(internal/jsoncons)
+add_subdirectory(internal/stduuid)
 
+# Libraries that are specifically set to one type
+add_subdirectory(internal/oneTBB)
 
 #Freetype Dependencies - maintaining a specific order on purpose to prevent build issues.
 NovelRTDeps_Options("zlib" NOVELRT_SYSTEM_ZLIB ON NOVELRT_STATIC_ZLIB NOVELRT_SHARED_ZLIB)
 if(NOT NOVELRT_SYSTEM_ZLIB)
   add_subdirectory(internal/zlib-ng)
+  set(ZLIB_INCLUDE_DIR ${ZLIB_INCLUDE_DIR})
 endif()
 
 NovelRTDeps_Options("libpng" NOVELRT_SYSTEM_PNG ON NOVELRT_STATIC_PNG NOVELRT_SHARED_PNG)
@@ -58,8 +62,12 @@ if(NOT NOVELRT_SYSTEM_OPENAL)
 endif()
 
 # Graphics dependencies
+NovelRTDeps_Options("glfw" NOVELRT_SYSTEM_GLFW ON NOVELRT_STATIC_GLFW NOVELRT_SHARED_GLFW)
+add_subdirectory(internal/glfw)
+
 NovelRTDeps_Options("Vulkan" NOVELRT_SYSTEM_VULKAN ON NOVELRT_STATIC_VULKAN NOVELRT_SHARED_VULKAN)
 if(NOVELRT_SYSTEM_VULKAN)
+  # Search for system Vulkan SDK
   if(APPLE)
     find_package(Vulkan ${NOVELRT_VULKAN_VERSION} COMPONENTS MoltenVK REQUIRED)
   else()
@@ -69,17 +77,17 @@ else()
   add_subdirectory(internal/vulkan/vulkan-headers)
   add_subdirectory(internal/vulkan/vulkan-loader)
   if(APPLE)
+    # We are going to assume you don't have the SDK installed here
     add_subdirectory(internal/moltenvk)
   endif()
 endif()
 
 #Other dependencies
-NovelRTDeps_Options("GSL" NOVELRT_SYSTEM_GSL ON NOVELRT_STATIC_GSL NOVELRT_SHARED_GSL)
-if(NOVELRT_SYSTEM_GSL)
-  find_package(GSL REQUIRED)
-else()
-  add_subdirectory(internal/GSL)
-endif()
+
+# Set this to indicate static building properly
+set(NOVELRT_STATIC_FABULIST ON)
+NovelRTDeps_Options("Fabulist" NOVELRT_SYSTEM_FABULIST ON NOVELRT_STATIC_FABULIST NOVELRT_SHARED_FABULIST)
+add_subdirectory(internal/Fabulist)
 
 if(NOVELRT_BUILD_TESTS)
   NovelRTDeps_Options("GoogleTest" NOVELRT_SYSTEM_GTEST ON NOVELRT_STATIC_GTEST NOVELRT_SHARED_GTEST)
@@ -87,27 +95,5 @@ if(NOVELRT_BUILD_TESTS)
   add_subdirectory(internal/gtest)
 endif()
 
-# #Add libraries that are not typically system libraries
-set(NOVELRT_SHARED_GLFW ${NOVELRT_BUILD_SHARED_LIBS})
-NovelRTDeps_Options("glfw" NOVELRT_SYSTEM_GLFW ON NOVELRT_STATIC_GLFW NOVELRT_SHARED_GLFW)
-add_subdirectory(internal/glfw)
-
-set(NOVELRT_SHARED_GLM ${NOVELRT_BUILD_SHARED_LIBS})
-NovelRTDeps_Options("GLM" NOVELRT_SYSTEM_GLM ON NOVELRT_STATIC_GLM NOVELRT_SHARED_GLM)
-add_subdirectory(internal/glm)
-
-set(NOVELRT_SHARED_GLFW ${NOVELRT_BUILD_SHARED_LIBS})
-NovelRTDeps_Options("jsoncons" NOVELRT_SYSTEM_JSONCONS ON NOVELRT_STATIC_JSONCONS NOVELRT_SHARED_JSONCONS)
-add_subdirectory(internal/jsoncons)
-
-set(NOVELRT_SHARED_TBB ${NOVELRT_BUILD_SHARED_LIBS})
-NovelRTDeps_Options("oneTBB" NOVELRT_SYSTEM_TBB ON NOVELRT_STATIC_TBB NOVELRT_SHARED_TBB)
-add_subdirectory(internal/oneTBB)
-
-set(NOVELRT_SHARED_SPDLOG ${NOVELRT_BUILD_SHARED_LIBS})
 NovelRTDeps_Options("spdlog" NOVELRT_SYSTEM_SPDLOG ON NOVELRT_STATIC_SPDLOG NOVELRT_SHARED_SPDLOG)
 add_subdirectory(internal/spdlog)
-
-set(NOVELRT_SHARED_STDUUID ${NOVELRT_BUILD_SHARED_LIBS})
-NovelRTDeps_Options("stduuid" NOVELRT_SYSTEM_STDUUID ON NOVELRT_STATIC_STDUUID NOVELRT_SHARED_STDUUID)
-add_subdirectory(internal/stduuid)

@@ -11,6 +11,12 @@ set(INSTALL_MANPAGES OFF CACHE BOOL "" FORCE)
 set(INSTALL_PKGCONFIG_MODULES OFF CACHE BOOL "" FORCE)
 set(INSTALL_CMAKE_CONFIG_MODULE OFF CACHE BOOL "" FORCE)
 
+if(NOVELRT_SHARED_FLAC OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(FLAC
   URL https://github.com/xiph/flac/releases/download/1.3.4/flac-1.3.4.tar.xz
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
@@ -26,11 +32,7 @@ FetchContent_Declare(FLAC
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(FLAC)
-
-#add_library(FLAC::FLAC ALIAS FLAC)
+NovelRTDeps_PopulateExplicit(FLAC ${type})
 
 set(FLAC_LIBRARY "FLAC::FLAC" PARENT_SCOPE)
 set(FLAC_INCLUDE_DIR "${flac_SOURCE_DIR}/include" PARENT_SCOPE)
-
-

@@ -7,6 +7,12 @@ set(FT_DISABLE_HARFBUZZ TRUE CACHE BOOL "Disable Harfbuzz dependency" FORCE)
 set(FT_DISABLE_BROTLI TRUE CACHE BOOL "Disable Brotli dependency" FORCE)
 set(SKIP_INSTALL_ALL TRUE)
 
+if(NOVELRT_SHARED_FREETYPE OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(freetype
   URL https://github.com/freetype/freetype/archive/refs/tags/VER-2-12-1.zip
   URL_HASH SHA512=3ef3e47752b7c3cd158c738d7e0194f1c9f97ac85c754b02be6ee0f7999c3c19050f713d1e975f5310a4689337463e7b54450ef62e02c3f09864f4c6b13740d9
@@ -22,6 +28,6 @@ FetchContent_Declare(freetype
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(freetype)
+NovelRTDeps_PopulateExplicit(freetype ${type})
 
 add_library(Freetype::Freetype ALIAS freetype)

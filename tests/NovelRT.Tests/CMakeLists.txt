@@ -1,4 +1,6 @@
 include(GoogleTest)
+include(functions/CopyRuntimeDependencies)
+
 set(SOURCES
   Ecs/CatalogueTest.cpp
   Ecs/ComponentBufferMemoryContainerTest.cpp
@@ -51,21 +53,6 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
-include(functions/CopyBuildProducts)
-if(NOVELRT_BUILD_INTEROP)
-  copy_build_products(Engine_Tests
-    DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-
-    DEPENDENCY Interop
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-  )
-else()
-  copy_build_products(Engine_Tests
-    DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-  )
-endif()
 
 target_link_libraries(Engine_Tests
   PUBLIC
@@ -73,8 +60,27 @@ target_link_libraries(Engine_Tests
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
     gtest_main
 )
+target_compile_options(Engine_Tests PUBLIC ${NOVELRT_PLATFORM_COMPILE_OPTIONS})
+
+if(MSVC)
+  target_compile_options(Engine_Tests
+    PUBLIC
+      /wd4189
+      /wd4834
+  )
+endif()
+
+if(NOVELRT_BUILD_INTEROP)
+  CopyRuntimeDependencies(Engine_Tests
+    DEPENDENCY Engine
+    DEPENDENCY Interop
+  )
+else()
+  CopyRuntimeDependencies(Engine_Tests
+  DEPENDENCY Engine
+  )
+endif()
 
 gtest_discover_tests(Engine_Tests
   EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/"
   DISCOVERY_MODE PRE_TEST)
-

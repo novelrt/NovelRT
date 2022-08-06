@@ -19,8 +19,10 @@ FetchContent_Declare(GSL
 
 NovelRTDeps_PopulateHeaderOnly(GSL)
 
-install(
-  DIRECTORY ${GSL_SOURCE_DIR}/include/
-  DESTINATION include
-  PATTERN "CMakeLists.txt" EXCLUDE
-)
+if(NOVELRT_INSTALL)
+  install(
+    DIRECTORY ${GSL_SOURCE_DIR}/include/
+    DESTINATION include
+    PATTERN "CMakeLists.txt" EXCLUDE
+  )
+endif()

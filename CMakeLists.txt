@@ -44,6 +44,7 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
+option(NOVELRT_INSTALL "NovelRT install targets will be generated" ON)
 option(NOVELRT_PIE "Generate position independent code" OFF)
 
 set(NOVELRT_BZIP2_VERSION "1.0.8" CACHE STRING "BZip2 version")
@@ -117,9 +118,3 @@ if(NOVELRT_BUILD_DOCUMENTATION)
     add_subdirectory(doxygen)
   endif()
 endif()
-
-# install(
-#   EXPORT NovelRT
-#   NAMESPACE NovelRT::
-#   DESTINATION lib
-# )

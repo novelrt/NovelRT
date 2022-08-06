@@ -5,6 +5,12 @@ message(STATUS "Fetching spdlog...")
 set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
 set(SPDLOG_ENABLE_PCH ON CACHE BOOL "" FORCE)
 
+if(NOVELRT_SHARED_SPDLOG OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
+
 FetchContent_Declare(spdlog
   URL https://github.com/gabime/spdlog/archive/refs/tags/v1.10.0.zip
   URL_HASH SHA512=9f1c778482446f52fb6e35f752226715412011f608bdcbfc87be5ae4a246d6733179a910fce09c2609e4dc1ba50664a6b0c3421749a7a12d8648dcf2b61c0b99
@@ -20,6 +26,7 @@ FetchContent_Declare(spdlog
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(spdlog)
+# TODO: Investigate if it's worth making spdlog header-only
+NovelRTDeps_PopulateExplicit(spdlog ${type})
 
 add_library(Spdlog::spdlog ALIAS spdlog)

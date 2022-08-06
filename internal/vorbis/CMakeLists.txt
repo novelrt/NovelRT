@@ -2,6 +2,11 @@ include(FetchContent)
 include(functions/NovelRTDeps_Populate)
 message(STATUS "Fetching Vorbis...")
 
+if(NOVELRT_SHARED_VORBIS OR NOVELRT_BUILD_SHARED_LIBS)
+  set(type SHARED)
+else()
+  set(type STATIC)
+endif()
 
 FetchContent_Declare(vorbis
   URL https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz
@@ -18,13 +23,11 @@ FetchContent_Declare(vorbis
   LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-NovelRTDeps_Populate(vorbis)
+NovelRTDeps_PopulateExplicit(vorbis ${type})
 
+#Required for libsndfile
 add_library(Vorbis::vorbisenc ALIAS vorbisenc)
 
-# set_property(TARGET vorbis PROPERTY POSITION_INDEPENDENT_CODE ON)
-# set_property(TARGET vorbisfile PROPERTY POSITION_INDEPENDENT_CODE ON)
-# set_property(TARGET vorbisenc PROPERTY POSITION_INDEPENDENT_CODE ON)
 set(Vorbis_Vorbis_LIBRARY "vorbis" PARENT_SCOPE)
 set(Vorbis_Enc_LIBRARY "vorbisenc" PARENT_SCOPE)
 set(Vorbis_File_LIBRARY "vorbisfile" PARENT_SCOPE)

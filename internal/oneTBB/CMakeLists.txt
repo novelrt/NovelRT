@@ -28,5 +28,7 @@ FetchContent_Declare(TBB
   INSTALL_COMMAND "${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/build --prefix \"${CMAKE_CURRENT_BINARY_DIR}/inst\""
 )
 
+# oneTBB will never support static libraries at this time
 NovelRTDeps_PopulateExplicit(TBB SHARED)
 
+set_target_properties(tbb PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
