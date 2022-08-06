@@ -171,3 +171,12 @@ target_link_libraries (SNDFILE
 		FLAC::FLAC
 		Opus::Opus
 )
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS SNDFILE
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

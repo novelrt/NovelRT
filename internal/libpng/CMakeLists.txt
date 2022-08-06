@@ -43,3 +43,12 @@ target_include_directories(${PNG_LIBRARY} INTERFACE
 add_library(PNG::PNG ALIAS ${PNG_LIBRARY})
 set(PNG_PNG_INCLUDE_DIR "${libpng_SOURCE_DIR};${libpng_BINARY_DIR}" PARENT_SCOPE)
 set(PNG_LIBRARY ${PNG_LIBRARY} PARENT_SCOPE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS png
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

@@ -31,3 +31,11 @@ FetchContent_Declare(freetype
 NovelRTDeps_PopulateExplicit(freetype ${type})
 
 add_library(Freetype::Freetype ALIAS freetype)
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS freetype
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

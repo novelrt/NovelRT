@@ -31,3 +31,12 @@ NovelRTDeps_PopulateExplicit(opus ${type})
 add_library(Opus::Opus ALIAS opus)
 set(OPUS_LIBRARY "Opus::Opus" PARENT_SCOPE)
 set(OPUS_INCLUDE_DIR "${opus_SOURCE_DIR}/include" PARENT_SCOPE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS opus
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

@@ -29,3 +29,11 @@ NovelRTDeps_PopulateExplicit(Fabulist ${type})
 
 add_library(Fabulist::Runtime ALIAS runtime)
 add_library(Fabulist::Compiler ALIAS compiler)
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS runtime compiler
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

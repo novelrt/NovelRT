@@ -30,3 +30,12 @@ FetchContent_Declare(spdlog
 NovelRTDeps_PopulateExplicit(spdlog ${type})
 
 add_library(Spdlog::spdlog ALIAS spdlog)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS spdlog
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

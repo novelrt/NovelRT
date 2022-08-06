@@ -36,3 +36,12 @@ NovelRTDeps_PopulateExplicit(OpenAL ${type})
 
 set_target_properties(OpenAL PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 add_library(OpenAL::OpenAL ALIAS OpenAL)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS OpenAL
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

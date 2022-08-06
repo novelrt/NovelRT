@@ -36,3 +36,12 @@ NovelRTDeps_PopulateExplicit(FLAC ${type})
 
 set(FLAC_LIBRARY "FLAC::FLAC" PARENT_SCOPE)
 set(FLAC_INCLUDE_DIR "${flac_SOURCE_DIR}/include" PARENT_SCOPE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS FLAC
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

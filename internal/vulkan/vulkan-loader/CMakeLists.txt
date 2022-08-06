@@ -29,3 +29,12 @@ target_compile_features(loader_common_options INTERFACE c_std_11)
 
 set(NOVELRT_VULKAN_TARGET "vulkan" CACHE STRING "Vulkan Dependencies to attach to NovelRT Engine" FORCE)
 set(NOVELRT_VULKAN_DEPS "vulkan" CACHE STRING "Vulkan Dependencies to attach to NovelRT Engine" FORCE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS vulkan
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

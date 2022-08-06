@@ -25,8 +25,43 @@ FetchContent_Declare(Ogg
 
 NovelRTDeps_PopulateExplicit(Ogg ${type})
 
-add_library(Ogg::Ogg ALIAS ogg)
+set(OGG_HEADERS
+  ${ogg_BINARY_DIR}/include/ogg/config_types.h
+  ${ogg_SOURCE_DIR}/include/ogg/ogg.h
+  ${ogg_SOURCE_DIR}/include/ogg/os_types.h
+)
+
+set(OGG_SOURCES
+  ${ogg_SOURCE_DIR}/src/bitwise.c
+  ${ogg_SOURCE_DIR}/src/framing.c
+  ${ogg_SOURCE_DIR}/src/crctable.h
+)
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+    list(APPEND OGG_SOURCES ${ogg_SOURCE_DIR}/win32/ogg.def)
+endif()
+
+add_library(Ogg ${type} ${OGG_HEADERS} ${OGG_SOURCES})
+add_library(Ogg::Ogg ALIAS Ogg)
+
+target_include_directories(Ogg PUBLIC
+    $<BUILD_INTERFACE:${ogg_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${ogg_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+set_target_properties(Ogg PROPERTIES OUTPUT_NAME "ogg")
+
 # Sndfile gets funny without forcing these
-set(OGG_LIBRARY "ogg" CACHE STRING "The target name for Ogg" FORCE)
+set(OGG_LIBRARY "Ogg" CACHE STRING "The target name for Ogg" FORCE)
 set(OGG_INCLUDE_DIR "${ogg_SOURCE_DIR}/include" CACHE STRING "Where to find Ogg sources" FORCE)
 set(OGG_FOUND TRUE PARENT_SCOPE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS Ogg
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

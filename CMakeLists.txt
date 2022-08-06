@@ -118,3 +118,20 @@ if(NOVELRT_BUILD_DOCUMENTATION)
     add_subdirectory(doxygen)
   endif()
 endif()
+
+if(NOVELRT_INSTALL)
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    NovelRTConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+  )
+  # install(
+  #   EXPORT NovelRTTargets
+  #   FILE NovelRTTargets.cmake
+  #   NAMESPACE NovelRT::
+  #   DESTINATION lib/cmake
+  # )
+
+
+endif()

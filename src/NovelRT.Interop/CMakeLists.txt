@@ -43,6 +43,7 @@ set(SOURCES
 )
 
 add_library(Interop SHARED ${SOURCES})
+add_library(NovelRT::Interop ALIAS Interop)
 add_dependencies(Interop Engine)
 
 set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")

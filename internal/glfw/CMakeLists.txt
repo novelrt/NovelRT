@@ -29,3 +29,11 @@ FetchContent_Declare(glfw
 
 NovelRTDeps_PopulateExplicit(glfw ${type})
 add_library(GLFW::glfw ALIAS glfw)
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS glfw
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

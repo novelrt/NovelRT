@@ -78,6 +78,7 @@ set(SOURCES
 )
 
 add_library(Engine ${type} ${SOURCES})
+add_library(NovelRT::NovelRT ALIAS Engine)
 set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Debug>,NovelRT-$<CONFIG>,NovelRT>")
 
 target_include_directories(Engine
@@ -138,12 +139,12 @@ get_target_property(NOVELRT_LINK_LIBS Engine LINK_LIBRARIES)
 target_link_libraries(Engine PUBLIC ${NOVELRT_PLATFORM_LINK_LIBRARIES})
 
 if(NOVELRT_INSTALL)
-  install(
-    TARGETS Engine
-    EXPORT NovelRT
-    DESTINATION lib
-    RUNTIME DESTINATION bin
-  )
+  # install(
+  #   TARGETS Engine
+  #   EXPORT NovelRT
+  #   DESTINATION lib
+  #   RUNTIME DESTINATION bin
+  # )
   #Workaround due to hierarchy destruction when installing by TARGETS
   install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT/

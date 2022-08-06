@@ -32,3 +32,13 @@ FetchContent_Declare(TBB
 NovelRTDeps_PopulateExplicit(TBB SHARED)
 
 set_target_properties(tbb PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+list(APPEND NOVELRT_EXPORTED_TARGETS tbb)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS tbb
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

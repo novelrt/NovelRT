@@ -99,8 +99,12 @@ set_target_properties(ZLIB
   PROPERTIES
   SUFFIX "1.${NOVELRT_LIB_SUFFIX}"
   OUTPUT_NAME "zlib")
-target_include_directories(ZLIB PUBLIC ${zlib_SOURCE_DIR})
-target_include_directories(ZLIB PUBLIC ${zlib_BINARY_DIR})
+target_include_directories(ZLIB
+  PUBLIC
+    $<BUILD_INTERFACE:${zlib_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${zlib_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
 set_target_properties(ZLIB PROPERTIES SOVERSION 1)
 target_compile_definitions(ZLIB PUBLIC -DZLIB_COMPAT)
 
@@ -115,3 +119,11 @@ if(NOT DEFINED ZLIB_INCLUDE_DIR)
   set(ZLIB_FOUND TRUE PARENT_SCOPE)
 endif()
 
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS ZLIB
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()

@@ -34,3 +34,12 @@ set(Vorbis_File_LIBRARY "vorbisfile" PARENT_SCOPE)
 set(Vorbis_Vorbis_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" PARENT_SCOPE)
 set(Vorbis_Enc_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" PARENT_SCOPE)
 set(Vorbis_File_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" PARENT_SCOPE)
+
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS vorbis vorbisfile vorbisenc
+    EXPORT NovelRTTargets
+    DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+endif()
