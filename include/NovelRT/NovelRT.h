@@ -155,12 +155,6 @@
   #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
   #include <NovelRT.Interop/Ecs/Audio/NrtEcsAudio.h>
 
-#ifdef NOVELRT_INK
-  // Ink
-  #include <NovelRT.Interop/Ink/NrtInkService.h>
-  #include <NovelRT.Interop/Ink/NrtStory.h>
-#endif
-
   // Maths
   #include <NovelRT.Interop/Maths/NrtGeoBounds.h>
   #include <NovelRT.Interop/Maths/NrtGeoMatrix4x4F.h>
@@ -184,9 +178,6 @@
 
   // Utilities
   #include <NovelRT.Interop/Utilities/NrtMisc.h>
-
-  // Windowing
-  #include <NovelRT.Interop/Windowing/NrtWindowingService.h>
 #endif
 
 // clang-format on
