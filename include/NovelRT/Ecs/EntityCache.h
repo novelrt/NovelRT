@@ -20,6 +20,8 @@ namespace NovelRT::Ecs
     private:
         std::vector<std::vector<EntityId>> _updateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
+        SparseSet<EntityId, uuids::uuid> _entityUuidIdentifiers;
+        std::vector<std::vector<EntityId>> _registerVectors;
 
     public:
         /**
@@ -43,6 +45,11 @@ namespace NovelRT::Ecs
             return _entitiesToRemoveThisFrame;
         }
 
+        [[nodiscard]] inline const SparseSet<EntityId, uuids::uuid>& GetEntityUuidIdentifiers() const noexcept
+        {
+            return _entityUuidIdentifiers;
+        }
+
         /**
          * @brief Queues an entity for removal in the next frame.
          *
@@ -58,6 +65,10 @@ namespace NovelRT::Ecs
          * In a standard ECS instance, This method should not be called by the developer.
          */
         void ProcessEntityDeletionRequestsFromThreads() noexcept;
+
+        void ProcessEntityRegistrationRequestsFromThreads() noexcept;
+
+        void RegisterEntity(size_t poolid, EntityId entity);
     };
 }
 

@@ -10,7 +10,8 @@ using namespace NovelRT::Persistence;
 
 TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
 {
-    ComponentCache cache(1);
+    SystemScheduler scheduler(1);
+    auto& cache = scheduler.GetComponentCache();
     cache.RegisterComponentType<int32_t>(-1, "MyExampleIntBuffer");
     cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 7, 20);
@@ -18,7 +19,7 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
     cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
     auto buffers = cache.GetAllComponentBuffers();
-    Chapter chapter(buffers);
+    Chapter chapter(buffers, SparseSet<EntityId, uuids::uuid>{});
 
     auto package = chapter.ToFileData();
 
@@ -29,7 +30,7 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
 
     chapter.LoadFileData(package);
 
-    chapter.ToEcsInstance(cache);
+    chapter.ToEcsInstance(scheduler);
     cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
     auto buffer = cache.GetComponentBuffer<int32_t>();

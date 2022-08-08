@@ -10,19 +10,24 @@ namespace NovelRT::Persistence
     {
     }
 
-    Chapter::Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept
-        : _componentCacheData{}
+    Chapter::Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData, const Ecs::SparseSet<Ecs::EntityId, uuids::uuid>& entityUuidIdentifiers) noexcept
+        : _componentCacheData{}, _entityUuidIdentifiers(entityUuidIdentifiers), _entityUuidInverseIdentifiers{}
     {
         for (auto&& buffer : componentCacheData)
         {
             _componentCacheData.emplace(buffer->GetSerialisedTypeName(), buffer->GetReadOnlyContainer());
         }
+
+        for (auto&& [entity, id] : _entityUuidIdentifiers)
+        {
+            _entityUuidInverseIdentifiers.emplace(id, entity);
+        }
     }
 
-    void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache) const
+    void Chapter::ToEcsInstance(Ecs::SystemScheduler& instance) const
     {
         static AtomFactory& factory = AtomFactoryDatabase::GetFactory("EntityId");
-        for (auto&& buffer : componentCache.GetAllComponentBuffers())
+        for (auto&& buffer : instance.GetComponentCache().GetAllComponentBuffers())
         {
             auto& container = _componentCacheData.at(buffer->GetSerialisedTypeName());
             auto& rootSet = buffer->GetReadOnlyContainer();
@@ -41,16 +46,14 @@ namespace NovelRT::Persistence
         }
     }
 
-    Chapter Chapter::FromEcsInstance(const Ecs::ComponentCache& componentCache) noexcept
+    Chapter Chapter::FromEcsInstance(const Ecs::SystemScheduler& instance) noexcept
     {
-        auto buffers = componentCache.GetAllComponentBuffers(); // This is required due to Span requirements
-        return Chapter(buffers);
+        auto buffers = instance.GetComponentCache().GetAllComponentBuffers(); // This is required due to Span requirements
+        return Chapter(buffers, instance.GetEntityCache().GetEntityUuidIdentifiers());
     }
 
-    ResourceManagement::BinaryPackage Chapter::ToFileData() const noexcept
+    ResourceManagement::BinaryPackage Chapter::ToFileData() const 
     {
-        std::vector<uuids::uuid> usedIds{};
-
         ResourceManagement::BinaryPackage package{};
 
         package.data = std::vector<uint8_t>{};
@@ -104,26 +107,16 @@ namespace NovelRT::Persistence
             auto componentPtr =
                 package.data.data() + oldLength + (entityMetadata.length * entityMetadata.sizeOfTypeInBytes);
                 
-            std::random_device rd;
-            auto seedData = std::array<int, std::mt19937::state_size> {};
-            std::generate(std::begin(seedData), std::end(seedData), std::ref(rd));
-            std::seed_seq seq(std::begin(seedData), std::end(seedData));
-            std::mt19937 generator(seq);
-            uuids::uuid_random_generator gen{generator};
-
-
             for (auto&& [entity, dataView] : dataPair.second)
             {
-                uuids::uuid id = gen();
-
-                std::memcpy(entityPtr, &id, sizeof(uuids::uuid));
-
-                while (std::find(usedIds.begin(), usedIds.end(), id) != usedIds.end()) 
+                if (!_entityUuidIdentifiers.ContainsKey(entity))
                 {
-                    id = gen();
+                    throw std::runtime_error("Invalid entity found in Chapter instance."); // TODO: Replace with real exception.
                 }
 
-                usedIds.emplace_back(id);
+                auto id = _entityUuidIdentifiers[entity];
+
+                std::memcpy(entityPtr, &id, sizeof(uuids::uuid));
 
                 size_t componentJumpValue = sizeOfComponentType;
                 if (componentMetadata.sizeOfSerialisedDataInBytes == 0)

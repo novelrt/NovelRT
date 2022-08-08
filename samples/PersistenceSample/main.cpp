@@ -140,7 +140,7 @@ int main()
         if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
         {
             secondsPassed = NovelRT::Timing::Timestamp(0);
-            chapterToLoad = Chapter::FromEcsInstance(scheduler.GetComponentCache());
+            chapterToLoad = Chapter::FromEcsInstance(scheduler);
             resourceManagementProvider->GetResourceLoader()->SavePackage("MyChapter.chapter",
                                                                          chapterToLoad.ToFileData());
             chapterToLoad.LoadFileData(

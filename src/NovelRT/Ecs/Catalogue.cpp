@@ -19,6 +19,7 @@ namespace NovelRT::Ecs
 
         EntityId returnId = _entityIdFactory.GetNext();
         _createdEntitiesThisFrame.push_back(returnId);
+        _entityCache.RegisterEntity(_poolId, returnId);
         return returnId;
     }
 

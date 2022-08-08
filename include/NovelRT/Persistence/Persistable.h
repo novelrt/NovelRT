@@ -25,7 +25,7 @@ namespace NovelRT::Persistence
         [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>&
         GetSerialisationRules() noexcept;
 
-        [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const noexcept = 0;
+        [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const = 0;
         virtual void LoadFileData(const ResourceManagement::BinaryPackage& data) = 0;
     };
 }

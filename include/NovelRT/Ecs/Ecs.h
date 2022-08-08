@@ -38,6 +38,7 @@
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
 #include <oneapi/tbb/mutex.h>
+#include <uuid.h>
 
 // clang-format on
 

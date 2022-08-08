@@ -14,17 +14,19 @@ namespace NovelRT::Persistence
     {
     private:
         std::map<std::string, Ecs::SparseSetMemoryContainer> _componentCacheData;
+        Ecs::SparseSet<Ecs::EntityId, uuids::uuid> _entityUuidIdentifiers;
+        std::unordered_map<uuids::uuid, Ecs::EntityId> _entityUuidInverseIdentifiers;
 
     public:
         Chapter() noexcept;
 
-        explicit Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept;
+        explicit Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData, const Ecs::SparseSet<Ecs::EntityId, uuids::uuid>& entityUuidIdentifiers) noexcept;
 
-        void ToEcsInstance(Ecs::ComponentCache& componentCache) const;
+        void ToEcsInstance(Ecs::SystemScheduler& instance) const;
 
-        [[nodiscard]] static Chapter FromEcsInstance(const Ecs::ComponentCache& componentCache) noexcept;
+        [[nodiscard]] static Chapter FromEcsInstance(const Ecs::SystemScheduler& instance) noexcept;
 
-        [[nodiscard]] ResourceManagement::BinaryPackage ToFileData() const noexcept final;
+        [[nodiscard]] ResourceManagement::BinaryPackage ToFileData() const final;
 
         void LoadFileData(const ResourceManagement::BinaryPackage& data) final;
     };

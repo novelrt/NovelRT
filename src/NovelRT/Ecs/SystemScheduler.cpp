@@ -184,6 +184,7 @@ namespace NovelRT::Ecs
         ScheduleUpdateWork();
         _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
         _entityCache.ProcessEntityDeletionRequestsFromThreads();
+        _entityCache.ProcessEntityRegistrationRequestsFromThreads();
     }
 
     void SystemScheduler::ShutDown() noexcept
