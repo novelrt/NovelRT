@@ -16,29 +16,24 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [RelWithDebInfo, Release]
-        os: [windows-latest, windows-2019, ubuntu-latest, macos-10.15]
+        os: [windows-latest, windows-2019, ubuntu-latest, macos-11]
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
-          profile: linux-clang10-amd64
           name: Ubuntu - Clang 10
           c: CC=clang-10
           cxx: CXX=clang++-10
         - os: windows-2019
-          profile: windows-vs2019-amd64
           name: Windows - Visual Studio 2019
         - os: windows-latest
-          profile: windows-vs2022-amd64
           name: Windows - Visual Studio 2022
-        - os: macos-10.15
-          profile: macos-appleclang12-amd64
-          name: macOS 10.15 - Apple-Clang 12
+        - os: macos-11
+          name: macOS 11 - Apple-Clang 13
           configuration: Debug
-        - os: macos-10.15
-          profile: macos-appleclang12-amd64
-          name: macOS 10.15 - Apple-Clang 12
+        - os: macos-11
+          name: macOS 11 - Apple-Clang 13
         exclude:
-        - os: macos-10.15
+        - os: macos-11
           configuration: RelWithDebInfo
 
     steps:
@@ -60,26 +55,20 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
-      - name: Prepare build environment
-        run: |
-          pip3 install conan
-          conan config install https://github.com/NovelRT/ConanConfig.git
-
-      - name: Generate Build System
-        run: conan install . -if build --build=missing --profile ${{ matrix.profile }}-${{ matrix.configuration }}
-
       - uses: novelrt/setup-cpp@v1
-      - name: Build and Test NovelRT - ${{ matrix.configuration }}
+      - name: Build NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-          cmake --build build --config ${{ matrix.configuration }}
-          cd build/tests/NovelRT.Tests
-          ctest --output-on-failure
+          cmake --build build --config ${{ matrix.configuration }} --target compiler Engine Interop Samples
 
-      - name: Install NovelRT - ${{ matrix.configuration }}
+      - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
-        run: cmake --install build --config "${{ matrix.configuration }}"
+        id: test
+        run: |
+          cmake --build build --config ${{ matrix.configuration }} --target Engine_Tests
+          cd build/tests/NovelRT.Tests
+          ctest --output-on-failure -C ${{ matrix.configuration }}
 
   Formatting:
     name: clang-format
@@ -107,7 +96,7 @@ jobs:
         run: scripts/ci-checkdiff.sh
 
       - name: Upload Patch
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
           name: clang-format-patch

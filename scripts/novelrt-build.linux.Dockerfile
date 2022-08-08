@@ -32,9 +32,6 @@ RUN apt update \
         xkb-data \
         libxcb-dri3-dev \
         libxcb-util-dev \
-        python3-pip \
         gh \
 	&& rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install conan
 

@@ -1,4 +1,3 @@
-include(CopyBuildProducts)
 if(NOVELRT_VULKAN_SDK)
   find_dependency(Vulkan REQUIRED)
 endif()

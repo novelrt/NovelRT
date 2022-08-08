@@ -79,4 +79,6 @@ target_link_libraries(Engine_Tests
 )
 
 gtest_discover_tests(Engine_Tests
-  EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/")
+  EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/"
+  DISCOVERY_MODE PRE_TEST)
+

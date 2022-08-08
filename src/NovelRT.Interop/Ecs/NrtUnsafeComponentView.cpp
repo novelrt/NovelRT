@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtUnsafeComponentView.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
 #include <vector>
 
@@ -26,11 +27,13 @@ extern "C"
     {
         if (componentView == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (instructionData == nullptr)
         {
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -42,14 +45,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
+            Nrt_setErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -58,6 +64,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -68,14 +75,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
+            Nrt_setErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -87,11 +97,13 @@ extern "C"
     {
         if (componentView == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -105,6 +117,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
+            Nrt_setErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -149,6 +162,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

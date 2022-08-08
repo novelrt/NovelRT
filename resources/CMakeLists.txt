@@ -5,6 +5,7 @@ set(RESOURCES_FILES
   Images/novel-chan.png
   Images/novel-chan-white-bg.png
   Images/test.png
+  Images/uwu.png
 
   Scripts/avg.lua
   Scripts/story.ink
@@ -19,9 +20,8 @@ set(RESOURCES_FILES
   Shaders/frag.spv
   Shaders/vert.spv
 
-  Sounds/waltz.ogg
-  Sounds/laz0r.ogg
-  Sounds/goat.ogg
+  Sounds/goat.wav
+  Sounds/uwu.ogg
 )
 
 foreach(resource ${RESOURCES_FILES})

@@ -19,7 +19,6 @@ endif()
 
 if(WIN32)
   # this is needed, because Windows can be weird, man.
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
@@ -29,28 +28,17 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
-option(NOVELRT_INCLUDE_CONAN_PATHS "Include conan_paths toolchain" ON)
 
 set(NOVELRT_BZIP2_VERSION "1.0.8" CACHE STRING "BZip2 version")
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
-set(NOVELRT_FLAC_VERSION "1.3.3" CACHE STRING "FLAC version")
 set(NOVELRT_FREETYPE_VERSION "2.12.1" CACHE STRING "Freetype version")
 set(NOVELRT_GSL_VERSION "4.0.0" CACHE STRING "ms-gsl version")
-set(NOVELRT_OGG_VERSION "1.3.4" CACHE STRING "Ogg version")
 set(NOVELRT_ONETBB_VERSION "2021.5.0" CACHE STRING "OneTBB version")
 set(NOVELRT_OPENAL_VERSION "1.21.1" CACHE STRING "OpenAL version")
-set(NOVELRT_OPUS_VERSION "1.3.1" CACHE STRING "Opus version")
 set(NOVELRT_PNG_VERSION "1.6.35" CACHE STRING "PNG version")
-set(NOVELRT_SNDFILE_VERSION "1.0.30" CACHE STRING "Sndfile version")
-set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Opus version")
 set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
 set(NOVELRT_VULKAN_MEMORY_ALLOCATOR_VERSION "2.3.0" CACHE STRING "VulkanMemoryAllocator version")
 set(NOVELRT_VULKAN_SDK_PATH "" CACHE STRING "Directory for NovelRT to find the Vulkan SDK (mainly for macOS support)")
-
-if (NOVELRT_INCLUDE_CONAN_PATHS)
-  set(CONAN_CMAKE_SILENT_OUTPUT ON)
-  include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-endif()
 
 find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
   COMPONENTS dot

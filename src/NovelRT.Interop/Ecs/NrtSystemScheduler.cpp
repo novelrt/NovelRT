@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT.Interop/Ecs/NrtSystemScheduler.h>
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
@@ -67,6 +68,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -77,66 +79,82 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
+            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const CharacterNotFoundException&)
         {
+            Nrt_setErrMsgIsCharacterNotFoundInternal();
             return NRT_FAILURE_CHARACTER_NOT_FOUND;
         }
         catch (const CompilationErrorException&)
         {
+            Nrt_setErrMsgCompilationErrorInternal();
             return NRT_FAILURE_COMPILATION_ERROR;
         }
         catch (const DuplicateKeyException&)
         {
+            Nrt_setErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const FileNotFoundException&)
         {
+            Nrt_setErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
         catch (const FunctionNotFoundException&)
         {
+            Nrt_setErrMsgIsFunctionNotFoundInternal();
             return NRT_FAILURE_FUNCTION_NOT_FOUND;
         }
         catch (const InitialisationFailureException&)
         {
+            Nrt_setErrMsgIsInitialisationFailureInternal();
             return NRT_FAILURE_INITIALISATION_FAILURE;
         }
         catch (const InvalidOperationException&)
         {
+            Nrt_setErrMsgIsInvalidOperationInternal();
             return NRT_FAILURE_INVALID_OPERATION;
         }
         catch (const KeyNotFoundException&)
         {
+            Nrt_setErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
         catch (const NotInitialisedException&)
         {
+            Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
         catch (const NotSupportedException&)
         {
+            Nrt_setErrMsgIsNotSupportedInternal();
             return NRT_FAILURE_NOT_SUPPORTED;
         }
         catch (const NullPointerException&)
         {
+            Nrt_setErrIsNullArgProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         catch (const OutOfMemoryException&)
         {
+            Nrt_setErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const RuntimeNotFoundException&)
         {
+            Nrt_setErrMsgRuntimeNotFoundInternal();
             return NRT_FAILURE_RUNTIME_NOT_FOUND;
         }
         catch (...)
         {
+            Nrt_setErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -145,6 +163,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -158,6 +177,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
+            Nrt_setErrIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

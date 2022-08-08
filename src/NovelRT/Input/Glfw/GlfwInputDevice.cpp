@@ -174,9 +174,12 @@ namespace NovelRT::Input::Glfw
     {
         double x = 0;
         double y = 0;
+        int width = 0;
+        int height = 0;
         glfwGetCursorPos(_window, &x, &y);
-        _mousePos.x = static_cast<float>(x);
-        _mousePos.y = static_cast<float>(y);
+        glfwGetWindowSize(_window, &width, &height);
+        _mousePos.x = static_cast<float>(x - (width / 2));
+        _mousePos.y = static_cast<float>(-y + (height / 2));
 
         _previousStates = _mappedActions;
 

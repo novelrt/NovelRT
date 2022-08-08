@@ -55,6 +55,8 @@ namespace NovelRT::Ecs::Graphics
 
         SceneGraph::Scene _renderScene;
 
+        NovelRT::Graphics::RGBAColour _backgroundColour;
+
         void ResolveGpuResourceCleanup();
         void ResolveVertexInfoGpuCleanup();
         void ResolveTextureInfoGpuCleanup();
@@ -178,6 +180,16 @@ namespace NovelRT::Ecs::Graphics
                                                                  SystemScheduler& scheduler);
 
         void ForceVertexTextureFutureResolution();
+
+        [[nodiscard]] inline NovelRT::Graphics::RGBAColour& BackgroundColour() noexcept
+        {
+            return _backgroundColour;
+        }
+
+        [[nodiscard]] inline const NovelRT::Graphics::RGBAColour& BackgroundColour() const noexcept
+        {
+            return _backgroundColour;
+        }
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H
