@@ -4,7 +4,7 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Timing/NrtStepTimer.h>
 #include <NovelRT/Timing/StepTimer.h>
-#include <NovelRT/Utilities/Event.h> // The order is important for some reason.
+#include <NovelRT/Utilities/Event.h>
 
 NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimerHandle* output)
 {
