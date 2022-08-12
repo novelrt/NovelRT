@@ -16,4 +16,7 @@ FetchContent_Declare(Fabulist
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
+# Until this is changed, always build Fabulist as Static
+set(BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(Fabulist)
+add_dependencies(compiler runtime)

@@ -23,3 +23,10 @@ FetchContent_MakeAvailable(opus)
 set(OPUS_LIBRARY "opus" CACHE STRING "Set Opus libraries" FORCE)
 set(OPUS_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" CACHE STRING "Set Opus include dirs" FORCE)
 set_property(TARGET opus PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+install(EXPORT Opus
+  DESTINATION lib
+  NAMESPACE Opus::)
+install(TARGETS opus
+  EXPORT Opus
+  LIBRARY DESTINATION lib)
