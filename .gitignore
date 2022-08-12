@@ -148,3 +148,4 @@ CTestTestfile.cmake
 # End of https://www.gitignore.io/api/c++,cmake,clion
 
 .DS_Store
+internal/build
