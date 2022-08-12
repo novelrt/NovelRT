@@ -25,16 +25,18 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-#add_subdirectory(Fabulist)
-#add_subdirectory(glfw)
-#add_subdirectory(glm)
-#add_subdirectory(GSL)
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Forced directory to install NovelRT's Dependencies" FORCE)
 
-#add_subdirectory(jsoncons)
+add_subdirectory(Fabulist)
+add_subdirectory(glfw)
+add_subdirectory(glm)
+add_subdirectory(GSL)
+
+add_subdirectory(jsoncons)
 #Ordering this way required as libpng depends on zlib, and freetype depends on both
-#add_subdirectory(zlib-ng)
-#add_subdirectory(libpng)
-#add_subdirectory(freetype)
+add_subdirectory(zlib-ng)
+add_subdirectory(libpng)
+add_subdirectory(freetype)
 
 #Ordering all of the audio file deps together before we lose sanity at a rapid pace
 add_subdirectory(ogg)
@@ -43,12 +45,10 @@ add_subdirectory(vorbis)
 add_subdirectory(flac)
 add_subdirectory(libsndfile)
 
-#add_subdirectory(oneTBB)
-#add_subdirectory(openal)
-#add_subdirectory(spdlog)
-#add_subdirectory(stduuid)
-#add_subdirectory(vulkan)
+add_subdirectory(oneTBB)
+add_subdirectory(openal)
+add_subdirectory(spdlog)
+add_subdirectory(stduuid)
 
-#if(NOVELRT_BUILD_TESTS)
-#add_subdirectory(gtest)
-#endif()
+add_subdirectory(gtest)
+

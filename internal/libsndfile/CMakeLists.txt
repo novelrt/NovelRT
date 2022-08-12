@@ -17,8 +17,6 @@ FetchContent_Declare(sndfile
 
         PATCH_COMMAND git apply "${CMAKE_CURRENT_LIST_DIR}/v1.1.0.patch"
 )
-
-set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
 set(BUILD_SHARED_LIBS ON CACHE INTERNAL "Build SHARED libraries")
 set(ENABLE_PACKAGE_CONFIG OFF CACHE BOOL "" FORCE)
 
@@ -29,11 +27,17 @@ FetchContent_MakeAvailable(sndfile)
 add_dependencies(sndfile FLAC ogg opus vorbis vorbisenc)
 target_include_directories(sndfile PRIVATE ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR} ${FLAC_INCLUDE_DIR} ${Vorbis_Vorbis_INCLUDE_DIR})
 target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
-set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 
-install(EXPORT SndFile
-  DESTINATION lib
+set_target_properties(sndfile PROPERTIES PUBLIC_HEADER "${sndfile_SOURCE_DIR}/include/sndfile.hh;${sndfile_BINARY_DIR}/include/sndfile.h")
+
+install(EXPORT SndFileTargets
+  DESTINATION lib/cmake/SndFile
   NAMESPACE SndFile::)
+install(FILES SndFileConfig.cmake DESTINATION lib/cmake/SndFile)
 install(TARGETS sndfile
-  EXPORT SndFile
-  LIBRARY DESTINATION lib)
+  EXPORT SndFileTargets
+  LIBRARY DESTINATION lib
+  PUBLIC_HEADER DESTINATION include
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  FRAMEWORK DESTINATION lib)
