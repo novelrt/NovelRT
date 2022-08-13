@@ -1,7 +1,15 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
+# Setting multiple policies for additional packages
+# We set CMP0048 as a few packages don't set versions
+cmake_policy(SET CMP0048 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 cmake_policy(SET CMP0091 NEW)
-cmake_policy(SET CMP0135 NEW) #for users of 3.24, DOWNLOAD_TIMESTAMP will follow new behaviour
+# For users of 3.24 and onwards, DOWNLOAD_TIMESTAMP will follow new behaviour
+# and use the current time instead of the archived timestamp (which can cause
+# issues with not rebuilding the content)
+cmake_policy(SET CMP0135 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
 
 project(NovelRTDeps
   VERSION 0.1.0
@@ -24,7 +32,7 @@ if(WIN32)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
+set(BUILD_SHARED_LIBS ON)
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Forced directory to install NovelRT's Dependencies" FORCE)
 
 add_subdirectory(Fabulist)
