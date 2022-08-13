@@ -10,6 +10,9 @@ cmake_policy(SET CMP0091 NEW)
 # issues with not rebuilding the content)
 cmake_policy(SET CMP0135 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+# We set CMP0077 to prevent clearing of some of our variables
+cmake_policy(SET CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 project(NovelRTDeps
   VERSION 0.1.0
@@ -33,7 +36,12 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(BUILD_SHARED_LIBS ON)
-set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Forced directory to install NovelRT's Dependencies" FORCE)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Forced directory to install NovelRT's Dependencies" FORCE)
+endif()
+
+message(STATUS "NovelRT - Set dependencies install location to: ${CMAKE_INSTALL_PREFIX}")
 
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
