@@ -15,6 +15,6 @@ FetchContent_Declare(stduuid
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
         )
 set(UUID_USING_CXX20_SPAN TRUE CACHE BOOL "Avoids using the bundled GSL library from stduuid" FORCE)
-set(UUID_ENABLE_INSTALL FALSE CACHE BOOL
-        "Do not install the stduuid library in cmake, simply make its header available." FORCE)
+set(UUID_ENABLE_INSTALL TRUE CACHE BOOL
+        "Install the stduuid library." FORCE)
 FetchContent_MakeAvailable(stduuid)

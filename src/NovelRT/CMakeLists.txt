@@ -1,7 +1,26 @@
-if(NOVELRT_VULKAN_SDK)
-  include(CMakeFindDependencyMacro)
-  find_dependency(Vulkan REQUIRED)
-endif()
+find_package(Vulkan REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
+find_package(stduuid REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm REQUIRED)
+find_package(jsoncons REQUIRED)
+find_package(Ogg REQUIRED)
+find_package(OpenAL REQUIRED)
+find_package(Opus REQUIRED)
+find_package(Vorbis REQUIRED)
+find_package(flac REQUIRED)
+find_package(SndFile REQUIRED)
+find_package(ZLIB REQUIRED)
+add_library(ZLIB::zlib ALIAS ZLIB::ZLIB)
+find_package(nlohmann_json REQUIRED)
+include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
+include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
+find_package(freetype CONFIG REQUIRED)
+
+
+
 
 if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
@@ -148,14 +167,14 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    runtime # Fabulist support - target name is vague. Fix later. :]
+    fabulist::runtime # Fabulist support - target name is vague. Fix later. :]
     freetype
     glfw
     OpenAL
-    png_static
+    png
     spdlog
     TBB::tbb
-    $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
+    Vulkan::Vulkan
     jsoncons
     sndfile
 )
@@ -179,31 +198,31 @@ if(WIN32 OR APPLE)
   #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
   #    ${CMAKE_BINARY_DIR}/thirdparty
   #    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:OpenAL>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:sndfile>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:tbb>
-    $<TARGET_FILE_DIR:Engine>)
-  if(NOT NOVELRT_VULKAN_SDK)
-    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-      $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
-      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
-    if(APPLE)
-      add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${NOVELRT_MOLTENVK_DYLIB_PATH}
-        $<TARGET_FILE_DIR:Engine>)
-      set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
-      set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
-    endif()
-  endif()
+  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #  $<TARGET_FILE_DIR:OpenAL>
+  #  $<TARGET_FILE_DIR:Engine>)
+  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #  $<TARGET_FILE_DIR:sndfile>
+  #  $<TARGET_FILE_DIR:Engine>)
+  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #  $<TARGET_FILE_DIR:tbb>
+  #  $<TARGET_FILE_DIR:Engine>)
+  #if(NOT NOVELRT_VULKAN_SDK)
+  #  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+  #    $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
+  #    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
+  #  if(APPLE)
+  #    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+  #      ${NOVELRT_MOLTENVK_DYLIB_PATH}
+  #      $<TARGET_FILE_DIR:Engine>)
+  #    set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
+  #    set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
+  #  endif()
+  #endif()
   #file(GLOB libs RELATIVE
   #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine
-    PROPERTIES
-      RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
+  #set_target_properties(Engine
+  #  PROPERTIES
+  #    RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
 endif()
 

@@ -43,6 +43,7 @@ endif()
 
 message(STATUS "NovelRT - Set dependencies install location to: ${CMAKE_INSTALL_PREFIX}")
 
+add_subdirectory(nlohmann)
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(glm)
