@@ -88,9 +88,9 @@ add_subdirectory(src)
 #   message("NovelRT Interop library building is disabled.")
 # endif()
 
-# if(NOVELRT_BUILD_SAMPLES)
-#   add_subdirectory(samples)
-# endif()
+if(NOVELRT_BUILD_SAMPLES)
+  add_subdirectory(samples)
+endif()
 
 # if(NOVELRT_BUILD_DOCUMENTATION)
 #   add_subdirectory(doxygen)

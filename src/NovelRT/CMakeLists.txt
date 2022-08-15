@@ -7,7 +7,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm REQUIRED)
 find_package(jsoncons REQUIRED)
 find_package(Ogg REQUIRED)
-find_package(OpenAL REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
 find_package(Opus REQUIRED)
 find_package(Vorbis REQUIRED)
 find_package(flac REQUIRED)
@@ -119,12 +119,6 @@ target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
-    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -170,13 +164,16 @@ target_link_libraries(Engine
     fabulist::runtime # Fabulist support - target name is vague. Fix later. :]
     freetype
     glfw
-    OpenAL
+    glm::glm
+    OpenAL::OpenAL
     png
-    spdlog
+    spdlog::spdlog
     TBB::tbb
     Vulkan::Vulkan
     jsoncons
-    sndfile
+    stduuid
+    SndFile::sndfile
+    ZLIB::zlib
 )
 
 install(
@@ -194,7 +191,7 @@ install(
 
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-if(WIN32 OR APPLE)
+if(WIN32)
   #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
   #    ${CMAKE_BINARY_DIR}/thirdparty
   #    $<TARGET_FILE_DIR:Engine>)
@@ -221,6 +218,7 @@ if(WIN32 OR APPLE)
   #endif()
   #file(GLOB libs RELATIVE
   #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
+
   #set_target_properties(Engine
   #  PROPERTIES
   #    RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
