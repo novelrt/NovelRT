@@ -54,7 +54,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Constructs a unit GeoVector2F with a magnitude of one by normalizing this vector.
+         * @brief Constructs a unit GeoVector2F with a magnitude of one by normalising this vector.
          *
          * @details
          * To calculate a vector's unit vector you first calculate its magnitude and then divide the vector by its
@@ -76,7 +76,7 @@ namespace NovelRT::Maths
          *      \tfrac{9}{25}} \rightarrow \sqrt{\tfrac{25}{25}} \rightarrow \sqrt{1} = 1
          * \f]
          *
-         * @return A unit GeoVector2F created from normalizing this GeoVector2F.
+         * @return A unit GeoVector2F created from normalising this GeoVector2F.
          */
         inline GeoVector2F getNormalised() const noexcept
         {
