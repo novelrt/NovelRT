@@ -203,6 +203,7 @@ namespace NovelRT::Maths
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose components get added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
@@ -246,6 +247,7 @@ namespace NovelRT::Maths
          *      -2 & -1 & 1 & -7
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose components get subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
@@ -289,6 +291,7 @@ namespace NovelRT::Maths
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
          * @return A matrix product where the components consist of the sum of the products of this GeoMatrix4x4F's rows
          * and another GeoMatrix4x4F's columns.
@@ -333,6 +336,7 @@ namespace NovelRT::Maths
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose components get added together with this matrix.
          * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
@@ -377,6 +381,7 @@ namespace NovelRT::Maths
          *      -2 & -1 & 1 & -7
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose components get subtracted from this matrix.
          * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and
          * another GeoMatrix4x4F.
@@ -421,6 +426,7 @@ namespace NovelRT::Maths
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
          * @return This matrix where the components consist of the sum of the products of this GeoMatrix4x4F's rows and
          * another GeoMatrix4x4F's columns.
@@ -472,6 +478,7 @@ namespace NovelRT::Maths
          *      10& 12 & 13 & 7
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
          * scalar.
@@ -522,6 +529,7 @@ namespace NovelRT::Maths
          *      -2 & 0 & 1 & -5\\
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
          * provided scalar.
@@ -572,6 +580,7 @@ namespace NovelRT::Maths
          *      24 & 36 & 42 & 6
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets multiplied by this matrix.
          * @return a matrix where the components consist of the product of this GeoMatrix4x4F and the provided scalar.
          */
@@ -622,6 +631,7 @@ namespace NovelRT::Maths
          *      10& 12 & 13 & 7
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets added together with this matrix.
          * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
          * scalar.
@@ -674,6 +684,7 @@ namespace NovelRT::Maths
          *      -2 & 0 & 1 & -5\\
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets subtracted from this matrix.
          * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
          * provided scalar.
@@ -726,6 +737,7 @@ namespace NovelRT::Maths
          *      24 & 36 & 42 & 6
          *      \end{bmatrix}
          * \f]
+         *
          * @param other The other scalar that gets multiplied by this matrix.
          * @return This matrix where the components consist of the product of this GeoMatrix4x4F and the provided
          * scalar.
@@ -748,6 +760,7 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
+         *
          * @return An Identity GeoMatrix4x4F.
          */
         static GeoMatrix4x4F getDefaultIdentity() noexcept
@@ -788,6 +801,7 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
+         *
          * @param x The scale component over the X axis.
          * @param y The scale component over the Y axis.
          * @param z The scale component over the Z axis.
