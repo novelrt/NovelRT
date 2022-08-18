@@ -195,10 +195,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief
+         * @brief TODO
          *
-         * @param point
-         * @return
+         * @param point TODO
+         * @return TODO
          */
         bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
         {
@@ -230,8 +230,8 @@ namespace NovelRT::Maths
         /**
          * @brief Gets a set of points that intersect with the given bounds.
          *
-         * @param bounds
-         * @param intersectingPoints
+         * @param bounds TODO
+         * @param intersectingPoints TODO
          */
         void getIntersectingPoints(GeoBounds bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints)
         {
