@@ -261,8 +261,8 @@ namespace NovelRT::Maths
          * \f]
          *
          * @param other The other vector whose components get subtracted from this vector.
-         * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and another
-         * GeoVector2F.
+         * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and
+         * another GeoVector2F.
          */
         inline GeoVector2F operator-(GeoVector2F other) const noexcept
         {
@@ -578,7 +578,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the Hadamard product of this GeoVector2F and another GeoVector2F.
+         * @brief Calculates the Hadamard product of this GeoVector2F and another GeoVector2F and overwrites this
+         * instance with the result.
          *
          * @details
          * An example of a Hadamard product of two vectors: \f[
@@ -614,7 +615,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F.
+         * @brief Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F and
+         * overwrites this instance with the result.
          *
          * @details
          * An example of a Hadamard division of two vectors: \f[
@@ -736,7 +738,8 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the product of this and the provided scalar.
+         * @brief Calculates the product of this GeoVector2F and the provided scalar and overwrites this instance with
+         * the result.
          *
          * @details
          * An example of a multiplication between a vector and a scalar: \f[
