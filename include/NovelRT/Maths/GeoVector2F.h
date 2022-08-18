@@ -200,7 +200,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculate the entrywise sum of this GeoVector2F and another GeoVector2F.
+         * @brief Calculates the entrywise sum of this GeoVector2F and another GeoVector2F.
          *
          * @details
          * An example of an entrywise addition using 2 dimensional vectors: \f[
