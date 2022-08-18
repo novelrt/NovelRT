@@ -57,8 +57,8 @@ namespace NovelRT::Maths
          * @brief Constructs a unit GeoVector2F with a magnitude of one by normalizing this vector.
          *
          * @details
-         * To calculate a vector's unit vector you first calculate it's magnitde and then divide the vector by it's
-         * magnitdue \f[
+         * To calculate a vector's unit vector you first calculate its magnitude and then divide the vector by its
+         * magnitude \f[
          *      \vec{v}= \begin{pmatrix}
          *      4\\
          *      3
@@ -84,7 +84,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the magnitude of this GeoVector2F using it's components. This is the same as the
+         * @brief Calculates the magnitude of this GeoVector2F using its components. This is the same as the
          * calculating the vector's length.
          *
          * @details
@@ -104,7 +104,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the length of this GeoVector2F using it's components. This is the same as calculating the
+         * @brief Calculates the length of this GeoVector2F using its components. This is the same as calculating the
          * vector's magnitude.
          *
          * @details
@@ -146,7 +146,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is less
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is less
          * than the other's components.
          *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
@@ -159,7 +159,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is less
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is less
          * than or equal to the other's components.
          *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
@@ -173,7 +173,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is greater
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is greater
          * than the other's components.
          *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
@@ -186,7 +186,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of it's components is greater
+         * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is greater
          * than or equal to the other's components.
          *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.

@@ -123,7 +123,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Flips the matrix alongside it's descending diagonal.
+         * @brief Flips the matrix alongside its descending diagonal.
          *
          * @details
          * An example of transposing a matrix: \f[
