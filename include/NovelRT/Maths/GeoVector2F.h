@@ -856,7 +856,7 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components are within a given
          * range of tolerance.
          *
-         * @param other The other GeoVector2F whos components are evaluated against this GeoVector2F's components.
+         * @param other The other GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @param epsilonValue The vector determining the tolerance per component.
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.

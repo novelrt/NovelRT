@@ -60,7 +60,7 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a GeoVector3F with the given GeoVector2F.
          *
-         * @param vec2Value The GeoVector2F whose X and Y components are used for the GeoVector3F A and Y components.
+         * @param vec2Value The GeoVector2F whose X and Y components are used for the GeoVector3F X and Y components.
          * @return A GeoVector3F with the given GeoVector2F and the Z component set to zero.
          */
         GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
@@ -523,7 +523,7 @@ namespace NovelRT::Maths
          * An example of a division between a three-dimensional vector and a scalar: \f[
          *      \begin{pmatrix}
          *      16\\
-         *      12
+         *      12\\
          *      8
          *      \end{pmatrix}
          *      /
@@ -928,12 +928,11 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief
+         * @brief Rotates this vector around a given point by a given angle in degrees.
          *
          * @param angleRotationValue The angle in degrees to rotate by.
          * @param point The point that acts as this vectors origin point to rotate around.
          * @param axis The axis on which this rotation will be applied.
-         * @return
          */
         void rotateToAngleAroundPoint(float angleRotationValue,
                                       const GeoVector3F& point,
@@ -949,7 +948,7 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if all components are within a given
          * range of tolerance.
          *
-         * @param other The other GeoVector3F whos components are evaluated against this GeoVector3F's components.
+         * @param other The other GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @param epsilonValue The vector determining the tolerance per component.
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
@@ -984,7 +983,7 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new uniform GeoVector3F based on the specified value.
          *
-         * @param The value to use as the uniform value across the GeoVector2F.
+         * @param The value to use as the uniform value across the GeoVector3F.
          * @return a new GeoVector3F instance with all components set to the specified value.
          */
         static GeoVector3F uniform(float value) noexcept
@@ -997,7 +996,7 @@ namespace NovelRT::Maths
      * @brief Calculates the product of the provided GeoVector3F and the provided scalar.
      *
      * @details
-     * An example of a multiplication between a two-dimensional vector and a scalar: \f[
+     * An example of a multiplication between a three-dimensional vector and a scalar: \f[
      *      4
      *      *
      *      \begin{pmatrix}
