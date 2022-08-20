@@ -146,7 +146,7 @@ namespace NovelRT::Maths::Utilities
      * @brief Converts an angle in degrees to an angle in radians.
      *
      * @details
-     * To get the angle in radians you can us this formula: \f[
+     * To get the angle in radians you can use this formula: \f[
      *      radians = \frac{\pi \times degrees}{180}
      * \f]
      *
@@ -162,7 +162,7 @@ namespace NovelRT::Maths::Utilities
      * @brief Converts an angle in degrees to an angle in radians.
      *
      * @details
-     * To get the angle in degrees you can us this formula: \f[
+     * To get the angle in degrees you can use this formula: \f[
      *      degrees = \frac{180 \times radians}{\pi }
      * \f]
      *
