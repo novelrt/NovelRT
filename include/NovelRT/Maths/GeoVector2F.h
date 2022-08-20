@@ -287,8 +287,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      2 * 4\\
-         *      3 * 5
+         *      2 \times 4\\
+         *      3 \times 5
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -434,7 +434,7 @@ namespace NovelRT::Maths
          *      8\\
          *      6
          *      \end{pmatrix}
-         *      *
+         *      \times
          *      4
          *      \rightarrow
          *      \begin{pmatrix}
@@ -448,8 +448,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      8 * 4 \\
-         *      6 * 4
+         *      8 \times 4 \\
+         *      6 \times 4
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -602,8 +602,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      2 * 4\\
-         *      3 * 5
+         *      2 \times 4\\
+         *      3 \times 5
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -759,7 +759,7 @@ namespace NovelRT::Maths
          *      8\\
          *      6
          *      \end{pmatrix}
-         *      *
+         *      \times
          *      4
          *      \rightarrow
          *      \begin{pmatrix}
@@ -773,8 +773,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      8 * 4 \\
-         *      6 * 4
+         *      8 \times 4 \\
+         *      6 \times 4
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -906,7 +906,7 @@ namespace NovelRT::Maths
      * @details
      * An example of a multiplication between a two-dimensional vector and a scalar: \f[
      *      4
-     *      *
+     *      \times
      *      \begin{pmatrix}
      *      8\\
      *      6
@@ -923,8 +923,8 @@ namespace NovelRT::Maths
      *      \end{pmatrix}
      *      =
      *      \begin{pmatrix}
-     *      4 * 8 \\
-     *      4 * 6
+     *      4 \times 8 \\
+     *      4 \times 6
      *      \end{pmatrix}
      *      \rightarrow
      *      \begin{pmatrix}

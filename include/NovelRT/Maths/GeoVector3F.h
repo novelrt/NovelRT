@@ -315,9 +315,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      2 * 4\\
-         *      3 * 5\\
-         *      4 * 6
+         *      2 \times 4\\
+         *      3 \times 5\\
+         *      4 \times 6
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -479,7 +479,7 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}
-         *      *
+         *      \times
          *      4
          *      \rightarrow
          *      \begin{pmatrix}
@@ -495,9 +495,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      8 * 4 \\
-         *      6 * 4 \\
-         *      3 * 4
+         *      8 \times 4 \\
+         *      6 \times 4 \\
+         *      3 \times 4
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -666,9 +666,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      2 * 4\\
-         *      3 * 5\\
-         *      4 * 6
+         *      2 \times 4\\
+         *      3 \times 5\\
+         *      4 \times 6
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -840,7 +840,7 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}
-         *      *
+         *      \times
          *      4
          *      \rightarrow
          *      \begin{pmatrix}
@@ -856,9 +856,9 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      =
          *      \begin{pmatrix}
-         *      8 * 4 \\
-         *      6 * 4 \\
-         *      3 * 4
+         *      8 \times 4 \\
+         *      6 \times 4 \\
+         *      3 \times 4
          *      \end{pmatrix}
          *      \rightarrow
          *      \begin{pmatrix}
@@ -998,7 +998,7 @@ namespace NovelRT::Maths
      * @details
      * An example of a multiplication between a three-dimensional vector and a scalar: \f[
      *      4
-     *      *
+     *      \times
      *      \begin{pmatrix}
      *      8\\
      *      6\\
@@ -1018,9 +1018,9 @@ namespace NovelRT::Maths
      *      \end{pmatrix}
      *      =
      *      \begin{pmatrix}
-     *      4 * 8 \\
-     *      4 * 6 \\
-     *      4 * 3
+     *      4 \times 8 \\
+     *      4 \times 6 \\
+     *      4 \times 3
      *      \end{pmatrix}
      *      \rightarrow
      *      \begin{pmatrix}
