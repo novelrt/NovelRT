@@ -33,7 +33,7 @@ namespace NovelRT::Maths
         /**
          * @brief Instantiates a QuadTree instance with the specified bounds and parent.
          *
-         * @param bounds TODO
+         * @param bounds The area in which this QuadTree will map points.
          * @param parent The parent to this instance in the tree's hierarchy. If none is provided, this QuadTree
          * instance will be at the root of the hierarchy.
          * @return Newly constructed QuadTree object.
@@ -57,7 +57,7 @@ namespace NovelRT::Maths
         /**
          * @brief Returns the bounds this QuadTree covers.
          *
-         * @return TODO
+         * @return The area in which this QuadTree maps points.
          */
         GeoBounds getBounds() const noexcept
         {
@@ -176,9 +176,12 @@ namespace NovelRT::Maths
         /**
          * @brief Attempts to insert a bounding box into the quadtree.
          *
+         * @details
+         * A TQuadTreePoint most have a constructor that matches TQuadTreePoint(GeoVector, TArgs).
+         *
          * @tparam TQuadTreePoint A point type that can be casted as a QuadTreePoint instance.
-         * @tparam ...TArgs TODO
-         * @param bounds TODO
+         * @tparam ...TArgs The variable length argument types for constructing a TQuadTreePoint.
+         * @param bounds The bounding area to insert into the QuadTree
          * @param ...args Additional arguments needed to create the point instance.
          * @return true if a TQuadTreePoint has succesfully been inserted, false otherwise.
          */
@@ -195,10 +198,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief TODO
+         * @brief Attempts to remove a point from the QuadTree.
          *
-         * @param point TODO
-         * @return TODO
+         * @param point The point to remove from the QuadTree,
+         * @return true if the point has been succesfully removed, otherwise false.
          */
         bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
         {
@@ -228,10 +231,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Gets a set of points that intersect with the given bounds.
+         * @brief Gets a set of points that intersect with the given bounds and stores it in the given vector.
          *
-         * @param bounds TODO
-         * @param intersectingPoints TODO
+         * @param bounds The area in which to look for points in the QuadTree.
+         * @param intersectingPoints A collection of points that will be filled with the intersecting points.
          */
         void getIntersectingPoints(GeoBounds bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints)
         {
@@ -263,8 +266,8 @@ namespace NovelRT::Maths
         /**
          * @brief Gets a set of points that intersect with the given bounds.
          *
-         * @param bounds
-         * @return
+         * @param bounds The area in which to look for points in the QuadTree.
+         * @return A collection of points filled with the intersecting points.
          */
         std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(GeoBounds bounds)
         {
