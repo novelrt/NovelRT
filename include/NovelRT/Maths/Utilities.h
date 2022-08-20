@@ -186,7 +186,7 @@ namespace NovelRT::Maths::Utilities
      * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
      * @return A full rotation expressed in radians.
      */
-    template<typename TFloatingPointType> [[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
+    template<typename TFloatingPointType>[[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
     {
         _assert(std::is_same_v<TFloatingPointType, float> || std::is_same_v<TFloatingPointType, double>,
                 "Type is unsupported for a Tau representation.");
@@ -202,7 +202,7 @@ namespace NovelRT::Maths::Utilities
      *
      * @return A full rotation expressed in radians.
      */
-    template<> [[nodiscard]] inline constexpr float Tau<float>() noexcept
+    template<>[[nodiscard]] inline constexpr float Tau<float>() noexcept
     {
         return 6.283185307f;
     }
@@ -217,7 +217,7 @@ namespace NovelRT::Maths::Utilities
      *
      * @return A full rotation expressed in radians.
      */
-    template<> [[nodiscard]] inline constexpr double Tau<double>() noexcept
+    template<>[[nodiscard]] inline constexpr double Tau<double>() noexcept
     {
         return 6.283185307179586476925;
     }
