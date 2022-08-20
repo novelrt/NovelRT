@@ -18,19 +18,40 @@
 #error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
 #endif
 
+/**
+ * @brief Contains utility functions to assist in math operations.
+ */
 namespace NovelRT::Maths::Utilities
 {
+    /**
+     * @brief Creates a lookup table for calculating the log base 2 for a 32 bit integer.
+     *
+     * @return A lookup table for calculating the log base 2 for a 32 bit integer.
+     */
     [[nodiscard]] inline constexpr std::array<uint8_t, 32> Log2DeBruijn() noexcept
     {
         return std::array<uint8_t, 32>{0, 9,  1,  10, 13, 21, 2,  29, 11, 14, 16, 18, 22, 25, 3, 30,
                                        8, 12, 20, 28, 15, 17, 24, 7,  19, 27, 23, 6,  26, 5,  4, 31};
     }
 
+    /**
+     * @brief Evaluates if the provided integer is a power of 2.
+     *
+     * @param value The given integer to be tested.
+     * @return true if the given integer is a power of 2, otherwise false.
+     */
     [[nodiscard]] inline bool IsPow2(size_t value) noexcept
     {
         return ((value & (value - 1ULL)) == 0ULL) && (value != 0ULL);
     }
 
+    /**
+     * @brief Rounds a given address up to the nearest alignment.
+     *
+     * @param address The address to be aligned.
+     * @param alignment The target alignment, which should be a power of two.
+     * @return The address rounded up to the nearest alignment.
+     */
     [[nodiscard]] inline size_t AlignUp(size_t address, size_t alignment)
     {
         if (!IsPow2(alignment))
@@ -41,6 +62,12 @@ namespace NovelRT::Maths::Utilities
         return (address + (alignment - 1ULL)) & ~(alignment - 1ULL);
     }
 
+    /**
+     * @brief Returns the number of set bits in the given value.
+     *
+     * @param value The number to extract the amount of set bits from
+     * @return The number of set bits.
+     */
     [[nodiscard]] [[deprecated("This implementation of PopCount is superseeded by std::popcount in C++20. This "
                                "will be removed when the language version is updated.")]] inline int32_t
     PopCount(uint32_t value) noexcept
@@ -57,6 +84,15 @@ namespace NovelRT::Maths::Utilities
         return static_cast<int32_t>(value);
     }
 
+    /**
+     * @brief Determines the exponent to which 2 should be raised with in order to get to the given value, rounded down.
+     *
+     * @details
+     * When the input value is 0, 0 will be returned.
+     *
+     * @param value The value to reach with 2 to the power of the resulting exponent.
+     * @return The exponent to get to the given number, rounded down
+     */
     [[nodiscard]] inline uint32_t Log2(uint32_t value) noexcept
     {
         value |= value >> 1;
@@ -68,6 +104,12 @@ namespace NovelRT::Maths::Utilities
         return Log2DeBruijn()[(value * 0x07C4ACDDu) >> 27];
     }
 
+    /**
+     * @brief Computes the amount of leading zeros for the given 32 bit number.
+     *
+     * @param value The number to get the amount of leading zeros from.
+     * @return The amount of leading zeros.
+     */
     [[nodiscard]] inline uint32_t LeadingZeroCount32(uint32_t value) noexcept
     {
         if (value == 0)
@@ -80,6 +122,12 @@ namespace NovelRT::Maths::Utilities
         }
     }
 
+    /**
+     * @brief Computes the amount of leading zeros for the given 64 bit number.
+     *
+     * @param value The number to get the amount of leading zeros from.
+     * @return The amount of leading zeros.
+     */
     [[nodiscard]] inline uint64_t LeadingZeroCount64(uint64_t value) noexcept
     {
         uint32_t hi = static_cast<uint32_t>(value >> 32);
@@ -94,28 +142,82 @@ namespace NovelRT::Maths::Utilities
         }
     }
 
+    /**
+     * @brief Converts an angle in degrees to an angle in radians.
+     *
+     * @details
+     * To get the angle in radians you can us this formula: \f[
+     *      radians = \frac{\pi \times degrees}{180}
+     * \f]
+     *
+     * @param degrees The angle in degrees to convert.
+     * @return The angle in radians.
+     */
     [[nodiscard]] inline float DegreesToRadians(float degrees) noexcept
     {
         return glm::radians(degrees);
     }
 
+    /**
+     * @brief Converts an angle in degrees to an angle in radians.
+     *
+     * @details
+     * To get the angle in degrees you can us this formula: \f[
+     *      degrees = \frac{180 \times radians}{\pi }
+     * \f]
+     *
+     * @param radians The angle in radians to convert.
+     * @return The angle in degrees.
+     */
     [[nodiscard]] inline float RadiansToDegrees(float radians) noexcept
     {
         return glm::degrees(radians);
     }
 
-    template<typename TFloatingPointType>[[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
+    /**
+     * @brief Retrieves a constant for a full rotation expressed in radians.
+     *
+     * @details
+     * A full rotation is expressed as: \f[
+     *      2\pi = 6.283185307179586476925...
+     * \f]
+     *
+     *
+     * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
+     * @return A full rotation expressed in radians.
+     */
+    template<typename TFloatingPointType> [[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
     {
         _assert(std::is_same_v<TFloatingPointType, float> || std::is_same_v<TFloatingPointType, double>,
                 "Type is unsupported for a Tau representation.");
     }
 
-    template<>[[nodiscard]] inline constexpr float Tau<float>() noexcept
+    /**
+     * @brief Retrieves a constant for a full rotation expressed in radians.
+     *
+     * @details
+     * A full rotation is expressed as: \f[
+     *      2\pi = 6.283185307179586476925...
+     * \f]
+     *
+     * @return A full rotation expressed in radians.
+     */
+    template<> [[nodiscard]] inline constexpr float Tau<float>() noexcept
     {
         return 6.283185307f;
     }
 
-    template<>[[nodiscard]] inline constexpr double Tau<double>() noexcept
+    /**
+     * @brief Retrieves a constant for a full rotation expressed in radians.
+     *
+     * @details
+     * A full rotation is expressed as: \f[
+     *      2\pi = 6.283185307179586476925...
+     * \f]
+     *
+     * @return A full rotation expressed in radians.
+     */
+    template<> [[nodiscard]] inline constexpr double Tau<double>() noexcept
     {
         return 6.283185307179586476925;
     }

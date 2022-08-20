@@ -12,6 +12,9 @@
 #include <memory>
 #include <vector>
 
+/**
+ * @brief Contains features in assisting math, such as structures for vector and matrix math.
+ */
 namespace NovelRT::Maths
 {
     class GeoBounds;
