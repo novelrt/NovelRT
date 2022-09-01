@@ -67,15 +67,9 @@ extern "C"
 #include "Utilities/NrtUtilitiesTypedefs.h"
 
 #include "Audio/NrtAudioTypedefs.h"
-#ifdef NOVELRT_INK
-#include "DotNet/NrtDotNetTypedefs.h"
-#endif
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
-#ifdef NOVELRT_INK
-#include "Ink/NrtInkTypedefs.h"
-#endif
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus
