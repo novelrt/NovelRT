@@ -17,15 +17,13 @@ NrtResult Nrt_IGraphicsPluginProvider_Destroy(NrtIGraphicsPluginProviderHandle p
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (Lifetime::Release(reinterpret_cast<IGraphicsPluginProvider*>(plugin)))
-    {
-        return NRT_SUCCESS;
-    }
-    else
+    if (!Lifetime::Release(reinterpret_cast<IGraphicsPluginProvider*>(plugin)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
+    
+    return NRT_SUCCESS;
 }
 
 NrtResult Nrt_IGraphicsPluginProvider_GetGraphicsProvider(NrtIGraphicsPluginProviderHandle plugin,

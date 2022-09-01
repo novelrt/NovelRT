@@ -17,13 +17,11 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (Lifetime::Release(reinterpret_cast<GraphicsProvider*>(provider)))
-    {
-        return NRT_SUCCESS;
-    }
-    else
+    if (!Lifetime::Release(reinterpret_cast<GraphicsProvider*>(provider)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
+    
+    return NRT_SUCCESS;
 }

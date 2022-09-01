@@ -17,15 +17,13 @@ NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderHandle plugin)
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (Lifetime::Release(reinterpret_cast<IInputPluginProvider*>(plugin)))
-    {
-        return NRT_SUCCESS;
-    }
-    else
+    if (!Lifetime::Release(reinterpret_cast<IInputPluginProvider*>(plugin)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
+    
+    return NRT_SUCCESS;
 }
 NrtResult Nrt_IInputPluginProvider_GetInputDevice(NrtIInputPluginProviderHandle plugin,
                                                   NrtIInputDeviceHandle* outputDevice)
