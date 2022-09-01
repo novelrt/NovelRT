@@ -17,15 +17,13 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (Lifetime::Release(reinterpret_cast<IResourceManagementPluginProvider*>(plugin)))
-    {
-        return NRT_SUCCESS;
-    }
-    else
+    if (!Lifetime::Release(reinterpret_cast<IResourceManagementPluginProvider*>(plugin)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
+    
+    return NRT_SUCCESS;
 }
 
 NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceManagementPluginProviderHandle plugin,
