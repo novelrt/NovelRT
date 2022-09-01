@@ -5,6 +5,7 @@
 #include <NovelRT.Interop/Ecs/NrtConfigurator.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Utilities/Misc.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -23,7 +24,7 @@ NrtResult Nrt_Configurator_AddDefaultSystemsAndComponents(NrtConfiguratorHandle 
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    (void)reinterpret_cast<Configurator*>(configurator)->WithDefaultSystemsAndComponents();
+    unused(reinterpret_cast<Configurator*>(configurator)->WithDefaultSystemsAndComponents());
 
     return NRT_SUCCESS;
 }
@@ -55,8 +56,13 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
     }
 
     auto* pluginProvider = reinterpret_cast<IGraphicsPluginProvider*>(provider);
-    auto providerSharedPtr = Lifetime::Find(pluginProvider); // We assume they didn't destroy it.
-    (void)reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IGraphicsPluginProvider>(providerSharedPtr);
+    auto providerSharedPtr = Lifetime::Find(pluginProvider);
+    if (providerSharedPtr == nullptr) {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+    }
+
+    unused(reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IGraphicsPluginProvider>(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -76,9 +82,14 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
     }
 
     auto* pluginProvider = reinterpret_cast<IWindowingPluginProvider*>(provider);
-    auto providerSharedPtr = Lifetime::Find(pluginProvider); // We assume they didn't destroy it.
-    (void)reinterpret_cast<Configurator*>(configurator)
-        ->WithPluginProvider<IWindowingPluginProvider>(providerSharedPtr);
+    auto providerSharedPtr = Lifetime::Find(pluginProvider);
+    if (providerSharedPtr == nullptr) {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+    }
+
+    unused(reinterpret_cast<Configurator*>(configurator)
+        ->WithPluginProvider<IWindowingPluginProvider>(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -98,9 +109,14 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
     }
 
     auto* pluginProvider = reinterpret_cast<IResourceManagementPluginProvider*>(provider);
-    auto providerSharedPtr = Lifetime::Find(pluginProvider); // We assume they didn't destroy it.
-    (void)reinterpret_cast<Configurator*>(configurator)
-        ->WithPluginProvider<IResourceManagementPluginProvider>(providerSharedPtr);
+    auto providerSharedPtr = Lifetime::Find(pluginProvider);
+    if (providerSharedPtr == nullptr) {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+    }
+
+    unused(reinterpret_cast<Configurator*>(configurator)
+        ->WithPluginProvider<IResourceManagementPluginProvider>(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -120,8 +136,13 @@ NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configur
     }
 
     auto* pluginProvider = reinterpret_cast<IInputPluginProvider*>(provider);
-    auto providerSharedPtr = Lifetime::Find(pluginProvider); // We assume they didn't destroy it.
-    (void)reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IInputPluginProvider>(providerSharedPtr);
+    auto providerSharedPtr = Lifetime::Find(pluginProvider);
+    if (providerSharedPtr == nullptr) {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
+    }
+
+    unused(reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IInputPluginProvider>(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
