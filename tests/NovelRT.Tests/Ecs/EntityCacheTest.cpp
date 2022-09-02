@@ -24,7 +24,8 @@ TEST_F(EntityCacheTest, AddEntityAddsEntityCorrectly)
 {
     cache.AddEntity(0, 10);
     cache.ProcessEntityRegistrationRequestsFromThreads();
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL), cache.GetRegisteredEntities().end());
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+              cache.GetRegisteredEntities().end());
 }
 
 TEST_F(EntityCacheTest, AddEntityAddsEntityCorrectlyMultipleTimes)
@@ -35,8 +36,10 @@ TEST_F(EntityCacheTest, AddEntityAddsEntityCorrectlyMultipleTimes)
     cache.AddEntity(0, 20);
     cache.ProcessEntityRegistrationRequestsFromThreads();
 
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL), cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL), cache.GetRegisteredEntities().end());
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+              cache.GetRegisteredEntities().end());
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL),
+              cache.GetRegisteredEntities().end());
 }
 
 TEST_F(EntityCacheTest, ProcessEntityDeletionRequestsFromThreadsDoesNotThrow)
@@ -62,7 +65,10 @@ TEST_F(EntityCacheTest, ApplyEntityDeletionRequestsToRegisteredEntitiesAppliesEn
     cache.ProcessEntityDeletionRequestsFromThreads();
     cache.ApplyEntityDeletionRequestsToRegisteredEntities();
 
-    ASSERT_EQ(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL), cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL), cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 30ULL), cache.GetRegisteredEntities().end());
+    ASSERT_EQ(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+              cache.GetRegisteredEntities().end());
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL),
+              cache.GetRegisteredEntities().end());
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 30ULL),
+              cache.GetRegisteredEntities().end());
 }

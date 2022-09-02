@@ -5,7 +5,9 @@
 
 namespace NovelRT::Ecs
 {
-    EntityCache::EntityCache(size_t poolSize) noexcept : _registrationUpdateVectors(std::vector<std::vector<EntityId>>(poolSize)), _removalUpdateVectors(std::vector<std::vector<EntityId>>(poolSize))
+    EntityCache::EntityCache(size_t poolSize) noexcept
+        : _registrationUpdateVectors(std::vector<std::vector<EntityId>>(poolSize)),
+          _removalUpdateVectors(std::vector<std::vector<EntityId>>(poolSize))
     {
     }
 
@@ -17,7 +19,9 @@ namespace NovelRT::Ecs
     void EntityCache::RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept
     {
         _removalUpdateVectors[poolId].push_back(entityToRemove);
-        _removalUpdateVectors[poolId].erase(std::remove(_registrationUpdateVectors[poolId].begin(), _registrationUpdateVectors[poolId].end(), entityToRemove), _registrationUpdateVectors[poolId].end());
+        _removalUpdateVectors[poolId].erase(std::remove(_registrationUpdateVectors[poolId].begin(),
+                                                        _registrationUpdateVectors[poolId].end(), entityToRemove),
+                                            _registrationUpdateVectors[poolId].end());
     }
 
     void EntityCache::ProcessEntityDeletionRequestsFromThreads() noexcept
@@ -54,7 +58,8 @@ namespace NovelRT::Ecs
             auto rootIt = _registeredEntities.begin();
             std::advance(rootIt, oldSize);
             std::copy_if(vector.begin(), vector.end(), rootIt, [&](auto entity) -> bool {
-                             return std::find(_registeredEntities.begin(), _registeredEntities.end(), entity) == _registeredEntities.end();
+                return std::find(_registeredEntities.begin(), _registeredEntities.end(), entity) ==
+                       _registeredEntities.end();
             });
             vector.clear();
         }
@@ -64,7 +69,8 @@ namespace NovelRT::Ecs
     {
         for (auto&& entity : _entitiesToRemoveThisFrame)
         {
-            _registeredEntities.erase(std::remove(_registeredEntities.begin(), _registeredEntities.end(), entity), _registeredEntities.end());
+            _registeredEntities.erase(std::remove(_registeredEntities.begin(), _registeredEntities.end(), entity),
+                                      _registeredEntities.end());
         }
     }
 } // namespace NovelRT::Ecs

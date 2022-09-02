@@ -36,11 +36,13 @@ namespace NovelRT::Persistence
                 {
                     entityId = localToGlobalEntityMap[entityId];
                 }
-                else if (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) != registeredGlobalEntities.end())
+                else if (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) !=
+                         registeredGlobalEntities.end())
                 {
                     Ecs::EntityId localId = entityId;
 
-                    while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) != registeredGlobalEntities.end())
+                    while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) !=
+                           registeredGlobalEntities.end())
                     {
                         entityId = factory.GetNext();
                     }
