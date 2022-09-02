@@ -18,8 +18,10 @@ namespace NovelRT::Ecs
     class EntityCache
     {
     private:
-        std::vector<std::vector<EntityId>> _updateVectors;
+        std::vector<std::vector<EntityId>> _removalUpdateVectors;
         std::vector<EntityId> _entitiesToRemoveThisFrame;
+        std::vector<std::vector<EntityId>> _registrationUpdateVectors;
+        std::vector<EntityId> _registeredEntities;
 
     public:
         /**
@@ -44,6 +46,29 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Returns all registered entities in this instance of EntityCache. This data is based off of the root,
+         * read-only data.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return a std::vector<EntityId>& containing all entities currently registered to this cache.
+         */
+        [[nodiscard]] inline const std::vector<EntityId>& GetRegisteredEntities() const noexcept
+        {
+            return _registeredEntities;
+        }
+
+        /**
+         * @brief Registers a new entity to this particular instance of EntityCache.
+         *
+         *
+         * @param poolId The current worker thread's pool ID the registration instruction is coming from.
+         * @param newEntity The new entity to register.
+         */
+        void AddEntity(size_t poolId, EntityId newEntity) noexcept;
+
+        /**
          * @brief Queues an entity for removal in the next frame.
          *
          * @param poolId The current worker thread's pool ID the removal instruction is coming from.
@@ -55,9 +80,24 @@ namespace NovelRT::Ecs
          * @brief Propagates deletion requests from worker threads to the main thread. Once this is called, the data can
          * be accessed from EntityCache::GetEntitiesToRemoveThisFrame.
          *
-         * In a standard ECS instance, This method should not be called by the developer.
+         * In a standard ECS instance, this method should not be called by the developer.
          */
         void ProcessEntityDeletionRequestsFromThreads() noexcept;
+
+        /**
+         * @brief Applies entity deletion to the currently registered entities.
+         *
+         * In a standard ECS instance, this method should not be called by the developer.
+         */
+        void ApplyEntityDeletionRequestsToRegisteredEntities() noexcept;
+
+        /**
+         * @brief propagates registration requests from worker threads to the main thread. Once this is called,
+         * the data can be accessed from EntityCache::GetRegisteredEntities.
+         *
+         * In a standard ECS instance, this method should not be called by the developer.
+         */
+        void ProcessEntityRegistrationRequestsFromThreads() noexcept;
     };
 }
 

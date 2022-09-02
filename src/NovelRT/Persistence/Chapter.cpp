@@ -18,21 +18,35 @@ namespace NovelRT::Persistence
         }
     }
 
-    void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache) const
+    void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache, Ecs::EntityCache& entityCache) const
     {
         static AtomFactory& factory = AtomFactoryDatabase::GetFactory("EntityId");
+        Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId> localToGlobalEntityMap{};
+
         for (auto&& buffer : componentCache.GetAllComponentBuffers())
         {
             auto& container = _componentCacheData.at(buffer->GetSerialisedTypeName());
-            auto& rootSet = buffer->GetReadOnlyContainer();
+            auto& registeredGlobalEntities = entityCache.GetRegisteredEntities();
 
             for (auto&& [entity, it] : container)
             {
                 Ecs::EntityId entityId = entity;
 
-                if (rootSet.ContainsKey(entity))
+                if (localToGlobalEntityMap.ContainsKey(entityId))
                 {
-                    entityId = factory.GetNext();
+                    entityId = localToGlobalEntityMap[entityId];
+                }
+                else if (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) != registeredGlobalEntities.end())
+                {
+                    Ecs::EntityId localId = entityId;
+
+                    while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) != registeredGlobalEntities.end())
+                    {
+                        entityId = factory.GetNext();
+                    }
+
+                    entityCache.AddEntity(0, entityId);
+                    localToGlobalEntityMap.Insert(localId, entityId);
                 }
 
                 buffer->PushComponentUpdateInstruction(0, entityId, it.GetDataHandle());

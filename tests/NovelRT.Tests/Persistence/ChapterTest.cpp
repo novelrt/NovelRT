@@ -11,6 +11,7 @@ using namespace NovelRT::Persistence;
 TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
 {
     ComponentCache cache(1);
+    EntityCache entityCache(1);
     cache.RegisterComponentType<int32_t>(-1, "MyExampleIntBuffer");
     cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 7, 20);
@@ -29,11 +30,54 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectly)
 
     chapter.LoadFileData(package);
 
-    chapter.ToEcsInstance(cache);
+    chapter.ToEcsInstance(cache, entityCache);
     cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
     auto buffer = cache.GetComponentBuffer<int32_t>();
     EXPECT_EQ(buffer.GetComponentUnsafe(1), 10);
     EXPECT_EQ(buffer.GetComponentUnsafe(7), 20);
     EXPECT_EQ(buffer.GetComponentUnsafe(15), 30);
+}
+
+TEST(ChapterTest, CanPackageAndUnpackageCorrectlyWithDuplicate)
+{
+    ComponentCache cache(1);
+    EntityCache entityCache(1);
+    cache.RegisterComponentType<int32_t>(-1, "MyExampleIntBuffer");
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 7, 20);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 15, 30);
+    entityCache.AddEntity(0, 1);
+    entityCache.AddEntity(0, 7);
+    entityCache.AddEntity(0, 15);
+    cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+    entityCache.ProcessEntityRegistrationRequestsFromThreads();
+    entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
+
+    auto buffers = cache.GetAllComponentBuffers();
+    Chapter chapter(buffers);
+
+    auto package = chapter.ToFileData();
+
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 40);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 7, 50);
+    cache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 15, 60);
+    cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+    entityCache.ProcessEntityRegistrationRequestsFromThreads();
+    entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
+
+    chapter.LoadFileData(package);
+
+    chapter.ToEcsInstance(cache, entityCache);
+    cache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+    entityCache.ProcessEntityRegistrationRequestsFromThreads();
+    entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
+
+    auto buffer = cache.GetComponentBuffer<int32_t>();
+    EXPECT_EQ(buffer.GetComponentUnsafe(1), 50);
+    EXPECT_EQ(buffer.GetComponentUnsafe(7), 70);
+    EXPECT_EQ(buffer.GetComponentUnsafe(15), 90);
+    EXPECT_EQ(buffer.GetComponentUnsafe(2), 10);
+    EXPECT_EQ(buffer.GetComponentUnsafe(3), 20);
+    EXPECT_EQ(buffer.GetComponentUnsafe(4), 30);
 }
