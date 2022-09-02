@@ -829,6 +829,14 @@ namespace NovelRT::Ecs::Graphics
         static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
 
         EntityId entity = _entityIdFactory.GetNext();
+        auto& registeredEntities = scheduler.GetEntityCache().GetRegisteredEntities();
+
+        while (std::find(registeredEntities.begin(), registeredEntities.end(), entity) != registeredEntities.end())
+        {
+            entity = _entityIdFactory.GetNext();
+        }
+
+        scheduler.GetEntityCache().AddEntity(0, entity);
 
         auto newRenderComponent =
             RenderComponent{_defaultSpriteMeshPtr->ecsId, texture->ecsId, _defaultGraphicsPipelinePtr->ecsId};
@@ -865,6 +873,7 @@ namespace NovelRT::Ecs::Graphics
         scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
             0, entity, EntityGraphComponent{});
 
+        scheduler.GetEntityCache().ProcessEntityRegistrationRequestsFromThreads();
         scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         return entity;
     }
