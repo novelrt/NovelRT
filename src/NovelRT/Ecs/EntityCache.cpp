@@ -6,8 +6,8 @@
 namespace NovelRT::Ecs
 {
     EntityCache::EntityCache(size_t poolSize) noexcept
-        : _registrationUpdateVectors(std::vector<std::vector<EntityId>>(poolSize)),
-          _removalUpdateVectors(std::vector<std::vector<EntityId>>(poolSize))
+        : _removalUpdateVectors(std::vector<std::vector<EntityId>>(poolSize)),
+          _registrationUpdateVectors(std::vector<std::vector<EntityId>>(poolSize))
     {
     }
 
