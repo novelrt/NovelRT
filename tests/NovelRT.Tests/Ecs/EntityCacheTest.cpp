@@ -24,7 +24,7 @@ TEST_F(EntityCacheTest, AddEntityAddsEntityCorrectly)
 {
     cache.AddEntity(0, 10);
     cache.ProcessEntityRegistrationRequestsFromThreads();
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(10)),
               cache.GetRegisteredEntities().end());
 }
 
@@ -36,9 +36,9 @@ TEST_F(EntityCacheTest, AddEntityAddsEntityCorrectlyMultipleTimes)
     cache.AddEntity(0, 20);
     cache.ProcessEntityRegistrationRequestsFromThreads();
 
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(10)),
               cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL),
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(20)),
               cache.GetRegisteredEntities().end());
 }
 
@@ -65,10 +65,10 @@ TEST_F(EntityCacheTest, ApplyEntityDeletionRequestsToRegisteredEntitiesAppliesEn
     cache.ProcessEntityDeletionRequestsFromThreads();
     cache.ApplyEntityDeletionRequestsToRegisteredEntities();
 
-    ASSERT_EQ(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 10ULL),
+    ASSERT_EQ(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(10)),
               cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 20ULL),
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(20)),
               cache.GetRegisteredEntities().end());
-    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), 30ULL),
+    EXPECT_NE(std::find(cache.GetRegisteredEntities().begin(), cache.GetRegisteredEntities().end(), Atom(30)),
               cache.GetRegisteredEntities().end());
 }
