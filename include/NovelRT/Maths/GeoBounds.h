@@ -44,7 +44,7 @@ namespace NovelRT::Maths
         /**
          * @brief Determines if a given GeoVector2F is within the confines of this bounding box.
          * @param point The GeoVector2F to be evaluated.
-         * @return true if the given GeoVector2F is within the confines of this GeoBounds instance, false otherwise.
+         * @return true if the given GeoVector2F is within the confines of this GeoBounds instance, otherwise false.
          */
         [[nodiscard]] bool pointIsWithinBounds(GeoVector2F point) const noexcept;
 
