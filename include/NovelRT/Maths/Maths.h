@@ -13,7 +13,7 @@
 #include <vector>
 
 /**
- * @brief Contains features in assisting math, such as structures for vector and matrix math.
+ * @brief Contains features in assisting with mathematical operations, such as structures for vector and matrix maths.
  */
 namespace NovelRT::Maths
 {

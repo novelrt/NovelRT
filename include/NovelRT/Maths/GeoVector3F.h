@@ -58,10 +58,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Creates a GeoVector3F with the given GeoVector2F.
+         * @brief Creates a GeoVector3F based on an already existing GeoVector2F.
          *
-         * @param vec2Value The GeoVector2F whose X and Y components are used for the GeoVector3F X and Y components.
-         * @return A GeoVector3F with the given GeoVector2F and the Z component set to zero.
+         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector3F's X and Y components.
+         * @return A new GeoVector3F with the given GeoVector2F X and Y components, with the Z component set to zero.
          */
         GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
         {
@@ -71,8 +71,8 @@ namespace NovelRT::Maths
          * @brief Constructs a unit GeoVector3F with a magnitude of one by normalising this vector.
          *
          * @details
-         * To calculate a vector's unit vector you first calculate its magnitude and then divide the vector by its
-         * magnitude \f[
+         * To normalize a vector you need to divide its components by its magnitude. As a result, a vector with the
+         * resulting components will have a magnitude of 1, also known as a unit vector. \f[
          *      \vec{v}= \begin{pmatrix}
          *      2\\
          *      6\\
@@ -167,7 +167,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is less
-         * than the other's components.
+         * than the other GeoVector3F's components.
          *
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is less than the other GeoVector3F's components, otherwise false.
@@ -180,7 +180,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is less
-         * than or equal to the other's components.
+         * than or equal to the other GeoVector3F's components.
          *
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is less than or equal to the other GeoVector3F's components,
@@ -194,7 +194,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is greater
-         * than the other's components.
+         * than the other GeoVector3F's components.
          *
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is greater than the other GeoVector3F's components, otherwise false.
@@ -207,7 +207,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is greater
-         * than or equal to the other's components.
+         * than or equal to the other GeoVector3F's components.
          *
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is greater than or equal to the other GeoVector3F's components,
@@ -366,7 +366,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and another
          * GeoVector3F.
          */
@@ -720,7 +720,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @param other The other vector whose components act as a divisor for this vector's components.
          * @return This GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and
          * another GeoVector3F.
          */

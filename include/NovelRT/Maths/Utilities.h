@@ -105,7 +105,7 @@ namespace NovelRT::Maths::Utilities
     }
 
     /**
-     * @brief Computes the amount of leading zeros for the given 32 bit number.
+     * @brief Computes the amount of leading zeros for the given 32-bit integer.
      *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
@@ -123,7 +123,7 @@ namespace NovelRT::Maths::Utilities
     }
 
     /**
-     * @brief Computes the amount of leading zeros for the given 64 bit number.
+     * @brief Computes the amount of leading zeros for the given 64-bit integer.
      *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
@@ -199,6 +199,7 @@ namespace NovelRT::Maths::Utilities
      * A full rotation is expressed as: \f[
      *      2\pi = 6.283185307179586476925...
      * \f]
+     * In this implementation it is expressed as \f(6.283185307\f).
      *
      * @return A full rotation expressed in radians.
      */
@@ -214,6 +215,7 @@ namespace NovelRT::Maths::Utilities
      * A full rotation is expressed as: \f[
      *      2\pi = 6.283185307179586476925...
      * \f]
+     * In this implementation it is expressed as \f(6.283185307179586476925\f).
      *
      * @return A full rotation expressed in radians.
      */

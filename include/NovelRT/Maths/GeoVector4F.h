@@ -75,8 +75,9 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a GeoVector4F with the given GeoVector2F.
          *
-         * @param vec2Value The GeoVector2F whose X and Y components are used for the GeoVector4F X and Y components.
-         * @return A GeoVector4F with the given GeoVector2F and the Z and W components set to zero.
+         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector4F's X and Y components.
+         * @return A new GeoVector4F with the given GeoVector2F X and Y components, with the Z and W components set to
+         * zero.
          */
         GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
         {
@@ -85,9 +86,9 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a GeoVector4F with the given GeoVector3F.
          *
-         * @param vec3Value The GeoVector2F whose X, Y and Z components are used for the GeoVector4F X, Y and Z
+         * @param vec3Value The GeoVector2F whose X, Y and Z components are used for this GeoVector4F X, Y and Z
          * components.
-         * @return A GeoVector4F with the given GeoVector3F and the W component set to zero.
+         * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
          */
         GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
@@ -97,8 +98,8 @@ namespace NovelRT::Maths
          * @brief Constructs a unit GeoVector4F with a magnitude of one by normalising this vector.
          *
          * @details
-         * To calculate a vector's unit vector you first calculate its magnitude and then divide the vector by its
-         * magnitude \f[
+         * To normalize a vector you need to divide its components by its magnitude. As a result, a vector with the
+         * resulting components will have a magnitude of 1, also known as a unit vector. \f[
          *      \vec{v}= \begin{pmatrix}
          *      7\\
          *      2\\
@@ -200,7 +201,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if any of its components is less
-         * than the other's components.
+         * than the other GeoVector4F's components.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is less than the other GeoVector4F's components, otherwise false.
@@ -213,7 +214,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if any of its components is less
-         * than or equal to the other's components.
+         * than or equal to the other GeoVector4F's components.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is less than or equal to the other GeoVector4F's components,
@@ -227,7 +228,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if any of its components is greater
-         * than the other's components.
+         * than the other GeoVector4F's components.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is greater than the other GeoVector4F's components, otherwise false.
@@ -240,7 +241,7 @@ namespace NovelRT::Maths
 
         /**
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if any of its components is greater
-         * than or equal to the other's components.
+         * than or equal to the other GeoVector4F's components.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is greater than or equal to the other GeoVector4F's components,
@@ -415,7 +416,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and another
          * GeoVector4F.
          */
@@ -802,7 +803,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f]
          *
-         * @param other The other vector whose component act as a divisor for this vector's components.
+         * @param other The other vector whose components act as a divisor for this vector's components.
          * @return This GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and
          * another GeoVector4F.
          */
