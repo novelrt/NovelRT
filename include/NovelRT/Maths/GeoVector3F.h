@@ -71,7 +71,7 @@ namespace NovelRT::Maths
          * @brief Constructs a unit GeoVector3F with a magnitude of one by normalising this vector.
          *
          * @details
-         * To normalize a vector you need to divide its components by its magnitude. As a result, a vector with the
+         * To normalise a vector you need to divide its components by its magnitude. As a result, a vector with the
          * resulting components will have a magnitude of 1, also known as a unit vector. \f[
          *      \vec{v}= \begin{pmatrix}
          *      2\\
