@@ -31,7 +31,8 @@ int main()
 
         bool operator==(const TestStruct& rhs)
         {
-            return value == rhs.value && multiplier == rhs.multiplier && testEntityValue == rhs.testEntityValue && shouldDelete == rhs.shouldDelete;
+            return value == rhs.value && multiplier == rhs.multiplier && testEntityValue == rhs.testEntityValue &&
+                   shouldDelete == rhs.shouldDelete;
         }
     };
 
@@ -44,6 +45,7 @@ int main()
             int32_t multiplier;
             EntityId testEntityValue;
         };
+
     public:
         size_t GetSerialisedSize() const noexcept final
         {
@@ -157,8 +159,8 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
     testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, 5, false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, 10,false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, 15,false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, 10, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, 15, false});
 
     auto& entityCache = scheduler.GetEntityCache();
     entityCache.AddEntity(0, 5);
@@ -178,7 +180,7 @@ int main()
             secondsPassed = NovelRT::Timing::Timestamp(0);
             chapterToLoad.LoadFileData(
                 resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-            //chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
+            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
             // SEE THE FILE SIZE GROW
             // FOREVER, UNCOMMENT THIS!
         }

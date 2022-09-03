@@ -59,7 +59,8 @@ namespace NovelRT::Persistence
 
                 if (loadRuleIt != loadRules.end())
                 {
-                    loadRuleIt->second->ExecuteComponentLoadModification(localToGlobalEntityMap, tempComponentDataContainer.data());
+                    loadRuleIt->second->ExecuteComponentLoadModification(localToGlobalEntityMap,
+                                                                         tempComponentDataContainer.data());
                 }
 
                 buffer->PushComponentUpdateInstruction(0, entityId, tempComponentDataContainer.data());

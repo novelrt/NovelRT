@@ -15,7 +15,9 @@ namespace NovelRT::Persistence
     public:
         virtual ~ICustomComponentLoadRule() = default;
 
-        virtual void ExecuteComponentLoadModification(const Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId>& localToGlobalEntityMap, void* componentDataHandle) = 0;
+        virtual void ExecuteComponentLoadModification(
+            const Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId>& localToGlobalEntityMap,
+            void* componentDataHandle) = 0;
     };
 }
 

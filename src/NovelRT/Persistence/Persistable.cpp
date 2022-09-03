@@ -13,7 +13,7 @@ namespace NovelRT::Persistence
     }
 
     std::unordered_map<std::string, std::unique_ptr<ICustomComponentLoadRule>>& Persistable::
-    GetComponentLoadRules() noexcept
+        GetComponentLoadRules() noexcept
     {
         static std::unordered_map<std::string, std::unique_ptr<ICustomComponentLoadRule>> _componentLoadRules;
         return _componentLoadRules;
