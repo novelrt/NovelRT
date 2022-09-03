@@ -178,7 +178,7 @@ int main()
             secondsPassed = NovelRT::Timing::Timestamp(0);
             chapterToLoad.LoadFileData(
                 resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-            chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
+            //chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
             // SEE THE FILE SIZE GROW
             // FOREVER, UNCOMMENT THIS!
         }
