@@ -181,16 +181,6 @@ int main()
             chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
             // SEE THE FILE SIZE GROW
             // FOREVER, UNCOMMENT THIS!
-
-            auto testStructView = catalogue.template GetComponentView<TestStruct>();
-
-            std::cout << "----------------" << std::endl;
-            for (auto&& [entity, component] : testStructView)
-            {
-                std::cout << entity << std::endl;
-                std::cout << component.testEntityValue << std::endl;
-            }
-            std::cout << "----------------" << std::endl;
         }
         else if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(1.5f) && !fileSaved)
         {
