@@ -16,12 +16,14 @@ int main()
     {
         int32_t value;
         int32_t multiplier;
+        EntityId testEntityValue;
         bool shouldDelete;
 
         TestStruct& operator+=(const TestStruct& rhs)
         {
             value = rhs.value;
             multiplier = rhs.multiplier;
+            testEntityValue = rhs.testEntityValue;
             shouldDelete = rhs.shouldDelete;
 
             return *this;
@@ -29,16 +31,25 @@ int main()
 
         bool operator==(const TestStruct& rhs)
         {
-            return value == rhs.value && multiplier == rhs.multiplier && shouldDelete == rhs.shouldDelete;
+            return value == rhs.value && multiplier == rhs.multiplier && testEntityValue == rhs.testEntityValue &&
+                   shouldDelete == rhs.shouldDelete;
         }
     };
 
     class TestStructSerialisationRule final : public NovelRT::Persistence::ICustomSerialisationRule
     {
+    private:
+        struct CopyStruct
+        {
+            int32_t value;
+            int32_t multiplier;
+            EntityId testEntityValue;
+        };
+
     public:
         size_t GetSerialisedSize() const noexcept final
         {
-            return sizeof(int32_t) * 2;
+            return sizeof(CopyStruct);
         }
 
         std::vector<uint8_t> ExecuteSerialiseModification(gsl::span<const uint8_t> component) const noexcept final
@@ -47,22 +58,24 @@ int main()
 
             std::vector<uint8_t> data{};
             data.resize(GetSerialisedSize());
-            auto dataPtr = reinterpret_cast<int32_t*>(data.data());
-            dataPtr[0] = componentStruct.value;
-            dataPtr[1] = componentStruct.multiplier;
+            auto dataPtr = reinterpret_cast<CopyStruct*>(data.data());
+            dataPtr->value = componentStruct.value;
+            dataPtr->multiplier = componentStruct.multiplier;
+            dataPtr->testEntityValue = componentStruct.testEntityValue;
 
             return data;
         }
 
         std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept final
         {
-            auto dataPtr = reinterpret_cast<const int32_t*>(component.data());
+            auto dataPtr = reinterpret_cast<const CopyStruct*>(component.data());
 
             TestStruct newData{};
             std::vector<uint8_t> structData{};
             structData.resize(sizeof(TestStruct));
-            newData.value = dataPtr[0];
-            newData.multiplier = dataPtr[1];
+            newData.value = dataPtr->value;
+            newData.multiplier = dataPtr->multiplier;
+            newData.testEntityValue = dataPtr->testEntityValue;
             newData.shouldDelete = false;
             *reinterpret_cast<TestStruct*>(structData.data()) = newData;
 
@@ -70,8 +83,26 @@ int main()
         }
     };
 
+    class TestStructComponentLoadRule : public ICustomComponentLoadRule
+    {
+    public:
+        void ExecuteComponentLoadModification(const SparseSet<EntityId, EntityId>& localToGlobalEntityMap,
+                                              void* componentDataHandle) override
+        {
+            auto componentPtr = reinterpret_cast<TestStruct*>(componentDataHandle);
+
+            if (localToGlobalEntityMap.ContainsKey(componentPtr->testEntityValue))
+            {
+                componentPtr->testEntityValue = localToGlobalEntityMap[componentPtr->testEntityValue];
+            }
+        }
+    };
+
     NovelRT::Persistence::Persistable::GetSerialisationRules().emplace(
         "TestStruct", std::unique_ptr<ICustomSerialisationRule>(new TestStructSerialisationRule()));
+
+    NovelRT::Persistence::Persistable::GetComponentLoadRules().emplace(
+        "TestStruct", std::unique_ptr<ICustomComponentLoadRule>(new TestStructComponentLoadRule()));
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
@@ -95,7 +126,7 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(resourceManagementProvider)
-            .InitialiseAndRegisterComponents<TestStruct>(std::make_tuple(TestStruct{0, 0, true}, "TestStruct"));
+            .InitialiseAndRegisterComponents<TestStruct>(std::make_tuple(TestStruct{0, 0, 0, true}, "TestStruct"));
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
@@ -127,9 +158,14 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, false});
-    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, 5, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, 10, false});
+    testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, 15, false});
+
+    auto& entityCache = scheduler.GetEntityCache();
+    entityCache.AddEntity(0, 5);
+    entityCache.AddEntity(0, 10);
+    entityCache.AddEntity(0, 15);
 
     NovelRT::Timing::Timestamp secondsPassed(0);
     Chapter chapterToLoad;
@@ -170,6 +206,7 @@ int main()
         }
     });
 
+    entityCache.ProcessEntityRegistrationRequestsFromThreads();
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
     NovelRT::Timing::StepTimer timer;

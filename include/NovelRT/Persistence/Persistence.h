@@ -17,10 +17,12 @@ namespace NovelRT::Persistence
     class Chapter;
     class Persistable;
     class ICustomSerialisationRule;
+    class ICustomComponentLoadRule;
 }
 
 // clang-format off
 
+#include "ICustomComponentLoadRule.h"
 #include "ICustomSerialisationRule.h"
 #include "Persistable.h"
 #include "Chapter.h"

@@ -22,11 +22,27 @@ namespace NovelRT::Persistence
     {
         static AtomFactory& factory = AtomFactoryDatabase::GetFactory("EntityId");
         Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId> localToGlobalEntityMap{};
+        auto& registeredGlobalEntities = entityCache.GetRegisteredEntities();
+        auto& loadRules = Persistable::GetComponentLoadRules();
+
+        for (Ecs::EntityId entity : registeredGlobalEntities)
+        {
+            Ecs::EntityId newId = entity;
+
+            while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), newId) !=
+                   registeredGlobalEntities.end())
+            {
+                newId = factory.GetNext();
+            }
+
+            entityCache.AddEntity(0, newId);
+            localToGlobalEntityMap.Insert(entity, newId);
+        }
 
         for (auto&& buffer : componentCache.GetAllComponentBuffers())
         {
             auto& container = _componentCacheData.at(buffer->GetSerialisedTypeName());
-            auto& registeredGlobalEntities = entityCache.GetRegisteredEntities();
+            std::vector<uint8_t> tempComponentDataContainer(container.GetSizeOfDataTypeInBytes());
 
             for (auto&& [entity, it] : container)
             {
@@ -36,22 +52,18 @@ namespace NovelRT::Persistence
                 {
                     entityId = localToGlobalEntityMap[entityId];
                 }
-                else if (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) !=
-                         registeredGlobalEntities.end())
+
+                it.CopyFromLocation(tempComponentDataContainer.data());
+
+                auto loadRuleIt = loadRules.find(buffer->GetSerialisedTypeName());
+
+                if (loadRuleIt != loadRules.end())
                 {
-                    Ecs::EntityId localId = entityId;
-
-                    while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), entityId) !=
-                           registeredGlobalEntities.end())
-                    {
-                        entityId = factory.GetNext();
-                    }
-
-                    entityCache.AddEntity(0, entityId);
-                    localToGlobalEntityMap.Insert(localId, entityId);
+                    loadRuleIt->second->ExecuteComponentLoadModification(localToGlobalEntityMap,
+                                                                         tempComponentDataContainer.data());
                 }
 
-                buffer->PushComponentUpdateInstruction(0, entityId, it.GetDataHandle());
+                buffer->PushComponentUpdateInstruction(0, entityId, tempComponentDataContainer.data());
             }
         }
     }
