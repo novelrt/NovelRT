@@ -5,7 +5,30 @@
 
 namespace NovelRT::ResourceManagement::Desktop
 {
-    TextureMetadata DesktopResourceLoader::LoadTextureFromFile(std::filesystem::path filePath)
+    void DesktopResourceLoader::WriteAssetDatabaseFile()
+    {
+        auto filePath = _resourcesRootDirectory / _assetDatabaseFileName;
+        std::ifstream file(filePath);
+
+        if (!file.is_open())
+        {
+            std::ofstream {filePath}; // NOLINT(bugprone-unused-raii)
+
+            file = std::ifstream(filePath);
+            if (!file.is_open())
+            {
+                throw NovelRT::Exceptions::IOException(filePath.string(), "Unable to open asset database file even after a creation attempt. Please validate that there is room on the local disk, and that folder permissions are correct.");
+            }
+        }
+
+        std::string line;
+        while(std::getline(file, line))
+        {
+            // todo: iterate
+        }
+    }
+
+    TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
         {
@@ -24,6 +47,7 @@ namespace NovelRT::ResourceManagement::Desktop
         _logger.throwIfNullPtr(
             cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #endif
+
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,
                                           nullptr); // TODO: Figure out how the error function ptr works
 
@@ -145,6 +169,8 @@ namespace NovelRT::ResourceManagement::Desktop
         delete[] data.rowPointers;
         png_destroy_read_struct(&png, &info, nullptr);
 
+        RegisterAsset(filePath);
+
         return TextureMetadata{returnImage, data.width, data.height, finalLength};
     }
 
@@ -168,6 +194,8 @@ namespace NovelRT::ResourceManagement::Desktop
         file.read(reinterpret_cast<char*>(buffer.data()),
                   std::streamsize(fileSize)); // TODO: Why on earth do we have to cast to char*?!
         file.close();
+
+        RegisterAsset(filePath);
 
         return buffer;
     }
@@ -207,6 +235,8 @@ namespace NovelRT::ResourceManagement::Desktop
 
         package.data = j["data"].as<std::vector<uint8_t>>();
 
+        RegisterAsset(filePath);
+
         return package;
     }
 
@@ -243,6 +273,8 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             throw NovelRT::Exceptions::InvalidOperationException("Unable to create file at " + filePath.string());
         }
+
+        RegisterAsset(filePath);
 
         file.write(reinterpret_cast<const char*>(buffer.data()), std::streamsize(buffer.size()));
         file.close();

@@ -13,6 +13,7 @@
 #include <jsoncons_ext/jsonpath/jsonpath.hpp>
 #include <memory>
 #include <vector>
+#include <uuid.h>
 
 /**
  * @brief The APIs for managing assets and other resources that reside in persisted storage.
