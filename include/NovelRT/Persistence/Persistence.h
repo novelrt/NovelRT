@@ -27,6 +27,8 @@ namespace NovelRT::Persistence
 #include "Persistable.h"
 #include "Chapter.h"
 
+#include "Graphics/Persistence.Graphics.h"
+
 // clang-format on
 
 #endif // NOVELRT_PERSISTENCE_H
