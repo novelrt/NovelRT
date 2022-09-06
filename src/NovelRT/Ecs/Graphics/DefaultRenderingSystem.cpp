@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include "NovelRT/Ecs/Graphics/DefaultRenderingSystem.h"
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -887,4 +888,19 @@ namespace NovelRT::Ecs::Graphics
         _graphicsDevice->Signal(currentContext->GetFence());
         _graphicsDevice->WaitForIdle();
     }
+
+    uuids::uuid DefaultRenderingSystem::GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const noexcept
+    {
+    }
+
+    uuids::uuid DefaultRenderingSystem::GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const noexcept
+    {
+
+    }
+
+    uuids::uuid DefaultRenderingSystem::GetGuidForTexture(Atom textureId) const noexcept
+    {
+
+    }
+
 }

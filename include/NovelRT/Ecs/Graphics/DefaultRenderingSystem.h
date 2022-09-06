@@ -190,6 +190,12 @@ namespace NovelRT::Ecs::Graphics
         {
             return _backgroundColour;
         }
+
+        [[nodiscard]] uuids::uuid GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const noexcept;
+
+        [[nodiscard]] uuids::uuid GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const noexcept;
+
+        [[nodiscard]] uuids::uuid GetGuidForTexture(Atom textureId) const noexcept;
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H

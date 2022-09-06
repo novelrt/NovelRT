@@ -17,8 +17,8 @@ namespace NovelRT::Persistence::Graphics
         const Ecs::Graphics::RenderComponent* ptr =
             reinterpret_cast<const Ecs::Graphics::RenderComponent*>(component.data());
 
-        uuids::uuid vertexShaderId = _renderingSystem->GetVertexShaderGuidForPrimitiveinfo(ptr->primitiveInfoId);
-        uuids::uuid pixelShaderId = _renderingSystem->GetPixelShaderGuidForPrimitiveinfo(ptr->primitiveInfoId);
+        uuids::uuid vertexShaderId = _renderingSystem->GetVertexShaderGuidForPrimitiveInfo(ptr->primitiveInfoId);
+        uuids::uuid pixelShaderId = _renderingSystem->GetPixelShaderGuidForPrimitiveInfo(ptr->primitiveInfoId);
 
         std::vector<uint8_t> packedData(GetSerialisedSize());
 
@@ -38,6 +38,7 @@ namespace NovelRT::Persistence::Graphics
 
         std::vector<uint8_t> unpackedData(sizeof(Ecs::Graphics::RenderComponent));
         Ecs::Graphics::RenderComponent* ptr = reinterpret_cast<Ecs::Graphics::RenderComponent*>(unpackedData.data());
+        ptr->vertexDataId = _renderingSystem->GetDefaultVertexDataId();
         ptr->textureId = _renderingSystem->GetTextureIdFromGuid(guids[0]);
         ptr->primitiveInfoId = _renderingSystem->GetPrimitiveInfoFromAssetGuids(guids[0], guids[1], guids[2]);
         ptr->pipelineId = _renderingSystem->GetPipelineFromAssetGuids(guids[0], guids[1], guids[2]);
