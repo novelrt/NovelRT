@@ -17,6 +17,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
     protected:
         void WriteAssetDatabaseFile() final;
+        void LoadAssetDatabaseFile() override;
 
     public:
         [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;

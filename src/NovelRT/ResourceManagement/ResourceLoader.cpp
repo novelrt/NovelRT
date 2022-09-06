@@ -7,6 +7,13 @@ namespace NovelRT::ResourceManagement
 {
     void ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)
     {
+        static std::random_device rd;
+        static auto seed_data = std::array<int, std::mt19937::state_size> {};
+        std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
+        static std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
+        static std::mt19937 generator(seq);
+        static uuids::uuid_random_generator gen{generator};
+
         if (!_hasLoadedAssetDatabase)
         {
             _hasLoadedAssetDatabase = true;
@@ -21,12 +28,6 @@ namespace NovelRT::ResourceManagement
         {
             auto& guidPathMap = GetGuidsToFilePathsMap();
 
-            std::random_device rd;
-            auto seed_data = std::array<int, std::mt19937::state_size> {};
-            std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-            std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-            std::mt19937 generator(seq);
-            uuids::uuid_random_generator gen{generator};
 
             uuids::uuid guid = gen();
 
