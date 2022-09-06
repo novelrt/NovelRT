@@ -18,7 +18,10 @@ namespace NovelRT::ResourceManagement::Desktop
             file = std::ifstream(filePath);
             if (!file.is_open())
             {
-                throw NovelRT::Exceptions::IOException(filePath.string(), "Unable to open asset database file even after a creation attempt. Please validate that there is room on the local disk, and that folder permissions are correct.");
+                throw NovelRT::Exceptions::IOException(
+                    filePath.string(),
+                    "Unable to open asset database file even after a creation attempt. Please validate that there is "
+                    "room on the local disk, and that folder permissions are correct.");
             }
         }
 
@@ -26,13 +29,14 @@ namespace NovelRT::ResourceManagement::Desktop
         auto& pathToGuidMap = GetFilePathsToGuidsMap();
 
         std::string line;
-        while(std::getline(file, line))
+        while (std::getline(file, line))
         {
             auto subStrings = Utilities::Misc::SplitString(line, ":");
 
             if (subStrings.size() != 2)
             {
-                throw Exceptions::InvalidOperationException("Invalid record detected in asset database. Is the asset database corrupted?");
+                throw Exceptions::InvalidOperationException(
+                    "Invalid record detected in asset database. Is the asset database corrupted?");
             }
 
             auto parsedGuid = uuids::uuid::from_string(subStrings[0]).value();
@@ -50,7 +54,9 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!inputStream.is_open())
         {
-            throw NovelRT::Exceptions::IOException(filePath.string(), "Unable to open asset database file for append-write. Please validate that there is room on the local disk, and that folder permissions are correct.");
+            throw NovelRT::Exceptions::IOException(
+                filePath.string(), "Unable to open asset database file for append-write. Please validate that there is "
+                                   "room on the local disk, and that folder permissions are correct.");
         }
 
         auto& guidToPathMap = GetGuidsToFilePathsMap();

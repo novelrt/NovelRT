@@ -61,7 +61,8 @@ namespace NovelRT::Utilities
             return targetPtrs;
         }
 
-        static std::vector<std::string> SplitString(const std::string& targetString, const std::string& delimiter) noexcept
+        static std::vector<std::string> SplitString(const std::string& targetString,
+                                                    const std::string& delimiter) noexcept
         {
             std::vector<std::string> returnVec{};
             size_t start = 0;
