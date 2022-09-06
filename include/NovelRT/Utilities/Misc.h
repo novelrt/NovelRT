@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <gsl/span>
 #include <type_traits>
+#include <vector>
 
 #define unused(x) (void)(x)
 
