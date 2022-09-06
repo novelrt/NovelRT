@@ -73,6 +73,7 @@ set(SOURCES
 
   PluginManagement/TemporaryFnPtrs.cpp
 
+  ResourceManagement/ResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
