@@ -216,7 +216,8 @@ namespace NovelRT::ResourceManagement::Desktop
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
-        return TextureMetadata{returnImage, data.width, data.height, finalLength, RegisterAsset(relativePathForAssetDatabase)};
+        return TextureMetadata{returnImage, data.width, data.height, finalLength,
+                               RegisterAsset(relativePathForAssetDatabase)};
     }
 
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
@@ -242,7 +243,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
-        return ShaderMetadata { buffer,RegisterAsset(relativePathForAssetDatabase) };
+        return ShaderMetadata{buffer, RegisterAsset(relativePathForAssetDatabase)};
     }
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
