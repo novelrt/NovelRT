@@ -12,6 +12,7 @@
 #include <jsoncons_ext/bson/bson.hpp>
 #include <jsoncons_ext/jsonpath/jsonpath.hpp>
 #include <memory>
+#include <uuid.h>
 #include <vector>
 
 /**

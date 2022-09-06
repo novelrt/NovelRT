@@ -93,7 +93,7 @@ namespace NovelRT::Ecs::Graphics
             }
             else
             {
-                texture = resourceLoader->LoadTextureFromFile(ptr->textureName + ".png");
+                texture = resourceLoader->LoadTexture(ptr->textureName + ".png");
             }
 
             auto texture2DRegion =
