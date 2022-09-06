@@ -165,9 +165,9 @@ namespace NovelRT::Ecs::Graphics
         };
 
         auto vertexShaderProgram =
-            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertShaderData);
+            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertShaderData.shaderCode);
         auto pixelShaderProgram =
-            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData);
+            _graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
         auto signature = _graphicsDevice->CreatePipelineSignature(
             NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
             NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
