@@ -1,27 +1,3 @@
-find_package(Vulkan REQUIRED)
-find_package(spdlog REQUIRED)
-find_package(TBB REQUIRED)
-find_package(Microsoft.GSL REQUIRED)
-find_package(stduuid REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(glm REQUIRED)
-find_package(jsoncons REQUIRED)
-find_package(Ogg REQUIRED)
-find_package(OpenAL CONFIG REQUIRED)
-find_package(Opus REQUIRED)
-find_package(Vorbis REQUIRED)
-find_package(flac REQUIRED)
-find_package(SndFile REQUIRED)
-find_package(ZLIB REQUIRED)
-add_library(ZLIB::zlib ALIAS ZLIB::ZLIB)
-find_package(nlohmann_json REQUIRED)
-include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
-include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-find_package(freetype CONFIG REQUIRED)
-
-
-
-
 if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
@@ -161,7 +137,7 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    fabulist::runtime # Fabulist support - target name is vague. Fix later. :]
+    fabulist::runtime
     freetype
     glfw
     glm::glm
@@ -173,7 +149,6 @@ target_link_libraries(Engine
     jsoncons
     stduuid
     SndFile::sndfile
-    ZLIB::zlib
 )
 
 install(
@@ -191,7 +166,6 @@ install(
 
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-if(WIN32)
   #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
   #    ${CMAKE_BINARY_DIR}/thirdparty
   #    $<TARGET_FILE_DIR:Engine>)
@@ -222,5 +196,4 @@ if(WIN32)
   #set_target_properties(Engine
   #  PROPERTIES
   #    RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
-endif()
 
