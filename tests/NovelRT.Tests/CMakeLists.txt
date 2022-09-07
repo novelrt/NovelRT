@@ -1,7 +1,5 @@
+find_package(GTest)
 include(GoogleTest)
-if(NOVELRT_VULKAN_SDK)
-  find_dependency(Vulkan REQUIRED)
-endif()
 
 set(SOURCES
   Ecs/CatalogueTest.cpp
@@ -55,19 +53,14 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
-include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 if(NOVELRT_BUILD_INTEROP)
-  copy_build_products(Engine_Tests
+  copy_runtime_dependencies(Engine_Tests
     DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-
     DEPENDENCY Interop
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
   )
 else()
-  copy_build_products(Engine_Tests
+  copy_runtime_dependencies(Engine_Tests
     DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
   )
 endif()
 
@@ -75,7 +68,7 @@ target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
-    gtest_main
+    GTest::gtest_main
 )
 
 gtest_discover_tests(Engine_Tests

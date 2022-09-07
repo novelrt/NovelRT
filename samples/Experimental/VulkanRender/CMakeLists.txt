@@ -1,7 +1,3 @@
-if(NOVELRT_VULKAN_SDK)
-  find_dependency(Vulkan REQUIRED)
-endif()
-
 set(SOURCES
   main.cpp
 )
@@ -17,7 +13,7 @@ target_compile_definitions(VulkanRender PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:
 copy_build_products(VulkanRender
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
-
+)
+copy_runtime_dependencies(VulkanRender
   DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>
 )

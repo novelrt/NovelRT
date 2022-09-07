@@ -86,32 +86,32 @@ include(${NOVELRT_DEPS_PATH}/lib/cmake/ZLIB/ZLIBConfig.cmake)
 find_package(nlohmann_json REQUIRED)
 include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-#find_package(freetype CONFIG REQUIRED)
+
 
 add_subdirectory(resources)
 add_subdirectory(src)
 
-# if(NOVELRT_BUILD_DOCUMENTATION)
-#   find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-#     COMPONENTS dot
-#   )
-#   if(NOT DOXYGEN_FOUND)
-#     message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
-#     set(NOVELRT_BUILD_DOCUMENTATION OFF)
-#   endif()
-# endif()
+if(NOVELRT_BUILD_DOCUMENTATION)
+  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+    COMPONENTS dot
+  )
+  if(NOT DOXYGEN_FOUND)
+    message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
+    set(NOVELRT_BUILD_DOCUMENTATION OFF)
+  endif()
+endif()
 
-# if(NOT NOVELRT_BUILD_INTEROP)
-#   message("NovelRT Interop library building is disabled.")
-# endif()
+if(NOT NOVELRT_BUILD_INTEROP)
+  message("NovelRT Interop library building is disabled.")
+endif()
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()
 
-# if(NOVELRT_BUILD_TESTS)
-#   add_subdirectory(tests)
-# endif()
+if(NOVELRT_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 
 # install(
 #   EXPORT NovelRT

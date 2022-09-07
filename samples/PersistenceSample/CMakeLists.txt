@@ -1,23 +1,19 @@
-if(NOVELRT_VULKAN_SDK)
-  find_dependency(Vulkan REQUIRED)
-endif()
-
 set(SOURCES
   main.cpp
-  )
+)
 
 add_executable(PersistenceSample ${SOURCES})
 add_dependencies(PersistenceSample Resources)
 target_link_libraries(PersistenceSample
   PRIVATE
-  Engine
-  )
+    Engine
+)
 target_compile_definitions(PersistenceSample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:${NOVELRT_MOLTENVK_VENDORED}>,1,0>)
 
 copy_build_products(PersistenceSample
   DEPENDENCY Resources
   TARGET_LOCATION $<TARGET_FILE_DIR:PersistenceSample>/Resources
-
+)
+copy_runtime_dependencies(PersistenceSample
   DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:PersistenceSample>
-  )
+)
