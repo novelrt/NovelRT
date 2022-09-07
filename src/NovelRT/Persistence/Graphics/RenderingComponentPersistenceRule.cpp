@@ -24,9 +24,9 @@ namespace NovelRT::Persistence::Graphics
 
         auto uuidPtr = reinterpret_cast<uuids::uuid*>(packedData.data());
 
-       uuidPtr[0] = _renderingSystem->GetGuidForTexture(ptr->textureId);
-       uuidPtr[1] = vertexShaderId;
-       uuidPtr[2] = pixelShaderId;
+        uuidPtr[0] = _renderingSystem->GetGuidForTexture(ptr->textureId);
+        uuidPtr[1] = vertexShaderId;
+        uuidPtr[2] = pixelShaderId;
 
         return packedData;
     }

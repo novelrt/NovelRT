@@ -103,13 +103,14 @@ namespace NovelRT::Ecs::Graphics
                                              textureDataSpan.size(), width, height);
         }
 
-        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRawUntyped(const std::string& textureDataName,
-                                                                                     void* data,
-                                                                                     size_t dataTypeSize,
-                                                                                     size_t dataLength,
-                                                                                     uint32_t width,
-                                                                                     uint32_t height,
-                                                                                     uuids::uuid textureAssetDataHandle);
+        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRawUntyped(
+            const std::string& textureDataName,
+            void* data,
+            size_t dataTypeSize,
+            size_t dataLength,
+            uint32_t width,
+            uint32_t height,
+            uuids::uuid textureAssetDataHandle);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(Atom ecsId);
 
@@ -207,9 +208,12 @@ namespace NovelRT::Ecs::Graphics
 
         [[nodiscard]] Atom GetTextureIdFromGuid(uuids::uuid assetGuid) const;
 
-        [[nodiscard]] Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid, uuids::uuid vertexShaderAssetGuid, uuids::uuid pixelShaderAssetGuid) const;
+        [[nodiscard]] Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
+                                                          uuids::uuid vertexShaderAssetGuid,
+                                                          uuids::uuid pixelShaderAssetGuid) const;
 
-        [[nodiscard]] Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid, uuids::uuid pixelShaderAssetGuid) const;
+        [[nodiscard]] Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
+                                                     uuids::uuid pixelShaderAssetGuid) const;
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H

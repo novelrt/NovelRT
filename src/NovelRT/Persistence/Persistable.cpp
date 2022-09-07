@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Persistence/Persistence.h>
 #include "NovelRT/Persistence/Persistable.h"
+#include <NovelRT/Persistence/Persistence.h>
 
 namespace NovelRT::Persistence
 {
@@ -57,6 +57,8 @@ namespace NovelRT::Persistence
     {
         auto& serialisationRules = GetSerialisationRules();
 
-        serialisationRules.emplace("NovelRT::Ecs::Graphics::RenderComponent", std::unique_ptr<ICustomSerialisationRule>(new Graphics::RenderingComponentPersistenceRule(std::move(renderingSystem))));
+        serialisationRules.emplace("NovelRT::Ecs::Graphics::RenderComponent",
+                                   std::unique_ptr<ICustomSerialisationRule>(
+                                       new Graphics::RenderingComponentPersistenceRule(std::move(renderingSystem))));
     }
 }

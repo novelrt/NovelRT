@@ -173,7 +173,8 @@ namespace NovelRT::Ecs::Graphics
             NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
-        _defaultGraphicsPipelinePtr = RegisterPipeline("default", pipeline, vertShaderData.databaseHandle, pixelShaderData.databaseHandle);
+        _defaultGraphicsPipelinePtr =
+            RegisterPipeline("default", pipeline, vertShaderData.databaseHandle, pixelShaderData.databaseHandle);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
@@ -896,12 +897,14 @@ namespace NovelRT::Ecs::Graphics
 
     uuids::uuid DefaultRenderingSystem::GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const
     {
-        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)->vertexShaderAssetHandle;
+        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)
+            ->vertexShaderAssetHandle;
     }
 
     uuids::uuid DefaultRenderingSystem::GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const
     {
-        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)->pixelShaderAssetHandle;
+        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)
+            ->pixelShaderAssetHandle;
     }
 
     uuids::uuid DefaultRenderingSystem::GetGuidForTexture(Atom textureId) const
@@ -950,7 +953,8 @@ namespace NovelRT::Ecs::Graphics
     {
         for (auto&& [atomHandle, pipelineInfo] : _namedGraphicsPipelineInfoObjects)
         {
-            if (pipelineInfo->vertexShaderAssetHandle != vertexShaderAssetGuid || pipelineInfo->pixelShaderAssetHandle != pixelShaderAssetGuid)
+            if (pipelineInfo->vertexShaderAssetHandle != vertexShaderAssetGuid ||
+                pipelineInfo->pixelShaderAssetHandle != pixelShaderAssetGuid)
             {
                 continue;
             }

@@ -16,16 +16,19 @@ namespace NovelRT::Persistence::Graphics
         std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> _renderingSystem;
 
     public:
-        explicit RenderingComponentPersistenceRule(std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept;
+        explicit RenderingComponentPersistenceRule(
+            std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept;
 
         [[nodiscard]] inline size_t GetSerialisedSize() const noexcept final
         {
             return sizeof(uuids::uuid) * 3;
         }
 
-        [[nodiscard]] std::vector<uint8_t> ExecuteSerialiseModification(gsl::span<const uint8_t> component) const noexcept final;
+        [[nodiscard]] std::vector<uint8_t> ExecuteSerialiseModification(
+            gsl::span<const uint8_t> component) const noexcept final;
 
-        [[nodiscard]] std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept final;
+        [[nodiscard]] std::vector<uint8_t> ExecuteDeserialiseModification(
+            gsl::span<const uint8_t> component) const noexcept final;
     };
 }
 
