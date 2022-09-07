@@ -113,8 +113,8 @@ if(NOVELRT_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
-# install(
-#   EXPORT NovelRT
-#   NAMESPACE NovelRT::
-#   DESTINATION lib
-# )
+install(
+  EXPORT NovelRT
+  NAMESPACE NovelRT::
+  DESTINATION lib
+)
