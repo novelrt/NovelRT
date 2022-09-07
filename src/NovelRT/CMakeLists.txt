@@ -138,7 +138,7 @@ endif()
 target_link_libraries(Engine
   PUBLIC
     fabulist::runtime
-    freetype
+    #freetype
     glfw
     glm::glm
     OpenAL::OpenAL

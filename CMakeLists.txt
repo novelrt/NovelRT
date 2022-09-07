@@ -43,6 +43,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
     if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
       set(GENERATOR_ARCH_PARAM -A ${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE})
     endif()
+
     execute_process(
       COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_SOURCE_DIR}/internal -B ${CMAKE_CURRENT_BINARY_DIR}/depbuild -DCMAKE_BUILD_TYPE=Release -G ${CMAKE_GENERATOR} ${GENERATOR_ARCH_PARAM} -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/dist
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -58,10 +59,6 @@ if(NOVELRT_FETCH_DEPENDENCIES)
     )
 
     set(NOVELRT_DEPS_PATH "${CMAKE_CURRENT_BINARY_DIR}/dist" CACHE FILEPATH "Path where NovelRT's Dependencies were previously installed")
-
-    #list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/lib)
-    #list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/share)
-    #list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/share/cmake)
     set(NOVELRT_DEPS_INSTALLED TRUE CACHE BOOL "Indicates if NovelRT's Dependencies have been installed locally via FetchContent")
   endif()
   list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist)
@@ -89,7 +86,7 @@ include(${NOVELRT_DEPS_PATH}/lib/cmake/ZLIB/ZLIBConfig.cmake)
 find_package(nlohmann_json REQUIRED)
 include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-find_package(freetype CONFIG REQUIRED)
+#find_package(freetype CONFIG REQUIRED)
 
 add_subdirectory(resources)
 add_subdirectory(src)

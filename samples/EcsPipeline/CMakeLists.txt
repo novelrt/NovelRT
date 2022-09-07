@@ -1,6 +1,6 @@
 set(SOURCES
   main.cpp
-  )
+)
 
 add_executable(EcsPipeline ${SOURCES})
 add_dependencies(EcsPipeline Resources)
