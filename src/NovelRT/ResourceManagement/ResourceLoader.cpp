@@ -5,7 +5,7 @@
 
 namespace NovelRT::ResourceManagement
 {
-    void ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)
+    uuids::uuid ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)
     {
         static std::random_device rd;
         static auto seed_data = std::array<int, std::mt19937::state_size>{};
@@ -40,5 +40,7 @@ namespace NovelRT::ResourceManagement
         }
 
         WriteAssetDatabaseFile();
+
+        return it->second;
     }
 }

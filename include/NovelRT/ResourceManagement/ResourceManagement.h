@@ -25,6 +25,7 @@ namespace NovelRT::ResourceManagement
     enum class BinaryDataType : uint32_t;
     struct BinaryMemberMetadata;
     struct BinaryPackage;
+    struct ShaderMetadata;
 }
 
 // clang-format off
@@ -33,6 +34,7 @@ namespace NovelRT::ResourceManagement
 #include "BinaryDataType.h"
 #include "BinaryMemberMetadata.h"
 #include "BinaryPackage.h"
+#include "ShaderMetadata.h"
 // clang-format on
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_H

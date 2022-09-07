@@ -34,7 +34,7 @@ namespace NovelRT::ResourceManagement
         virtual void WriteAssetDatabaseFile() = 0;
         virtual void LoadAssetDatabaseFile() = 0;
 
-        void RegisterAsset(const std::filesystem::path& filePath);
+        uuids::uuid RegisterAsset(const std::filesystem::path& filePath);
 
     public:
         [[nodiscard]] inline std::filesystem::path& ResourcesRootDirectory() noexcept
@@ -76,10 +76,10 @@ namespace NovelRT::ResourceManagement
          * When using a relative path it will look in the Resources/Shaders directory.
          *
          * @param filePath Relative or absolute path to the shader.
-         * @returns std::vector<uint8_t> Shader data as a memory block that was contained in the file.
+         * @returns ShaderMetadata instance containing the shader bytecode and asset database handle.
          * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
          */
-        [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) = 0;
+        [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
 
