@@ -21,7 +21,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
     public:
         [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;
-        [[nodiscard]] std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) final;
+        [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
         ~DesktopResourceLoader() final = default;

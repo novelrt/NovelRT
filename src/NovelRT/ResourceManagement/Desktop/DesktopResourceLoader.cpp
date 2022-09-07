@@ -215,12 +215,12 @@ namespace NovelRT::ResourceManagement::Desktop
         png_destroy_read_struct(&png, &info, nullptr);
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
-        RegisterAsset(relativePathForAssetDatabase);
 
-        return TextureMetadata{returnImage, data.width, data.height, finalLength};
+        return TextureMetadata{returnImage, data.width, data.height, finalLength,
+                               RegisterAsset(relativePathForAssetDatabase)};
     }
 
-    std::vector<uint8_t> DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
+    ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
         {
@@ -242,9 +242,8 @@ namespace NovelRT::ResourceManagement::Desktop
         file.close();
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
-        RegisterAsset(relativePathForAssetDatabase);
 
-        return buffer;
+        return ShaderMetadata{buffer, RegisterAsset(relativePathForAssetDatabase)};
     }
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
@@ -283,7 +282,7 @@ namespace NovelRT::ResourceManagement::Desktop
         package.data = j["data"].as<std::vector<uint8_t>>();
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
-        RegisterAsset(relativePathForAssetDatabase);
+        package.databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return package;
     }
