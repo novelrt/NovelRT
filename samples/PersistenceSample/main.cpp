@@ -131,6 +131,8 @@ int main()
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
+    NovelRT::Persistence::Persistable::LoadDefaultRules(renderingSystem);
+
     NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
         renderingSystem->GetOrLoadTexture("novel-chan");
 
@@ -180,7 +182,7 @@ int main()
             secondsPassed = NovelRT::Timing::Timestamp(0);
             chapterToLoad.LoadFileData(
                 resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
+            //chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
             // SEE THE FILE SIZE GROW
             // FOREVER, UNCOMMENT THIS!
         }

@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Persistence/Persistence.h>
+#include "NovelRT/Persistence/Persistable.h"
 
 namespace NovelRT::Persistence
 {
@@ -49,5 +50,13 @@ namespace NovelRT::Persistence
 
         auto newData = it->second->ExecuteDeserialiseModification(serialisedData);
         memcpy(writeToData.data(), newData.data(), writeToData.size());
+    }
+
+    // TODO: Rework this at a later date.
+    void Persistable::LoadDefaultRules(std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept
+    {
+        auto& serialisationRules = GetSerialisationRules();
+
+        serialisationRules.emplace("NovelRT::Ecs::Graphics::RenderComponent", std::unique_ptr<ICustomSerialisationRule>(new Graphics::RenderingComponentPersistenceRule(std::move(renderingSystem))));
     }
 }

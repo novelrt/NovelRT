@@ -13,11 +13,11 @@
 
 namespace NovelRT::Persistence::Graphics
 {
-    class TexturePersistenceRule;
+    class RenderingComponentPersistenceRule;
 }
 
 // clang-format off
-#include "TexturePersistenceRule.h"
+#include "RenderingComponentPersistenceRule.h"
 // clang-format on
 
 #endif // NOVELRT_PERSISTENCE_GRAPHICS_H

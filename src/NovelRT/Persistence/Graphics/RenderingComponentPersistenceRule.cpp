@@ -5,13 +5,13 @@
 
 namespace NovelRT::Persistence::Graphics
 {
-    TexturePersistenceRule::TexturePersistenceRule(
+    RenderingComponentPersistenceRule::RenderingComponentPersistenceRule(
         std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept
         : _renderingSystem(std::move(renderingSystem))
     {
     }
 
-    std::vector<uint8_t> TexturePersistenceRule::ExecuteSerialiseModification(
+    std::vector<uint8_t> RenderingComponentPersistenceRule::ExecuteSerialiseModification(
         gsl::span<const uint8_t> component) const noexcept
     {
         const Ecs::Graphics::RenderComponent* ptr =
@@ -22,7 +22,7 @@ namespace NovelRT::Persistence::Graphics
 
         std::vector<uint8_t> packedData(GetSerialisedSize());
 
-        uuids::uuid* uuidPtr = reinterpret_cast<const uuids::uuid*>(packedData.data());
+        auto uuidPtr = reinterpret_cast<uuids::uuid*>(packedData.data());
 
        uuidPtr[0] = _renderingSystem->GetGuidForTexture(ptr->textureId);
        uuidPtr[1] = vertexShaderId;
@@ -31,7 +31,7 @@ namespace NovelRT::Persistence::Graphics
         return packedData;
     }
 
-    std::vector<uint8_t> TexturePersistenceRule::ExecuteDeserialiseModification(
+    std::vector<uint8_t> RenderingComponentPersistenceRule::ExecuteDeserialiseModification(
         gsl::span<const uint8_t> component) const noexcept
     {
         const uuids::uuid* guids = reinterpret_cast<const uuids::uuid*>(component.data());
@@ -41,7 +41,7 @@ namespace NovelRT::Persistence::Graphics
         ptr->vertexDataId = _renderingSystem->GetDefaultVertexDataId();
         ptr->textureId = _renderingSystem->GetTextureIdFromGuid(guids[0]);
         ptr->primitiveInfoId = _renderingSystem->GetPrimitiveInfoFromAssetGuids(guids[0], guids[1], guids[2]);
-        ptr->pipelineId = _renderingSystem->GetPipelineFromAssetGuids(guids[0], guids[1], guids[2]);
+        ptr->pipelineId = _renderingSystem->GetPipelineFromAssetGuids(guids[1], guids[2]);
 
         return unpackedData;
     }
