@@ -94,7 +94,8 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
                                                                               gsl::span<TSpanType> textureDataSpan,
                                                                               uint32_t width,
-                                                                              uint32_t height, uuids::uuid textureAssetDataHandle)
+                                                                              uint32_t height,
+                                                                              uuids::uuid textureAssetDataHandle)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
