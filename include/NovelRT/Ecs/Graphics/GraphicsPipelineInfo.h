@@ -19,6 +19,8 @@ namespace NovelRT::Ecs::Graphics
         bool useEcsTransforms = false;
         std::string pipelineName = "";
         Atom ecsId = 0;
+        uuids::uuid vertexShaderAssetHandle;
+        uuids::uuid pixelShaderAssetHandle;
     };
 }
 

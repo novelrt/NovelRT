@@ -100,8 +100,8 @@ namespace NovelRT::Ecs::Graphics
                 resourceManager.LoadTextureData(texture, NovelRT::Graphics::GraphicsTextureAddressMode::ClampToEdge,
                                                 NovelRT::Graphics::GraphicsTextureKind::TwoDimensional);
 
-            *ptr = TextureInfo{texture2DRegion, ptr->textureName, texture.width,
-                               texture.height,  ptr->ecsId,       std::vector<uint8_t>{}};
+            *ptr = TextureInfo{texture2DRegion, ptr->textureName,       texture.width,         texture.height,
+                               ptr->ecsId,      std::vector<uint8_t>{}, texture.databaseHandle};
             _namedTextureInfoObjects.emplace(ptr->ecsId, ptr);
         }
     }
@@ -173,7 +173,8 @@ namespace NovelRT::Ecs::Graphics
             NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
         auto pipeline = _graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
-        _defaultGraphicsPipelinePtr = RegisterPipeline("default", pipeline);
+        _defaultGraphicsPipelinePtr =
+            RegisterPipeline("default", pipeline, vertShaderData.databaseHandle, pixelShaderData.databaseHandle);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
 
@@ -440,7 +441,8 @@ namespace NovelRT::Ecs::Graphics
         size_t dataTypeSize,
         size_t dataLength,
         uint32_t width,
-        uint32_t height)
+        uint32_t height,
+        uuids::uuid textureAssetDataHandle)
     {
         std::scoped_lock guard(_textureQueueMapMutex);
 
@@ -455,6 +457,7 @@ namespace NovelRT::Ecs::Graphics
         ptr->width = width;
         ptr->height = height;
         ptr->ecsId = _textureIdFactory.GetNext();
+        ptr->textureAssetDataHandle = textureAssetDataHandle;
         _texturesToInitialise.push(ptr);
 
         return Threading::FutureResult<TextureInfo>(ptr, *ptr);
@@ -678,6 +681,8 @@ namespace NovelRT::Ecs::Graphics
     Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::RegisterPipeline(
         const std::string& pipelineName,
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline,
+        uuids::uuid vertexShaderAssetHandle,
+        uuids::uuid pixelShaderAssetHandle,
         std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
             customConstantBufferRegions,
         bool useEcsTransforms)
@@ -691,6 +696,8 @@ namespace NovelRT::Ecs::Graphics
         ptr->pipelineName = pipelineName;
         ptr->ecsId = ecsGraphicsPipelineIdFactory.GetNext();
         ptr->useEcsTransforms = useEcsTransforms;
+        ptr->vertexShaderAssetHandle = vertexShaderAssetHandle;
+        ptr->pixelShaderAssetHandle = pixelShaderAssetHandle;
 
         if (!customConstantBufferRegions.empty())
         {
@@ -886,5 +893,75 @@ namespace NovelRT::Ecs::Graphics
         currentContext->EndFrame();
         _graphicsDevice->Signal(currentContext->GetFence());
         _graphicsDevice->WaitForIdle();
+    }
+
+    uuids::uuid DefaultRenderingSystem::GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const
+    {
+        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)
+            ->vertexShaderAssetHandle;
+    }
+
+    uuids::uuid DefaultRenderingSystem::GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const
+    {
+        return _namedGraphicsPipelineInfoObjects.at(_primitiveConfigurations.at(primitiveInfoId).ecsPipelineId)
+            ->pixelShaderAssetHandle;
+    }
+
+    uuids::uuid DefaultRenderingSystem::GetGuidForTexture(Atom textureId) const
+    {
+        return _namedTextureInfoObjects.at(textureId)->textureAssetDataHandle;
+    }
+
+    Atom DefaultRenderingSystem::GetTextureIdFromGuid(uuids::uuid assetGuid) const
+    {
+        for (auto&& [atomHandle, textureInfo] : _namedTextureInfoObjects)
+        {
+            if (textureInfo->textureAssetDataHandle != assetGuid)
+            {
+                continue;
+            }
+
+            return atomHandle;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    Atom DefaultRenderingSystem::GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
+                                                                uuids::uuid vertexShaderAssetGuid,
+                                                                uuids::uuid pixelShaderAssetGuid) const
+    {
+        for (auto&& [atomHandle, primitiveInfo] : _primitiveConfigurations)
+        {
+            auto pipeline = _namedGraphicsPipelineInfoObjects.at(primitiveInfo.ecsPipelineId);
+
+            if (_namedTextureInfoObjects.at(primitiveInfo.ecsTextureId)->textureAssetDataHandle != textureAssetGuid ||
+                pipeline->vertexShaderAssetHandle != vertexShaderAssetGuid ||
+                pipeline->pixelShaderAssetHandle != pixelShaderAssetGuid)
+            {
+                continue;
+            }
+
+            return atomHandle;
+        }
+
+        throw Exceptions::KeyNotFoundException();
+    }
+
+    Atom DefaultRenderingSystem::GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
+                                                           uuids::uuid pixelShaderAssetGuid) const
+    {
+        for (auto&& [atomHandle, pipelineInfo] : _namedGraphicsPipelineInfoObjects)
+        {
+            if (pipelineInfo->vertexShaderAssetHandle != vertexShaderAssetGuid ||
+                pipelineInfo->pixelShaderAssetHandle != pixelShaderAssetGuid)
+            {
+                continue;
+            }
+
+            return atomHandle;
+        }
+
+        throw Exceptions::KeyNotFoundException();
     }
 }

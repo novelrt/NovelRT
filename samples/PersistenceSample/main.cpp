@@ -131,6 +131,8 @@ int main()
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
+    NovelRT::Persistence::Persistable::LoadDefaultRules(renderingSystem);
+
     NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
         renderingSystem->GetOrLoadTexture("novel-chan");
 

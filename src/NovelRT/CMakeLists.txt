@@ -69,6 +69,7 @@ set(SOURCES
 
   Persistence/Chapter.cpp
   Persistence/Persistable.cpp
+  Persistence/Graphics/RenderingComponentPersistenceRule.cpp
 
   PluginManagement/TemporaryFnPtrs.cpp
 
