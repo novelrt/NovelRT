@@ -20,7 +20,7 @@ namespace NovelRT::Persistence
 
         explicit Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept;
 
-        void ToEcsInstance(Ecs::ComponentCache& componentCache) const;
+        void ToEcsInstance(Ecs::ComponentCache& componentCache, Ecs::EntityCache& entityCache) const;
 
         [[nodiscard]] static Chapter FromEcsInstance(const Ecs::ComponentCache& componentCache) noexcept;
 

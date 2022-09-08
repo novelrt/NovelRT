@@ -12,8 +12,29 @@ namespace NovelRT::ResourceManagement
 {
     class ResourceLoader : public std::enable_shared_from_this<ResourceLoader>
     {
+    private:
+        std::map<uuids::uuid, std::filesystem::path> _guidsToFilePathsMap;
+        std::map<std::filesystem::path, uuids::uuid> _filePathsToGuidsMap;
+        bool _hasLoadedAssetDatabase = false;
+
     protected:
         std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
+        std::string _assetDatabaseFileName = "AssetDB.txt";
+
+        [[nodiscard]] inline std::map<uuids::uuid, std::filesystem::path>& GetGuidsToFilePathsMap() noexcept
+        {
+            return _guidsToFilePathsMap;
+        }
+
+        [[nodiscard]] inline std::map<std::filesystem::path, uuids::uuid>& GetFilePathsToGuidsMap() noexcept
+        {
+            return _filePathsToGuidsMap;
+        }
+
+        virtual void WriteAssetDatabaseFile() = 0;
+        virtual void LoadAssetDatabaseFile() = 0;
+
+        uuids::uuid RegisterAsset(const std::filesystem::path& filePath);
 
     public:
         [[nodiscard]] inline std::filesystem::path& ResourcesRootDirectory() noexcept
@@ -26,6 +47,16 @@ namespace NovelRT::ResourceManagement
             return _resourcesRootDirectory;
         }
 
+        [[nodiscard]] inline const std::map<uuids::uuid, std::filesystem::path>& GetGuidsToFilePathsMap() const noexcept
+        {
+            return _guidsToFilePathsMap;
+        }
+
+        [[nodiscard]] inline const std::map<std::filesystem::path, uuids::uuid>& GetFilePathsToGuidsMap() const noexcept
+        {
+            return _filePathsToGuidsMap;
+        }
+
         /**
          * @brief Loads a texture from a file on a given path.
          *
@@ -36,7 +67,7 @@ namespace NovelRT::ResourceManagement
          * @returns TextureMetadata The texture data contained in the file.
          * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
          */
-        [[nodiscard]] virtual TextureMetadata LoadTextureFromFile(std::filesystem::path filePath) = 0;
+        [[nodiscard]] virtual TextureMetadata LoadTexture(std::filesystem::path filePath) = 0;
 
         /**
          * @brief Loads shader from a file on a given path.
@@ -45,10 +76,10 @@ namespace NovelRT::ResourceManagement
          * When using a relative path it will look in the Resources/Shaders directory.
          *
          * @param filePath Relative or absolute path to the shader.
-         * @returns std::vector<uint8_t> Shader data as a memory block that was contained in the file.
+         * @returns ShaderMetadata instance containing the shader bytecode and asset database handle.
          * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
          */
-        [[nodiscard]] virtual std::vector<uint8_t> LoadShaderSource(std::filesystem::path filePath) = 0;
+        [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
 

@@ -68,7 +68,8 @@ int main()
                 pTextureData.emplace_back(colourValue);
             }
 
-            redTextureFuture = renderingSystem->LoadTextureDataRaw<uint32_t>("exampleTex", pTextureData, 100, 100);
+            redTextureFuture =
+                renderingSystem->LoadTextureDataRaw<uint32_t>("exampleTex", pTextureData, 100, 100, uuids::uuid{});
         }
     });
 
