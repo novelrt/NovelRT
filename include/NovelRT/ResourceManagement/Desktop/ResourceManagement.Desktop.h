@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <fstream>
 #include <png.h>
+#include <sndfile.h>
 
 namespace NovelRT::ResourceManagement::Desktop
 {

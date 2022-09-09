@@ -33,7 +33,7 @@ namespace NovelRT::Audio
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
 
-        ALuint ReadFile(std::string input);
+        ALuint BufferAudioFrameData(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate);
         std::string GetALError();
 
     public:
@@ -43,7 +43,7 @@ namespace NovelRT::Audio
         ~AudioService();
 
         bool InitializeAudio();
-        std::vector<ALuint>::iterator LoadMusic(std::string input);
+        std::vector<ALuint>::iterator LoadMusic(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate);
 
         void SetSoundVolume(ALuint source, float val);
         void SetSoundPosition(ALuint source, float posX, float posY);
@@ -53,7 +53,7 @@ namespace NovelRT::Audio
         void StopMusic();
         void SetMusicVolume(float value);
         void CheckSources();
-        ALuint LoadSound(std::string input);
+        ALuint LoadSound(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate);
         void Unload(ALuint handle);
         void PlaySound(ALuint handle, int32_t loops);
         void StopSound(ALuint handle);

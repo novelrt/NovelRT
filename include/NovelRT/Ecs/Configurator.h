@@ -51,8 +51,15 @@ namespace NovelRT::Ecs
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
+            auto deleteState = Audio::AudioEmitterComponent();
+            target.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
+            target.GetComponentCache().RegisterComponentType(Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
+                                                                "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
+
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
+
+            target.RegisterSystem(std::make_shared<Ecs::Audio::AudioSystem>(_resourceManagementPluginProvider));
         }
 
     public:
