@@ -174,7 +174,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise sum of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise sum: \f[
+         * An example of a matrix that would be constructed from an entrywise sum: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -188,21 +188,21 @@ namespace NovelRT::Maths
          *      8 & 3 & 2 & 2\\
          *      6 & 7 & 6 & 8
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1+4 & 7+7 & 6+2 & 5+5\\
          *      2+5 & 1+1 & 4+8 & 3+4\\
          *      3+8 & 5+3 & 1+2 & 2+2\\
          *      4+6 & 6+7 & 7+6 & 1+8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      5 & 14 & 8 & 10\\
          *      7 & 2 & 12 & 7\\
          *      11 & 8 & 3 & 4\\
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose components get added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
@@ -218,7 +218,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise difference of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise difference: \f[
+         * An example of a matrix that would be constructed from an entrywise difference: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -232,21 +232,21 @@ namespace NovelRT::Maths
          *      8 & 3 & 2 & 2\\
          *      6 & 7 & 6 & 8
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1-4 & 7-7 & 6-2 & 5-5\\
          *      2-5 & 1-1 & 4-8 & 3-4\\
          *      3-8 & 5-3 & 1-2 & 2-2\\
          *      4-6 & 6-7 & 7-6 & 1-8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      -3 & 0 & 4 & 0\\
          *      -3 & 0 & -4 & 1\\
          *      -5 & 2 & -1 & 0\\
          *      -2 & -1 & 1 & -7
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose components get subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and another
@@ -262,7 +262,7 @@ namespace NovelRT::Maths
          * @brief Calculates the product of this GeoMatrix4x4F and another GeoMatrix4x4F.
          *
          * @details
-         * An example of a matrix that would be constructed from multiplying two matrices: \f[
+         * An example of a matrix that would be constructed from multiplying two matrices: \f{align*}{
          *      \begin{bmatrix}
          *      4 & 7 & 2 & 5\\
          *      5 & 1 & 8 & 4\\
@@ -276,21 +276,21 @@ namespace NovelRT::Maths
          *      3 & 5 & 1 & 2\\
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1*4+7*5+6*8+5*6 & 1*7+7*1+6*3+5*7 & 1*2+7*8+6*2+5*6 & 1*5+7*4+6*2+5*8\\
          *      2*4+1*5+4*8+3*6 & 2*7+1*1+4*3+3*7 & 2*2+1*8+4*2+3*6 & 2*5+1*4+4*2+3*8\\
          *      3*4+5*5+1*8+2*6 & 3*7+5*1+1*3+2*7 & 3*2+5*8+1*2+2*6 & 3*5+5*4+1*2+2*8\\
          *      4*4+6*5+7*8+1*6 & 4*7+6*1+7*3+1*7 & 4*2+6*8+7*2+1*6 & 4*5+6*4+7*2+1*8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      117 & 67 & 100 & 85\\
          *      63 & 48 & 38 & 46\\
          *      57 & 43 & 60 & 53\\
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
          * @return A matrix product where the components consist of the sum of the products of this GeoMatrix4x4F's rows
@@ -307,7 +307,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise sum: \f[
+         * An example of a matrix that would be constructed from an entrywise sum: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -321,21 +321,21 @@ namespace NovelRT::Maths
          *      8 & 3 & 2 & 2\\
          *      6 & 7 & 6 & 8
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1+4 & 7+7 & 6+2 & 5+5\\
          *      2+5 & 1+1 & 4+8 & 3+4\\
          *      3+8 & 5+3 & 1+2 & 2+2\\
          *      4+6 & 6+7 & 7+6 & 1+8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      5 & 14 & 8 & 10\\
          *      7 & 2 & 12 & 7\\
          *      11 & 8 & 3 & 4\\
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose components get added together with this matrix.
          * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
@@ -352,7 +352,7 @@ namespace NovelRT::Maths
          * this instance with the result.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise difference: \f[
+         * An example of a matrix that would be constructed from an entrywise difference: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -366,21 +366,21 @@ namespace NovelRT::Maths
          *      8 & 3 & 2 & 2\\
          *      6 & 7 & 6 & 8
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1-4 & 7-7 & 6-2 & 5-5\\
          *      2-5 & 1-1 & 4-8 & 3-4\\
          *      3-8 & 5-3 & 1-2 & 2-2\\
          *      4-6 & 6-7 & 7-6 & 1-8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      -3 & 0 & 4 & 0\\
          *      -3 & 0 & -4 & 1\\
          *      -5 & 2 & -1 & 0\\
          *      -2 & -1 & 1 & -7
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose components get subtracted from this matrix.
          * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and
@@ -397,7 +397,7 @@ namespace NovelRT::Maths
          * with the result.
          *
          * @details
-         * An example of a matrix that would be constructed from multiplying two matrices: \f[
+         * An example of a matrix that would be constructed from multiplying two matrices: \f{align*}{
          *      \begin{bmatrix}
          *      4 & 7 & 2 & 5\\
          *      5 & 1 & 8 & 4\\
@@ -411,21 +411,21 @@ namespace NovelRT::Maths
          *      3 & 5 & 1 & 2\\
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
-         *      =
+         *      &=
          *      \begin{bmatrix}
          *      1*4+7*5+6*8+5*6 & 1*7+7*1+6*3+5*7 & 1*2+7*8+6*2+5*6 & 1*5+7*4+6*2+5*8\\
          *      2*4+1*5+4*8+3*6 & 2*7+1*1+4*3+3*7 & 2*2+1*8+4*2+3*6 & 2*5+1*4+4*2+3*8\\
          *      3*4+5*5+1*8+2*6 & 3*7+5*1+1*3+2*7 & 3*2+5*8+1*2+2*6 & 3*5+5*4+1*2+2*8\\
          *      4*4+6*5+7*8+1*6 & 4*7+6*1+7*3+1*7 & 4*2+6*8+7*2+1*6 & 4*5+6*4+7*2+1*8
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      117 & 67 & 100 & 85\\
          *      63 & 48 & 38 & 46\\
          *      57 & 43 & 60 & 53\\
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
          * @return This matrix where the components consist of the sum of the products of this GeoMatrix4x4F's rows and
@@ -441,7 +441,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise sum of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
+         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -449,7 +449,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      + 6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -462,22 +462,22 @@ namespace NovelRT::Maths
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1+6 & 7+6 & 6+6 & 5+6\\
          *      2+6 & 1+6 & 4+6 & 3+6\\
          *      3+6 & 5+6 & 1+6 & 2+6\\
          *      4+6 & 6+6 & 7+6 & 1+6\\
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      7 & 13 & 12 & 11\\
          *      8 & 7 & 10 & 9\\
          *      9 & 11 & 7 & 8\\
          *      10& 12 & 13 & 7
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
@@ -492,7 +492,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise difference of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
+         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -500,7 +500,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      -6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -513,22 +513,22 @@ namespace NovelRT::Maths
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1-6 & 7-6 & 6-6 & 5-6\\
          *      2-6 & 1-6 & 4-6 & 3-6\\
          *      3-6 & 5-6 & 1-6 & 2-6\\
          *      4-6 & 6-6 & 7-6 & 1-6\\
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      -5 & 1 & 0 & -1\\
          *      -4 & -5 & -2 & -3\\
          *      -3 & -1 & -5 & -4\\
          *      -2 & 0 & 1 & -5\\
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
@@ -543,7 +543,7 @@ namespace NovelRT::Maths
          * @brief Calculates the product of this GeoMatrix4x4F and the provided scalar.
          *
          * @details
-         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
+         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -551,7 +551,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      \cdot 6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -564,22 +564,22 @@ namespace NovelRT::Maths
          *      0 & 6 & 0 & 0\\
          *      0 & 0 & 6 & 0\\
          *      0 & 0 & 0 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1*6+7*0+6*0+5*0 & 1*0+7*6+6*0+5*0 & 1*0+7*0+6*6+5*0 & 1*0+7*0+6*0+5*6\\
          *      2*6+1*0+4*0+3*0 & 2*0+1*6+4*0+3*0 & 2*0+1*0+4*6+3*0 & 2*0+1*0+4*0+3*6\\
          *      3*6+5*0+1*0+2*0 & 3*0+5*6+1*0+2*0 & 3*0+5*0+1*6+2*0 & 3*0+5*0+1*0+2*6\\
          *      4*6+6*0+7*0+1*0 & 4*0+6*6+7*0+1*0 & 4*0+6*0+7*6+1*0 & 4*0+6*0+7*0+1*6
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      6 & 42 & 36 & 30\\
          *      12 & 6 & 24 & 18\\
          *      18 & 30 & 6 & 12\\
          *      24 & 36 & 42 & 6
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets multiplied by this matrix.
          * @return a matrix where the components consist of the product of this GeoMatrix4x4F and the provided scalar.
@@ -594,7 +594,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f[
+         * An example of a matrix that would be constructed from an entrywise sum with a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -602,7 +602,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      + 6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -615,22 +615,22 @@ namespace NovelRT::Maths
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1+6 & 7+6 & 6+6 & 5+6\\
          *      2+6 & 1+6 & 4+6 & 3+6\\
          *      3+6 & 5+6 & 1+6 & 2+6\\
          *      4+6 & 6+6 & 7+6 & 1+6\\
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      7 & 13 & 12 & 11\\
          *      8 & 7 & 10 & 9\\
          *      9 & 11 & 7 & 8\\
          *      10& 12 & 13 & 7
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets added together with this matrix.
          * @return This matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
@@ -647,7 +647,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f[
+         * An example of a matrix that would be constructed from an entrywise difference with a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -655,7 +655,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      -6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -668,22 +668,22 @@ namespace NovelRT::Maths
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6\\
          *      6 & 6 & 6 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1-6 & 7-6 & 6-6 & 5-6\\
          *      2-6 & 1-6 & 4-6 & 3-6\\
          *      3-6 & 5-6 & 1-6 & 2-6\\
          *      4-6 & 6-6 & 7-6 & 1-6\\
-         *      \end{bmatrix}
-         *      \rightarrow
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      -5 & 1 & 0 & -1\\
          *      -4 & -5 & -2 & -3\\
          *      -3 & -1 & -5 & -4\\
          *      -2 & 0 & 1 & -5\\
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets subtracted from this matrix.
          * @return This matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
@@ -700,7 +700,7 @@ namespace NovelRT::Maths
          * the result.
          *
          * @details
-         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f[
+         * An example of a matrix that would be constructed from multiplying a matrix by a scalar: \f{align*}{
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -708,7 +708,7 @@ namespace NovelRT::Maths
          *      4 & 6 & 7 & 1
          *      \end{bmatrix}
          *      \cdot 6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{bmatrix}
          *      1 & 7 & 6 & 5\\
          *      2 & 1 & 4 & 3\\
@@ -721,22 +721,22 @@ namespace NovelRT::Maths
          *      0 & 6 & 0 & 0\\
          *      0 & 0 & 6 & 0\\
          *      0 & 0 & 0 & 6
-         *      \end{bmatrix}
-         *      =
+         *      \end{bmatrix}\\
+         *      &=
          *      \begin{bmatrix}
          *      1*6+7*0+6*0+5*0 & 1*0+7*6+6*0+5*0 & 1*0+7*0+6*6+5*0 & 1*0+7*0+6*0+5*6\\
          *      2*6+1*0+4*0+3*0 & 2*0+1*6+4*0+3*0 & 2*0+1*0+4*6+3*0 & 2*0+1*0+4*0+3*6\\
          *      3*6+5*0+1*0+2*0 & 3*0+5*6+1*0+2*0 & 3*0+5*0+1*6+2*0 & 3*0+5*0+1*0+2*6\\
          *      4*6+6*0+7*0+1*0 & 4*0+6*6+7*0+1*0 & 4*0+6*0+7*6+1*0 & 4*0+6*0+7*0+1*6
          *      \end{bmatrix}
-         *      \rightarrow
+         *      &=
          *      \begin{bmatrix}
          *      6 & 42 & 36 & 30\\
          *      12 & 6 & 24 & 18\\
          *      18 & 30 & 6 & 12\\
          *      24 & 36 & 42 & 6
          *      \end{bmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets multiplied by this matrix.
          * @return This matrix where the components consist of the product of this GeoMatrix4x4F and the provided

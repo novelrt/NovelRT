@@ -99,17 +99,18 @@ namespace NovelRT::Maths
          *
          * @details
          * To normalise a vector you need to divide its components by its magnitude. As a result, a vector with the
-         * resulting components will have a magnitude of 1, also known as a unit vector. \f[
-         *      \vec{v}= \begin{pmatrix}
+         * resulting components will have a magnitude of 1, also known as a unit vector. \f{align*}{
+         *      \vec{v}&=
+         *      \begin{pmatrix}
          *      7\\
          *      2\\
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| = \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
          *      4^{2}}
          *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13\\
-         *      \hat{v}=\frac{\vec{v}}{\left \| \vec{v} \right \|} = \frac{\bigl(\begin{smallmatrix}
+         *      \hat{v}&=\frac{\vec{v}}{\left \| \vec{v} \right \|} = \frac{\bigl(\begin{smallmatrix}
          *      7\\
          *      2\\
          *      10\\
@@ -120,9 +121,10 @@ namespace NovelRT::Maths
          *      \tfrac{10}{13}\\
          *      \tfrac{4}{13}
          *      \end{pmatrix}\\
-         *      \left \| \hat{v} \right \| = \sqrt{\tfrac{7}{13}^{2} + \tfrac{2}{13}^{2} + \tfrac{10}{13}^{2} +
+         *      \left \| \hat{v} \right \| &= \sqrt{\tfrac{7}{13}^{2} + \tfrac{2}{13}^{2} + \tfrac{10}{13}^{2} +
          *      \tfrac{4}{13}^{2}} = \sqrt{\tfrac{49}{169} + \tfrac{4}{169} + \tfrac{100}{169} + \tfrac{16}{169}}
-         *      \rightarrow \sqrt{\tfrac{169}{169}} \rightarrow \sqrt{1} = 1 \f]
+         *      \rightarrow \sqrt{\tfrac{169}{169}} \rightarrow \sqrt{1} = 1
+         * \f}
          *
          * @return A unit GeoVector4F created from normalising this GeoVector4F.
          */
@@ -136,17 +138,18 @@ namespace NovelRT::Maths
          * calculating the vector's length.
          *
          * @details
-         * To find a vector's magnitude you can use the Pythagorean theorem:\f[
-         *      \vec{v}= \begin{pmatrix}
+         * To find a vector's magnitude you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v}&= \begin{pmatrix}
          *      7\\
          *      2\\
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| = \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
          *      4^{2}}
          *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
-         * \f]
+         * \f}
+         *
          * @return The magnitude of this GeoVector4F.
          */
         inline float getMagnitude() const noexcept
@@ -159,17 +162,18 @@ namespace NovelRT::Maths
          * vector's magnitude.
          *
          * @details
-         * To find a vector's length you can use the Pythagorean theorem:\f[
-         *      \vec{v}= \begin{pmatrix}
+         * To find a vector's length you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v}&= \begin{pmatrix}
          *      7\\
          *      2\\
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| = \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
          *      4^{2}}
          *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
-         * \f]
+         * \f}
+         *
          * @return The length of this GeoVector4F.
          */
         inline float getLength() const noexcept
@@ -257,7 +261,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise sum of this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of an entrywise addition using four-dimensional vectors: \f[
+         * An example of an entrywise addition using four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -271,21 +275,21 @@ namespace NovelRT::Maths
          *      6\\
          *      7
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 + 4\\
          *      3 + 5\\
          *      4 + 6\\
          *      5 + 7
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      6\\
          *      8\\
          *      10\\
          *      12
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get added together with this vector.
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and another
@@ -300,7 +304,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise difference of this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of an entrywise subtraction using four-dimensional vectors: \f[
+         * An example of an entrywise subtraction using four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -314,21 +318,21 @@ namespace NovelRT::Maths
          *      6\\
          *      2
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 - 1\\
          *      3 - 4\\
          *      4 - 6\\
          *      5 - 2
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      1\\
          *      -1\\
          *      -2\\
          *      3
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get subtracted from this vector.
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and
@@ -343,7 +347,7 @@ namespace NovelRT::Maths
          * @brief Calculates the Hadamard product of this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of a Hadamard product of two four-dimensional vectors: \f[
+         * An example of a Hadamard product of two four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -357,21 +361,21 @@ namespace NovelRT::Maths
          *      6\\
          *      7
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 \times 4\\
          *      3 \times 5\\
          *      4 \times 6\\
          *      5 \times 7
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8\\
          *      15\\
          *      24\\
          *      35
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get multiplied by this vector's components.
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and another
@@ -386,7 +390,7 @@ namespace NovelRT::Maths
          * @brief Calculates the quotients of a Hadamard division using this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of a Hadamard division of two four-dimensional vectors: \f[
+         * An example of a Hadamard division of two four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -400,21 +404,21 @@ namespace NovelRT::Maths
          *      4\\
          *      5
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      \tfrac{8}{2}\\
          *      \tfrac{6}{3}\\
          *      \tfrac{20}{4}\\
          *      \tfrac{15}{5}
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      4\\
          *      2\\
          *      5\\
          *      3
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and another
@@ -429,7 +433,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise sum of this GeoVector4F and the provided scalar.
          *
          * @details
-         * An example of summing up a four-dimensional vector and a scalar: \f[
+         * An example of summing up a four-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -438,7 +442,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      +
          *      6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -451,22 +455,22 @@ namespace NovelRT::Maths
          *      6\\
          *      6\\
          *      6
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 + 6 \\
          *      6 + 6 \\
          *      3 + 6 \\
          *      5 + 6
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      14\\
          *      12\\
          *      9\\
          *      11
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets added up with each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and the provided
@@ -481,7 +485,7 @@ namespace NovelRT::Maths
          * @brief Calculates the entrywise difference of this GeoVector4F and the provided scalar.
          *
          * @details
-         * An example of subtracting a scalar from a three-dimensional vector: \f[
+         * An example of subtracting a scalar from a three-dimensional vector: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -490,7 +494,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      -
          *      3
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -503,22 +507,22 @@ namespace NovelRT::Maths
          *      3\\
          *      3\\
          *      3
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 - 3 \\
          *      6 - 3 \\
          *      3 - 3 \\
          *      7 - 3
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      5\\
          *      3\\
          *      0\\
          *      4
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets subtracted from each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and the
@@ -533,7 +537,7 @@ namespace NovelRT::Maths
          * @brief Calculates the Hadamard product of this GeoVector4F and the provided scalar.
          *
          * @details
-         * An example of a multiplication between a three-dimensional vector and a scalar: \f[
+         * An example of a multiplication between a three-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -542,7 +546,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      \times
          *      4
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -555,22 +559,22 @@ namespace NovelRT::Maths
          *      4\\
          *      4\\
          *      4
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 \times 4 \\
          *      6 \times 4 \\
          *      3 \times 4 \\
          *      7 \times 4
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      32\\
          *      24\\
          *      12\\
          *      28
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar who get multiplied by this vector's components.
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and the
@@ -585,7 +589,7 @@ namespace NovelRT::Maths
          * @brief Calculates the quotients of a Hadamard division using this GeoVector4F and the provided scalar.
          *
          * @details
-         * An example of a division between a four-dimensional vector and a scalar: \f[
+         * An example of a division between a four-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      16\\
          *      12\\
@@ -594,7 +598,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      /
          *      4
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      16\\
          *      12\\
@@ -607,22 +611,22 @@ namespace NovelRT::Maths
          *      4\\
          *      4\\
          *      4
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      \tfrac{16}{4} \\
          *      \tfrac{12}{4} \\
          *      \tfrac{8}{4} \\
          *      \tfrac{28}{4}
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      4\\
          *      3\\
          *      2\\
          *      7
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that acts as the divisor for each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and the
@@ -638,7 +642,7 @@ namespace NovelRT::Maths
          * with the result.
          *
          * @details
-         * An example of an entrywise addition using four-dimensional vectors: \f[
+         * An example of an entrywise addition using four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -652,21 +656,21 @@ namespace NovelRT::Maths
          *      6\\
          *      7
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 + 4\\
          *      3 + 5\\
          *      4 + 6\\
          *      5 + 7
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      6\\
          *      8\\
          *      10\\
          *      12
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get added together with this vector.
          * @return This GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and another
@@ -683,7 +687,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of an entrywise subtraction using four-dimensional vectors: \f[
+         * An example of an entrywise subtraction using four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -697,21 +701,21 @@ namespace NovelRT::Maths
          *      6\\
          *      2
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 - 1\\
          *      3 - 4\\
          *      4 - 6\\
          *      5 - 2
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      1\\
          *      -1\\
          *      -2\\
          *      3
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get subtracted from this vector.
          * @return This GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and
@@ -728,7 +732,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of a Hadamard product of two four-dimensional vectors: \f[
+         * An example of a Hadamard product of two four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      2\\
          *      3\\
@@ -742,21 +746,21 @@ namespace NovelRT::Maths
          *      6\\
          *      7
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      2 \times 4\\
          *      3 \times 5\\
          *      4 \times 6\\
          *      5 \times 7
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8\\
          *      15\\
          *      24\\
          *      35
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components get multiplied by this vector's components.
          * @return This GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and another
@@ -773,7 +777,7 @@ namespace NovelRT::Maths
          * overwrites this instance with the result.
          *
          * @details
-         * An example of a Hadamard division of two four-dimensional vectors: \f[
+         * An example of a Hadamard division of two four-dimensional vectors: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -787,21 +791,21 @@ namespace NovelRT::Maths
          *      4\\
          *      5
          *      \end{pmatrix}
-         *      =
+         *      &=
          *      \begin{pmatrix}
          *      \tfrac{8}{2}\\
          *      \tfrac{6}{3}\\
          *      \tfrac{20}{4}\\
          *      \tfrac{15}{5}
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      4\\
          *      2\\
          *      5\\
          *      3
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other vector whose components act as a divisor for this vector's components.
          * @return This GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and
@@ -818,7 +822,7 @@ namespace NovelRT::Maths
          * with the result.
          *
          * @details
-         * An example of summing up a four-dimensional vector and a scalar: \f[
+         * An example of summing up a four-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -827,7 +831,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      +
          *      6
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -840,22 +844,22 @@ namespace NovelRT::Maths
          *      6\\
          *      6\\
          *      6
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 + 6 \\
          *      6 + 6 \\
          *      3 + 6 \\
          *      5 + 6
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      14\\
          *      12\\
          *      9\\
          *      11
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets added up with each component of this vector.
          * @return This GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and the
@@ -872,7 +876,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of subtracting a scalar from a three-dimensional vector: \f[
+         * An example of subtracting a scalar from a three-dimensional vector: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -881,7 +885,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      -
          *      3
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -894,22 +898,22 @@ namespace NovelRT::Maths
          *      3\\
          *      3\\
          *      3
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 - 3 \\
          *      6 - 3 \\
          *      3 - 3 \\
          *      7 - 3
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      5\\
          *      3\\
          *      0\\
          *      4
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that gets subtracted from each component of this vector.
          * @return This GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and the
@@ -926,7 +930,7 @@ namespace NovelRT::Maths
          * instance with the result.
          *
          * @details
-         * An example of a multiplication between a three-dimensional vector and a scalar: \f[
+         * An example of a multiplication between a three-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -935,7 +939,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      \times
          *      4
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      8\\
          *      6\\
@@ -948,22 +952,22 @@ namespace NovelRT::Maths
          *      4\\
          *      4\\
          *      4
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      8 \times 4 \\
          *      6 \times 4 \\
          *      3 \times 4 \\
          *      7 \times 4
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      32\\
          *      24\\
          *      12\\
          *      28
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar who get multiplied by this vector's components.
          * @return This GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and the
@@ -980,7 +984,7 @@ namespace NovelRT::Maths
          * overwrites this instance with the result.
          *
          * @details
-         * An example of a division between a four-dimensional vector and a scalar: \f[
+         * An example of a division between a four-dimensional vector and a scalar: \f{align*}{
          *      \begin{pmatrix}
          *      16\\
          *      12\\
@@ -989,7 +993,7 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          *      /
          *      4
-         *      \rightarrow
+         *      &\rightarrow
          *      \begin{pmatrix}
          *      16\\
          *      12\\
@@ -1002,22 +1006,22 @@ namespace NovelRT::Maths
          *      4\\
          *      4\\
          *      4
-         *      \end{pmatrix}
-         *      =
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      \tfrac{16}{4} \\
          *      \tfrac{12}{4} \\
          *      \tfrac{8}{4} \\
          *      \tfrac{28}{4}
-         *      \end{pmatrix}
-         *      \rightarrow
+         *      \end{pmatrix}\\
+         *      &=
          *      \begin{pmatrix}
          *      4\\
          *      3\\
          *      2\\
          *      7
          *      \end{pmatrix}
-         * \f]
+         * \f}
          *
          * @param other The other scalar that acts as the divisor for each component of this vector.
          * @return This GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and the
@@ -1096,7 +1100,7 @@ namespace NovelRT::Maths
      * @brief Calculates the product of the provided GeoVector4F and the provided scalar.
      *
      * @details
-     * An example of a multiplication between a Four-dimensional vector and a scalar: \f[
+     * An example of a multiplication between a Four-dimensional vector and a scalar: \f{align*}{
      *      4
      *      \times
      *      \begin{pmatrix}
@@ -1105,7 +1109,7 @@ namespace NovelRT::Maths
      *      3\\
      *      7
      *      \end{pmatrix}
-     *      \rightarrow
+     *      &\rightarrow
      *      \begin{pmatrix}
      *      4\\
      *      4\\
@@ -1118,22 +1122,22 @@ namespace NovelRT::Maths
      *      6\\
      *      3\\
      *      7
-     *      \end{pmatrix}
-     *      =
+     *      \end{pmatrix}\\
+     *      &=
      *      \begin{pmatrix}
      *      4 \times 8 \\
      *      4 \times 6 \\
      *      4 \times 3 \\
      *      4 \times 7
-     *      \end{pmatrix}
-     *      \rightarrow
+     *      \end{pmatrix}\\
+     *      &=
      *      \begin{pmatrix}
      *      32\\
      *      24\\
      *      12\\
      *      28
      *      \end{pmatrix}
-     * \f]
+     * \f}
      *
      * @param lhs The scalar that gets multiplied by the GeoVector4F's components.
      * @param rhs The GeoVector4F whos components get multiplied by the scalar.

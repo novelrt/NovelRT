@@ -64,7 +64,7 @@ namespace NovelRT::Maths::Utilities
 
     /**
      * @brief Returns the number of set bits in the given value.
-     * 
+     *
      * @deprecated This implementation of PopCount is superseeded by <a
      * href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> in C++20. This will be removed when
      * the language version is updated.
