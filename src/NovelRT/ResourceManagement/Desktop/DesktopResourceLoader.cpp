@@ -333,12 +333,13 @@ namespace NovelRT::ResourceManagement::Desktop
 
     AudioMetadata DesktopResourceLoader::LoadAudioFrameData(std::filesystem::path filePath)
     {
+        constexpr size_t _bufferSize = 2048;
+
         if (filePath.is_relative())
         {
             filePath = _resourcesRootDirectory / "Audio" / filePath;
         }
 
-        const size_t _bufferSize = 2048;
         SF_INFO info;
         info.format = 0;
         auto filePathString = filePath.string();
@@ -346,7 +347,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (file == nullptr)
         {
-            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+            throw NovelRT::Exceptions::IOException(filePath.string(), std::string(sf_strerror(file)));
         }
 
         std::vector<int16_t> data;

@@ -14,7 +14,6 @@ namespace NovelRT::Audio
     class AudioService
     {
     private:
-        const size_t _bufferSize = 2048;
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
 
