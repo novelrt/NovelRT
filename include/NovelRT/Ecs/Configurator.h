@@ -53,8 +53,9 @@ namespace NovelRT::Ecs
 
             auto deleteState = Audio::AudioEmitterComponent();
             target.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
-            target.GetComponentCache().RegisterComponentType(Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
-                                                                "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
+            target.GetComponentCache().RegisterComponentType(
+                Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
+                "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));

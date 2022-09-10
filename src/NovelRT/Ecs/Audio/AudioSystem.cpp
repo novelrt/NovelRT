@@ -5,7 +5,8 @@
 
 namespace NovelRT::Ecs::Audio
 {
-    AudioSystem::AudioSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider)
+    AudioSystem::AudioSystem(
+        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider)
         : _counter(1),
           _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
           _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),

@@ -42,7 +42,9 @@ namespace NovelRT::Audio
         ~AudioService();
 
         bool InitializeAudio();
-        std::vector<ALuint>::iterator LoadMusic(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate);
+        std::vector<ALuint>::iterator LoadMusic(gsl::span<const int16_t> audioFrameData,
+                                                int32_t channelCount,
+                                                int32_t sampleRate);
 
         void SetSoundVolume(ALuint source, float val);
         void SetSoundPosition(ALuint source, float posX, float posY);

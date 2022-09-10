@@ -58,7 +58,9 @@ namespace NovelRT::Audio
         return isInitialised;
     }
 
-    ALuint AudioService::BufferAudioFrameData(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate)
+    ALuint AudioService::BufferAudioFrameData(gsl::span<const int16_t> audioFrameData,
+                                              int32_t channelCount,
+                                              int32_t sampleRate)
     {
         ALuint buffer;
         alGenBuffers(1, &buffer);
@@ -77,7 +79,9 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::LoadMusic(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate)
+    std::vector<ALuint>::iterator AudioService::LoadMusic(gsl::span<const int16_t> audioFrameData,
+                                                          int32_t channelCount,
+                                                          int32_t sampleRate)
     {
         if (!isInitialised)
         {
@@ -91,7 +95,8 @@ namespace NovelRT::Audio
         // Sorry Matt, nullptr types are incompatible to ALuint according to VS.
         if (newBuffer == _noBuffer)
         {
-            _logger.logWarning("Could not buffer provided audio data. Please verify the resource was loaded correctly.");
+            _logger.logWarning(
+                "Could not buffer provided audio data. Please verify the resource was loaded correctly.");
             return _music.end();
         }
 

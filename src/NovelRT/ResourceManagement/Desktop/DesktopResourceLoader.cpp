@@ -368,6 +368,6 @@ namespace NovelRT::ResourceManagement::Desktop
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
-        return AudioMetadata { data, info.channels, info.samplerate, databaseHandle };
+        return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
     }
 }
