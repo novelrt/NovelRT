@@ -26,4 +26,4 @@ add_dependencies(compiler runtime)
 install(FILES
   ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/runtime.hpp
   ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/decoder.hpp
-  DESTINATION include/Fabulist/runtime)
+  DESTINATION include/fabulist/runtime)
