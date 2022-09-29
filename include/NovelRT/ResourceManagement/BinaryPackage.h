@@ -14,6 +14,7 @@ namespace NovelRT::ResourceManagement
     {
         std::vector<BinaryMemberMetadata> memberMetadata;
         std::vector<uint8_t> data;
+        uuids::uuid databaseHandle;
     };
 }
 

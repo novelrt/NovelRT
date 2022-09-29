@@ -12,6 +12,7 @@
 #include <jsoncons_ext/bson/bson.hpp>
 #include <jsoncons_ext/jsonpath/jsonpath.hpp>
 #include <memory>
+#include <uuid.h>
 #include <vector>
 
 /**
@@ -24,6 +25,7 @@ namespace NovelRT::ResourceManagement
     enum class BinaryDataType : uint32_t;
     struct BinaryMemberMetadata;
     struct BinaryPackage;
+    struct ShaderMetadata;
 }
 
 // clang-format off
@@ -32,6 +34,7 @@ namespace NovelRT::ResourceManagement
 #include "BinaryDataType.h"
 #include "BinaryMemberMetadata.h"
 #include "BinaryPackage.h"
+#include "ShaderMetadata.h"
 // clang-format on
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_H

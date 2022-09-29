@@ -94,21 +94,24 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
                                                                               gsl::span<TSpanType> textureDataSpan,
                                                                               uint32_t width,
-                                                                              uint32_t height)
+                                                                              uint32_t height,
+                                                                              uuids::uuid textureAssetDataHandle)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
 
             return LoadTextureDataRawUntyped(textureDataName, textureDataSpan.data(), sizeof(TSpanType),
-                                             textureDataSpan.size(), width, height);
+                                             textureDataSpan.size(), width, height, textureAssetDataHandle);
         }
 
-        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRawUntyped(const std::string& textureDataName,
-                                                                                     void* data,
-                                                                                     size_t dataTypeSize,
-                                                                                     size_t dataLength,
-                                                                                     uint32_t width,
-                                                                                     uint32_t height);
+        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRawUntyped(
+            const std::string& textureDataName,
+            void* data,
+            size_t dataTypeSize,
+            size_t dataLength,
+            uint32_t width,
+            uint32_t height,
+            uuids::uuid textureAssetDataHandle);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(Atom ecsId);
 
@@ -159,6 +162,8 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
             std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline,
+            uuids::uuid vertexShaderAssetHandle,
+            uuids::uuid pixelShaderAssetHandle,
             std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
                 customConstantBufferRegions = {},
             bool useEcsTransforms = true);
@@ -190,6 +195,26 @@ namespace NovelRT::Ecs::Graphics
         {
             return _backgroundColour;
         }
+
+        [[nodiscard]] uuids::uuid GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;
+
+        [[nodiscard]] uuids::uuid GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;
+
+        [[nodiscard]] uuids::uuid GetGuidForTexture(Atom textureId) const;
+
+        [[nodiscard]] inline Atom GetDefaultVertexDataId() const noexcept
+        {
+            return _defaultSpriteMeshPtr->ecsId;
+        }
+
+        [[nodiscard]] Atom GetTextureIdFromGuid(uuids::uuid assetGuid) const;
+
+        [[nodiscard]] Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
+                                                          uuids::uuid vertexShaderAssetGuid,
+                                                          uuids::uuid pixelShaderAssetGuid) const;
+
+        [[nodiscard]] Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
+                                                     uuids::uuid pixelShaderAssetGuid) const;
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H
