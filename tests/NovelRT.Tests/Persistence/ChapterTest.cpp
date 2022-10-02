@@ -77,7 +77,42 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectlyWithDuplicate)
     EXPECT_EQ(buffer.GetComponentUnsafe(1), 50);
     EXPECT_EQ(buffer.GetComponentUnsafe(7), 70);
     EXPECT_EQ(buffer.GetComponentUnsafe(15), 90);
-    EXPECT_EQ(buffer.GetComponentUnsafe(2), 10);
-    EXPECT_EQ(buffer.GetComponentUnsafe(3), 20);
-    EXPECT_EQ(buffer.GetComponentUnsafe(4), 30);
+
+    bool tenFound = false;
+    bool twentyFound = false;
+    bool thirtyFound = false;
+    bool rubbishDataFound = false;
+
+    for(auto&& [entity, component] : buffer)
+    {
+        switch (entity)
+        {
+            case 1:
+            case 7:
+            case 15:
+                continue;
+
+            default:
+                switch (component)
+                {
+                    case 10:
+                        tenFound = true;
+                        break;
+                    case 20:
+                        twentyFound = true;
+                        break;
+                    case 30:
+                        thirtyFound = true;
+                        break;
+                    default:
+                        rubbishDataFound = true;
+                        break;
+                }
+        }
+    }
+
+    EXPECT_TRUE(tenFound);
+    EXPECT_TRUE(twentyFound);
+    EXPECT_TRUE(thirtyFound);
+    EXPECT_FALSE(rubbishDataFound);
 }
