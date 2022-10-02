@@ -83,7 +83,7 @@ TEST(ChapterTest, CanPackageAndUnpackageCorrectlyWithDuplicate)
     bool thirtyFound = false;
     bool rubbishDataFound = false;
 
-    for(auto&& [entity, component] : buffer)
+    for (auto&& [entity, component] : buffer)
     {
         switch (entity)
         {
