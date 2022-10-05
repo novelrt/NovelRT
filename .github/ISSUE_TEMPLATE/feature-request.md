@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**_Note: for support questions, please use the #engine-user-help channel in our [Discord](https://discord.com/invite/V7SgCkm) or [create a discussion](https://github.com/novelrt/NovelRT/discussions/new). This repository's issues are reserved for feature requests and bug reports._**
+**_Note: for support questions, please use the #engine-user-help channel in our [Discord](https://discord.novelrt.dev/) or [create a discussion](https://github.com/novelrt/NovelRT/discussions/new). This repository's issues are reserved for feature requests and bug reports._**
 
 **What is the current behaviour?**
 A clear and concise description of what the current behaviour is.
