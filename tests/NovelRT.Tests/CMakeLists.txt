@@ -55,7 +55,7 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
-include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 if(NOVELRT_BUILD_INTEROP)
   copy_build_products(Engine_Tests
     DEPENDENCY Engine
