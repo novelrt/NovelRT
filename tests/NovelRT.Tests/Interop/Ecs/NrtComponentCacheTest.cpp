@@ -29,7 +29,7 @@ protected:
 
 TEST_F(InteropComponentCacheTest, RegisterComponentTypeSucceeds)
 {
-    int32_t deleteState = NAN;
+    int32_t deleteState = 1;
     NrtComponentTypeId id = 0;
     EXPECT_EQ(Nrt_ComponentCache_RegisterComponentTypeUnsafe(
                   cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY", nullptr, &id),
@@ -38,7 +38,7 @@ TEST_F(InteropComponentCacheTest, RegisterComponentTypeSucceeds)
 
 TEST_F(InteropComponentCacheTest, GetComponentBufferByIdReturnsValidBuffer)
 {
-    int32_t deleteState = NAN;
+    int32_t deleteState = 1;
     NrtComponentTypeId id = 0;
     ASSERT_EQ(Nrt_ComponentCache_RegisterComponentTypeUnsafe(
                   cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY", nullptr, &id),

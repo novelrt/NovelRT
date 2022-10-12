@@ -55,6 +55,44 @@ set(SOURCES
 )
 
 add_executable(Engine_Tests ${SOURCES})
+
+if(MSVC)
+  set_property(TARGET Engine_Tests PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  target_compile_options(Engine_Tests
+    PRIVATE
+      /W4
+      /WX
+      /wd4611
+      /MP
+  )
+  get_target_property(opts Engine_Tests COMPILE_OPTIONS)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(Engine_Tests
+    PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-float-equal
+      -Wno-padded
+  )
+else()
+  target_compile_options(Engine_Tests
+    PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-c++98-compat
+      -Wno-c++98-compat-pedantic
+      -Wno-float-equal
+      -Wno-padded
+      -Wno-reserved-id-macro
+  )
+endif()
+
 include(${CMAKE_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 if(NOVELRT_BUILD_INTEROP)
   copy_build_products(Engine_Tests

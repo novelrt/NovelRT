@@ -29,7 +29,7 @@ protected:
         entityCache = Nrt_EntityCache_Create(1);
         catalogue = Nrt_Catalogue_Create(0, componentCache, entityCache);
         int32_t intDeleteState = -1;
-        size_t sizeTDeleteState = -1;
+        size_t sizeTDeleteState = 1;
         char charDeleteState = 'e';
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(

@@ -24,7 +24,7 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithDefaultSystems)
 
 TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentAndSystem)
 {
-    auto lambda = [](Timestamp delta, Catalogue catalogue) {
+    auto lambda = [](Timestamp, Catalogue catalogue) {
         auto intComponents = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intComponents)
         {
