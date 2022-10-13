@@ -56,6 +56,37 @@ set(SOURCES
 
 add_executable(Engine_Tests ${SOURCES})
 include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
+
+target_compile_options(Interop
+  PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    $<$<CXX_COMPILER_ID:MSVC>:/WX>
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4611>
+    $<$<CXX_COMPILER_ID:MSVC>:/MP>
+    $<$<CXX_COMPILER_ID:GNU>:-pedantic>
+    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
+    $<$<CXX_COMPILER_ID:GNU>:-Wall>
+    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
+    $<$<CXX_COMPILER_ID:GNU>:-Werror>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-float-equal>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-padded>
+    $<$<CXX_COMPILER_ID:Clang>:-pedantic>
+    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
+    $<$<CXX_COMPILER_ID:Clang>:-Wall>
+    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
+    $<$<CXX_COMPILER_ID:Clang>:-Werror>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat-pedantic>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-float-equal>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
+)
+
+if(MSVC)
+  set_property(TARGET Engine_Tests PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  get_target_property(opts Engine_Tests COMPILE_OPTIONS)
+endif()
+
 if(NOVELRT_BUILD_INTEROP)
   copy_build_products(Engine_Tests
     DEPENDENCY Engine
