@@ -101,7 +101,7 @@ endif()
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
     $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
@@ -170,7 +170,7 @@ install(
 )
 #Workaround due to hierarchy destruction when installing by TARGETS
 install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT/
+  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
   DESTINATION include/NovelRT
   FILES_MATCHING PATTERN "*.h"
 )
