@@ -54,7 +54,7 @@ set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -106,7 +106,7 @@ install(
   RUNTIME DESTINATION bin
 )
 install(
-  DIRECTORY ${CMAKE_SOURCE_DIR}/include/NovelRT.Interop/
+  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
   DESTINATION include/NovelRT.Interop
   FILES_MATCHING PATTERN "*.h"
 )
