@@ -1,6 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <limits>
+
 #include <NovelRT.Interop/Ecs/NrtEcs.h>
 #include <NovelRT/NovelRT.h>
 
@@ -29,7 +31,7 @@ protected:
         entityCache = Nrt_EntityCache_Create(1);
         catalogue = Nrt_Catalogue_Create(0, componentCache, entityCache);
         int32_t intDeleteState = -1;
-        size_t sizeTDeleteState = -1;
+        size_t sizeTDeleteState = std::numeric_limits<size_t>::max();
         char charDeleteState = 'e';
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(

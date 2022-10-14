@@ -201,16 +201,16 @@ TEST(InteropGeoVector3Test, getLengthReturnsCorrectLength)
 
 TEST(InteropGeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount)
 {
-    NrtGeoVector3F vec{0.0f, 1.0f};
+    NrtGeoVector3F vec{0.0f, 1.0f, 0.0f};
     NrtGeoVector3F zero = Nrt_GeoVector3F_zero();
     Nrt_GeoVector3F_rotateToAngleAroundPoint(&vec, 90.0f, zero);
-    NrtGeoVector3F other{-1.0f, 0.0f};
+    NrtGeoVector3F other{-1.0f, 0.0f, 0.0f};
     NrtGeoVector3F epsilon = Nrt_GeoVector3F_uniform(1e-7f);
     EXPECT_TRUE(Nrt_GeoVector3F_epsilonEquals(vec, other, epsilon));
 }
 
 TEST(InteropGeoVector3Test, isNaNReturnsTrueNaNVector)
 {
-    NrtGeoVector3F nanVec{NAN, NAN};
+    NrtGeoVector3F nanVec{NAN, NAN, NAN};
     EXPECT_TRUE(Nrt_GeoVector3F_isNaN(nanVec));
 }
