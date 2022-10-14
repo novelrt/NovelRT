@@ -3,8 +3,8 @@
 
 #include <NovelRT/NovelRT.h>
 #include <atomic>
-#include <limits>
 #include <gtest/gtest.h>
+#include <limits>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
