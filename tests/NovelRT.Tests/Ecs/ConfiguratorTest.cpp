@@ -32,7 +32,14 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentA
         }
     };
 
-    auto scheduler = Configurator().WithSystems({lambda}).InitialiseAndRegisterComponents<int32_t>(
+    class TestSystem : public IEcsSystem {
+        public:
+            void Update(NovelRT::Timing::Timestamp delta, Catalogue catalogue) final {}
+    };
+
+    std::shared_ptr<TestSystem> tester = std::make_shared<TestSystem>();
+
+    auto scheduler = Configurator().WithSystems({lambda}).WithIEcsSystems({tester}).InitialiseAndRegisterComponents<int32_t>(
         std::make_tuple(-1, "THROW_AWAY"));
     scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
