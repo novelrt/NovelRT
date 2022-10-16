@@ -22,7 +22,7 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithDefaultSystems)
 }
  */
 
-TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentAndSystem)
+TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentAndFunctionSystem)
 {
     auto lambda = [](Timestamp, Catalogue catalogue) {
         auto intComponents = catalogue.GetComponentView<int32_t>();
@@ -32,14 +32,32 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentA
         }
     };
 
-    class TestSystem : public IEcsSystem {
-        public:
-            void Update(NovelRT::Timing::Timestamp delta, Catalogue catalogue) final {}
+    auto scheduler = Configurator().WithSystems({lambda}).InitialiseAndRegisterComponents<int32_t>(
+        std::make_tuple(-1, "THROW_AWAY"));
+    scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
+    ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
+    ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));
+    EXPECT_EQ(scheduler.GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(1), 20);
+}
+
+TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentAndIEcsSystem)
+{
+    class TestSystem : public IEcsSystem
+    {
+    public:
+        void Update(NovelRT::Timing::Timestamp, Catalogue catalogue) final
+        {
+            auto intComponents = catalogue.GetComponentView<int32_t>();
+            for (auto [entity, component] : intComponents)
+            {
+                intComponents.PushComponentUpdateInstruction(entity, 10);
+            }
+        }
     };
 
     std::shared_ptr<TestSystem> tester = std::make_shared<TestSystem>();
 
-    auto scheduler = Configurator().WithSystems({lambda}).WithIEcsSystems({tester}).InitialiseAndRegisterComponents<int32_t>(
+    auto scheduler = Configurator().WithSystems({tester}).InitialiseAndRegisterComponents<int32_t>(
         std::make_tuple(-1, "THROW_AWAY"));
     scheduler.GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 1, 10);
     ASSERT_NO_THROW(scheduler.ExecuteIteration(Timestamp(0)));

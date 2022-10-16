@@ -1,5 +1,5 @@
-#include <utility>
 #include "IEcsSystem.h"
+#include <utility>
 
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
@@ -93,7 +93,7 @@ namespace NovelRT::Ecs
          * @param functions collection of IEcsSystem instances to attach.
          * @returns A reference to this to allow method chaining.
          */
-        [[nodiscard]] inline Configurator& WithIEcsSystems(
+        [[nodiscard]] inline Configurator& WithSystems(
             std::initializer_list<std::shared_ptr<IEcsSystem>>&& systems) noexcept
         {
             for (auto&& system : systems)
