@@ -55,7 +55,7 @@ TEST(ConfiguratorTest, ConfiguratorCanProduceSystemSchedulerWithCustomComponentA
         }
     };
 
-    std::shared_ptr<TestSystem> tester = std::make_shared<TestSystem>();
+    auto tester = std::make_shared<TestSystem>();
 
     auto scheduler = Configurator().WithSystems({tester}).InitialiseAndRegisterComponents<int32_t>(
         std::make_tuple(-1, "THROW_AWAY"));

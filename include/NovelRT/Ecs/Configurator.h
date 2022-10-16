@@ -1,4 +1,3 @@
-#include "IEcsSystem.h"
 #include <utility>
 
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
@@ -88,9 +87,9 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Configures systems for registration for this ECS instance (IEcs variant).
+         * @brief Configures systems for registration for this ECS instance (IEcsSystem variant).
          *
-         * @param functions collection of IEcsSystem instances to attach.
+         * @param systems collection of IEcsSystem instances to attach.
          * @returns A reference to this to allow method chaining.
          */
         [[nodiscard]] inline Configurator& WithSystems(
