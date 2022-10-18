@@ -36,9 +36,9 @@ protected:
 
             cppScheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta, Catalogue) { sysOneBool = false; };
-            sysTwo = [&](Timestamp delta, Catalogue) { sysTwoBool = false; };
-            sysThree = [&](Timestamp delta, Catalogue) { sysThreeBool = false; };
+            sysOne = [&](Timestamp, Catalogue) { sysOneBool = false; };
+            sysTwo = [&](Timestamp, Catalogue) { sysTwoBool = false; };
+            sysThree = [&](Timestamp, Catalogue) { sysThreeBool = false; };
 
             cppScheduler->RegisterSystem(sysOne);
             cppScheduler->RegisterSystem(sysTwo);
@@ -88,7 +88,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
-        [](auto delta, auto catalogue, auto) {
+        [](auto, auto catalogue, auto) {
             auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
             for (auto [entity, component] : intSystem)
@@ -142,7 +142,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
-        [](auto delta, auto catalogue, auto) {
+        [](auto, auto catalogue, auto) {
             auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
             for (auto [entity, component] : intSystem)
@@ -160,7 +160,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
-        [](auto delta, auto catalogue, auto) {
+        [](auto, auto catalogue, auto) {
             auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
             for (auto [entity, component] : intSystem)
@@ -178,7 +178,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
-        [](auto delta, auto catalogue, auto) {
+        [](auto, auto catalogue, auto) {
             auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
             for (auto [entity, component] : intSystem)
@@ -196,7 +196,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThree
 
     Nrt_SystemScheduler_RegisterSystem(
         scheduler,
-        [](auto delta, auto catalogue, auto) {
+        [](auto, auto catalogue, auto) {
             auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
             for (auto [entity, component] : intSystem)
@@ -231,7 +231,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     for (int i = 0; i < 8; ++i) // 11 total systems
         Nrt_SystemScheduler_RegisterSystem(
             scheduler,
-            [](auto delta, auto catalogue, auto) {
+            [](auto, auto catalogue, auto) {
                 auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
                 for (auto [entity, component] : intSystem)
@@ -250,7 +250,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     for (int i = 0; i < 6; ++i) // 17 total systems
         Nrt_SystemScheduler_RegisterSystem(
             scheduler,
-            [](auto delta, auto catalogue, auto) {
+            [](auto, auto catalogue, auto) {
                 auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
                 for (auto [entity, component] : intSystem)
@@ -269,7 +269,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     for (int i = 0; i < 6; ++i) // 23 total systems
         Nrt_SystemScheduler_RegisterSystem(
             scheduler,
-            [](auto delta, auto catalogue, auto) {
+            [](auto, auto catalogue, auto) {
                 auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
                 for (auto [entity, component] : intSystem)
@@ -288,7 +288,7 @@ TEST_F(InteropSystemSchedulerTest, IndependentSystemsCanHandleManySystems)
     for (int i = 0; i < 14; ++i) // 37 total systems
         Nrt_SystemScheduler_RegisterSystem(
             scheduler,
-            [](auto delta, auto catalogue, auto) {
+            [](auto, auto catalogue, auto) {
                 auto intSystem = reinterpret_cast<Catalogue*>(catalogue)->GetComponentView<int32_t>();
 
                 for (auto [entity, component] : intSystem)

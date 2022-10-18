@@ -18,11 +18,12 @@ namespace NovelRT::Ecs::Graphics
         uint32_t height = 0;
         Atom ecsId = 0;
         std::vector<uint8_t> textureData;
+        uuids::uuid textureAssetDataHandle;
 
         bool operator==(const TextureInfo& other) const noexcept
         {
             return (gpuTextureRegion == other.gpuTextureRegion) && (textureName == other.textureName) &&
-                   (ecsId == other.ecsId);
+                   (ecsId == other.ecsId) && (textureAssetDataHandle == other.textureAssetDataHandle);
         }
     };
 }

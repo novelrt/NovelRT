@@ -18,9 +18,9 @@ else()
 endif()
 
 set(DOCS_MAINPAGE
-        ${CMAKE_SOURCE_DIR}/README.md
-        ${CMAKE_SOURCE_DIR}/LICENCE.md
-        ${CMAKE_SOURCE_DIR}/CODE_OF_CONDUCT.md
+        ${PROJECT_SOURCE_DIR}/README.md
+        ${PROJECT_SOURCE_DIR}/LICENCE.md
+        ${PROJECT_SOURCE_DIR}/CODE_OF_CONDUCT.md
         )
 
 foreach(docFile ${DOCS_MAINPAGE})
@@ -67,5 +67,5 @@ doxygen_add_docs(Doxygen
         ${DOXYGEN_OUTPUT_DIRECTORY}/README.md
         ${DOXYGEN_OUTPUT_DIRECTORY}/CODE_OF_CONDUCT.md
         ${DOXYGEN_OUTPUT_DIRECTORY}/LICENCE.md
-        ${CMAKE_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include
         )

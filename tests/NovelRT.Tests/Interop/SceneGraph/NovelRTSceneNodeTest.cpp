@@ -156,8 +156,6 @@ NrtSceneNodeHandle childNode = Nrt_SceneNode_create();
 
 TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
 {
-    typedef int32_t (*wrapperFunction)(NrtSceneNodeHandle);
-
     NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     Nrt_SceneNode_insert(parentNode, childNode);
 
