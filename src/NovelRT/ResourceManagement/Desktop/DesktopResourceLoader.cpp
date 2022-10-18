@@ -5,7 +5,75 @@
 
 namespace NovelRT::ResourceManagement::Desktop
 {
-    TextureMetadata DesktopResourceLoader::LoadTextureFromFile(std::filesystem::path filePath)
+    void DesktopResourceLoader::LoadAssetDatabaseFile()
+    {
+        auto filePath = _resourcesRootDirectory / _assetDatabaseFileName;
+        std::ifstream file(filePath);
+
+        if (!file.is_open())
+        {
+            std::ofstream unusedOutputStream(filePath);
+            unusedOutputStream.close();
+
+            file = std::ifstream(filePath);
+            if (!file.is_open())
+            {
+                throw NovelRT::Exceptions::IOException(
+                    filePath.string(),
+                    "Unable to open asset database file even after a creation attempt. Please validate that there is "
+                    "room on the local disk, and that folder permissions are correct.");
+            }
+        }
+
+        auto& guidToPathMap = GetGuidsToFilePathsMap();
+        auto& pathToGuidMap = GetFilePathsToGuidsMap();
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            auto subStrings = Utilities::Misc::SplitString(line, ":");
+
+            if (subStrings.size() != 2)
+            {
+                throw Exceptions::InvalidOperationException(
+                    "Invalid record detected in asset database. Is the asset database corrupted?");
+            }
+
+            auto parsedGuid = uuids::uuid::from_string(subStrings[0]).value();
+            auto parsedAssetPath = std::filesystem::path(subStrings[1]);
+
+            guidToPathMap.emplace(parsedGuid, parsedAssetPath);
+            pathToGuidMap.emplace(parsedAssetPath, parsedGuid);
+        }
+    }
+
+    void DesktopResourceLoader::WriteAssetDatabaseFile()
+    {
+        auto filePath = _resourcesRootDirectory / _assetDatabaseFileName;
+        std::ofstream inputStream(filePath);
+
+        if (!inputStream.is_open())
+        {
+            throw NovelRT::Exceptions::IOException(
+                filePath.string(), "Unable to open asset database file for append-write. Please validate that there is "
+                                   "room on the local disk, and that folder permissions are correct.");
+        }
+
+        auto& guidToPathMap = GetGuidsToFilePathsMap();
+
+        std::string pathStr;
+        for (auto [guid, path] : guidToPathMap)
+        {
+            pathStr = path.string();
+            std::replace(pathStr.begin(), pathStr.end(), '\\', '/');
+            inputStream << to_string(guid) << ":" << pathStr << '\n';
+        }
+
+        inputStream.flush();
+        inputStream.close();
+    }
+
+    TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
         {
@@ -24,6 +92,7 @@ namespace NovelRT::ResourceManagement::Desktop
         _logger.throwIfNullPtr(
             cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #endif
+
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,
                                           nullptr); // TODO: Figure out how the error function ptr works
 
@@ -145,10 +214,13 @@ namespace NovelRT::ResourceManagement::Desktop
         delete[] data.rowPointers;
         png_destroy_read_struct(&png, &info, nullptr);
 
-        return TextureMetadata{returnImage, data.width, data.height, finalLength};
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        return TextureMetadata{returnImage, data.width, data.height, finalLength,
+                               RegisterAsset(relativePathForAssetDatabase)};
     }
 
-    std::vector<uint8_t> DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
+    ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
         {
@@ -169,7 +241,9 @@ namespace NovelRT::ResourceManagement::Desktop
                   std::streamsize(fileSize)); // TODO: Why on earth do we have to cast to char*?!
         file.close();
 
-        return buffer;
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        return ShaderMetadata{buffer, RegisterAsset(relativePathForAssetDatabase)};
     }
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
@@ -207,6 +281,9 @@ namespace NovelRT::ResourceManagement::Desktop
 
         package.data = j["data"].as<std::vector<uint8_t>>();
 
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        package.databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
         return package;
     }
 
@@ -243,6 +320,9 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             throw NovelRT::Exceptions::InvalidOperationException("Unable to create file at " + filePath.string());
         }
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        RegisterAsset(relativePathForAssetDatabase);
 
         file.write(reinterpret_cast<const char*>(buffer.data()), std::streamsize(buffer.size()));
         file.close();

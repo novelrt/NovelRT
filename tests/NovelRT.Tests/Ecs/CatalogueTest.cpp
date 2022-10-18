@@ -4,6 +4,7 @@
 #include <NovelRT/NovelRT.h>
 #include <atomic>
 #include <gtest/gtest.h>
+#include <limits>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
@@ -21,7 +22,7 @@ protected:
         componentCache = ComponentCache(1);
         entityCache = EntityCache(1);
         componentCache.RegisterComponentType<int32_t>(-1, "THROW_AWAY");
-        componentCache.RegisterComponentType<size_t>(-1, "THROW_AWAY_AGAIN");
+        componentCache.RegisterComponentType<size_t>(std::numeric_limits<size_t>::max(), "THROW_AWAY_AGAIN");
         componentCache.RegisterComponentType<char>('e', "THROW_AWAY_AGAIN_AGAIN");
 
         componentCache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 0, 10);
