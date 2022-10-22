@@ -47,8 +47,8 @@ namespace NovelRT::Maths
         /**
          * @brief Returns a pointer to the parent instance in this QuadTree's hierarchy.
          *
-         * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, nullptr is
-         * returned instead.
+         * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, nullptr
+         * is returned instead.
          */
         const std::weak_ptr<QuadTree>& getParent() const noexcept
         {
