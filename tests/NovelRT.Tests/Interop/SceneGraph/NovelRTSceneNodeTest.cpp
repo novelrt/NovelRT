@@ -188,8 +188,8 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
 
     ASSERT_EQ(true, isEqual);
 
-    ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_SceneNode_delete(childNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(parentNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(childNode), NRT_SUCCESS);
 }
 
 TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild)
@@ -199,15 +199,15 @@ TEST(InteropSceneNodeTest, parentNodeIsNotReachableFromChild)
     Nrt_SceneNode_insert(parentNode, childNode);
     ASSERT_FALSE(Nrt_SceneNode_canReach(childNode, parentNode));
 
-    ASSERT_EQ(Nrt_SceneNode_delete(childNode), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(childNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(parentNode), NRT_SUCCESS);
 }
 
 TEST(InteropSceneNodeTest, nodeIsReachableFromSelf)
 {
     NrtSceneNodeHandle parentNode = Nrt_SceneNode_create();
     ASSERT_TRUE(Nrt_SceneNode_canReach(parentNode, parentNode));
-    ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(parentNode), NRT_SUCCESS);
 }
 
 // These are now defined here as they needed to be referenced for the lambda functions.
@@ -246,8 +246,8 @@ TEST(InteropSceneNodeTest, breadthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_EQ(1, childSceneNodeHitCount);
     ASSERT_EQ(0, otherSceneNodeHitCount);
 
-    ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_SceneNode_delete(childNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(parentNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(childNode), NRT_SUCCESS);
 }
 
 TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
@@ -284,6 +284,6 @@ TEST(InteropSceneNodeTest, depthFirstTraversalVisitsEachNodeOnceEvenWithCycle)
     ASSERT_EQ(1, childSceneNodeHitCount);
     ASSERT_EQ(0, otherSceneNodeHitCount);
 
-    ASSERT_EQ(Nrt_SceneNode_delete(parentNode), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_SceneNode_delete(childNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(parentNode), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_SceneNode_Destroy(childNode), NRT_SUCCESS);
 }

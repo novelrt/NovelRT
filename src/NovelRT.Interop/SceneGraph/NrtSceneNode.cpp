@@ -200,7 +200,7 @@ extern "C"
             firstNodePointer->canReach(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
     }
 
-    NrtResult Nrt_SceneNode_delete(NrtSceneNodeHandle node)
+    NrtResult Nrt_SceneNode_Destroy(NrtSceneNodeHandle node)
     {
         if (node == nullptr)
         {
@@ -220,7 +220,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSetHandle nodeSet)
+    NrtResult Nrt_SceneNodeSet_Destroy(NrtSceneNodeSetHandle nodeSet)
     {
         if (nodeSet == nullptr)
         {

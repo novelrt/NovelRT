@@ -206,7 +206,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_PointVector_delete(NrtPointVectorHandle vector)
+    NrtResult Nrt_PointVector_Destroy(NrtPointVectorHandle vector)
     {
         if (vector == nullptr)
         {
@@ -254,7 +254,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTree_delete(NrtQuadTreeHandle tree)
+    NrtResult Nrt_QuadTree_Destroy(NrtQuadTreeHandle tree)
     {
         if (tree == nullptr)
         {
