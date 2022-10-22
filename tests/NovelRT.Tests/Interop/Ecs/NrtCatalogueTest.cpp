@@ -142,7 +142,7 @@ TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 
 TEST_F(InteropCatalogueTest, CanHandleEntityDeletionBetweenFrames)
 {
-    Nrt_Catalogue_DestroyEntity(catalogue, 0);
+    Nrt_Catalogue_DeleteEntity(catalogue, 0);
     Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(entityCache);
     Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
                                                   Nrt_EntityCache_GetEntitiesToRemoveThisFrame(entityCache));
@@ -163,7 +163,7 @@ TEST_F(InteropCatalogueTest, CanHandleEntityDeletionBetweenFrames)
 TEST_F(InteropCatalogueTest, CanHandleEntityDeletionInSameFrame)
 {
     auto id = Nrt_Catalogue_CreateEntity(catalogue);
-    Nrt_Catalogue_DestroyEntity(catalogue, id);
+    Nrt_Catalogue_DeleteEntity(catalogue, id);
     Nrt_EntityCache_ProcessEntityDeletionRequestsFromThreads(entityCache);
     Nrt_ComponentCache_PrepAllBuffersForNextFrame(componentCache,
                                                   Nrt_EntityCache_GetEntitiesToRemoveThisFrame(entityCache));
