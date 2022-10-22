@@ -25,12 +25,12 @@ extern "C"
     NrtResult Nrt_QuadTree_getIntersectingPoints(const NrtQuadTreeHandle tree,
                                                  NrtGeoBounds bounds,
                                                  NrtPointVectorHandle* outputResultVector);
-    NrtResult Nrt_PointVector_destroy(NrtPointVectorHandle vector);
+    NrtResult Nrt_PointVector_Destroy(NrtPointVectorHandle vector);
     size_t Nrt_PointVector_getSize(const NrtPointVectorHandle vector);
     NrtResult Nrt_PointVector_getPointFromIndex(const NrtPointVectorHandle vector,
                                                 size_t index,
                                                 NrtQuadTreePointHandle* outputPoint);
-    NrtResult Nrt_QuadTree_destroy(NrtQuadTreeHandle tree);
+    NrtResult Nrt_QuadTree_Destroy(NrtQuadTreeHandle tree);
 
 #ifdef __cplusplus
 }
