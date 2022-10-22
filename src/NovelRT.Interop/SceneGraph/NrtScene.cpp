@@ -54,7 +54,7 @@ extern "C"
         return static_cast<int32_t>(cppScene->remove(cppNode));
     }
 
-    NrtResult Nrt_Scene_delete(NrtSceneHandle scene)
+    NrtResult Nrt_Scene_destroy(NrtSceneHandle scene)
     {
         if (scene == nullptr)
         {

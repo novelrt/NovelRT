@@ -14,7 +14,7 @@ extern "C"
     NrtQuadTreePointHandle Nrt_QuadTreePoint_create(NrtGeoVector2F position);
     NrtQuadTreePointHandle Nrt_QuadTreePoint_createFromFloat(float x, float y);
     NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePointHandle point);
-    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePointHandle point);
+    NrtResult Nrt_QuadTreePoint_destroy(NrtQuadTreePointHandle point);
 
 #ifdef __cplusplus
 }

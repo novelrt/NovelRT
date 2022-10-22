@@ -17,7 +17,7 @@ extern "C"
 
     NrtResult Nrt_EntityIdVector_Remove(NrtEntityIdVectorHandle vector, NrtEntityId entity);
 
-    NrtResult Nrt_EntityIdVector_Delete(NrtEntityIdVectorHandle vector);
+    NrtResult Nrt_EntityIdVector_Destroy(NrtEntityIdVectorHandle vector);
 
 #ifdef __cplusplus
 };

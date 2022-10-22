@@ -24,7 +24,7 @@ extern "C"
 
     NrtEntityId Nrt_Catalogue_CreateEntity(NrtCatalogueHandle catalogue);
 
-    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogueHandle catalogue, NrtEntityId entity);
+    NrtResult Nrt_Catalogue_DestroyEntity(NrtCatalogueHandle catalogue, NrtEntityId entity);
 
     NrtResult Nrt_Catalogue_Destroy(NrtCatalogueHandle catalogue);
 

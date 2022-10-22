@@ -63,12 +63,12 @@ TEST_F(InteropQuadTreeTest, createReturnsValidHandle)
 TEST_F(InteropQuadTreeTest, deleteReturnsSuccessWhenGivenValidHandle)
 {
     NrtQuadTreeHandle tree = Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
-    EXPECT_EQ(Nrt_QuadTree_delete(tree), NRT_SUCCESS);
+    EXPECT_EQ(Nrt_QuadTree_destroy(tree), NRT_SUCCESS);
 }
 
 TEST_F(InteropQuadTreeTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
-    ASSERT_EQ(Nrt_QuadTree_delete(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTree_destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
 TEST_F(InteropQuadTreeTest,
@@ -76,8 +76,8 @@ TEST_F(InteropQuadTreeTest,
 {
     auto handle = reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))
                       ->shared_from_this();
-    ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTreeHandle>(handle.get())), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_delete(reinterpret_cast<NrtQuadTreeHandle>(handle.get())),
+    ASSERT_EQ(Nrt_QuadTree_destroy(reinterpret_cast<NrtQuadTreeHandle>(handle.get())), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_destroy(reinterpret_cast<NrtQuadTreeHandle>(handle.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 }
 
@@ -87,7 +87,7 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsValidPointVectorHandleAn
 
     int32_t result = Nrt_QuadTree_getIntersectingPoints(_quadTree, getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT), &vec);
     EXPECT_EQ(result, NRT_SUCCESS);
-    EXPECT_EQ(Nrt_PointVector_delete(vec), NRT_SUCCESS);
+    EXPECT_EQ(Nrt_PointVector_destroy(vec), NRT_SUCCESS);
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullInstanceFailureWhenGivenNullPtrForInput)
@@ -392,7 +392,7 @@ TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue)
 
 TEST_F(InteropQuadTreeTest, PointVector_deleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
-    ASSERT_EQ(Nrt_PointVector_delete(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_PointVector_destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
 TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints)

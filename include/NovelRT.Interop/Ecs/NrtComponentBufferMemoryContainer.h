@@ -19,7 +19,7 @@ extern "C"
                                                                                       void* context);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
-                                                                  NrtEntityIdVectorHandle entitiesToDelete);
+                                                                  NrtEntityIdVectorHandle entitiesToDestroy);
 
     NrtComponentBufferMemoryContainer_ImmutableDataViewHandle
     Nrt_ComponentBufferMemoryContainer_GetDeleteInstructionState(NrtComponentBufferMemoryContainerHandle container);

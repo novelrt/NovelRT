@@ -66,7 +66,7 @@ extern "C"
         return reinterpret_cast<Catalogue*>(catalogue)->CreateEntity();
     }
 
-    NrtResult Nrt_Catalogue_DeleteEntity(NrtCatalogueHandle catalogue, NrtEntityId entity)
+    NrtResult Nrt_Catalogue_DestroyEntity(NrtCatalogueHandle catalogue, NrtEntityId entity)
     {
         if (catalogue == nullptr)
         {

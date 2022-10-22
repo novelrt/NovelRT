@@ -36,7 +36,7 @@ extern "C"
         return returnValue;
     }
 
-    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePointHandle point)
+    NrtResult Nrt_QuadTreePoint_destroy(NrtQuadTreePointHandle point)
     {
         if (point == nullptr)
         {
