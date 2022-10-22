@@ -47,7 +47,7 @@ namespace NovelRT::Maths
         /**
          * @brief Returns a pointer to the parent instance in this QuadTree's hierarchy.
          *
-         * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, null is
+         * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, nullptr is
          * returned instead.
          */
         const std::weak_ptr<QuadTree>& getParent() const noexcept
@@ -70,7 +70,7 @@ namespace NovelRT::Maths
          *
          * @param index The index of the point to retrieve. A valid index ranges from 0 to 3 inclusive.
          * @return A std::shared_ptr<TQuadTreePoint>&, pointing to the instance. If no instance was stored under the
-         * given index, a null pointer is returned instead.
+         * given index, nullptr is returned instead.
          */
         const std::shared_ptr<QuadTreePoint>& getPoint(size_t index) const noexcept
         {
@@ -83,7 +83,7 @@ namespace NovelRT::Maths
          * @tparam TQuadTreePoint A point type that can be casted as a QuadTreePoint instance.
          * @param index The index of the point to retrieve. A valid index ranges from 0 to 3 inclusive.
          * @return A std::shared_ptr<QuadTreePoint>& to the QuadTreePoint instance. If no instance was stored under the
-         * given index, a null pointer is returned instead.
+         * given index, nullptr is returned instead.
          */
         template<typename TQuadTreePoint> const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const
         {
@@ -104,7 +104,7 @@ namespace NovelRT::Maths
          * @brief Returns the child QuadTree node for the top left area.
          *
          * @return The child QuadTree covering the top left area of this QuadTree. If this QuadTree instance does not
-         * have any children, a null pointer is returned instead.
+         * have any children, nullptr is returned instead.
          */
         const std::shared_ptr<QuadTree>& getTopLeft() const noexcept
         {
@@ -115,7 +115,7 @@ namespace NovelRT::Maths
          * @brief Returns the child QuadTree node for the top right area.
          *
          * @return The child QuadTree covering the top right area of this QuadTree. If this QuadTree instance does not
-         * have any children, a null pointer is returned instead.
+         * have any children, nullptr is returned instead.
          */
         const std::shared_ptr<QuadTree>& getTopRight() const noexcept
         {
@@ -126,7 +126,7 @@ namespace NovelRT::Maths
          * @brief Returns the child QuadTree node for the bottom left area.
          *
          * @return The child QuadTree covering the botom left area of this QuadTree. If this QuadTree instance does not
-         * have any children, a null pointer is returned instead.
+         * have any children, nullptr is returned instead.
          */
         const std::shared_ptr<QuadTree>& getBottomLeft() const noexcept
         {
@@ -137,7 +137,7 @@ namespace NovelRT::Maths
          * @brief Returns the child QuadTree node for the bottom right area.
          *
          * @return The child QuadTree covering the bottom right area of this QuadTree. If this QuadTree instance does
-         * not have any children, a null pointer is returned instead.
+         * not have any children, nullptr is returned instead.
          */
         const std::shared_ptr<QuadTree>& getBottomRight() const noexcept
         {

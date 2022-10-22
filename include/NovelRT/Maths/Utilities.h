@@ -19,7 +19,7 @@
 #endif
 
 /**
- * @brief Contains utility functions to assist in math operations.
+ * @brief Contains utility functions to assist in mathematical operations.
  */
 namespace NovelRT::Maths::Utilities
 {
