@@ -9,5 +9,6 @@
 #include "NrtBinaryPackage.h"
 #include "NrtUint8Vector.h"
 #include "NrtShaderMetadata.h"
+#include "NrtTextureMetadata.h"
 
 #endif // NOVELRT_INTEROP_RESOURCEMANAGEMENT_RESOURCEMANAGEMENT_H

@@ -36,6 +36,8 @@ set(SOURCES
   ResourceManagement/NrtBinaryMemberMetadata.cpp
   ResourceManagement/NrtBinaryPackage.cpp
   ResourceManagement/NrtUint8Vector.cpp
+  ResourceManagement/NrtShaderMetadata.cpp
+  ResourceManagement/NrtTextureMetadata.cpp
 
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
