@@ -33,6 +33,10 @@ set(SOURCES
   Maths/NrtQuadTree.cpp
   Maths/NrtQuadTreePoint.cpp
 
+  ResourceManagement/NrtBinaryMemberMetadata.cpp
+  ResourceManagement/NrtBinaryPackage.cpp
+  ResourceManagement/NrtUint8Vector.cpp
+
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
   SceneGraph/NrtScene.cpp
