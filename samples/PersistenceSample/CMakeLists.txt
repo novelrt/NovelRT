@@ -1,5 +1,5 @@
 if(NOVELRT_VULKAN_SDK)
-  find_dependency(Vulkan REQUIRED)
+  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
 set(SOURCES
