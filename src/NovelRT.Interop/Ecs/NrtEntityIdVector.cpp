@@ -51,7 +51,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_EntityIdVector_Delete(NrtEntityIdVectorHandle vector)
+    NrtResult Nrt_EntityIdVector_Destroy(NrtEntityIdVectorHandle vector)
     {
         if (vector == nullptr)
         {

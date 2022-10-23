@@ -24,13 +24,13 @@ TEST(InteropQuadTreePointTest, createFromFloatReturnsValidHandle)
 
 TEST(InteropQuadTreePointTest, deleteReturnsSuccess)
 {
-    EXPECT_EQ(Nrt_QuadTreePoint_delete(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f)), NRT_SUCCESS);
+    EXPECT_EQ(Nrt_QuadTreePoint_Destroy(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f)), NRT_SUCCESS);
 }
 
 TEST(InteropQuadTreePointTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     const char* outputError = "Unable to continue. A null instance was provided when an instance was expected.";
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTreePoint_Destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
     EXPECT_STREQ(outputError, Nrt_getLastError());
 }
 
@@ -40,8 +40,8 @@ TEST(InteropQuadTreePointTest,
     const char* outputError = "Unable to continue. The specific item has already been deleted or removed.";
     auto ptr =
         reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f))->shared_from_this();
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTreePoint_delete(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())),
+    ASSERT_EQ(Nrt_QuadTreePoint_Destroy(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTreePoint_Destroy(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 
     EXPECT_STREQ(outputError, Nrt_getLastError());
