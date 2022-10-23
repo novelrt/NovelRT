@@ -18,7 +18,8 @@ extern "C"
     typedef struct NrtTextureMetadata* NrtTextureMetadataHandle;
     typedef struct NrtBinaryMemberMetadataVector* NrtBinaryMemberMetadataVectorHandle;
     typedef struct NrtUint8Vector* NrtUint8VectorHandle;
-
+    typedef const struct NrtUuidFilePathMap* NrtUuidFilePathMapHandle;
+    typedef const struct NrtFilePathUuidMap* NrtFilePathUuidMapHandle;
 
     typedef struct {
         uint8_t zero;

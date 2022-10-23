@@ -7,8 +7,11 @@
 #include "NrtResourceManagementTypedefs.h"
 #include "NrtBinaryMemberMetadata.h"
 #include "NrtBinaryPackage.h"
+#include "NrtFilePathUuidMap.h"
 #include "NrtUint8Vector.h"
 #include "NrtShaderMetadata.h"
 #include "NrtTextureMetadata.h"
+#include "NrtResourceLoader.h"
+#include "NrtUuidFilePathMap.h"
 
 #endif // NOVELRT_INTEROP_RESOURCEMANAGEMENT_RESOURCEMANAGEMENT_H

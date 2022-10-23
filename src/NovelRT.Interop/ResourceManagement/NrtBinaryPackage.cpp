@@ -13,11 +13,13 @@ extern "C"
     {
         if (package == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         delete reinterpret_cast<BinaryPackage*>(package);
+
+        return NRT_SUCCESS;
     }
 
     NrtBinaryMemberMetadataVectorHandle Nrt_BinaryPackage_GetMemberMetadata(NrtBinaryPackageHandle package)
