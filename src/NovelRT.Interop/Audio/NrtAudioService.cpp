@@ -270,7 +270,8 @@ extern "C"
 
         try
         {
-            *output = serv->LoadSound(*reinterpret_cast<std::vector<int16_t>*>(audioFrameData), channelCount, sampleRate);
+            *output =
+                serv->LoadSound(*reinterpret_cast<std::vector<int16_t>*>(audioFrameData), channelCount, sampleRate);
         }
         catch (const Exceptions::NotInitialisedException&)
         {

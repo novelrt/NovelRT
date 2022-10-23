@@ -11,7 +11,8 @@ extern "C"
 {
     NrtInt16VectorHandle Nrt_AudioMetadata_GetProcessedAudioFrames(NrtAudioMetadataHandle audioMetadata)
     {
-        return reinterpret_cast<NrtInt16VectorHandle>(&reinterpret_cast<AudioMetadata*>(audioMetadata)->processedAudioFrames);
+        return reinterpret_cast<NrtInt16VectorHandle>(
+            &reinterpret_cast<AudioMetadata*>(audioMetadata)->processedAudioFrames);
     }
 
     int32_t Nrt_AudioMetadata_GetChannelCount(NrtAudioMetadataHandle audioMetadata)
