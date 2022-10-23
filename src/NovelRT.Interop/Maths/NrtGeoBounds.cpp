@@ -55,7 +55,7 @@ extern "C"
     {
         if (outputResult == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

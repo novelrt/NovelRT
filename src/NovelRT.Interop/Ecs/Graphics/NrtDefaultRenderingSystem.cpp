@@ -14,13 +14,13 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
 {
     if (scheduler == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputResult == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -43,7 +43,7 @@ NrtResult Nrt_DefaultRenderingSystem_ForceVertexTextureFutureResolution(NrtDefau
 {
     if (system == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
