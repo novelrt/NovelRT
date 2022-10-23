@@ -9,8 +9,8 @@ extern "C"
 {
 #endif
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
     typedef struct NrtBinaryMemberMetadata* NrtBinaryMemberMetadataHandle;
     typedef struct NrtBinaryPackage* NrtBinaryPackageHandle;
