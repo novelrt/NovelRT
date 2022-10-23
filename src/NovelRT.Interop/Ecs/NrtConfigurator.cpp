@@ -20,7 +20,7 @@ NrtResult Nrt_Configurator_AddDefaultSystemsAndComponents(NrtConfiguratorHandle 
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -32,7 +32,7 @@ NrtResult Nrt_Configurator_Destroy(NrtConfiguratorHandle configurator)
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -45,13 +45,13 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -71,13 +71,13 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -98,13 +98,13 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -125,13 +125,13 @@ NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configur
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -152,13 +152,13 @@ NrtResult Nrt_Configurator_InitialiseAndRegisterComponents(NrtConfiguratorHandle
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputSystemScheduler == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 

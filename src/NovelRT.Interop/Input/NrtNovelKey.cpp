@@ -31,7 +31,7 @@ NrtResult Nrt_NovelKey_PairKey(NrtNovelKeyHandle key, int32_t externalKeyCode)
 {
     if (key == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -45,7 +45,7 @@ NrtResult Nrt_NovelKey_UnpairKey(NrtNovelKeyHandle key)
 {
     if (key == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

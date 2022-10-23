@@ -14,15 +14,10 @@ extern "C"
     const char* Nrt_getExecutablePath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
-        char* returnPtr = nullptr;
 
-#ifdef WIN32
         size_t length = cppPath.length() + 1;
-        returnPtr = static_cast<char*>(malloc(length));
-        strcpy_s(returnPtr, length, cppPath.c_str());
-#else
-    returnPtr = strdup(cppPath.c_str());
-#endif
+        char* returnPtr = static_cast<char*>(malloc(length));
+        strcpy(returnPtr, cppPath.c_str());
 
         return returnPtr;
     }
@@ -30,15 +25,10 @@ extern "C"
     const char* Nrt_getExecutableDirPath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
-        char* returnPtr = nullptr;
 
-#ifdef WIN32
         size_t length = cppPath.length() + 1;
-        returnPtr = static_cast<char*>(malloc(length));
-        strcpy_s(returnPtr, length, cppPath.c_str());
-#else
-    returnPtr = strdup(cppPath.c_str());
-#endif
+        char* returnPtr = static_cast<char*>(malloc(length));
+        strcpy(returnPtr, cppPath.c_str());
 
         return returnPtr;
     }
@@ -69,10 +59,7 @@ extern "C"
             }
         }
 
-        char* finalPath = nullptr;
-// strcpy_s is not included by all compilers that don't have __STDC_LIB_EXT1__ available, including clang.
-#if defined(WIN32)
-        finalPath = static_cast<char*>(malloc(finalString.length() + 1));
+        char* finalPath = static_cast<char*>(malloc(finalString.length() + 1));
 
         if (finalPath == nullptr)
         {
@@ -80,15 +67,8 @@ extern "C"
             return NULL;
         }
 
-        strcpy_s(finalPath, finalString.length() + 1, finalString.c_str());
-#else
-    finalPath = strdup(finalString.c_str());
-    if (finalPath == nullptr)
-    {
-        Nrt_setErrMsgIsOutOfMemoryInternal();
-        return NULL;
-    }
-#endif
+        strcpy(finalPath,finalString.c_str());
+
         return finalPath;
     }
 
@@ -110,15 +90,12 @@ extern "C"
         char* finalText = new char[finalString.length() + 1];
         if (strlen(finalText) < (finalString.length() + 1))
         {
-            Nrt_setErrMsgCustomInternal("Could not properly allocate memory for test!");
+            Nrt_setErrMsgCustomInternal("Could not properly allocate memory for text!");
             return NULL;
         }
 
-#if defined(WIN32)
-        strcpy_s(finalText, finalString.length() + 1, finalString.c_str());
-#else
-    finalText = strdup(finalString.c_str());
-#endif
+        strcpy(finalText, finalString.c_str());
+
         return finalText;
     }
 

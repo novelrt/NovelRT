@@ -13,7 +13,7 @@ NrtResult Nrt_IInputDevice_Destroy(NrtIInputDeviceHandle device)
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -55,7 +55,7 @@ NrtResult Nrt_IInputDevice_AddInputAction(NrtIInputDeviceHandle device,
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -83,7 +83,7 @@ NrtResult Nrt_IInputDevice_GetAvailableKey(NrtIInputDeviceHandle device,
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

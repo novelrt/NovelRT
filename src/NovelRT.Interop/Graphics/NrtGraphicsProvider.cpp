@@ -13,7 +13,7 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
 {
     if (provider == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

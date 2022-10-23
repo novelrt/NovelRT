@@ -13,7 +13,7 @@ NrtResult Nrt_IWindowingDevice_Destroy(NrtIWindowingDeviceHandle device)
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -42,13 +42,9 @@ char* Nrt_IWindowingDevice_GetWindowTitle(NrtIWindowingDeviceHandle device)
 {
     auto title = reinterpret_cast<IWindowingDevice*>(device)->GetWindowTitle();
 
-#ifdef WIN32
-    size_t size = strlen(title.c_str()) + 1;
+    size_t size = title.length() + 1;
     char* result = reinterpret_cast<char*>(malloc(size));
-    strcpy_s(result, size, title.c_str());
-#else
-    char* result = strdup(title.c_str());
-#endif
+    strcpy(result, title.c_str());
 
     return result;
 }
@@ -57,7 +53,7 @@ NrtResult Nrt_IWindowingDevice_SetWindowTitle(NrtIWindowingDeviceHandle device, 
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -70,7 +66,7 @@ NrtResult Nrt_IWindowingDevice_ProcessAllMessages(NrtIWindowingDeviceHandle devi
 {
     if (device == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

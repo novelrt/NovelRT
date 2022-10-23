@@ -13,7 +13,7 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -31,13 +31,13 @@ NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceMa
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputLoader == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 

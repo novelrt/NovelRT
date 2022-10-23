@@ -13,7 +13,7 @@ NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderHandle plugin)
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -30,13 +30,13 @@ NrtResult Nrt_IInputPluginProvider_GetInputDevice(NrtIInputPluginProviderHandle 
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrIsNullInstanceProvidedInternal();
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputDevice == nullptr)
     {
-        Nrt_setErrIsNullArgProvidedInternal();
+        Nrt_setErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 

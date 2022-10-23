@@ -88,6 +88,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
     $<$<CXX_COMPILER_ID:MSVC>:/wd4611>
     $<$<CXX_COMPILER_ID:MSVC>:/MP>
+    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS>
 
     $<$<CXX_COMPILER_ID:GNU>:-pedantic>
     $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>

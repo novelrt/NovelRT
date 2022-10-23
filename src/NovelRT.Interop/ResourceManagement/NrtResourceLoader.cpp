@@ -14,15 +14,10 @@ extern "C"
     char* Nrt_ResourceLoader_GetResourcesRootDirectory(NrtResourceLoaderHandle resourceLoader)
     {
         std::string cppPath = reinterpret_cast<ResourceLoader*>(resourceLoader)->ResourcesRootDirectory().string();
-        char* returnPtr = nullptr;
 
-#ifdef WIN32
         size_t length = cppPath.length() + 1;
-        returnPtr = static_cast<char*>(malloc(length));
-        strcpy_s(returnPtr, length, cppPath.c_str());
-#else
-        returnPtr = strdup(cppPath.c_str());
-#endif
+        char* returnPtr = static_cast<char*>(malloc(length));
+        strcpy(returnPtr, cppPath.c_str());
 
         return returnPtr;
     }
