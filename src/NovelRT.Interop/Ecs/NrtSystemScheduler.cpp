@@ -68,7 +68,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -139,7 +139,7 @@ extern "C"
         }
         catch (const NullPointerException&)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         catch (const OutOfMemoryException&)
@@ -163,7 +163,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -177,7 +177,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

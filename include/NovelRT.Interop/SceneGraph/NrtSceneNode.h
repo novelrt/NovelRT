@@ -32,9 +32,9 @@ extern "C"
                                                            void* context,
                                                            NrtSceneNodeDepthFirstIteratorHandle* outputIterator);
     NrtBool Nrt_SceneNode_canReach(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode);
-    NrtResult Nrt_SceneNode_delete(NrtSceneNodeHandle node);
+    NrtResult Nrt_SceneNode_Destroy(NrtSceneNodeHandle node);
 
-    NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSetHandle nodeSet);
+    NrtResult Nrt_SceneNodeSet_Destroy(NrtSceneNodeSetHandle nodeSet);
     size_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSetHandle nodeSet);
     NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSetHandle nodeSet,
                                                      size_t index,

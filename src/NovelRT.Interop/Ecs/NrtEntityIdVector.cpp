@@ -21,7 +21,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -34,7 +34,7 @@ extern "C"
     {
         if (vector == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -51,11 +51,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_EntityIdVector_Delete(NrtEntityIdVectorHandle vector)
+    NrtResult Nrt_EntityIdVector_Destroy(NrtEntityIdVectorHandle vector)
     {
         if (vector == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

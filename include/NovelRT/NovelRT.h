@@ -160,6 +160,9 @@
   #include <NovelRT.Interop/Maths/NrtQuadTree.h>
   #include <NovelRT.Interop/Maths/NrtQuadTreePoint.h>
 
+  // Resource Management
+  #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
+
   // SceneGraph
   #include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
   #include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>

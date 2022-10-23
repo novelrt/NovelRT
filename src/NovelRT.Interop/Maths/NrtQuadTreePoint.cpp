@@ -36,11 +36,11 @@ extern "C"
         return returnValue;
     }
 
-    NrtResult Nrt_QuadTreePoint_delete(NrtQuadTreePointHandle point)
+    NrtResult Nrt_QuadTreePoint_Destroy(NrtQuadTreePointHandle point)
     {
         if (point == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

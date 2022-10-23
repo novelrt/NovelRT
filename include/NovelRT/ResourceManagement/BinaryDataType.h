@@ -12,7 +12,7 @@ namespace NovelRT::ResourceManagement
 {
     enum class BinaryDataType : uint32_t
     {
-        Null = 0,
+        NullOrUnknown = 0,
         Boolean = 1,
         Int32 = 2,
         Int64 = 3,

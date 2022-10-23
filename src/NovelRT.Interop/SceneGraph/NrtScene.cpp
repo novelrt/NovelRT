@@ -21,13 +21,13 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -54,11 +54,11 @@ extern "C"
         return static_cast<int32_t>(cppScene->remove(cppNode));
     }
 
-    NrtResult Nrt_Scene_delete(NrtSceneHandle scene)
+    NrtResult Nrt_Scene_Destroy(NrtSceneHandle scene)
     {
         if (scene == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
