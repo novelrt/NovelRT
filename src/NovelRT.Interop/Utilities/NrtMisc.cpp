@@ -4,8 +4,7 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtMisc.h>
 #include <NovelRT/NovelRT.h>
-
-#include <string.h>
+#include <cstring>
 
 #ifdef __cplusplus
 extern "C"

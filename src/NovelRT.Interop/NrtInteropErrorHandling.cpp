@@ -24,6 +24,7 @@ const char* const errMsgIsOutOfMemory =
 const char* const errMsgIsNullArg = "Unable to continue. A null argument was provided when an argument was expected.";
 const char* const errMsgKeyNotFound = "Unable to continue. The specified key was not found in the collection.";
 const char* const errMsgRuntimeNotFound = "Unable to continue. Runtime not found.";
+const char* const errMsgInvalidPath = "Unable to continue. Invalid path provided.";
 const char* const errMsgErrorUnknown = "Unable to continue. Unknown exception occurred.";
 const char* currentErrorMessage = nullptr;
 bool customMessageSet = false;
@@ -61,7 +62,7 @@ extern "C"
         customMessageSet = false;
     }
 
-    void Nrt_setErrIsNullInstanceProvidedInternal()
+    void Nrt_setErrMsgIsNullInstanceProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullInstanceProvided;
@@ -97,7 +98,7 @@ extern "C"
         currentErrorMessage = errMsgCompilationError;
     }
 
-    void Nrt_setErrIsNullArgProvidedInternal()
+    void Nrt_setErrMsgIsNullArgumentProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullArg;
@@ -173,6 +174,12 @@ extern "C"
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsOutOfMemory;
+    }
+
+    void Nrt_setErrMsgIsInvalidPathInternal()
+    {
+        validateCustomMessageInternal();
+        currentErrorMessage = errMsgInvalidPath;
     }
 
     void Nrt_setErrMsgCustomInternal(const char* message)
