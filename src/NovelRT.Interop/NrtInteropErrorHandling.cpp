@@ -182,7 +182,6 @@ extern "C"
         currentErrorMessage = errMsgInvalidPath;
     }
 
-
     void Nrt_setErrMsgCustomInternal(const char* message)
     {
         currentErrorMessage = message;

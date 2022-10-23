@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 #include <NovelRT/ResourceManagement/ResourceManagement.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::ResourceManagement;
 
@@ -32,5 +32,4 @@ extern "C"
     {
         return *reinterpret_cast<NrtUuid*>(&reinterpret_cast<ShaderMetadata*>(shaderMetadata)->databaseHandle);
     }
-
 }

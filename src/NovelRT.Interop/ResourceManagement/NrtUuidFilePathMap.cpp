@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 #include <NovelRT/ResourceManagement/ResourceManagement.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::ResourceManagement;
 
@@ -25,7 +25,9 @@ extern "C"
 
         try
         {
-            std::string pathString = reinterpret_cast<const std::map<uuids::uuid, std::filesystem::path>*>(map)->at(*reinterpret_cast<uuids::uuid*>(&id)).string();
+            std::string pathString = reinterpret_cast<const std::map<uuids::uuid, std::filesystem::path>*>(map)
+                                         ->at(*reinterpret_cast<uuids::uuid*>(&id))
+                                         .string();
             char* returnPtr = nullptr;
 
 #ifdef WIN32

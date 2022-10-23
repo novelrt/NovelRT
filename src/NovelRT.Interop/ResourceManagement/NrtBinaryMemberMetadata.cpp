@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 #include <NovelRT/ResourceManagement/ResourceManagement.h>
-#include <NovelRT.Interop/NrtErrorHandling.h>
 
 using namespace NovelRT::ResourceManagement;
 
@@ -41,7 +41,7 @@ extern "C"
 
     size_t Nrt_BinaryMemberMetadata_GetDataLocation(NrtBinaryMemberMetadataHandle memberMetadata)
     {
-            return reinterpret_cast<BinaryMemberMetadata*>(memberMetadata)->location;
+        return reinterpret_cast<BinaryMemberMetadata*>(memberMetadata)->location;
     }
 
     size_t Nrt_BinaryMemberMetadata_GetSizeOfTypeInBytes(NrtBinaryMemberMetadataHandle memberMetadata)

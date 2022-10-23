@@ -21,7 +21,8 @@ extern "C"
     typedef const struct NrtUuidFilePathMap* NrtUuidFilePathMapHandle;
     typedef const struct NrtFilePathUuidMap* NrtFilePathUuidMapHandle;
 
-    typedef struct {
+    typedef struct
+    {
         uint8_t zero;
         uint8_t one;
         uint8_t two;
@@ -39,7 +40,6 @@ extern "C"
         uint8_t fourteen;
         uint8_t fifteen;
     } NrtUuid;
-
 
     typedef enum
     {
@@ -67,6 +67,5 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // NOVELRT_INTEROP_RESOURCEMANAGEMENT_NRTRESOURCEMANAGEMENTTYPEDEFS_H

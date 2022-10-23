@@ -13,17 +13,24 @@ extern "C"
 
     char* Nrt_ResourceLoader_GetResourcesRootDirectory(NrtResourceLoaderHandle resourceLoader);
 
-    NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader, const char* newDirectory);
+    NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader,
+                                                                 const char* newDirectory);
 
     NrtUuidFilePathMapHandle Nrt_ResourceLoader_GetGuidsToFilePathsMap(NrtResourceLoaderHandle resourceLoader);
 
     NrtFilePathUuidMapHandle Nrt_ResourceLoader_GetFilePathsToGuidsMap(NrtResourceLoaderHandle resourceLoader);
 
-    NrtResult Nrt_ResourceLoader_LoadTexture(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtTextureMetadataHandle* outTextureMetadata);
+    NrtResult Nrt_ResourceLoader_LoadTexture(NrtResourceLoaderHandle resourceLoader,
+                                             const char* filePath,
+                                             NrtTextureMetadataHandle* outTextureMetadata);
 
-    NrtResult Nrt_ResourceLoader_LoadShaderSource(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtShaderMetadataHandle* outShaderMetadata);
+    NrtResult Nrt_ResourceLoader_LoadShaderSource(NrtResourceLoaderHandle resourceLoader,
+                                                  const char* filePath,
+                                                  NrtShaderMetadataHandle* outShaderMetadata);
 
-    NrtResult Nrt_ResourceLoader_LoadPackage(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtBinaryPackageHandle* outBinaryPackage);
+    NrtResult Nrt_ResourceLoader_LoadPackage(NrtResourceLoaderHandle resourceLoader,
+                                             const char* filePath,
+                                             NrtBinaryPackageHandle* outBinaryPackage);
 
 #ifdef __cplusplus
 }

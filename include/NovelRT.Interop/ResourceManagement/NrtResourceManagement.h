@@ -4,14 +4,18 @@
 #ifndef NOVELRT_INTEROP_RESOURCEMANAGEMENT_RESOURCEMANAGEMENT_H
 #define NOVELRT_INTEROP_RESOURCEMANAGEMENT_RESOURCEMANAGEMENT_H
 
+// clang-format off
+
 #include "NrtResourceManagementTypedefs.h"
 #include "NrtBinaryMemberMetadata.h"
 #include "NrtBinaryPackage.h"
 #include "NrtFilePathUuidMap.h"
-#include "NrtUint8Vector.h"
+#include "NrtResourceLoader.h"
 #include "NrtShaderMetadata.h"
 #include "NrtTextureMetadata.h"
-#include "NrtResourceLoader.h"
+#include "NrtUint8Vector.h"
 #include "NrtUuidFilePathMap.h"
+
+// clang-format on
 
 #endif // NOVELRT_INTEROP_RESOURCEMANAGEMENT_RESOURCEMANAGEMENT_H

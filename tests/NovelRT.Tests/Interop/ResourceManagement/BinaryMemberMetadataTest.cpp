@@ -7,15 +7,7 @@
 class InteropBinaryMemberMetadataTest : public testing::Test
 {
 protected:
-
-    NrtBinaryMemberMetadataCreateInfo DummyInfo {
-        "test",
-        NRT_BINTYPE_NULLORUNKNOWN,
-        10,
-        20,
-        30,
-        40
-    };
+    NrtBinaryMemberMetadataCreateInfo DummyInfo{"test", NRT_BINTYPE_NULLORUNKNOWN, 10, 20, 30, 40};
 
     NrtBinaryMemberMetadataHandle DummyHandle = nullptr;
 
@@ -32,14 +24,7 @@ protected:
 
 TEST_F(InteropBinaryMemberMetadataTest, CreateReturnsValidHandle)
 {
-    NrtBinaryMemberMetadataCreateInfo info {
-        "test",
-        NRT_BINTYPE_NULLORUNKNOWN,
-        0,
-        0,
-        0,
-        0
-    };
+    NrtBinaryMemberMetadataCreateInfo info{"test", NRT_BINTYPE_NULLORUNKNOWN, 0, 0, 0, 0};
 
     auto handle = Nrt_BinaryMemberMetadata_Create(info);
 

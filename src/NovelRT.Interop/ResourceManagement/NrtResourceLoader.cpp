@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
-#include <NovelRT/ResourceManagement/ResourceManagement.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
+#include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 #include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/ResourceManagement/ResourceManagement.h>
 
 using namespace NovelRT::ResourceManagement;
 using namespace NovelRT::Exceptions;
@@ -27,7 +27,8 @@ extern "C"
         return returnPtr;
     }
 
-    NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader, const char* newDirectory)
+    NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader,
+                                                                 const char* newDirectory)
     {
         if (resourceLoader == nullptr)
         {
@@ -68,15 +69,19 @@ extern "C"
 
     NrtUuidFilePathMapHandle Nrt_ResourceLoader_GetGuidsToFilePathsMap(NrtResourceLoaderHandle resourceLoader)
     {
-        return reinterpret_cast<NrtUuidFilePathMapHandle>(&reinterpret_cast<const ResourceLoader*>(resourceLoader)->GetGuidsToFilePathsMap());
+        return reinterpret_cast<NrtUuidFilePathMapHandle>(
+            &reinterpret_cast<const ResourceLoader*>(resourceLoader)->GetGuidsToFilePathsMap());
     }
 
     NrtFilePathUuidMapHandle Nrt_ResourceLoader_GetFilePathsToGuidsMap(NrtResourceLoaderHandle resourceLoader)
     {
-        return reinterpret_cast<NrtFilePathUuidMapHandle>(&reinterpret_cast<const ResourceLoader*>(resourceLoader)->GetFilePathsToGuidsMap());
+        return reinterpret_cast<NrtFilePathUuidMapHandle>(
+            &reinterpret_cast<const ResourceLoader*>(resourceLoader)->GetFilePathsToGuidsMap());
     }
 
-    NrtResult Nrt_ResourceLoader_LoadTexture(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtTextureMetadataHandle* outTextureMetadata)
+    NrtResult Nrt_ResourceLoader_LoadTexture(NrtResourceLoaderHandle resourceLoader,
+                                             const char* filePath,
+                                             NrtTextureMetadataHandle* outTextureMetadata)
     {
         if (resourceLoader == nullptr)
         {
@@ -97,7 +102,7 @@ extern "C"
         {
             cppFilePath = filePath;
         }
-        catch(const std::runtime_error&)
+        catch (const std::runtime_error&)
         {
             Nrt_setErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
@@ -118,7 +123,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ResourceLoader_LoadShaderSource(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtShaderMetadataHandle* outShaderMetadata)
+    NrtResult Nrt_ResourceLoader_LoadShaderSource(NrtResourceLoaderHandle resourceLoader,
+                                                  const char* filePath,
+                                                  NrtShaderMetadataHandle* outShaderMetadata)
     {
         if (resourceLoader == nullptr)
         {
@@ -139,7 +146,7 @@ extern "C"
         {
             cppFilePath = filePath;
         }
-        catch(const std::runtime_error&)
+        catch (const std::runtime_error&)
         {
             Nrt_setErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
@@ -160,7 +167,9 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_ResourceLoader_LoadPackage(NrtResourceLoaderHandle resourceLoader, const char* filePath, NrtBinaryPackageHandle* outBinaryPackage)
+    NrtResult Nrt_ResourceLoader_LoadPackage(NrtResourceLoaderHandle resourceLoader,
+                                             const char* filePath,
+                                             NrtBinaryPackageHandle* outBinaryPackage)
     {
         if (resourceLoader == nullptr)
         {
@@ -181,7 +190,7 @@ extern "C"
         {
             cppFilePath = filePath;
         }
-        catch(const std::runtime_error&)
+        catch (const std::runtime_error&)
         {
             Nrt_setErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
