@@ -21,8 +21,11 @@ int main()
 #endif
 
     DefaultPluginSelector selector;
+
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
+    auto uiProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>();
+
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()
@@ -30,6 +33,8 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
+            .WithPluginProvider(uiProvider)
             .InitialiseAndRegisterComponents();
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =

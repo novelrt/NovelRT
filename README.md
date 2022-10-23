@@ -36,6 +36,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
+- imgui 1.87
 - libpng 1.6.35
 - libsndfile 1.0.30
 - Microsoft GSL 4.0.0

@@ -7,6 +7,7 @@
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+#include <NovelRT/UI/DearImGui/UI.DearImGui.h>
 
 namespace NovelRT::PluginManagement
 {
@@ -25,5 +26,9 @@ namespace NovelRT::PluginManagement
     std::shared_ptr<IInputPluginProvider> GetGlfwInputPluginProvider() noexcept
     {
         return std::make_shared<Input::Glfw::GlfwInputPluginProvider>();
+    }
+    std::shared_ptr<IUIPluginProvider> GetImGuiUIPluginProvider() noexcept
+    {
+        return std::make_shared<UI::DearImGui::ImGuiUIPluginProvider>();
     }
 }

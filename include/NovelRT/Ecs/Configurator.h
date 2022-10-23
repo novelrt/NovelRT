@@ -24,6 +24,7 @@ namespace NovelRT::Ecs
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<PluginManagement::IInputPluginProvider> _inputPluginProvider;
+        std::shared_ptr<PluginManagement::IUIPluginProvider> _uiPluginProvider;
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
@@ -43,15 +44,21 @@ namespace NovelRT::Ecs
                 TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN},
                 "NovelRT::Ecs::TransformComponent");
 
-            target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
-                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
-
             target.GetComponentCache().RegisterComponentType(
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
-            target.RegisterSystem(
-                std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
+            auto defaultRenderingSystem = std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
+                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider);
+            target.RegisterSystem(defaultRenderingSystem);
+
+            auto defaultInputSystem =
+                std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider);
+            target.RegisterSystem(defaultInputSystem);
+
+            auto defaultUISystem = std::make_shared<Ecs::UI::UISystem>(_uiPluginProvider, _windowingPluginProvider,
+                                                                       _inputPluginProvider, defaultRenderingSystem);
+            target.RegisterSystem(defaultUISystem);
         }
 
     public:
@@ -193,6 +200,23 @@ namespace NovelRT::Ecs
             std::shared_ptr<PluginManagement::IInputPluginProvider> pluginInstance)
         {
             _inputPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IUIPluginProvider>(
+            std::shared_ptr<PluginManagement::IUIPluginProvider> pluginInstance)
+        {
+            _uiPluginProvider = std::move(pluginInstance);
             return *this;
         }
 
