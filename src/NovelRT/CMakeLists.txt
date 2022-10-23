@@ -78,7 +78,11 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
-set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
+if(GENERATOR_IS_MULTI_CONFIG)
+  set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
+else()
+  set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CMAKE_BUILD_TYPE:Release>,NovelRT,NovelRT-$<CMAKE_BUILD_TYPE>>")
+endif()
 
 if(APPLE)
   #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
