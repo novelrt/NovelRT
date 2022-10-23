@@ -22,7 +22,7 @@ NrtResult Nrt_IGraphicsPluginProvider_Destroy(NrtIGraphicsPluginProviderHandle p
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
-    
+
     return NRT_SUCCESS;
 }
 

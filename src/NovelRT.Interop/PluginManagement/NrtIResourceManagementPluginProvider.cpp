@@ -22,7 +22,7 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
-    
+
     return NRT_SUCCESS;
 }
 

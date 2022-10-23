@@ -10,7 +10,7 @@
  */
 namespace NovelRT::Interop::Lifetime
 {
-    template<typename T> [[nodiscard]] std::vector<std::shared_ptr<T>>& AliveObjects() noexcept
+    template<typename T>[[nodiscard]] std::vector<std::shared_ptr<T>>& AliveObjects() noexcept
     {
         static std::vector<std::shared_ptr<T>> aliveObjects{};
 
@@ -27,7 +27,7 @@ namespace NovelRT::Interop::Lifetime
         AliveObjects<T>().emplace_back(object);
     }
 
-    template<typename T> [[nodiscard]] std::shared_ptr<T> Find(T* object) noexcept
+    template<typename T>[[nodiscard]] std::shared_ptr<T> Find(T* object) noexcept
     {
         for (auto& aliveObject : AliveObjects<T>())
         {

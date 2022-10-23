@@ -22,7 +22,7 @@ NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderHandle plugin)
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
-    
+
     return NRT_SUCCESS;
 }
 NrtResult Nrt_IInputPluginProvider_GetInputDevice(NrtIInputPluginProviderHandle plugin,

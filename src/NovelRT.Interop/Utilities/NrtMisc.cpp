@@ -67,7 +67,7 @@ extern "C"
             return NULL;
         }
 
-        strcpy(finalPath,finalString.c_str());
+        strcpy(finalPath, finalString.c_str());
 
         return finalPath;
     }

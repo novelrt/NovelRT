@@ -22,6 +22,6 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
-    
+
     return NRT_SUCCESS;
 }
