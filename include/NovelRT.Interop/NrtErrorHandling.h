@@ -15,8 +15,8 @@ extern "C"
 
     // Internal
     const char* Nrt_getLastErrorInternal();
-    void Nrt_setErrIsNullInstanceProvidedInternal();
-    void Nrt_setErrIsNullArgProvidedInternal();
+    void Nrt_setErrMsgIsNullInstanceProvidedInternal();
+    void Nrt_setErrMsgIsNullArgumentProvidedInternal();
     void Nrt_setErrMsgIsNaNInternal();
     void Nrt_setErrMsgDupKeyGivenInternal();
     void Nrt_setErrMsgCompilationErrorInternal();
@@ -34,6 +34,7 @@ extern "C"
     void Nrt_setErrMsgKeyNotFoundInternal();
     void Nrt_setErrMsgRuntimeNotFoundInternal();
     void Nrt_setErrMsgErrorUnknownInternal();
+    void Nrt_setErrMsgIsInvalidPathInternal();
     void Nrt_setErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus

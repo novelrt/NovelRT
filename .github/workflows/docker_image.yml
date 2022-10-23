@@ -1,6 +1,7 @@
 name: Build Docker Images
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,14 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log in to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Build and push Linux docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
           file: scripts/novelrt-build.linux.Dockerfile
-          tags:
-            - novelrt/novelrt-build:latest
+          tags: novelrt/novelrt-build:latest

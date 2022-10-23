@@ -68,7 +68,7 @@ TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotated)
     GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 20.0f);
     GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
 
-    EXPECT_THROW(bounds0.intersectsWith(bounds1), Exceptions::NotSupportedException);
+    EXPECT_THROW(static_cast<void>(bounds0.intersectsWith(bounds1)), Exceptions::NotSupportedException);
 }
 
 TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotatedInversed)
@@ -76,7 +76,7 @@ TEST(GeoBoundsTest, intersectsWithThrowExceptionWhenBoundsIsRotatedInversed)
     GeoBounds bounds0(GeoVector2F::zero(), GeoVector2F::uniform(5.0f), 20.0f);
     GeoBounds bounds1(GeoVector2F::uniform(100.0f), GeoVector2F::uniform(5.0f), 0.0f);
 
-    EXPECT_THROW(bounds1.intersectsWith(bounds0), Exceptions::NotSupportedException);
+    EXPECT_THROW(static_cast<void>(bounds1.intersectsWith(bounds0)), Exceptions::NotSupportedException);
 }
 
 TEST(GeoBoundsTest, getCornerInLocalSpaceReturnsCorrectValues)
