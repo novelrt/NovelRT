@@ -1,5 +1,4 @@
 if(NOVELRT_VULKAN_SDK)
-  #include(CMakeFindDependencyMacro)
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
