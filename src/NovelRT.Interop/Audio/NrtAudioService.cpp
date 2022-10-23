@@ -38,7 +38,7 @@ extern "C"
         {
             return serv->InitializeAudio() ? NRT_TRUE : NRT_FALSE;
         }
-        catch (const Exceptions::InitialisationFailureException)
+        catch (const Exceptions::InitialisationFailureException&)
         {
             Nrt_setErrMsgIsInitialisationFailureInternal();
             return NRT_FAILURE_INITIALISATION_FAILURE;
@@ -46,7 +46,9 @@ extern "C"
     }
 
     NrtResult Nrt_AudioService_LoadMusic(NrtAudioServiceHandle service,
-                                         char* input,
+                                         NrtInt16VectorHandle audioFrameData,
+                                         int32_t channelCount,
+                                         int32_t sampleRate,
                                          NrtAudioServiceIteratorHandle* output)
     {
         if (service == nullptr)
@@ -60,9 +62,9 @@ extern "C"
         NovelRT::Audio::SoundBank::iterator out;
         try
         {
-            out = serv->LoadMusic(input);
+            out = serv->LoadMusic(*reinterpret_cast<std::vector<int16_t>*>(audioFrameData), channelCount, sampleRate);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -86,7 +88,7 @@ extern "C"
         {
             serv->SetSoundVolume(source, val);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -112,7 +114,7 @@ extern "C"
         {
             serv->SetSoundPosition(source, posX, posY);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -135,7 +137,7 @@ extern "C"
         {
             serv->ResumeMusic();
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -160,7 +162,7 @@ extern "C"
         {
             serv->PlayMusic(reinterpret_cast<NovelRT::Audio::SoundBank::iterator&>(handle), loops);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -183,7 +185,7 @@ extern "C"
         {
             serv->PauseMusic();
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -206,7 +208,7 @@ extern "C"
         {
             serv->StopMusic();
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -229,7 +231,7 @@ extern "C"
         {
             serv->SetMusicVolume(value);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -252,7 +254,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_AudioService_LoadSound(NrtAudioServiceHandle service, char* input, unsigned int* output)
+    NrtResult Nrt_AudioService_LoadSound(NrtAudioServiceHandle service,
+                                         NrtInt16VectorHandle audioFrameData,
+                                         int32_t channelCount,
+                                         int32_t sampleRate,
+                                         uint32_t* output)
     {
         if (service == nullptr)
         {
@@ -264,9 +270,9 @@ extern "C"
 
         try
         {
-            *output = serv->LoadSound(input);
+            *output = serv->LoadSound(*reinterpret_cast<std::vector<int16_t>*>(audioFrameData), channelCount, sampleRate);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
@@ -302,7 +308,7 @@ extern "C"
         {
             serv->PlaySound(handle, loops);
         }
-        catch (const Exceptions::NotInitialisedException)
+        catch (const Exceptions::NotInitialisedException&)
         {
             Nrt_setErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;

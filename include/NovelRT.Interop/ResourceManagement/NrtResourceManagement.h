@@ -7,9 +7,11 @@
 // clang-format off
 
 #include "NrtResourceManagementTypedefs.h"
+#include "NrtAudioMetadata.h"
 #include "NrtBinaryMemberMetadata.h"
 #include "NrtBinaryPackage.h"
 #include "NrtFilePathUuidMap.h"
+#include "NrtInt16Vector.h"
 #include "NrtResourceLoader.h"
 #include "NrtShaderMetadata.h"
 #include "NrtTextureMetadata.h"

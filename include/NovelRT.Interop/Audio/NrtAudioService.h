@@ -15,7 +15,9 @@ extern "C"
     NrtResult Nrt_AudioService_Destroy(NrtAudioServiceHandle service);
     NrtBool Nrt_AudioService_InitialiseAudio(NrtAudioServiceHandle service);
     NrtResult Nrt_AudioService_LoadMusic(NrtAudioServiceHandle service,
-                                         char* input,
+                                         NrtInt16VectorHandle audioFrameData,
+                                         int32_t channelCount,
+                                         int32_t sampleRate,
                                          NrtAudioServiceIteratorHandle* output);
     NrtResult Nrt_AudioService_SetSoundVolume(NrtAudioServiceHandle service, unsigned int source, float val);
     NrtResult Nrt_AudioService_SetSoundPosition(NrtAudioServiceHandle service,
@@ -30,7 +32,11 @@ extern "C"
     NrtResult Nrt_AudioService_StopMusic(NrtAudioServiceHandle service);
     NrtResult Nrt_AudioService_SetMusicVolume(NrtAudioServiceHandle service, float value);
     NrtResult Nrt_AudioService_CheckSources(NrtAudioServiceHandle service);
-    NrtResult Nrt_AudioService_LoadSound(NrtAudioServiceHandle service, char* input, unsigned int* output);
+    NrtResult Nrt_AudioService_LoadSound(NrtAudioServiceHandle service,
+                                         NrtInt16VectorHandle audioFrameData,
+                                         int32_t channelCount,
+                                         int32_t sampleRate,
+                                         uint32_t* output);
     NrtResult Nrt_AudioService_Unload(NrtAudioServiceHandle service, unsigned int handle);
     NrtResult Nrt_AudioService_PlaySound(NrtAudioServiceHandle service, unsigned int handle, int loops);
     NrtResult Nrt_AudioService_StopSound(NrtAudioServiceHandle service, unsigned int handle);

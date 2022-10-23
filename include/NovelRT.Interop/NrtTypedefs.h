@@ -71,6 +71,7 @@ extern "C"
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
+#include "ResourceManagement/NrtResourceManagementTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 
 #ifdef __cplusplus

@@ -33,13 +33,15 @@ set(SOURCES
   Maths/NrtQuadTree.cpp
   Maths/NrtQuadTreePoint.cpp
 
+  ResourceManagement/NrtAudioMetadata.cpp
   ResourceManagement/NrtBinaryMemberMetadata.cpp
   ResourceManagement/NrtBinaryPackage.cpp
   ResourceManagement/NrtFilePathUuidMap.cpp
-  ResourceManagement/NrtUint8Vector.cpp
   ResourceManagement/NrtShaderMetadata.cpp
   ResourceManagement/NrtTextureMetadata.cpp
   ResourceManagement/NrtResourceLoader.cpp
+  ResourceManagement/NrtUint8Vector.cpp
+        ResourceManagement/NrtInt16Vector.cpp
   ResourceManagement/NrtUuidFilePathMap.cpp
 
   SceneGraph/NrtQuadTreeNode.cpp
