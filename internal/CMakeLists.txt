@@ -2,6 +2,7 @@ add_subdirectory(Fabulist)
 add_subdirectory(glfw)
 add_subdirectory(glm)
 add_subdirectory(GSL)
+add_subdirectory(imgui)
 
 add_subdirectory(jsoncons)
 #Ordering this way required as libpng depends on zlib, and freetype depends on both

@@ -83,6 +83,8 @@ set(SOURCES
   UI/DearImGui/ImGuiUIProvider.cpp
 
   Utilities/Misc.cpp
+
+  "${imgui_SOURCES}"
 )
 
 add_library(Engine SHARED ${SOURCES})
@@ -106,6 +108,7 @@ target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
     $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
@@ -113,6 +116,8 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
+
+message(STATUS "KEKW HERES IMGUI: ${imgui_SOURCE_DIR}")
 
 target_compile_options(Engine
   PRIVATE
