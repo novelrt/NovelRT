@@ -26,7 +26,7 @@ extern "C"
 
     NrtGeoMatrix4x4F Nrt_GeoMatrix4x4F_getDefaultIdentity()
     {
-        auto identity = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        auto identity = Maths::GeoMatrix4x4F::GetDefaultIdentity();
         return *reinterpret_cast<NrtGeoMatrix4x4F*>(&identity);
     }
 

@@ -763,7 +763,7 @@ namespace NovelRT::Maths
          *
          * @return An Identity GeoMatrix4x4F.
          */
-        static GeoMatrix4x4F getDefaultIdentity() noexcept
+        static GeoMatrix4x4F GetDefaultIdentity() noexcept
         {
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }

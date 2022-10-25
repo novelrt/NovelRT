@@ -13,7 +13,7 @@ using namespace NovelRT::Maths;
 TEST(InteropGeoMatrix4x4FTest, getDefaultIdentityReturnsCorrectIdentityMatrix)
 {
     NrtGeoMatrix4x4F mat4 = Nrt_GeoMatrix4x4F_getDefaultIdentity();
-    EXPECT_EQ(Maths::GeoMatrix4x4F::getDefaultIdentity(), reinterpret_cast<Maths::GeoMatrix4x4F&>(mat4));
+    EXPECT_EQ(Maths::GeoMatrix4x4F::GetDefaultIdentity(), reinterpret_cast<Maths::GeoMatrix4x4F&>(mat4));
 }
 
 TEST(InteropGeoMatrix4x4FTest, isNaNReturnsTrueWhenGivenNaNMatrix)
@@ -62,7 +62,7 @@ TEST(InteropGeoMatrix4x4FTest, notEqualsOperatorReturnsFalseWhenMatricesAreEqual
 TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F::getDefaultIdentity() + Maths::GeoMatrix4x4F::getDefaultIdentity();
+        Maths::GeoMatrix4x4F::GetDefaultIdentity() + Maths::GeoMatrix4x4F::GetDefaultIdentity();
     NrtGeoMatrix4x4F actualMatrix =
         Nrt_GeoMatrix4x4F_addMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(), Nrt_GeoMatrix4x4F_getDefaultIdentity());
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
@@ -94,7 +94,7 @@ TEST(InteropGeoMatrix4x4FTest, addAssignMatrixAddsMatricesTogetherCorrectly)
 {
     NrtGeoMatrix4x4F inputMatrix = Nrt_GeoMatrix4x4F_getDefaultIdentity();
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F::getDefaultIdentity() + Maths::GeoMatrix4x4F::getDefaultIdentity();
+        Maths::GeoMatrix4x4F::GetDefaultIdentity() + Maths::GeoMatrix4x4F::GetDefaultIdentity();
     Nrt_GeoMatrix4x4F_addAssignMatrix(reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix),
                                       *reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix));
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix), inputMatrix));

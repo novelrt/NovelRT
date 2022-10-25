@@ -39,7 +39,7 @@ TEST_F(GeoMatrix4x4Test, inequalityOperatorEvaluatesCorrectly)
 
 TEST_F(GeoMatrix4x4Test, getDefaultIdentityReturnsIdentityMatrix)
 {
-    ASSERT_EQ(GeoMatrix4x4F::getDefaultIdentity(), _dummyMatrix);
+    ASSERT_EQ(GeoMatrix4x4F::GetDefaultIdentity(), _dummyMatrix);
 }
 
 TEST_F(GeoMatrix4x4Test, addOperatorAddsCorrectlyForGeoMatrix4x4)

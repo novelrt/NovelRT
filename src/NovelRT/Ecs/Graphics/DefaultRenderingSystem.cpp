@@ -316,7 +316,7 @@ namespace NovelRT::Ecs::Graphics
                 auto scaleValue = Maths::GeoVector2F::uniform(500);
                 float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
                 scaleValue.y *= aspect;
-                Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::getDefaultIdentity();
+                Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::GetDefaultIdentity();
 
                 std::vector<TransformComponent> parentTransforms{};
 
