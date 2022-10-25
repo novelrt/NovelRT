@@ -22,12 +22,12 @@ namespace NovelRT::Maths
         {
         }
 
-        inline const glm::vec4& vec4Value() const noexcept
+        inline const glm::vec4& Vec4Value() const noexcept
         {
             return *reinterpret_cast<const glm::vec4*>(this);
         }
 
-        inline glm::vec4& vec4Value() noexcept
+        inline glm::vec4& Vec4Value() noexcept
         {
             return reinterpret_cast<glm::vec4&>(*this);
         }
@@ -128,9 +128,9 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector4F created from normalising this GeoVector4F.
          */
-        inline GeoVector4F getNormalised() const noexcept
+        inline GeoVector4F GetNormalised() const noexcept
         {
-            return GeoVector4F(glm::normalize(vec4Value()));
+            return GeoVector4F(glm::normalize(Vec4Value()));
         }
 
         /**
@@ -152,7 +152,7 @@ namespace NovelRT::Maths
          *
          * @return The magnitude of this GeoVector4F.
          */
-        inline float getMagnitude() const noexcept
+        inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec4*>(this));
         }
@@ -176,9 +176,9 @@ namespace NovelRT::Maths
          *
          * @return The length of this GeoVector4F.
          */
-        inline float getLength() const noexcept
+        inline float GetLength() const noexcept
         {
-            return getMagnitude();
+            return GetMagnitude();
         }
 
         /**
@@ -1059,9 +1059,9 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool epsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
+        bool EpsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
         {
-            return glm::all(glm::equal(vec4Value(), other.vec4Value(), epsilonValue.vec4Value()));
+            return glm::all(glm::equal(Vec4Value(), other.Vec4Value(), epsilonValue.Vec4Value()));
         }
 
         /**
@@ -1069,9 +1069,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to zero.
          */
-        static GeoVector4F zero() noexcept
+        static GeoVector4F Zero() noexcept
         {
-            return GeoVector4F::uniform(0);
+            return GeoVector4F::Uniform(0);
         }
 
         /**
@@ -1079,9 +1079,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to one.
          */
-        static GeoVector4F one() noexcept
+        static GeoVector4F One() noexcept
         {
-            return GeoVector4F::uniform(1);
+            return GeoVector4F::Uniform(1);
         }
 
         /**
@@ -1090,7 +1090,7 @@ namespace NovelRT::Maths
          * @param The value to use as the uniform value across the GeoVector4F.
          * @return a new GeoVector4F instance with all components set to the specified value.
          */
-        static GeoVector4F uniform(float value) noexcept
+        static GeoVector4F Uniform(float value) noexcept
         {
             return GeoVector4F(value, value, value, value);
         }

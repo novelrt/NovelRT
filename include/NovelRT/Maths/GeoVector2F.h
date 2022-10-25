@@ -78,7 +78,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector2F created from normalising this GeoVector2F.
          */
-        inline GeoVector2F getNormalised() const noexcept
+        inline GeoVector2F GetNormalised() const noexcept
         {
             return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));
         }
@@ -99,7 +99,7 @@ namespace NovelRT::Maths
          *
          * @return The magnitude of this GeoVector2F.
          */
-        inline float getMagnitude() const noexcept
+        inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec2*>(this));
         }
@@ -120,9 +120,9 @@ namespace NovelRT::Maths
          *
          * @return The length of this GeoVector2F.
          */
-        inline float getLength() const noexcept
+        inline float GetLength() const noexcept
         {
-            return getMagnitude();
+            return GetMagnitude();
         }
 
         /**
@@ -843,7 +843,7 @@ namespace NovelRT::Maths
          * @param angleRotationValue The angle in degrees to rotate by.
          * @param point The point that acts as this vectors origin point to rotate around.
          */
-        void rotateToAngleAroundPoint(float angleRotationValue, GeoVector2F point) noexcept
+        void RotateToAngleAroundPoint(float angleRotationValue, GeoVector2F point) noexcept
         {
             *reinterpret_cast<glm::vec2*>(this) =
                 glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) -
@@ -861,7 +861,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool epsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
+        bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec2*>(this),
                                        *reinterpret_cast<const glm::vec2*>(&other),
@@ -873,9 +873,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector2F instance with all components set to zero.
          */
-        static GeoVector2F zero() noexcept
+        static GeoVector2F Zero() noexcept
         {
-            return GeoVector2F::uniform(0);
+            return GeoVector2F::Uniform(0);
         }
 
         /**
@@ -883,9 +883,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector2F instance with all components set to one.
          */
-        static GeoVector2F one() noexcept
+        static GeoVector2F One() noexcept
         {
-            return GeoVector2F::uniform(1);
+            return GeoVector2F::Uniform(1);
         }
 
         /**
@@ -894,7 +894,7 @@ namespace NovelRT::Maths
          * @param The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
-        static GeoVector2F uniform(float value) noexcept
+        static GeoVector2F Uniform(float value) noexcept
         {
             return GeoVector2F(value, value);
         }

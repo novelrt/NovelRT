@@ -53,7 +53,7 @@ extern "C"
                                                   NrtGeoVector2F point)
     {
         Maths::GeoVector2F cPoint = *reinterpret_cast<const Maths::GeoVector2F*>(&point);
-        (*reinterpret_cast<Maths::GeoVector2F*>(vector)).rotateToAngleAroundPoint(angleRotationValue, cPoint);
+        (*reinterpret_cast<Maths::GeoVector2F*>(vector)).RotateToAngleAroundPoint(angleRotationValue, cPoint);
     }
 
     NrtBool Nrt_GeoVector2F_epsilonEquals(NrtGeoVector2F vector, NrtGeoVector2F other, NrtGeoVector2F epsilonValue)
@@ -62,7 +62,7 @@ extern "C"
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&other);
         Maths::GeoVector2F cEpsilonValue = *reinterpret_cast<const Maths::GeoVector2F*>(&epsilonValue);
 
-        if (cVector.epsilonEquals(cOther, cEpsilonValue))
+        if (cVector.EpsilonEquals(cOther, cEpsilonValue))
         {
             return NRT_TRUE;
         }
@@ -73,20 +73,20 @@ extern "C"
     NrtGeoVector2F Nrt_GeoVector2F_getNormalised(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
-        Maths::GeoVector2F normal = cVector.getNormalised();
+        Maths::GeoVector2F normal = cVector.GetNormalised();
         return *reinterpret_cast<NrtGeoVector2F*>(&normal);
     }
 
     float Nrt_GeoVector2F_getLength(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
-        return cVector.getLength();
+        return cVector.GetLength();
     }
 
     float Nrt_GeoVector2F_getMagnitude(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
-        return cVector.getMagnitude();
+        return cVector.GetMagnitude();
     }
 
     NrtBool Nrt_GeoVector2F_equal(NrtGeoVector2F lhs, NrtGeoVector2F rhs)

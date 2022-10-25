@@ -48,7 +48,7 @@ namespace NovelRT::Maths
          * @return The newly instantiated GeoMatrix4x4F object.
          */
         GeoMatrix4x4F() noexcept
-            : x(GeoVector4F::zero()), y(GeoVector4F::zero()), z(GeoVector4F::zero()), w(GeoVector4F::zero())
+            : x(GeoVector4F::Zero()), y(GeoVector4F::Zero()), z(GeoVector4F::Zero()), w(GeoVector4F::Zero())
         {
         }
 

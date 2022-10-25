@@ -43,35 +43,38 @@ int main()
     FutureResult<VertexInfo> squareVertexFuture(nullptr, VertexInfo{});
     FutureResult<TextureInfo> redTextureFuture(nullptr, TextureInfo{});
 
-    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-        if (!squareVertexFuture.IsValid())
+    scheduler.RegisterSystem(
+        [&](auto delta, auto catalogue)
         {
-            auto pVertexBuffer = std::vector<TexturedVertex>{
-                TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)},
-                TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)},
-                TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)},
-                TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)},
-                TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)},
-                TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)}};
-
-            squareVertexFuture = renderingSystem->LoadVertexDataRaw<TexturedVertex>("exampleVert", pVertexBuffer);
-        }
-
-        if (!redTextureFuture.IsValid())
-        {
-            uint32_t colourValue = 0xFF0000FF;
-            auto pTextureData = std::vector<uint32_t>();
-            pTextureData.reserve(10000);
-
-            for (size_t i = 0; i < 10000; i++)
+            if (!squareVertexFuture.IsValid())
             {
-                pTextureData.emplace_back(colourValue);
+                auto pVertexBuffer = std::vector<TexturedVertex>{
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)},
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, +0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)},
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)},
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(+0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)},
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, -0.5, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)},
+                    TexturedVertex{NovelRT::Maths::GeoVector3F(-0.5, +0.5, 0),
+                                   NovelRT::Maths::GeoVector2F(0.0f, 0.0f)}};
+
+                squareVertexFuture = renderingSystem->LoadVertexDataRaw<TexturedVertex>("exampleVert", pVertexBuffer);
             }
 
-            redTextureFuture =
-                renderingSystem->LoadTextureDataRaw<uint32_t>("exampleTex", pTextureData, 100, 100, uuids::uuid{});
-        }
-    });
+            if (!redTextureFuture.IsValid())
+            {
+                uint32_t colourValue = 0xFF0000FF;
+                auto pTextureData = std::vector<uint32_t>();
+                pTextureData.reserve(10000);
+
+                for (size_t i = 0; i < 10000; i++)
+                {
+                    pTextureData.emplace_back(colourValue);
+                }
+
+                redTextureFuture =
+                    renderingSystem->LoadTextureDataRaw<uint32_t>("exampleTex", pTextureData, 100, 100, uuids::uuid{});
+            }
+        });
 
     std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> inputResourceRegions{};
     std::optional<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> transformRegion;
@@ -79,7 +82,8 @@ int main()
     // we cache the primitive here so its kept alive long enough so that Vulkan can execute the relevant cmd lists
     std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive> primitive = nullptr;
 
-    renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args) {
+    renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args)
+    {
         inputResourceRegions.clear();
         if (!squareVertexFuture.IsValid() || !squareVertexFuture.IsValueCreated())
         {
@@ -109,15 +113,15 @@ int main()
             // im only adding 3 transforms for this example.
             auto matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(0, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[0] = matrixToInsert;
             matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, -300, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[1] = matrixToInsert;
             matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[2] = matrixToInsert;
 
             args.resourceManager.UnmapAndWriteAllConstantBuffers();

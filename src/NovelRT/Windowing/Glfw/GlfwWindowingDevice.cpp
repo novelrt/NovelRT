@@ -116,7 +116,7 @@ namespace NovelRT::Windowing::Glfw
 
         if (width == 0 || height == 0)
         {
-            return Maths::GeoVector2F::zero();
+            return Maths::GeoVector2F::Zero();
         }
 
         return Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));

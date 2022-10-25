@@ -54,24 +54,27 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     transformBuffer.PushComponentUpdateInstruction(
         0, childOfChildEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    scheduler.RegisterSystem([](auto delta, auto catalogue) {
-        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-
-        for (auto [entity, transform] : transforms)
+    scheduler.RegisterSystem(
+        [](auto delta, auto catalogue)
         {
-            TransformComponent newComponent{};
-            newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-            transforms.PushComponentUpdateInstruction(entity, newComponent);
-        }
-    });
+            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+
+            for (auto [entity, transform] : transforms)
+            {
+                TransformComponent newComponent{};
+                newComponent.rotationInRadians =
+                    NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+                newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
+                transforms.PushComponentUpdateInstruction(entity, newComponent);
+            }
+        });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 

@@ -93,7 +93,7 @@ int main()
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
     NovelRT::Maths::GeoBounds uwuBounds =
-        NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::zero(),
+        NovelRT::Maths::GeoBounds(NovelRT::Maths::GeoVector2F::Zero(),
                                   NovelRT::Maths::GeoVector2F(textureFuture.GetBackingConcurrentSharedPtr()->width,
                                                               textureFuture.GetBackingConcurrentSharedPtr()->height),
                                   0);
@@ -101,42 +101,44 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, parentEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(0, 0, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(0, 0, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
 
-    scheduler.RegisterSystem([&uwuBounds, &uwuFlip](auto delta, auto catalogue) {
-        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-
-        for (auto [entity, transform] : transforms)
+    scheduler.RegisterSystem(
+        [&uwuBounds, &uwuFlip](auto delta, auto catalogue)
         {
-            TransformComponent newComponent{};
-            newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::zero();
-            if (uwuFlip)
+            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+
+            for (auto [entity, transform] : transforms)
             {
-                newComponent.positionAndLayer.x = 2;
-                uwuBounds = NovelRT::Maths::GeoBounds(
-                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x + 2, transform.positionAndLayer.y),
-                    uwuBounds.size, transform.rotationInRadians);
-                if (transform.positionAndLayer.x >= 480)
+                TransformComponent newComponent{};
+                newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::Zero();
+                if (uwuFlip)
                 {
-                    uwuFlip = false;
+                    newComponent.positionAndLayer.x = 2;
+                    uwuBounds = NovelRT::Maths::GeoBounds(
+                        NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x + 2, transform.positionAndLayer.y),
+                        uwuBounds.size, transform.rotationInRadians);
+                    if (transform.positionAndLayer.x >= 480)
+                    {
+                        uwuFlip = false;
+                    }
                 }
-            }
-            else
-            {
-                newComponent.positionAndLayer.x = -2;
-                uwuBounds = NovelRT::Maths::GeoBounds(
-                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x - 2, transform.positionAndLayer.y),
-                    uwuBounds.size, transform.rotationInRadians);
-                if (transform.positionAndLayer.x <= -480)
+                else
                 {
-                    uwuFlip = true;
+                    newComponent.positionAndLayer.x = -2;
+                    uwuBounds = NovelRT::Maths::GeoBounds(
+                        NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x - 2, transform.positionAndLayer.y),
+                        uwuBounds.size, transform.rotationInRadians);
+                    if (transform.positionAndLayer.x <= -480)
+                    {
+                        uwuFlip = true;
+                    }
                 }
+                newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
+                newComponent.rotationInRadians = 0;
+                transforms.PushComponentUpdateInstruction(entity, newComponent);
             }
-            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-            newComponent.rotationInRadians = 0;
-            transforms.PushComponentUpdateInstruction(entity, newComponent);
-        }
-    });
+        });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
@@ -153,33 +155,35 @@ int main()
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
     // Register system to trigger sound when something is clicked
-    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-        ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
-            catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
-
-        NovelRT::Ecs::Input::InputEventComponent input;
-        bool triggered = false;
-        if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
+    scheduler.RegisterSystem(
+        [&](auto delta, auto catalogue)
         {
-            triggered =
-                uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
-        }
+            ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
+                catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
 
-        if (triggered)
-        {
-            logger.logInfoLine("Clicked!");
-            auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
-            AudioEmitterStateComponent state;
-            if (states.TryGetComponent(soundEnt, state))
+            NovelRT::Ecs::Input::InputEventComponent input;
+            bool triggered = false;
+            if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
             {
-                if (state.state == AudioEmitterState::Stopped)
+                triggered = uwuBounds.pointIsWithinBounds(
+                    NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+            }
+
+            if (triggered)
+            {
+                logger.logInfoLine("Clicked!");
+                auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
+                AudioEmitterStateComponent state;
+                if (states.TryGetComponent(soundEnt, state))
                 {
-                    state.state = AudioEmitterState::ToPlay;
-                    states.PushComponentUpdateInstruction(soundEnt, state);
+                    if (state.state == AudioEmitterState::Stopped)
+                    {
+                        state.state = AudioEmitterState::ToPlay;
+                        states.PushComponentUpdateInstruction(soundEnt, state);
+                    }
                 }
             }
-        }
-    });
+        });
 
     // Additional setup to ensure ECS works
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };

@@ -70,8 +70,8 @@ TEST(InteropGeoMatrix4x4FTest, addMatrixAddsMatricesTogetherCorrectly)
 
 TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
 {
-    Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(),
-                                                               Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero());
+    Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::Zero(), Maths::GeoVector4F::Zero(),
+                                                               Maths::GeoVector4F::Zero(), Maths::GeoVector4F::Zero());
     NrtGeoMatrix4x4F actualMatrix = Nrt_GeoMatrix4x4F_subtractMatrix(Nrt_GeoMatrix4x4F_getDefaultIdentity(),
                                                                      Nrt_GeoMatrix4x4F_getDefaultIdentity());
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix), actualMatrix));
@@ -80,11 +80,11 @@ TEST(InteropGeoMatrix4x4FTest, subtractMatrixSubtractsMatricesTogetherCorrectly)
 TEST(InteropGeoMatrix4x4FTest, multiplyMatrixMultipliesMatricesTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F inputMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f),
-                             Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f),
+                             Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f));
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f),
-                             Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(16.0f), Maths::GeoVector4F::Uniform(16.0f),
+                             Maths::GeoVector4F::Uniform(16.0f), Maths::GeoVector4F::Uniform(16.0f));
     NrtGeoMatrix4x4F resultMatrix = Nrt_GeoMatrix4x4F_multiplyMatrix(
         *reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix), *reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix));
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix), resultMatrix));
@@ -112,11 +112,11 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignMatrixSubtractsMatricesTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixMultipliesMatricesTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F inputMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f),
-                             Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f),
+                             Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f));
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f),
-                             Maths::GeoVector4F::uniform(16.0f), Maths::GeoVector4F::uniform(16.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(16.0f), Maths::GeoVector4F::Uniform(16.0f),
+                             Maths::GeoVector4F::Uniform(16.0f), Maths::GeoVector4F::Uniform(16.0f));
     Nrt_GeoMatrix4x4F_multiplyAssignMatrix(reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix),
                                            *reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix));
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix),
@@ -126,8 +126,8 @@ TEST(InteropGeoMatrix4x4FTest, multiplyAssignMatrixMultipliesMatricesTogetherCor
 TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f),
-                             Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f),
+                             Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f));
     NrtGeoMatrix4x4F actualMatrix = Nrt_GeoMatrix4x4F_addFloat(
         NrtGeoMatrix4x4F{Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one()},
         1.0f);
@@ -136,8 +136,8 @@ TEST(InteropGeoMatrix4x4FTest, addFloatAddsMatrixAndFloatTogetherCorrectly)
 
 TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorrectly)
 {
-    Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero(),
-                                                               Maths::GeoVector4F::zero(), Maths::GeoVector4F::zero());
+    Maths::GeoMatrix4x4F expectedMatrix = Maths::GeoMatrix4x4F(Maths::GeoVector4F::Zero(), Maths::GeoVector4F::Zero(),
+                                                               Maths::GeoVector4F::Zero(), Maths::GeoVector4F::Zero());
     NrtGeoMatrix4x4F actualMatrix = Nrt_GeoMatrix4x4F_subtractFloat(
         NrtGeoMatrix4x4F{Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one(), Nrt_GeoVector4F_one()},
         1.0f);
@@ -147,11 +147,11 @@ TEST(InteropGeoMatrix4x4FTest, subtractFloatSubtractsMatricxAndFloatTogetherCorr
 TEST(InteropGeoMatrix4x4FTest, multiplyFloatMultipliesMatrixAndFloatTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F inputMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f),
-                             Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f),
+                             Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f));
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f),
-                             Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(4.0f), Maths::GeoVector4F::Uniform(4.0f),
+                             Maths::GeoVector4F::Uniform(4.0f), Maths::GeoVector4F::Uniform(4.0f));
     NrtGeoMatrix4x4F resultMatrix =
         Nrt_GeoMatrix4x4F_multiplyFloat(*reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix), 2.0f);
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix), resultMatrix));
@@ -180,11 +180,11 @@ TEST(InteropGeoMatrix4x4FTest, subtractAssignFloatSubtractsMatrixAndFloatTogethe
 TEST(InteropGeoMatrix4x4FTest, multiplyAssignFloatMultipliesMatrixAndFloatTogetherCorrectly)
 {
     Maths::GeoMatrix4x4F inputMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f),
-                             Maths::GeoVector4F::uniform(2.0f), Maths::GeoVector4F::uniform(2.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f),
+                             Maths::GeoVector4F::Uniform(2.0f), Maths::GeoVector4F::Uniform(2.0f));
     Maths::GeoMatrix4x4F expectedMatrix =
-        Maths::GeoMatrix4x4F(Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f),
-                             Maths::GeoVector4F::uniform(4.0f), Maths::GeoVector4F::uniform(4.0f));
+        Maths::GeoMatrix4x4F(Maths::GeoVector4F::Uniform(4.0f), Maths::GeoVector4F::Uniform(4.0f),
+                             Maths::GeoVector4F::Uniform(4.0f), Maths::GeoVector4F::Uniform(4.0f));
 
     Nrt_GeoMatrix4x4F_multiplyAssignFloat(reinterpret_cast<NrtGeoMatrix4x4F*>(&inputMatrix), 2.0f);
     EXPECT_TRUE(Nrt_GeoMatrix4x4F_equal(*reinterpret_cast<NrtGeoMatrix4x4F*>(&expectedMatrix),

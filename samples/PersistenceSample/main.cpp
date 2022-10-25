@@ -153,10 +153,10 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     transformBuffer.PushComponentUpdateInstruction(
         0, childOfChildEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
@@ -173,40 +173,42 @@ int main()
     Chapter chapterToLoad;
     bool fileSaved = false;
 
-    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
-        secondsPassed += delta;
+    scheduler.RegisterSystem(
+        [&](auto delta, auto catalogue)
+        {
+            secondsPassed += delta;
 
-        if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
-        {
-            fileSaved = false;
-            secondsPassed = NovelRT::Timing::Timestamp(0);
-            chapterToLoad.LoadFileData(
-                resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
-            // SEE THE FILE SIZE GROW
-            // FOREVER, UNCOMMENT THIS!
-        }
-        else if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(1.5f) && !fileSaved)
-        {
-            fileSaved = true;
-            chapterToLoad = Chapter::FromEcsInstance(scheduler.GetComponentCache());
-            resourceManagementProvider->GetResourceLoader()->SavePackage("MyChapter.chapter",
-                                                                         chapterToLoad.ToFileData());
-        }
-        else
-        {
-            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-            for (auto [entity, transform] : transforms)
+            if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
             {
-                TransformComponent newComponent{};
-                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                newComponent.rotationInRadians =
-                    NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
-                transforms.PushComponentUpdateInstruction(entity, newComponent);
+                fileSaved = false;
+                secondsPassed = NovelRT::Timing::Timestamp(0);
+                chapterToLoad.LoadFileData(
+                    resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
+                // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT
+                // TO SEE THE FILE SIZE GROW FOREVER, UNCOMMENT THIS!
             }
-        }
-    });
+            else if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(1.5f) && !fileSaved)
+            {
+                fileSaved = true;
+                chapterToLoad = Chapter::FromEcsInstance(scheduler.GetComponentCache());
+                resourceManagementProvider->GetResourceLoader()->SavePackage("MyChapter.chapter",
+                                                                             chapterToLoad.ToFileData());
+            }
+            else
+            {
+                ComponentView<TransformComponent> transforms =
+                    catalogue.template GetComponentView<TransformComponent>();
+                for (auto [entity, transform] : transforms)
+                {
+                    TransformComponent newComponent{};
+                    newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
+                    newComponent.rotationInRadians =
+                        NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
+                    newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
+                    transforms.PushComponentUpdateInstruction(entity, newComponent);
+                }
+            }
+        });
 
     entityCache.ProcessEntityRegistrationRequestsFromThreads();
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});

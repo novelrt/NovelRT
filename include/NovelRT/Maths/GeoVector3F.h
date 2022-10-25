@@ -96,7 +96,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector3F created from normalising this GeoVector3F.
          */
-        inline GeoVector3F getNormalised() const noexcept
+        inline GeoVector3F GetNormalised() const noexcept
         {
             return GeoVector3F(glm::normalize(*reinterpret_cast<const glm::vec3*>(this)));
         }
@@ -117,7 +117,7 @@ namespace NovelRT::Maths
          * \f}
          * @return The magnitude of this GeoVector3F.
          */
-        inline float getMagnitude() const noexcept
+        inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec3*>(this));
         }
@@ -138,9 +138,9 @@ namespace NovelRT::Maths
          * \f}
          * @return The length of this GeoVector3F.
          */
-        inline float getLength() const noexcept
+        inline float GetLength() const noexcept
         {
-            return getMagnitude();
+            return GetMagnitude();
         }
 
         /**
@@ -934,7 +934,7 @@ namespace NovelRT::Maths
          * @param point The point that acts as this vectors origin point to rotate around.
          * @param axis The axis on which this rotation will be applied.
          */
-        void rotateToAngleAroundPoint(float angleRotationValue,
+        void RotateToAngleAroundPoint(float angleRotationValue,
                                       const GeoVector3F& point,
                                       const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
@@ -953,7 +953,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool epsilonEquals(const GeoVector3F& other, const GeoVector3F& epsilonValue) const noexcept
+        bool EpsilonEquals(const GeoVector3F& other, const GeoVector3F& epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec3*>(this),
                                        *reinterpret_cast<const glm::vec3*>(&other),
@@ -965,9 +965,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector3F instance with all components set to zero.
          */
-        static GeoVector3F zero() noexcept
+        static GeoVector3F Zero() noexcept
         {
-            return GeoVector3F::uniform(0);
+            return GeoVector3F::Uniform(0);
         }
 
         /**
@@ -975,9 +975,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector3F instance with all components set to one.
          */
-        static GeoVector3F one() noexcept
+        static GeoVector3F One() noexcept
         {
-            return GeoVector3F::uniform(1);
+            return GeoVector3F::Uniform(1);
         }
 
         /**
@@ -986,7 +986,7 @@ namespace NovelRT::Maths
          * @param The value to use as the uniform value across the GeoVector3F.
          * @return a new GeoVector3F instance with all components set to the specified value.
          */
-        static GeoVector3F uniform(float value) noexcept
+        static GeoVector3F Uniform(float value) noexcept
         {
             return GeoVector3F(value, value, value);
         }
