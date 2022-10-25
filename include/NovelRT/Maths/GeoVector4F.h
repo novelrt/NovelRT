@@ -1040,7 +1040,7 @@ namespace NovelRT::Maths
          * @param point The point that acts as this vectors origin point to rotate around.
          * @param axis The axis on which this rotation will be applied.
          */
-        void rotateToAngleAroundPoint(float angleRotationValue,
+        void RotateToAngleAroundPoint(float angleRotationValue,
                                       const GeoVector4F& point,
                                       const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
