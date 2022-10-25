@@ -40,7 +40,7 @@ namespace NovelRT::Ecs
                 "NovelRT::Ecs::LinkedEntityListNodeComponent");
 
             target.GetComponentCache().RegisterComponentType(
-                TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN},
+                TransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN},
                 "NovelRT::Ecs::TransformComponent");
 
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
