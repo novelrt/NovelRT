@@ -16,23 +16,41 @@ namespace NovelRT::Ecs::UI
         : _uiProvider(uiPluginProvider->GetUIProvider())
     {
         _uiProvider->Initialise(windowingPluginProvider->GetWindowingDevice(), inputPluginProvider->GetInputService());
-/*
+
         defaultRenderingSystem->UIRenderEvent +=
             [&](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
         {
-            auto& renderingSystem = defaultRenderingSystem.get();
+            DefaultRenderingSystem& renderingSystem = defaultRenderingSystem.get();
             auto pipeline = renderingSystem.GetExistingPipelineInfo("default");
 
             ImGui::Render();
             const ImDrawData* drawData = ImGui::GetDrawData();
 
-            FutureResult<VertexInfo> vertexInfo(nullptr, VertexInfo{});
-
-            if (drawData->TotalVtxCount > 0)
+            for (size_t listIndex = 0; listIndex < drawData->CmdListsCount; listIndex++)
             {
-                vertexInfo = renderingSystem.LoadVertexDataRaw<ImDrawVert>("ImGui", gsl::span<ImDrawVert>(drawData->)
+                auto listIndexStr = std::to_string(listIndex);
+                auto drawList = drawData->CmdLists[listIndex];
+                FutureResult<VertexInfo> vertexInfo = renderingSystem.LoadVertexDataRaw<ImDrawVert>("ImGuiVertices" + listIndexStr, gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
+                FutureResult<VertexInfo> indexInfo = renderingSystem.LoadVertexDataRaw<ImDrawIdx>("ImGuiIndices" + listIndexStr, gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
+
+
+
+                for (int n = 0; n < drawList->CmdBuffer.Size; n++)
+                {
+                    const ImDrawCmd* drawCmd = &drawList->CmdBuffer[n];
+
+                    //()drawCmd->GetTexID();
+/*
+                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
+                        pipeline->gpuPipeline.GetUnderlyingSharedPtr(), drawCmd-> squareVertexFuture.GetValue().gpuVertexRegion,
+                        sizeof(TexturedVertex), dummyRegion, 0, inputResourceRegions);
+                    args.graphicsContext->Draw(primitive, 3);
+                    */
+                }
+
             }
 
+            /*
             for (int i = 0; i < drawData->CmdListsCount; i++)
             {
                 const ImDrawList* drawList = drawData->CmdLists[i];
@@ -47,8 +65,8 @@ namespace NovelRT::Ecs::UI
                     args.graphicsContext->Draw(primitive, 3);
                 }
             }
+             */
         };
-*/
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
