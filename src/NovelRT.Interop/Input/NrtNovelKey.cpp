@@ -18,10 +18,12 @@ const char* Nrt_NovelKey_GetKeyName(NrtNovelKeyHandle key)
 {
     return reinterpret_cast<NovelRT::Input::NovelKey*>(key)->GetKeyName().c_str();
 }
+
 int32_t Nrt_NovelKey_GetExternalKeyCode(NrtNovelKeyHandle key)
 {
     return reinterpret_cast<NovelRT::Input::NovelKey*>(key)->GetExternalKeyCode();
 }
+
 int32_t Nrt_NovelKey_GetExternalModifierCode(NrtNovelKeyHandle key)
 {
     return reinterpret_cast<NovelRT::Input::NovelKey*>(key)->GetExternalModifierCode();
