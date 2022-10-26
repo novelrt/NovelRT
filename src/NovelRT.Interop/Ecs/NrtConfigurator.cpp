@@ -28,6 +28,7 @@ NrtResult Nrt_Configurator_AddDefaultSystemsAndComponents(NrtConfiguratorHandle 
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_Configurator_Destroy(NrtConfiguratorHandle configurator)
 {
     if (configurator == nullptr)
@@ -40,6 +41,7 @@ NrtResult Nrt_Configurator_Destroy(NrtConfiguratorHandle configurator)
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle configurator,
                                                      NrtIGraphicsPluginProviderHandle provider)
 {
@@ -68,6 +70,7 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle configurator,
                                                       NrtIWindowingPluginProviderHandle provider)
 {
@@ -96,6 +99,7 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHandle configurator,
                                                                NrtIResourceManagementPluginProviderHandle provider)
 {
@@ -124,6 +128,7 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configurator,
                                                   NrtIInputPluginProviderHandle provider)
 {

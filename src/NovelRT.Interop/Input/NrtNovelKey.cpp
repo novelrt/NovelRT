@@ -54,6 +54,7 @@ NrtResult Nrt_NovelKey_UnpairKey(NrtNovelKeyHandle key)
 
     return NRT_SUCCESS;
 }
+
 NrtBool Nrt_NovelKey_equal(NrtNovelKeyHandle lhs, NrtNovelKeyHandle rhs)
 {
     return *reinterpret_cast<NovelKey*>(lhs) == *reinterpret_cast<NovelKey*>(rhs);

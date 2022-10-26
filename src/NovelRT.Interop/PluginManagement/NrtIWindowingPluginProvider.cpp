@@ -25,6 +25,7 @@ NrtResult Nrt_IWindowingPluginProvider_Destroy(NrtIWindowingPluginProviderHandle
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_IWindowingPluginProvider_GetWindowingDevice(NrtIWindowingPluginProviderHandle plugin,
                                                           NrtIWindowingDeviceHandle* outputDevice)
 {

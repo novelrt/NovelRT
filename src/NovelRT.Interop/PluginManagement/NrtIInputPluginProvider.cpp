@@ -25,6 +25,7 @@ NrtResult Nrt_IInputPluginProvider_Destroy(NrtIInputPluginProviderHandle plugin)
 
     return NRT_SUCCESS;
 }
+
 NrtResult Nrt_IInputPluginProvider_GetInputDevice(NrtIInputPluginProviderHandle plugin,
                                                   NrtIInputDeviceHandle* outputDevice)
 {
