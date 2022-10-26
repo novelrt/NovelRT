@@ -71,11 +71,10 @@ extern "C"
         {
             const char* message = ex.what();
             char* target = new char[strlen(message) + 1];
-#if defined(WIN32)
-            strcpy_s(target, strlen(message) + 1, message);
-#else
-        target = strdup(message);
-#endif
+
+            // strcpy should be "safe" there since we called strlen earlier
+            strcpy(target, message);
+
             Nrt_setErrMsgCustomInternal(target);
             return NRT_FAILURE_UNKNOWN;
         }

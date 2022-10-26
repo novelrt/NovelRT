@@ -30,13 +30,9 @@ extern "C"
                                          .string();
             char* returnPtr = nullptr;
 
-#ifdef WIN32
             size_t length = pathString.length() + 1;
             returnPtr = static_cast<char*>(malloc(length));
-            strcpy_s(returnPtr, length, pathString.c_str());
-#else
-            returnPtr = strdup(pathString.c_str());
-#endif
+            strcpy(returnPtr, pathString.c_str());
 
             *outFilePath = returnPtr;
         }

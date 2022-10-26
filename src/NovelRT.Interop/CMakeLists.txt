@@ -9,6 +9,7 @@ set(SOURCES
   Audio/NrtAudioService.cpp
 
   Ecs/NrtCatalogue.cpp
+  Ecs/NrtConfigurator.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
   Ecs/NrtComponentCache.cpp
   Ecs/NrtEntityCache.cpp
@@ -24,6 +25,11 @@ set(SOURCES
   Ecs/Graphics/NrtDefaultRenderingSystem.cpp
 
   Graphics/NrtRGBAColour.cpp
+  Graphics/NrtGraphicsProvider.cpp
+
+  Input/NrtIInputDevice.cpp
+  Input/NrtInputAction.cpp
+  Input/NrtNovelKey.cpp
 
   Maths/NrtGeoBounds.cpp
   Maths/NrtGeoMatrix4x4F.cpp
@@ -42,6 +48,14 @@ set(SOURCES
   ResourceManagement/NrtResourceLoader.cpp
   ResourceManagement/NrtUuidFilePathMap.cpp
 
+  PluginManagement/NrtDefaultPluginSelector.cpp
+  PluginManagement/NrtIGraphicsPluginProvider.cpp
+  PluginManagement/NrtIInputPluginProvider.cpp
+  PluginManagement/NrtIResourceManagementPluginProvider.cpp
+  PluginManagement/NrtIWindowingPluginProvider.cpp
+
+  ResourceManagement/NrtResourceLoader.cpp
+
   SceneGraph/NrtQuadTreeNode.cpp
   SceneGraph/NrtQuadTreeScenePoint.cpp
   SceneGraph/NrtScene.cpp
@@ -53,7 +67,8 @@ set(SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
-)
+
+  Windowing/NrtIWindowingDevice.cpp)
 
 add_library(Interop SHARED ${SOURCES})
 add_dependencies(Interop Engine)
@@ -73,6 +88,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
     $<$<CXX_COMPILER_ID:MSVC>:/wd4611>
     $<$<CXX_COMPILER_ID:MSVC>:/MP>
+    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS>
 
     $<$<CXX_COMPILER_ID:GNU>:-pedantic>
     $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
