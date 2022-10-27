@@ -10,7 +10,7 @@
 
 namespace NovelRT::PluginManagement
 {
-    class IResourceManagementPluginProvider
+    class IResourceManagementPluginProvider : public std::enable_shared_from_this<IResourceManagementPluginProvider>
     {
     private:
         [[nodiscard]] virtual ResourceManagement::ResourceLoader* GetResourceLoaderInternal() = 0;

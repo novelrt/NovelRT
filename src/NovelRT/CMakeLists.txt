@@ -1,6 +1,5 @@
 if(NOVELRT_VULKAN_SDK)
-  include(CMakeFindDependencyMacro)
-  find_dependency(Vulkan REQUIRED)
+  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
 if(NOT DEFINED NOVELRT_LIB_SUFFIX)
