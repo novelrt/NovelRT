@@ -10,7 +10,7 @@
 
 namespace NovelRT::PluginManagement
 {
-    class IWindowingPluginProvider
+    class IWindowingPluginProvider : public std::enable_shared_from_this<IWindowingPluginProvider>
     {
     private:
         [[nodiscard]] virtual Windowing::IWindowingDevice* GetWindowingDeviceInternal() = 0;

@@ -58,36 +58,20 @@ namespace NovelRT::Audio
         return isInitialised;
     }
 
-    ALuint AudioService::ReadFile(std::string input)
+    ALuint AudioService::BufferAudioFrameData(gsl::span<const int16_t> audioFrameData,
+                                              int32_t channelCount,
+                                              int32_t sampleRate)
     {
-        SF_INFO info;
-        info.format = 0;
-        SNDFILE* file = sf_open(input.c_str(), SFM_READ, &info);
+        ALuint buffer;
+        alGenBuffers(1, &buffer);
 
-        if (file == nullptr)
+        if (buffer == _noBuffer)
         {
-            _logger.logWarning(std::string(sf_strerror(nullptr)));
             return _noBuffer;
         }
 
-        std::vector<int16_t> data;
-        std::vector<short> readBuffer;
-        readBuffer.resize(_bufferSize);
-
-        sf_command(file, SFC_SET_SCALE_FLOAT_INT_READ, NULL, SF_TRUE);
-
-        sf_count_t readSize = 0;
-
-        while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
-        {
-            data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
-        }
-
-        ALuint buffer;
-        alGenBuffers(1, &buffer);
-        alBufferData(buffer, info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, &data.front(),
-                     static_cast<ALsizei>(data.size() * sizeof(int16_t)), info.samplerate);
-        sf_close(file);
+        alBufferData(buffer, channelCount == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, audioFrameData.data(),
+                     static_cast<ALsizei>(audioFrameData.size() * sizeof(int16_t)), sampleRate);
         return buffer;
     }
 
@@ -95,7 +79,9 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::LoadMusic(std::string input)
+    std::vector<ALuint>::iterator AudioService::LoadMusic(gsl::span<const int16_t> audioFrameData,
+                                                          int32_t channelCount,
+                                                          int32_t sampleRate)
     {
         if (!isInitialised)
         {
@@ -103,12 +89,14 @@ namespace NovelRT::Audio
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = ReadFile(input);
+
+        auto newBuffer = BufferAudioFrameData(audioFrameData, channelCount, sampleRate);
 
         // Sorry Matt, nullptr types are incompatible to ALuint according to VS.
         if (newBuffer == _noBuffer)
         {
-            _logger.logWarning("Could not load audio file: {}", input);
+            _logger.logWarning(
+                "Could not buffer provided audio data. Please verify the resource was loaded correctly.");
             return _music.end();
         }
 
@@ -340,7 +328,7 @@ namespace NovelRT::Audio
         }
     }
 
-    ALuint AudioService::LoadSound(std::string input)
+    ALuint AudioService::LoadSound(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate)
     {
         if (!isInitialised)
         {
@@ -348,11 +336,11 @@ namespace NovelRT::Audio
             throw NovelRT::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
-        auto newBuffer = ReadFile(input);
+        auto newBuffer = BufferAudioFrameData(audioFrameData, channelCount, sampleRate);
 
         if (newBuffer == _noBuffer)
         {
-            _logger.logWarning("Could not load audio file: {}", input);
+            _logger.logWarning("Cannot play the requested sound - it may have been deleted or not loaded properly.");
             return _noBuffer;
         }
 
