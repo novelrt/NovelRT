@@ -63,7 +63,7 @@ extern "C"
     typedef int32_t NrtLogLevel;
     typedef int32_t NrtResult;
 
-// clang-format off
+    // clang-format off
 
 #include "Maths/NrtMathsTypedefs.h"
 #include "Timing/NrtTimingTypedefs.h"
@@ -79,7 +79,7 @@ extern "C"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 #include "Windowing/NrtWindowingTypedefs.h"
 
-// clang-format on
+    // clang-format on
 
 #ifdef __cplusplus
 }
