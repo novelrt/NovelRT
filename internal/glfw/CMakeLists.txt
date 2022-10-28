@@ -22,7 +22,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 
 if (UNIX AND NOT APPLE)
     message(STATUS "Linux detected, enabling Wayland support for GLFW.")
-    set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
+    set(GLFW_USE_WAYLAND ON CACHE BOOL "" FORCE)
 endif()
 
 FetchContent_MakeAvailable(glfw)
