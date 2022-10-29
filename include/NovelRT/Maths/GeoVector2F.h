@@ -968,6 +968,11 @@ namespace NovelRT::Maths
         {
             return glm::dot(*reinterpret_cast<const glm::vec2*>(&lhs), *reinterpret_cast<const glm::vec2*>(&rhs));
         }
+
+        static inline GeoVector3F Cross(GeoVector2F lhs, GeoVector2F rhs)
+        {
+            return GeoVector3F::Cross(lhs, rhs);
+        }
     };
 
     /**
