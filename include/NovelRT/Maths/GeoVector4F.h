@@ -145,7 +145,7 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}\\
          *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
          *      &= \sqrt{169}\\
          *      &= 13
@@ -170,7 +170,7 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}\\
          *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
          *      &= \sqrt{169}\\
          *      &= 13
