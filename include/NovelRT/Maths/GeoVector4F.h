@@ -1132,7 +1132,7 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new uniform GeoVector4F based on the specified value.
          *
-         * @param The value to use as the uniform value across the GeoVector4F.
+         * @param value The value to use as the uniform value across the GeoVector4F.
          * @return a new GeoVector4F instance with all components set to the specified value.
          */
         static GeoVector4F Uniform(float value) noexcept

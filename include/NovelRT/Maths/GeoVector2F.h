@@ -164,7 +164,6 @@ namespace NovelRT::Maths
         {
             return GetSquaredMagnitude();
         }
-        }
 
         /**
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components match.
@@ -932,7 +931,7 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new uniform GeoVector2F based on the specified value.
          *
-         * @param The value to use as the uniform value across the GeoVector2F.
+         * @param value The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
         static GeoVector2F Uniform(float value) noexcept
