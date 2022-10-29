@@ -971,7 +971,8 @@ namespace NovelRT::Maths
 
         static inline GeoVector3F Cross(GeoVector2F lhs, GeoVector2F rhs)
         {
-            return GeoVector3F::Cross(lhs, rhs);
+            return *reinterpret_cast<GeoVector3F*>(&glm::cross(*reinterpret_cast<glm::vec3*>(&GeoVector3F(lhs)),
+                                                               *reinterpret_cast<glm::vec3*>(&GeoVector3F(rhs))));
         }
     };
 
