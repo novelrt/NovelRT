@@ -938,6 +938,36 @@ namespace NovelRT::Maths
         {
             return GeoVector2F(value, value);
         }
+
+        /**
+         * @brief Returns the sum of products of the left-hand side GeoVector2Fs components and the right-hand size
+         * GeoVector2Fs components.
+         *
+         * @details
+         * An example of a dot product between two two-dimensional vectors: \f{align*}{
+         *      \vec{u} &= \begin{pmatrix}
+         *      2\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y}\\
+         *      &= 2 \times 4 + 3 \times 5\\
+         *      &= 8 + 15\\
+         *      &= 23
+         * \f}
+         *
+         * @param lhs The left-hand side GeoVector2F.
+         * @param rhs The right-hand side GeoVector2F.
+         * @return The sum of products of the left-hand side GeoVector2Fs components and the right-hand side
+         * GeoVector2Fs components.
+         */
+        static inline float Dot(GeoVector2F lhs, GeoVector2F rhs) noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(&lhs), *reinterpret_cast<const glm::vec2*>(&rhs));
+        }
     };
 
     /**

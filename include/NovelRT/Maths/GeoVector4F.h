@@ -1139,6 +1139,41 @@ namespace NovelRT::Maths
         {
             return GeoVector4F(value, value, value, value);
         }
+
+        /**
+         * @brief Returns the sum of products of the left-hand side GeoVector4Fs components and the right-hand size
+         * GeoVector4Fs components.
+         *
+         * @details
+         * An example of a dot product between two four-dimensional vectors: \f{align*}{
+         *      \vec{u} &= \begin{pmatrix}
+         *      2\\
+         *      3\\
+         *      4\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      5\\
+         *      6\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y} +
+         *      \vec{v}_{z}\times \vec{v}_{z} + \vec{v}_{w}\times \vec{v}_{w}\\
+         *      &= 2 \times 4 + 3 \times 5 + 4 \times 6 + 5 \times 7\\
+         *      &= 8 + 15 + 24 + 35\\
+         *      &= 82
+         * \f}
+         *
+         * @param lhs The left-hand side GeoVector4F.
+         * @param rhs The right-hand side GeoVector4F.
+         * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
+         * GeoVector4Fs components.
+         */
+        static inline float Dot(GeoVector4F lhs, GeoVector4F rhs) noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec4*>(&lhs), *reinterpret_cast<const glm::vec4*>(&rhs));
+        }
     };
 
     /**
