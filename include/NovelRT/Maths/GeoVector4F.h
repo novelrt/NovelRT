@@ -55,7 +55,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector4F with all components set to zero.
          */
-        GeoVector4F() noexcept
+        GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
         {
         }
 
