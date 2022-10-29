@@ -136,11 +136,56 @@ namespace NovelRT::Maths
          *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{2^{2} + 6^{2} + 3^{2}}
          *      \rightarrow \sqrt{4 + 36 + 9} = \sqrt{49} = 7
          * \f}
+         *
          * @return The length of this GeoVector3F.
          */
         inline float GetLength() const noexcept
         {
             return GetMagnitude();
+        }
+
+        /**
+         * @brief Calculates the squared magnitude of this GeoVector3F using its components. This is the same as
+         * calculating the vector's squared length.
+         *
+         * @details
+         * To find a vector's squared magnitude you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v}&= \begin{pmatrix}
+         *      2\\
+         *      6\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 2^{2} + 6^{2} + 3^{2} \rightarrow
+         *      4 + 36 + 9 = 49
+         * \f}
+         *
+         * @return The squared magnitude of this GeoVector3F.
+         */
+        inline float getSquaredMagnitude() const noexcept
+        {
+            return glm::length2(*reinterpret_cast<const glm::vec3*>(this));
+        }
+
+        /**
+         * @brief Calculates the squared length of this GeoVector3F using its components. This is the same as
+         * calculating the vector's squared magnitude.
+         *
+         * @details
+         * To find a vector's squared length you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v}&= \begin{pmatrix}
+         *      2\\
+         *      6\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 2^{2} + 6^{2} + 3^{2} \rightarrow
+         *      4 + 36 + 9 = 49
+         * \f}
+         *
+         * @return The squared length of this GeoVector3F.
+         */
+        inline float getSquaredLength() const noexcept
+        {
+            return getSquaredMagnitude();
         }
 
         /**

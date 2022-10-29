@@ -8,6 +8,7 @@
 #include <NovelRT/Exceptions/Exceptions.h>
 #include <array>
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <memory>
 #include <vector>

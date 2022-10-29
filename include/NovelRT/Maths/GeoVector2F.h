@@ -126,6 +126,46 @@ namespace NovelRT::Maths
         }
 
         /**
+         * @brief Calculates the squared magnitude of this GeoVector2F using its components. This is the same as
+         * calculating the vector's squared length.
+         *
+         * @details
+         * To find a vector's squared magnitude you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} = 4^{2} + 3^{2} \rightarrow 16 + 9 = 25
+         * \f}
+         *
+         * @return The squared magnitude of this GeoVector2F.
+         */
+        inline float getSquaredMagnitude() const noexcept
+        {
+            return glm::length2(*reinterpret_cast<const glm::vec2*>(this));
+        }
+
+        /**
+         * @brief Calculates the squared length of this GeoVector2F using its components. This is the same as
+         * calculating the vector's squared magnitude.
+         *
+         * @details
+         * To find a vector's squared length you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} = 4^{2} + 3^{2} \rightarrow 16 + 9 = 25
+         * \f}
+         *
+         * @return The squared length of this GeoVector2F.
+         */
+        inline float getSquaredLength() const noexcept
+        {
+            return getSquaredMagnitude();
+        }
+
+        /**
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components match.
          *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
