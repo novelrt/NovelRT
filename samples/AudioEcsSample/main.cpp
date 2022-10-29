@@ -103,42 +103,40 @@ int main()
         0, parentEntity,
         TransformComponent{NovelRT::Maths::GeoVector3F(0, 0, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
 
-    scheduler.RegisterSystem(
-        [&uwuBounds, &uwuFlip](auto delta, auto catalogue)
-        {
-            ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
+    scheduler.RegisterSystem([&uwuBounds, &uwuFlip](auto delta, auto catalogue) {
+        ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
 
-            for (auto [entity, transform] : transforms)
+        for (auto [entity, transform] : transforms)
+        {
+            TransformComponent newComponent{};
+            newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::Zero();
+            if (uwuFlip)
             {
-                TransformComponent newComponent{};
-                newComponent.positionAndLayer = NovelRT::Maths::GeoVector3F::Zero();
-                if (uwuFlip)
+                newComponent.positionAndLayer.x = 2;
+                uwuBounds = NovelRT::Maths::GeoBounds(
+                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x + 2, transform.positionAndLayer.y),
+                    uwuBounds.size, transform.rotationInRadians);
+                if (transform.positionAndLayer.x >= 480)
                 {
-                    newComponent.positionAndLayer.x = 2;
-                    uwuBounds = NovelRT::Maths::GeoBounds(
-                        NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x + 2, transform.positionAndLayer.y),
-                        uwuBounds.size, transform.rotationInRadians);
-                    if (transform.positionAndLayer.x >= 480)
-                    {
-                        uwuFlip = false;
-                    }
+                    uwuFlip = false;
                 }
-                else
-                {
-                    newComponent.positionAndLayer.x = -2;
-                    uwuBounds = NovelRT::Maths::GeoBounds(
-                        NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x - 2, transform.positionAndLayer.y),
-                        uwuBounds.size, transform.rotationInRadians);
-                    if (transform.positionAndLayer.x <= -480)
-                    {
-                        uwuFlip = true;
-                    }
-                }
-                newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
-                newComponent.rotationInRadians = 0;
-                transforms.PushComponentUpdateInstruction(entity, newComponent);
             }
-        });
+            else
+            {
+                newComponent.positionAndLayer.x = -2;
+                uwuBounds = NovelRT::Maths::GeoBounds(
+                    NovelRT::Maths::GeoVector2F(transform.positionAndLayer.x - 2, transform.positionAndLayer.y),
+                    uwuBounds.size, transform.rotationInRadians);
+                if (transform.positionAndLayer.x <= -480)
+                {
+                    uwuFlip = true;
+                }
+            }
+            newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
+            newComponent.rotationInRadians = 0;
+            transforms.PushComponentUpdateInstruction(entity, newComponent);
+        }
+    });
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
@@ -155,35 +153,33 @@ int main()
     auto mouseClick = inputSystem->GetMappingId("LeftClick");
 
     // Register system to trigger sound when something is clicked
-    scheduler.RegisterSystem(
-        [&](auto delta, auto catalogue)
+    scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+        ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
+            catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
+
+        NovelRT::Ecs::Input::InputEventComponent input;
+        bool triggered = false;
+        if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
         {
-            ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
-                catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
+            triggered =
+                uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+        }
 
-            NovelRT::Ecs::Input::InputEventComponent input;
-            bool triggered = false;
-            if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
+        if (triggered)
+        {
+            logger.logInfoLine("Clicked!");
+            auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
+            AudioEmitterStateComponent state;
+            if (states.TryGetComponent(soundEnt, state))
             {
-                triggered = uwuBounds.pointIsWithinBounds(
-                    NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
-            }
-
-            if (triggered)
-            {
-                logger.logInfoLine("Clicked!");
-                auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
-                AudioEmitterStateComponent state;
-                if (states.TryGetComponent(soundEnt, state))
+                if (state.state == AudioEmitterState::Stopped)
                 {
-                    if (state.state == AudioEmitterState::Stopped)
-                    {
-                        state.state = AudioEmitterState::ToPlay;
-                        states.PushComponentUpdateInstruction(soundEnt, state);
-                    }
+                    state.state = AudioEmitterState::ToPlay;
+                    states.PushComponentUpdateInstruction(soundEnt, state);
                 }
             }
-        });
+        }
+    });
 
     // Additional setup to ensure ECS works
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
