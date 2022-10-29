@@ -161,7 +161,7 @@ namespace NovelRT::Maths
          *
          * @return The squared magnitude of this GeoVector3F.
          */
-        inline float getSquaredMagnitude() const noexcept
+        inline float GetSquaredMagnitude() const noexcept
         {
             return glm::length2(*reinterpret_cast<const glm::vec3*>(this));
         }
@@ -183,9 +183,9 @@ namespace NovelRT::Maths
          *
          * @return The squared length of this GeoVector3F.
          */
-        inline float getSquaredLength() const noexcept
+        inline float GetSquaredLength() const noexcept
         {
-            return getSquaredMagnitude();
+            return GetSquaredMagnitude();
         }
 
         /**
