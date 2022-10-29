@@ -107,8 +107,8 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}} = \sqrt{7^{2} + 2^{2}
+         *      + 10^{2} + 4^{2}}
          *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13\\
          *      \hat{v}&=\frac{\vec{v}}{\left \| \vec{v} \right \|} = \frac{\bigl(\begin{smallmatrix}
          *      7\\
@@ -145,9 +145,10 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
-         *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}
+         *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
          * \f}
          *
          * @return The magnitude of this GeoVector4F.
@@ -169,9 +170,10 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
-         *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}
+         *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
          * \f}
          *
          * @return The length of this GeoVector4F.
@@ -193,8 +195,9 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 7^{2} + 2^{2} + 10^{2} + 4^{2}
-         *      \rightarrow 49 + 4 + 100 + 16 = 169
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}\\
+         *      &= 7^{2} + 2^{2} + 10^{2} + 4^{2} \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
          * \f}
          *
          * @return The squared magnitude of this GeoVector4F.
@@ -210,13 +213,15 @@ namespace NovelRT::Maths
          *
          * @details
          * To find a vector's squared length you can use the Pythagorean theorem:\f{align*}{
-         *      \vec{v}&= \begin{pmatrix}
+         *      \vec{v} &= \begin{pmatrix}
+         *      7\\
          *      2\\
-         *      6\\
-         *      3
+         *      10\\
+         *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 2^{2} + 6^{2} + 3^{2} \rightarrow
-         *      4 + 36 + 9 = 49
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}\\
+         *      &= 7^{2} + 2^{2} + 10^{2} + 4^{2} \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
          * \f}
          *
          * @return The squared length of this GeoVector4F.
