@@ -142,7 +142,7 @@ namespace NovelRT::Maths
          */
         inline float GetSquaredMagnitude() const noexcept
         {
-            return glm::length2(*reinterpret_cast<const glm::vec2*>(this));
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(this));
         }
 
         /**
@@ -933,15 +933,9 @@ namespace NovelRT::Maths
          * @return The sum of products of the left-hand side GeoVector2Fs components and the right-hand side
          * GeoVector2Fs components.
          */
-        inline float Dot(GeoVector2F lhs, GeoVector2F rhs) noexcept
+        inline float Dot(GeoVector2F rhs) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec2*>(&lhs), *reinterpret_cast<const glm::vec2*>(&rhs));
-        }
-
-        inline GeoVector3F Cross(GeoVector2F lhs, GeoVector2F rhs)
-        {
-            return *reinterpret_cast<GeoVector3F*>(&glm::cross(*reinterpret_cast<glm::vec3*>(&GeoVector3F(lhs)),
-                                                               *reinterpret_cast<glm::vec3*>(&GeoVector3F(rhs))));
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&rhs));
         }
 
         /**

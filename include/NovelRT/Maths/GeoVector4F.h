@@ -204,7 +204,7 @@ namespace NovelRT::Maths
          */
         inline float GetSquaredMagnitude() const noexcept
         {
-            return glm::length2(*reinterpret_cast<const glm::vec4*>(this));
+            return glm::dot(Vec4Value(),Vec4Value());
         }
 
         /**
@@ -1144,9 +1144,9 @@ namespace NovelRT::Maths
          * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
          * GeoVector4Fs components.
          */
-        static inline float Dot(GeoVector4F lhs, GeoVector4F rhs) noexcept
+        inline float Dot(GeoVector4F rhs) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec4*>(&lhs), *reinterpret_cast<const glm::vec4*>(&rhs));
+            return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&rhs));
         }
 
         /**
