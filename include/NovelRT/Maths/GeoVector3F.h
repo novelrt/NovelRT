@@ -1006,6 +1006,51 @@ namespace NovelRT::Maths
         }
 
         /**
+         * @brief Returns the sum of products of the left-hand side GeoVector3Fs components and the right-hand size
+         * GeoVector3Fs components.
+         *
+         * @details
+         * An example of a dot product between two three-dimensional vectors: \f{align*}{
+         *      \vec{u} &= \begin{pmatrix}
+         *      2\\
+         *      3\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      5\\
+         *      6
+         *      \end{pmatrix}\\
+         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y} +
+         *      \vec{v}_{z}\times \vec{v}_{z} \\
+         *      &= 2 \times 4 + 3 \times 5 + 4 \times 6\\
+         *      &= 8 + 15 + 24\\
+         *      &= 47
+         * \f}
+         *
+         * @param lhs The left-hand side GeoVector3F.
+         * @param rhs The right-hand side GeoVector3F.
+         * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
+         * GeoVector3Fs components.
+         */
+        inline float Dot(GeoVector3F lhs, GeoVector3F rhs) noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec3*>(&lhs), *reinterpret_cast<const glm::vec3*>(&rhs));
+        }
+
+        /**
+         * @brief
+         *
+         * @param lhs
+         * @param rhs
+         * @return GeoVector3F
+         */
+        inline GeoVector3F Cross(GeoVector3F lhs, GeoVector3F rhs) noexcept
+        {
+            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(&lhs), *reinterpret_cast<glm::vec3*>(&rhs)));
+        }
+
+        /**
          * @brief Creates a new GeoVector3F instance with a uniform value of zero.
          *
          * @return A new GeoVector3F instance with all components set to zero.
@@ -1034,44 +1079,6 @@ namespace NovelRT::Maths
         static GeoVector3F Uniform(float value) noexcept
         {
             return GeoVector3F(value, value, value);
-        }
-
-        /**
-         * @brief Returns the sum of products of the left-hand side GeoVector3Fs components and the right-hand size
-         * GeoVector3Fs components.
-         *
-         * @details
-         * An example of a dot product between two three-dimensional vectors: \f{align*}{
-         *      \vec{u} &= \begin{pmatrix}
-         *      2\\
-         *      3\\
-         *      4
-         *      \end{pmatrix}\\
-         *      \vec{v} &= \begin{pmatrix}
-         *      4\\
-         *      5\\
-         *      6
-         *      \end{pmatrix}\\
-         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y} +
-         *      \vec{v}_{z}\times \vec{v}_{z} \\
-         *      &= 2 \times 4 + 3 \times 5 + 4 \times 6\\
-         *      &= 8 + 15 + 24\\
-         *      &= 47
-         * \f}
-         *
-         * @param lhs The left-hand side GeoVector3F.
-         * @param rhs The right-hand side GeoVector3F.
-         * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
-         * GeoVector3Fs components.
-         */
-        static inline float Dot(GeoVector3F lhs, GeoVector3F rhs) noexcept
-        {
-            return glm::dot(*reinterpret_cast<const glm::vec3*>(&lhs), *reinterpret_cast<const glm::vec3*>(&rhs));
-        }
-
-        static inline GeoVector3F Cross(GeoVector3F lhs, GeoVector3F rhs) noexcept
-        {
-            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(&lhs), *reinterpret_cast<glm::vec3*>(&rhs)));
         }
     };
 

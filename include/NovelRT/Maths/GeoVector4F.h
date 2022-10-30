@@ -1115,37 +1115,6 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Creates a new GeoVector4F instance with a uniform value of zero.
-         *
-         * @return A new GeoVector4F instance with all components set to zero.
-         */
-        static GeoVector4F Zero() noexcept
-        {
-            return GeoVector4F::Uniform(0);
-        }
-
-        /**
-         * @brief Creates a new GeoVector4F instance with a uniform value of one.
-         *
-         * @return A new GeoVector4F instance with all components set to one.
-         */
-        static GeoVector4F One() noexcept
-        {
-            return GeoVector4F::Uniform(1);
-        }
-
-        /**
-         * @brief Creates a new uniform GeoVector4F based on the specified value.
-         *
-         * @param value The value to use as the uniform value across the GeoVector4F.
-         * @return a new GeoVector4F instance with all components set to the specified value.
-         */
-        static GeoVector4F Uniform(float value) noexcept
-        {
-            return GeoVector4F(value, value, value, value);
-        }
-
-        /**
          * @brief Returns the sum of products of the left-hand side GeoVector4Fs components and the right-hand size
          * GeoVector4Fs components.
          *
@@ -1178,6 +1147,37 @@ namespace NovelRT::Maths
         static inline float Dot(GeoVector4F lhs, GeoVector4F rhs) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec4*>(&lhs), *reinterpret_cast<const glm::vec4*>(&rhs));
+        }
+
+        /**
+         * @brief Creates a new GeoVector4F instance with a uniform value of zero.
+         *
+         * @return A new GeoVector4F instance with all components set to zero.
+         */
+        static GeoVector4F Zero() noexcept
+        {
+            return GeoVector4F::Uniform(0);
+        }
+
+        /**
+         * @brief Creates a new GeoVector4F instance with a uniform value of one.
+         *
+         * @return A new GeoVector4F instance with all components set to one.
+         */
+        static GeoVector4F One() noexcept
+        {
+            return GeoVector4F::Uniform(1);
+        }
+
+        /**
+         * @brief Creates a new uniform GeoVector4F based on the specified value.
+         *
+         * @param value The value to use as the uniform value across the GeoVector4F.
+         * @return a new GeoVector4F instance with all components set to the specified value.
+         */
+        static GeoVector4F Uniform(float value) noexcept
+        {
+            return GeoVector4F(value, value, value, value);
         }
     };
 
