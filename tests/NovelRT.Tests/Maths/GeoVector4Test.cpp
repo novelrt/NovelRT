@@ -190,6 +190,39 @@ TEST(GeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount)
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
 }
 
+TEST(GeoVector4Test, GetSquaredMagnitudeReturnsCorrectLength)
+{
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredMagnitude(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
+}
+
+TEST(GeoVector4Test, GetSquaredLengthReturnsCorrectLength)
+{
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredLength(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
+}
+
+TEST(GeoVector4Test, DotReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.Dot(vecB), (vecA.x * vecB.x) + (vecA.y * vecB.y) + (vecA.z * vecB.z) + (vecA.w * vecB.w));
+}
+
+TEST(GeoVector4Test, DistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2)));
+}
+
+TEST(GeoVector4Test, SquaredDistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2));
+}
+
 TEST(GeoVector4Test, geoVector2ConstructorReturnsCorrectGeoVector4)
 {
     EXPECT_EQ(GeoVector4F(GeoVector2F::One()), GeoVector4F(1.0f, 1.0f, 0.0f, 0.0f));
