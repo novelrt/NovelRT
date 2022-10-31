@@ -1050,6 +1050,16 @@ namespace NovelRT::Maths
             return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(this), *reinterpret_cast<glm::vec3*>(&rhs)));
         }
 
+        inline float Distance(GeoVector3F other) noexcept
+        {
+            return glm::distance(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other));
+        }
+
+        inline float SquaredDistance(GeoVector3F other) noexcept
+        {
+            return (*this - other).GetSquaredMagnitude();
+        }
+
         /**
          * @brief Creates a new GeoVector3F instance with a uniform value of zero.
          *

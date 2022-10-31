@@ -938,6 +938,16 @@ namespace NovelRT::Maths
             return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&rhs));
         }
 
+        inline float Distance(GeoVector2F other) noexcept
+        {
+            return glm::distance(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other));
+        }
+
+        inline float SquaredDistance(GeoVector2F other) noexcept
+        {
+            return (*this - other).GetSquaredMagnitude();
+        }
+
         /**
          * @brief Creates a new GeoVector2F instance with a uniform value of zero.
          *

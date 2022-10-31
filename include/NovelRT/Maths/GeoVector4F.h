@@ -1149,6 +1149,16 @@ namespace NovelRT::Maths
             return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&rhs));
         }
 
+        inline float Distance(GeoVector4F other) noexcept
+        {
+            return glm::distance(Vec4Value(), other.Vec4Value());
+        }
+
+        inline float SquaredDistance(GeoVector4F other) noexcept
+        {
+            return (*this - other).GetSquaredMagnitude();
+        }
+
         /**
          * @brief Creates a new GeoVector4F instance with a uniform value of zero.
          *
