@@ -14,167 +14,167 @@ NrtGeoVector3F vec3One = Nrt_GeoVector3F_Uniform(0.0);
 NrtGeoVector3F vec3Two = Nrt_GeoVector3F_Uniform(0.0f);
 NrtGeoVector3F vec3Three = Nrt_GeoVector3F_Uniform(1.0f);
 
-TEST(InteropGeoVector3Test, createFromGeoVector2ReturnsGeoVector3WithCorrectAndVerbatimValues)
+TEST(InteropGeoVector3Test, CreateFromGeoVector2ReturnsGeoVector3WithCorrectAndVerbatimValues)
 {
     NrtGeoVector3F vec = Nrt_GeoVector3F_CreateFromGeoVector2F(Nrt_GeoVector2F_Uniform(1.0f));
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(NrtGeoVector3F{1.0f, 1.0f, 0.0f}, vec));
 }
 
-TEST(InteropGeoVector3Test, equalityOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, EqualityOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(vec3One, vec3Two));
 }
 
-TEST(InteropGeoVector3Test, inequalityOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, InequalityOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_NotEqual(vec3One, vec3Three));
 }
 
-TEST(InteropGeoVector3Test, lessThanOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, LessThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_LessThan(vec3One, vec3Three));
 }
 
-TEST(InteropGeoVector3Test, lessOrEqualToThanOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, LessOrEqualToThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_LessThanOrEqualTo(vec3One, vec3Three));
     EXPECT_TRUE(Nrt_GeoVector3F_LessThanOrEqualTo(vec3Three, vec3Three));
 }
 
-TEST(InteropGeoVector3Test, greaterThanOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, GreaterThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_GreaterThan(vec3Three, vec3One));
 }
 
-TEST(InteropGeoVector3Test, greaterThanOrEqualToOperatorEvaluatesCorrectly)
+TEST(InteropGeoVector3Test, GreaterThanOrEqualToOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_GreaterThanOrEqualTo(vec3Three, vec3One));
     EXPECT_TRUE(Nrt_GeoVector3F_GreaterThanOrEqualTo(vec3Three, vec3Three));
 }
 
-TEST(InteropGeoVector3Test, staticUniformCallReturnsGeoVector3WithUniformValues)
+TEST(InteropGeoVector3Test, StaticUniformCallReturnsGeoVector3WithUniformValues)
 {
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(1.0f), vec3Three));
 }
 
-TEST(InteropGeoVector3Test, staticZeroCallReturnsGeoVector3Zero)
+TEST(InteropGeoVector3Test, StaticZeroCallReturnsGeoVector3Zero)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(0.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Zero(), test));
 }
 
-TEST(InteropGeoVector3Test, staticOneCallReturnsGeoVector3One)
+TEST(InteropGeoVector3Test, StaticOneCallReturnsGeoVector3One)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_One(), test));
 }
 
-TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, AddOperatorAddsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     NrtGeoVector3F result = Nrt_GeoVector3F_AddVector(test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, SubtractOperatorSubtractsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     NrtGeoVector3F result = Nrt_GeoVector3F_Zero() = Nrt_GeoVector3F_SubtractVector(test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Zero(), result));
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, MultiplyOperatorMultipliesCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     NrtGeoVector3F result = Nrt_GeoVector3F_Zero() = Nrt_GeoVector3F_MultiplyVector(test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(4.0f), result));
 }
 
-TEST(InteropGeoVector3Test, divideOperatorDividesCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, DivideOperatorDividesCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(4.0f);
     NrtGeoVector3F result = Nrt_GeoVector3F_Zero() = Nrt_GeoVector3F_DivideVector(test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_One(), result));
 }
 
-TEST(InteropGeoVector3Test, addOperatorAddsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, AddOperatorAddsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     NrtGeoVector3F result = Nrt_GeoVector3F_Zero() = Nrt_GeoVector3F_AddFloat(test, 1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(2.0f), result));
 }
 
-TEST(InteropGeoVector3Test, subtractOperatorSubtractsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, SubtractOperatorSubtractsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     NrtGeoVector3F result = Nrt_GeoVector3F_SubtractFloat(test, 1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Zero(), result));
 }
 
-TEST(InteropGeoVector3Test, multiplyOperatorMultipliesCorrectlyForFloat)
+TEST(InteropGeoVector3Test, MultiplyOperatorMultipliesCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     NrtGeoVector3F result = Nrt_GeoVector3F_MultiplyFloat(test, 2.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(4.0f), result));
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, AddAssignOperatorAddsAndAssignsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     Nrt_GeoVector3F_AddAssignVector(&test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, SubtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     Nrt_GeoVector3F_SubtractAssignVector(&test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Zero(), test));
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, MultiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     Nrt_GeoVector3F_MultiplyAssignVector(&test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(4.0f), test));
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector3F)
+TEST(InteropGeoVector3Test, DivideAssignOperatorDividesAndAssignsCorrectlyForGeoVector3F)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     Nrt_GeoVector3F_DivideAssignVector(&test, test);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_One(), test));
 }
 
-TEST(InteropGeoVector3Test, addAssignOperatorAddsAndAssignsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, AddAssignOperatorAddsAndAssignsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     Nrt_GeoVector3F_AddAssignFloat(&test, 1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, SubtractAssignOperatorSubtractsAndAssignsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_One();
     Nrt_GeoVector3F_SubtractAssignFloat(&test, 1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(0.0f), test));
 }
 
-TEST(InteropGeoVector3Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, MultiplyAssignOperatorMultipliesAndAssignsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     Nrt_GeoVector3F_MultiplyAssignFloat(&test, 1.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(2.0f), test));
 }
 
-TEST(InteropGeoVector3Test, divideAssignOperatorDividesAndAssignsCorrectlyForFloat)
+TEST(InteropGeoVector3Test, DivideAssignOperatorDividesAndAssignsCorrectlyForFloat)
 {
     NrtGeoVector3F test = Nrt_GeoVector3F_Uniform(2.0f);
     Nrt_GeoVector3F_DivideAssignFloat(&test, 2.0f);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(Nrt_GeoVector3F_Uniform(1.0f), test));
 }
 
-TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector)
+TEST(InteropGeoVector3Test, GetNormalisedReturnsNormalisedGeoVector)
 {
     NrtGeoVector3F cVector = Nrt_GeoVector3F_One();
     NrtGeoVector3F normal = Nrt_GeoVector3F_GetNormalised(cVector);
@@ -183,7 +183,7 @@ TEST(InteropGeoVector3Test, getNormalisedReturnsNormalisedGeoVector)
     EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
-TEST(InteropGeoVector3Test, getMagnitudeReturnsCorrectLength)
+TEST(InteropGeoVector3Test, GetMagnitudeReturnsCorrectLength)
 {
     NrtGeoVector3F cVector = Nrt_GeoVector3F_One();
     NrtGeoVector3F normal = Nrt_GeoVector3F_GetNormalised(cVector);
@@ -191,7 +191,7 @@ TEST(InteropGeoVector3Test, getMagnitudeReturnsCorrectLength)
     EXPECT_FLOAT_EQ(Nrt_GeoVector3F_GetMagnitude(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
-TEST(InteropGeoVector3Test, getLengthReturnsCorrectLength)
+TEST(InteropGeoVector3Test, GetLengthReturnsCorrectLength)
 {
     NrtGeoVector3F cVector = Nrt_GeoVector3F_One();
     NrtGeoVector3F normal = Nrt_GeoVector3F_GetNormalised(cVector);
@@ -263,7 +263,7 @@ TEST(InteropGeoVector3Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
     EXPECT_TRUE(Nrt_GeoVector3F_EpsilonEquals(vec, other, epsilon));
 }
 
-TEST(InteropGeoVector3Test, isNaNReturnsTrueNaNVector)
+TEST(InteropGeoVector3Test, IsNaNReturnsTrueNaNVector)
 {
     NrtGeoVector3F nanVec{NAN, NAN, NAN};
     EXPECT_TRUE(Nrt_GeoVector3F_IsNaN(nanVec));
