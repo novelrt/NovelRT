@@ -190,6 +190,13 @@ TEST(GeoVector4Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
 }
 
+TEST(GeoVector4Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
+{
+    auto vec = GeoVector4F(0.0f, 1.0f, 0.0f, 0.0f);
+    vec.RotateToAngleAroundPointRad(Maths::Utilities::Tau<float>() / 4, GeoVector4F::Zero());
+    EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
+}
+
 TEST(GeoVector4Test, GetSquaredMagnitudeReturnsCorrectLength)
 {
     auto vec = GeoVector4F::One().GetNormalised();

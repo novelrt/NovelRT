@@ -222,3 +222,10 @@ TEST(GeoVector2Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
     vec.RotateToAngleAroundPointDeg(90.0f, GeoVector2F::Zero());
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector2F(-1.0f, 0.0f), GeoVector2F::Uniform(1e-7f)));
 }
+
+TEST(GeoVector2Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
+{
+    auto vec = GeoVector2F(0.0f, 1.0f);
+    vec.RotateToAngleAroundPointRad(Maths::Utilities::Tau<float>() / 4, GeoVector2F::Zero());
+    EXPECT_TRUE(vec.EpsilonEquals(GeoVector2F(-1.0f, 0.0f), GeoVector2F::Uniform(1e-7f)));
+}

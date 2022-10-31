@@ -230,6 +230,13 @@ TEST(GeoVector3Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector3F(-1.0f, 0.0f, 0.0f), GeoVector3F::Uniform(1e-7f)));
 }
 
+TEST(GeoVector3Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
+{
+    auto vec = GeoVector3F(0.0f, 1.0f, 0.0f);
+    vec.RotateToAngleAroundPointRad(Maths::Utilities::Tau<float>() / 4, GeoVector3F::Zero());
+    EXPECT_TRUE(vec.EpsilonEquals(GeoVector3F(-1.0f, 0.0f, 0.0f), GeoVector3F::Uniform(1e-7f)));
+}
+
 TEST(GeoVector3Test, GeoVector2ConstructorReturnsCorrectGeoVector3)
 {
     EXPECT_EQ(GeoVector3F(GeoVector2F::One()), GeoVector3F(1.0f, 1.0f, 0.0f));
