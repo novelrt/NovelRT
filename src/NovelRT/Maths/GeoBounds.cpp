@@ -56,7 +56,7 @@ namespace NovelRT::Maths
                 break;
         }
 
-        returnValue.RotateToAngleAroundPoint(rotation, position);
+        returnValue.RotateToAngleAroundPointDeg(rotation, position);
         return returnValue;
     }
 

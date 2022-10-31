@@ -204,7 +204,7 @@ TEST(InteropGeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount)
 {
     NrtGeoVector2F vec{0.0f, 1.0f};
     NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
-    Nrt_GeoVector2F_rotateToAngleAroundPoint(&vec, 90.0f, zero);
+    Nrt_GeoVector2F_RotateToAngleAroundPointDeg(&vec, 90.0f, zero);
     NrtGeoVector2F other{-1.0f, 0.0f};
     NrtGeoVector2F epsilon = Nrt_GeoVector2F_uniform(1e-7f);
     EXPECT_TRUE(Nrt_GeoVector2F_epsilonEquals(vec, other, epsilon));

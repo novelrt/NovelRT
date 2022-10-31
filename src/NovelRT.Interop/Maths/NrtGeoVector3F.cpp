@@ -47,12 +47,20 @@ extern "C"
         return Nrt_GeoVector3F_uniform(1.0f);
     }
 
-    void Nrt_GeoVector3F_rotateToAngleAroundPoint(NrtGeoVector3F* vector,
+    void Nrt_GeoVector3F_RotateToAngleAroundPointDeg(NrtGeoVector3F* vector,
                                                   float angleRotationValue,
                                                   NrtGeoVector3F point)
     {
         Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
-        (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPoint(angleRotationValue, cPoint);
+        (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPointDeg(angleRotationValue, cPoint);
+    }
+
+    void Nrt_GeoVector3F_RotateToAngleAroundPointRad(NrtGeoVector3F* vector,
+                                                  float angleRotationValue,
+                                                  NrtGeoVector3F point)
+    {
+        Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
+        (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPointRad(angleRotationValue, cPoint);
     }
 
     NrtBool Nrt_GeoVector3F_epsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue)

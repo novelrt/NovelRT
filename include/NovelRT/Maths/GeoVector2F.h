@@ -883,12 +883,27 @@ namespace NovelRT::Maths
          * @param angleRotationValue The angle in degrees to rotate by.
          * @param point The point that acts as this vectors origin point to rotate around.
          */
-        void RotateToAngleAroundPoint(float angleRotationValue, GeoVector2F point) noexcept
+        void RotateToAngleAroundPointDeg(float angleRotationValue, GeoVector2F point) noexcept
         {
             *reinterpret_cast<glm::vec2*>(this) =
                 glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) -
                                                                    *reinterpret_cast<const glm::vec2*>(&point)),
                             glm::radians(angleRotationValue)) +
+                *reinterpret_cast<const glm::vec2*>(&point);
+        }
+
+        /**
+         * @brief Rotates this vector around a given point by a given angle in radians.
+         *
+         * @param angleRotationValue The angle in radians to rotate by.
+         * @param point The point that acts as this vectors origin point to rotate around.
+         */
+        void RotateToAngleAroundPointRad(float angleRotationValue, GeoVector2F point) noexcept
+        {
+            *reinterpret_cast<glm::vec2*>(this) =
+                glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) -
+                                                                   *reinterpret_cast<const glm::vec2*>(&point)),
+                            angleRotationValue) +
                 *reinterpret_cast<const glm::vec2*>(&point);
         }
 

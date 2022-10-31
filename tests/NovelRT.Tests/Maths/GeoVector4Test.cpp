@@ -183,10 +183,10 @@ TEST(GeoVector4Test, GetLengthReturnsCorrectLength)
     EXPECT_FLOAT_EQ(vec.GetLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
 }
 
-TEST(GeoVector4Test, RotateToAngleAroundPointRotatesCorrectAmount)
+TEST(GeoVector4Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
 {
     auto vec = GeoVector4F(0.0f, 1.0f, 0.0f, 0.0f);
-    vec.RotateToAngleAroundPoint(90.0f, GeoVector4F::Zero());
+    vec.RotateToAngleAroundPointDeg(90.0f, GeoVector4F::Zero());
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
 }
 

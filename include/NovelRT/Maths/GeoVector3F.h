@@ -979,13 +979,30 @@ namespace NovelRT::Maths
          * @param point The point that acts as this vectors origin point to rotate around.
          * @param axis The axis on which this rotation will be applied.
          */
-        void RotateToAngleAroundPoint(float angleRotationValue,
+        void RotateToAngleAroundPointDeg(float angleRotationValue,
                                       const GeoVector3F& point,
                                       const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec3*>(this) =
                 glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)),
                             glm::radians(angleRotationValue), *reinterpret_cast<const glm::vec3*>(&axis)) +
+                *reinterpret_cast<const glm::vec3*>(&point);
+        }
+
+        /**
+         * @brief Rotates this vector around a given point by a given angle in radians.
+         *
+         * @param angleRotationValue The angle in radians to rotate by.
+         * @param point The point that acts as this vectors origin point to rotate around.
+         * @param axis The axis on which this rotation will be applied.
+         */
+        void RotateToAngleAroundPointRad(float angleRotationValue,
+                                      const GeoVector3F& point,
+                                      const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
+        {
+            *reinterpret_cast<glm::vec3*>(this) =
+                glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)),
+                            angleRotationValue, *reinterpret_cast<const glm::vec3*>(&axis)) +
                 *reinterpret_cast<const glm::vec3*>(&point);
         }
 

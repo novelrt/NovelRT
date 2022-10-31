@@ -216,9 +216,9 @@ TEST(GeoVector2Test, SquaredDistanceReturnsCorrectValue)
     EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2));
 }
 
-TEST(GeoVector2Test, RotateToAngleAroundPointRotatesCorrectAmount)
+TEST(GeoVector2Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
 {
     auto vec = GeoVector2F(0.0f, 1.0f);
-    vec.RotateToAngleAroundPoint(90.0f, GeoVector2F::Zero());
+    vec.RotateToAngleAroundPointDeg(90.0f, GeoVector2F::Zero());
     EXPECT_TRUE(vec.EpsilonEquals(GeoVector2F(-1.0f, 0.0f), GeoVector2F::Uniform(1e-7f)));
 }
