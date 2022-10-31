@@ -183,6 +183,25 @@ TEST(GeoVector2Test, getLengthReturnsCorrectLength)
     EXPECT_FLOAT_EQ(vec.GetLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
 
+TEST(GeoVector2Test, getSquaredMagnitudeReturnsCorrectLength)
+{
+    auto vec = GeoVector2F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredMagnitude(), powf(vec.x, 2) + powf(vec.y, 2));
+}
+
+TEST(GeoVector2Test, getSquaredLengthReturnsCorrectLength)
+{
+    auto vec = GeoVector2F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredLength(), powf(vec.x, 2) + powf(vec.y, 2));
+}
+
+TEST(GeoVector2Test, dotReturnsCorrectValue)
+{
+    auto vecA = GeoVector2F::Zero();
+    auto vecB = GeoVector2F::One();
+    EXPECT_FLOAT_EQ(vecA.Dot(vecB), (vecA.x * vecB.x) + (vecA.y * vecB.y));
+}
+
 TEST(GeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount)
 {
     auto vec = GeoVector2F(0.0f, 1.0f);
