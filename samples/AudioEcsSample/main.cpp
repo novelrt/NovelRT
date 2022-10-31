@@ -34,14 +34,6 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
 
-    // Initialisation of ECS Audio System
-    auto audioSystem = std::make_shared<NovelRT::Ecs::Audio::AudioSystem>();
-    scheduler.RegisterSystem(audioSystem);
-    auto deleteState = AudioEmitterComponent();
-    scheduler.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
-    scheduler.GetComponentCache().RegisterComponentType(AudioEmitterStateComponent{AudioEmitterState::Done},
-                                                        "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
-
     // Set global logging level
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
@@ -50,6 +42,8 @@ int main()
                        ->GetResourceLoader()
                        ->ResourcesRootDirectory();
     auto soundDir = rootDir / "Sounds";
+
+    auto audioSystem = scheduler.GetRegisteredIEcsSystemAs<AudioSystem>();
 
     // Create the sound components
     std::string uwu = (soundDir / "uwu.ogg").string();
