@@ -7,90 +7,90 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-TEST(GeoVector3Test, equalityOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, EqualityOperatorEvaluatesCorrectly)
 {
     EXPECT_EQ(GeoVector3F(0.0f, 0.0f, 0.0f), GeoVector3F(0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector3Test, inequalityOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, InequalityOperatorEvaluatesCorrectly)
 {
     EXPECT_NE(GeoVector3F(0.0f, 0.0f, 0.0f), GeoVector3F(1.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector3Test, lessThanOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, LessThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector3F(0.0f, 0.0f, 0.0f) < GeoVector3F(1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector3Test, lessOrEqualToThanOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, LessOrEqualToThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector3F(0.0f, 0.0f, 0.0f) <= GeoVector3F(1.0f, 1.0f, 1.0f));
     EXPECT_TRUE(GeoVector3F(1.0f, 1.0f, 1.0f) <= GeoVector3F(1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector3Test, greaterThanOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, GreaterThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector3F(1.0f, 1.0f, 1.0f) > GeoVector3F(0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector3Test, greaterThanOrEqualToOperatorEvaluatesCorrectly)
+TEST(GeoVector3Test, GreaterThanOrEqualToOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector3F(1.0f, 1.0f, 1.0f) >= GeoVector3F(0.0f, 0.0f, 0.0f));
     EXPECT_TRUE(GeoVector3F(1.0f, 1.0f, 1.0f) >= GeoVector3F(1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector3Test, staticUniformCallReturnsGeoVector3WithUniformValues)
+TEST(GeoVector3Test, StaticUniformCallReturnsGeoVector3WithUniformValues)
 {
     EXPECT_EQ(GeoVector3F::Uniform(1.0f), GeoVector3F(1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector3Test, staticZeroCallReturnsGeoVector3Zero)
+TEST(GeoVector3Test, StaticZeroCallReturnsGeoVector3Zero)
 {
     EXPECT_EQ(GeoVector3F::Zero(), GeoVector3F::Uniform(0.0f));
 }
 
-TEST(GeoVector3Test, staticOneCallReturnsGeoVector3One)
+TEST(GeoVector3Test, StaticOneCallReturnsGeoVector3One)
 {
     EXPECT_EQ(GeoVector3F::One(), GeoVector3F::Uniform(1.0f));
 }
 
-TEST(GeoVector3Test, addOperatorAddsCorrectlyForGeoVector3)
+TEST(GeoVector3Test, AddOperatorAddsCorrectlyForGeoVector3)
 {
     auto result = GeoVector3F::One() + GeoVector3F::One();
     EXPECT_EQ(result, GeoVector3F::Uniform(2.0f));
 }
 
-TEST(GeoVector3Test, subtractOperatorSubtractsCorrectlyForGeoVector3)
+TEST(GeoVector3Test, SubtractOperatorSubtractsCorrectlyForGeoVector3)
 {
     auto result = GeoVector3F::One() - GeoVector3F::One();
     EXPECT_EQ(result, GeoVector3F::Zero());
 }
 
-TEST(GeoVector3Test, multiplyOperatorMultipliesCorrectlyForGeoVector3)
+TEST(GeoVector3Test, MultiplyOperatorMultipliesCorrectlyForGeoVector3)
 {
     auto result = GeoVector3F::Uniform(2.0f) * GeoVector3F::Uniform(2.0f);
     EXPECT_EQ(result, GeoVector3F::Uniform(4.0f));
 }
 
-TEST(GeoVector3Test, divideOperatorDividesCorrectlyForGeoVector3)
+TEST(GeoVector3Test, DivideOperatorDividesCorrectlyForGeoVector3)
 {
     auto result = GeoVector3F::Uniform(2.0f) / GeoVector3F::Uniform(2.0f);
     EXPECT_EQ(result, GeoVector3F::One());
 }
 
-TEST(GeoVector3Test, addOperatorAddsCorrectlyForTemplateType)
+TEST(GeoVector3Test, AddOperatorAddsCorrectlyForTemplateType)
 {
     auto result = GeoVector3F::One() + 1.0f;
     EXPECT_EQ(result, GeoVector3F::Uniform(2.0f));
 }
 
-TEST(GeoVector3Test, subtractOperatorSubtractsCorrectlyForTemplateType)
+TEST(GeoVector3Test, SubtractOperatorSubtractsCorrectlyForTemplateType)
 {
     auto result = GeoVector3F::One() - 1.0f;
     EXPECT_EQ(result, GeoVector3F::Zero());
 }
 
-TEST(GeoVector3Test, multiplyOperatorMultipliesCorrectlyForTemplateType)
+TEST(GeoVector3Test, MultiplyOperatorMultipliesCorrectlyForTemplateType)
 {
     auto result = GeoVector3F::Uniform(2.0f) * 2.0f;
     EXPECT_EQ(result, GeoVector3F::Uniform(4.0f));
