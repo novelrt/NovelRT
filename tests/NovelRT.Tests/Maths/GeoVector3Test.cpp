@@ -183,6 +183,46 @@ TEST(GeoVector3Test, getLengthReturnsCorrectLength)
     EXPECT_FLOAT_EQ(vec.GetLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2)));
 }
 
+TEST(GeoVector3Test, GetSquaredMagnitudeReturnsCorrectLength)
+{
+    auto vec = GeoVector3F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredMagnitude(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2));
+}
+
+TEST(GeoVector3Test, GetSquaredLengthReturnsCorrectLength)
+{
+    auto vec = GeoVector3F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredLength(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2));
+}
+
+TEST(GeoVector3Test, DotReturnsCorrectValue)
+{
+    auto vecA = GeoVector3F::Zero();
+    auto vecB = GeoVector3F::One();
+    EXPECT_FLOAT_EQ(vecA.Dot(vecB), (vecA.x * vecB.x) + (vecA.y * vecB.y) + (vecA.z * vecB.z));
+}
+
+TEST(GeoVector3Test, CrossReturnsCorrectValue)
+{
+    auto vecA = GeoVector3F(1,2,3);
+    auto vecB = GeoVector3F(4,5,6);
+    EXPECT_EQ(vecA.Cross(vecB), GeoVector3F((vecA.y * vecB.z) - (vecA.z * vecB.y), (vecA.z * vecB.x) - (vecA.x * vecB.z),  (vecA.x * vecB.y) - (vecA.y * vecB.x)));
+}
+
+TEST(GeoVector3Test, DistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector3F::Zero();
+    auto vecB = GeoVector3F::One();
+    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2)));
+}
+
+TEST(GeoVector3Test, SquaredDistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector3F::Zero();
+    auto vecB = GeoVector3F::One();
+    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2));
+}
+
 TEST(GeoVector3Test, rotateToAngleAroundPointRotatesCorrectAmount)
 {
     auto vec = GeoVector3F(0.0f, 1.0f, 0.0f);
