@@ -200,11 +200,56 @@ TEST(InteropGeoVector2Test, getLengthReturnsCorrectLength)
     EXPECT_FLOAT_EQ(Nrt_GeoVector2F_getLength(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
 
-TEST(InteropGeoVector2Test, rotateToAngleAroundPointRotatesCorrectAmount)
+TEST(InteropGeoVector2Test, GetSquaredMagnitudeReturnsCorrectLength)
+{
+    NrtGeoVector2F cVector = Nrt_GeoVector2F_one();
+    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetSquaredMagnitude(normal), powf(normal.x, 2) + powf(normal.y, 2));
+}
+
+TEST(InteropGeoVector2Test, GetSquaredLengthReturnsCorrectLength)
+{
+    NrtGeoVector2F cVector = Nrt_GeoVector2F_one();
+    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetSquaredLength(normal), powf(normal.x, 2) + powf(normal.y, 2));
+}
+
+TEST(InteropGeoVector2Test, DotReturnsCorrectValue)
+{
+    NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
+    NrtGeoVector2F one = Nrt_GeoVector2F_one();
+    EXPECT_FLOAT_EQ(Nrt_GeoVector2F_Dot(zero, one), (zero.x * one.x) + (zero.y * one.y));
+}
+
+TEST(InteropGeoVector2Test, DistanceReturnsCorrectValue)
+{
+    NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
+    NrtGeoVector2F one = Nrt_GeoVector2F_one();
+    EXPECT_FLOAT_EQ(Nrt_GeoVector2F_Distance(zero, one), sqrtf(powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2)));
+}
+
+TEST(InteropGeoVector2Test, SquaredDistanceReturnsCorrectValue)
+{
+    NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
+    NrtGeoVector2F one = Nrt_GeoVector2F_one();
+    EXPECT_FLOAT_EQ(Nrt_GeoVector2F_SquaredDistance(zero, one), powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2));
+}
+
+TEST(InteropGeoVector2Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
 {
     NrtGeoVector2F vec{0.0f, 1.0f};
     NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
     Nrt_GeoVector2F_RotateToAngleAroundPointDeg(&vec, 90.0f, zero);
+    NrtGeoVector2F other{-1.0f, 0.0f};
+    NrtGeoVector2F epsilon = Nrt_GeoVector2F_uniform(1e-7f);
+    EXPECT_TRUE(Nrt_GeoVector2F_epsilonEquals(vec, other, epsilon));
+}
+
+TEST(InteropGeoVector2Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
+{
+    NrtGeoVector2F vec{0.0f, 1.0f};
+    NrtGeoVector2F zero = Nrt_GeoVector2F_zero();
+    Nrt_GeoVector2F_RotateToAngleAroundPointRad(&vec, Maths::Utilities::Tau<float>() / 4, zero);
     NrtGeoVector2F other{-1.0f, 0.0f};
     NrtGeoVector2F epsilon = Nrt_GeoVector2F_uniform(1e-7f);
     EXPECT_TRUE(Nrt_GeoVector2F_epsilonEquals(vec, other, epsilon));
