@@ -96,6 +96,51 @@ extern "C"
         return cVector.GetMagnitude();
     }
 
+    float Nrt_GeoVector3F_GetSquaredLength(NrtGeoVector3F vector)
+    {
+        Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
+        return cVector.GetSquaredLength();
+    }
+
+    float Nrt_GeoVector3F_GetSquaredMagnitude(NrtGeoVector3F vector)
+    {
+        Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
+        return cVector.GetSquaredMagnitude();
+    }
+
+    float Nrt_GeoVector3F_Dot(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    {
+        Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
+        Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
+
+        return cFirst.Dot(cOther);
+    }
+
+    NrtGeoVector3F Nrt_GeoVector3F_Cross(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    {
+        Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
+        Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
+
+        Maths::GeoVector3F crossProduct = cFirst.Cross(cOther);
+        return *reinterpret_cast<NrtGeoVector3F*>(&crossProduct);
+    }
+
+    float Nrt_GeoVector3F_Distance(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    {
+        Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
+        Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
+
+        return cFirst.Distance(cOther);
+    }
+
+    float Nrt_GeoVector3F_SquaredDistance(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    {
+        Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
+        Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
+
+        return cFirst.SquaredDistance(cOther);
+    }
+
     NrtBool Nrt_GeoVector3F_equal(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);

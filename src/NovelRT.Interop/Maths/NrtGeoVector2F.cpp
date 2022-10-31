@@ -97,6 +97,42 @@ extern "C"
         return cVector.GetMagnitude();
     }
 
+    float Nrt_GeoVector2F_GetSquaredLength(NrtGeoVector2F vector)
+    {
+        Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
+        return cVector.GetSquaredLength();
+    }
+
+    float Nrt_GeoVector2F_GetSquaredMagnitude(NrtGeoVector2F vector)
+    {
+        Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
+        return cVector.GetSquaredMagnitude();
+    }
+
+    float Nrt_GeoVector2F_Dot(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    {
+        Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+        Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
+
+        return cFirst.Dot(cOther);
+    }
+
+    float Nrt_GeoVector2F_Distance(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    {
+        Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+        Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
+
+        return cFirst.Distance(cOther);
+    }
+
+    float Nrt_GeoVector2F_SquaredDistance(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    {
+        Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
+        Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
+
+        return cFirst.SquaredDistance(cOther);
+    }
+
     NrtBool Nrt_GeoVector2F_equal(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);

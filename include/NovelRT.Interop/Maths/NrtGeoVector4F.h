@@ -27,6 +27,11 @@ extern "C"
     NrtGeoVector4F Nrt_GeoVector4F_getNormalised(NrtGeoVector4F vector);
     float Nrt_GeoVector4F_getLength(NrtGeoVector4F vector);
     float Nrt_GeoVector4F_getMagnitude(NrtGeoVector4F vector);
+    float Nrt_GeoVector4F_GetSquaredLength(NrtGeoVector4F vector);
+    float Nrt_GeoVector4F_GetSquaredMagnitude(NrtGeoVector4F vector);
+    float Nrt_GeoVector4F_Dot(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
+    float Nrt_GeoVector4F_Distance(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
+    float Nrt_GeoVector4F_SquaredDistance(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
     NrtBool Nrt_GeoVector4F_equal(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
     NrtBool Nrt_GeoVector4F_notEqual(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
     NrtBool Nrt_GeoVector4F_lessThan(NrtGeoVector4F lhs, NrtGeoVector4F rhs);
