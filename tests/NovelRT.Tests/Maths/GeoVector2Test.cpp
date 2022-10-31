@@ -202,6 +202,20 @@ TEST(GeoVector2Test, DotReturnsCorrectValue)
     EXPECT_FLOAT_EQ(vecA.Dot(vecB), (vecA.x * vecB.x) + (vecA.y * vecB.y));
 }
 
+TEST(GeoVector2Test, DistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector2F::Zero();
+    auto vecB = GeoVector2F::One();
+    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2)));
+}
+
+TEST(GeoVector2Test, SquaredDistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector2F::Zero();
+    auto vecB = GeoVector2F::One();
+    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2));
+}
+
 TEST(GeoVector2Test, RotateToAngleAroundPointRotatesCorrectAmount)
 {
     auto vec = GeoVector2F(0.0f, 1.0f);
