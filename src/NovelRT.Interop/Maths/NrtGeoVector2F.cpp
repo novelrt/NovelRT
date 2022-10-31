@@ -23,7 +23,7 @@ extern "C"
         return NrtGeoVector2F{NAN, NAN};
     }
 
-    NrtBool Nrt_GeoVector2F_isNaN(NrtGeoVector2F vector)
+    NrtBool Nrt_GeoVector2F_IsNaN(NrtGeoVector2F vector)
     {
         if (std::isnan(vector.x) || std::isnan(vector.y))
         {
@@ -33,19 +33,19 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_uniform(float value)
+    NrtGeoVector2F Nrt_GeoVector2F_Uniform(float value)
     {
         return NrtGeoVector2F{value, value};
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_zero()
+    NrtGeoVector2F Nrt_GeoVector2F_Zero()
     {
-        return Nrt_GeoVector2F_uniform(0.0f);
+        return Nrt_GeoVector2F_Uniform(0.0f);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_one()
+    NrtGeoVector2F Nrt_GeoVector2F_One()
     {
-        return Nrt_GeoVector2F_uniform(1.0f);
+        return Nrt_GeoVector2F_Uniform(1.0f);
     }
 
     void Nrt_GeoVector2F_RotateToAngleAroundPointDeg(NrtGeoVector2F* vector,
@@ -64,7 +64,7 @@ extern "C"
         (*reinterpret_cast<Maths::GeoVector2F*>(vector)).RotateToAngleAroundPointRad(angleRotationValue, cPoint);
     }
 
-    NrtBool Nrt_GeoVector2F_epsilonEquals(NrtGeoVector2F vector, NrtGeoVector2F other, NrtGeoVector2F epsilonValue)
+    NrtBool Nrt_GeoVector2F_EpsilonEquals(NrtGeoVector2F vector, NrtGeoVector2F other, NrtGeoVector2F epsilonValue)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&other);
@@ -85,13 +85,13 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector2F*>(&normal);
     }
 
-    float Nrt_GeoVector2F_getLength(NrtGeoVector2F vector)
+    float Nrt_GeoVector2F_GetLength(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
         return cVector.GetLength();
     }
 
-    float Nrt_GeoVector2F_getMagnitude(NrtGeoVector2F vector)
+    float Nrt_GeoVector2F_GetMagnitude(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
         return cVector.GetMagnitude();
@@ -133,7 +133,7 @@ extern "C"
         return cFirst.SquaredDistance(cOther);
     }
 
-    NrtBool Nrt_GeoVector2F_equal(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_Equal(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -145,7 +145,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector2F_notEqual(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_NotEqual(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -157,7 +157,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector2F_lessThan(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_LessThan(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -169,7 +169,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector2F_lessThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_LessThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -181,7 +181,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector2F_greaterThan(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_GreaterThan(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -193,7 +193,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector2F_greaterThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtBool Nrt_GeoVector2F_GreaterThanOrEqualTo(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -205,7 +205,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_addVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_AddVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -213,7 +213,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_subtractVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_SubtractVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -221,7 +221,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_multiplyVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_MultiplyVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -229,7 +229,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_divideVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_DivideVector(NrtGeoVector2F lhs, NrtGeoVector2F rhs)
     {
         Maths::GeoVector2F cFirst = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F cOther = *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
@@ -237,70 +237,70 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_addFloat(NrtGeoVector2F lhs, float rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_AddFloat(NrtGeoVector2F lhs, float rhs)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F result = cVector + rhs;
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_subtractFloat(NrtGeoVector2F lhs, float rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_SubtractFloat(NrtGeoVector2F lhs, float rhs)
     {
         const Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F result = cVector - rhs;
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_multiplyFloat(NrtGeoVector2F lhs, float rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_MultiplyFloat(NrtGeoVector2F lhs, float rhs)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F result = cVector * rhs;
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_divideFloat(NrtGeoVector2F lhs, float rhs)
+    NrtGeoVector2F Nrt_GeoVector2F_DivideFloat(NrtGeoVector2F lhs, float rhs)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&lhs);
         Maths::GeoVector2F result = cVector / rhs;
         return *reinterpret_cast<NrtGeoVector2F*>(&result);
     }
 
-    void Nrt_GeoVector2F_addAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
+    void Nrt_GeoVector2F_AddAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) += *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     }
 
-    void Nrt_GeoVector2F_subtractAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
+    void Nrt_GeoVector2F_SubtractAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) -= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     }
 
-    void Nrt_GeoVector2F_multiplyAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
+    void Nrt_GeoVector2F_MultiplyAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) *= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     }
 
-    void Nrt_GeoVector2F_divideAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
+    void Nrt_GeoVector2F_DivideAssignVector(NrtGeoVector2F* lhs, NrtGeoVector2F rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) /= *reinterpret_cast<const Maths::GeoVector2F*>(&rhs);
     }
 
-    void Nrt_GeoVector2F_addAssignFloat(NrtGeoVector2F* lhs, float rhs)
+    void Nrt_GeoVector2F_AddAssignFloat(NrtGeoVector2F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) += rhs;
     }
 
-    void Nrt_GeoVector2F_subtractAssignFloat(NrtGeoVector2F* lhs, float rhs)
+    void Nrt_GeoVector2F_SubtractAssignFloat(NrtGeoVector2F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) -= rhs;
     }
 
-    void Nrt_GeoVector2F_multiplyAssignFloat(NrtGeoVector2F* lhs, float rhs)
+    void Nrt_GeoVector2F_MultiplyAssignFloat(NrtGeoVector2F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) *= rhs;
     }
 
-    void Nrt_GeoVector2F_divideAssignFloat(NrtGeoVector2F* lhs, float rhs)
+    void Nrt_GeoVector2F_DivideAssignFloat(NrtGeoVector2F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector2F*>(lhs) /= rhs;
     }

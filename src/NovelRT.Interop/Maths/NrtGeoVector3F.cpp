@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    NrtGeoVector3F Nrt_GeoVector3F_createFromGeoVector2F(NrtGeoVector2F vector)
+    NrtGeoVector3F Nrt_GeoVector3F_CreateFromGeoVector2F(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector2 = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
         return NrtGeoVector3F{cVector2.x, cVector2.y, 0.0f};
@@ -22,7 +22,7 @@ extern "C"
         return NrtGeoVector3F{NAN, NAN, NAN};
     }
 
-    NrtBool Nrt_GeoVector3F_isNaN(NrtGeoVector3F vector)
+    NrtBool Nrt_GeoVector3F_IsNaN(NrtGeoVector3F vector)
     {
         if (std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z))
         {
@@ -32,19 +32,19 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_uniform(float value)
+    NrtGeoVector3F Nrt_GeoVector3F_Uniform(float value)
     {
         return NrtGeoVector3F{value, value, value};
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_zero()
+    NrtGeoVector3F Nrt_GeoVector3F_Zero()
     {
-        return Nrt_GeoVector3F_uniform(0.0f);
+        return Nrt_GeoVector3F_Uniform(0.0f);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_one()
+    NrtGeoVector3F Nrt_GeoVector3F_One()
     {
-        return Nrt_GeoVector3F_uniform(1.0f);
+        return Nrt_GeoVector3F_Uniform(1.0f);
     }
 
     void Nrt_GeoVector3F_RotateToAngleAroundPointDeg(NrtGeoVector3F* vector,
@@ -63,7 +63,7 @@ extern "C"
         (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPointRad(angleRotationValue, cPoint);
     }
 
-    NrtBool Nrt_GeoVector3F_epsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue)
+    NrtBool Nrt_GeoVector3F_EpsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&other);
@@ -77,20 +77,20 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_getNormalised(NrtGeoVector3F vector)
+    NrtGeoVector3F Nrt_GeoVector3F_GetNormalised(NrtGeoVector3F vector)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
         Maths::GeoVector3F normal = cVector.GetNormalised();
         return *reinterpret_cast<NrtGeoVector3F*>(&normal);
     }
 
-    float Nrt_GeoVector3F_getLength(NrtGeoVector3F vector)
+    float Nrt_GeoVector3F_GetLength(NrtGeoVector3F vector)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
         return cVector.GetLength();
     }
 
-    float Nrt_GeoVector3F_getMagnitude(NrtGeoVector3F vector)
+    float Nrt_GeoVector3F_GetMagnitude(NrtGeoVector3F vector)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&vector);
         return cVector.GetMagnitude();
@@ -141,7 +141,7 @@ extern "C"
         return cFirst.SquaredDistance(cOther);
     }
 
-    NrtBool Nrt_GeoVector3F_equal(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_Equal(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -153,7 +153,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector3F_notEqual(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_NotEqual(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -165,7 +165,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector3F_lessThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_LessThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -177,7 +177,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector3F_lessThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_LessThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -189,7 +189,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector3F_greaterThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_GreaterThan(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -201,7 +201,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoVector3F_greaterThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtBool Nrt_GeoVector3F_GreaterThanOrEqualTo(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -213,7 +213,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_addVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_AddVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -221,7 +221,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_subtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_SubtractVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -229,7 +229,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_multiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_MultiplyVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -237,7 +237,7 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_divideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_DivideVector(NrtGeoVector3F lhs, NrtGeoVector3F rhs)
     {
         Maths::GeoVector3F cFirst = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F cOther = *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
@@ -245,70 +245,70 @@ extern "C"
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_addFloat(NrtGeoVector3F lhs, float rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_AddFloat(NrtGeoVector3F lhs, float rhs)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F result = cVector + rhs;
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_subtractFloat(NrtGeoVector3F lhs, float rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_SubtractFloat(NrtGeoVector3F lhs, float rhs)
     {
         const Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F result = cVector - rhs;
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_multiplyFloat(NrtGeoVector3F lhs, float rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_MultiplyFloat(NrtGeoVector3F lhs, float rhs)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F result = cVector * rhs;
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    NrtGeoVector3F Nrt_GeoVector3F_divideFloat(NrtGeoVector3F lhs, float rhs)
+    NrtGeoVector3F Nrt_GeoVector3F_DivideFloat(NrtGeoVector3F lhs, float rhs)
     {
         Maths::GeoVector3F cVector = *reinterpret_cast<const Maths::GeoVector3F*>(&lhs);
         Maths::GeoVector3F result = cVector / rhs;
         return *reinterpret_cast<NrtGeoVector3F*>(&result);
     }
 
-    void Nrt_GeoVector3F_addAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
+    void Nrt_GeoVector3F_AddAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) += *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     }
 
-    void Nrt_GeoVector3F_subtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
+    void Nrt_GeoVector3F_SubtractAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) -= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     }
 
-    void Nrt_GeoVector3F_multiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
+    void Nrt_GeoVector3F_MultiplyAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) *= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     }
 
-    void Nrt_GeoVector3F_divideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
+    void Nrt_GeoVector3F_DivideAssignVector(NrtGeoVector3F* lhs, NrtGeoVector3F rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) /= *reinterpret_cast<const Maths::GeoVector3F*>(&rhs);
     }
 
-    void Nrt_GeoVector3F_addAssignFloat(NrtGeoVector3F* lhs, float rhs)
+    void Nrt_GeoVector3F_AddAssignFloat(NrtGeoVector3F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) += rhs;
     }
 
-    void Nrt_GeoVector3F_subtractAssignFloat(NrtGeoVector3F* lhs, float rhs)
+    void Nrt_GeoVector3F_SubtractAssignFloat(NrtGeoVector3F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) -= rhs;
     }
 
-    void Nrt_GeoVector3F_multiplyAssignFloat(NrtGeoVector3F* lhs, float rhs)
+    void Nrt_GeoVector3F_MultiplyAssignFloat(NrtGeoVector3F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) *= rhs;
     }
 
-    void Nrt_GeoVector3F_divideAssignFloat(NrtGeoVector3F* lhs, float rhs)
+    void Nrt_GeoVector3F_DivideAssignFloat(NrtGeoVector3F* lhs, float rhs)
     {
         *reinterpret_cast<Maths::GeoVector3F*>(lhs) /= rhs;
     }

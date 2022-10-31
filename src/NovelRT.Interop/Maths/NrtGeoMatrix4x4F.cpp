@@ -15,8 +15,8 @@ extern "C"
 
     NrtBool Nrt_GeoMatrix4x4F_isNaN(NrtGeoMatrix4x4F matrix)
     {
-        if (Nrt_GeoVector4F_isNaN(matrix.x) || Nrt_GeoVector4F_isNaN(matrix.y) || Nrt_GeoVector4F_isNaN(matrix.z) ||
-            Nrt_GeoVector4F_isNaN(matrix.w))
+        if (Nrt_GeoVector4F_IsNaN(matrix.x) || Nrt_GeoVector4F_IsNaN(matrix.y) || Nrt_GeoVector4F_IsNaN(matrix.z) ||
+            Nrt_GeoVector4F_IsNaN(matrix.w))
         {
             return NRT_TRUE;
         }
