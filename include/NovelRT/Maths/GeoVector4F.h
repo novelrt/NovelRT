@@ -1156,21 +1156,99 @@ namespace NovelRT::Maths
          *      &= 82
          * \f}
          *
-         * @param lhs The left-hand side GeoVector4F.
-         * @param rhs The right-hand side GeoVector4F.
+         * @param other The other GeoVector4F whos components get multiplied and summed up with this GeoVector4F.
          * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
          * GeoVector4Fs components.
          */
-        inline float Dot(GeoVector4F rhs) noexcept
+        inline float Dot(GeoVector4F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&rhs));
+            return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other));
         }
 
+        /**
+         * @brief Calculates the distance between this GeoVector4F and another GeoVector4F.
+         * 
+         * @details
+         * To get the distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the length of the delta vector to get the distance between two points.
+         * An example of getting the distance between two four-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      3\\ 
+         *      10\\
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\ 
+         *      12\\
+         *      15\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\ 
+         *      12 - 10\\
+         *      15 - 5\\
+         *      7 - 3
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \| = \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2 + {\Delta v}_w^2}\\
+         *      &= \sqrt{7^2 + 2^2 + 10^2 + 4^2} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
+         * \f}
+         * 
+         * @param other The other point to meassure the distance to.
+         * @return The distance between this GeoVector4F and another GeoVector4F.
+         */
         inline float Distance(GeoVector4F other) noexcept
         {
             return glm::distance(Vec4Value(), other.Vec4Value());
         }
 
+        /**
+         * @brief Calculates the square distance between this GeoVector4F and another GeoVector4F.
+         * 
+         * @details
+         * To get the square distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the square length of the delta vector to get the square distance between two points.
+         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      3\\ 
+         *      10\\
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\ 
+         *      12\\
+         *      15\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\ 
+         *      12 - 10\\
+         *      15 - 5\\
+         *      7 - 3
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \|^2 = {\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2 + {\Delta v}_w^2\\
+         *      &= 7^2 + 2^2 + 10^2 + 4^2 \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
+         * \f}
+         * 
+         * @param other The other point to meassure the square distance to.
+         * @return The square distance between this GeoVector4F and another GeoVector4F.
+         */
         inline float SquaredDistance(GeoVector4F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();

@@ -93,8 +93,10 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}} = \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 +
-         *      9} = \sqrt{25} = 5
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}}\\
+         *      &= \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 + 9}\\
+         *      &= \sqrt{25}\\
+         *      &= 5
          * \f}
          *
          * @return The magnitude of this GeoVector2F.
@@ -114,8 +116,10 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}} = \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 +
-         *      9} = \sqrt{25} = 5
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}}\\
+         *      &= \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 + 9}\\
+         *      &= \sqrt{25}\\
+         *      &= 5
          * \f}
          *
          * @return The length of this GeoVector2F.
@@ -135,7 +139,9 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} = 4^{2} + 3^{2} \rightarrow 16 + 9 = 25
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2}\\
+         *      &= 4^{2} + 3^{2} \rightarrow 16 + 9\\
+         *      &= 25
          * \f}
          *
          * @return The squared magnitude of this GeoVector2F.
@@ -155,7 +161,9 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} = 4^{2} + 3^{2} \rightarrow 16 + 9 = 25
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2}\\
+         *      &= 4^{2} + 3^{2} \rightarrow 16 + 9\\
+         *      &= 25
          * \f}
          *
          * @return The squared length of this GeoVector2F.
@@ -924,8 +932,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Returns the sum of products of the left-hand side GeoVector2Fs components and the right-hand size
-         * GeoVector2Fs components.
+         * @brief Returns the sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          *
          * @details
          * An example of a dot product between two two-dimensional vectors: \f{align*}{
@@ -943,21 +950,82 @@ namespace NovelRT::Maths
          *      &= 23
          * \f}
          *
-         * @param lhs The left-hand side GeoVector2F.
-         * @param rhs The right-hand side GeoVector2F.
-         * @return The sum of products of the left-hand side GeoVector2Fs components and the right-hand side
-         * GeoVector2Fs components.
+         * @param other The other GeoVector2F whos components get multiplied and summed up with this GeoVector2F.
+         * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          */
-        inline float Dot(GeoVector2F rhs) noexcept
+        inline float Dot(GeoVector2F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&rhs));
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other));
         }
 
+        /**
+         * @brief Calculates the distance between this GeoVector2F and another GeoVector2F.
+         * 
+         * @details
+         * To get the distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the length of the delta vector to get the distance between two points.
+         * An example of getting the distance between two two-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\ 
+         *      2
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      6\\ 
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      6 - 1\\ 
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      5\\ 
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \| &= \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2}\\
+         *      &= \sqrt{5^2 + 3^2} \rightarrow \sqrt{25 + 9}\\
+         *      &= \sqrt{36}\\
+         *      &= 6
+         * \f}
+         * 
+         * @param other The other point to meassure the distance to.
+         * @return The distance between this GeoVector2F and another GeoVector2F.
+         */
         inline float Distance(GeoVector2F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other));
         }
 
+        /**
+         * @brief Calculates the square distance between this GeoVector2F and another GeoVector2F.
+         * 
+         * @details
+         * To get the square distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the square length of the delta vector to get the square distance between two points.
+         * An example of getting the square distance between two two-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\ 
+         *      2
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      6\\ 
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      6 - 1\\ 
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      5\\ 
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \|^2 &= {\Delta v}_x^2 + {\Delta v}_y^2\\
+         *      &= 5^2 + 3^2 \rightarrow 25 + 9\\
+         *      &= 36
+         * \f}
+         * 
+         * @param other The other point to meassure the square distance to.
+         * @return The square distance between this GeoVector2F and another GeoVector2F.
+         */
         inline float SquaredDistance(GeoVector2F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();

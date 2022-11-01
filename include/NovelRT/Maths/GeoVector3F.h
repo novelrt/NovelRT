@@ -112,8 +112,10 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{2^{2} + 6^{2} + 3^{2}}
-         *      \rightarrow \sqrt{4 + 36 + 9} = \sqrt{49} = 7
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} 
+         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9} 
+         *      &= \sqrt{49} 
+         *      &= 7
          * \f}
          * @return The magnitude of this GeoVector3F.
          */
@@ -133,8 +135,10 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{2^{2} + 6^{2} + 3^{2}}
-         *      \rightarrow \sqrt{4 + 36 + 9} = \sqrt{49} = 7
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} 
+         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9} 
+         *      &= \sqrt{49} 
+         *      &= 7
          * \f}
          *
          * @return The length of this GeoVector3F.
@@ -155,8 +159,9 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 2^{2} + 6^{2} + 3^{2} \rightarrow
-         *      4 + 36 + 9 = 49
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} 
+         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9 
+         *      &= 49
          * \f}
          *
          * @return The squared magnitude of this GeoVector3F.
@@ -177,8 +182,9 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} = 2^{2} + 6^{2} + 3^{2} \rightarrow
-         *      4 + 36 + 9 = 49
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} 
+         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9 
+         *      &= 49
          * \f}
          *
          * @return The squared length of this GeoVector3F.
@@ -1023,8 +1029,7 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Returns the sum of products of the left-hand side GeoVector3Fs components and the right-hand size
-         * GeoVector3Fs components.
+         * @brief Returns the sum of products of this GeoVector3Fs components and the other GeoVector3Fs components.
          *
          * @details
          * An example of a dot product between two three-dimensional vectors: \f{align*}{
@@ -1045,33 +1050,137 @@ namespace NovelRT::Maths
          *      &= 47
          * \f}
          *
-         * @param lhs The left-hand side GeoVector3F.
-         * @param rhs The right-hand side GeoVector3F.
+         * @param other The other GeoVector3F whos components get multiplied and summed up with this GeoVector3F.
          * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
          * GeoVector3Fs components.
          */
-        inline float Dot(GeoVector3F rhs) noexcept
+        inline float Dot(GeoVector3F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&rhs));
+            return glm::dot(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other));
         }
 
         /**
-         * @brief
+         * @brief Calculates the cross product of this GeoVector3F with another GeoVector3F. The magnitude of the resulting vector is equal to the area of a parallelogram with this GeoVector3F and the other GeoVector3F as sides.
          *
-         * @param lhs
-         * @param rhs
-         * @return GeoVector3F
+         * @details
+         * To calculate the cross product of two vectors you take the following steps: \f{align*}{
+         *      \vec{a} &= \begin{pmatrix}
+         *      1\\ 
+         *      5\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{b} &= \begin{pmatrix}
+         *      1\\ 
+         *      2\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{c} &= \begin{pmatrix}
+         *      \vec{a}_{y}\vec{b}_{z} - \vec{a}_{z}\vec{b}_{y}\\ 
+         *      \vec{a}_{z}\vec{b}_{x} - \vec{a}_{x}\vec{b}_{z}\\ 
+         *      \vec{a}_{x}\vec{b}_{y} - \vec{a}_{y}\vec{b}_{x}
+         *      \end{pmatrix}\\
+         *      &= \begin{pmatrix}
+         *      5 \times 3 - 7 \times 2\\ 
+         *      7 \times 1 - 1 \times 3\\ 
+         *      1 \times 2 - 5 \times 1
+         *      \end{pmatrix} \rightarrow 
+         *      \begin{pmatrix}
+         *      15 - 14\\ 
+         *      7 - 3\\ 
+         *      2 - 5
+         *      \end{pmatrix}\\
+         *      &= \begin{pmatrix}
+         *      1\\ 
+         *      4\\ 
+         *      -3
+         *      \end{pmatrix}
+         * \f}
+         * It should be noted that by flipping the left hand side vector with the right hand side vector will result in a cross product of equal length with opposite polarity.
+         * 
+         * @param other The other GeoVector3F whos components will be used to calculate the cross product with this GeoVector3F.
+         * @return The cross product of this GeoVector3F with another GeoVector3F.
          */
-        inline GeoVector3F Cross(GeoVector3F rhs) noexcept
+        inline GeoVector3F Cross(GeoVector3F other) noexcept
         {
-            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(this), *reinterpret_cast<glm::vec3*>(&rhs)));
+            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(this), *reinterpret_cast<glm::vec3*>(&other)));
         }
 
+        /**
+         * @brief Calculates the distance between this GeoVector3F and another GeoVector3F.
+         * 
+         * @details
+         * To get the distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the length of the delta vector to get the distance between two points.
+         * An example of getting the distance between two three-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      6\\ 
+         *      8\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\ 
+         *      12\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\ 
+         *      12 - 8\\
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      4\\ 
+         *      4\\
+         *      2
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \| &= \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2}\\
+         *      &= \sqrt{4^2 + 4^2 + 2^2} \rightarrow \sqrt{16 + 16 + 4}\\
+         *      &= \sqrt{36}\\
+         *      &= 6
+         * \f}
+         * 
+         * @param other The other point to meassure the distance to.
+         * @return The distance between this GeoVector3F and another GeoVector3F.
+         */
         inline float Distance(GeoVector3F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other));
         }
 
+        /**
+         * @brief Calculates the square distance between this GeoVector3F and another GeoVector3F.
+         * 
+         * @details
+         * To get the square distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the square length of the delta vector to get the square distance between two points.
+         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      6\\ 
+         *      8\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\ 
+         *      12\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\ 
+         *      12 - 8\\
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      4\\ 
+         *      4\\
+         *      2
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \|^2 &= {\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2\\
+         *      &= 4^2 + 4^2 + 2^2 \rightarrow 16 + 16 + 4\\
+         *      &= 36
+         * \f}
+         * 
+         * @param other The other point to meassure the square distance to.
+         * @return The square distance between this GeoVector3F and another GeoVector3F.
+         */
         inline float SquaredDistance(GeoVector3F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();
