@@ -18,11 +18,11 @@ extern "C"
     NrtGeoVector4F Nrt_GeoVector4F_Zero();
     NrtGeoVector4F Nrt_GeoVector4F_One();
     void Nrt_GeoVector4F_RotateToAngleAroundPointDeg(NrtGeoVector4F* const vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point);
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point);
     void Nrt_GeoVector4F_RotateToAngleAroundPointRad(NrtGeoVector4F* const vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point);
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point);
     NrtBool Nrt_GeoVector4F_EpsilonEquals(NrtGeoVector4F vector, NrtGeoVector4F other, NrtGeoVector4F epsilonValue);
     NrtGeoVector4F Nrt_GeoVector4F_GetNormalised(NrtGeoVector4F vector);
     float Nrt_GeoVector4F_GetLength(NrtGeoVector4F vector);

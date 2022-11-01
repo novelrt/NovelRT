@@ -17,11 +17,11 @@ extern "C"
     NrtGeoVector3F Nrt_GeoVector3F_Zero();
     NrtGeoVector3F Nrt_GeoVector3F_One();
     void Nrt_GeoVector3F_RotateToAngleAroundPointDeg(NrtGeoVector3F* vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point);
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point);
     void Nrt_GeoVector3F_RotateToAngleAroundPointRad(NrtGeoVector3F* vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point);
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point);
     NrtBool Nrt_GeoVector3F_EpsilonEquals(NrtGeoVector3F vector, NrtGeoVector3F other, NrtGeoVector3F epsilonValue);
     NrtGeoVector3F Nrt_GeoVector3F_GetNormalised(NrtGeoVector3F vector);
     float Nrt_GeoVector3F_GetLength(NrtGeoVector3F vector);

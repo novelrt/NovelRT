@@ -112,9 +112,9 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} 
-         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9} 
-         *      &= \sqrt{49} 
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}}
+         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9}
+         *      &= \sqrt{49}
          *      &= 7
          * \f}
          * @return The magnitude of this GeoVector3F.
@@ -135,9 +135,9 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} 
-         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9} 
-         *      &= \sqrt{49} 
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}}
+         *      &= \sqrt{2^{2} + 6^{2} + 3^{2}} \rightarrow \sqrt{4 + 36 + 9}
+         *      &= \sqrt{49}
          *      &= 7
          * \f}
          *
@@ -159,8 +159,8 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} 
-         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9 
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2}
+         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9
          *      &= 49
          * \f}
          *
@@ -168,7 +168,7 @@ namespace NovelRT::Maths
          */
         inline float GetSquaredMagnitude() const noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec3*>(this),*reinterpret_cast<const glm::vec3*>(this));
+            return glm::dot(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(this));
         }
 
         /**
@@ -182,8 +182,8 @@ namespace NovelRT::Maths
          *      6\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} 
-         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9 
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2}
+         *      &= 2^{2} + 6^{2} + 3^{2} \rightarrow 4 + 36 + 9
          *      &= 49
          * \f}
          *
@@ -986,8 +986,8 @@ namespace NovelRT::Maths
          * @param axis The axis on which this rotation will be applied.
          */
         void RotateToAngleAroundPointDeg(float angleRotationValue,
-                                      const GeoVector3F& point,
-                                      const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
+                                         const GeoVector3F& point,
+                                         const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec3*>(this) =
                 glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)),
@@ -1003,8 +1003,8 @@ namespace NovelRT::Maths
          * @param axis The axis on which this rotation will be applied.
          */
         void RotateToAngleAroundPointRad(float angleRotationValue,
-                                      const GeoVector3F& point,
-                                      const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
+                                         const GeoVector3F& point,
+                                         const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec3*>(this) =
                 glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)),
@@ -1060,44 +1060,48 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the cross product of this GeoVector3F with another GeoVector3F. The magnitude of the resulting vector is equal to the area of a parallelogram with this GeoVector3F and the other GeoVector3F as sides.
+         * @brief Calculates the cross product of this GeoVector3F with another GeoVector3F. The magnitude of the
+         * resulting vector is equal to the area of a parallelogram with this GeoVector3F and the other GeoVector3F as
+         * sides.
          *
          * @details
          * To calculate the cross product of two vectors you take the following steps: \f{align*}{
          *      \vec{a} &= \begin{pmatrix}
-         *      1\\ 
+         *      1\\
          *      5\\
          *      7
          *      \end{pmatrix}\\
          *      \vec{b} &= \begin{pmatrix}
-         *      1\\ 
+         *      1\\
          *      2\\
          *      3
          *      \end{pmatrix}\\
          *      \vec{c} &= \begin{pmatrix}
-         *      \vec{a}_{y}\vec{b}_{z} - \vec{a}_{z}\vec{b}_{y}\\ 
-         *      \vec{a}_{z}\vec{b}_{x} - \vec{a}_{x}\vec{b}_{z}\\ 
+         *      \vec{a}_{y}\vec{b}_{z} - \vec{a}_{z}\vec{b}_{y}\\
+         *      \vec{a}_{z}\vec{b}_{x} - \vec{a}_{x}\vec{b}_{z}\\
          *      \vec{a}_{x}\vec{b}_{y} - \vec{a}_{y}\vec{b}_{x}
          *      \end{pmatrix}\\
          *      &= \begin{pmatrix}
-         *      5 \times 3 - 7 \times 2\\ 
-         *      7 \times 1 - 1 \times 3\\ 
+         *      5 \times 3 - 7 \times 2\\
+         *      7 \times 1 - 1 \times 3\\
          *      1 \times 2 - 5 \times 1
-         *      \end{pmatrix} \rightarrow 
+         *      \end{pmatrix} \rightarrow
          *      \begin{pmatrix}
-         *      15 - 14\\ 
-         *      7 - 3\\ 
+         *      15 - 14\\
+         *      7 - 3\\
          *      2 - 5
          *      \end{pmatrix}\\
          *      &= \begin{pmatrix}
-         *      1\\ 
-         *      4\\ 
+         *      1\\
+         *      4\\
          *      -3
          *      \end{pmatrix}
          * \f}
-         * It should be noted that by flipping the left hand side vector with the right hand side vector will result in a cross product of equal length with opposite polarity.
-         * 
-         * @param other The other GeoVector3F whos components will be used to calculate the cross product with this GeoVector3F.
+         * It should be noted that by flipping the left hand side vector with the right hand side vector will result in
+         * a cross product of equal length with opposite polarity.
+         *
+         * @param other The other GeoVector3F whos components will be used to calculate the cross product with this
+         * GeoVector3F.
          * @return The cross product of this GeoVector3F with another GeoVector3F.
          */
         inline GeoVector3F Cross(GeoVector3F other) noexcept
@@ -1107,28 +1111,29 @@ namespace NovelRT::Maths
 
         /**
          * @brief Calculates the distance between this GeoVector3F and another GeoVector3F.
-         * 
+         *
          * @details
-         * To get the distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the length of the delta vector to get the distance between two points.
-         * An example of getting the distance between two three-dimensional vectors: \f{align*}{
-         *      \vec{v}_{1} &= \begin{pmatrix}
-         *      6\\ 
+         * To get the distance between to vectors, you should determine the delta vector, a vector representing the
+         * difference between two vectors. Once you have done that you calculate the length of the delta vector to get
+         * the distance between two points. An example of getting the distance between two three-dimensional vectors:
+         * \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         *      6\\
          *      8\\
          *      3
          *      \end{pmatrix}\\
          *      \vec{v}_{2} &= \begin{pmatrix}
-         *      10\\ 
+         *      10\\
          *      12\\
          *      5
          *      \end{pmatrix}\\
          *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
          *      &=\begin{pmatrix}
-         *      10 - 6\\ 
+         *      10 - 6\\
          *      12 - 8\\
          *      5 - 2
          *      \end{pmatrix} \\
          *      &= \begin{pmatrix}
-         *      4\\ 
+         *      4\\
          *      4\\
          *      2
          *      \end{pmatrix}\\
@@ -1137,39 +1142,41 @@ namespace NovelRT::Maths
          *      &= \sqrt{36}\\
          *      &= 6
          * \f}
-         * 
+         *
          * @param other The other point to meassure the distance to.
          * @return The distance between this GeoVector3F and another GeoVector3F.
          */
         inline float Distance(GeoVector3F other) noexcept
         {
-            return glm::distance(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other));
+            return glm::distance(*reinterpret_cast<const glm::vec3*>(this),
+                                 *reinterpret_cast<const glm::vec3*>(&other));
         }
 
         /**
          * @brief Calculates the square distance between this GeoVector3F and another GeoVector3F.
-         * 
+         *
          * @details
-         * To get the square distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the square length of the delta vector to get the square distance between two points.
-         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
-         *      \vec{v}_{1} &= \begin{pmatrix}
-         *      6\\ 
+         * To get the square distance between to vectors, you should determine the delta vector, a vector representing
+         * the difference between two vectors. Once you have done that you calculate the square length of the delta
+         * vector to get the square distance between two points. An example of getting the square distance between two
+         * three-dimensional vectors: \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         *      6\\
          *      8\\
          *      3
          *      \end{pmatrix}\\
          *      \vec{v}_{2} &= \begin{pmatrix}
-         *      10\\ 
+         *      10\\
          *      12\\
          *      5
          *      \end{pmatrix}\\
          *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
          *      &=\begin{pmatrix}
-         *      10 - 6\\ 
+         *      10 - 6\\
          *      12 - 8\\
          *      5 - 2
          *      \end{pmatrix} \\
          *      &= \begin{pmatrix}
-         *      4\\ 
+         *      4\\
          *      4\\
          *      2
          *      \end{pmatrix}\\
@@ -1177,7 +1184,7 @@ namespace NovelRT::Maths
          *      &= 4^2 + 4^2 + 2^2 \rightarrow 16 + 16 + 4\\
          *      &= 36
          * \f}
-         * 
+         *
          * @param other The other point to meassure the square distance to.
          * @return The square distance between this GeoVector3F and another GeoVector3F.
          */

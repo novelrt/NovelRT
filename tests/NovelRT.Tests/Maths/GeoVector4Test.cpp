@@ -220,14 +220,16 @@ TEST(GeoVector4Test, DistanceReturnsCorrectValue)
 {
     auto vecA = GeoVector4F::Zero();
     auto vecB = GeoVector4F::One();
-    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2)));
+    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) +
+                                               powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2)));
 }
 
 TEST(GeoVector4Test, SquaredDistanceReturnsCorrectValue)
 {
     auto vecA = GeoVector4F::Zero();
     auto vecB = GeoVector4F::One();
-    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) + powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2));
+    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) +
+                                                    powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2));
 }
 
 TEST(GeoVector4Test, GeoVector2ConstructorReturnsCorrectGeoVector4)

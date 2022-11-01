@@ -960,25 +960,26 @@ namespace NovelRT::Maths
 
         /**
          * @brief Calculates the distance between this GeoVector2F and another GeoVector2F.
-         * 
+         *
          * @details
-         * To get the distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the length of the delta vector to get the distance between two points.
-         * An example of getting the distance between two two-dimensional vectors: \f{align*}{
-         *      \vec{v}_{1} &= \begin{pmatrix}
-         *      1\\ 
+         * To get the distance between to vectors, you should determine the delta vector, a vector representing the
+         * difference between two vectors. Once you have done that you calculate the length of the delta vector to get
+         * the distance between two points. An example of getting the distance between two two-dimensional vectors:
+         * \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\
          *      2
          *      \end{pmatrix}\\
          *      \vec{v}_{2} &= \begin{pmatrix}
-         *      6\\ 
+         *      6\\
          *      5
          *      \end{pmatrix}\\
          *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
          *      &=\begin{pmatrix}
-         *      6 - 1\\ 
+         *      6 - 1\\
          *      5 - 2
          *      \end{pmatrix} \\
          *      &= \begin{pmatrix}
-         *      5\\ 
+         *      5\\
          *      3
          *      \end{pmatrix}\\
          *      \left \| \vec{\Delta v} \right \| &= \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2}\\
@@ -986,43 +987,45 @@ namespace NovelRT::Maths
          *      &= \sqrt{36}\\
          *      &= 6
          * \f}
-         * 
+         *
          * @param other The other point to meassure the distance to.
          * @return The distance between this GeoVector2F and another GeoVector2F.
          */
         inline float Distance(GeoVector2F other) noexcept
         {
-            return glm::distance(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other));
+            return glm::distance(*reinterpret_cast<const glm::vec2*>(this),
+                                 *reinterpret_cast<const glm::vec2*>(&other));
         }
 
         /**
          * @brief Calculates the square distance between this GeoVector2F and another GeoVector2F.
-         * 
+         *
          * @details
-         * To get the square distance between to vectors, you should determine the delta vector, a vector representing the difference between two vectors. Once you have done that you calculate the square length of the delta vector to get the square distance between two points.
-         * An example of getting the square distance between two two-dimensional vectors: \f{align*}{
-         *      \vec{v}_{1} &= \begin{pmatrix}
-         *      1\\ 
+         * To get the square distance between to vectors, you should determine the delta vector, a vector representing
+         * the difference between two vectors. Once you have done that you calculate the square length of the delta
+         * vector to get the square distance between two points. An example of getting the square distance between two
+         * two-dimensional vectors: \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\
          *      2
          *      \end{pmatrix}\\
          *      \vec{v}_{2} &= \begin{pmatrix}
-         *      6\\ 
+         *      6\\
          *      5
          *      \end{pmatrix}\\
          *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
          *      &=\begin{pmatrix}
-         *      6 - 1\\ 
+         *      6 - 1\\
          *      5 - 2
          *      \end{pmatrix} \\
          *      &= \begin{pmatrix}
-         *      5\\ 
+         *      5\\
          *      3
          *      \end{pmatrix}\\
          *      \left \| \vec{\Delta v} \right \|^2 &= {\Delta v}_x^2 + {\Delta v}_y^2\\
          *      &= 5^2 + 3^2 \rightarrow 25 + 9\\
          *      &= 36
          * \f}
-         * 
+         *
          * @param other The other point to meassure the square distance to.
          * @return The square distance between this GeoVector2F and another GeoVector2F.
          */

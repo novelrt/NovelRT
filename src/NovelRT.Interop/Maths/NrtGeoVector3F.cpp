@@ -48,16 +48,16 @@ extern "C"
     }
 
     void Nrt_GeoVector3F_RotateToAngleAroundPointDeg(NrtGeoVector3F* vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point)
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point)
     {
         Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
         (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPointDeg(angleRotationValue, cPoint);
     }
 
     void Nrt_GeoVector3F_RotateToAngleAroundPointRad(NrtGeoVector3F* vector,
-                                                  float angleRotationValue,
-                                                  NrtGeoVector3F point)
+                                                     float angleRotationValue,
+                                                     NrtGeoVector3F point)
     {
         Maths::GeoVector3F cPoint = *reinterpret_cast<const Maths::GeoVector3F*>(&point);
         (*reinterpret_cast<Maths::GeoVector3F*>(vector)).RotateToAngleAroundPointRad(angleRotationValue, cPoint);

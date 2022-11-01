@@ -203,14 +203,16 @@ TEST(InteropGeoVector3Test, GetSquaredMagnitudeReturnsCorrectLength)
 {
     NrtGeoVector3F cVector = Nrt_GeoVector3F_One();
     NrtGeoVector3F normal = Nrt_GeoVector3F_GetNormalised(cVector);
-    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_GetSquaredMagnitude(normal), powf(normal.x, 2) + powf(normal.y, 2) + powf(normal.z, 2));
+    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_GetSquaredMagnitude(normal),
+                    powf(normal.x, 2) + powf(normal.y, 2) + powf(normal.z, 2));
 }
 
 TEST(InteropGeoVector3Test, GetSquaredLengthReturnsCorrectLength)
 {
     NrtGeoVector3F cVector = Nrt_GeoVector3F_One();
     NrtGeoVector3F normal = Nrt_GeoVector3F_GetNormalised(cVector);
-    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_GetSquaredLength(normal), powf(normal.x, 2) + powf(normal.y, 2) + powf(normal.z, 2));
+    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_GetSquaredLength(normal),
+                    powf(normal.x, 2) + powf(normal.y, 2) + powf(normal.z, 2));
 }
 
 TEST(InteropGeoVector3Test, DotReturnsCorrectValue)
@@ -224,7 +226,8 @@ TEST(InteropGeoVector3Test, CrossReturnsCorrectValue)
 {
     NrtGeoVector3F vecA{1.0f, 2.0f, 3.0f};
     NrtGeoVector3F vecB{4.0f, 5.0f, 6.0f};
-    NrtGeoVector3F control{(vecA.y * vecB.z) - (vecA.z * vecB.y), (vecA.z * vecB.x) - (vecA.x * vecB.z),  (vecA.x * vecB.y) - (vecA.y * vecB.x)};
+    NrtGeoVector3F control{(vecA.y * vecB.z) - (vecA.z * vecB.y), (vecA.z * vecB.x) - (vecA.x * vecB.z),
+                           (vecA.x * vecB.y) - (vecA.y * vecB.x)};
     NrtGeoVector3F crossProduct = Nrt_GeoVector3F_Cross(vecA, vecB);
     EXPECT_TRUE(Nrt_GeoVector3F_Equal(crossProduct, control));
 }
@@ -233,14 +236,16 @@ TEST(InteropGeoVector3Test, DistanceReturnsCorrectValue)
 {
     NrtGeoVector3F zero = Nrt_GeoVector3F_Zero();
     NrtGeoVector3F one = Nrt_GeoVector3F_One();
-    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_Distance(zero, one), sqrtf(powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2) + powf(zero.z - one.z, 2)));
+    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_Distance(zero, one),
+                    sqrtf(powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2) + powf(zero.z - one.z, 2)));
 }
 
 TEST(InteropGeoVector3Test, SquaredDistanceReturnsCorrectValue)
 {
     NrtGeoVector3F zero = Nrt_GeoVector3F_Zero();
     NrtGeoVector3F one = Nrt_GeoVector3F_One();
-    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_SquaredDistance(zero, one), powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2) + powf(zero.z - one.z, 2));
+    EXPECT_FLOAT_EQ(Nrt_GeoVector3F_SquaredDistance(zero, one),
+                    powf(zero.x - one.x, 2) + powf(zero.y - one.y, 2) + powf(zero.z - one.z, 2));
 }
 
 TEST(InteropGeoVector3Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
