@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 cmake_policy(SET CMP0091 NEW)
 
 project(NovelRT
-  VERSION 0.1.0
+  VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"
-  HOMEPAGE_URL "https://github.com/novelrt/NovelRT"
+  HOMEPAGE_URL "https://novelrt.dev"
   LANGUAGES C CXX
 )
 
@@ -15,6 +15,11 @@ if(MSVC)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
+if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
+  message(STATUS "Defaulting to Debug build as no build type was specified")
+  set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 if(WIN32)
@@ -87,7 +92,6 @@ find_package(nlohmann_json REQUIRED)
 include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
 
-
 add_subdirectory(resources)
 add_subdirectory(src)
 
@@ -113,8 +117,36 @@ if(NOVELRT_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
+## WIP
+include(CMakePackageConfigHelpers)
+set(NOVELRT_CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}/NovelRT" CACHE STRING "" FORCE)
+configure_package_config_file(CMake/NovelRTConfig.cmake.in
+                              src/NovelRTConfig.cmake
+                              INSTALL_DESTINATION "${NOVELRT_CONFIG_PATH}"
+                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+
+write_basic_package_version_file(src/NovelRTConfigVersion.cmake
+                                VERSION 0.0.1
+                                COMPATIBILITY SameMajorVersion)
+
 install(
   EXPORT NovelRT
+  FILE NovelRTTargets.cmake
+  EXPORT_LINK_INTERFACE_LIBRARIES
   NAMESPACE NovelRT::
   DESTINATION lib
 )
+
+#Installing installed libs
+# install(
+#   DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
+#   DESTINATION lib
+# )
+# install(
+#   DIRECTORY ${NOVELRT_DEPS_PATH}/include/
+#   DESTINATION include
+# )
+# install(
+#   DIRECTORY ${NOVELRT_DEPS_PATH}/share/
+#   DESTINATION share
+# )
