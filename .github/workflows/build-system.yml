@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [RelWithDebInfo, Release]
+        configuration: [Debug, Release]
         os: [windows-latest, windows-2019, ubuntu-latest, macos-11]
         include:
         - os: ubuntu-latest
@@ -29,12 +29,6 @@ jobs:
           name: Windows - Visual Studio 2022
         - os: macos-11
           name: macOS 11 - Apple-Clang 13
-          configuration: Debug
-        - os: macos-11
-          name: macOS 11 - Apple-Clang 13
-        exclude:
-        - os: macos-11
-          configuration: RelWithDebInfo
 
     steps:
       - name: Checkout Code
