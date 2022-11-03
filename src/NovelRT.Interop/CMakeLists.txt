@@ -2,7 +2,7 @@ if(NOVELRT_VULKAN_SDK)
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
-set(SOURCES
+set(INTEROP_SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
 
@@ -55,13 +55,19 @@ set(SOURCES
   Utilities/NrtMisc.cpp
 )
 
-add_library(Interop SHARED ${SOURCES})
+add_library(Interop SHARED ${INTEROP_SOURCES})
 add_dependencies(Interop Engine)
+set_property(TARGET Interop PROPERTY VERSION ${PROJECT_VERSION})
 
 if(GENERATOR_IS_MULTI_CONFIG)
   set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
 else()
-  set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CMAKE_BUILD_TYPE:Release>,NovelRT.Interop,NovelRT.Interop-$<CMAKE_BUILD_TYPE>>")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(INTEROP_NAME "NovelRT.Interop")
+  else()
+    set(INTEROP_NAME "NovelRT.Interop-${CMAKE_BUILD_TYPE}")
+  endif()
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME ${INTEROP_NAME})
 endif()
 
 target_compile_features(Interop PUBLIC cxx_std_17)
@@ -118,14 +124,12 @@ target_link_libraries(Interop
   PUBLIC
     Engine)
 
-install(
-  TARGETS Interop
-  EXPORT NovelRT
-  DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-install(
-  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
-  DESTINATION include/NovelRT.Interop
-  FILES_MATCHING PATTERN "*.h"
-)
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS Interop
+    EXPORT NovelRT
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  )
+endif()

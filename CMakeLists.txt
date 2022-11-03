@@ -172,6 +172,15 @@ if(NOVELRT_INSTALL)
     FILES_MATCHING PATTERN "*.h"
   )
 
+  if(NOVELRT_BUILD_INTEROP)
+    install(
+      DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/NovelRT
+      FILES_MATCHING PATTERN "*.h"
+    )
+  endif()
+
+
   #TODO: Install Doxygen Docs?
 
   if(NOVELRT_DEPS_INSTALLED)
