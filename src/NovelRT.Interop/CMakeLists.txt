@@ -67,7 +67,7 @@ else()
   else()
     set(INTEROP_NAME "NovelRT.Interop-${CMAKE_BUILD_TYPE}")
   endif()
-  set_target_properties(Engine PROPERTIES OUTPUT_NAME ${INTEROP_NAME})
+  set_target_properties(Interop PROPERTIES OUTPUT_NAME ${INTEROP_NAME})
 endif()
 
 target_compile_features(Interop PUBLIC cxx_std_17)
