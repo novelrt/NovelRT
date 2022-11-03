@@ -56,7 +56,7 @@ set(SOURCES
 add_executable(Engine_Tests ${SOURCES})
 include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 
-target_compile_options(Interop
+target_compile_options(Engine_Tests
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>

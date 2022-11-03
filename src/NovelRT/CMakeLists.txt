@@ -169,6 +169,11 @@ target_link_libraries(Engine
     jsoncons
     stduuid
     SndFile::sndfile
+  PRIVATE
+    Vorbis::vorbis
+    Vorbis::vorbisenc
+    FLAC::FLAC
+    Opus::opus
 )
 
 if(NOVELRT_INSTALL)
