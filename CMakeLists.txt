@@ -164,7 +164,6 @@ if(NOVELRT_INSTALL)
           "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
     DESTINATION "${NOVELRT_CONFIG_PATH}")
 
-  #Workaround due to hierarchy destruction when installing by TARGETS
   #Moved to main CMakeLists as headers should always be distributed for now
   install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
@@ -179,7 +178,6 @@ if(NOVELRT_INSTALL)
       FILES_MATCHING PATTERN "*.h"
     )
   endif()
-
 
   #TODO: Install Doxygen Docs?
 
@@ -200,5 +198,13 @@ if(NOVELRT_INSTALL)
       PATTERN "doc" EXCLUDE
       PATTERN "man" EXCLUDE
     )
+    if(WIN32)
+      install(
+        DIRECTORY ${NOVELRT_DEPS_PATH}/bin/
+        DESTINATION bin
+        PATTERN "png*.exe" EXCLUDE
+        PATTERN "gtest*" EXCLUDE
+      )
+    endif()
   endif()
 endif()
