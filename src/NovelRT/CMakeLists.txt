@@ -78,10 +78,16 @@ set(SOURCES
 )
 
 add_library(Engine SHARED ${SOURCES})
+
 if(GENERATOR_IS_MULTI_CONFIG)
-  set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
 else()
-  set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CMAKE_BUILD_TYPE:Release>,NovelRT,NovelRT-$<CMAKE_BUILD_TYPE>>")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(NAME "NovelRT")
+  else()
+    set(NAME "NovelRT-${CMAKE_BUILD_TYPE}")
+  endif()
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME ${NAME})
 endif()
 
 if(APPLE)
@@ -175,6 +181,9 @@ install(
   DESTINATION include/NovelRT
   FILES_MATCHING PATTERN "*.h"
 )
+install(FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
+              "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
+        DESTINATION "${NOVELRT_CONFIG_PATH}/NovelRT")
 
   # I hate CMake I hate it I hate it I hate it
   # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
