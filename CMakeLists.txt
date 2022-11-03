@@ -31,9 +31,10 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
-option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" ON)
+option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" OFF)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
+option(NOVELRT_INSTALL "Generate installation targets" ON)
 
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
 set(NOVELRT_FREETYPE_VERSION "2.12.1" CACHE STRING "Freetype version")
@@ -43,6 +44,23 @@ set(NOVELRT_OPENAL_VERSION "1.21.1" CACHE STRING "OpenAL version")
 set(NOVELRT_PNG_VERSION "1.6.35" CACHE STRING "PNG version")
 set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
 
+
+#
+# Allow for generating documentation
+#
+if(NOVELRT_BUILD_DOCUMENTATION)
+  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+    COMPONENTS dot
+  )
+  if(NOT DOXYGEN_FOUND)
+    message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
+    set(NOVELRT_BUILD_DOCUMENTATION OFF)
+  endif()
+endif()
+
+#
+# Generate and Locate NovelRT's Dependencies
+#
 if(NOVELRT_FETCH_DEPENDENCIES)
   if(NOT NOVELRT_DEPS_INSTALLED)
     if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
@@ -85,29 +103,40 @@ find_package(Opus REQUIRED)
 find_package(Vorbis REQUIRED)
 find_package(flac REQUIRED)
 find_package(SndFile REQUIRED)
-#CMake-standard FindZLIB breaks runtime deps for Windows
-#So we just use our version that doesn't :)
-include(${NOVELRT_DEPS_PATH}/lib/cmake/ZLIB/ZLIBConfig.cmake)
 find_package(nlohmann_json REQUIRED)
-include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
-include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
 
+if(NOVELRT_DEPS_INSTALLED)
+  #CMake-standard FindZLIB breaks runtime deps for Windows
+  #So we just use our version that doesn't :)
+  include(${NOVELRT_DEPS_PATH}/lib/cmake/ZLIB/ZLIBConfig.cmake)
+  include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
+  include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
+else()
+  find_package(ZLIB REQUIRED)
+  find_package(PNG REQUIRED)
+  find_package(fabulist REQUIRED) #Will probably break for now :^)
+endif()
+
+#
+# Generate required files for install
+#
+include(CMakePackageConfigHelpers)
+set(NOVELRT_CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}/cmake/NovelRT")
+
+configure_package_config_file(cmake/NovelRTConfig.cmake.in
+                              src/NovelRTConfig.cmake
+                              INSTALL_DESTINATION "${NOVELRT_CONFIG_PATH}")
+
+write_basic_package_version_file(src/NovelRTConfigVersion.cmake
+                                COMPATIBILITY SameMajorVersion)
+
+
+
+#
+# Add subdirectories
+#
 add_subdirectory(resources)
 add_subdirectory(src)
-
-if(NOVELRT_BUILD_DOCUMENTATION)
-  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-    COMPONENTS dot
-  )
-  if(NOT DOXYGEN_FOUND)
-    message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
-    set(NOVELRT_BUILD_DOCUMENTATION OFF)
-  endif()
-endif()
-
-if(NOT NOVELRT_BUILD_INTEROP)
-  message("NovelRT Interop library building is disabled.")
-endif()
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
@@ -117,36 +146,42 @@ if(NOVELRT_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
-## WIP
-include(CMakePackageConfigHelpers)
-set(NOVELRT_CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}/NovelRT" CACHE STRING "" FORCE)
-configure_package_config_file(CMake/NovelRTConfig.cmake.in
-                              src/NovelRTConfig.cmake
-                              INSTALL_DESTINATION "${NOVELRT_CONFIG_PATH}"
-                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+if(DOXYGEN_FOUND AND NOVELRT_BUILD_DOCUMENTATION)
+  add_subdirectory(doxygen)
+endif()
 
-write_basic_package_version_file(src/NovelRTConfigVersion.cmake
-                                VERSION 0.0.1
-                                COMPATIBILITY SameMajorVersion)
+#
+# Install files other than the libraries themselves
+# Targets' CMakeLists contains respective installations
+#
+if(NOVELRT_INSTALL)
+  install(
+    EXPORT NovelRTTargets
+    FILE NovelRTTargets.cmake
+    EXPORT_LINK_INTERFACE_LIBRARIES
+    NAMESPACE NovelRT::
+    DESTINATION "${NOVELRT_CONFIG_PATH}"
+  )
 
-install(
-  EXPORT NovelRT
-  FILE NovelRTTargets.cmake
-  EXPORT_LINK_INTERFACE_LIBRARIES
-  NAMESPACE NovelRT::
-  DESTINATION lib
-)
+  install(
+    FILES "${NOVELRT_BINARY_DIR}/src/NovelRTConfig.cmake"
+          "${NOVELRT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
+    DESTINATION "${NOVELRT_CONFIG_PATH}")
 
-#Installing installed libs
-# install(
-#   DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
-#   DESTINATION lib
-# )
-# install(
-#   DIRECTORY ${NOVELRT_DEPS_PATH}/include/
-#   DESTINATION include
-# )
-# install(
-#   DIRECTORY ${NOVELRT_DEPS_PATH}/share/
-#   DESTINATION share
-# )
+  #TODO: Install Doxygen Docs?
+
+  if(NOVELRT_DEPS_INSTALLED)
+    install(
+      DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
+      DESTINATION lib
+    )
+    install(
+      DIRECTORY ${NOVELRT_DEPS_PATH}/include/
+      DESTINATION include
+    )
+    install(
+      DIRECTORY ${NOVELRT_DEPS_PATH}/share/
+      DESTINATION share
+    )
+  endif()
+endif()
