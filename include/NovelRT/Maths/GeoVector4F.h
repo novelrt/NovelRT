@@ -1169,10 +1169,8 @@ namespace NovelRT::Maths
          * @brief Calculates the distance between this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * To get the distance between to vectors, you should determine the delta vector, a vector representing the
-         * difference between two vectors. Once you have done that you calculate the length of the delta vector to get
-         * the distance between two points. An example of getting the distance between two four-dimensional vectors:
-         * \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         * An example of getting the distance between two four-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
          *      3\\
          *      10\\
          *      5\\
@@ -1216,10 +1214,8 @@ namespace NovelRT::Maths
          * @brief Calculates the square distance between this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * To get the square distance between to vectors, you should determine the delta vector, a vector representing
-         * the difference between two vectors. Once you have done that you calculate the square length of the delta
-         * vector to get the square distance between two points. An example of getting the square distance between two
-         * three-dimensional vectors: \f{align*}{ \vec{v}_{1} &= \begin{pmatrix}
+         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
          *      3\\
          *      10\\
          *      5\\
