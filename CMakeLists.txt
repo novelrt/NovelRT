@@ -152,7 +152,7 @@ endif()
 #
 if(NOVELRT_INSTALL)
   install(
-    EXPORT NovelRTTargets
+    EXPORT NovelRT
     FILE NovelRTTargets.cmake
     EXPORT_LINK_INTERFACE_LIBRARIES
     NAMESPACE NovelRT::
@@ -187,14 +187,18 @@ if(NOVELRT_INSTALL)
     install(
       DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
       DESTINATION lib
+      PATTERN "*gtest*" EXCLUDE
     )
     install(
       DIRECTORY ${NOVELRT_DEPS_PATH}/include/
       DESTINATION include
+      PATTERN "gtest" EXCLUDE
     )
     install(
       DIRECTORY ${NOVELRT_DEPS_PATH}/share/
       DESTINATION share
+      PATTERN "doc" EXCLUDE
+      PATTERN "man" EXCLUDE
     )
   endif()
 endif()
