@@ -117,11 +117,11 @@ endif()
 # Generate required files for install
 #
 include(CMakePackageConfigHelpers)
-set(NOVELRT_CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}/cmake/NovelRT")
+set(NOVELRT_CONFIG_PATH lib/cmake/NovelRT)
 
 configure_package_config_file(cmake/NovelRTConfig.cmake.in
                               src/NovelRTConfig.cmake
-                              INSTALL_DESTINATION "${NOVELRT_CONFIG_PATH}")
+                              INSTALL_DESTINATION ${NOVELRT_CONFIG_PATH})
 
 write_basic_package_version_file(src/NovelRTConfigVersion.cmake
                                 COMPATIBILITY SameMajorVersion)
@@ -160,22 +160,22 @@ if(NOVELRT_INSTALL)
   )
 
   install(
-    FILES "${NOVELRT_BINARY_DIR}/src/NovelRTConfig.cmake"
-          "${NOVELRT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
+    FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
+          "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
     DESTINATION "${NOVELRT_CONFIG_PATH}")
 
   #Workaround due to hierarchy destruction when installing by TARGETS
   #Moved to main CMakeLists as headers should always be distributed for now
   install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/NovelRT
+    DESTINATION include/NovelRT
     FILES_MATCHING PATTERN "*.h"
   )
 
   if(NOVELRT_BUILD_INTEROP)
     install(
       DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
-      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/NovelRT
+      DESTINATION include/NovelRT.Interop
       FILES_MATCHING PATTERN "*.h"
     )
   endif()
