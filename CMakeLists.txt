@@ -52,10 +52,6 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
     COMPONENTS dot
   )
-  if(NOT DOXYGEN_FOUND)
-    message("Doxygen ${NOVELRT_DOXYGEN_VERSION} was not found, building documentation is disabled.")
-    set(NOVELRT_BUILD_DOCUMENTATION OFF)
-  endif()
 endif()
 
 #
@@ -167,6 +163,14 @@ if(NOVELRT_INSTALL)
     FILES "${NOVELRT_BINARY_DIR}/src/NovelRTConfig.cmake"
           "${NOVELRT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
     DESTINATION "${NOVELRT_CONFIG_PATH}")
+
+  #Workaround due to hierarchy destruction when installing by TARGETS
+  #Moved to main CMakeLists as headers should always be distributed for now
+  install(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/NovelRT
+    FILES_MATCHING PATTERN "*.h"
+  )
 
   #TODO: Install Doxygen Docs?
 

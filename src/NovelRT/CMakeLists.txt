@@ -2,7 +2,7 @@ if(NOT DEFINED NOVELRT_LIB_SUFFIX)
   set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
 endif()
 
-set(SOURCES
+set(CORE_SOURCES
   Atom.cpp
 
   Audio/AudioService.cpp
@@ -77,7 +77,9 @@ set(SOURCES
   Utilities/Misc.cpp
 )
 
-add_library(Engine SHARED ${SOURCES})
+add_library(Engine SHARED ${CORE_SOURCES})
+set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
+
 
 if(GENERATOR_IS_MULTI_CONFIG)
   set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
@@ -169,52 +171,13 @@ target_link_libraries(Engine
     SndFile::sndfile
 )
 
-install(
-  TARGETS Engine
-  EXPORT NovelRT
-  DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-#Workaround due to hierarchy destruction when installing by TARGETS
-install(
-  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
-  DESTINATION include/NovelRT
-  FILES_MATCHING PATTERN "*.h"
-)
-install(FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
-              "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
-        DESTINATION "${NOVELRT_CONFIG_PATH}/NovelRT")
-
-  # I hate CMake I hate it I hate it I hate it
-  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #    ${CMAKE_BINARY_DIR}/thirdparty
-  #    $<TARGET_FILE_DIR:Engine>)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #  $<TARGET_FILE_DIR:OpenAL>
-  #  $<TARGET_FILE_DIR:Engine>)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #  $<TARGET_FILE_DIR:sndfile>
-  #  $<TARGET_FILE_DIR:Engine>)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #  $<TARGET_FILE_DIR:tbb>
-  #  $<TARGET_FILE_DIR:Engine>)
-  #if(NOT NOVELRT_VULKAN_SDK)
-  #  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-  #    $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
-  #    $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
-  #  if(APPLE)
-  #    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #      ${NOVELRT_MOLTENVK_DYLIB_PATH}
-  #      $<TARGET_FILE_DIR:Engine>)
-  #    set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
-  #    set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
-  #  endif()
-  #endif()
-  #file(GLOB libs RELATIVE
-  #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-
-  #set_target_properties(Engine
-  #  PROPERTIES
-  #    RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS Engine
+    EXPORT NovelRT
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  )
+endif()
 
