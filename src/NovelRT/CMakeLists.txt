@@ -3,6 +3,7 @@ if(NOT DEFINED NOVELRT_LIB_SUFFIX)
 endif()
 
 set(CORE_SOURCES
+
   Atom.cpp
 
   Audio/AudioService.cpp
