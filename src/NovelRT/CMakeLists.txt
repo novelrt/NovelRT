@@ -5,6 +5,8 @@ endif()
 set(CORE_SOURCES
 
   Atom.cpp
+  LoggingService.cpp
+  EngineConfig.cpp
 
   Audio/AudioService.cpp
 
@@ -21,12 +23,6 @@ set(CORE_SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
-
-  EngineConfig.cpp
-
-  Input/Glfw/GlfwInputDevice.cpp
-  Input/Glfw/GlfwInputPluginProvider.cpp
-  Input/NovelKey.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
@@ -54,11 +50,9 @@ set(CORE_SOURCES
   Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Graphics/Vulkan/VulkanShaderProgram.cpp
 
-  Threading/VolatileState.cpp
-  Windowing/Glfw/GlfwWindowingDevice.cpp
-  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
-
-  LoggingService.cpp
+  Input/Glfw/GlfwInputDevice.cpp
+  Input/Glfw/GlfwInputPluginProvider.cpp
+  Input/NovelKey.cpp
 
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
@@ -73,9 +67,14 @@ set(CORE_SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
+  Threading/VolatileState.cpp
+
   Timing/StepTimer.cpp
 
   Utilities/Misc.cpp
+
+  Windowing/Glfw/GlfwWindowingDevice.cpp
+  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 )
 
 add_library(Engine SHARED ${CORE_SOURCES})
