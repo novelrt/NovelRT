@@ -95,8 +95,6 @@ else()
 endif()
 
 if(APPLE)
-  #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
-  add_dependencies(Engine ${NOVELRT_VULKAN_DEPS})
   set(NOVELRT_LIB_SUFFIX "dylib")
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
