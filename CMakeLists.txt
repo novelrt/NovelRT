@@ -34,6 +34,7 @@ option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" OFF)
 option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
+option(NOVELRT_VERBOSE_BUILD "Build NovelRT using verbose output" ON)
 option(NOVELRT_INSTALL "Generate installation targets" ON)
 
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
@@ -126,6 +127,15 @@ configure_package_config_file(cmake/NovelRTConfig.cmake.in
 write_basic_package_version_file(src/NovelRTConfigVersion.cmake
                                 COMPATIBILITY SameMajorVersion)
 
+#
+# Setup Debug Output
+#
+if(NOVELRT_VERBOSE_BUILD)
+  set(CMAKE_VERBOSE_MAKEFILE TRUE)
+  if(CMAKE_GENERATOR STREQUAL "Visual Studio 2019 16" OR CMAKE_GENERATOR STREQUAL "Visual Studio 2022 17")
+    string(APPEND CMAKE_CXX_FLAGS "-v:detailed")
+  endif()
+endif()
 
 
 #
