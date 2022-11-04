@@ -82,12 +82,14 @@ set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
 
 
 if(GENERATOR_IS_MULTI_CONFIG)
-  set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>" )
 else()
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(ENGINE_NAME "NovelRT")
-  else()
+  elseif(CMAKE_BUILD_TYPE)
     set(ENGINE_NAME "NovelRT-${CMAKE_BUILD_TYPE}")
+  else()
+    set(ENGINE_NAME "NovelRT-\$<CONFIG>")
   endif()
   set_target_properties(Engine PROPERTIES OUTPUT_NAME ${ENGINE_NAME})
 endif()
@@ -98,10 +100,6 @@ if(APPLE)
   set(NOVELRT_LIB_SUFFIX "dylib")
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-  target_link_libraries(Engine
-    PUBLIC
-      Winmm
-  )
   set(NOVELRT_LIB_SUFFIX "dll")
 endif()
 
@@ -109,6 +107,8 @@ target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:glm::glm,INTERFACE_INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Microsoft.GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -157,23 +157,22 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    fabulist::runtime
-    #freetype
-    glfw
-    glm::glm
+    Vulkan::Vulkan
+    TBB::tbb
     OpenAL::OpenAL
+    SndFile::sndfile
+    glfw
     png
     spdlog::spdlog
-    TBB::tbb
-    Vulkan::Vulkan
     jsoncons
     stduuid
-    SndFile::sndfile
+    fabulist::runtime
   PRIVATE
     Vorbis::vorbis
     Vorbis::vorbisenc
     FLAC::FLAC
     Opus::opus
+    $<$<CXX_COMPILER_ID:MSVC>:Winmm>
 )
 
 if(NOVELRT_INSTALL)

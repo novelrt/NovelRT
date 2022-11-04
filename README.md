@@ -37,7 +37,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
 - libpng 1.6.35
-- libsndfile 1.0.30
+- libsndfile 1.1.0
 - Microsoft GSL 4.0.0
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
