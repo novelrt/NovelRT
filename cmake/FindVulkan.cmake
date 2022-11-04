@@ -1,5 +1,6 @@
-# Distributed under the OSI-approved BSD 3-Clause License.
+# Original file distributed under the OSI-approved BSD 3-Clause License.
 # See https://cmake.org/licensing for details.
+# Modified to use CMake's provided FindPackageHandleStandardArgs module.
 
 #[=======================================================================[.rst:
 FindVulkan
@@ -514,7 +515,7 @@ if(Vulkan_MoltenVK_FOUND)
   endif()
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Vulkan
   REQUIRED_VARS
     Vulkan_LIBRARY
