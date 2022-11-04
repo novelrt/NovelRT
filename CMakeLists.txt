@@ -109,12 +109,7 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(nlohmann_json REQUIRED)
-
-if(APPLE)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
-else()
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
+find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 
 if(NOVELRT_DEPS_INSTALLED)
   #CMake-standard FindZLIB breaks runtime deps for Windows

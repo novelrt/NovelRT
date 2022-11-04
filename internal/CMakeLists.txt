@@ -8,8 +8,10 @@ cmake_policy(SET CMP0091 NEW)
 # For users of 3.24 and onwards, DOWNLOAD_TIMESTAMP will follow new behaviour
 # and use the current time instead of the archived timestamp (which can cause
 # issues with not rebuilding the content)
-cmake_policy(SET CMP0135 NEW)
-set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+  set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+endif()
 # We set CMP0077 to prevent clearing of some of our variables
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
