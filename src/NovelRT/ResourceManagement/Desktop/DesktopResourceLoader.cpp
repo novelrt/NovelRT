@@ -248,7 +248,10 @@ namespace NovelRT::ResourceManagement::Desktop
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
     {
-        filePath = _resourcesRootDirectory / filePath;
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / filePath;
+        }
 
         std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
 
@@ -326,5 +329,45 @@ namespace NovelRT::ResourceManagement::Desktop
 
         file.write(reinterpret_cast<const char*>(buffer.data()), std::streamsize(buffer.size()));
         file.close();
+    }
+
+    AudioMetadata DesktopResourceLoader::LoadAudioFrameData(std::filesystem::path filePath)
+    {
+        constexpr size_t _bufferSize = 2048;
+
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Audio" / filePath;
+        }
+
+        SF_INFO info;
+        info.format = 0;
+        auto filePathString = filePath.string();
+        SNDFILE* file = sf_open(filePathString.c_str(), SFM_READ, &info);
+
+        if (file == nullptr)
+        {
+            throw NovelRT::Exceptions::IOException(filePath.string(), std::string(sf_strerror(file)));
+        }
+
+        std::vector<int16_t> data;
+        std::vector<short> readBuffer;
+        readBuffer.resize(_bufferSize);
+
+        sf_command(file, SFC_SET_SCALE_FLOAT_INT_READ, nullptr, SF_TRUE);
+
+        sf_count_t readSize = 0;
+
+        while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
+        {
+            data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
+        }
+
+        sf_close(file);
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
     }
 }

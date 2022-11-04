@@ -63,15 +63,23 @@ extern "C"
     typedef int32_t NrtLogLevel;
     typedef int32_t NrtResult;
 
+    // clang-format off
+
 #include "Maths/NrtMathsTypedefs.h"
 #include "Timing/NrtTimingTypedefs.h"
 #include "Utilities/NrtUtilitiesTypedefs.h"
-
 #include "Audio/NrtAudioTypedefs.h"
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
+#include "Graphics/NrtGraphicsTypedefs.h"
+#include "Input/NrtInputTypedefs.h"
+#include "PluginManagement/NrtPluginManagementTypedefs.h"
+#include "ResourceManagement/NrtResourceManagementTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
+#include "Windowing/NrtWindowingTypedefs.h"
+
+    // clang-format on
 
 #ifdef __cplusplus
 }

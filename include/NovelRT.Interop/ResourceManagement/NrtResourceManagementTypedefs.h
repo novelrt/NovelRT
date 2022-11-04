@@ -14,9 +14,11 @@ extern "C"
 
     typedef struct NrtBinaryMemberMetadata* NrtBinaryMemberMetadataHandle;
     typedef struct NrtBinaryPackage* NrtBinaryPackageHandle;
+    typedef struct NrtInt16Vector* NrtInt16VectorHandle;
     typedef struct NrtResourceLoader* NrtResourceLoaderHandle;
     typedef struct NrtShaderMetadata* NrtShaderMetadataHandle;
     typedef struct NrtTextureMetadata* NrtTextureMetadataHandle;
+    typedef struct NrtAudioMetadata* NrtAudioMetadataHandle;
     typedef struct NrtBinaryMemberMetadataVector* NrtBinaryMemberMetadataVectorHandle;
     typedef struct NrtUint8Vector* NrtUint8VectorHandle;
     typedef const struct NrtUuidFilePathMap* NrtUuidFilePathMapHandle;
