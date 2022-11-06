@@ -36,11 +36,9 @@ namespace NovelRT::Ecs::UI
                 typeid(NovelRT::Maths::GeoVector2F),
                 NovelRT::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, sizeof(Maths::GeoVector2F)),
 
-
             NovelRT::Graphics::GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector4F),
-                NovelRT::Graphics::GraphicsPipelineInputElementKind::Colour, sizeof(Maths::GeoVector4F))
-
+                typeid(NovelRT::Graphics::RGBAColour),
+                NovelRT::Graphics::GraphicsPipelineInputElementKind::Colour, sizeof(NovelRT::Graphics::RGBAColour))
         };
 
         std::vector<NovelRT::Graphics::GraphicsPipelineInput> inputs = {

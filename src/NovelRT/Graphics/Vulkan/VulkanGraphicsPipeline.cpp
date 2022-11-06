@@ -219,6 +219,26 @@ namespace NovelRT::Graphics::Vulkan
         {
             returnFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
         }
+        else if (type == typeid(RGBAColour))
+        {
+            returnFormat = VK_FORMAT_R8G8B8A8_UNORM;
+        }
+        else if (type == typeid(uint32_t))
+        {
+            returnFormat = VK_FORMAT_R32_UINT;
+        }
+        else if (type == typeid(int32_t))
+        {
+            returnFormat = VK_FORMAT_R32_SINT;
+        }
+        else if (type == typeid(float))
+        {
+            returnFormat = VK_FORMAT_R32_SFLOAT;
+        }
+        else if (type == typeid(double))
+        {
+            returnFormat = VK_FORMAT_R64_SFLOAT;
+        }
 
         return returnFormat;
     }
