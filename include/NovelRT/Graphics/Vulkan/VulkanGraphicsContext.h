@@ -100,12 +100,12 @@ namespace NovelRT::Graphics::Vulkan
         void Copy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
         void Copy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
 
-        inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive, uint32_t instanceCount) final
+        inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) final
         {
-            Draw(std::static_pointer_cast<VulkanGraphicsPrimitive>(primitive), instanceCount);
+            Draw(std::static_pointer_cast<VulkanGraphicsPrimitive>(primitive), instanceCount, firstIndex, vertexOffset, firstInstance);
         }
 
-        void Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive, int32_t instanceCount);
+        void Draw(const std::shared_ptr<VulkanGraphicsPrimitive>& primitive, int32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance);
         void EndDrawing() final;
         void EndFrame() final;
 

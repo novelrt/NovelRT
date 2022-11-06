@@ -22,14 +22,18 @@ namespace NovelRT::Graphics::Vulkan
                                 uint32_t vertexBufferStride,
                                 GraphicsMemoryRegion<GraphicsResource> indexBufferView,
                                 uint32_t indexBufferStride,
-                                gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {})
+                                gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {},
+                                bool shouldUseExplicitElementCount = false,
+                                uint32_t explicitElementCount = 0)
             : GraphicsPrimitive(std::move(device),
                                 std::move(pipeline),
                                 std::move(vertexBufferView),
                                 vertexBufferStride,
                                 std::move(indexBufferView),
                                 indexBufferStride,
-                                inputResourceRegions),
+                                inputResourceRegions,
+                                shouldUseExplicitElementCount,
+                                explicitElementCount),
               _state()
         {
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));

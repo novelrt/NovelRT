@@ -19,6 +19,8 @@ namespace NovelRT::Graphics
         std::vector<GraphicsMemoryRegion<GraphicsResource>> _inputResourceRegions;
         uint32_t _vertexBufferStride;
         uint32_t _indexBufferStride;
+        bool _shouldUseExplicitElementCount;
+        uint32_t _explicitElementCount;
 
     public:
         GraphicsPrimitive(const std::shared_ptr<GraphicsDevice>& device,
@@ -27,14 +29,18 @@ namespace NovelRT::Graphics
                           uint32_t vertexBufferStride,
                           GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
                           uint32_t indexBufferStride,
-                          gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+                          gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions,
+                          bool shouldUseExplicitElementCount,
+                          uint32_t explicitElementCount)
             : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)),
               _pipeline(std::move(pipeline)),
               _vertexBufferRegion(std::move(vertexBufferRegion)),
               _indexBufferRegion(std::move(indexBufferRegion)),
               _inputResourceRegions(),
               _vertexBufferStride(vertexBufferStride),
-              _indexBufferStride(indexBufferStride)
+              _indexBufferStride(indexBufferStride),
+              _shouldUseExplicitElementCount(shouldUseExplicitElementCount),
+              _explicitElementCount(explicitElementCount)
         {
             if (_pipeline == nullptr)
             {
@@ -99,6 +105,16 @@ namespace NovelRT::Graphics
         [[nodiscard]] inline uint32_t GetVertexBufferStride() const noexcept
         {
             return _vertexBufferStride;
+        }
+
+        [[nodiscard]] inline bool ShouldUseExplicitElementCount() const noexcept
+        {
+            return _shouldUseExplicitElementCount;
+        }
+
+        [[nodiscard]] inline uint32_t GetExplicitElementCount() const noexcept
+        {
+            return _explicitElementCount;
         }
 
         virtual ~GraphicsPrimitive() = default;

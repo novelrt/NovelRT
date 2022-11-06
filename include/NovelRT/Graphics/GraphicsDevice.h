@@ -89,6 +89,13 @@ namespace NovelRT::Graphics
             uint32_t indexBufferStride,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
 
+        [[nodiscard]] virtual std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
+            std::shared_ptr<GraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t explicitElementCount,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
+
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
                                                                                  ShaderProgramKind kind,
                                                                                  gsl::span<uint8_t> byteData) = 0;

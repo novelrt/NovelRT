@@ -12,16 +12,62 @@ namespace NovelRT::Ecs::UI
     UISystem::UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
                        std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
                        std::shared_ptr<PluginManagement::IInputPluginProvider> inputPluginProvider,
+                       std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider,
                        std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> defaultRenderingSystem)
         : _uiProvider(uiPluginProvider->GetUIProvider())
     {
-        _uiProvider->Initialise(windowingPluginProvider->GetWindowingDevice(), inputPluginProvider->GetInputService());
+        auto graphicsDevice = defaultRenderingSystem->GetGraphicsDevice();
+        auto resourceManager = resourceManagementPluginProvider->GetResourceLoader();
+        _uiProvider->Initialise(windowingPluginProvider->GetWindowingDevice(), inputPluginProvider->GetInputService(), graphicsDevice);
+
+        auto vertexShaderData = resourceManager->LoadShaderSource("ImguiVert.spv");
+        auto pixelShaderData = resourceManager->LoadShaderSource("ImguiPixel.spv");
+
+
+        auto vertexShaderProgram = graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertexShaderData.shaderCode);
+        auto pixelShaderProgram = graphicsDevice->CreateShaderProgram("main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
+
+        std::vector<NovelRT::Graphics::GraphicsPipelineInputElement> elements = {
+            NovelRT::Graphics::GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector2F),
+                NovelRT::Graphics::GraphicsPipelineInputElementKind::Position, sizeof(Maths::GeoVector2F)),
+
+            NovelRT::Graphics::GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector2F),
+                NovelRT::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate, sizeof(Maths::GeoVector2F)),
+
+
+            NovelRT::Graphics::GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector4F),
+                NovelRT::Graphics::GraphicsPipelineInputElementKind::Colour, sizeof(Maths::GeoVector4F))
+
+        };
+
+        std::vector<NovelRT::Graphics::GraphicsPipelineInput> inputs = {
+            NovelRT::Graphics::GraphicsPipelineInput(elements)};
+
+        std::vector<NovelRT::Graphics::GraphicsPipelineResource> resources = {
+            NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::ConstantBuffer,
+                                                        NovelRT::Graphics::ShaderProgramVisibility::Vertex),
+
+            NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::Texture,
+                                                        NovelRT::Graphics::ShaderProgramVisibility::Pixel),
+        };
+
+        auto signature = graphicsDevice->CreatePipelineSignature(NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha, NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
+        auto pipeline = graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
+
+        std::random_device rd;
+        auto seedData = std::array<int, std::mt19937::state_size> {};
+        std::generate(std::begin(seedData), std::end(seedData), std::ref(rd));
+        std::seed_seq seq(std::begin(seedData), std::end(seedData));
+        std::mt19937 generator(seq);
+        uuids::uuid_random_generator gen{generator};
 
         defaultRenderingSystem->UIRenderEvent +=
-            [&](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
+            [&, pipeline](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
         {
             DefaultRenderingSystem& renderingSystem = defaultRenderingSystem.get();
-            auto pipeline = renderingSystem.GetExistingPipelineInfo("default");
 
             ImGui::Render();
             const ImDrawData* drawData = ImGui::GetDrawData();
@@ -30,42 +76,27 @@ namespace NovelRT::Ecs::UI
             {
                 auto listIndexStr = std::to_string(listIndex);
                 auto drawList = drawData->CmdLists[listIndex];
-                FutureResult<VertexInfo> vertexInfo = renderingSystem.LoadVertexDataRaw<ImDrawVert>("ImGuiVertices" + listIndexStr, gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
-                FutureResult<VertexInfo> indexInfo = renderingSystem.LoadVertexDataRaw<ImDrawIdx>("ImGuiIndices" + listIndexStr, gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
+                FutureResult<VertexInfo> vertexInfo = renderingSystem.LoadVertexDataRaw<ImDrawVert>(
+                    "ImGuiVertices" + listIndexStr,
+                    gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
+                FutureResult<VertexInfo> indexInfo = renderingSystem.LoadVertexDataRaw<ImDrawIdx>(
+                    "ImGuiIndices" + listIndexStr,
+                    gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
 
-
-
-                for (int n = 0; n < drawList->CmdBuffer.Size; n++)
-                {
-                    const ImDrawCmd* drawCmd = &drawList->CmdBuffer[n];
-
-                    //()drawCmd->GetTexID();
-/*
-                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
-                        pipeline->gpuPipeline.GetUnderlyingSharedPtr(), drawCmd-> squareVertexFuture.GetValue().gpuVertexRegion,
-                        sizeof(TexturedVertex), dummyRegion, 0, inputResourceRegions);
-                    args.graphicsContext->Draw(primitive, 3);
-                    */
-                }
-
-            }
-
-            /*
-            for (int i = 0; i < drawData->CmdListsCount; i++)
-            {
-                const ImDrawList* drawList = drawData->CmdLists[i];
+                renderingSystem.ForceVertexTextureFutureResolution();
 
                 for (int n = 0; n < drawList->CmdBuffer.Size; n++)
                 {
                     const ImDrawCmd* drawCmd = &drawList->CmdBuffer[n];
-
-                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
-                        pipeline->gpuPipeline.GetUnderlyingSharedPtr(), drawCmd-> squareVertexFuture.GetValue().gpuVertexRegion,
-                        sizeof(TexturedVertex), dummyRegion, 0, inputResourceRegions);
-                    args.graphicsContext->Draw(primitive, 3);
+                    auto tex =
+                        *reinterpret_cast<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>*>(drawCmd->GetTexID());
+                    std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> resources{
+                        eventArgs.frameMatrixConstantBufferRegion, tex};
+                    unused(eventArgs.graphicsDevice->CreatePrimitive(
+                        pipeline, vertexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
+                        indexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd->ElemCount, resources));
                 }
             }
-             */
         };
     }
 

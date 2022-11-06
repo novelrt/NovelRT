@@ -57,7 +57,7 @@ namespace NovelRT::Ecs
             target.RegisterSystem(defaultInputSystem);
 
             auto defaultUISystem = std::make_shared<Ecs::UI::UISystem>(_uiPluginProvider, _windowingPluginProvider,
-                                                                       _inputPluginProvider, defaultRenderingSystem);
+                                                                       _inputPluginProvider, _resourceManagementPluginProvider, defaultRenderingSystem);
             target.RegisterSystem(defaultUISystem);
         }
 

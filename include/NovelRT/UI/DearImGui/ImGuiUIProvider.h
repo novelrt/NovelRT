@@ -20,6 +20,7 @@ namespace NovelRT::UI::DearImGui
 
         std::shared_ptr<Windowing::IWindowingDevice> _windowingDevice;
         std::shared_ptr<Input::IInputDevice> _inputDevice;
+        std::shared_ptr<Graphics::GraphicsTexture> _texture2D;
 
     public:
         ImGuiUIProvider();
@@ -30,7 +31,8 @@ namespace NovelRT::UI::DearImGui
         }
 
         void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
-                        std::shared_ptr<Input::IInputDevice> inputDevice) final;
+                        std::shared_ptr<Input::IInputDevice> inputDevice,
+                        std::shared_ptr<Graphics::GraphicsDevice> graphicsDevice) final;
 
         void BeginFrame(double deltaTime) final;
 

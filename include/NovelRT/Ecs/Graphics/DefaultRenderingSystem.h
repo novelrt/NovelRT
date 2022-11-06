@@ -88,6 +88,11 @@ namespace NovelRT::Ecs::Graphics
 
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;
 
+        [[nodiscard]] inline std::shared_ptr<NovelRT::Graphics::GraphicsDevice> GetGraphicsDevice() const noexcept
+        {
+            return _graphicsDevice;
+        }
+
         [[nodiscard]] Threading::FutureResult<TextureInfo> GetOrLoadTexture(const std::string& spriteName);
 
         template<typename TSpanType>

@@ -11,14 +11,11 @@ set(RESOURCES_FILES
   Scripts/story.ink
   Scripts/story.json
 
-  Shaders/BasicFragmentShader.glsl
-  Shaders/BasicVertexShader.glsl
-  Shaders/FontFragmentShader.glsl
-  Shaders/FontVertexShader.glsl
-  Shaders/TexturedFragmentShader.glsl
-  Shaders/TexturedVertexShader.glsl
   Shaders/frag.spv
   Shaders/vert.spv
+  Shaders/ImguiVert.spv
+  Shaders/ImguiPixel.spv
+
 
   Sounds/goat.wav
   Sounds/uwu.ogg

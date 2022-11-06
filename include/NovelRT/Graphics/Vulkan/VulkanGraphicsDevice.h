@@ -73,12 +73,19 @@ namespace NovelRT::Graphics::Vulkan
         void TearDown() final;
         size_t GetContextIndex() const noexcept override;
 
-        std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
+        [[nodiscard]] std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
             std::shared_ptr<GraphicsPipeline> pipeline,
             GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
+
+        [[nodiscard]] std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
+            std::shared_ptr<GraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t explicitElementCount,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
@@ -87,6 +94,13 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
+            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
+            std::shared_ptr<VulkanGraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t explicitElementCount,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 
         void PresentFrame() final;
