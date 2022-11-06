@@ -29,14 +29,15 @@ jobs:
           name: Windows - Visual Studio 2022
         - os: macos-11
           name: macOS 11 - Apple-Clang 13
+          vulkan: VULKAN_SDK=$VULKAN_SDK/macOS  #HumbleTim's installer doesn't append macOS for us
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Install Vulkan SDK (Linux / macOS)
+      - name: Install Vulkan SDK (macOS)
         uses: humbletim/install-vulkan-sdk@v1.1.1
-        if: "!contains(matrix.os, 'windows')"
+        if: "contains(matrix.os, 'macos')"
         with:
           version: 1.3.211.0
           cache: true
@@ -53,7 +54,7 @@ jobs:
       - name: Build NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
-          ${{ matrix.c }} ${{ matrix.cxx }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples
 
       - name: Test NovelRT - ${{ matrix.configuration }}

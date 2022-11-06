@@ -241,9 +241,15 @@ if(APPLE AND DEFINED ENV{VULKAN_SDK})
         "${_MoltenVK_path}/dylib/tvOS"
       )
     else()
-      list(APPEND _Vulkan_hint_library_search_paths
-        "${_MoltenVK_path}/dylib/macOS"
-      )
+      if(MOLTENVK_STATIC)
+        list(APPEND _Vulkan_hint_library_search_paths
+          "${_MoltenVK_path}/MoltenVK.xcframework/macos-arm64_x86_64"
+        )
+      else()
+        list(APPEND _Vulkan_hint_library_search_paths
+          "${_MoltenVK_path}/dylib/macOS"
+        )
+      endif()
     endif()
   endif()
   unset(_MoltenVK_path)
