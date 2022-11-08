@@ -30,6 +30,7 @@ if(WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
+# Prepend so that our FindVulkan gets picked up first
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
@@ -189,6 +190,11 @@ if(NOVELRT_INSTALL)
     FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
           "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
     DESTINATION "${NOVELRT_CONFIG_PATH}")
+
+  install(
+    FILES "${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake"
+    DESTINATION "${NOVELRT_CONFIG_PATH}"
+  )
 
   #Moved to main CMakeLists as headers should always be distributed for now
   install(

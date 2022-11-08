@@ -3,6 +3,7 @@ include(CMakeFindDependencyMacro)
 option(NOVELRT_USE_EXTERNAL "Forcefully look for system libraries instead of assuming NovelRT's versions are located here" OFF)
 set(NOVELRT_INTERNAL_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
+list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 find_dependency(Vulkan REQUIRED)
 
 if(NOVELRT_USE_EXTERNAL)
