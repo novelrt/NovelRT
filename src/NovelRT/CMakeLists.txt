@@ -100,6 +100,7 @@ if(APPLE)
     SOVERSION ${PROJECT_VERSION} 
     NO_SONAME TRUE
   )
+  set(VERBOSE TRUE)
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
   set(NOVELRT_LIB_SUFFIX "dll")

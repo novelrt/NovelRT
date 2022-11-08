@@ -133,7 +133,8 @@ if(APPLE)
     LIBRARY Vorbis::vorbis
     LIBRARY FLAC::FLAC
     LIBRARY Opus::opus
-    LIBRARY Ogg::ogg)
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib)
 endif()
 
 target_link_libraries(Engine_Tests
