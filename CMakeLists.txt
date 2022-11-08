@@ -112,6 +112,7 @@ find_package(nlohmann_json REQUIRED)
 
 if(APPLE)
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
+  set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
 else()
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()

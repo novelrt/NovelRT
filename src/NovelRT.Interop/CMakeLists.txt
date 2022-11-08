@@ -89,6 +89,13 @@ else()
   set_target_properties(Interop PROPERTIES OUTPUT_NAME ${INTEROP_NAME})
 endif()
 
+if(APPLE)
+  set_target_properties(Interop PROPERTIES
+    SOVERSION ${PROJECT_VERSION} 
+    NO_SONAME TRUE
+  )
+endif()
+
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
   PUBLIC
@@ -148,8 +155,9 @@ if(NOVELRT_INSTALL)
   install(
     TARGETS Interop
     EXPORT NovelRT
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    FRAMEWORK DESTINATION lib
   )
 endif()

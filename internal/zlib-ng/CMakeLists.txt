@@ -25,6 +25,7 @@ FetchContent_MakeAvailable(zlib)
 
 set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src;${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
 set(ZLIB_LIBRARY "zlib" CACHE STRING "" FORCE)
+set_target_properties(zlib PROPERTIES NO_SONAME TRUE)
 
 install(EXPORT ZLIBConfig
   DESTINATION lib/cmake/ZLIB

@@ -53,8 +53,21 @@ set(SOURCES
   main.cpp
 )
 
-add_executable(Engine_Tests ${SOURCES})
+
 include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
+
+if(APPLE)
+  add_executable(Engine_Tests MACOSX_BUNDLE ${SOURCES})
+  set_target_properties(Engine_Tests PROPERTIES
+    BUNDLE True
+    MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.Engine_Tests
+    MACOS_BUNDLE_BUNDLE_NAME Engine_Tests
+    MACOSX_BUNDLE_BUNDLE_VERSION "0.1"
+    MACOSX_BUNDLE_SHORT_VERION_STRING "0.1")
+  
+else()
+  add_executable(Engine_Tests ${SOURCES})
+endif()
 
 target_compile_options(Engine_Tests
   PRIVATE
@@ -110,12 +123,32 @@ else()
   )
 endif()
 
+if(APPLE)
+  #set_target_properties(Engine_Tests PROPERTIES BUILD_RPATH "@executable_path/../Frameworks")
+  copy_runtime_dependencies(Engine_Tests
+    LIBRARY GTest::gtest_main
+    LIBRARY GTest::gtest
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg)
+endif()
+
 target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
     GTest::gtest_main
 )
+
+# add_custom_target(CopyGTest
+#   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#     $<TARGET_LINKER_FILE:GTest::gtest_main> $<TARGET_FILE_DIR:Engine_Tests>
+# )
+# add_dependencies(Engine_Tests CopyGTest)
+  
 
 gtest_discover_tests(Engine_Tests
   EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/"

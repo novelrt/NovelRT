@@ -28,7 +28,10 @@ add_dependencies(sndfile FLAC ogg opus vorbis vorbisenc)
 target_include_directories(sndfile PRIVATE ${OGG_INCLUDE_DIR} ${OPUS_INCLUDE_DIR} ${FLAC_INCLUDE_DIR} ${Vorbis_Vorbis_INCLUDE_DIR})
 target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
 
-set_target_properties(sndfile PROPERTIES PUBLIC_HEADER "${sndfile_SOURCE_DIR}/include/sndfile.hh;${sndfile_BINARY_DIR}/include/sndfile.h")
+set_target_properties(sndfile PROPERTIES 
+  PUBLIC_HEADER "${sndfile_SOURCE_DIR}/include/sndfile.hh;${sndfile_BINARY_DIR}/include/sndfile.h"
+)
+set_target_properties(sndfile PROPERTIES NO_SONAME TRUE)
 
 install(EXPORT SndFileTargets
   DESTINATION lib/cmake/SndFile

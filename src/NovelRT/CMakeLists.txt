@@ -96,6 +96,10 @@ endif()
 
 if(APPLE)
   set(NOVELRT_LIB_SUFFIX "dylib")
+  set_target_properties(Engine PROPERTIES
+    SOVERSION ${PROJECT_VERSION} 
+    NO_SONAME TRUE
+  )
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
   set(NOVELRT_LIB_SUFFIX "dll")
@@ -165,11 +169,11 @@ target_link_libraries(Engine
     jsoncons
     stduuid
     fabulist::runtime
-  PRIVATE
     Vorbis::vorbis
     Vorbis::vorbisenc
     FLAC::FLAC
     Opus::opus
+    Ogg::ogg
     $<$<CXX_COMPILER_ID:MSVC>:Winmm>
 )
 
@@ -180,6 +184,7 @@ if(NOVELRT_INSTALL)
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
+    FRAMEWORK DESTINATION lib
   )
 endif()
 
