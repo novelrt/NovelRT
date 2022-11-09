@@ -950,7 +950,7 @@ namespace NovelRT::Maths
          *      &= 23
          * \f}
          *
-         * @param other The other GeoVector2F whos components get multiplied and summed up with this GeoVector2F.
+         * @param other The other GeoVector2F, the components of which get multiplied and summed up with this GeoVector2F.
          * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          */
         inline float Dot(GeoVector2F other) noexcept
@@ -962,7 +962,7 @@ namespace NovelRT::Maths
          * @brief Calculates the distance between this GeoVector2F and another GeoVector2F.
          *
          * @details
-         * An example of getting the distance between two two-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      1\\
          *      2
@@ -996,10 +996,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the square distance between this GeoVector2F and another GeoVector2F.
+         * @brief Calculates the squared distance between this GeoVector2F and another GeoVector2F.
          *
          * @details
-         * An example of getting the square distance between two two-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the squared distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      1\\
          *      2
@@ -1022,8 +1022,8 @@ namespace NovelRT::Maths
          *      &= 36
          * \f}
          *
-         * @param other The other point to meassure the square distance to.
-         * @return The square distance between this GeoVector2F and another GeoVector2F.
+         * @param other The other point to meassure the squared distance to.
+         * @return The squared distance between this GeoVector2F and another GeoVector2F.
          */
         inline float SquaredDistance(GeoVector2F other) noexcept
         {

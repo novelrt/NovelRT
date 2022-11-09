@@ -1032,7 +1032,7 @@ namespace NovelRT::Maths
          * @brief Returns the sum of products of this GeoVector3Fs components and the other GeoVector3Fs components.
          *
          * @details
-         * An example of a dot product between two three-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the dot product can be seen in this example: \f{align*}{
          *      \vec{u} &= \begin{pmatrix}
          *      2\\
          *      3\\
@@ -1050,7 +1050,7 @@ namespace NovelRT::Maths
          *      &= 47
          * \f}
          *
-         * @param other The other GeoVector3F whos components get multiplied and summed up with this GeoVector3F.
+         * @param other The other GeoVector3F, the components of which get multiplied and summed up with this GeoVector3F.
          * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
          * GeoVector3Fs components.
          */
@@ -1100,7 +1100,7 @@ namespace NovelRT::Maths
          * It should be noted that by flipping the left hand side vector with the right hand side vector will result in
          * a cross product of equal length with opposite polarity.
          *
-         * @param other The other GeoVector3F whos components will be used to calculate the cross product with this
+         * @param other The other GeoVector3F, the components of which will be used to calculate the cross product with this
          * GeoVector3F.
          * @return The cross product of this GeoVector3F with another GeoVector3F.
          */
@@ -1113,7 +1113,7 @@ namespace NovelRT::Maths
          * @brief Calculates the distance between this GeoVector3F and another GeoVector3F.
          *
          * @details
-         * An example of getting the distance between two three-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      6\\
          *      8\\
@@ -1151,10 +1151,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the square distance between this GeoVector3F and another GeoVector3F.
+         * @brief Calculates the squared distance between this GeoVector3F and another GeoVector3F.
          *
          * @details
-         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the squared distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      6\\
          *      8\\
@@ -1181,8 +1181,8 @@ namespace NovelRT::Maths
          *      &= 36
          * \f}
          *
-         * @param other The other point to meassure the square distance to.
-         * @return The square distance between this GeoVector3F and another GeoVector3F.
+         * @param other The other point to meassure the squared distance to.
+         * @return The squared distance between this GeoVector3F and another GeoVector3F.
          */
         inline float SquaredDistance(GeoVector3F other) noexcept
         {

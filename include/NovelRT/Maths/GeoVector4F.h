@@ -1136,7 +1136,7 @@ namespace NovelRT::Maths
          * GeoVector4Fs components.
          *
          * @details
-         * An example of a dot product between two four-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the dot product can be seen in this example: \f{align*}{
          *      \vec{u} &= \begin{pmatrix}
          *      2\\
          *      3\\
@@ -1156,7 +1156,7 @@ namespace NovelRT::Maths
          *      &= 82
          * \f}
          *
-         * @param other The other GeoVector4F whos components get multiplied and summed up with this GeoVector4F.
+         * @param other The other GeoVector4F, the components of which get multiplied and summed up with this GeoVector4F.
          * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
          * GeoVector4Fs components.
          */
@@ -1169,7 +1169,7 @@ namespace NovelRT::Maths
          * @brief Calculates the distance between this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of getting the distance between two four-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      3\\
          *      10\\
@@ -1211,10 +1211,10 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Calculates the square distance between this GeoVector4F and another GeoVector4F.
+         * @brief Calculates the squared distance between this GeoVector4F and another GeoVector4F.
          *
          * @details
-         * An example of getting the square distance between two three-dimensional vectors: \f{align*}{
+         * The calculation used to obtain the squared distance can be seen in this example: \f{align*}{
          *      \vec{v}_{1} &= \begin{pmatrix}
          *      3\\
          *      10\\
@@ -1247,7 +1247,7 @@ namespace NovelRT::Maths
          * \f}
          *
          * @param other The other point to meassure the square distance to.
-         * @return The square distance between this GeoVector4F and another GeoVector4F.
+         * @return The squared distance between this GeoVector4F and another GeoVector4F.
          */
         inline float SquaredDistance(GeoVector4F other) noexcept
         {
