@@ -14,7 +14,8 @@ namespace NovelRT::Ecs::UI
                        std::shared_ptr<PluginManagement::IInputPluginProvider> inputPluginProvider,
                        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider,
                        std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> defaultRenderingSystem)
-        : _uiProvider(uiPluginProvider->GetUIProvider())
+        : _uiProvider(uiPluginProvider->GetUIProvider()),
+          _defaultRenderingSystem(std::move(defaultRenderingSystem))
     {
         auto graphicsDevice = defaultRenderingSystem->GetGraphicsDevice();
         auto resourceManager = resourceManagementPluginProvider->GetResourceLoader();
@@ -53,36 +54,20 @@ namespace NovelRT::Ecs::UI
         };
 
         auto signature = graphicsDevice->CreatePipelineSignature(NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha, NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
-        auto pipeline = graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
-
-        std::random_device rd;
-        auto seedData = std::array<int, std::mt19937::state_size> {};
-        std::generate(std::begin(seedData), std::end(seedData), std::ref(rd));
-        std::seed_seq seq(std::begin(seedData), std::end(seedData));
-        std::mt19937 generator(seq);
-        uuids::uuid_random_generator gen{generator};
+        _uiPipeline = graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
         defaultRenderingSystem->UIRenderEvent +=
-            [&, pipeline](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
+            [&](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
         {
             DefaultRenderingSystem& renderingSystem = defaultRenderingSystem.get();
 
-            ImGui::Render();
-            const ImDrawData* drawData = ImGui::GetDrawData();
+            
+            /*
+            auto cmdListSubmissionInfo = _submissionInfoQueue.front();
+            _submissionInfoQueue.pop();
 
-            for (size_t listIndex = 0; listIndex < drawData->CmdListsCount; listIndex++)
+            for (cmdListSubmissionInfo)
             {
-                auto listIndexStr = std::to_string(listIndex);
-                auto drawList = drawData->CmdLists[listIndex];
-                FutureResult<VertexInfo> vertexInfo = renderingSystem.LoadVertexDataRaw<ImDrawVert>(
-                    "ImGuiVertices" + listIndexStr,
-                    gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
-                FutureResult<VertexInfo> indexInfo = renderingSystem.LoadVertexDataRaw<ImDrawIdx>(
-                    "ImGuiIndices" + listIndexStr,
-                    gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
-
-                renderingSystem.ForceVertexTextureFutureResolution();
-
                 for (int n = 0; n < drawList->CmdBuffer.Size; n++)
                 {
                     const ImDrawCmd* drawCmd = &drawList->CmdBuffer[n];
@@ -90,20 +75,50 @@ namespace NovelRT::Ecs::UI
                         *reinterpret_cast<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>*>(drawCmd->GetTexID());
                     std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> resources{
                         eventArgs.frameMatrixConstantBufferRegion, tex};
-                    unused(eventArgs.graphicsDevice->CreatePrimitive(
-                        pipeline, vertexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
-                        indexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd->ElemCount, resources));
+
+                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
+                        _uiPipeline, vertexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
+                        indexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd->ElemCount, resources);
+                    eventArgs.graphicsContext->Draw(primitive, 1, drawCmd->IdxOffset, drawCmd->VtxOffset, 0);
+
                 }
             }
+             */
         };
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
-        //UNREFERENCED_PARAMETER(catalogue);
-
+        unused(catalogue);
         _uiProvider->BeginFrame(delta.getSecondsDouble());
         Draw(*this, delta, catalogue);
         _uiProvider->EndFrame();
+
+        ImGui::Render();
+        const ImDrawData* drawData = ImGui::GetDrawData();
+
+        for (size_t listIndex = 0; listIndex < drawData->CmdListsCount; listIndex++)
+        {
+            CmdListSubmissionInfo listSubmissionInfo;
+            auto drawList = drawData->CmdLists[listIndex];
+            auto listIndexStr = std::to_string(listIndex);
+            auto queueSizeStr = std::to_string(_submissionInfoQueue.size() + _gpuObjectsToCleanUp.size());
+            FutureResult<VertexInfo> vertexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawVert>(
+                std::string("ImGuiVertices").append(queueSizeStr).append("-").append(listIndexStr),
+                gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
+            FutureResult<VertexInfo> indexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawIdx>(
+                std::string("ImGuiIndices").append(queueSizeStr).append("-").append(listIndexStr),
+                gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
+
+            listSubmissionInfo.Vertices = vertexInfo;
+            listSubmissionInfo.Indices = indexInfo;
+
+            for(auto&& cmd : drawList->CmdBuffer)
+            {
+                listSubmissionInfo.Cmds.emplace_back(CmdSubmissionInfo{ cmd.VtxOffset, cmd.IdxOffset });
+            }
+
+            _submissionInfoQueue.emplace(listSubmissionInfo);
+        }
     }
 }

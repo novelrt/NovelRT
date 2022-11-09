@@ -463,7 +463,7 @@ namespace NovelRT::Graphics::Vulkan
 
             vkCmdDrawIndexed(vulkanCommandBuffer,
                              primitive->ShouldUseExplicitElementCount() ? primitive->GetExplicitElementCount() : static_cast<uint32_t>(indexBufferRegion.GetSize() / indexBufferStride), instanceCount, firstIndex,
-                             vertexOffset, firstInstance);
+                             vertexOffset, firstInstance); // TODO: FUCK THIS IS BROKEN AAAA HOW DO I APPLY BOTH VERTEX AND INDEX OFFSETS OH NOOOOOOOOOO
         }
         else
         {

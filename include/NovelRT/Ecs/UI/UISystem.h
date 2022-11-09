@@ -13,8 +13,27 @@ namespace NovelRT::Ecs::UI
     class UISystem : public Ecs::IEcsSystem
     {
     private:
+        struct CmdSubmissionInfo
+        {
+            uint32_t vertexOffset;
+            uint32_t indexOffset;
+        };
+
+        struct CmdListSubmissionInfo
+        {
+            Threading::FutureResult<Graphics::VertexInfo> Vertices = Threading::FutureResult<Graphics::VertexInfo>(nullptr, Graphics::VertexInfo{});
+            Threading::FutureResult<Graphics::VertexInfo> Indices = Threading::FutureResult<Graphics::VertexInfo>(nullptr, Graphics::VertexInfo{});
+            std::vector<CmdSubmissionInfo> Cmds;
+        };
+
+
         LoggingService _logger;
         std::shared_ptr<NovelRT::UI::UIProvider> _uiProvider;
+        std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> _defaultRenderingSystem;
+        std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> _uiPipeline;
+        std::queue<CmdListSubmissionInfo> _submissionInfoQueue;
+        std::vector<Threading::FutureResult<Graphics::VertexInfo>> _gpuObjectsToCleanUp;
+
 
     public:
         UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
