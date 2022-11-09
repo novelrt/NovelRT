@@ -98,6 +98,14 @@ namespace NovelRT::Ecs::UI
                 }
             }
         };
+
+        // TEST CODE - DELETE WHEN DONE
+
+        Draw += [&](auto, auto, auto) {
+            ImGui::Text("Hello, NovelRT!");
+        };
+
+        // END TEST CODE
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
@@ -133,6 +141,11 @@ namespace NovelRT::Ecs::UI
             }
 
             listSubmissionInfos.emplace_back(listSubmissionInfo);
+        }
+
+        if (listSubmissionInfos.empty())
+        {
+            return;
         }
 
         std::scoped_lock lock(_submissionInfoListMutex);

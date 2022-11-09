@@ -71,6 +71,7 @@ namespace NovelRT::UI::DearImGui
 
         auto graphicsContext = graphicsDevice->GetCurrentContext();
 
+        graphicsContext->BeginFrame();
         auto textureStagingBuffer = graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write, Graphics::GraphicsResourceAccess::Read, 64 * 1024 * 4);
 

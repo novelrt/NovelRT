@@ -39,7 +39,6 @@ namespace NovelRT::Ecs::UI
 
         size_t _drawCallCounter;
 
-
     public:
         UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
                  std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
