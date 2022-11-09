@@ -1094,10 +1094,7 @@ namespace NovelRT::Maths
                                          const GeoVector4F& point,
                                          const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
-            *reinterpret_cast<glm::vec4*>(this) =
-                glm::rotate((*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&point)),
-                            glm::radians(angleRotationValue), *reinterpret_cast<const glm::vec3*>(&axis)) +
-                *reinterpret_cast<const glm::vec4*>(&point);
+            RotateToAngleAroundPointRad(glm::radians(angleRotationValue), point, axis);
         }
 
         /**

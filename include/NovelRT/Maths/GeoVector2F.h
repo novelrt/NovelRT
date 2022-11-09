@@ -893,11 +893,7 @@ namespace NovelRT::Maths
          */
         void RotateToAngleAroundPointDeg(float angleRotationValue, GeoVector2F point) noexcept
         {
-            *reinterpret_cast<glm::vec2*>(this) =
-                glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) -
-                                                                   *reinterpret_cast<const glm::vec2*>(&point)),
-                            glm::radians(angleRotationValue)) +
-                *reinterpret_cast<const glm::vec2*>(&point);
+            RotateToAngleAroundPointRad(glm::radians(angleRotationValue), point);
         }
 
         /**
