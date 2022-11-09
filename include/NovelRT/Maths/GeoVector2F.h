@@ -946,7 +946,8 @@ namespace NovelRT::Maths
          *      &= 23
          * \f}
          *
-         * @param other The other GeoVector2F, the components of which get multiplied and summed up with this GeoVector2F.
+         * @param other The other GeoVector2F, the components of which get multiplied and summed up with this
+         * GeoVector2F.
          * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          */
         inline float Dot(GeoVector2F other) noexcept

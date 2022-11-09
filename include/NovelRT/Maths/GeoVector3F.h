@@ -1047,7 +1047,8 @@ namespace NovelRT::Maths
          *      &= 47
          * \f}
          *
-         * @param other The other GeoVector3F, the components of which get multiplied and summed up with this GeoVector3F.
+         * @param other The other GeoVector3F, the components of which get multiplied and summed up with this
+         * GeoVector3F.
          * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
          * GeoVector3Fs components.
          */
@@ -1097,8 +1098,8 @@ namespace NovelRT::Maths
          * It should be noted that by flipping the left hand side vector with the right hand side vector will result in
          * a cross product of equal length with opposite polarity.
          *
-         * @param other The other GeoVector3F, the components of which will be used to calculate the cross product with this
-         * GeoVector3F.
+         * @param other The other GeoVector3F, the components of which will be used to calculate the cross product with
+         * this GeoVector3F.
          * @return The cross product of this GeoVector3F with another GeoVector3F.
          */
         inline GeoVector3F Cross(GeoVector3F other) noexcept

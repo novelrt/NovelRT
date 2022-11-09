@@ -1153,7 +1153,8 @@ namespace NovelRT::Maths
          *      &= 82
          * \f}
          *
-         * @param other The other GeoVector4F, the components of which get multiplied and summed up with this GeoVector4F.
+         * @param other The other GeoVector4F, the components of which get multiplied and summed up with this
+         * GeoVector4F.
          * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
          * GeoVector4Fs components.
          */
