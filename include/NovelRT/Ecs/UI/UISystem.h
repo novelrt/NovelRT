@@ -17,6 +17,8 @@ namespace NovelRT::Ecs::UI
         {
             uint32_t vertexOffset;
             uint32_t indexOffset;
+            uint32_t elementCount;
+            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> textureData;
         };
 
         struct CmdListSubmissionInfo
@@ -31,8 +33,11 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::UI::UIProvider> _uiProvider;
         std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> _defaultRenderingSystem;
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> _uiPipeline;
-        std::queue<CmdListSubmissionInfo> _submissionInfoQueue;
+        tbb::mutex _submissionInfoListMutex;
+        std::queue<std::vector<CmdListSubmissionInfo>> _submissionInfoListQueue;
         std::vector<Threading::FutureResult<Graphics::VertexInfo>> _gpuObjectsToCleanUp;
+
+        size_t _drawCallCounter;
 
 
     public:

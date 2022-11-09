@@ -15,9 +15,14 @@ namespace NovelRT::Ecs::UI
                        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider,
                        std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> defaultRenderingSystem)
         : _uiProvider(uiPluginProvider->GetUIProvider()),
-          _defaultRenderingSystem(std::move(defaultRenderingSystem))
+          _defaultRenderingSystem(std::move(defaultRenderingSystem)),
+          _uiPipeline(nullptr),
+          _submissionInfoListMutex(),
+          _submissionInfoListQueue{},
+          _gpuObjectsToCleanUp{},
+          _drawCallCounter(0)
     {
-        auto graphicsDevice = defaultRenderingSystem->GetGraphicsDevice();
+        auto graphicsDevice = _defaultRenderingSystem->GetGraphicsDevice();
         auto resourceManager = resourceManagementPluginProvider->GetResourceLoader();
         _uiProvider->Initialise(windowingPluginProvider->GetWindowingDevice(), inputPluginProvider->GetInputService(), graphicsDevice);
 
@@ -56,34 +61,42 @@ namespace NovelRT::Ecs::UI
         auto signature = graphicsDevice->CreatePipelineSignature(NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha, NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
         _uiPipeline = graphicsDevice->CreatePipeline(signature, vertexShaderProgram, pixelShaderProgram);
 
-        defaultRenderingSystem->UIRenderEvent +=
-            [&](auto defaultRenderingSystem, Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
+        _defaultRenderingSystem->UIRenderEvent +=
+            [&](auto , Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
         {
-            DefaultRenderingSystem& renderingSystem = defaultRenderingSystem.get();
+            std::vector<CmdListSubmissionInfo> finalCmdListSubmissionInfosForFrame{};
 
-            
-            /*
-            auto cmdListSubmissionInfo = _submissionInfoQueue.front();
-            _submissionInfoQueue.pop();
-
-            for (cmdListSubmissionInfo)
+            if (!_submissionInfoListQueue.empty())
             {
-                for (int n = 0; n < drawList->CmdBuffer.Size; n++)
+                std::scoped_lock lock(_submissionInfoListMutex);
+                auto cmdListSubmissionInfos = _submissionInfoListQueue.front();
+
+                auto& drawData = cmdListSubmissionInfos.at(0);
+                if (drawData.Vertices.IsValueCreated() && drawData.Indices.IsValueCreated())
                 {
-                    const ImDrawCmd* drawCmd = &drawList->CmdBuffer[n];
-                    auto tex =
-                        *reinterpret_cast<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>*>(drawCmd->GetTexID());
-                    std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> resources{
-                        eventArgs.frameMatrixConstantBufferRegion, tex};
-
-                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
-                        _uiPipeline, vertexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
-                        indexInfo.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd->ElemCount, resources);
-                    eventArgs.graphicsContext->Draw(primitive, 1, drawCmd->IdxOffset, drawCmd->VtxOffset, 0);
-
+                    finalCmdListSubmissionInfosForFrame = cmdListSubmissionInfos;
+                    _submissionInfoListQueue.pop();
                 }
             }
-             */
+
+            if (finalCmdListSubmissionInfosForFrame.empty())
+            {
+                return;
+            }
+
+            for(auto&& cmdListSubmissionInfo : finalCmdListSubmissionInfosForFrame)
+            {
+                for (auto&& drawCmd : cmdListSubmissionInfo.Cmds)
+                {
+                    std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
+                        resources{eventArgs.frameMatrixConstantBufferRegion, drawCmd.textureData};
+
+                    auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
+                        _uiPipeline, cmdListSubmissionInfo.Vertices.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
+                        cmdListSubmissionInfo.Indices.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd.elementCount, resources);
+                    eventArgs.graphicsContext->Draw(primitive, 1, drawCmd.indexOffset, static_cast<int32_t>(drawCmd.vertexOffset), 0);
+                }
+            }
         };
     }
 
@@ -97,17 +110,18 @@ namespace NovelRT::Ecs::UI
         ImGui::Render();
         const ImDrawData* drawData = ImGui::GetDrawData();
 
+        std::vector<CmdListSubmissionInfo> listSubmissionInfos{};
+
         for (size_t listIndex = 0; listIndex < drawData->CmdListsCount; listIndex++)
         {
             CmdListSubmissionInfo listSubmissionInfo;
             auto drawList = drawData->CmdLists[listIndex];
-            auto listIndexStr = std::to_string(listIndex);
-            auto queueSizeStr = std::to_string(_submissionInfoQueue.size() + _gpuObjectsToCleanUp.size());
+            auto drawCallCounterStr =_drawCallCounter++;
             FutureResult<VertexInfo> vertexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawVert>(
-                std::string("ImGuiVertices").append(queueSizeStr).append("-").append(listIndexStr),
+                "ImGuiVertices" + std::to_string(drawCallCounterStr),
                 gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
             FutureResult<VertexInfo> indexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawIdx>(
-                std::string("ImGuiIndices").append(queueSizeStr).append("-").append(listIndexStr),
+                "ImGuiIndices" + std::to_string(drawCallCounterStr),
                 gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
 
             listSubmissionInfo.Vertices = vertexInfo;
@@ -115,10 +129,13 @@ namespace NovelRT::Ecs::UI
 
             for(auto&& cmd : drawList->CmdBuffer)
             {
-                listSubmissionInfo.Cmds.emplace_back(CmdSubmissionInfo{ cmd.VtxOffset, cmd.IdxOffset });
+                listSubmissionInfo.Cmds.emplace_back(CmdSubmissionInfo{ cmd.VtxOffset, cmd.IdxOffset, cmd.ElemCount, *reinterpret_cast<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>*>(cmd.GetTexID()) });
             }
 
-            _submissionInfoQueue.emplace(listSubmissionInfo);
+            listSubmissionInfos.emplace_back(listSubmissionInfo);
         }
+
+        std::scoped_lock lock(_submissionInfoListMutex);
+        _submissionInfoListQueue.emplace(listSubmissionInfos);
     }
 }
