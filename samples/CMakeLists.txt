@@ -1,5 +1,6 @@
 include(CopyBuildProducts)
 include(CopyRuntimeDependencies)
+include(WriteMoltenVKICD)
 
 add_subdirectory(Experimental)
 add_subdirectory(EcsPipeline)
