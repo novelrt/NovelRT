@@ -153,10 +153,10 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     transformBuffer.PushComponentUpdateInstruction(
         0, childOfChildEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
@@ -182,9 +182,8 @@ int main()
             secondsPassed = NovelRT::Timing::Timestamp(0);
             chapterToLoad.LoadFileData(
                 resourceManagementProvider->GetResourceLoader()->LoadPackage("MyChapter.chapter"));
-            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT TO
-            // SEE THE FILE SIZE GROW
-            // FOREVER, UNCOMMENT THIS!
+            // chapterToLoad.ToEcsInstance(scheduler.GetComponentCache(), scheduler.GetEntityCache()); //IF YOU WANT
+            // TO SEE THE FILE SIZE GROW FOREVER, UNCOMMENT THIS!
         }
         else if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(1.5f) && !fileSaved)
         {
@@ -199,10 +198,10 @@ int main()
             for (auto [entity, transform] : transforms)
             {
                 TransformComponent newComponent{};
-                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+                newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
                 newComponent.rotationInRadians =
                     NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-                newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+                newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
                 transforms.PushComponentUpdateInstruction(entity, newComponent);
             }
         }

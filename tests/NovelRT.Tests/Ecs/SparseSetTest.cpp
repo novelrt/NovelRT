@@ -78,17 +78,17 @@ TEST(SparseSetTest, CanUseStruct)
         int32_t fieldOne = 1;
         void* fieldTwo = nullptr;
         bool fieldThree = false;
-        Maths::GeoVector3F fieldFour = Maths::GeoVector3F::one();
+        Maths::GeoVector3F fieldFour = Maths::GeoVector3F::One();
     };
 
     SparseSet<EntityId, MyAwesomeStruct> testSet{};
     testSet.Insert(0, MyAwesomeStruct{});
     EXPECT_EQ(testSet[0].fieldOne, 1);
-    EXPECT_EQ(testSet[0].fieldFour, Maths::GeoVector3F::one());
+    EXPECT_EQ(testSet[0].fieldFour, Maths::GeoVector3F::One());
 
     for (auto [entity, component] : testSet)
     {
         EXPECT_EQ(component.fieldOne, 1);
-        EXPECT_EQ(component.fieldFour, Maths::GeoVector3F::one());
+        EXPECT_EQ(component.fieldFour, Maths::GeoVector3F::One());
     }
 }

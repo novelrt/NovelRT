@@ -54,10 +54,10 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     transformBuffer.PushComponentUpdateInstruction(
         0, childOfChildEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
@@ -68,7 +68,7 @@ int main()
         {
             TransformComponent newComponent{};
             newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
             transforms.PushComponentUpdateInstruction(entity, newComponent);
         }
     });
