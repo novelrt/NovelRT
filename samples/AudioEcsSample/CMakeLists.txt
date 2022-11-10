@@ -25,7 +25,7 @@ target_link_libraries(AudioEcsSample
 
 copy_build_products(AudioEcsSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:AudioEcsSample>/Resources
+  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:AudioEcsSample>/../Resources,$<TARGET_FILE_DIR:AudioEcsSample>/Resources>
 )
 
 if(APPLE)
