@@ -94,6 +94,10 @@ namespace NovelRT::Windowing::Glfw
         {
             requiredExtensions.emplace_back(extensions[i]);
         }
+
+#ifdef __APPLE__
+        requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+#endif
     }
 
     void GlfwWindowingDevice::TearDown() noexcept
