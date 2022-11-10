@@ -21,4 +21,6 @@ set(SPDLOG_ENABLE_PCH ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(spdlog)
 
 set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)
-set_target_properties(spdlog PROPERTIES NO_SONAME TRUE)
+if(APPLE)
+  set_target_properties(spdlog PROPERTIES NO_SONAME TRUE)
+endif()

@@ -31,7 +31,9 @@ target_link_libraries(sndfile PRIVATE ogg vorbis vorbisenc opus FLAC)
 set_target_properties(sndfile PROPERTIES 
   PUBLIC_HEADER "${sndfile_SOURCE_DIR}/include/sndfile.hh;${sndfile_BINARY_DIR}/include/sndfile.h"
 )
-set_target_properties(sndfile PROPERTIES NO_SONAME TRUE)
+if(APPLE)
+  set_target_properties(sndfile PROPERTIES NO_SONAME TRUE)
+endif()
 
 install(EXPORT SndFileTargets
   DESTINATION lib/cmake/SndFile

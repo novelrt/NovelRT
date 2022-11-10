@@ -23,5 +23,8 @@ set(BUILD_TESTING OFF CACHE BOOL "Build tests" FORCE)
 FetchContent_MakeAvailable(opus)
 set(OPUS_LIBRARY "opus" CACHE STRING "Set Opus libraries" FORCE)
 set(OPUS_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" CACHE STRING "Set Opus include dirs" FORCE)
-set_target_properties(opus PROPERTIES NO_SONAME TRUE)
+
+if(APPLE)
+  set_target_properties(opus PROPERTIES NO_SONAME TRUE)
+endif()
 #need to stop tests from building
