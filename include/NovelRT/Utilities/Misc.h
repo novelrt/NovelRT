@@ -40,11 +40,7 @@ namespace NovelRT::Utilities
          */
         static std::filesystem::path getExecutableDirPath()
         {
-#ifdef __APPLE__
-            return getExecutablePath();
-#else
             return getExecutablePath().parent_path();
-#endif
         }
 
         [[nodiscard]] static std::vector<const char*> GetStringSpanAsCharPtrVector(

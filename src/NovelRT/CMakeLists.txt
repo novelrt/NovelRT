@@ -176,6 +176,7 @@ target_link_libraries(Engine
     Opus::opus
     Ogg::ogg
     $<$<CXX_COMPILER_ID:MSVC>:Winmm>
+    $<$<BOOL:APPLE>:${COREFOUNDATION}>
 )
 
 if(NOVELRT_INSTALL)

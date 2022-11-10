@@ -5,6 +5,8 @@ if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif()
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
+
 project(NovelRT
   VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"
@@ -113,6 +115,7 @@ find_package(nlohmann_json REQUIRED)
 
 if(APPLE)
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
+  find_library(COREFOUNDATION CoreFoundation "/")
   set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
 else()
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
