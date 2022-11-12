@@ -134,8 +134,8 @@ namespace NovelRT::Graphics::Vulkan
         uint64_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
-        size_t offset = GetOffset() + readRangeOffset;
-        size_t size = (readRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
+        size_t offset = Maths::Utilities::AlignDown(GetOffset() + readRangeOffset, nonCoherentAtomSize);
+        size_t size = Maths::Utilities::AlignUp(readRangeLength, nonCoherentAtomSize);
 
         VkMappedMemoryRange mappedMemoryRange{};
         mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -175,8 +175,8 @@ namespace NovelRT::Graphics::Vulkan
         uint64_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
-        size_t offset = GetOffset();
-        size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
+        size_t offset = Maths::Utilities::AlignDown(GetOffset(), nonCoherentAtomSize);
+        size_t size = Maths::Utilities::AlignUp(GetSize(), nonCoherentAtomSize);
 
         VkMappedMemoryRange mappedMemoryRange{};
         mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -205,8 +205,8 @@ namespace NovelRT::Graphics::Vulkan
         uint64_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
-        size_t offset = GetOffset() + writtenRangeOffset;
-        size_t size = (writtenRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
+        size_t offset = Maths::Utilities::AlignDown(GetOffset() + writtenRangeOffset, nonCoherentAtomSize);
+        size_t size = Maths::Utilities::AlignUp(writtenRangeLength + nonCoherentAtomSize, nonCoherentAtomSize);
 
         VkMappedMemoryRange mappedMemoryRange{};
         mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;

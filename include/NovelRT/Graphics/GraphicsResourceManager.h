@@ -64,9 +64,15 @@ namespace NovelRT::Graphics
         }
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexDataUntyped(void* data,
+<<<<<<< HEAD
                                                                                   size_t dataTypeSize,
                                                                                   size_t dataLength,
                                                                                   size_t alignment = 64);
+=======
+                                                                                   size_t dataTypeSize,
+                                                                                   size_t dataLength,
+                                                                                   size_t alignment = 64);
+>>>>>>> ea2f9b0b (Fix Vulkan validation error.)
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
             const ResourceManagement::TextureMetadata& metadata,
