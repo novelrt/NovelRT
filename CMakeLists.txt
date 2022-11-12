@@ -56,7 +56,7 @@ set(NOVELRT_PNG_VERSION "1.6.35" CACHE STRING "PNG version")
 set(NOVELRT_SNDFILE_VERSION "1.1.0" CACHE STRING "SndFile version")
 set(NOVELRT_SPDLOG_VERSION "1.10.0" CACHE STRING "spdlog version")
 set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Vorbis version")
-set(NOVELRT_VULKAN_VERSION "1.3.211" CACHE STRING "Vulkan version")
+set(NOVELRT_VULKAN_VERSION "1.3.231" CACHE STRING "Vulkan version")
 
 #
 # Allow for generating documentation
@@ -65,6 +65,19 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
     COMPONENTS dot
   )
+endif()
+
+#
+# Do a Vulkan check before we bother getting other deps
+# since we scaffold the others
+#
+if(APPLE)
+  message(STATUS "Vulkan SDK variable: $ENV{VULKAN_SDK}")
+  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
+  find_library(COREFOUNDATION CoreFoundation "/")
+  set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
+else()
+  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
 #
@@ -113,13 +126,7 @@ find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-if(APPLE)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
-  find_library(COREFOUNDATION CoreFoundation "/")
-  set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
-else()
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
+
 
 if(NOVELRT_DEPS_INSTALLED)
   #CMake-standard FindZLIB breaks runtime deps for Windows

@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: $GITHUB_WORKSPACE/VulkanSDK
-          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/libvulkan.dylib') }}
+          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
           restore-keys: |
             ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
 
