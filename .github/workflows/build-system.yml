@@ -17,6 +17,7 @@ jobs:
       matrix:
         configuration: [Debug, Release]
         os: [windows-latest, windows-2019, ubuntu-latest, macos-11]
+        vulkanVersion: [1.3.231.1]
         include:
         - os: ubuntu-latest
           container: novelrt/novelrt-build:latest
@@ -29,26 +30,37 @@ jobs:
           name: Windows - Visual Studio 2022
         - os: macos-11
           name: macOS 11 - Apple-Clang 13
-          vulkan: VULKAN_SDK=$VULKAN_SDK/macOS  #HumbleTim's installer doesn't append macOS for us
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Install Vulkan SDK (macOS)
-        uses: humbletim/install-vulkan-sdk@v1.1.1
+      - name: Cache Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos')"
+        id: cache-vulkan-macOS
+        uses: actions/cache@v3
         with:
-          version: 1.3.231.1
-          cache: true
+          path: $GITHUB_WORKSPACE/VulkanSDK
+          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/libvulkan.dylib') }}
+          restore-keys: |
+            ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
+
+      - name: Install Vulkan SDK (macOS)
+        if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
+        id: install-vulkan-macOS
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/VulkanSDK
 
       - name: Install Vulkan SDK (Windows)
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         if: "contains(matrix.os, 'windows')"
         with:
-          vulkan-query-version: 1.3.231.1
+          vulkan-query-version: ${{ matrix.vulkanVersion }}
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
+
+      - name: Restore Vulkan SDK Env. Variable (macOS)
+        if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
+        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
 
       - uses: novelrt/setup-cpp@v1
       - name: Build NovelRT - ${{ matrix.configuration }}
