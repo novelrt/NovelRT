@@ -27,7 +27,7 @@ else
                 echo "Mounted dmg image: '$RUNNER_TEMP/vulkan_sdk.dmg' (mountpoint=$mountpoint)" >&2
             else
                 echo "Could not mount dmg image: $RUNNER_TEMP/vulkan_sdk.dmg (mountpoint=$mountpoint)" >&2
-                exit 7
+                exit -1
             fi
 
             sudo $mountpoint/InstallVulkan.app/Contents/MacOS/InstallVulkan --root "$sdk_path" --accept-licenses --default-answer --confirm-command install
@@ -35,8 +35,21 @@ else
 
             #Write the VULKAN_SDK env var to the Github Environment variables
             echo "VULKAN_SDK=$sdk_path/$version/macOS" >> $GITHUB_ENV
+            if test -f $sdk_path/$version/macOS/lib/libvulkan.dylib; then
+                echo "Found libvulkan.dylib!"
+            else
+                echo "Could not find libvulkan.dylib!"
+                exit -1
+            fi
+            if test -f $sdk_path/$version/MoltenVK/dylib/macOS/libMoltenVK.dylib; then
+                echo "Found MoltenVK!"
+            else
+                echo "Could not find MoltenVK!"
+                exit -1
+            fi
         else
             echo "Could not download Vulkan SDK! Check curl output for more information."
+            exit -1
         fi
     fi
 fi
