@@ -30,7 +30,7 @@ else
                 exit -1
             fi
 
-            sudo $mountpoint/InstallVulkan.app/Contents/MacOS/InstallVulkan --root "$sdk_path" --accept-licenses --default-answer --confirm-command install
+            sudo $mountpoint/InstallVulkan.app/Contents/MacOS/InstallVulkan --root "$sdk_path/$version" --accept-licenses --default-answer --confirm-command install
             hdiutil detach $mountpoint
 
             #Write the VULKAN_SDK env var to the Github Environment variables
