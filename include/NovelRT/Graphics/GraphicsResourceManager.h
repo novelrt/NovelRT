@@ -61,7 +61,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexDataUntyped(void* data,
                                                                                    size_t dataTypeSize,
                                                                                    size_t dataLength,
-                                                                                   size_t alignment = 16);
+                                                                                   size_t alignment = 64);
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
             const ResourceManagement::TextureMetadata& metadata,
