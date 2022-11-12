@@ -16,23 +16,28 @@ else
         echo "Downloading Vulkan SDK v.$version"
 
         #Download the SDK
+        cat > $sdk_path/vulkan_sdk.dmg
         curl -L -o $sdk_path/vulkan_sdk.dmg $url
+        if test -f $sdk_path/vulkan_sdk.dmg; then
 
-        #Mount the dmg
-        test -f $sdk_path/vulkan_sdk.dmg
-        mountpoint=$(hdiutil attach $sdk_path/vulkan_sdk.dmg | grep -o "\S.*vulkansdk-.*" | awk 'END {print $NF}')
-        if [[ -d $mountpoint ]] ; then
-            echo "Mounted dmg image: '$sdk_path/vulkan_sdk.dmg' (mountpoint=$mountpoint)" >&2
+            #Mount the dmg
+            test -f $sdk_path/vulkan_sdk.dmg
+            mountpoint=$(hdiutil attach $sdk_path/vulkan_sdk.dmg | grep -o "\S.*vulkansdk-.*" | awk 'END {print $NF}')
+            if [[ -d $mountpoint ]] ; then
+                echo "Mounted dmg image: '$sdk_path/vulkan_sdk.dmg' (mountpoint=$mountpoint)" >&2
+            else
+                echo "Could not mount dmg image: $sdk_path/vulkan_sdk.dmg (mountpoint=$mountpoint)" >&2
+                exit 7
+            fi
+
+            sudo $mountpoint/InstallVulkan.app/Contents/MacOS/InstallVulkan --root "$sdk_path" --accept-licenses --default-answer --confirm-command install
+            hdiutil detach $mountpoint
+            rm $sdk_path/vulkan_sdk.dmg
+
+            #Write the VULKAN_SDK env var to the Github Environment variables
+            echo "VULKAN_SDK=$sdk_path/$version/macOS" >> $GITHUB_ENV
         else
-            echo "Could not mount dmg image: $sdk_path/vulkan_sdk.dmg (mountpoint=$mountpoint)" >&2
-            exit 7
+            echo "Could not download Vulkan SDK! Check curl output for more information."
         fi
-
-        sudo $mountpoint/InstallVulkan.app/Contents/MacOS/InstallVulkan --root "$sdk_path" --accept-licenses --default-answer --confirm-command install
-        hdiutil detach $mountpoint
-        rm $sdk_path/vulkan_sdk.dmg
-
-        #Write the VULKAN_SDK env var to the Github Environment variables
-        echo "VULKAN_SDK=$sdk_path/$version/macOS" >> $GITHUB_ENV
     fi
 fi
