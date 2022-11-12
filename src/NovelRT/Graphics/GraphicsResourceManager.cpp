@@ -2,6 +2,7 @@
 // for more information.
 
 #include "NovelRT/Graphics/Graphics.h"
+#include "NovelRT/Graphics/GraphicsResourceManager.h"
 
 namespace NovelRT::Graphics
 {
@@ -18,13 +19,13 @@ namespace NovelRT::Graphics
     }
 
     GraphicsResourceManager::GraphicsResourceManager(const GraphicsResourceManager& other)
-        : _stagingBuffer(nullptr), _vertexBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
+        : _stagingBuffer(nullptr), _defaultBuffers{}, _vertexBuffers{}, _indexBuffers{}, _constantBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
     {
         *this = other;
     }
 
     GraphicsResourceManager::GraphicsResourceManager(GraphicsResourceManager&& other) noexcept
-        : _stagingBuffer(nullptr), _vertexBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
+        : _stagingBuffer(nullptr), _defaultBuffers{}, _vertexBuffers{}, _indexBuffers{}, _constantBuffers{}, _textures{}, _graphicsDevice(nullptr), _stagingBufferSize(0)
     {
         *this = std::move(other);
     }
@@ -39,7 +40,10 @@ namespace NovelRT::Graphics
         _graphicsDevice = other._graphicsDevice;
         _stagingBuffer = Utilities::Lazy<std::shared_ptr<GraphicsBuffer>>([&]() { return CreateStagingBuffer(); });
         _stagingBufferSize = other._stagingBufferSize;
+        _defaultBuffers = {};
         _vertexBuffers = {};
+        _indexBuffers = {};
+        _constantBuffers = {};
         _textures = {};
 
         return *this;
@@ -56,7 +60,10 @@ namespace NovelRT::Graphics
             other._stagingBuffer.reset();
         }
 
+        _defaultBuffers = std::move(other._defaultBuffers);
         _vertexBuffers = std::move(other._vertexBuffers);
+        _indexBuffers = std::move(other._indexBuffers);
+        _constantBuffers = std::move(other._constantBuffers);
         _textures = std::move(other._textures);
         _stagingBufferSize = other._stagingBufferSize;
         other._stagingBufferSize = 0;
@@ -75,7 +82,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsBuffer> stagingBuffer =
             GetStagingBufferWithProperSizeHandling(sizeToStage, currentContext);
 
-        std::shared_ptr<GraphicsBuffer> vertexBuffer = GetOrCreateGraphicsBufferForAllocationSize(sizeToStage);
+        std::shared_ptr<GraphicsBuffer> vertexBuffer = GetOrCreateGraphicsBufferForAllocationSize(sizeToStage, GraphicsBufferKind::Vertex);
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
 #ifdef WIN32
@@ -92,6 +99,36 @@ namespace NovelRT::Graphics
         currentContext->BeginFrame();
 
         return vertexRegion;
+    }
+
+    GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadIndexDataUntyped(void* data,
+                                                                                         size_t dataTypeSize,
+                                                                                         size_t dataLength,
+                                                                                         size_t alignment)
+    {
+        size_t sizeToStage = dataTypeSize * dataLength;
+        auto currentContext = _graphicsDevice->GetCurrentContext();
+
+        std::shared_ptr<GraphicsBuffer> stagingBuffer =
+            GetStagingBufferWithProperSizeHandling(sizeToStage, currentContext);
+
+        std::shared_ptr<GraphicsBuffer> indexBuffer = GetOrCreateGraphicsBufferForAllocationSize(sizeToStage, GraphicsBufferKind::Index);
+        auto indexRegion = indexBuffer->Allocate(sizeToStage, alignment);
+        auto writeArea = stagingBuffer->Map<uint8_t>(indexRegion);
+#ifdef WIN32
+        memcpy_s(writeArea, sizeToStage, data, sizeToStage);
+#else
+        memcpy(writeArea, data, sizeToStage);
+#endif
+        stagingBuffer->UnmapAndWrite(indexRegion);
+        currentContext->Copy(indexBuffer, stagingBuffer);
+
+        currentContext->EndFrame();
+        _graphicsDevice->Signal(currentContext->GetFence());
+        _graphicsDevice->WaitForIdle();
+        currentContext->BeginFrame();
+
+        return indexRegion;
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetStagingBufferWithProperSizeHandling(
@@ -123,9 +160,27 @@ namespace NovelRT::Graphics
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetOrCreateGraphicsBufferForAllocationSize(
-        size_t allocationSize)
+        size_t allocationSize, GraphicsBufferKind bufferKind)
     {
-        for (auto&& buffer : _vertexBuffers)
+        std::vector<std::shared_ptr<GraphicsBuffer>>* buffers = nullptr;
+
+        switch (bufferKind)
+        {
+            case GraphicsBufferKind::Default:
+                buffers = &_defaultBuffers;
+                break;
+            case GraphicsBufferKind::Vertex:
+                buffers = &_vertexBuffers;
+                break;
+            case GraphicsBufferKind::Index:
+                buffers = &_indexBuffers;
+                break;
+            case GraphicsBufferKind::Constant:
+                buffers = &_constantBuffers;
+                break;
+        }
+
+        for (auto&& buffer : *buffers)
         {
             if (buffer->GetLargestFreeRegionSize() >= allocationSize)
             {
@@ -133,39 +188,44 @@ namespace NovelRT::Graphics
             }
         }
 
-        size_t minimumBlockSize = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
-        size_t sizeToAllocate = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+        std::shared_ptr<GraphicsBuffer> newBuffer = nullptr;
 
-        while (sizeToAllocate < allocationSize)
+        if (bufferKind == GraphicsBufferKind::Constant)
         {
-            sizeToAllocate += minimumBlockSize;
+            newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+                GraphicsBufferKind::Constant, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read,
+                ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
         }
-
-        auto newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write,
-            ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
-
-        _vertexBuffers.emplace_back(newBuffer);
-
-        return newBuffer;
-    }
-
-    std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetOrCreateConstantBufferForAllocationSize(
-        size_t allocationSize)
-    {
-        for (auto&& buffer : _constantBuffers)
+        else
         {
-            if (buffer->GetLargestFreeRegionSize() >= allocationSize)
+            size_t minimumBlockSize = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+            size_t sizeToAllocate = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+            while (sizeToAllocate < allocationSize)
             {
-                return buffer;
+                sizeToAllocate += minimumBlockSize;
             }
+
+            newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+                bufferKind, GraphicsResourceAccess::None, GraphicsResourceAccess::Write,
+                ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
         }
 
-        auto newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            GraphicsBufferKind::Constant, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read,
-            ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
+        switch (bufferKind)
+        {
+            case GraphicsBufferKind::Default:
+                _defaultBuffers.emplace_back(newBuffer);
+                break;
+            case GraphicsBufferKind::Vertex:
+                _vertexBuffers.emplace_back(newBuffer);
+                break;
+            case GraphicsBufferKind::Index:
+                _indexBuffers.emplace_back(newBuffer);
+                break;
+            case GraphicsBufferKind::Constant:
+                _constantBuffers.emplace_back(newBuffer);
+                break;
+        }
 
-        _constantBuffers.emplace_back(newBuffer);
 
         return newBuffer;
     }
@@ -225,6 +285,24 @@ namespace NovelRT::Graphics
         }
     }
 
+    void GraphicsResourceManager::FreeIndexData(GraphicsMemoryRegion<GraphicsResource>& indexResource)
+    {
+        auto collection = indexResource.GetCollection();
+        auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(collection);
+
+        if (bufferPtr == nullptr)
+        {
+            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeIndexData.");
+        }
+
+        collection->Free(indexResource);
+
+        if (bufferPtr->GetSize() == bufferPtr->GetLargestFreeRegionSize())
+        {
+            unused(std::remove(_indexBuffers.begin(), _indexBuffers.end(), bufferPtr));
+        }
+    }
+
     void GraphicsResourceManager::FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource)
     {
         auto collection = textureResource.GetCollection();
@@ -246,7 +324,7 @@ namespace NovelRT::Graphics
                                                                                                       size_t size,
                                                                                                       size_t alignment)
     {
-        auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
+        auto bufferPtr = GetOrCreateGraphicsBufferForAllocationSize(size, GraphicsBufferKind::Constant);
         auto allocation = bufferPtr->Allocate(size, alignment);
         uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
 
@@ -294,7 +372,7 @@ namespace NovelRT::Graphics
         bufferPtr->UnmapAndWrite(targetMemoryResource);
     }
 
-    void GraphicsResourceManager::FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource> region)
+    void GraphicsResourceManager::FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource>& region)
     {
         auto collection = region.GetCollection();
         auto bufferPtr = std::dynamic_pointer_cast<Graphics::GraphicsBuffer>(collection);
@@ -366,7 +444,7 @@ namespace NovelRT::Graphics
     GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::AllocateConstantBufferRegion(size_t size,
                                                                                                  size_t alignment)
     {
-        auto bufferPtr = GetOrCreateConstantBufferForAllocationSize(size);
+        auto bufferPtr = GetOrCreateGraphicsBufferForAllocationSize(size, GraphicsBufferKind::Constant);
         return bufferPtr->Allocate(size, alignment);
     }
 }

@@ -2,8 +2,8 @@
 
 #include "ImguiTypes.hlsl"
 
-Texture2D textureInput : register(t2);
-SamplerState samplerInput : register(s2);
+Texture2D textureInput : register(t1);
+SamplerState samplerInput : register(s1);
 
 float4 main(PSInput input) : SV_Target
 {

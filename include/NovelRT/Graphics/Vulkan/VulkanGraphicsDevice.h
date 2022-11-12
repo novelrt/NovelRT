@@ -84,7 +84,9 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
             std::shared_ptr<GraphicsPipeline> pipeline,
             GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t indexBufferStride,
             uint32_t explicitElementCount,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
 
@@ -99,7 +101,9 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
             std::shared_ptr<VulkanGraphicsPipeline> pipeline,
             GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+            uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+            uint32_t indexBufferStride,
             uint32_t explicitElementCount,
             gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 

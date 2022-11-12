@@ -44,6 +44,11 @@ namespace NovelRT::Ecs::Graphics
         std::queue<Threading::ConcurrentSharedPtr<VertexInfo>> _vertexDataToInitialise;
         std::queue<Atom> _vertexDataToDelete;
 
+        tbb::mutex _indexQueueMapMutex;
+        std::map<Atom, Threading::ConcurrentSharedPtr<IndexInfo>> _namedIndexInfoObjects;
+        std::queue<Threading::ConcurrentSharedPtr<IndexInfo>> _indexDataToInitialise;
+        std::queue<Atom> _indexDataToDelete;
+
         Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
         tbb::mutex _graphicsPipelineMapMutex;
@@ -59,11 +64,13 @@ namespace NovelRT::Ecs::Graphics
 
         void ResolveGpuResourceCleanup();
         void ResolveVertexInfoGpuCleanup();
+        void ResolveIndexInfoGpuCleanup();
         void ResolveTextureInfoGpuCleanup();
 
         void ResolveGpuFutures();
         void ResolveVertexInfoFutureResults();
         void ResolveTextureFutureResults();
+        void ResolveIndexInfoFutureResults();
 
     public:
         struct UIRenderEventArgs
@@ -158,6 +165,29 @@ namespace NovelRT::Ecs::Graphics
         void DeleteVertexData(Atom ecsId);
 
         void DeleteVertexData(const std::string& name);
+
+        template<typename TSpanType>
+        [[nodiscard]] Threading::FutureResult<IndexInfo> LoadIndexDataRaw(const std::string& indexDataName, gsl::span<TSpanType> indexDataSpan, IndexIntegerKind indexKind)
+        {
+            static_assert(std::is_trivially_copyable_v<TSpanType> &&
+                          "The specified index type must be trivially copyable.");
+
+            return LoadIndexDataRawUntyped(indexDataName, indexDataSpan.data(), sizeof(TSpanType), indexDataSpan.size(), indexKind);
+        }
+
+        [[nodiscard]] Threading::FutureResult<IndexInfo> LoadIndexDataRawUntyped(const std::string& indexDataName,
+                                                                                   void* data,
+                                                                                   size_t dataTypeSize,
+                                                                                   size_t dataLength,
+                                                                                   IndexIntegerKind indexKind);
+
+        [[nodiscard]] Threading::ConcurrentSharedPtr<IndexInfo> GetExistingIndexData(Atom ecsId);
+
+        void DeleteIndexData(Threading::ConcurrentSharedPtr<IndexInfo> vertexData);
+
+        void DeleteIndexData(Atom ecsId);
+
+        void DeleteIndexData(const std::string& name);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
             const std::string& name);

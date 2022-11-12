@@ -2,12 +2,14 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include "NovelRT/Ecs/Graphics/DefaultRenderingSystem.h"
 
 namespace NovelRT::Ecs::Graphics
 {
     void DefaultRenderingSystem::ResolveGpuResourceCleanup()
     {
         ResolveVertexInfoGpuCleanup();
+        ResolveIndexInfoGpuCleanup();
         ResolveTextureInfoGpuCleanup();
     }
 
@@ -25,6 +27,20 @@ namespace NovelRT::Ecs::Graphics
         }
     }
 
+    void DefaultRenderingSystem::ResolveIndexInfoGpuCleanup()
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        while (!_indexDataToDelete.empty())
+        {
+            Atom ecsId = _indexDataToDelete.front();
+            _indexDataToDelete.pop();
+
+            _resourceManager.getActual().FreeIndexData(_namedIndexInfoObjects.at(ecsId)->gpuIndexRegion);
+            _namedIndexInfoObjects.erase(ecsId);
+        }
+    }
+
     void DefaultRenderingSystem::ResolveTextureInfoGpuCleanup()
     {
         std::scoped_lock guard(_textureQueueMapMutex);
@@ -35,13 +51,14 @@ namespace NovelRT::Ecs::Graphics
             _texturesToDelete.pop();
 
             _resourceManager.getActual().FreeTextureData(_namedTextureInfoObjects.at(ecsId)->gpuTextureRegion);
-            _namedVertexInfoObjects.erase(ecsId);
+            _namedTextureInfoObjects.erase(ecsId);
         }
     }
 
     void DefaultRenderingSystem::ResolveGpuFutures()
     {
         ResolveVertexInfoFutureResults();
+        ResolveIndexInfoFutureResults();
         ResolveTextureFutureResults();
     }
 
@@ -106,6 +123,30 @@ namespace NovelRT::Ecs::Graphics
         }
     }
 
+    void DefaultRenderingSystem::ResolveIndexInfoFutureResults()
+    {
+        static AtomFactory& indexDataIdFactory = AtomFactoryDatabase::GetFactory("IndexDataId");
+
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        while (!_indexDataToInitialise.empty())
+        {
+            Threading::ConcurrentSharedPtr<IndexInfo> ptr = _indexDataToInitialise.front();
+            _indexDataToInitialise.pop();
+
+            std::scoped_lock innerGuard(ptr);
+
+            auto& resourceManager = _resourceManager.getActual();
+
+            ptr->gpuIndexRegion =
+                resourceManager.LoadIndexDataUntyped(ptr->stagingPtr, ptr->sizeofIndexStructData, ptr->stagingPtrLength);
+            ptr->ecsId = indexDataIdFactory.GetNext();
+            free(ptr->stagingPtr);
+            ptr->stagingPtr = nullptr;
+            _namedIndexInfoObjects.emplace(ptr->ecsId, ptr);
+        }
+    }
+
     DefaultRenderingSystem::DefaultRenderingSystem(
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
@@ -122,9 +163,15 @@ namespace NovelRT::Ecs::Graphics
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
           _texturesToInitialise(),
+          _texturesToDelete{},
           _vertexQueueMapMutex(),
           _namedVertexInfoObjects{},
+          _vertexDataToDelete{},
           _vertexDataToInitialise(),
+          _indexQueueMapMutex(),
+          _namedIndexInfoObjects{},
+          _indexDataToInitialise(),
+          _indexDataToDelete{},
           _defaultSpriteMeshPtr(nullptr),
           _namedGraphicsPipelineInfoObjects{},
           _defaultGraphicsPipelinePtr(nullptr),
@@ -566,7 +613,7 @@ namespace NovelRT::Ecs::Graphics
 #endif
         _vertexDataToInitialise.push(ptr);
 
-        return Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
+        return Threading::FutureResult<VertexInfo>(ptr, *ptr);
     }
 
     Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexData(
@@ -652,6 +699,99 @@ namespace NovelRT::Ecs::Graphics
         }
 
         _vertexDataToDelete.push(ecsId.value());
+    }
+
+    Threading::FutureResult<IndexInfo> DefaultRenderingSystem::LoadIndexDataRawUntyped(const std::string& indexDataName,
+                                                                                       void* data,
+                                                                                       size_t dataTypeSize,
+                                                                                       size_t dataLength,
+                                                                                       IndexIntegerKind indexKind)
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        auto ptr = Threading::MakeConcurrentShared<IndexInfo>();
+        size_t size = dataTypeSize * dataLength;
+        ptr->indexInfoName = indexDataName;
+        ptr->stagingPtr = malloc(size);
+        ptr->sizeofIndexStructData = dataTypeSize;
+        ptr->stagingPtrLength = dataLength;
+        ptr->indexKind = indexKind;
+
+#ifdef WIN32
+        memcpy_s(ptr->stagingPtr, size, data, size);
+#else
+        memcpy(ptr->stagingPtr, data, size);
+#endif
+        _indexDataToInitialise.push(ptr);
+
+        return Threading::FutureResult<IndexInfo>(ptr, *ptr);
+    }
+
+    Threading::ConcurrentSharedPtr<IndexInfo> DefaultRenderingSystem::GetExistingIndexData(Atom ecsId)
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+        return _namedIndexInfoObjects.at(ecsId);
+    }
+
+    void DefaultRenderingSystem::DeleteIndexData(Threading::ConcurrentSharedPtr<IndexInfo> indexData)
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedIndexInfoObjects)
+        {
+            if (pair.second != indexData)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _indexDataToDelete.push(ecsId.value());
+    }
+
+    void DefaultRenderingSystem::DeleteIndexData(Atom ecsId)
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        auto it = _namedIndexInfoObjects.find(ecsId);
+
+        if (it == _namedIndexInfoObjects.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _indexDataToDelete.push(ecsId);
+    }
+
+    void DefaultRenderingSystem::DeleteIndexData(const std::string& name)
+    {
+        std::scoped_lock guard(_indexQueueMapMutex);
+
+        std::optional<Atom> ecsId;
+        for (auto&& pair : _namedIndexInfoObjects)
+        {
+            if (pair.second->indexInfoName != name)
+            {
+                continue;
+            }
+
+            ecsId = pair.first;
+            break;
+        }
+
+        if (!ecsId.has_value())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _indexDataToDelete.push(ecsId.value());
     }
 
     Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(

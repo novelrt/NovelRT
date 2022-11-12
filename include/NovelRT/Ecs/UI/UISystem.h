@@ -24,7 +24,7 @@ namespace NovelRT::Ecs::UI
         struct CmdListSubmissionInfo
         {
             Threading::FutureResult<Graphics::VertexInfo> Vertices = Threading::FutureResult<Graphics::VertexInfo>(nullptr, Graphics::VertexInfo{});
-            Threading::FutureResult<Graphics::VertexInfo> Indices = Threading::FutureResult<Graphics::VertexInfo>(nullptr, Graphics::VertexInfo{});
+            Threading::FutureResult<Graphics::IndexInfo> Indices = Threading::FutureResult<Graphics::IndexInfo>(nullptr, Graphics::IndexInfo{});
             std::vector<CmdSubmissionInfo> Cmds;
         };
 
@@ -35,9 +35,11 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> _uiPipeline;
         tbb::mutex _submissionInfoListMutex;
         std::queue<std::vector<CmdListSubmissionInfo>> _submissionInfoListQueue;
-        std::vector<Threading::FutureResult<Graphics::VertexInfo>> _gpuObjectsToCleanUp;
+        std::vector<CmdListSubmissionInfo> _gpuObjectsToCleanUp;
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive>> _primitivesForFrame;
 
         size_t _drawCallCounter;
+
 
     public:
         UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,

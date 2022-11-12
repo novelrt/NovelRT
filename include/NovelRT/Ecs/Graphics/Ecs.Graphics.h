@@ -15,20 +15,18 @@ namespace NovelRT::Ecs::Graphics
 {
     class DefaultRenderingSystem;
     struct RenderComponent;
-    struct GraphicsPipelineComponent;
     struct TextureInfo;
     struct GraphicsPrimitiveInfo;
     struct VertexInfo;
-    struct AttachRenderToExistingEntityRequestInfo;
     struct GraphicsPipelineInfo;
-    struct CreateRenderEntityRequestInfo;
-    struct ConstantBufferInfo;
     struct TexturedVertex;
+    struct IndexInfo;
+    enum class IndexIntegerKind : uint32_t;
 }
 
 // clang-format off
-#include "AttachRenderToExistingEntityRequestInfo.h"
-#include "CreateRenderEntityRequestInfo.h"
+#include "IndexIntegerKind.h"
+#include "IndexInfo.h"
 #include "TextureInfo.h"
 #include "VertexInfo.h"
 #include "DefaultRenderingComponentTypes.h"
@@ -36,7 +34,6 @@ namespace NovelRT::Ecs::Graphics
 #include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPrimitiveInfo.h"
 #include "GraphicsPipelineInfo.h"
-#include "ConstantBufferInfo.h"
 // clang-format on
 
 #endif // NOVELRT_ECS_GRAPHICS_H

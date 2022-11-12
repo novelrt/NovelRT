@@ -446,7 +446,7 @@ namespace NovelRT::Graphics::Vulkan
         if (indexBuffer != nullptr)
         {
             uint32_t indexBufferStride = primitive->GetIndexBufferStride();
-            VkIndexType indexType = VK_INDEX_TYPE_UINT16;
+            VkIndexType indexType = VK_INDEX_TYPE_UINT16; // TOOD: FUCKING FIX THIS
 
             if (indexBufferStride != 2)
             {

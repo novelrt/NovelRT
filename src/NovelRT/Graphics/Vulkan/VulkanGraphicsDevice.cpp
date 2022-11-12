@@ -483,12 +483,14 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<GraphicsPrimitive> VulkanGraphicsDevice::CreatePrimitive(
         std::shared_ptr<GraphicsPipeline> pipeline,
         GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+        uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+        uint32_t indexBufferStride,
         uint32_t explicitElementCount,
         gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::static_pointer_cast<GraphicsPrimitive>(
-                CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion, indexBufferRegion, explicitElementCount, inputResourceRegions
+                CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion, vertexBufferStride, indexBufferRegion, indexBufferStride, explicitElementCount, inputResourceRegions
                 ));
     }
 
@@ -508,13 +510,15 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<VulkanGraphicsPrimitive> VulkanGraphicsDevice::CreateVulkanPrimitive(
         std::shared_ptr<VulkanGraphicsPipeline> pipeline,
         GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
+        uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
+        uint32_t indexBufferStride,
         uint32_t explicitElementCount,
         gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::make_shared<VulkanGraphicsPrimitive>(
             std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,
-            0, indexBufferRegion, 0, inputResourceRegions, true, explicitElementCount);
+            vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions, true, explicitElementCount);
     }
 
     void VulkanGraphicsDevice::PresentFrame()

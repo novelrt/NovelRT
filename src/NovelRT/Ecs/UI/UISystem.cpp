@@ -64,6 +64,16 @@ namespace NovelRT::Ecs::UI
         _defaultRenderingSystem->UIRenderEvent +=
             [&](auto , Graphics::DefaultRenderingSystem::UIRenderEventArgs eventArgs)
         {
+            _primitivesForFrame.clear();
+
+            for (auto&& cmdList : _gpuObjectsToCleanUp)
+            {
+                _defaultRenderingSystem->DeleteVertexData(cmdList.Vertices.GetBackingConcurrentSharedPtr());
+                _defaultRenderingSystem->DeleteIndexData(cmdList.Indices.GetBackingConcurrentSharedPtr());
+            }
+
+            _gpuObjectsToCleanUp.clear();
+
             std::vector<CmdListSubmissionInfo> finalCmdListSubmissionInfosForFrame{};
 
             if (!_submissionInfoListQueue.empty())
@@ -92,10 +102,14 @@ namespace NovelRT::Ecs::UI
                         resources{eventArgs.frameMatrixConstantBufferRegion, drawCmd.textureData};
 
                     auto primitive = eventArgs.graphicsDevice->CreatePrimitive(
-                        _uiPipeline, cmdListSubmissionInfo.Vertices.GetBackingConcurrentSharedPtr()->gpuVertexRegion,
-                        cmdListSubmissionInfo.Indices.GetBackingConcurrentSharedPtr()->gpuVertexRegion, drawCmd.elementCount, resources);
+                        _uiPipeline, cmdListSubmissionInfo.Vertices.GetBackingConcurrentSharedPtr()->gpuVertexRegion, 0,
+                        cmdListSubmissionInfo.Indices.GetBackingConcurrentSharedPtr()->gpuIndexRegion, 2, resources);
                     eventArgs.graphicsContext->Draw(primitive, 1, drawCmd.indexOffset, static_cast<int32_t>(drawCmd.vertexOffset), 0);
+
+                    _primitivesForFrame.emplace_back(primitive);
                 }
+
+                _gpuObjectsToCleanUp.emplace_back(cmdListSubmissionInfo);
             }
         };
 
@@ -128,9 +142,9 @@ namespace NovelRT::Ecs::UI
             FutureResult<VertexInfo> vertexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawVert>(
                 "ImGuiVertices" + std::to_string(drawCallCounterStr),
                 gsl::span<ImDrawVert>(drawList->VtxBuffer.begin(), drawList->VtxBuffer.size()));
-            FutureResult<VertexInfo> indexInfo = _defaultRenderingSystem->LoadVertexDataRaw<ImDrawIdx>(
+            FutureResult<IndexInfo> indexInfo = _defaultRenderingSystem->LoadIndexDataRaw<ImDrawIdx>(
                 "ImGuiIndices" + std::to_string(drawCallCounterStr),
-                gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()));
+                gsl::span<ImDrawIdx>(drawList->IdxBuffer.begin(), drawList->IdxBuffer.size()), IndexIntegerKind::UInt16);
 
             listSubmissionInfo.Vertices = vertexInfo;
             listSubmissionInfo.Indices = indexInfo;
