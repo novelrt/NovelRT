@@ -151,7 +151,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider)
-        : _resourceManager([&]() { return NovelRT::Graphics::GraphicsResourceManager(_graphicsDevice); }),
+        : _resourceManager([&]() { return NovelRT::Graphics::GraphicsResourceManager(_graphicsDevice, 1024 * 10000); }),
           _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider)),
           _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider)),

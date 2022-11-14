@@ -8,6 +8,8 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.UI.h instead for the Ecs.UI namespace subset.
 #endif
 
+#include "imgui.h"
+
 namespace NovelRT::Ecs::UI
 {
     class UISystem : public Ecs::IEcsSystem
@@ -23,9 +25,15 @@ namespace NovelRT::Ecs::UI
 
         struct CmdListSubmissionInfo
         {
-            Threading::FutureResult<Graphics::VertexInfo> Vertices = Threading::FutureResult<Graphics::VertexInfo>(nullptr, Graphics::VertexInfo{});
-            Threading::FutureResult<Graphics::IndexInfo> Indices = Threading::FutureResult<Graphics::IndexInfo>(nullptr, Graphics::IndexInfo{});
+            std::vector<ImDrawVert> Vertices;
+            std::vector<ImDrawIdx> Indices;
             std::vector<CmdSubmissionInfo> Cmds;
+        };
+
+        struct CleanupData
+        {
+            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> Vertices;
+            NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> Indices;
         };
 
 
@@ -35,11 +43,15 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> _uiPipeline;
         tbb::mutex _submissionInfoListMutex;
         std::queue<std::vector<CmdListSubmissionInfo>> _submissionInfoListQueue;
-        std::vector<CmdListSubmissionInfo> _gpuObjectsToCleanUp;
+        std::vector<CleanupData> _gpuObjectsToCleanUp;
         std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive>> _primitivesForFrame;
 
         size_t _drawCallCounter;
 
+        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer> _vertexStagingBuffer;
+        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer> _indexStagingBuffer;
+        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer> _vertexBuffer;
+        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer> _indexBuffer;
 
     public:
         UISystem(std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,

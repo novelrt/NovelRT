@@ -80,11 +80,9 @@ namespace NovelRT::UI::DearImGui
             Graphics::GraphicsResourceAccess::None, Graphics::GraphicsResourceAccess::Write, width, height);
         Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource> texture2DRegion;
         texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
-        auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
-
+        auto pTextureData = textureStagingBuffer->Map<uint8_t>(texture2DRegion);
+        memcpy(pTextureData, pixels, (width * height) * 4);
         textureStagingBuffer->UnmapAndWrite();
-
-        memcpy(pTextureData, pixels, width * height);
 
         graphicsContext->Copy(_texture2D, textureStagingBuffer);
         graphicsContext->EndFrame();

@@ -137,8 +137,10 @@ namespace NovelRT::Graphics
     {
         std::shared_ptr<GraphicsBuffer> stagingBuffer = _stagingBuffer.getActual();
 
-        if (stagingBuffer->GetLargestFreeRegionSize() < sizeToStage)
+        auto fuck = stagingBuffer->GetLargestFreeRegionSize();
+        if (fuck < sizeToStage)
         {
+            std::cerr << "O NO IT RESIZED" << std::endl;
             _stagingBufferSize = (_stagingBufferSize * 2) + sizeToStage;
             std::shared_ptr<GraphicsBuffer> newStagingBuffer = CreateStagingBuffer();
             currentContext->Copy(newStagingBuffer, stagingBuffer);
@@ -149,6 +151,7 @@ namespace NovelRT::Graphics
             stagingBuffer = _stagingBuffer.getActual();
             currentContext->BeginFrame();
         }
+
         return stagingBuffer;
     }
 
