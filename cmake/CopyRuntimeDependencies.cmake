@@ -37,7 +37,7 @@ function(copy_runtime_dependencies TARGET)
               else()
                 set(lib_safe_name "${lib_idx}")
               endif()
-              list(APPEND dep_lib_snippet 
+              list(APPEND dep_lib_snippet
                 "
                 if(EXISTS otool.txt)
                   file(REMOVE otool.txt)
@@ -55,8 +55,8 @@ function(copy_runtime_dependencies TARGET)
                 execute_process(COMMAND otool -L $<TARGET_FILE:${TARGET}> OUTPUT_FILE otool.txt)
                 set(GREP_ARGS .*\${lib_file_name})
                 execute_process(
-                  COMMAND grep -o \${GREP_ARGS} otool.txt 
-                  OUTPUT_VARIABLE grep-output 
+                  COMMAND grep -o \${GREP_ARGS} otool.txt
+                  OUTPUT_VARIABLE grep-output
                   RESULT_VARIABLE grep-result)
                 if(grep-output)
                   string(STRIP \${grep-output} grep-output)
@@ -67,7 +67,7 @@ function(copy_runtime_dependencies TARGET)
                 endif()
                 ")
               list(JOIN dep_lib_snippet "\n" dep_lib_snippet)
-              file(GENERATE 
+              file(GENERATE
                 OUTPUT copy_${lib_safe_name}_from_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
                 CONTENT "${dep_lib_snippet}"
               )
@@ -90,7 +90,7 @@ function(copy_runtime_dependencies TARGET)
         COMMAND_EXPAND_LISTS
       )
     elseif(APPLE)
-        list(APPEND dep_snippet 
+        list(APPEND dep_snippet
           "
           if(EXISTS otool.txt)
             file(REMOVE otool.txt)
@@ -100,8 +100,8 @@ function(copy_runtime_dependencies TARGET)
           execute_process(COMMAND otool -L $<TARGET_FILE:${TARGET}> OUTPUT_FILE otool.txt)
           set(GREP_ARGS .*$<TARGET_LINKER_FILE_NAME:${dependency}>)
           execute_process(
-            COMMAND grep -o \${GREP_ARGS} otool.txt 
-            OUTPUT_VARIABLE grep-output 
+            COMMAND grep -o \${GREP_ARGS} otool.txt
+            OUTPUT_VARIABLE grep-output
             RESULT_VARIABLE grep-result)
           if(grep-output)
             string(STRIP \${grep-output} grep-output)
@@ -112,15 +112,15 @@ function(copy_runtime_dependencies TARGET)
           endif()
           ")
         list(JOIN dep_snippet "\n" dep_snippet)
-        file(GENERATE 
+        file(GENERATE
           OUTPUT copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
           CONTENT "${dep_snippet}"
         )
-        add_custom_command(TARGET ${TARGET}
-          POST_BUILD
+        add_custom_target(copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>
           COMMAND ${CMAKE_COMMAND} -P copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
-          DEPENDS $<TARGET_FILE:${TARGET}>
         )
+        add_dependencies(${TARGET} copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>)
+        add_dependencies(copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>> ${dependency})
         list(POP_BACK dep_snippet)
     endif()
   endif()
@@ -132,7 +132,7 @@ function(copy_runtime_dependencies TARGET)
       else()
         set(lib_safe_name "${lib_idx}")
       endif()
-      list(APPEND lib_snippet 
+      list(APPEND lib_snippet
           "
           if(EXISTS otool.txt)
             file(REMOVE otool.txt)
@@ -151,8 +151,8 @@ function(copy_runtime_dependencies TARGET)
           execute_process(COMMAND otool -L $<TARGET_FILE:${TARGET}> OUTPUT_FILE otool.txt)
           set(GREP_ARGS .*\${lib_file_name})
           execute_process(
-            COMMAND grep -o \${GREP_ARGS} otool.txt 
-            OUTPUT_VARIABLE grep-output 
+            COMMAND grep -o \${GREP_ARGS} otool.txt
+            OUTPUT_VARIABLE grep-output
             RESULT_VARIABLE grep-result)
           if(grep-output)
             string(STRIP \${grep-output} grep-output)
@@ -163,7 +163,7 @@ function(copy_runtime_dependencies TARGET)
           endif()
           ")
         list(JOIN lib_snippet "\n" lib_snippet)
-        file(GENERATE 
+        file(GENERATE
           OUTPUT copy_${lib_safe_name}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
           CONTENT "${lib_snippet}"
         )
