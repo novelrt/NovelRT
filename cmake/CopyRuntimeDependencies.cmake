@@ -90,6 +90,10 @@ function(copy_runtime_dependencies TARGET)
         COMMAND_EXPAND_LISTS
       )
     elseif(APPLE)
+        set(config_suffix "")
+        if(multi_config)
+          set(config_suffix "_${CONFIG}")
+        endif()
         list(APPEND dep_snippet
           "
           if(EXISTS otool.txt)
@@ -113,14 +117,14 @@ function(copy_runtime_dependencies TARGET)
           ")
         list(JOIN dep_snippet "\n" dep_snippet)
         file(GENERATE
-          OUTPUT copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
+          OUTPUT copy_${dependency}_to_${TARGET}${config_suffix}.cmake
           CONTENT "${dep_snippet}"
         )
-        add_custom_target(copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>
-          COMMAND ${CMAKE_COMMAND} -P copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>.cmake
+        add_custom_target(copy_${dependency}_to_${TARGET}${config_suffix}
+          COMMAND ${CMAKE_COMMAND} -P copy_${dependency}_to_${TARGET}${config_suffix}.cmake
         )
-        add_dependencies(${TARGET} copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>>)
-        add_dependencies(copy_${dependency}_to_${TARGET}$<$<BOOL:${multi_config}>:_$<CONFIG>> ${dependency})
+        add_dependencies(${TARGET} copy_${dependency}_to_${TARGET}${config_suffix})
+        add_dependencies(copy_${dependency}_to_${TARGET}${config_suffix} ${dependency})
         list(POP_BACK dep_snippet)
     endif()
   endif()
