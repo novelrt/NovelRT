@@ -12,8 +12,8 @@ namespace NovelRT::Ecs
 {
     struct TransformComponent
     {
-        Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::zero();
-        Maths::GeoVector2F scale = Maths::GeoVector2F::one();
+        Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::Zero();
+        Maths::GeoVector2F scale = Maths::GeoVector2F::One();
         float rotationInRadians = 0.0f;
 
         inline TransformComponent& operator+=(const TransformComponent& other)

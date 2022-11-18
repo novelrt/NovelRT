@@ -20,11 +20,12 @@ namespace NovelRT::Ecs::Audio
         std::shared_ptr<NovelRT::Audio::AudioService> _service;
         std::map<uint32_t, ALuint> _soundCache;
         NovelRT::Timing::Timestamp _systemTime;
+        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagerPluginProvider;
 
         void ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume);
 
     public:
-        AudioSystem();
+        AudioSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider);
         ~AudioSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;

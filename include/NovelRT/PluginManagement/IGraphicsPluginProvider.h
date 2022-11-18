@@ -10,7 +10,7 @@
 
 namespace NovelRT::PluginManagement
 {
-    class IGraphicsPluginProvider
+    class IGraphicsPluginProvider : public std::enable_shared_from_this<IGraphicsPluginProvider>
     {
     protected:
         [[nodiscard]] virtual Graphics::GraphicsProvider* GetGraphicsProviderInternal() = 0;

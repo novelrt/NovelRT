@@ -53,7 +53,8 @@ extern "C"
         NRT_FAILURE_OUT_OF_MEMORY = -16,
         NRT_FAILURE_COMPILATION_ERROR = -17,
         NRT_FAILURE_RUNTIME_NOT_FOUND = -18,
-        NRT_FAILURE_NULL_INSTANCE_PROVIDED = -19
+        NRT_FAILURE_NULL_INSTANCE_PROVIDED = -19,
+        NRT_FAILURE_INVALID_DIRECTORY_PATH = -20
     } NrtResultKind;
 
     typedef uintptr_t NrtAtom;
@@ -62,20 +63,23 @@ extern "C"
     typedef int32_t NrtLogLevel;
     typedef int32_t NrtResult;
 
+    // clang-format off
+
 #include "Maths/NrtMathsTypedefs.h"
 #include "Timing/NrtTimingTypedefs.h"
 #include "Utilities/NrtUtilitiesTypedefs.h"
-
 #include "Audio/NrtAudioTypedefs.h"
-#ifdef NOVELRT_INK
-#include "DotNet/NrtDotNetTypedefs.h"
-#endif
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
+#include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
-#ifdef NOVELRT_INK
-#include "Ink/NrtInkTypedefs.h"
-#endif
+#include "Graphics/NrtGraphicsTypedefs.h"
+#include "Input/NrtInputTypedefs.h"
+#include "PluginManagement/NrtPluginManagementTypedefs.h"
+#include "ResourceManagement/NrtResourceManagementTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
+#include "Windowing/NrtWindowingTypedefs.h"
+
+    // clang-format on
 
 #ifdef __cplusplus
 }

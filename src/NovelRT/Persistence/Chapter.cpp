@@ -18,24 +18,52 @@ namespace NovelRT::Persistence
         }
     }
 
-    void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache) const
+    void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache, Ecs::EntityCache& entityCache) const
     {
         static AtomFactory& factory = AtomFactoryDatabase::GetFactory("EntityId");
+        Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId> localToGlobalEntityMap{};
+        auto& registeredGlobalEntities = entityCache.GetRegisteredEntities();
+        auto& loadRules = Persistable::GetComponentLoadRules();
+
+        for (Ecs::EntityId entity : registeredGlobalEntities)
+        {
+            Ecs::EntityId newId = entity;
+
+            while (std::find(registeredGlobalEntities.begin(), registeredGlobalEntities.end(), newId) !=
+                   registeredGlobalEntities.end())
+            {
+                newId = factory.GetNext();
+            }
+
+            entityCache.AddEntity(0, newId);
+            localToGlobalEntityMap.Insert(entity, newId);
+        }
+
         for (auto&& buffer : componentCache.GetAllComponentBuffers())
         {
             auto& container = _componentCacheData.at(buffer->GetSerialisedTypeName());
-            auto& rootSet = buffer->GetReadOnlyContainer();
+            std::vector<uint8_t> tempComponentDataContainer(container.GetSizeOfDataTypeInBytes());
 
             for (auto&& [entity, it] : container)
             {
                 Ecs::EntityId entityId = entity;
 
-                if (rootSet.ContainsKey(entity))
+                if (localToGlobalEntityMap.ContainsKey(entityId))
                 {
-                    entityId = factory.GetNext();
+                    entityId = localToGlobalEntityMap[entityId];
                 }
 
-                buffer->PushComponentUpdateInstruction(0, entityId, it.GetDataHandle());
+                it.CopyFromLocation(tempComponentDataContainer.data());
+
+                auto loadRuleIt = loadRules.find(buffer->GetSerialisedTypeName());
+
+                if (loadRuleIt != loadRules.end())
+                {
+                    loadRuleIt->second->ExecuteComponentLoadModification(localToGlobalEntityMap,
+                                                                         tempComponentDataContainer.data());
+                }
+
+                buffer->PushComponentUpdateInstruction(0, entityId, tempComponentDataContainer.data());
             }
         }
     }

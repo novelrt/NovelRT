@@ -41,13 +41,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -62,13 +62,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -106,13 +106,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -129,7 +129,7 @@ extern "C"
     {
         if (node == nullptr || action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -149,13 +149,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -173,13 +173,13 @@ extern "C"
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (action == nullptr || outputIterator == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -200,11 +200,11 @@ extern "C"
             firstNodePointer->canReach(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
     }
 
-    NrtResult Nrt_SceneNode_delete(NrtSceneNodeHandle node)
+    NrtResult Nrt_SceneNode_Destroy(NrtSceneNodeHandle node)
     {
         if (node == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -220,11 +220,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeSet_delete(NrtSceneNodeSetHandle nodeSet)
+    NrtResult Nrt_SceneNodeSet_Destroy(NrtSceneNodeSetHandle nodeSet)
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -243,13 +243,13 @@ extern "C"
     {
         if (nodeSet == nullptr)
         {
-            Nrt_setErrIsNullInstanceProvidedInternal();
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSceneNode == nullptr)
         {
-            Nrt_setErrIsNullArgProvidedInternal();
+            Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

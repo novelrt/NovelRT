@@ -34,9 +34,9 @@ protected:
 
             scheduler->SpinThreads();
 
-            sysOne = [&](Timestamp delta, Catalogue) { sysOneBool = false; };
-            sysTwo = [&](Timestamp delta, Catalogue) { sysTwoBool = false; };
-            sysThree = [&](Timestamp delta, Catalogue) { sysThreeBool = false; };
+            sysOne = [&](Timestamp, Catalogue) { sysOneBool = false; };
+            sysTwo = [&](Timestamp, Catalogue) { sysTwoBool = false; };
+            sysThree = [&](Timestamp, Catalogue) { sysThreeBool = false; };
 
             scheduler->RegisterSystem(sysOne);
             scheduler->RegisterSystem(sysTwo);
@@ -76,7 +76,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
     scheduler->ExecuteIteration(Timestamp(0));
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -109,7 +109,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     scheduler->RegisterSystem(sysOne);
     scheduler->RegisterSystem(sysTwo);
     scheduler->RegisterSystem(sysThree);
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -120,7 +120,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 19);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -131,7 +131,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 36);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -142,7 +142,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThreeThreads
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -170,7 +170,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
     scheduler->RegisterSystem(sysOne);
     scheduler->RegisterSystem(sysTwo);
     scheduler->RegisterSystem(sysThree);
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -181,7 +181,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 19);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -192,7 +192,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 36);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -203,7 +203,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleRemainderWithThirtyTwoThr
     scheduler->ExecuteIteration(Timestamp(0));
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 60);
 
-    scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+    scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -225,7 +225,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     for (int i = 0; i < 8; ++i) // 11 total systems
     {
-        scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
             auto intSystem = catalogue.GetComponentView<int32_t>();
             for (auto [entity, component] : intSystem)
             {
@@ -239,7 +239,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     for (int i = 0; i < 6; ++i) // 17 total systems
     {
-        scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
             auto intSystem = catalogue.GetComponentView<int32_t>();
             for (auto [entity, component] : intSystem)
             {
@@ -253,7 +253,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     for (int i = 0; i < 6; ++i) // 23 total systems
     {
-        scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
             auto intSystem = catalogue.GetComponentView<int32_t>();
             for (auto [entity, component] : intSystem)
             {
@@ -267,7 +267,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsCanHandleManySystems)
 
     for (int i = 0; i < 14; ++i) // 37 total systems
     {
-        scheduler->RegisterSystem([&](Timestamp delta, Catalogue catalogue) {
+        scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
             auto intSystem = catalogue.GetComponentView<int32_t>();
             for (auto [entity, component] : intSystem)
             {

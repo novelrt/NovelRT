@@ -7,195 +7,237 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-TEST(GeoVector4Test, equalityOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, EqualityOperatorEvaluatesCorrectly)
 {
     EXPECT_EQ(GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f), GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector4Test, inequalityOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, InequalityOperatorEvaluatesCorrectly)
 {
     EXPECT_NE(GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f), GeoVector4F(1.0f, 0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector4Test, lessThanOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, LessThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f) < GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector4Test, lessThanOrEqualToThanOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, LessThanOrEqualToThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f) <= GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
     EXPECT_TRUE(GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f) <= GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector4Test, greaterThanOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, GreaterThanOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f) > GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector4Test, greaterThanOrEqualToOperatorEvaluatesCorrectly)
+TEST(GeoVector4Test, GreaterThanOrEqualToOperatorEvaluatesCorrectly)
 {
     EXPECT_TRUE(GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f) >= GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f));
     EXPECT_TRUE(GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f) >= GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector4Test, staticUniformCallReturnsGeoVector4WithUniformValues)
+TEST(GeoVector4Test, StaticUniformCallReturnsGeoVector4WithUniformValues)
 {
-    EXPECT_EQ(GeoVector4F::uniform(1.0f), GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
+    EXPECT_EQ(GeoVector4F::Uniform(1.0f), GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector4Test, staticZeroCallReturnsGeoVector4Zero)
+TEST(GeoVector4Test, StaticZeroCallReturnsGeoVector4Zero)
 {
-    EXPECT_EQ(GeoVector4F::zero(), GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f));
+    EXPECT_EQ(GeoVector4F::Zero(), GeoVector4F(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
-TEST(GeoVector4Test, staticOneCallReturnsGeoVector4One)
+TEST(GeoVector4Test, StaticOneCallReturnsGeoVector4One)
 {
-    EXPECT_EQ(GeoVector4F::one(), GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
+    EXPECT_EQ(GeoVector4F::One(), GeoVector4F(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-TEST(GeoVector4Test, addOperatorAddsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, AddOperatorAddsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::one() + GeoVector4F::one();
-    EXPECT_EQ(result, GeoVector4F::uniform(2.0f));
+    auto result = GeoVector4F::One() + GeoVector4F::One();
+    EXPECT_EQ(result, GeoVector4F::Uniform(2.0f));
 }
 
-TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, SubtractOperatorSubtractsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::one() - GeoVector4F::one();
-    EXPECT_EQ(result, GeoVector4F::zero());
+    auto result = GeoVector4F::One() - GeoVector4F::One();
+    EXPECT_EQ(result, GeoVector4F::Zero());
 }
 
-TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForGeoVector4)
+TEST(GeoVector4Test, MultiplyOperatorMultipliesCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::uniform(2.0f) * GeoVector4F::uniform(2.0f);
-    EXPECT_EQ(result, GeoVector4F::uniform(4.0f));
+    auto result = GeoVector4F::Uniform(2.0f) * GeoVector4F::Uniform(2.0f);
+    EXPECT_EQ(result, GeoVector4F::Uniform(4.0f));
 }
 
-TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForTemplateTypeInverse)
+TEST(GeoVector4Test, MultiplyOperatorMultipliesCorrectlyForTemplateTypeInverse)
 {
-    auto result = 2.0f * GeoVector4F::uniform(2.0f);
-    EXPECT_EQ(result, GeoVector4F::uniform(4.0f));
+    auto result = 2.0f * GeoVector4F::Uniform(2.0f);
+    EXPECT_EQ(result, GeoVector4F::Uniform(4.0f));
 }
 
-TEST(GeoVector4Test, divideOperatorDividesCorrectlyForGeoVector4)
+TEST(GeoVector4Test, DivideOperatorDividesCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::uniform(2.0f) / GeoVector4F::uniform(2.0f);
-    EXPECT_EQ(result, GeoVector4F::one());
+    auto result = GeoVector4F::Uniform(2.0f) / GeoVector4F::Uniform(2.0f);
+    EXPECT_EQ(result, GeoVector4F::One());
 }
 
-TEST(GeoVector4Test, addOperatorAddsCorrectlyForTemplateType)
+TEST(GeoVector4Test, AddOperatorAddsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::one() + 1.0f;
-    EXPECT_EQ(result, GeoVector4F::uniform(2.0f));
+    auto result = GeoVector4F::One() + 1.0f;
+    EXPECT_EQ(result, GeoVector4F::Uniform(2.0f));
 }
 
-TEST(GeoVector4Test, subtractOperatorSubtractsCorrectlyForTemplateType)
+TEST(GeoVector4Test, SubtractOperatorSubtractsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::one() - 1.0f;
-    EXPECT_EQ(result, GeoVector4F::zero());
+    auto result = GeoVector4F::One() - 1.0f;
+    EXPECT_EQ(result, GeoVector4F::Zero());
 }
 
-TEST(GeoVector4Test, multiplyOperatorMultipliesCorrectlyForTemplateType)
+TEST(GeoVector4Test, MultiplyOperatorMultipliesCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::uniform(2.0f) * 2.0f;
-    EXPECT_EQ(result, GeoVector4F::uniform(4.0f));
+    auto result = GeoVector4F::Uniform(2.0f) * 2.0f;
+    EXPECT_EQ(result, GeoVector4F::Uniform(4.0f));
 }
 
-TEST(GeoVector4Test, divideOperatorDividesCorrectlyForTemplateType)
+TEST(GeoVector4Test, DivideOperatorDividesCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::uniform(2.0f) / 2.0f;
-    EXPECT_EQ(result, GeoVector4F::one());
+    auto result = GeoVector4F::Uniform(2.0f) / 2.0f;
+    EXPECT_EQ(result, GeoVector4F::One());
 }
 
-TEST(GeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, AddAssignOperatorAddsAndAssignsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::one();
-    result += GeoVector4F::one();
-    EXPECT_EQ(result, GeoVector4F::uniform(2.0f));
+    auto result = GeoVector4F::One();
+    result += GeoVector4F::One();
+    EXPECT_EQ(result, GeoVector4F::Uniform(2.0f));
 }
 
-TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, SubtractAssignOperatorSubtractsAndAssignsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::one();
-    result -= GeoVector4F::one();
-    EXPECT_EQ(result, GeoVector4F::zero());
+    auto result = GeoVector4F::One();
+    result -= GeoVector4F::One();
+    EXPECT_EQ(result, GeoVector4F::Zero());
 }
 
-TEST(GeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, MultiplyAssignOperatorMultipliesAndAssignsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::uniform(2.0f);
-    result *= GeoVector4F::uniform(2.0f);
-    EXPECT_EQ(result, GeoVector4F::uniform(4.0f));
+    auto result = GeoVector4F::Uniform(2.0f);
+    result *= GeoVector4F::Uniform(2.0f);
+    EXPECT_EQ(result, GeoVector4F::Uniform(4.0f));
 }
 
-TEST(GeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForGeoVector4)
+TEST(GeoVector4Test, DivideAssignOperatorDividesAndAssignsCorrectlyForGeoVector4)
 {
-    auto result = GeoVector4F::uniform(2.0f);
-    result /= GeoVector4F::uniform(2.0f);
-    EXPECT_EQ(result, GeoVector4F::one());
+    auto result = GeoVector4F::Uniform(2.0f);
+    result /= GeoVector4F::Uniform(2.0f);
+    EXPECT_EQ(result, GeoVector4F::One());
 }
 
-TEST(GeoVector4Test, addAssignOperatorAddsAndAssignsCorrectlyForTemplateType)
+TEST(GeoVector4Test, AddAssignOperatorAddsAndAssignsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::one();
+    auto result = GeoVector4F::One();
     result += 1.0f;
-    EXPECT_EQ(result, GeoVector4F::uniform(2.0f));
+    EXPECT_EQ(result, GeoVector4F::Uniform(2.0f));
 }
 
-TEST(GeoVector4Test, subtractAssignOperatorSubtractsAndAssignsCorrectlyForTemplateType)
+TEST(GeoVector4Test, SubtractAssignOperatorSubtractsAndAssignsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::one();
+    auto result = GeoVector4F::One();
     result -= 1.0f;
-    EXPECT_EQ(result, GeoVector4F::zero());
+    EXPECT_EQ(result, GeoVector4F::Zero());
 }
 
-TEST(GeoVector4Test, multiplyAssignOperatorMultipliesAndAssignsCorrectlyForTemplateType)
+TEST(GeoVector4Test, MultiplyAssignOperatorMultipliesAndAssignsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::uniform(2.0f);
+    auto result = GeoVector4F::Uniform(2.0f);
     result *= 2.0f;
-    EXPECT_EQ(result, GeoVector4F::uniform(4.0f));
+    EXPECT_EQ(result, GeoVector4F::Uniform(4.0f));
 }
 
-TEST(GeoVector4Test, divideAssignOperatorDividesAndAssignsCorrectlyForTemplateType)
+TEST(GeoVector4Test, DivideAssignOperatorDividesAndAssignsCorrectlyForTemplateType)
 {
-    auto result = GeoVector4F::uniform(2.0f);
+    auto result = GeoVector4F::Uniform(2.0f);
     result /= 2.0f;
-    EXPECT_EQ(result, GeoVector4F::one());
+    EXPECT_EQ(result, GeoVector4F::One());
 }
 
-TEST(GeoVector4Test, getNormalisedReturnsNormalisedGeoVector)
+TEST(GeoVector4Test, GetNormalisedReturnsNormalisedGeoVector)
 {
-    auto vec = GeoVector4F::one().getNormalised();
+    auto vec = GeoVector4F::One().GetNormalised();
     float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
     EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
 }
 
-TEST(GeoVector4Test, getMagnitudeReturnsCorrectLength)
+TEST(GeoVector4Test, GetMagnitudeReturnsCorrectLength)
 {
-    auto vec = GeoVector4F::one().getNormalised();
-    EXPECT_FLOAT_EQ(vec.getMagnitude(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetMagnitude(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
 }
 
-TEST(GeoVector4Test, getLengthReturnsCorrectLength)
+TEST(GeoVector4Test, GetLengthReturnsCorrectLength)
 {
-    auto vec = GeoVector4F::one().getNormalised();
-    EXPECT_FLOAT_EQ(vec.getLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetLength(), sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2)));
 }
 
-TEST(GeoVector4Test, rotateToAngleAroundPointRotatesCorrectAmount)
+TEST(GeoVector4Test, RotateToAngleAroundPointDegRotatesCorrectAmount)
 {
     auto vec = GeoVector4F(0.0f, 1.0f, 0.0f, 0.0f);
-    vec.rotateToAngleAroundPoint(90.0f, GeoVector4F::zero());
-    EXPECT_TRUE(vec.epsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::uniform(1e-7f)));
+    vec.RotateToAngleAroundPointDeg(90.0f, GeoVector4F::Zero());
+    EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
 }
 
-TEST(GeoVector4Test, geoVector2ConstructorReturnsCorrectGeoVector4)
+TEST(GeoVector4Test, RotateToAngleAroundPointRadRotatesCorrectAmount)
 {
-    EXPECT_EQ(GeoVector4F(GeoVector2F::one()), GeoVector4F(1.0f, 1.0f, 0.0f, 0.0f));
+    auto vec = GeoVector4F(0.0f, 1.0f, 0.0f, 0.0f);
+    vec.RotateToAngleAroundPointRad(Maths::Utilities::Tau<float>() / 4, GeoVector4F::Zero());
+    EXPECT_TRUE(vec.EpsilonEquals(GeoVector4F(-1.0f, 0.0f, 0.0f, 0.0f), GeoVector4F::Uniform(1e-7f)));
 }
 
-TEST(GeoVector4Test, geoVector3ConstructorReturnsCorrectGeoVector4)
+TEST(GeoVector4Test, GetSquaredMagnitudeReturnsCorrectLength)
 {
-    EXPECT_EQ(GeoVector4F(GeoVector3F::one()), GeoVector4F(1.0f, 1.0f, 1.0f, 0.0f));
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredMagnitude(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
+}
+
+TEST(GeoVector4Test, GetSquaredLengthReturnsCorrectLength)
+{
+    auto vec = GeoVector4F::One().GetNormalised();
+    EXPECT_FLOAT_EQ(vec.GetSquaredLength(), powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2) + powf(vec.w, 2));
+}
+
+TEST(GeoVector4Test, DotReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.Dot(vecB), (vecA.x * vecB.x) + (vecA.y * vecB.y) + (vecA.z * vecB.z) + (vecA.w * vecB.w));
+}
+
+TEST(GeoVector4Test, DistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.Distance(vecB), sqrtf(powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) +
+                                               powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2)));
+}
+
+TEST(GeoVector4Test, SquaredDistanceReturnsCorrectValue)
+{
+    auto vecA = GeoVector4F::Zero();
+    auto vecB = GeoVector4F::One();
+    EXPECT_FLOAT_EQ(vecA.SquaredDistance(vecB), powf(vecA.x - vecB.x, 2) + powf(vecA.y - vecB.y, 2) +
+                                                    powf(vecA.z - vecB.z, 2) + powf(vecA.w - vecB.w, 2));
+}
+
+TEST(GeoVector4Test, GeoVector2ConstructorReturnsCorrectGeoVector4)
+{
+    EXPECT_EQ(GeoVector4F(GeoVector2F::One()), GeoVector4F(1.0f, 1.0f, 0.0f, 0.0f));
+}
+
+TEST(GeoVector4Test, GeoVector3ConstructorReturnsCorrectGeoVector4)
+{
+    EXPECT_EQ(GeoVector4F(GeoVector3F::One()), GeoVector4F(1.0f, 1.0f, 1.0f, 0.0f));
 }

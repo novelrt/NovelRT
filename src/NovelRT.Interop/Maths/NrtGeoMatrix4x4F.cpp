@@ -15,8 +15,8 @@ extern "C"
 
     NrtBool Nrt_GeoMatrix4x4F_isNaN(NrtGeoMatrix4x4F matrix)
     {
-        if (Nrt_GeoVector4F_isNaN(matrix.x) || Nrt_GeoVector4F_isNaN(matrix.y) || Nrt_GeoVector4F_isNaN(matrix.z) ||
-            Nrt_GeoVector4F_isNaN(matrix.w))
+        if (Nrt_GeoVector4F_IsNaN(matrix.x) || Nrt_GeoVector4F_IsNaN(matrix.y) || Nrt_GeoVector4F_IsNaN(matrix.z) ||
+            Nrt_GeoVector4F_IsNaN(matrix.w))
         {
             return NRT_TRUE;
         }
@@ -26,7 +26,7 @@ extern "C"
 
     NrtGeoMatrix4x4F Nrt_GeoMatrix4x4F_getDefaultIdentity()
     {
-        auto identity = Maths::GeoMatrix4x4F::getDefaultIdentity();
+        auto identity = Maths::GeoMatrix4x4F::GetDefaultIdentity();
         return *reinterpret_cast<NrtGeoMatrix4x4F*>(&identity);
     }
 

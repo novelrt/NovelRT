@@ -12,6 +12,13 @@ namespace NovelRT::Persistence
         return _serialisationRules;
     }
 
+    std::unordered_map<std::string, std::unique_ptr<ICustomComponentLoadRule>>& Persistable::
+        GetComponentLoadRules() noexcept
+    {
+        static std::unordered_map<std::string, std::unique_ptr<ICustomComponentLoadRule>> _componentLoadRules;
+        return _componentLoadRules;
+    }
+
     void Persistable::ApplySerialisationRule(const std::string& serialisedName,
                                              gsl::span<const uint8_t> componentData,
                                              gsl::span<uint8_t> writeToData) const
@@ -42,5 +49,15 @@ namespace NovelRT::Persistence
 
         auto newData = it->second->ExecuteDeserialiseModification(serialisedData);
         memcpy(writeToData.data(), newData.data(), writeToData.size());
+    }
+
+    // TODO: Rework this at a later date.
+    void Persistable::LoadDefaultRules(std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept
+    {
+        auto& serialisationRules = GetSerialisationRules();
+
+        serialisationRules.emplace("NovelRT::Ecs::Graphics::RenderComponent",
+                                   std::unique_ptr<ICustomSerialisationRule>(
+                                       new Graphics::RenderingComponentPersistenceRule(std::move(renderingSystem))));
     }
 }

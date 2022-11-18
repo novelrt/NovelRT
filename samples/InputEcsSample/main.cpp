@@ -55,10 +55,10 @@ int main()
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     transformBuffer.PushComponentUpdateInstruction(
         0, childOfChildEntity,
-        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::zero(), 0});
+        TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
@@ -69,7 +69,7 @@ int main()
         {
             TransformComponent newComponent{};
             newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
-            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
             transforms.PushComponentUpdateInstruction(entity, newComponent);
         }
     });
@@ -97,8 +97,8 @@ int main()
         ComponentView<NovelRT::Ecs::Input::InputEventComponent> events =
             catalogue.template GetComponentView<NovelRT::Ecs::Input::InputEventComponent>();
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
-        NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::zero();
-        NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::zero();
+        NovelRT::Maths::GeoVector2F scale = NovelRT::Maths::GeoVector2F::Zero();
+        NovelRT::Maths::GeoVector2F move = NovelRT::Maths::GeoVector2F::Zero();
 
         NovelRT::Ecs::Input::InputEventComponent input;
         if (events.TryGetComponent(up, input) &&
@@ -146,7 +146,7 @@ int main()
         for (auto [entity, transform] : transforms)
         {
             TransformComponent newComponent{};
-            newComponent.scale = NovelRT::Maths::GeoVector2F::zero();
+            newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
             newComponent.scale += scale;
             newComponent.positionAndLayer += move;
             transforms.PushComponentUpdateInstruction(entity, newComponent);

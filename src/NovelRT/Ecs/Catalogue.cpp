@@ -16,8 +16,16 @@ namespace NovelRT::Ecs
     EntityId Catalogue::CreateEntity() noexcept
     {
         static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
+        auto& knownEntities = _entityCache.GetRegisteredEntities();
 
         EntityId returnId = _entityIdFactory.GetNext();
+
+        while (std::find(knownEntities.begin(), knownEntities.end(), returnId) != knownEntities.end())
+        {
+            returnId = _entityIdFactory.GetNext();
+        }
+
+        _entityCache.AddEntity(_poolId, returnId);
         _createdEntitiesThisFrame.push_back(returnId);
         return returnId;
     }
