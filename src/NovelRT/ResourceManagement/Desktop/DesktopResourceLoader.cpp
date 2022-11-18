@@ -269,20 +269,20 @@ namespace NovelRT::ResourceManagement::Desktop
         BinaryPackage package{};
         package.memberMetadata = {};
 
-        jsoncons::json j = jsoncons::bson::decode_bson<jsoncons::json>(buffer);
-        jsoncons::json metadata = j["memberMetadata"];
+        auto j = nlohmann::json::from_bson(buffer);
+        auto metadata = j["memberMetadata"];
 
-        for (auto&& obj : metadata.array_value())
+        for (auto&& obj : metadata.array())
         {
             BinaryMemberMetadata newMemberMetadata{
-                obj["name"].as<std::string>(), static_cast<BinaryDataType>(obj["type"].as<uint32_t>()),
-                obj["location"].as<size_t>(),  obj["sizeOfTypeInBytes"].as<size_t>(),
-                obj["length"].as<size_t>(),    obj["sizeOfSerialisedDataInBytes"].as<size_t>()};
+                obj.value<std::string>("name", std::string()), obj.value<BinaryDataType>("type", BinaryDataType::NullOrUnknown),
+                obj.value<size_t>("location", 0),  obj.value<size_t>("sizeOfTypeInBytes", 0),
+                obj.value<size_t>("length", 0),    obj.value<size_t>("sizeOfSerialisedDataInBytes", 0)};
 
             package.memberMetadata.emplace_back(newMemberMetadata);
         }
 
-        package.data = j["data"].as<std::vector<uint8_t>>();
+        package.data = j.value<std::vector<uint8_t>>("data", std::vector<uint8_t>());
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
         package.databaseHandle = RegisterAsset(relativePathForAssetDatabase);
@@ -294,15 +294,15 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         filePath = _resourcesRootDirectory / filePath;
 
-        jsoncons::json j(jsoncons::json_object_arg);
-        std::vector<jsoncons::json> memberMetadataJson{};
+        nlohmann::json j{};
+        nlohmann::json memberMetadataJson{};
 
         for (auto&& member : package.memberMetadata)
         {
-            jsoncons::json newMemberJson(jsoncons::json_object_arg);
+            nlohmann::json newMemberJson{};
 
             newMemberJson["name"] = member.name;
-            newMemberJson["type"] = static_cast<uint32_t>(member.type);
+            newMemberJson["type"] = member.type;
             newMemberJson["location"] = member.location;
             newMemberJson["sizeOfTypeInBytes"] = member.sizeOfTypeInBytes;
             newMemberJson["length"] = member.length;
@@ -314,8 +314,7 @@ namespace NovelRT::ResourceManagement::Desktop
         j["memberMetadata"] = memberMetadataJson;
         j["data"] = package.data;
 
-        std::vector<uint8_t> buffer{};
-        jsoncons::bson::encode_bson(j, buffer);
+        std::vector<uint8_t> buffer = nlohmann::json::to_bson(j);
 
         std::ofstream file(filePath.string(), std::ios::out | std::ios::binary);
 
