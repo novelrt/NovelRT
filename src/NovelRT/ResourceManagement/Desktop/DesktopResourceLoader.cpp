@@ -274,10 +274,12 @@ namespace NovelRT::ResourceManagement::Desktop
 
         for (auto&& obj : metadata.array())
         {
-            BinaryMemberMetadata newMemberMetadata{
-                obj.value<std::string>("name", std::string()), obj.value<BinaryDataType>("type", BinaryDataType::NullOrUnknown),
-                obj.value<size_t>("location", 0),  obj.value<size_t>("sizeOfTypeInBytes", 0),
-                obj.value<size_t>("length", 0),    obj.value<size_t>("sizeOfSerialisedDataInBytes", 0)};
+            BinaryMemberMetadata newMemberMetadata{obj.value<std::string>("name", std::string()),
+                                                   obj.value<BinaryDataType>("type", BinaryDataType::NullOrUnknown),
+                                                   obj.value<size_t>("location", 0),
+                                                   obj.value<size_t>("sizeOfTypeInBytes", 0),
+                                                   obj.value<size_t>("length", 0),
+                                                   obj.value<size_t>("sizeOfSerialisedDataInBytes", 0)};
 
             package.memberMetadata.emplace_back(newMemberMetadata);
         }
