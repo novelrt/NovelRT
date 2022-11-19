@@ -1,6 +1,8 @@
 include(FetchContent)
 message(STATUS "Fetching Fabulist")
 
+set(FABULIST_THIRDPARTY_JSON OFF)
+
 FetchContent_Declare(Fabulist
         URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
         URL_HASH SHA512=3415d179f0931265678755e4b4ebf26866bab177dafd3b278fd57c9e93292e89e03735c6b1f995f7cb86355d1b9bcdc759e3d6e7e0c3dffc8a91c1ce7b3f7d9f
