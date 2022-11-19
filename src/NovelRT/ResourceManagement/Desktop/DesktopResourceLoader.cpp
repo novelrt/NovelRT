@@ -310,7 +310,7 @@ namespace NovelRT::ResourceManagement::Desktop
             newMemberJson["length"] = member.length;
             newMemberJson["sizeOfSerialisedDataInBytes"] = member.sizeOfSerialisedDataInBytes;
 
-            memberMetadataJson.emplace_back(newMemberJson);
+            memberMetadataJson.push_back(newMemberJson);
         }
 
         j["memberMetadata"] = memberMetadataJson;
