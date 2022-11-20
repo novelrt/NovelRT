@@ -272,7 +272,7 @@ namespace NovelRT::ResourceManagement::Desktop
         auto j = nlohmann::json::from_bson(buffer);
         auto metadata = j["memberMetadata"];
 
-        for (auto&& obj : metadata.array())
+        for (auto&& obj : metadata)
         {
             BinaryMemberMetadata newMemberMetadata{obj.value<std::string>("name", std::string()),
                                                    obj.value<BinaryDataType>("type", BinaryDataType::NullOrUnknown),
@@ -297,7 +297,7 @@ namespace NovelRT::ResourceManagement::Desktop
         filePath = _resourcesRootDirectory / filePath;
 
         nlohmann::json j{};
-        nlohmann::json memberMetadataJson{};
+        nlohmann::json memberMetadataJson = nlohmann::json::array();
 
         for (auto&& member : package.memberMetadata)
         {
