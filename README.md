@@ -31,17 +31,6 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 ### Dependencies
 - CMake 3.19.8
-- Doxygen 1.8.17 (if building docs)
-- Freetype 2.12.1
-- GLFW 3.3.7
-- glm 0.9.9.9
-- gtest/gmock 1.11.0
-- libpng 1.6.35
-- libsndfile 1.0.30
-- Microsoft GSL 4.0.0
-- OneTBB 2021.5.0
-- OpenAL 1.21.1
-- spdlog 1.10.0
 - Vulkan SDK 1.3.211.0 (if you require debug/validation layers)
   OR
 - Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.9 - macOS only)
