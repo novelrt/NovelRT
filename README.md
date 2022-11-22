@@ -31,7 +31,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 ### Dependencies
 - [CMake](https://cmake.org/download/) >= 3.19.8
-- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0 (if you require debug/validation layers)
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0
 
 
 
