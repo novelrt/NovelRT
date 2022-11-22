@@ -32,14 +32,12 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 ### Dependencies
 - [CMake](https://cmake.org/download/) >= 3.19.8
 - [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0 (if you require debug/validation layers)
-  OR
-- [Vulkan Loader](https://github.com/KhronosGroup/Vulkan-Loader) >= 1.3.211 + [Vulkan Headers](https://github.com/KhronosGroup/Vulkan-Headers/blob/main/BUILD.md) >= 1.3.211 (+ [MoltenVK](https://github.com/KhronosGroup/MoltenVK/blob/master/Docs/MoltenVK_Runtime_UserGuide.md) >= 1.1.9 - macOS only)
 
 
 
 The dependencies that are handled by CMake that do not need to be manually installed are as follows:
 
-- Doxygen 1.8.17 (if building docs)
+- Doxygen 1.8.17 (building docs)
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
