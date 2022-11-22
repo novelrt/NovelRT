@@ -30,7 +30,15 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- CMake 3.19.8
+- [CMake >= 3.19.8](https://cmake.org/download/)
+- [Vulkan SDK >= 1.3.211.0](https://vulkan.lunarg.com) (if you require debug/validation layers)
+  OR
+- [Vulkan Loader](https://github.com/KhronosGroup/Vulkan-Loader) >= 1.3.211 + [Vulkan Headers](https://github.com/KhronosGroup/Vulkan-Headers/blob/main/BUILD.md) >= 1.3.211 (+ [MoltenVK](https://github.com/KhronosGroup/MoltenVK/blob/master/Docs/MoltenVK_Runtime_UserGuide.md) >= 1.1.9 - macOS only)
+
+
+
+The dependencies that are handled by CMake that do not need to be manually installed are as follows:
+
 - Doxygen 1.8.17 (if building docs)
 - GLFW 3.3.7
 - glm 0.9.9.9
@@ -41,9 +49,6 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
-- Vulkan SDK 1.3.211.0 (if you require debug/validation layers)
-  OR
-- Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.9 - macOS only)
 
 ### Build instructions
 
@@ -76,7 +81,7 @@ cmake --build . -j
 
 #### Windows (x64 only)
 _Prerequisites:_
-- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer)(if you have not done so already).
+- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) (if you have not done so already).
 - Windows 10 x64
 - Either:
   - Visual Studio 2019 w/ "Desktop development with C++" Workload,
