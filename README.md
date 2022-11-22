@@ -27,12 +27,12 @@ For information on Fabulist, check it out from [here](https://github.com/novelrt
 
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything.
 
+### Dependencies
+
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
-### Dependencies
 - [CMake](https://cmake.org/download/) >= 3.19.8
 - [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0
-
 
 
 The dependencies that are handled by CMake that do not need to be manually installed are as follows:
