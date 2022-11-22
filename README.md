@@ -30,8 +30,8 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 ### Dependencies
-- [CMake >= 3.19.8](https://cmake.org/download/)
-- [Vulkan SDK >= 1.3.211.0](https://vulkan.lunarg.com) (if you require debug/validation layers)
+- [CMake](https://cmake.org/download/) >= 3.19.8
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0 (if you require debug/validation layers)
   OR
 - [Vulkan Loader](https://github.com/KhronosGroup/Vulkan-Loader) >= 1.3.211 + [Vulkan Headers](https://github.com/KhronosGroup/Vulkan-Headers/blob/main/BUILD.md) >= 1.3.211 (+ [MoltenVK](https://github.com/KhronosGroup/MoltenVK/blob/master/Docs/MoltenVK_Runtime_UserGuide.md) >= 1.1.9 - macOS only)
 
