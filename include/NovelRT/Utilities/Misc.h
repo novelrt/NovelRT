@@ -118,25 +118,25 @@ namespace NovelRT::Utilities
          */
         template<class TTo, class TFrom>
         #if __cpp_lib_bit_cast
-        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value) noexcept
         {
             return std::bit_cast<TTo>(value);
         }
         #elif _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST
-        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value) noexcept
         {
             return __builtin_bit_cast(TTo, value);
         }
         #else
         #if _NOVELRT_UTILITIES_IS_GCC
-        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value) noexcept
         {
             TTo result;
             memcpy(&result, &value, sizeof(result));
             return result;
         }
         #else
-        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value) noexcept
         {
             return *reinterpret_cast<const TTo*>(&value);
         }
