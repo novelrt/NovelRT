@@ -591,7 +591,7 @@ namespace NovelRT::Maths
         inline GeoVector2F& operator+=(GeoVector2F other) noexcept
         {
             *reinterpret_cast<glm::vec2*>(this) =
-                *reinterpret_cast<const glm::vec2*>(this) + *reinterpret_cast<const glm::vec2*>(&other);
+                *reinterpret_cast<const glm::vec2*>(this) + NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
             return *this;
         }
 
