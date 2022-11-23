@@ -4,10 +4,35 @@
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
 
+#ifdef __has_builtin
+#define _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST __has_builtin(__builtin_bit_cast)
+#else 
+#define _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST false
+#endif
+
+#if defined(__clang__) || defined(__INTEL_COMPILER)
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define _NOVELRT_UTILITIES_IS_GCC true
+#endif
+
 #include <filesystem>
 #include <gsl/span>
 #include <type_traits>
 #include <vector>
+
+#if __has_include(<version>)
+#include <version>
+
+#if __cpp_lib_bit_cast
+#include <bit>
+#endif
+
+#if !_NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST && _NOVELRT_UTILITIES_IS_GCC
+#include<cstring>
+#endif
+
+#endif
+
 
 #define unused(x) (void)(x)
 
@@ -80,6 +105,33 @@ namespace NovelRT::Utilities
 
             return returnVec;
         }
+
+        template<class TTo, class TFrom>
+        #if __cpp_lib_bit_cast
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        {
+            return std::bit_cast<TTo>(value);
+        }
+        #elif _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        {
+            return __builtin_bit_cast(TTo, value);
+        }
+        #else
+        #if _NOVELRT_UTILITIES_IS_GCC
+        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        {
+            TTo result;
+            memcpy(&result, &value, sizeof(result));
+            return result;
+        }
+        #else
+        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
+        {
+            return *reinterpret_cast<const TTo*>(value);
+        }
+        #endif
+        #endif
     };
 }
 
