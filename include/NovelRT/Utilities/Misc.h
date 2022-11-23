@@ -138,7 +138,7 @@ namespace NovelRT::Utilities
         #else
         inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> && std::is_trivially_copyable_v<TFrom>, TTo> BitCast(const TFrom& value)
         {
-            return *reinterpret_cast<const TTo*>(value);
+            return *reinterpret_cast<const TTo*>(&value);
         }
         #endif
         #endif
