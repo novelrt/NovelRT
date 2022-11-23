@@ -181,7 +181,7 @@ namespace NovelRT::Maths
          */
         inline bool operator==(GeoVector2F other) const noexcept
         {
-            return *reinterpret_cast<const glm::vec2*>(this) == *reinterpret_cast<const glm::vec2*>(&other);
+            return *reinterpret_cast<const glm::vec2*>(this) == NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
 
         /**
@@ -192,7 +192,7 @@ namespace NovelRT::Maths
          */
         inline bool operator!=(GeoVector2F other) const noexcept
         {
-            return *reinterpret_cast<const glm::vec2*>(this) != *reinterpret_cast<const glm::vec2*>(&other);
+            return *reinterpret_cast<const glm::vec2*>(this) != NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
 
         /**
@@ -205,7 +205,7 @@ namespace NovelRT::Maths
         inline bool operator<(GeoVector2F other) const noexcept
         {
             return glm::any(
-                glm::lessThan(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other)));
+                glm::lessThan(*reinterpret_cast<const glm::vec2*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
         }
 
         /**
@@ -219,7 +219,7 @@ namespace NovelRT::Maths
         inline bool operator<=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec2*>(this),
-                                               *reinterpret_cast<const glm::vec2*>(&other)));
+                                               NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
         }
 
         /**
@@ -232,7 +232,7 @@ namespace NovelRT::Maths
         inline bool operator>(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec2*>(this),
-                                             *reinterpret_cast<const glm::vec2*>(&other)));
+                                             NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
         }
 
         /**
@@ -246,7 +246,7 @@ namespace NovelRT::Maths
         inline bool operator>=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec2*>(this),
-                                                  *reinterpret_cast<const glm::vec2*>(&other)));
+                                                  NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
         }
 
         /**
@@ -281,7 +281,7 @@ namespace NovelRT::Maths
          */
         inline GeoVector2F operator+(GeoVector2F other) const noexcept
         {
-            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) + *reinterpret_cast<const glm::vec2*>(&other));
+            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) + NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
         }
 
         /**
@@ -316,7 +316,7 @@ namespace NovelRT::Maths
          */
         inline GeoVector2F operator-(GeoVector2F other) const noexcept
         {
-            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) - *reinterpret_cast<const glm::vec2*>(&other));
+            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) - NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
         }
 
         /**
@@ -351,7 +351,7 @@ namespace NovelRT::Maths
          */
         inline GeoVector2F operator*(GeoVector2F other) const noexcept
         {
-            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) * *reinterpret_cast<const glm::vec2*>(&other));
+            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) * NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
         }
 
         /**
@@ -386,7 +386,7 @@ namespace NovelRT::Maths
          */
         GeoVector2F operator/(GeoVector2F other) const noexcept
         {
-            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / *reinterpret_cast<const glm::vec2*>(&other));
+            return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
         }
 
         /**
