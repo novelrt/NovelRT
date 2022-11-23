@@ -153,6 +153,7 @@ namespace NovelRT::Graphics
             if (buffer->GetLargestFreeRegionSize() >= sizeToStage)
             {
                 chosenBuffer = buffer;
+                break;
             }
         }
 
