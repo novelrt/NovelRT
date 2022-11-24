@@ -60,19 +60,19 @@ namespace NovelRT
 
         template<typename I, typename... IRest> void logInfo(I current, IRest... next) const
         {
-            _logger->info(current, std::forward<IRest>(next)...);
+            _logger->info(fmt::runtime(current), std::forward<IRest>(next)...);
         }
         template<typename E, typename... ERest> void logError(E current, ERest... next) const
         {
-            _logger->error(current, std::forward<ERest>(next)...);
+            _logger->error(fmt::runtime(current), std::forward<ERest>(next)...);
         }
         template<typename W, typename... WRest> void logWarning(W current, WRest... next) const
         {
-            _logger->warn(current, std::forward<WRest>(next)...);
+            _logger->warn(fmt::runtime(current), std::forward<WRest>(next)...);
         }
         template<typename D, typename... DRest> void logDebug(D current, DRest... next) const
         {
-            _logger->debug(current, std::forward<DRest>(next)...);
+            _logger->debug(fmt::runtime(current), std::forward<DRest>(next)...);
         }
     };
 
