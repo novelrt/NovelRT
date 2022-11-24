@@ -100,7 +100,11 @@ function(copy_runtime_dependencies TARGET)
             file(REMOVE otool.txt)
           endif()
           execute_process(COMMAND echo \"Copying ${dependency} and adjusting RPATH for ${TARGET}\")
-          execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_LINKER_FILE:${dependency}> $<TARGET_FILE_DIR:${TARGET}>/../Frameworks/$<TARGET_LINKER_FILE_NAME:${dependency}>)
+          execute_process(
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_LINKER_FILE:${dependency}> $<TARGET_FILE_DIR:${TARGET}>/../Frameworks/$<TARGET_LINKER_FILE_NAME:${dependency}>
+            OUTPUT_VARIABLE copy-output
+          )
+          execute_process(COMMAND echo \"Copy output: \${copy-output}\")
           execute_process(COMMAND otool -L $<TARGET_FILE:${TARGET}> OUTPUT_FILE otool.txt)
           set(GREP_ARGS .*$<TARGET_LINKER_FILE_NAME:${dependency}>)
           execute_process(
@@ -109,7 +113,9 @@ function(copy_runtime_dependencies TARGET)
             RESULT_VARIABLE grep-result)
           if(grep-output)
             string(STRIP \${grep-output} grep-output)
-            execute_process(COMMAND install_name_tool -change \"\${grep-output}\" \"@executable_path/../Frameworks/$<TARGET_LINKER_FILE_NAME:${dependency}>\" \"$<TARGET_FILE:${TARGET}>\")
+            execute_process(
+              COMMAND install_name_tool -change \"\${grep-output}\" \"@executable_path/../Frameworks/$<TARGET_LINKER_FILE_NAME:${dependency}>\" \"$<TARGET_FILE:${TARGET}>\"
+            )
           endif()
           if(EXISTS otool.txt)
             file(REMOVE otool.txt)
