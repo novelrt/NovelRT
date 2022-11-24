@@ -2,8 +2,8 @@ include(FetchContent)
 message(STATUS "Fetching Google Test")
 
 FetchContent_Declare(googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-  URL_HASH SHA512=5d8518ccd783943a03dfbbc06c9001d2a657dfae531e2353ca9b557cf4eac02399a6a2d661500ad5e57fd93b8cd257b6d4a5e8b703d30bd9a9b5fbb85d451b5e
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
+  URL_HASH SHA512=1479ea2f3172c622c0ca305f5b2bc45a42941221ec0ac7865e6d6d020ec4d008d952fc64e01a4c5138d7bed4148cf75596f25bb9e9044a98bbbf5662053ea11c
 
   PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
   TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
