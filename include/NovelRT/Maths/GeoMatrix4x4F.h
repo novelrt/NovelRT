@@ -72,8 +72,8 @@ namespace NovelRT::Maths
          */
         inline void Translate(Maths::GeoVector3F vector)
         {
-            *reinterpret_cast<glm::mat4*>(this) =
-                glm::translate(*reinterpret_cast<glm::mat4*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(vector));
+            *reinterpret_cast<glm::mat4*>(this) = glm::translate(*reinterpret_cast<glm::mat4*>(this),
+                                                                 NovelRT::Utilities::Misc::BitCast<glm::vec3>(vector));
         }
 
         /**
@@ -84,8 +84,9 @@ namespace NovelRT::Maths
          */
         inline void Rotate(float angleInRadians, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInRadians,
-                                                              NovelRT::Utilities::Misc::BitCast<glm::vec3>(rotationAngle));
+            *reinterpret_cast<glm::mat4*>(this) =
+                glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInRadians,
+                            NovelRT::Utilities::Misc::BitCast<glm::vec3>(rotationAngle));
         }
 
         /**
@@ -106,8 +107,8 @@ namespace NovelRT::Maths
          */
         inline void Scale(GeoVector3F scaleValue)
         {
-            *reinterpret_cast<glm::mat4*>(this) =
-                glm::scale(*reinterpret_cast<glm::mat4*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(scaleValue));
+            *reinterpret_cast<glm::mat4*>(this) = glm::scale(*reinterpret_cast<glm::mat4*>(this),
+                                                             NovelRT::Utilities::Misc::BitCast<glm::vec3>(scaleValue));
         }
 
         /**
