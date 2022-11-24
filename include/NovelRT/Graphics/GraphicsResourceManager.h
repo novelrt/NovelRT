@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
     class GraphicsResourceManager
     {
     private:
-        std::vector<std::shared_ptr<GraphicsBuffer>> _stagingBuffers;
+        std::vector<std::vector<std::shared_ptr<GraphicsBuffer>>> _stagingBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _defaultBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _vertexBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _indexBuffers;
@@ -22,6 +22,7 @@ namespace NovelRT::Graphics
         std::set<size_t> _constantBuffersToUnmapAndWrite;
         std::shared_ptr<GraphicsDevice> _graphicsDevice;
         size_t _stagingBufferSize;
+        size_t _contextIndex;
         static constexpr size_t _tenMegabytesAsBytes = 10 * 1024 * 1024;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateStagingBuffer();
@@ -43,7 +44,7 @@ namespace NovelRT::Graphics
 
         ~GraphicsResourceManager() = default;
 
-        void PrepForFrame();
+        void PrepForFrameWithContextIndex(size_t newContextIndex);
 
         template<typename TData>
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data, size_t alignment = 0)

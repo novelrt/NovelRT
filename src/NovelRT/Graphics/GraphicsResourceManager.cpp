@@ -7,7 +7,14 @@ namespace NovelRT::Graphics
 {
     GraphicsResourceManager::GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice,
                                                      size_t startingStagingBufferSize)
-        : _graphicsDevice(std::move(graphicsDevice)), _stagingBufferSize(startingStagingBufferSize)
+        : _defaultBuffers{},
+          _vertexBuffers{},
+          _indexBuffers{},
+          _constantBuffers{},
+          _textures{},
+          _graphicsDevice(std::move(graphicsDevice)),
+          _stagingBufferSize(startingStagingBufferSize),
+          _contextIndex(0)
     {
         if (_stagingBufferSize == 0)
         {
@@ -22,7 +29,8 @@ namespace NovelRT::Graphics
           _constantBuffers{},
           _textures{},
           _graphicsDevice(nullptr),
-          _stagingBufferSize(0)
+          _stagingBufferSize(0),
+          _contextIndex(0)
     {
         *this = other;
     }
@@ -34,7 +42,8 @@ namespace NovelRT::Graphics
           _constantBuffers{},
           _textures{},
           _graphicsDevice(nullptr),
-          _stagingBufferSize(0)
+          _stagingBufferSize(0),
+          _contextIndex(0)
     {
         *this = std::move(other);
     }
@@ -48,6 +57,7 @@ namespace NovelRT::Graphics
 
         _graphicsDevice = other._graphicsDevice;
         _stagingBufferSize = other._stagingBufferSize;
+        _contextIndex = other._contextIndex;
         _stagingBuffers = {};
         _defaultBuffers = {};
         _vertexBuffers = {};
@@ -61,7 +71,6 @@ namespace NovelRT::Graphics
     GraphicsResourceManager& GraphicsResourceManager::operator=(GraphicsResourceManager&& other) noexcept
     {
         _graphicsDevice = std::move(other._graphicsDevice);
-
         _stagingBuffers = std::move(other._stagingBuffers);
         _defaultBuffers = std::move(other._defaultBuffers);
         _vertexBuffers = std::move(other._vertexBuffers);
@@ -70,22 +79,41 @@ namespace NovelRT::Graphics
         _textures = std::move(other._textures);
         _stagingBufferSize = other._stagingBufferSize;
         other._stagingBufferSize = 0;
+        _contextIndex = other._contextIndex;
+        other._contextIndex = 0;
 
         return *this;
     }
 
-    void GraphicsResourceManager::PrepForFrame()
+    void GraphicsResourceManager::PrepForFrameWithContextIndex(size_t newContextIndex)
     {
-        size_t totalSize = 0;
+        size_t finalContextCount = _contextIndex < newContextIndex ? newContextIndex : _contextIndex;
 
-        for (auto&& buffer : _stagingBuffers)
+        size_t currentStagingBufferContextSize = _stagingBuffers.size();
+        while (currentStagingBufferContextSize <= finalContextCount)
         {
-            totalSize += buffer->GetSize();
+            _stagingBuffers.emplace_back(std::vector<std::shared_ptr<GraphicsBuffer>>{});
+            ++currentStagingBufferContextSize;
         }
 
-        totalSize /= _stagingBuffers.size();
-        _stagingBuffers.clear();
-        _stagingBufferSize = totalSize;
+        if (_stagingBuffers[_contextIndex].size() == 0)
+        {
+            _stagingBufferSize = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+        }
+        else
+        {
+            size_t totalSize = 0;
+
+            for (auto&& buffer : _stagingBuffers[_contextIndex])
+            {
+                totalSize += buffer->GetSize();
+            }
+
+            totalSize /= _stagingBuffers.size();
+            _stagingBufferSize = totalSize;
+        }
+
+        _stagingBuffers[newContextIndex].clear();
     }
 
     GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadVertexDataUntyped(void* data,
@@ -148,7 +176,7 @@ namespace NovelRT::Graphics
 
         std::shared_ptr<GraphicsBuffer> chosenBuffer = nullptr;
 
-        for (auto&& buffer : _stagingBuffers)
+        for (auto&& buffer : _stagingBuffers[_contextIndex])
         {
             if (buffer->GetLargestFreeRegionSize() >= sizeToStage)
             {
@@ -171,7 +199,7 @@ namespace NovelRT::Graphics
             Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write,
             Graphics::GraphicsResourceAccess::Read, _stagingBufferSize);
 
-        _stagingBuffers.emplace_back(bufferToReturn);
+        _stagingBuffers[_contextIndex].emplace_back(bufferToReturn);
 
         return bufferToReturn;
     }
