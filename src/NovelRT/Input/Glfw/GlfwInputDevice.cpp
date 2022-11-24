@@ -8,7 +8,7 @@ namespace NovelRT::Input::Glfw
     GlfwInputDevice::GlfwInputDevice() noexcept
         : _isInitialised(false),
           _previousStates(std::vector<InputAction>()),
-          _mousePos(NovelRT::Maths::GeoVector2F::zero())
+          _mousePos(NovelRT::Maths::GeoVector2F::Zero())
     {
     }
 

@@ -13,7 +13,7 @@ using namespace NovelRT::Maths;
 
 TEST(InteropQuadTreePointTest, createReturnsValidHandle)
 {
-    NrtGeoVector2F vec = Nrt_GeoVector2F_one();
+    NrtGeoVector2F vec = Nrt_GeoVector2F_One();
     EXPECT_NE(Nrt_QuadTreePoint_create(vec), nullptr);
 }
 

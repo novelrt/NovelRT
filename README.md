@@ -32,7 +32,6 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 ### Dependencies
 - CMake 3.19.8
 - Doxygen 1.8.17 (if building docs)
-- Freetype 2.12.1
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0

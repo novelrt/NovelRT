@@ -78,7 +78,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector2F created from normalising this GeoVector2F.
          */
-        inline GeoVector2F getNormalised() const noexcept
+        inline GeoVector2F GetNormalised() const noexcept
         {
             return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));
         }
@@ -93,13 +93,15 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}} = \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 +
-         *      9} = \sqrt{25} = 5
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}}\\
+         *      &= \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 + 9}\\
+         *      &= \sqrt{25}\\
+         *      &= 5
          * \f}
          *
          * @return The magnitude of this GeoVector2F.
          */
-        inline float getMagnitude() const noexcept
+        inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec2*>(this));
         }
@@ -114,15 +116,61 @@ namespace NovelRT::Maths
          *      4\\
          *      3
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}} = \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 +
-         *      9} = \sqrt{25} = 5
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2}}\\
+         *      &= \sqrt{4^{2} + 3^{2}} \rightarrow \sqrt{16 + 9}\\
+         *      &= \sqrt{25}\\
+         *      &= 5
          * \f}
          *
          * @return The length of this GeoVector2F.
          */
-        inline float getLength() const noexcept
+        inline float GetLength() const noexcept
         {
-            return getMagnitude();
+            return GetMagnitude();
+        }
+
+        /**
+         * @brief Calculates the squared magnitude of this GeoVector2F using its components. This is the same as
+         * calculating the vector's squared length.
+         *
+         * @details
+         * To find a vector's squared magnitude you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2}\\
+         *      &= 4^{2} + 3^{2} \rightarrow 16 + 9\\
+         *      &= 25
+         * \f}
+         *
+         * @return The squared magnitude of this GeoVector2F.
+         */
+        inline float GetSquaredMagnitude() const noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(this));
+        }
+
+        /**
+         * @brief Calculates the squared length of this GeoVector2F using its components. This is the same as
+         * calculating the vector's squared magnitude.
+         *
+         * @details
+         * To find a vector's squared length you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2}\\
+         *      &= 4^{2} + 3^{2} \rightarrow 16 + 9\\
+         *      &= 25
+         * \f}
+         *
+         * @return The squared length of this GeoVector2F.
+         */
+        inline float GetSquaredLength() const noexcept
+        {
+            return GetSquaredMagnitude();
         }
 
         /**
@@ -843,12 +891,23 @@ namespace NovelRT::Maths
          * @param angleRotationValue The angle in degrees to rotate by.
          * @param point The point that acts as this vectors origin point to rotate around.
          */
-        void rotateToAngleAroundPoint(float angleRotationValue, GeoVector2F point) noexcept
+        void RotateToAngleAroundPointDeg(float angleRotationValue, GeoVector2F point) noexcept
+        {
+            RotateToAngleAroundPointRad(glm::radians(angleRotationValue), point);
+        }
+
+        /**
+         * @brief Rotates this vector around a given point by a given angle in radians.
+         *
+         * @param angleRotationValue The angle in radians to rotate by.
+         * @param point The point that acts as this vectors origin point to rotate around.
+         */
+        void RotateToAngleAroundPointRad(float angleRotationValue, GeoVector2F point) noexcept
         {
             *reinterpret_cast<glm::vec2*>(this) =
                 glm::rotate((*reinterpret_cast<glm::vec2*>(this) = *reinterpret_cast<const glm::vec2*>(this) -
                                                                    *reinterpret_cast<const glm::vec2*>(&point)),
-                            glm::radians(angleRotationValue)) +
+                            angleRotationValue) +
                 *reinterpret_cast<const glm::vec2*>(&point);
         }
 
@@ -861,7 +920,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool epsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
+        bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec2*>(this),
                                        *reinterpret_cast<const glm::vec2*>(&other),
@@ -869,13 +928,113 @@ namespace NovelRT::Maths
         }
 
         /**
+         * @brief Returns the sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
+         *
+         * @details
+         * An example of a dot product between two two-dimensional vectors: \f{align*}{
+         *      \vec{u} &= \begin{pmatrix}
+         *      2\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y}\\
+         *      &= 2 \times 4 + 3 \times 5\\
+         *      &= 8 + 15\\
+         *      &= 23
+         * \f}
+         *
+         * @param other The other GeoVector2F, the components of which get multiplied and summed up with this
+         * GeoVector2F.
+         * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
+         */
+        inline float Dot(GeoVector2F other) noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(&other));
+        }
+
+        /**
+         * @brief Calculates the distance between this GeoVector2F and another GeoVector2F.
+         *
+         * @details
+         * The calculation used to obtain the distance can be seen in this example: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\
+         *      2
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      6\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      6 - 1\\
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \| &= \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2}\\
+         *      &= \sqrt{5^2 + 3^2} \rightarrow \sqrt{25 + 9}\\
+         *      &= \sqrt{36}\\
+         *      &= 6
+         * \f}
+         *
+         * @param other The other point to meassure the distance to.
+         * @return The distance between this GeoVector2F and another GeoVector2F.
+         */
+        inline float Distance(GeoVector2F other) noexcept
+        {
+            return glm::distance(*reinterpret_cast<const glm::vec2*>(this),
+                                 *reinterpret_cast<const glm::vec2*>(&other));
+        }
+
+        /**
+         * @brief Calculates the squared distance between this GeoVector2F and another GeoVector2F.
+         *
+         * @details
+         * The calculation used to obtain the squared distance can be seen in this example: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      1\\
+         *      2
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      6\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      6 - 1\\
+         *      5 - 2
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \|^2 &= {\Delta v}_x^2 + {\Delta v}_y^2\\
+         *      &= 5^2 + 3^2 \rightarrow 25 + 9\\
+         *      &= 36
+         * \f}
+         *
+         * @param other The other point to meassure the squared distance to.
+         * @return The squared distance between this GeoVector2F and another GeoVector2F.
+         */
+        inline float SquaredDistance(GeoVector2F other) noexcept
+        {
+            return (*this - other).GetSquaredMagnitude();
+        }
+
+        /**
          * @brief Creates a new GeoVector2F instance with a uniform value of zero.
          *
          * @return A new GeoVector2F instance with all components set to zero.
          */
-        static GeoVector2F zero() noexcept
+        static GeoVector2F Zero() noexcept
         {
-            return GeoVector2F::uniform(0);
+            return GeoVector2F::Uniform(0);
         }
 
         /**
@@ -883,18 +1042,18 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector2F instance with all components set to one.
          */
-        static GeoVector2F one() noexcept
+        static GeoVector2F One() noexcept
         {
-            return GeoVector2F::uniform(1);
+            return GeoVector2F::Uniform(1);
         }
 
         /**
          * @brief Creates a new uniform GeoVector2F based on the specified value.
          *
-         * @param The value to use as the uniform value across the GeoVector2F.
+         * @param value The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
-        static GeoVector2F uniform(float value) noexcept
+        static GeoVector2F Uniform(float value) noexcept
         {
             return GeoVector2F(value, value);
         }

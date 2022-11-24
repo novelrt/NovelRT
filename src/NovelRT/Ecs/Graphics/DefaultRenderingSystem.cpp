@@ -205,7 +205,7 @@ namespace NovelRT::Ecs::Graphics
         float top = -halfHeight;
         float bottom = +halfHeight;
 
-        auto position = Maths::GeoVector2F::zero();
+        auto position = Maths::GeoVector2F::Zero();
         auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
         auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
                                                                  Maths::GeoVector3F(position.x, position.y, 0.0f),
@@ -231,7 +231,7 @@ namespace NovelRT::Ecs::Graphics
             float top = -halfHeight;
             float bottom = +halfHeight;
 
-            auto position = Maths::GeoVector2F::zero();
+            auto position = Maths::GeoVector2F::Zero();
             auto projectionMatrix = Maths::GeoMatrix4x4F::CreateOrthographic(left, right, bottom, top, 0.1f, 65535.0f);
             auto viewMatrix = Maths::GeoMatrix4x4F::CreateFromLookAt(Maths::GeoVector3F(position.x, position.y, -1.0f),
                                                                      Maths::GeoVector3F(position.x, position.y, 0.0f),
@@ -313,10 +313,10 @@ namespace NovelRT::Ecs::Graphics
 
                 auto textureInfo = GetExistingTexture(renderComponent.textureId);
                 GpuSpanCounter& tempSpanCounter = gpuSpanCounterMap[renderComponent.primitiveInfoId][layer];
-                auto scaleValue = Maths::GeoVector2F::uniform(500);
+                auto scaleValue = Maths::GeoVector2F::Uniform(500);
                 float aspect = static_cast<float>(textureInfo->height) / static_cast<float>(textureInfo->width);
                 scaleValue.y *= aspect;
-                Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::getDefaultIdentity();
+                Maths::GeoMatrix4x4F matrixToInsert = Maths::GeoMatrix4x4F::GetDefaultIdentity();
 
                 std::vector<TransformComponent> parentTransforms{};
 

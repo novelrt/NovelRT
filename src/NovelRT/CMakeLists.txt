@@ -97,7 +97,7 @@ endif()
 if(APPLE)
   set(NOVELRT_LIB_SUFFIX "dylib")
   set_target_properties(Engine PROPERTIES
-    SOVERSION ${PROJECT_VERSION} 
+    SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
   )
   set(VERBOSE TRUE)
@@ -167,7 +167,7 @@ target_link_libraries(Engine
     glfw
     png
     spdlog::spdlog
-    jsoncons
+    nlohmann_json::nlohmann_json
     stduuid
     fabulist::runtime
     Vorbis::vorbis

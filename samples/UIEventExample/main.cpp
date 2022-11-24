@@ -107,17 +107,17 @@ int main()
                 transformRegion.value());
 
             // im only adding 3 transforms for this example.
-            auto matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
+            auto matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(0, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[0] = matrixToInsert;
-            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
+            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, -300, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[1] = matrixToInsert;
-            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::getDefaultIdentity();
+            matrixToInsert = NovelRT::Maths::GeoMatrix4x4F::GetDefaultIdentity();
             matrixToInsert.Translate(NovelRT::Maths::GeoVector3F(700, 250, 0));
-            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::uniform(500));
+            matrixToInsert.Scale(NovelRT::Maths::GeoVector2F::Uniform(500));
             ptr[2] = matrixToInsert;
 
             args.resourceManager.UnmapAndWriteAllConstantBuffers();

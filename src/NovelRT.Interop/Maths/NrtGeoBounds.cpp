@@ -14,7 +14,7 @@ extern "C"
 
     NrtGeoBounds Nrt_GeoBounds_zero()
     {
-        return NrtGeoBounds{Nrt_GeoVector2F_zero(), Nrt_GeoVector2F_zero(), 0.0f};
+        return NrtGeoBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     }
 
     NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int32_t index)
