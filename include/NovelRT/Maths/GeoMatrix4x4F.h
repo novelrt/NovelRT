@@ -73,7 +73,7 @@ namespace NovelRT::Maths
         inline void Translate(Maths::GeoVector3F vector)
         {
             *reinterpret_cast<glm::mat4*>(this) =
-                glm::translate(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&vector));
+                glm::translate(*reinterpret_cast<glm::mat4*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(vector));
         }
 
         /**
@@ -85,7 +85,7 @@ namespace NovelRT::Maths
         inline void Rotate(float angleInRadians, GeoVector3F rotationAngle = GeoVector3F(0.0f, 0.0f, -1.0f))
         {
             *reinterpret_cast<glm::mat4*>(this) = glm::rotate(*reinterpret_cast<glm::mat4*>(this), angleInRadians,
-                                                              *reinterpret_cast<glm::vec3*>(&rotationAngle));
+                                                              NovelRT::Utilities::Misc::BitCast<glm::vec3>(rotationAngle));
         }
 
         /**
@@ -107,7 +107,7 @@ namespace NovelRT::Maths
         inline void Scale(GeoVector3F scaleValue)
         {
             *reinterpret_cast<glm::mat4*>(this) =
-                glm::scale(*reinterpret_cast<glm::mat4*>(this), *reinterpret_cast<glm::vec3*>(&scaleValue));
+                glm::scale(*reinterpret_cast<glm::mat4*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(scaleValue));
         }
 
         /**
@@ -155,7 +155,7 @@ namespace NovelRT::Maths
          */
         inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
-            return *reinterpret_cast<const glm::mat4*>(this) == *reinterpret_cast<const glm::mat4*>(&other);
+            return *reinterpret_cast<const glm::mat4*>(this) == NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
         }
 
         /**
@@ -167,7 +167,7 @@ namespace NovelRT::Maths
          */
         inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
-            return *reinterpret_cast<const glm::mat4*>(this) != *reinterpret_cast<const glm::mat4*>(&other);
+            return *reinterpret_cast<const glm::mat4*>(this) != NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
         }
 
         /**
@@ -211,7 +211,7 @@ namespace NovelRT::Maths
         inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) +
-                                 *reinterpret_cast<const glm::mat4*>(&other));
+                                 NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
         }
 
         /**
@@ -255,7 +255,7 @@ namespace NovelRT::Maths
         inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) -
-                                 *reinterpret_cast<const glm::mat4*>(&other));
+                                 NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
         }
 
         /**
@@ -299,7 +299,7 @@ namespace NovelRT::Maths
         inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) *
-                                 *reinterpret_cast<const glm::mat4*>(&other));
+                                 NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
         }
 
         /**
@@ -343,7 +343,7 @@ namespace NovelRT::Maths
          */
         inline GeoMatrix4x4F operator+=(GeoMatrix4x4F other) noexcept
         {
-            *reinterpret_cast<glm::mat4*>(this) += *reinterpret_cast<const glm::mat4*>(&other);
+            *reinterpret_cast<glm::mat4*>(this) += NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
             return *this;
         }
 
@@ -388,7 +388,7 @@ namespace NovelRT::Maths
          */
         inline GeoMatrix4x4F operator-=(GeoMatrix4x4F other) noexcept
         {
-            *reinterpret_cast<glm::mat4*>(this) -= *reinterpret_cast<const glm::mat4*>(&other);
+            *reinterpret_cast<glm::mat4*>(this) -= NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
             return *this;
         }
 
@@ -433,7 +433,7 @@ namespace NovelRT::Maths
          */
         inline GeoMatrix4x4F operator*=(GeoMatrix4x4F other) noexcept
         {
-            *reinterpret_cast<glm::mat4*>(this) *= *reinterpret_cast<const glm::mat4*>(&other);
+            *reinterpret_cast<glm::mat4*>(this) *= NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
             return *this;
         }
 
@@ -822,9 +822,9 @@ namespace NovelRT::Maths
          */
         static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
         {
-            return GeoMatrix4x4F(glm::lookAt(*reinterpret_cast<glm::vec3*>(&eye),
-                                             *reinterpret_cast<glm::vec3*>(&centre),
-                                             *reinterpret_cast<glm::vec3*>(&up)));
+            return GeoMatrix4x4F(glm::lookAt(NovelRT::Utilities::Misc::BitCast<glm::vec3>(eye),
+                                             NovelRT::Utilities::Misc::BitCast<glm::vec3>(centre),
+                                             NovelRT::Utilities::Misc::BitCast<glm::vec3>(up)));
         }
     };
 }
