@@ -120,11 +120,11 @@ function(copy_runtime_dependencies TARGET)
           OUTPUT copy_${dependency}_to_${TARGET}${config_suffix}.cmake
           CONTENT "${dep_snippet}"
         )
-        add_custom_target(copy_${dependency}_to_${TARGET}${config_suffix}
+        add_custom_command(TARGET ${TARGET}
+          POST_BUILD
           COMMAND ${CMAKE_COMMAND} -P copy_${dependency}_to_${TARGET}${config_suffix}.cmake
+          DEPENDS $<TARGET_FILE:${TARGET}> $<TARGET_FILE:${dependency}>
         )
-        add_dependencies(${TARGET} copy_${dependency}_to_${TARGET}${config_suffix})
-        add_dependencies(copy_${dependency}_to_${TARGET}${config_suffix} ${dependency})
         list(POP_BACK dep_snippet)
     endif()
   endif()
