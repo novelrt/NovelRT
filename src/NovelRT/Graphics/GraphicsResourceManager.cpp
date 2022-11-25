@@ -174,59 +174,46 @@ namespace NovelRT::Graphics
     {
         _stagingBufferSize = _stagingBufferSize < sizeToStage ? sizeToStage : _stagingBufferSize;
 
-        std::shared_ptr<GraphicsBuffer> chosenBuffer = nullptr;
-
         for (auto&& buffer : _stagingBuffers[_contextIndex])
         {
             if (buffer->GetLargestFreeRegionSize() >= sizeToStage)
             {
-                chosenBuffer = buffer;
-                break;
+                return buffer;
             }
         }
 
-        if (chosenBuffer == nullptr)
-        {
-            chosenBuffer = CreateStagingBuffer();
-        }
-
-        return chosenBuffer;
+        return CreateStagingBuffer();
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::CreateStagingBuffer()
     {
-        auto bufferToReturn = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        return _stagingBuffers[_contextIndex].emplace_back(_graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
             Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write,
-            Graphics::GraphicsResourceAccess::Read, _stagingBufferSize);
-
-        _stagingBuffers[_contextIndex].emplace_back(bufferToReturn);
-
-        return bufferToReturn;
+            Graphics::GraphicsResourceAccess::Read, _stagingBufferSize));
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetOrCreateGraphicsBufferForAllocationSize(
         size_t allocationSize,
         GraphicsBufferKind bufferKind)
     {
-        std::vector<std::shared_ptr<GraphicsBuffer>>* buffers = nullptr;
+        const std::vector<std::shared_ptr<GraphicsBuffer>>& buffers = [&](){
+            switch (bufferKind)
+            {
+                case GraphicsBufferKind::Default:
+                    return _defaultBuffers;
+                case GraphicsBufferKind::Vertex:
+                    return _vertexBuffers;
+                case GraphicsBufferKind::Index:
+                    return _indexBuffers;
+                case GraphicsBufferKind::Constant:
+                    return _constantBuffers;
+                default:
+                    throw Exceptions::InvalidOperationException();
+            }
+        }();
 
-        switch (bufferKind)
-        {
-            case GraphicsBufferKind::Default:
-                buffers = &_defaultBuffers;
-                break;
-            case GraphicsBufferKind::Vertex:
-                buffers = &_vertexBuffers;
-                break;
-            case GraphicsBufferKind::Index:
-                buffers = &_indexBuffers;
-                break;
-            case GraphicsBufferKind::Constant:
-                buffers = &_constantBuffers;
-                break;
-        }
 
-        for (auto&& buffer : *buffers)
+        for (auto&& buffer : buffers)
         {
             if (buffer->GetLargestFreeRegionSize() >= allocationSize)
             {
@@ -234,45 +221,41 @@ namespace NovelRT::Graphics
             }
         }
 
-        std::shared_ptr<GraphicsBuffer> newBuffer = nullptr;
-
-        if (bufferKind == GraphicsBufferKind::Constant)
-        {
-            newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-                GraphicsBufferKind::Constant, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read,
-                ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
-        }
-        else
-        {
-            size_t minimumBlockSize = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
-            size_t sizeToAllocate = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
-            while (sizeToAllocate < allocationSize)
+        const auto newBuffer = [&]() {
+            if (bufferKind == GraphicsBufferKind::Constant)
             {
-                sizeToAllocate += minimumBlockSize;
+                return _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+                    GraphicsBufferKind::Constant, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read,
+                    ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
             }
+            else
+            {
+                size_t minimumBlockSize = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+                size_t sizeToAllocate = _graphicsDevice->GetMemoryAllocator()->GetSettings().MinimumBlockSize;
+                while (sizeToAllocate < allocationSize)
+                {
+                    sizeToAllocate += minimumBlockSize;
+                }
 
-            newBuffer = _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-                bufferKind, GraphicsResourceAccess::None, GraphicsResourceAccess::Write,
-                ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
-        }
+                return _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+                    bufferKind, GraphicsResourceAccess::None, GraphicsResourceAccess::Write,
+                    ((allocationSize > _tenMegabytesAsBytes) ? allocationSize : _tenMegabytesAsBytes));
+            }
+        }();
 
         switch (bufferKind)
         {
             case GraphicsBufferKind::Default:
-                _defaultBuffers.emplace_back(newBuffer);
-                break;
+                return _defaultBuffers.emplace_back(newBuffer);
             case GraphicsBufferKind::Vertex:
-                _vertexBuffers.emplace_back(newBuffer);
-                break;
+                return _vertexBuffers.emplace_back(newBuffer);
             case GraphicsBufferKind::Index:
-                _indexBuffers.emplace_back(newBuffer);
-                break;
+                return _indexBuffers.emplace_back(newBuffer);
             case GraphicsBufferKind::Constant:
-                _constantBuffers.emplace_back(newBuffer);
-                break;
+                return _constantBuffers.emplace_back(newBuffer);
         }
 
-        return newBuffer;
+        throw Exceptions::InvalidOperationException(); // we should never reach here
     }
 
     GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadTextureData(
