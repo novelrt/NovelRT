@@ -603,17 +603,17 @@ namespace NovelRT::Graphics
 
                 if (paddingEnd != 0)
                 {
-                    auto iterator = _regions->insert(
-                        std::next(regionNode),
-                        GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(), false, offset + size, paddingEnd));
+                    auto iterator = _regions->insert(std::next(regionNode),
+                                                     GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(),
+                                                                                 false, offset + size, paddingEnd));
                     RegisterFreeRegion(iterator);
                 }
 
                 if (paddingBegin != 0)
                 {
-                    auto iterator =
-                        _regions->insert(regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(), false,
-                                                                                 offset - paddingBegin, paddingBegin));
+                    auto iterator = _regions->insert(
+                        regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(), false,
+                                                                offset - paddingBegin, paddingBegin));
                     RegisterFreeRegion(iterator);
                 }
 
