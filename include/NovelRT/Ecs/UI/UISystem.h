@@ -35,7 +35,7 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> _uiPipeline;
         tbb::mutex _submissionInfoListMutex;
         std::queue<std::vector<CmdListSubmissionInfo>> _submissionInfoListQueue;
-        std::vector<CmdListSubmissionInfo> _gpuObjectsToCleanUp;
+        std::vector<std::vector<CmdListSubmissionInfo>> _gpuObjectsToCleanUp;
         std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive>> _primitivesForFrame;
 
         size_t _drawCallCounter;

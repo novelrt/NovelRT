@@ -66,13 +66,24 @@ namespace NovelRT::Ecs::UI
         {
             _primitivesForFrame.clear();
 
-            for (auto&& cmdList : _gpuObjectsToCleanUp)
+            size_t contextIndex = eventArgs.graphicsDevice->GetContextIndex();
+            size_t gpuObjectContextTrackingDataCount = _gpuObjectsToCleanUp.size() <= contextIndex ? contextIndex : _gpuObjectsToCleanUp.size();
+            size_t whatTheFuckDoICallThis = _gpuObjectsToCleanUp.size();
+
+            while (whatTheFuckDoICallThis <= gpuObjectContextTrackingDataCount)
+            {
+                _gpuObjectsToCleanUp.emplace_back(std::vector<CmdListSubmissionInfo>{});
+                ++whatTheFuckDoICallThis;
+            }
+
+
+            for (auto&& cmdList : _gpuObjectsToCleanUp[contextIndex])
             {
                 _defaultRenderingSystem->DeleteVertexData(cmdList.Vertices.GetBackingConcurrentSharedPtr());
                 _defaultRenderingSystem->DeleteIndexData(cmdList.Indices.GetBackingConcurrentSharedPtr());
             }
 
-            _gpuObjectsToCleanUp.clear();
+            _gpuObjectsToCleanUp[contextIndex].clear();
 
             std::vector<CmdListSubmissionInfo> finalCmdListSubmissionInfosForFrame{};
 
@@ -109,7 +120,7 @@ namespace NovelRT::Ecs::UI
                     _primitivesForFrame.emplace_back(primitive);
                 }
 
-                _gpuObjectsToCleanUp.emplace_back(cmdListSubmissionInfo);
+                _gpuObjectsToCleanUp[contextIndex].emplace_back(cmdListSubmissionInfo);
             }
         };
 

@@ -13,6 +13,8 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
+    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Err;
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
@@ -82,9 +84,8 @@ int main()
     // we cache the primitive here so its kept alive long enough so that Vulkan can execute the relevant cmd lists
     std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive> primitive = nullptr;
 
-    renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args) {
-        ImGui::Begin("Hello, Novel-Chan");
-        ImGui::End();
+    scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::UI::UISystem>()->Draw += [&](auto, auto, auto) {
+        ImGui::Text("Hello, NovelRT!");
     };
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
