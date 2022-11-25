@@ -224,6 +224,7 @@ namespace NovelRT::Ecs::Graphics
             RegisterPipeline("default", pipeline, vertShaderData.databaseHandle, pixelShaderData.databaseHandle);
 
         auto graphicsContext = _graphicsDevice->GetCurrentContext();
+        _resourceManager.getActual().PrepForFrameWithContextIndex(graphicsContext->GetIndex());
 
         graphicsContext->BeginFrame();
         auto pVertexBuffer = std::vector<TexturedVertex>{
@@ -299,6 +300,7 @@ namespace NovelRT::Ecs::Graphics
         auto& gpuResourceManager = _resourceManager.getActual();
 
         auto context = _graphicsDevice->GetCurrentContext();
+        gpuResourceManager.PrepForFrameWithContextIndex(context->GetIndex());
         context->BeginFrame();
 
         ResolveGpuResourceCleanup();

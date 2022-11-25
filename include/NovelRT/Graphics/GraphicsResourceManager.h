@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
     class GraphicsResourceManager
     {
     private:
-        Utilities::Lazy<std::shared_ptr<GraphicsBuffer>> _stagingBuffer;
+        std::vector<std::vector<std::shared_ptr<GraphicsBuffer>>> _stagingBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _defaultBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _vertexBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _indexBuffers;
@@ -22,10 +22,13 @@ namespace NovelRT::Graphics
         std::set<size_t> _constantBuffersToUnmapAndWrite;
         std::shared_ptr<GraphicsDevice> _graphicsDevice;
         size_t _stagingBufferSize;
+        size_t _contextIndex;
         static constexpr size_t _tenMegabytesAsBytes = 10 * 1024 * 1024;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateStagingBuffer();
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(size_t allocationSize, GraphicsBufferKind bufferKind);
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(
+            size_t allocationSize,
+            GraphicsBufferKind bufferKind);
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetStagingBufferWithProperSizeHandling(
             size_t sizeToStage,
             std::shared_ptr<GraphicsContext>& currentContext);
@@ -40,6 +43,8 @@ namespace NovelRT::Graphics
         GraphicsResourceManager& operator=(GraphicsResourceManager&& other) noexcept;
 
         ~GraphicsResourceManager() = default;
+
+        void PrepForFrameWithContextIndex(size_t newContextIndex);
 
         template<typename TData>
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data, size_t alignment = 0)
@@ -59,9 +64,9 @@ namespace NovelRT::Graphics
         }
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexDataUntyped(void* data,
-                                                                                   size_t dataTypeSize,
-                                                                                   size_t dataLength,
-                                                                                   size_t alignment = 64);
+                                                                                  size_t dataTypeSize,
+                                                                                  size_t dataLength,
+                                                                                  size_t alignment = 64);
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
             const ResourceManagement::TextureMetadata& metadata,
@@ -93,7 +98,6 @@ namespace NovelRT::Graphics
         void FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource);
         void FreeIndexData(GraphicsMemoryRegion<GraphicsResource>& indexResource);
         void FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource);
-
     };
 }
 
