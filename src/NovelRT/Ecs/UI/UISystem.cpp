@@ -113,6 +113,7 @@ namespace NovelRT::Ecs::UI
             }
         };
 
+/*
         // TEST CODE - DELETE WHEN DONE
 
         Draw += [&](auto, auto, auto) {
@@ -120,6 +121,7 @@ namespace NovelRT::Ecs::UI
         };
 
         // END TEST CODE
+        */
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
