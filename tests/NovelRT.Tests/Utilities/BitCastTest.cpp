@@ -47,10 +47,7 @@ TEST(BitCastTest, CastGlmMat4ToNovelRTGeoMatrix4x4)
     float x2 = 0.0f, y2 = 1.0f, z2 = 0.0f, w2 = 0.0f;
     float x3 = 0.0f, y3 = 0.0f, z3 = 1.0f, w3 = 0.0f;
     float x4 = 0.0f, y4 = 0.0f, z4 = 0.0f, w4 = 1.0f;
-    glm::mat4 glmMat4 = glm::mat4{x1, y1, z1, w1,
-                                  x2, y2, z2, w2,
-                                  x3, y3, z3, w3,
-                                  x4, y4, z4, w4};
+    glm::mat4 glmMat4 = glm::mat4{x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3, x4, y4, z4, w4};
     GeoMatrix4x4F nrtMat4x4 = Misc::BitCast<GeoMatrix4x4F>(glmMat4);
 
     EXPECT_FLOAT_EQ(nrtMat4x4.x.x, x1);
