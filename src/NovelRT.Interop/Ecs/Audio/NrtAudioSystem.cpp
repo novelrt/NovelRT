@@ -12,9 +12,11 @@ extern "C"
 {
 #endif
 
-    NrtAudioSystemHandle Nrt_AudioSystem_Create()
+    NrtAudioSystemHandle Nrt_AudioSystem_Create(NrtIResourceManagementPluginProviderHandle resourceManagementPlugin)
     {
-        return reinterpret_cast<NrtAudioSystemHandle>(new Ecs::Audio::AudioSystem());
+        return reinterpret_cast<NrtAudioSystemHandle>(new Ecs::Audio::AudioSystem(
+            reinterpret_cast<PluginManagement::IResourceManagementPluginProvider*>(resourceManagementPlugin)
+                ->shared_from_this()));
     }
 
     NrtResult Nrt_AudioSystem_Destroy(NrtAudioSystemHandle system)

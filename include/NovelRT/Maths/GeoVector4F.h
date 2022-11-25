@@ -22,12 +22,12 @@ namespace NovelRT::Maths
         {
         }
 
-        inline const glm::vec4& vec4Value() const noexcept
+        inline const glm::vec4& Vec4Value() const noexcept
         {
             return *reinterpret_cast<const glm::vec4*>(this);
         }
 
-        inline glm::vec4& vec4Value() noexcept
+        inline glm::vec4& Vec4Value() noexcept
         {
             return reinterpret_cast<glm::vec4&>(*this);
         }
@@ -55,7 +55,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector4F with all components set to zero.
          */
-        GeoVector4F() noexcept
+        GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
         {
         }
 
@@ -107,8 +107,8 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}} = \sqrt{7^{2} + 2^{2}
+         *      + 10^{2} + 4^{2}}
          *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13\\
          *      \hat{v}&=\frac{\vec{v}}{\left \| \vec{v} \right \|} = \frac{\bigl(\begin{smallmatrix}
          *      7\\
@@ -128,9 +128,9 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector4F created from normalising this GeoVector4F.
          */
-        inline GeoVector4F getNormalised() const noexcept
+        inline GeoVector4F GetNormalised() const noexcept
         {
-            return GeoVector4F(glm::normalize(vec4Value()));
+            return GeoVector4F(glm::normalize(Vec4Value()));
         }
 
         /**
@@ -145,14 +145,15 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
-         *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}\\
+         *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
          * \f}
          *
          * @return The magnitude of this GeoVector4F.
          */
-        inline float getMagnitude() const noexcept
+        inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec4*>(this));
         }
@@ -169,16 +170,65 @@ namespace NovelRT::Maths
          *      10\\
          *      4
          *      \end{pmatrix}\\
-         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2}} = \sqrt{7^{2} + 2^{2} + 10^{2} +
-         *      4^{2}}
-         *      \rightarrow \sqrt{49 + 4 + 100 + 16} = \sqrt{169} = 13
+         *      \left \| \vec{v} \right \| &= \sqrt{v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + + v_{w}^{2}}\\
+         *      &= \sqrt{7^{2} + 2^{2} + 10^{2} + 4^{2}} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
          * \f}
          *
          * @return The length of this GeoVector4F.
          */
-        inline float getLength() const noexcept
+        inline float GetLength() const noexcept
         {
-            return getMagnitude();
+            return GetMagnitude();
+        }
+
+        /**
+         * @brief Calculates the squared magnitude of this GeoVector4F using its components. This is the same as
+         * calculating the vector's squared length.
+         *
+         * @details
+         * To find a vector's squared magnitude you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}\\
+         *      &= 7^{2} + 2^{2} + 10^{2} + 4^{2} \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
+         * \f}
+         *
+         * @return The squared magnitude of this GeoVector4F.
+         */
+        inline float GetSquaredMagnitude() const noexcept
+        {
+            return glm::dot(Vec4Value(), Vec4Value());
+        }
+
+        /**
+         * @brief Calculates the squared length of this GeoVector4F using its components. This is the same as
+         * calculating the vector's squared magnitude.
+         *
+         * @details
+         * To find a vector's squared length you can use the Pythagorean theorem:\f{align*}{
+         *      \vec{v} &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{v} \right \|^{2} &= v_{x}^{2} + v_{y}^{2} + v_{z}^{2} + v_{w}^{2}\\
+         *      &= 7^{2} + 2^{2} + 10^{2} + 4^{2} \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
+         * \f}
+         *
+         * @return The squared length of this GeoVector4F.
+         */
+        inline float GetSquaredLength() const noexcept
+        {
+            return GetSquaredMagnitude();
         }
 
         /**
@@ -1040,13 +1090,27 @@ namespace NovelRT::Maths
          * @param point The point that acts as this vectors origin point to rotate around.
          * @param axis The axis on which this rotation will be applied.
          */
-        void rotateToAngleAroundPoint(float angleRotationValue,
-                                      const GeoVector4F& point,
-                                      const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
+        void RotateToAngleAroundPointDeg(float angleRotationValue,
+                                         const GeoVector4F& point,
+                                         const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
+        {
+            RotateToAngleAroundPointRad(glm::radians(angleRotationValue), point, axis);
+        }
+
+        /**
+         * @brief Rotates this vector around a given point by a given angle in radians.
+         *
+         * @param angleRotationValue The angle in radians to rotate by.
+         * @param point The point that acts as this vectors origin point to rotate around.
+         * @param axis The axis on which this rotation will be applied.
+         */
+        void RotateToAngleAroundPointRad(float angleRotationValue,
+                                         const GeoVector4F& point,
+                                         const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec4*>(this) =
                 glm::rotate((*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&point)),
-                            glm::radians(angleRotationValue), *reinterpret_cast<const glm::vec3*>(&axis)) +
+                            angleRotationValue, *reinterpret_cast<const glm::vec3*>(&axis)) +
                 *reinterpret_cast<const glm::vec4*>(&point);
         }
 
@@ -1059,9 +1123,133 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool epsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
+        bool EpsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
         {
-            return glm::all(glm::equal(vec4Value(), other.vec4Value(), epsilonValue.vec4Value()));
+            return glm::all(glm::equal(Vec4Value(), other.Vec4Value(), epsilonValue.Vec4Value()));
+        }
+
+        /**
+         * @brief Returns the sum of products of the left-hand side GeoVector4Fs components and the right-hand size
+         * GeoVector4Fs components.
+         *
+         * @details
+         * The calculation used to obtain the dot product can be seen in this example: \f{align*}{
+         *      \vec{u} &= \begin{pmatrix}
+         *      2\\
+         *      3\\
+         *      4\\
+         *      5
+         *      \end{pmatrix}\\
+         *      \vec{v} &= \begin{pmatrix}
+         *      4\\
+         *      5\\
+         *      6\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{u}\cdot \vec{v} &= \vec{u}_{x} \times \vec{v}_{x} + \vec{u}_{y} \times \vec{v}_{y} +
+         *      \vec{v}_{z}\times \vec{v}_{z} + \vec{v}_{w}\times \vec{v}_{w}\\
+         *      &= 2 \times 4 + 3 \times 5 + 4 \times 6 + 5 \times 7\\
+         *      &= 8 + 15 + 24 + 35\\
+         *      &= 82
+         * \f}
+         *
+         * @param other The other GeoVector4F, the components of which get multiplied and summed up with this
+         * GeoVector4F.
+         * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
+         * GeoVector4Fs components.
+         */
+        inline float Dot(GeoVector4F other) noexcept
+        {
+            return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other));
+        }
+
+        /**
+         * @brief Calculates the distance between this GeoVector4F and another GeoVector4F.
+         *
+         * @details
+         * The calculation used to obtain the distance can be seen in this example: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      3\\
+         *      10\\
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\
+         *      12\\
+         *      15\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\
+         *      12 - 10\\
+         *      15 - 5\\
+         *      7 - 3
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \| = \sqrt{{\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2 + {\Delta
+         * v}_w^2}\\
+         *      &= \sqrt{7^2 + 2^2 + 10^2 + 4^2} \rightarrow \sqrt{49 + 4 + 100 + 16}\\
+         *      &= \sqrt{169}\\
+         *      &= 13
+         * \f}
+         *
+         * @param other The other point to meassure the distance to.
+         * @return The distance between this GeoVector4F and another GeoVector4F.
+         */
+        inline float Distance(GeoVector4F other) noexcept
+        {
+            return glm::distance(Vec4Value(), other.Vec4Value());
+        }
+
+        /**
+         * @brief Calculates the squared distance between this GeoVector4F and another GeoVector4F.
+         *
+         * @details
+         * The calculation used to obtain the squared distance can be seen in this example: \f{align*}{
+         *      \vec{v}_{1} &= \begin{pmatrix}
+         *      3\\
+         *      10\\
+         *      5\\
+         *      3
+         *      \end{pmatrix}\\
+         *      \vec{v}_{2} &= \begin{pmatrix}
+         *      10\\
+         *      12\\
+         *      15\\
+         *      7
+         *      \end{pmatrix}\\
+         *      \vec{\Delta v} &= \vec{v}_{2} - \vec{v}_{1}\\
+         *      &=\begin{pmatrix}
+         *      10 - 6\\
+         *      12 - 10\\
+         *      15 - 5\\
+         *      7 - 3
+         *      \end{pmatrix} \\
+         *      &= \begin{pmatrix}
+         *      7\\
+         *      2\\
+         *      10\\
+         *      4
+         *      \end{pmatrix}\\
+         *      \left \| \vec{\Delta v} \right \|^2 = {\Delta v}_x^2 + {\Delta v}_y^2 + {\Delta v}_z^2 + {\Delta
+         * v}_w^2\\
+         *      &= 7^2 + 2^2 + 10^2 + 4^2 \rightarrow 49 + 4 + 100 + 16\\
+         *      &= 169
+         * \f}
+         *
+         * @param other The other point to meassure the square distance to.
+         * @return The squared distance between this GeoVector4F and another GeoVector4F.
+         */
+        inline float SquaredDistance(GeoVector4F other) noexcept
+        {
+            return (*this - other).GetSquaredMagnitude();
         }
 
         /**
@@ -1069,9 +1257,9 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to zero.
          */
-        static GeoVector4F zero() noexcept
+        static GeoVector4F Zero() noexcept
         {
-            return GeoVector4F::uniform(0);
+            return GeoVector4F::Uniform(0);
         }
 
         /**
@@ -1079,18 +1267,18 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to one.
          */
-        static GeoVector4F one() noexcept
+        static GeoVector4F One() noexcept
         {
-            return GeoVector4F::uniform(1);
+            return GeoVector4F::Uniform(1);
         }
 
         /**
          * @brief Creates a new uniform GeoVector4F based on the specified value.
          *
-         * @param The value to use as the uniform value across the GeoVector4F.
+         * @param value The value to use as the uniform value across the GeoVector4F.
          * @return a new GeoVector4F instance with all components set to the specified value.
          */
-        static GeoVector4F uniform(float value) noexcept
+        static GeoVector4F Uniform(float value) noexcept
         {
             return GeoVector4F(value, value, value, value);
         }

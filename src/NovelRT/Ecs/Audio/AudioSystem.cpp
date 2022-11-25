@@ -5,14 +5,16 @@
 
 namespace NovelRT::Ecs::Audio
 {
-    AudioSystem::AudioSystem()
+    AudioSystem::AudioSystem(
+        std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider)
         : _counter(1),
           _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
           _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
           _musicCache(std::map<uint32_t, std::vector<ALuint>::iterator>()),
           _service(std::make_shared<NovelRT::Audio::AudioService>()),
           _soundCache(std::map<uint32_t, ALuint>()),
-          _systemTime(Timing::Timestamp::zero())
+          _systemTime(Timing::Timestamp::zero()),
+          _resourceManagerPluginProvider(std::move(resourceManagerPluginProvider))
     {
         _service->InitializeAudio();
     }
@@ -279,7 +281,8 @@ namespace NovelRT::Ecs::Audio
         uint32_t value = 0U;
         if (isMusic)
         {
-            auto handle = _service->LoadMusic(fileName);
+            auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
+            auto handle = _service->LoadMusic(asset.processedAudioFrames, asset.channelCount, asset.sampleRate);
             if (_service->IsLoaded(handle))
             {
                 _musicCache.insert({_counter, handle});
@@ -289,7 +292,8 @@ namespace NovelRT::Ecs::Audio
         }
         else
         {
-            auto handle = _service->LoadSound(fileName);
+            auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
+            auto handle = _service->LoadSound(asset.processedAudioFrames, asset.channelCount, asset.sampleRate);
             if (_service->IsLoaded(handle))
             {
                 _soundCache.insert({_counter, handle});

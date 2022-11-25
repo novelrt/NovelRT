@@ -172,7 +172,7 @@ target_link_libraries(Engine
     spdlog
     TBB::tbb
     $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
-    jsoncons
+    nlohmann_json::nlohmann_json
     sndfile
 )
 

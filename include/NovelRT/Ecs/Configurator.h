@@ -41,13 +41,22 @@ namespace NovelRT::Ecs
                 "NovelRT::Ecs::LinkedEntityListNodeComponent");
 
             target.GetComponentCache().RegisterComponentType(
-                TransformComponent{Maths::GeoVector3F::uniform(NAN), Maths::GeoVector2F::uniform(NAN), NAN},
+                TransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN},
                 "NovelRT::Ecs::TransformComponent");
 
             target.GetComponentCache().RegisterComponentType(
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
+            auto deleteState = Audio::AudioEmitterComponent();
+            target.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
+            target.GetComponentCache().RegisterComponentType(
+                Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
+                "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
+
+            target.RegisterSystem(std::make_shared<Ecs::Audio::AudioSystem>(_resourceManagementPluginProvider));
+
+            
             auto defaultRenderingSystem = std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
                 _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider);
             target.RegisterSystem(defaultRenderingSystem);

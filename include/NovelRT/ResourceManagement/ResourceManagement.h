@@ -8,10 +8,8 @@
 #include "../Utilities/Misc.h"
 #include <cstdint>
 #include <filesystem>
-#include <jsoncons/json.hpp>
-#include <jsoncons_ext/bson/bson.hpp>
-#include <jsoncons_ext/jsonpath/jsonpath.hpp>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <uuid.h>
 #include <vector>
 
@@ -26,6 +24,7 @@ namespace NovelRT::ResourceManagement
     struct BinaryMemberMetadata;
     struct BinaryPackage;
     struct ShaderMetadata;
+    struct AudioMetadata;
 }
 
 // clang-format off
@@ -35,6 +34,7 @@ namespace NovelRT::ResourceManagement
 #include "BinaryMemberMetadata.h"
 #include "BinaryPackage.h"
 #include "ShaderMetadata.h"
+#include "AudioMetadata.h"
 // clang-format on
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_H

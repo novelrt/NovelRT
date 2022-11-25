@@ -24,6 +24,7 @@ namespace NovelRT::ResourceManagement::Desktop
         [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
+        [[nodiscard]] AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) override;
         ~DesktopResourceLoader() final = default;
     };
 }
