@@ -187,16 +187,17 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::CreateStagingBuffer()
     {
-        return _stagingBuffers[_contextIndex].emplace_back(_graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write,
-            Graphics::GraphicsResourceAccess::Read, _stagingBufferSize));
+        return _stagingBuffers[_contextIndex].emplace_back(
+            _graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+                Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write,
+                Graphics::GraphicsResourceAccess::Read, _stagingBufferSize));
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsResourceManager::GetOrCreateGraphicsBufferForAllocationSize(
         size_t allocationSize,
         GraphicsBufferKind bufferKind)
     {
-        const std::vector<std::shared_ptr<GraphicsBuffer>>& buffers = [&](){
+        const std::vector<std::shared_ptr<GraphicsBuffer>>& buffers = [&]() {
             switch (bufferKind)
             {
                 case GraphicsBufferKind::Default:
@@ -211,7 +212,6 @@ namespace NovelRT::Graphics
                     throw Exceptions::InvalidOperationException();
             }
         }();
-
 
         for (auto&& buffer : buffers)
         {
