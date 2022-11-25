@@ -13,21 +13,25 @@ namespace NovelRT::Graphics
     class GraphicsResourceManager
     {
     private:
-        Utilities::Lazy<std::shared_ptr<GraphicsBuffer>> _stagingBuffer;
+        std::vector<std::vector<std::shared_ptr<GraphicsBuffer>>> _stagingBuffers;
+        std::vector<std::shared_ptr<GraphicsBuffer>> _defaultBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _vertexBuffers;
-        std::vector<std::shared_ptr<GraphicsTexture>> _textures;
+        std::vector<std::shared_ptr<GraphicsBuffer>> _indexBuffers;
         std::vector<std::shared_ptr<GraphicsBuffer>> _constantBuffers;
+        std::vector<std::shared_ptr<GraphicsTexture>> _textures;
         std::set<size_t> _constantBuffersToUnmapAndWrite;
         std::shared_ptr<GraphicsDevice> _graphicsDevice;
         size_t _stagingBufferSize;
+        size_t _contextIndex;
         static constexpr size_t _tenMegabytesAsBytes = 10 * 1024 * 1024;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateStagingBuffer();
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(size_t allocationSize);
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateGraphicsBufferForAllocationSize(
+            size_t allocationSize,
+            GraphicsBufferKind bufferKind);
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetStagingBufferWithProperSizeHandling(
             size_t sizeToStage,
             std::shared_ptr<GraphicsContext>& currentContext);
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer> GetOrCreateConstantBufferForAllocationSize(size_t allocationSize);
 
     public:
         explicit GraphicsResourceManager(std::shared_ptr<GraphicsDevice> graphicsDevice,
@@ -40,6 +44,8 @@ namespace NovelRT::Graphics
 
         ~GraphicsResourceManager() = default;
 
+        void PrepForFrameWithContextIndex(size_t newContextIndex);
+
         template<typename TData>
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(gsl::span<TData> data, size_t alignment = 0)
         {
@@ -51,6 +57,17 @@ namespace NovelRT::Graphics
                                                                                    size_t dataLength,
                                                                                    size_t alignment = 16);
 
+        template<typename TData>
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexData(gsl::span<TData> data, size_t alignment = 0)
+        {
+            return LoadIndexDataUntyped(&(*data.begin()), sizeof(TData), data.size(), alignment);
+        }
+
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexDataUntyped(void* data,
+                                                                                  size_t dataTypeSize,
+                                                                                  size_t dataLength,
+                                                                                  size_t alignment = 64);
+
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadTextureData(
             const ResourceManagement::TextureMetadata& metadata,
             GraphicsTextureAddressMode addressMode,
@@ -58,9 +75,11 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> AllocateConstantBufferRegion(size_t size,
                                                                                           size_t alignment = 256);
+
         [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadConstantBufferDataToNewRegion(void* data,
                                                                                                size_t size,
                                                                                                size_t alignment = 256);
+
         void LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
                                                     void* data,
                                                     size_t size);
@@ -75,9 +94,9 @@ namespace NovelRT::Graphics
         }
         void UnmapAndWriteAllConstantBuffers() noexcept;
 
-        void FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource> regionToFree);
-
+        void FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource>& regionToFree);
         void FreeVertexData(GraphicsMemoryRegion<GraphicsResource>& vertexResource);
+        void FreeIndexData(GraphicsMemoryRegion<GraphicsResource>& indexResource);
         void FreeTextureData(GraphicsMemoryRegion<GraphicsResource>& textureResource);
     };
 }
