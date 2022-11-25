@@ -79,7 +79,6 @@ cmake --build . -j
 
 #### Windows (x64 only)
 _Prerequisites:_
-- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer) (if you have not done so already).
 - Windows 10 x64
 - Either:
   - Visual Studio 2019 w/ "Desktop development with C++" Workload,
