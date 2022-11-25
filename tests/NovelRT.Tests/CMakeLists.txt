@@ -49,6 +49,7 @@ set(SOURCES
 
   Timing/TimestampTest.cpp
 
+  Utilities/BitCastTest.cpp
   Utilities/BitflagsTest.cpp
   Utilities/EventTest.cpp
 
