@@ -227,7 +227,7 @@ namespace NovelRT::Graphics
 
                 _regions->clear();
 
-                GraphicsMemoryRegion<TSelf> region(1, _collection, GetDevice(), false, 0, size);
+                GraphicsMemoryRegion<TSelf> region(1, _collection, this->GetDevice(), false, 0, size);
                 _regions->emplace_front(region);
                 auto iterator = _regions->begin();
                 _freeRegionsBySize->clear();
@@ -599,20 +599,20 @@ namespace NovelRT::Graphics
 
                 UnregisterFreeRegion(regionNode);
 
-                region = GraphicsMemoryRegion<TSelf>(alignment, _collection, GetDevice(), true, offset, size);
+                region = GraphicsMemoryRegion<TSelf>(alignment, _collection, this->GetDevice(), true, offset, size);
 
                 if (paddingEnd != 0)
                 {
                     auto iterator = _regions->insert(
                         std::next(regionNode),
-                        GraphicsMemoryRegion<TSelf>(1, _collection, GetDevice(), false, offset + size, paddingEnd));
+                        GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(), false, offset + size, paddingEnd));
                     RegisterFreeRegion(iterator);
                 }
 
                 if (paddingBegin != 0)
                 {
                     auto iterator =
-                        _regions->insert(regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, GetDevice(), false,
+                        _regions->insert(regionNode, GraphicsMemoryRegion<TSelf>(1, _collection, this->GetDevice(), false,
                                                                                  offset - paddingBegin, paddingBegin));
                     RegisterFreeRegion(iterator);
                 }
