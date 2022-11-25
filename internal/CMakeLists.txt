@@ -1,5 +1,6 @@
 add_subdirectory(Fabulist)
 add_subdirectory(glfw)
+add_subdirectory(SDL2)
 add_subdirectory(glm)
 add_subdirectory(GSL)
 add_subdirectory(nlohmannJson)
