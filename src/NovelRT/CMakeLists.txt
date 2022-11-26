@@ -96,13 +96,6 @@ endif()
 
 if(APPLE)
   get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
-  get_target_property(TEMP Engine COMPILE_FLAGS)
-  if(TEMP STREQUAL "TEMP-NOTFOUND")
-    SET(TEMP "")
-  else()
-    SET(TEMP "${TEMP} ")
-  endif()
-  SET(TEMP "${TEMP}-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib" )
   set(NOVELRT_LIB_SUFFIX "dylib")
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
@@ -160,6 +153,7 @@ target_compile_options(Engine
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>
 )
 
 if(MSVC)
