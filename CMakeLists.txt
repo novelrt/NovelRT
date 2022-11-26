@@ -94,7 +94,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release
+      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
