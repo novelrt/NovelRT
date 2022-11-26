@@ -96,7 +96,7 @@ endif()
 
 if(APPLE)
   get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
-  get_target_property(TEMP ${THE_TARGET} COMPILE_FLAGS)
+  get_target_property(TEMP Engine COMPILE_FLAGS)
   if(TEMP STREQUAL "TEMP-NOTFOUND")
     SET(TEMP "")
   else()
