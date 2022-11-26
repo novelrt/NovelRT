@@ -99,8 +99,8 @@ if(APPLE)
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
+    INSTALL_RPATH "@executable_path/../Frameworks/;@loader_path/"
     BUILD_WITH_INSTALL_RPATH TRUE
-    INSTALL_RPATH "@loader_path/"
   )
   set(VERBOSE TRUE)
 elseif(WIN32)
