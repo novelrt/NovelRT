@@ -95,10 +95,13 @@ else()
 endif()
 
 if(APPLE)
+  get_target_property(compile_flags Engine COMPILE_FLAGS)
+  get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
   set(NOVELRT_LIB_SUFFIX "dylib")
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
+    COMPILE_FLAGS "${compile_flags} -install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib"
   )
   set(VERBOSE TRUE)
 elseif(WIN32)
