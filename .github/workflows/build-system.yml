@@ -67,20 +67,19 @@ jobs:
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-          cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples Engine_Tests
+          cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples Engine_Tests -j
 
-      - name: Upload artifacts for debugging CI
-        uses: actions/upload-artifact@v3
-        if: "contains(matrix.os, 'macos')"
-        with:
-          name: novelrt-macos-build-${{ matrix.configuration }}
-          path: build/
+      # - name: Upload artifacts for debugging CI
+      #   uses: actions/upload-artifact@v3
+      #   if: "contains(matrix.os, 'macos')"
+      #   with:
+      #     name: novelrt-macos-build-${{ matrix.configuration }}
+      #     path: build/
 
       - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         id: test
         run: |
-          cmake --build build --config ${{ matrix.configuration }} --target Engine_Tests
           cd build/tests/NovelRT.Tests
           ctest --output-on-failure -C ${{ matrix.configuration }}
 

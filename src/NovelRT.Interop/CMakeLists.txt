@@ -91,8 +91,10 @@ endif()
 
 if(APPLE)
   set_target_properties(Interop PROPERTIES
-    SOVERSION ${PROJECT_VERSION} 
+    SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "@loader_path/"
   )
 endif()
 
