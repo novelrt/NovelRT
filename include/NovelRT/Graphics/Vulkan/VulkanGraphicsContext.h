@@ -85,10 +85,10 @@ namespace NovelRT::Graphics::Vulkan
         void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) final;
         void BeginFrame() final;
 
-        inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) final
+        inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source, size_t srcOffset, size_t dstOffset, size_t size) final
         {
             Copy(std::static_pointer_cast<VulkanGraphicsBuffer>(destination),
-                 std::static_pointer_cast<VulkanGraphicsBuffer>(source));
+                 std::static_pointer_cast<VulkanGraphicsBuffer>(source), srcOffset, dstOffset, size);
         }
 
         inline void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) final
@@ -97,7 +97,7 @@ namespace NovelRT::Graphics::Vulkan
                  std::static_pointer_cast<VulkanGraphicsBuffer>(source));
         }
 
-        void Copy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
+        void Copy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source, size_t srcOffset, size_t dstOffset, size_t size);
         void Copy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
 
         inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) final

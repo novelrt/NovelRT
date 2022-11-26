@@ -48,7 +48,7 @@ namespace NovelRT::Graphics::Vulkan
         return pDestination;
     }
 
-    void* VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t /*rangeLength*/)
+    void* VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t rangeLength)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
@@ -56,9 +56,12 @@ namespace NovelRT::Graphics::Vulkan
         VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
 
         void* pDestination = nullptr;
+        
+        uint64_t nonCoherentAtomSize =
+            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
 
         VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
+            vkMapMemory(vulkanDevice, vulkanDeviceMemory, Maths::Utilities::AlignDown(GetOffset() + rangeOffset, nonCoherentAtomSize), Maths::Utilities::AlignUp(rangeLength + nonCoherentAtomSize, nonCoherentAtomSize), 0, &pDestination);
 
         if (mapMemoryResult != VK_SUCCESS)
         {
@@ -67,7 +70,7 @@ namespace NovelRT::Graphics::Vulkan
                                      std::to_string(mapMemoryResult));
         }
 
-        return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
+        return reinterpret_cast<uint8_t*>(pDestination);
     }
 
     const void* VulkanGraphicsBuffer::MapForReadUntyped()

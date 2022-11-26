@@ -295,7 +295,10 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     void VulkanGraphicsContext::Copy(std::shared_ptr<VulkanGraphicsBuffer> destination,
-                                     std::shared_ptr<VulkanGraphicsBuffer> source)
+                                     std::shared_ptr<VulkanGraphicsBuffer> source,
+                                     size_t srcOffset,
+                                     size_t dstOffset,
+                                     size_t size)
     {
         if (destination == nullptr)
         {
@@ -307,9 +310,9 @@ namespace NovelRT::Graphics::Vulkan
             throw Exceptions::NullPointerException("The source graphics buffer is null.");
         }
         VkBufferCopy vulkanBufferCopy{};
-        vulkanBufferCopy.srcOffset = 0;
-        vulkanBufferCopy.dstOffset = 0;
-        vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
+        vulkanBufferCopy.srcOffset = srcOffset;
+        vulkanBufferCopy.dstOffset = dstOffset;
+        vulkanBufferCopy.size = size;
         vkCmdCopyBuffer(GetVulkanCommandBuffer(), source->GetVulkanBuffer(), destination->GetVulkanBuffer(), 1,
                         &vulkanBufferCopy);
     }

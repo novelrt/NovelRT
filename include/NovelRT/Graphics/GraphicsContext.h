@@ -30,7 +30,18 @@ namespace NovelRT::Graphics
 
         virtual void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) = 0;
         virtual void BeginFrame() = 0;
-        virtual void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
+        virtual void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source, size_t srcOffset, size_t dstOffset, size_t size) = 0;
+
+        inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source)
+        {
+            Copy(destination, source, 0, 0, std::min(destination->GetSize(), source->GetSize()));
+        }
+
+        inline void Copy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source, const GraphicsMemoryRegion<GraphicsResource>& resourceRegion)
+        {
+            Copy(destination, source, resourceRegion.GetOffset(), resourceRegion.GetOffset(), resourceRegion.GetSize());
+        }
+
         virtual void Copy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
 
         inline void Draw(std::shared_ptr<GraphicsPrimitive> primitive)

@@ -129,6 +129,7 @@ namespace NovelRT::Graphics
 
         std::shared_ptr<GraphicsBuffer> vertexBuffer =
             GetOrCreateGraphicsBufferForAllocationSize(sizeToStage, GraphicsBufferKind::Vertex);
+
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
 #ifdef WIN32
@@ -137,7 +138,7 @@ namespace NovelRT::Graphics
         memcpy(writeArea, data, sizeToStage);
 #endif
         stagingBuffer->UnmapAndWrite(vertexRegion);
-        currentContext->Copy(vertexBuffer, stagingBuffer);
+        currentContext->Copy(vertexBuffer, stagingBuffer, vertexRegion);
 
         return vertexRegion;
     }
