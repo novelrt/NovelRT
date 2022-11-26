@@ -100,7 +100,6 @@ if(APPLE)
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
-    COMPILE_FLAGS ${TEMP}
   )
   set(VERBOSE TRUE)
 elseif(WIN32)
