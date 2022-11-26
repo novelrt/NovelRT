@@ -95,13 +95,19 @@ else()
 endif()
 
 if(APPLE)
-  get_target_property(compile_flags Engine COMPILE_FLAGS)
   get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
+  get_target_property(TEMP ${THE_TARGET} COMPILE_FLAGS)
+  if(TEMP STREQUAL "TEMP-NOTFOUND")
+    SET(TEMP "")
+  else()
+    SET(TEMP "${TEMP} ")
+  endif()
+  SET(TEMP "${TEMP}-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib" )
   set(NOVELRT_LIB_SUFFIX "dylib")
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
-    COMPILE_FLAGS "${compile_flags} -install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib"
+    COMPILE_FLAGS ${TEMP}
   )
   set(VERBOSE TRUE)
 elseif(WIN32)
