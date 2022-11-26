@@ -104,7 +104,6 @@ function(copy_runtime_dependencies TARGET)
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_LINKER_FILE:${dependency}> $<TARGET_FILE_DIR:${TARGET}>/../Frameworks/$<TARGET_LINKER_FILE_NAME:${dependency}>
             OUTPUT_VARIABLE copy-output
           )
-          execute_process(COMMAND echo \"Copy output: \${copy-output}\")
           execute_process(COMMAND otool -L $<TARGET_FILE:${TARGET}> OUTPUT_FILE otool.txt)
           set(GREP_ARGS .*$<TARGET_LINKER_FILE_NAME:${dependency}>)
           execute_process(
