@@ -131,7 +131,7 @@ function(copy_runtime_dependencies TARGET)
     #       DEPENDS $<TARGET_FILE:${TARGET}> $<TARGET_FILE:${dependency}>
     #     )
     #     list(POP_BACK dep_snippet)
-    # endif()
+    endif()
   endif()
   # if(current_libs)
   #   if(APPLE)
