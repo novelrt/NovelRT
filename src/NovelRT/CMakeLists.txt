@@ -101,7 +101,7 @@ if(APPLE)
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
   )
-  set(VERBOSE TRUE)
+  target_link_options(Engine PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>)
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
   set(NOVELRT_LIB_SUFFIX "dll")
@@ -152,7 +152,6 @@ target_compile_options(Engine
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
-    $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>
 )
 
 if(MSVC)

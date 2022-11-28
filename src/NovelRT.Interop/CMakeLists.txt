@@ -90,10 +90,12 @@ else()
 endif()
 
 if(APPLE)
+  get_target_property(INTEROP_NAME_FINAL Interop OUTPUT_NAME)
   set_target_properties(Interop PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
   )
+  target_link_options(Interop PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${INTEROP_NAME_FINAL}.dylib>)
 endif()
 
 target_compile_features(Interop PUBLIC cxx_std_17)
