@@ -31,7 +31,7 @@ FetchContent_MakeAvailable(flac)
 # These warnings are outside our scope as we do not manage the libraries themselves.
 # We'll silence the warnings so that output is a little cleaner.
 if(NOT WIN32)
-  target_compile_definitions(FLAC
+  target_compile_options(FLAC
     PRIVATE
       $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-align>
       $<$<CXX_COMPILER_ID:Clang>:-Wno-cast-align>

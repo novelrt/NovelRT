@@ -41,7 +41,7 @@ endif()
 # These warnings are outside our scope as we do not manage the libraries themselves.
 # We'll silence the warnings so that output is a little cleaner.
 if(WIN32)
-  target_compile_definitions(OpenAL
+  target_compile_options(OpenAL
     PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/WD4127>
       $<$<CXX_COMPILER_ID:MSVC>:/WD4834>
