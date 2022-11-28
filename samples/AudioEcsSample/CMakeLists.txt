@@ -3,7 +3,7 @@ set(SOURCES
 )
 
 if(APPLE)
-  add_executable(AudioEcsSample MACOSX_BUNDLE ${novelchan_icon} ${SOURCES})
+  add_executable(AudioEcsSample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
   set_target_properties(AudioEcsSample 
     PROPERTIES
       BUNDLE True
