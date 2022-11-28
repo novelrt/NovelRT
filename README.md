@@ -27,11 +27,17 @@ For information on Fabulist, check it out from [here](https://github.com/novelrt
 
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything.
 
+### Dependencies
+
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
-### Dependencies
-- CMake 3.19.8
-- Doxygen 1.8.17 (if building docs)
+- [CMake](https://cmake.org/download/) >= 3.19.8
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0
+
+
+The dependencies that are handled by CMake that do not need to be manually installed are as follows:
+
+- Doxygen 1.8.17 (building docs)
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
@@ -41,8 +47,8 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
-- Vulkan SDK 1.3.231.1 (if you require debug/validation layers)
-  
+- Vulkan SDK 1.3.231.1
+
 ### Build instructions
 
 These instructions are based on the CMake build system generator. You can download the latest version here [here.](https://cmake.org/download/)
@@ -56,7 +62,7 @@ First, you must install the dependencies. On Ubuntu 20.04, it looks like this:
 ```
 sudo apt install clang  libgl-dev xorg-dev libx11-xcb-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
 libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
-libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev python3-pip \
+libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev \
 ```
 
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
@@ -74,7 +80,6 @@ cmake --build . -j
 
 #### Windows (x64 only)
 _Prerequisites:_
-- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer)(if you have not done so already).
 - Windows 10 x64
 - Either:
   - Visual Studio 2019 w/ "Desktop development with C++" Workload,
