@@ -1,7 +1,3 @@
-if(NOVELRT_VULKAN_SDK)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
-
 set(INTEROP_SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp

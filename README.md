@@ -136,9 +136,9 @@ However, if you have Apple-Silicon Mac (M1, M2, etc), you must add an additional
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
 
-If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `NOVELRT_VULKAN_SDK_PATH` to your local Vulkan SDK location as such:
+If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `VULKAN_SDK` environment variable to your local Vulkan SDK location as such:
 ```
-cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/Vulkan SDK/1.3.216.0/macOS
+VULKAN_SDK=/Users/youruser/Vulkan SDK/1.3.216.0/macOS cmake .. 
 ```
 Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
 
