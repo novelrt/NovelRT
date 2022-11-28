@@ -21,7 +21,6 @@ target_link_libraries(AudioEcsSample
   PRIVATE
     Engine
 )
-#target_compile_definitions(AudioEcsSample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:${NOVELRT_MOLTENVK_VENDORED}>,1,0>)
 
 copy_build_products(AudioEcsSample
   DEPENDENCY Resources
