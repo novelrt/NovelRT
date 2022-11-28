@@ -32,7 +32,18 @@ FetchContent_MakeAvailable(OpenAL)
 
 set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
+
 if(APPLE)
   set_target_properties(OpenAL PROPERTIES NO_SONAME TRUE)
   target_link_options(OpenAL PRIVATE -install_name @rpath/libopenal.dylib)
+endif()
+
+# These warnings are outside our scope as we do not manage the libraries themselves.
+# We'll silence the warnings so that output is a little cleaner.
+if(WIN32)
+  target_compile_definitions(OpenAL
+    PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/WD4127>
+      $<$<CXX_COMPILER_ID:MSVC>:/WD4834>
+  )
 endif()
