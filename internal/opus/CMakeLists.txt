@@ -26,5 +26,6 @@ set(OPUS_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" CACHE STRING "Set
 
 if(APPLE)
   set_target_properties(opus PROPERTIES NO_SONAME TRUE)
+  target_link_options(opus PRIVATE -install_name @rpath/libopus.dylib)
 endif()
 #need to stop tests from building

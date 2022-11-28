@@ -33,4 +33,5 @@ set(PNG_PNG_INCLUDE_DIR "${NOVELRT_PNG_SOURCE_DIR};${NOVELRT_PNGLIBCONFG_SOURCE_
 set(PNG_LIBRARY "png" CACHE STRING "Set PNG libraries" FORCE)
 if(APPLE)
   set_target_properties(png PROPERTIES NO_SONAME TRUE)
+  target_link_options(png PRIVATE -install_name @rpath/libpng16.dylib)
 endif()

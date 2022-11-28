@@ -47,4 +47,5 @@ endif()
 
 if(APPLE)
   set_target_properties(tbb PROPERTIES NO_SONAME TRUE)
+  target_link_options(tbb PRIVATE -install_name @rpath/libtbb.dylib)
 endif()

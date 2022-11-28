@@ -24,6 +24,10 @@ set(FABULIST_THIRDPARTY_JSON OFF)
 FetchContent_MakeAvailable(Fabulist)
 add_dependencies(compiler runtime)
 
+if(APPLE)
+  set_target_properties(runtime PROPERTIES NO_SONAME TRUE)
+endif()
+
 # Appears to be a bug, doing this until established and/or resolved
 install(FILES
   ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/runtime.hpp

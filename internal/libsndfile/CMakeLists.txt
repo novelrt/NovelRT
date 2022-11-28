@@ -33,6 +33,7 @@ set_target_properties(sndfile PROPERTIES
 )
 if(APPLE)
   set_target_properties(sndfile PROPERTIES NO_SONAME TRUE)
+  target_link_options(sndfile PRIVATE -install_name @rpath/libsndfile.dylib)
 endif()
 
 install(EXPORT SndFileTargets

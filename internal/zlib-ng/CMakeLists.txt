@@ -27,6 +27,7 @@ set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src;${CMAKE_CURRENT_BINARY_DIR
 set(ZLIB_LIBRARY "zlib" CACHE STRING "" FORCE)
 if(APPLE)
   set_target_properties(zlib PROPERTIES NO_SONAME TRUE)
+  target_link_options(zlib PRIVATE -install_name @rpath/libz.dylib)
 endif()
 
 install(EXPORT ZLIBConfig

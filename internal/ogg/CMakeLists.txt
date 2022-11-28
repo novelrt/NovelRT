@@ -22,4 +22,5 @@ set(OGG_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/include" CACHE STRING "Set 
 
 if(APPLE)
   set_target_properties(ogg PROPERTIES NO_SONAME TRUE)
+  target_link_options(ogg PRIVATE -install_name @rpath/libogg.dylib)
 endif()
