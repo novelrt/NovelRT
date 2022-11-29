@@ -16,6 +16,8 @@ endif()
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS / OS X deployment version")
+
 project(NovelRTDeps
   VERSION 0.1.0
   DESCRIPTION "NovelRT's Dependencies"
@@ -38,7 +40,6 @@ endif()
 
 # Override RPATH on macOS so that we can load in the same folder
 if(APPLE)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
   set(CMAKE_MACOSX_RPATH 1)
   set(CMAKE_INSTALL_RPATH "@loader_path/")
 endif()

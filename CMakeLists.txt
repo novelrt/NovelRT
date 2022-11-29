@@ -5,6 +5,8 @@ if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif()
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS / OS X deployment version")
+
 project(NovelRT
   VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"
@@ -78,7 +80,6 @@ endif()
 # Handle Apple-specific requirements for CMake
 #
 if(APPLE)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
   find_library(COREFOUNDATION CoreFoundation "/")
   set(CMAKE_MACOSX_RPATH 1)
   set(CMAKE_SKIP_BUILD_RPATH FALSE)

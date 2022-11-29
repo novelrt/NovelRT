@@ -32,7 +32,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 - [CMake](https://cmake.org/download/) >= 3.19.8
-- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.231.1
 
 
 The dependencies that are handled by CMake that do not need to be manually installed are as follows:
@@ -47,7 +47,6 @@ The dependencies that are handled by CMake that do not need to be manually insta
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
-- Vulkan SDK 1.3.231.1
 
 ### Build instructions
 
