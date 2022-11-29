@@ -44,3 +44,8 @@ if(NOT TBB_POPULATED)
   set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
 endif()
+
+if(APPLE)
+  set_target_properties(tbb PROPERTIES NO_SONAME TRUE)
+  target_link_options(tbb PRIVATE -install_name @rpath/libtbb.dylib)
+endif()

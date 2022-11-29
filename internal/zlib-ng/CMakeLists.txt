@@ -20,15 +20,19 @@ set(ZLIB_COMPAT ON CACHE BOOL "Compile with zlib compatible API" FORCE)
 set(ZLIB_ENABLE_TESTS OFF CACHE BOOL "Build test binaries" FORCE)
 set(INC_INSTALL_DIR "include" CACHE STRING "Relocate includes installation folder" FORCE)
 set(LIB_INSTALL_DIR "lib" CACHE STRING "Relocate libraries installation folder" FORCE)
+set(BIN_INSTALL_DIR "bin" CACHE STRING "Relocate libraries installation folder" FORCE)
 FetchContent_MakeAvailable(zlib)
 
 set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src;${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
-set(ZLIB_LIBRARY "zlibstatic" CACHE STRING "" FORCE)
-set_property(TARGET zlib PROPERTY POSITION_INDEPENDENT_CODE ON)
+set(ZLIB_LIBRARY "zlib" CACHE STRING "" FORCE)
+if(APPLE)
+  set_target_properties(zlib PROPERTIES NO_SONAME TRUE)
+  target_link_options(zlib PRIVATE -install_name @rpath/libz.dylib)
+endif()
 
-install(EXPORT ZLIB
-  DESTINATION lib
+install(EXPORT ZLIBConfig
+  DESTINATION lib/cmake/ZLIB
   NAMESPACE ZLIB::)
 install(TARGETS zlib
-  EXPORT ZLIB
+  EXPORT ZLIBConfig
   LIBRARY DESTINATION lib)

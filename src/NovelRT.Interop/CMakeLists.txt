@@ -1,8 +1,4 @@
-if(NOVELRT_VULKAN_SDK)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
-
-set(SOURCES
+set(INTEROP_SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
 
@@ -72,10 +68,31 @@ set(SOURCES
 
   Windowing/NrtIWindowingDevice.cpp)
 
-add_library(Interop SHARED ${SOURCES})
+add_library(Interop SHARED ${INTEROP_SOURCES})
 add_dependencies(Interop Engine)
+set_property(TARGET Interop PROPERTY VERSION ${PROJECT_VERSION})
 
-set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
+if(GENERATOR_IS_MULTI_CONFIG)
+  set_property(TARGET Interop PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT.Interop,NovelRT.Interop-$<CONFIG>>")
+else()
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(INTEROP_NAME "NovelRT.Interop")
+  elseif(CMAKE_BUILD_TYPE)
+    set(INTEROP_NAME "NovelRT.Interop-${CMAKE_BUILD_TYPE}")
+  else()
+    set(INTEROP_NAME "NovelRT.Interop-\$<CONFIG>")
+  endif()
+  set_target_properties(Interop PROPERTIES OUTPUT_NAME ${INTEROP_NAME})
+endif()
+
+if(APPLE)
+  get_target_property(INTEROP_NAME_FINAL Interop OUTPUT_NAME)
+  set_target_properties(Interop PROPERTIES
+    SOVERSION ${PROJECT_VERSION}
+    NO_SONAME TRUE
+  )
+  target_link_options(Interop PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${INTEROP_NAME_FINAL}.dylib>)
+endif()
 
 target_compile_features(Interop PUBLIC cxx_std_17)
 target_include_directories(Interop
@@ -132,14 +149,13 @@ target_link_libraries(Interop
   PUBLIC
     Engine)
 
-install(
-  TARGETS Interop
-  EXPORT NovelRT
-  DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-install(
-  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
-  DESTINATION include/NovelRT.Interop
-  FILES_MATCHING PATTERN "*.h"
-)
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS Interop
+    EXPORT NovelRT
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    FRAMEWORK DESTINATION lib
+  )
+endif()
