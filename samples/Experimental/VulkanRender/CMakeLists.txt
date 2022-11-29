@@ -23,8 +23,23 @@ target_link_libraries(VulkanRender
 
 copy_build_products(VulkanRender
   DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:VulkanRender>/Resources
+  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:VulkanRender>/../Resources,$<TARGET_FILE_DIR:VulkanRender>/Resources>
 )
-copy_runtime_dependencies(VulkanRender
-  DEPENDENCY Engine
-)
+
+if(APPLE)
+  copy_runtime_dependencies(VulkanRender
+    DEPENDENCY Engine
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib
+  )
+  write_moltenvk_icd_file(VulkanRender)
+else()
+  copy_runtime_dependencies(VulkanRender
+    DEPENDENCY Engine
+  )
+endif()

@@ -23,8 +23,23 @@ target_link_libraries(UIEventExample
 
 copy_build_products(UIEventExample
   DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:UIEventExample>/Resources
+  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:UIEventExample>/../Resources,$<TARGET_FILE_DIR:UIEventExample>/Resources>
 )
-copy_runtime_dependencies(UIEventExample
-  DEPENDENCY Engine
-)
+
+if(APPLE)
+  copy_runtime_dependencies(UIEventExample
+    DEPENDENCY Engine
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib
+  )
+  write_moltenvk_icd_file(UIEventExample)
+else()
+  copy_runtime_dependencies(UIEventExample
+    DEPENDENCY Engine
+  )
+endif()

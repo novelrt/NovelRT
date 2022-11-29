@@ -23,8 +23,23 @@ target_link_libraries(EcsPipeline
 
 copy_build_products(EcsPipeline
   DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:EcsPipeline>/Resources
+  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:EcsPipeline>/../Resources,$<TARGET_FILE_DIR:EcsPipeline>/Resources>
 )
-copy_runtime_dependencies(EcsPipeline
-  DEPENDENCY Engine
-)
+
+if(APPLE)
+  copy_runtime_dependencies(EcsPipeline
+    DEPENDENCY Engine
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib
+  )
+  write_moltenvk_icd_file(EcsPipeline)
+else()
+  copy_runtime_dependencies(EcsPipeline
+    DEPENDENCY Engine
+  )
+endif()
