@@ -47,6 +47,7 @@ The dependencies that are handled by CMake that do not need to be manually insta
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
+- SDL2 2.26.0
 
 ### Build instructions
 
