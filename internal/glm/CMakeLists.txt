@@ -10,14 +10,21 @@ FetchContent_Declare(glm
         STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/stamp"
         DOWNLOAD_DIR "${CMAKE_CURRENT_BINARY_DIR}/dl"
         SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src"
-        SUBBUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+        SUBBUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/build"
+        BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin"
         INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/inst"
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
 FetchContent_MakeAvailable(glm)
+
+include(CPack)
 install(
   DIRECTORY ${glm_SOURCE_DIR}/glm/
   DESTINATION include/glm
   PATTERN "CMakeLists.txt" EXCLUDE
 )
+install(EXPORT glm FILE glmConfig.cmake DESTINATION lib/cmake/glm NAMESPACE glm::)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${glm_BINARY_DIR}/glmConfigVersion.cmake" COMPATIBILITY AnyNewerVersion)
+install(FILES ${glm_BINARY_DIR}/glmConfigVersion.cmake DESTINATION lib/cmake/glm)

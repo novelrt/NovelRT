@@ -16,6 +16,8 @@ FetchContent_Declare(GSL
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
         )
 
+set(GSL_INSTALL ON)
+
 FetchContent_MakeAvailable(GSL)
 install(
         DIRECTORY ${GSL_SOURCE_DIR}/include/

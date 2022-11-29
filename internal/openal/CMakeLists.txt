@@ -32,3 +32,36 @@ FetchContent_MakeAvailable(OpenAL)
 
 set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Type of libraries to build" FORCE)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ${CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS_OLD} CACHE BOOL "Tell CMake to always export symbols on Windows" FORCE)
+
+if(APPLE)
+  set_target_properties(OpenAL PROPERTIES NO_SONAME TRUE)
+  target_link_options(OpenAL PRIVATE -install_name @rpath/libopenal.dylib)
+endif()
+
+# These warnings are outside our scope as we do not manage the libraries themselves.
+# We'll silence the warnings so that output is a little cleaner.
+if(WIN32)
+  target_compile_options(OpenAL
+    PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
+  )
+  target_compile_options(common
+    PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
+  )
+else()
+  target_compile_options(OpenAL
+    PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
+  )
+  target_compile_options(common
+    PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
+  )
+endif()

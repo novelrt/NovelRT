@@ -34,8 +34,8 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs
-          cmake --build build --config RelWithDebInfo --target Doxygen
+          cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs -DNOVELRT_BUILD_DOCUMENTATION=ON
+          cmake --build build --config Release --target Doxygen
 
       - name: Commit Documentation Updates
         if: ${{ success() }}

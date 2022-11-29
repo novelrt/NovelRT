@@ -1004,7 +1004,7 @@ namespace NovelRT::Maths
                                          const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec3*>(this) =
-                glm::rotate((*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point)),
+                glm::rotate(*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&point),
                             angleRotationValue, *reinterpret_cast<const glm::vec3*>(&axis)) +
                 *reinterpret_cast<const glm::vec3*>(&point);
         }
@@ -1054,7 +1054,8 @@ namespace NovelRT::Maths
          */
         inline float Dot(GeoVector3F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other));
+            return glm::dot(*reinterpret_cast<const glm::vec3*>(this),
+                            NovelRT::Utilities::Misc::BitCast<glm::vec3>(other));
         }
 
         /**
@@ -1104,7 +1105,8 @@ namespace NovelRT::Maths
          */
         inline GeoVector3F Cross(GeoVector3F other) noexcept
         {
-            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(this), *reinterpret_cast<glm::vec3*>(&other)));
+            return GeoVector3F(
+                glm::cross(*reinterpret_cast<glm::vec3*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(other)));
         }
 
         /**
@@ -1145,7 +1147,7 @@ namespace NovelRT::Maths
         inline float Distance(GeoVector3F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec3*>(this),
-                                 *reinterpret_cast<const glm::vec3*>(&other));
+                                 NovelRT::Utilities::Misc::BitCast<glm::vec3>(other));
         }
 
         /**

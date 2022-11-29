@@ -1,4 +1,15 @@
 include(CopyBuildProducts)
+include(CopyRuntimeDependencies)
+include(WriteMoltenVKICD)
+
+if(APPLE)
+  set(NOVELCHAN_ICON ${PROJECT_SOURCE_DIR}/Resources/novel-chan.icns)
+  set_source_files_properties(${NOVELCHAN_ICON} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources"
+  )
+  set(MACOSX_BUNDLE_ICON_FILE novel-chan.icns)
+endif()
+
 add_subdirectory(Experimental)
 add_subdirectory(EcsPipeline)
 add_subdirectory(InputEcsSample)
