@@ -132,6 +132,8 @@ if(NOVELRT_FETCH_DEPENDENCIES)
   list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/lib/cmake)
 endif()
 
+# Packages w/o version specified typically break as they don't support
+# versioning like the others do. 
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -151,14 +153,13 @@ find_package(nlohmann_json REQUIRED)
 if(NOVELRT_DEPS_INSTALLED)
   #CMake-standard FindZLIB breaks runtime deps for Windows
   #So we just use our version that doesn't :)
-  #include(${NOVELRT_DEPS_PATH}/lib/cmake/ZLIB/ZLIBConfig.cmake)
   find_package(ZLIB CONFIG REQUIRED)
   include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
   include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 else()
   find_package(ZLIB REQUIRED)
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
-  find_package(fabulist REQUIRED) #Will probably break for now :^)
+  find_package(fabulist REQUIRED)
 endif()
 
 #
@@ -182,6 +183,7 @@ if(NOVELRT_VERBOSE_BUILD)
   if(CMAKE_GENERATOR STREQUAL "Visual Studio 2019 16" OR CMAKE_GENERATOR STREQUAL "Visual Studio 2022 17")
     string(APPEND CMAKE_CXX_FLAGS "-v:detailed")
   endif()
+  set(VERBOSE TRUE)
 endif()
 
 
@@ -240,8 +242,6 @@ if(NOVELRT_INSTALL)
       FILES_MATCHING PATTERN "*.h"
     )
   endif()
-
-  #TODO: Install Doxygen Docs?
 
   if(NOVELRT_DEPS_INSTALLED)
     install(

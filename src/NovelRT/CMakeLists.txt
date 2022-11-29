@@ -1,7 +1,3 @@
-if(NOT DEFINED NOVELRT_LIB_SUFFIX)
-  set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
-endif()
-
 set(CORE_SOURCES
 
   Atom.cpp
@@ -96,7 +92,6 @@ endif()
 
 if(APPLE)
   get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
-  set(NOVELRT_LIB_SUFFIX "dylib")
   set_target_properties(Engine PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
@@ -104,7 +99,6 @@ if(APPLE)
   target_link_options(Engine PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>)
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-  set(NOVELRT_LIB_SUFFIX "dll")
 endif()
 
 target_compile_features(Engine PUBLIC cxx_std_17)
