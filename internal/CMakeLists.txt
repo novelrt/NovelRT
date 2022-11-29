@@ -38,6 +38,7 @@ endif()
 
 # Override RPATH on macOS so that we can load in the same folder
 if(APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
   set(CMAKE_MACOSX_RPATH 1)
   set(CMAKE_INSTALL_RPATH "@loader_path/")
 endif()

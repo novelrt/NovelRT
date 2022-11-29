@@ -46,4 +46,22 @@ if(WIN32)
       $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
       $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
   )
+  target_compile_options(common
+    PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
+  )
+else()
+  target_compile_options(OpenAL
+    PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
+  )
+  target_compile_options(common
+    PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
+  )
 endif()

@@ -5,8 +5,6 @@ if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif()
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
-
 project(NovelRT
   VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"
@@ -71,11 +69,18 @@ endif()
 # since we scaffold the others
 #
 if(APPLE)
-  message(STATUS "Vulkan SDK variable: $ENV{VULKAN_SDK}")
   find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
+else()
+  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
+endif()
+
+#
+# Handle Apple-specific requirements for CMake
+#
+if(APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
   find_library(COREFOUNDATION CoreFoundation "/")
   set(CMAKE_MACOSX_RPATH 1)
-  # set(CMAKE_BUILD_RPATH "@executable_path/../Frameworks/;@loader_path/")
   set(CMAKE_SKIP_BUILD_RPATH FALSE)
   set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   set(CMAKE_INSTALL_RPATH "@loader_path/")
@@ -84,13 +89,21 @@ if(APPLE)
   if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "@loader_path/")
   endif("${isSystemDir}" STREQUAL "-1")
-else()
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
 endif()
 
 #
 # Generate and Locate NovelRT's Dependencies
 #
+include(ProcessorCount)
+ProcessorCount(CORES)
+if(CORES EQUAL 0)
+  set(CORES_AMT 1)
+else()
+  math(EXPR CORES_AMT "${CORES} / 2")
+  if(CORES_AMT LESS 1)
+    set(CORES_AMT 1)
+  endif()
+endif()
 if(NOVELRT_FETCH_DEPENDENCIES)
   if(NOT NOVELRT_DEPS_INSTALLED)
     if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
@@ -103,7 +116,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j
+      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${CORES_AMT}
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
