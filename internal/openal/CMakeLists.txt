@@ -43,7 +43,7 @@ endif()
 if(WIN32)
   target_compile_options(OpenAL
     PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/WD4127>
-      $<$<CXX_COMPILER_ID:MSVC>:/WD4834>
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
+      $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
   )
 endif()
