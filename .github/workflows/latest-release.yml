@@ -106,12 +106,12 @@ jobs:
           name: macOS
 
     outputs:
-      date: ${{ steps.date.outputs.date }}
+      date: ${{ steps.get-date.outputs.date }}
 
     steps:
       - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y%m%d-%H%M%S')"
+        id: get-date
+        run: echo "date=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
       - uses: actions/download-artifact@v3
         with:
