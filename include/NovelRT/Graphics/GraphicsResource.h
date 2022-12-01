@@ -77,32 +77,20 @@ namespace NovelRT::Graphics
             return GetBlockRegion().GetSize();
         }
 
-        [[nodiscard]] virtual void* MapUntyped() = 0;
+        [[nodiscard]] virtual gsl::span<uint8_t> MapUntyped(size_t rangeOffset, size_t rangeLength) = 0;
 
-        [[nodiscard]] virtual void* MapUntyped(size_t rangeOffset, size_t rangeLength) = 0;
-
-        template<typename T>[[nodiscard]] T* Map()
-        {
-            return reinterpret_cast<T*>(MapUntyped());
-        }
-
-        template<typename T>[[nodiscard]] T* Map(const GraphicsMemoryRegion<GraphicsResource>& region)
+        template<typename T>[[nodiscard]] gsl::span<T> Map(const GraphicsMemoryRegion<GraphicsResource>& region)
         {
             return Map<T>(region.GetOffset(), region.GetSize());
         }
 
-        template<typename T>[[nodiscard]] T* Map(size_t rangeOffset, size_t rangeLength)
+        template<typename T>[[nodiscard]] gsl::span<T> Map(size_t rangeOffset, size_t rangeLength)
         {
-            return reinterpret_cast<T*>(MapUntyped(rangeOffset, rangeLength));
+            auto bla = MapUntyped(rangeOffset, rangeLength).data();
+            return gsl::span<T>();
         }
 
-        [[nodiscard]] virtual const void* MapForReadUntyped() = 0;
         [[nodiscard]] virtual const void* MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) = 0;
-
-        template<typename T>[[nodiscard]] const T* MapForRead()
-        {
-            return reinterpret_cast<const T*>(MapForReadUntyped());
-        }
 
         template<typename T>[[nodiscard]] const T* MapForRead(const GraphicsMemoryRegion<GraphicsResource>& readRegion)
         {
@@ -114,8 +102,7 @@ namespace NovelRT::Graphics
             return reinterpret_cast<const T*>(MapForReadUntyped(readRangeOffset, readRangeLength));
         }
 
-        virtual void Unmap() = 0;
-        virtual void UnmapAndWrite() = 0;
+        virtual void Unmap(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
         virtual void UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
 
         inline void UnmapAndWrite(const GraphicsMemoryRegion<GraphicsResource>& writtenRegion)

@@ -21,6 +21,7 @@ namespace NovelRT::Graphics
         size_t _size;
 
     public:
+    
         GraphicsMemoryRegion(size_t alignment,
                              std::shared_ptr<TCollection> collection,
                              std::shared_ptr<GraphicsDevice> device,
@@ -35,6 +36,7 @@ namespace NovelRT::Graphics
               _size(size)
         {
         }
+        
 
         GraphicsMemoryRegion() noexcept
             : _alignment(0), _collection(nullptr), _device(nullptr), _isAllocated(false), _offset(0), _size(0)

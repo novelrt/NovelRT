@@ -14,6 +14,7 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         VkBuffer _vulkanBuffer;
+        size_t _mappingCount;
 
     protected:
         Threading::VolatileState _state;
@@ -46,12 +47,9 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanBuffer;
         }
 
-        [[nodiscard]] void* MapUntyped() final;
         [[nodiscard]] void* MapUntyped(size_t rangeOffset, size_t rangeLength) final;
-        [[nodiscard]] const void* MapForReadUntyped() final;
         [[nodiscard]] const void* MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) final;
-        void Unmap() final;
-        void UnmapAndWrite() final;
+        void Unmap(size_t writtenRangeOffset, size_t writtenRangeLength) final;
         void UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
         ~VulkanGraphicsBuffer() override;
     };
