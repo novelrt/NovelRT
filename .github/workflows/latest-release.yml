@@ -130,7 +130,8 @@ jobs:
           name: NovelRT-${{ matrix.os }}
           path: merged
 
-      - uses: actions/download-artifact@v3
+      - name: Gather merged artifacts
+        uses: actions/download-artifact@v3
         with:
           name: NovelRT-${{ matrix.os }}
 
@@ -141,30 +142,30 @@ jobs:
           cd ..
 
       - name: Upload Artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: NovelRT-${{ steps.date.outputs.date }}
-            path: NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: NovelRT-${{ steps.date.outputs.date }}
+          path: NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip
 
   publish-release:
     name: "Publish Draft"
     needs: [ merge-releases ]
     runs-on: ubuntu-20.04
     steps:
-
-    - name: Download merged artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: NovelRT-${{ needs.merge-releases.outputs.date }}
-
-    - name: Publish release (latest build)
-      uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Download merged artifacts
+        uses: actions/download-artifact@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "NovelRT Draft - ${{ needs.merge-releases.outputs.date }}"
-          files: |
-            NovelRT-${{ needs.merge-releases.outputs.date }}-Windows.zip
-            NovelRT-${{ needs.merge-releases.outputs.date }}-Ubuntu.zip
-            NovelRT-${{ needs.merge-releases.outputs.date }}-macOS.zip
+          name: NovelRT-${{ needs.merge-releases.outputs.date }}
+
+      - name: Publish release (latest build)
+        uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: "latest"
+            prerelease: true
+            title: "NovelRT Draft - ${{ needs.merge-releases.outputs.date }}"
+            files: |
+              NovelRT-${{ needs.merge-releases.outputs.date }}-Windows.zip
+              NovelRT-${{ needs.merge-releases.outputs.date }}-Ubuntu.zip
+              NovelRT-${{ needs.merge-releases.outputs.date }}-macOS.zip
+
