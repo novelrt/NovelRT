@@ -71,10 +71,10 @@ jobs:
 
       - name: Copy PDBs and Licence (Windows)
         run: |
-          Get-ChildItem build/src/NovelRT/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
-          Get-ChildItem build/src/NovelRT.Interop/RelWithDebInfo -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+          Get-ChildItem build/src/NovelRT/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+          Get-ChildItem build/src/NovelRT.Interop/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
           Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
-        if: "contains(matrix.os, 'windows')"
+        if: "contains(matrix.os, 'windows') && contains(matrix.configuration, 'Debug')"
 
       - name: Copy Licence (macOS)
         run: |
