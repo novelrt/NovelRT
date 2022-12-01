@@ -67,7 +67,7 @@ jobs:
           cmake --build build --config ${{ matrix.configuration }} --target Engine Interop -j
 
       - name: Install NovelRT - ${{ matrix.configuration }}
-        run: cmake --install build --config "${{ matrix.configuration }}" --prefix package
+        run: cmake --install build --config "${{ matrix.configuration }}" --prefix build/package
 
       - name: Copy PDBs and Licence (Windows)
         run: |
