@@ -1,64 +1,33 @@
-name: Publish NovelRT
+name: Publish NovelRT Draft (Latest)
 
 on:
-  workflow_dispatch:
-    inputs:
-      pre-release:
-        type: boolean
-        description: Is this a stable release?
-        required: true
-      draft:
-        type: boolean
-        description: Is this a draft release?
-        required: true
+  push:
+    branches:
+      - "main"
 
 jobs:
-  # create-release:
-  #   runs-on: ubuntu-latest
-
-  #   outputs:
-  #     tag: ${{ steps.tag_version.outputs.new_tag }}
-  #     id: ${{ steps.create_release.outputs.id }}
-
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-  #   - uses: mathieudutour/github-tag-action@v6.0
-  #     id: tag_version
-  #     with:
-  #       github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  #   - uses: ncipollo/release-action@v1
-  #     id: create_release
-  #     with:
-  #       tag: ${{ steps.tag_version.outputs.new_tag }}
-  #       name: NovelRT ${{ steps.tag_version.outputs.new_tag }}
-  #       body: ${{ steps.tag_version.outputs.changelog }}
-  #       prerelease: true
-  #       draft: true
-
   build-release:
-    # needs: create-release
+    name: ${{ matrix.name }} - ${{ matrix.configuration }}
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
 
     strategy:
+      fail-fast: false
       matrix:
         configuration: [Debug, Release]
         os: [windows-2019, ubuntu-20.04, macos-11]
         vulkanVersion: [1.3.231.1]
         include:
-        - os: ubuntu-latest
+        - os: ubuntu-20.04
           container: novelrt/novelrt-build:latest
-          name: Ubuntu - Clang 10
+          name: Ubuntu 20.04 - Clang 10
           c: CC=clang-10
           cxx: CXX=clang++-10
         - os: windows-2019
           name: Windows - Visual Studio 2019
-        - os: windows-latest
-          name: Windows - Visual Studio 2022
         - os: macos-11
-          name: macOS 11 - Apple-Clang 13
+          name: macOS 11 - AppleClang 13
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -97,7 +66,7 @@ jobs:
           ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }} --target Engine Interop -j
 
-      - name: Install NovelRT - ${{ matrix.configuration }}
+            - name: Install NovelRT - ${{ matrix.configuration }}
         run: cmake --install build --config "${{ matrix.configuration }}" --prefix package
 
       - name: Copy PDBs and Licence (Windows)
@@ -117,12 +86,12 @@ jobs:
         if: "contains(matrix.os, 'ubuntu')"
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}
           path: build/package
 
-  merge-and-publish-artifacts:
+  merge-releases:
     needs: [ build-release ]
     runs-on: ubuntu-20.04
     strategy:
@@ -137,12 +106,17 @@ jobs:
           name: macOS
 
     outputs:
-      release-id: ${{ needs.create-release.outputs.id }}
+      date: ${{ steps.date.outputs.date }}
 
     steps:
+    - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d-%H%M%S')"
+
     - uses: actions/download-artifact@v3
       with:
         path: artifacts
+
     - name: Merge build artifacts
       run: |
         mkdir merged
@@ -163,46 +137,34 @@ jobs:
     - name: Create release artifact
       run: |
         cd merged
-        zip -r "../NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" .
+        zip -r "../NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip" .
         cd ..
 
     - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: novelrt-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}
-          path: NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip
-
-    # - name: Add merged artifacts to release
-    #   run: gh release upload "${{ needs.create-release.outputs.tag }}" "NovelRT-${{ needs.create-release.outputs.tag }}-${{ matrix.name }}.zip" --repo "$GITHUB_REPOSITORY"
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: NovelRT-${{ steps.date.outputs.date }}
+          path: NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip
 
   publish-release:
-    needs: merge-artifacts
-    runs-on: ubuntu-latest
-
+    name: "Publish Draft"
+    needs: [ merge-releases ]
+    runs-on: ubuntu-20.04
     steps:
-    - name: Create release
-      uses: softprops/action-gh-release@v1
+
+    - name: Download merged artifacts
+      uses: actions/download-artifact@v3
       with:
-        files: |
-          NovelRT-${{ needs.create-release.outputs.tag }}-Windows.zip
-          NovelRT-${{ needs.create-release.outputs.tag }}-Ubuntu.zip
-          NovelRT-${{ needs.create-release.outputs.tag }}-macOS.zip
-        fail_on_unmatched_files: true
-        prerelease: ${{ inputs.pre-release }}
-        draft: ${{ inputs.draft }}
-        token: ${{ secrets.GITHUB_TOKEN }}
+        name: NovelRT-${{ needs.merge-releases.outputs.date }}
 
-  delete-release:
-    needs: [ build-release, create-release ]
-    if: ${{ failure() }}
-    runs-on: ubuntu-latest
-    steps:
-    - run: gh release delete "${{ needs.create-release.outputs.tag }}" -y --repo "$GITHUB_REPOSITORY"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}" -X DELETE --silent
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+    - name: Publish release (latest build)
+      uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "NovelRT Draft - ${{ needs.merge-releases.outputs.date }}"
+          files: |
+            NovelRT-${{ needs.merge-releases.outputs.date }}-Windows.zip
+            NovelRT-${{ needs.merge-releases.outputs.date }}-Ubuntu.zip
+            NovelRT-${{ needs.merge-releases.outputs.date }}-macOS.zip
