@@ -109,42 +109,42 @@ jobs:
       date: ${{ steps.date.outputs.date }}
 
     steps:
-    - name: Get current date
+      - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y%m%d-%H%M%S')"
 
-    - uses: actions/download-artifact@v3
-      with:
-        path: artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
 
-    - name: Merge build artifacts
-      run: |
-        mkdir merged
-        for artifact in $(find ./artifacts/ -type d -name "novelrt-${{ matrix.os }}-*"); do
-            cp -RT "$artifact" merged/
-        done
+      - name: Merge build artifacts
+        run: |
+          mkdir merged
+          for artifact in $(find ./artifacts/ -type d -name "novelrt-${{ matrix.os }}-*"); do
+              cp -RT "$artifact" merged/
+          done
 
-    - name: Upload merged artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: NovelRT-${{ matrix.os }}
-        path: merged
-
-    - uses: actions/download-artifact@v3
-      with:
-        name: NovelRT-${{ matrix.os }}
-
-    - name: Create release artifact
-      run: |
-        cd merged
-        zip -r "../NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip" .
-        cd ..
-
-    - name: Upload Artifacts
+      - name: Upload merged artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: NovelRT-${{ steps.date.outputs.date }}
-          path: NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip
+          name: NovelRT-${{ matrix.os }}
+          path: merged
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: NovelRT-${{ matrix.os }}
+
+      - name: Create release artifact
+        run: |
+          cd merged
+          zip -r "../NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip" .
+          cd ..
+
+      - name: Upload Artifacts
+          uses: actions/upload-artifact@v3
+          with:
+            name: NovelRT-${{ steps.date.outputs.date }}
+            path: NovelRT-${{ steps.date.outputs.date }}-${{ matrix.name }}.zip
 
   publish-release:
     name: "Publish Draft"
