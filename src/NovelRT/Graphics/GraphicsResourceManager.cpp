@@ -133,9 +133,9 @@ namespace NovelRT::Graphics
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
 #ifdef WIN32
-        memcpy_s(writeArea, sizeToStage, data, sizeToStage);
+        memcpy_s(writeArea.data(), sizeToStage, data, sizeToStage);
 #else
-        memcpy(writeArea, data, sizeToStage);
+        memcpy(writeArea.data(), data, sizeToStage);
 #endif
         stagingBuffer->UnmapAndWrite(vertexRegion);
         currentContext->Copy(vertexBuffer, stagingBuffer, vertexRegion);
@@ -159,9 +159,9 @@ namespace NovelRT::Graphics
         auto indexRegion = indexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(indexRegion);
 #ifdef WIN32
-        memcpy_s(writeArea, sizeToStage, data, sizeToStage);
+        memcpy_s(writeArea.data(), sizeToStage, data, sizeToStage);
 #else
-        memcpy(writeArea, data, sizeToStage);
+        memcpy(writeArea.data(), data, sizeToStage);
 #endif
         stagingBuffer->UnmapAndWrite(indexRegion);
         currentContext->Copy(indexBuffer, stagingBuffer);
@@ -278,7 +278,7 @@ namespace NovelRT::Graphics
         auto pTextureData = stagingBuffer->Map<uint8_t>(texture2dRegion);
 
 #ifdef WIN32
-        memcpy_s(pTextureData, metadata.data.size(), metadata.data.data(), metadata.data.size());
+        memcpy_s(pTextureData.data(), metadata.data.size(), metadata.data.data(), metadata.data.size());
 #else
         memcpy(pTextureData, metadata.data.data(), metadata.data.size());
 #endif
@@ -348,12 +348,12 @@ namespace NovelRT::Graphics
     {
         auto bufferPtr = GetOrCreateGraphicsBufferForAllocationSize(size, GraphicsBufferKind::Constant);
         auto allocation = bufferPtr->Allocate(size, alignment);
-        uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
+        auto destination = bufferPtr->Map<uint8_t>(allocation);
 
 #ifdef WIN32
-        memcpy_s(destination, size, data, size);
+        memcpy_s(destination.data(), size, data, size);
 #else
-        memcpy(destination, data, size);
+        memcpy(destination.data(), data, size);
 #endif
 
         bufferPtr->UnmapAndWrite(allocation);
@@ -383,12 +383,12 @@ namespace NovelRT::Graphics
             throw std::out_of_range("The size of the data is too large for the specified memory region.");
         }
 
-        uint8_t* destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
+        auto destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
 
 #ifdef WIN32
-        memcpy_s(destination, size, data, size);
+        memcpy_s(destination.data(), size, data, size);
 #else
-        memcpy(destination, data, size);
+        memcpy(destination.data(), data, size);
 #endif
 
         bufferPtr->UnmapAndWrite(targetMemoryResource);
@@ -421,7 +421,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    uint8_t* GraphicsResourceManager::MapConstantBufferRegionForWritingUntyped(
+    gsl::span<uint8_t> GraphicsResourceManager::MapConstantBufferRegionForWritingUntyped(
         GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
     {
         auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(targetMemoryResource.GetCollection());
@@ -457,7 +457,8 @@ namespace NovelRT::Graphics
     {
         for (size_t index : _constantBuffersToUnmapAndWrite)
         {
-            _constantBuffers[index]->UnmapAndWrite();
+            auto buffer = _constantBuffers[index];
+            _constantBuffers[index]->UnmapAndWrite(0, buffer->GetSize()); // this is such a hack lol
         }
 
         _constantBuffersToUnmapAndWrite.clear();

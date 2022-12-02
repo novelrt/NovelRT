@@ -83,15 +83,18 @@ namespace NovelRT::Graphics
         void LoadConstantBufferDataToExistingRegion(GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource,
                                                     void* data,
                                                     size_t size);
-        [[nodiscard]] uint8_t* MapConstantBufferRegionForWritingUntyped(
+        [[nodiscard]] gsl::span<uint8_t> MapConstantBufferRegionForWritingUntyped(
             GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource);
 
-        template<typename TPointerType>
-        [[nodiscard]] TPointerType* MapConstantBufferRegionForWriting(
+        template<typename T>
+        [[nodiscard]] gsl::span<T> MapConstantBufferRegionForWriting(
             GraphicsMemoryRegion<GraphicsResource>& targetMemoryResource)
         {
-            return reinterpret_cast<TPointerType*>(MapConstantBufferRegionForWritingUntyped(targetMemoryResource));
+            auto span = MapConstantBufferRegionForWritingUntyped(targetMemoryResource);
+            auto ptrToData = span.data();
+            return gsl::span<T>(reinterpret_cast<T*>(ptrToData), span.size() / sizeof(T));
         }
+        
         void UnmapAndWriteAllConstantBuffers() noexcept;
 
         void FreeConstantBufferData(GraphicsMemoryRegion<GraphicsResource>& regionToFree);

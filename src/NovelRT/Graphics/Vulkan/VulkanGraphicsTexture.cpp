@@ -36,26 +36,7 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void* Vulkan::VulkanGraphicsTexture::MapUntyped()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-        VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (mapMemoryResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
-        }
-
-        return pDestination;
-    }
-
-    void* VulkanGraphicsTexture::MapUntyped(size_t rangeOffset, size_t /*rangeLength*/)
+    gsl::span<uint8_t> VulkanGraphicsTexture::MapUntyped(size_t rangeOffset, size_t rangeLength)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
@@ -64,57 +45,19 @@ namespace NovelRT::Graphics::Vulkan
 
         void* pDestination = nullptr;
 
-        VkResult result = vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
+        VkResult result = vkMapMemory(vulkanDevice, vulkanDeviceMemory, 0, VK_WHOLE_SIZE, 0, &pDestination);
 
         if (result != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to map VkDeviceMemory! Reason: " + std::to_string(result));
         }
 
-        return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
+        auto returnPtr = reinterpret_cast<uint8_t*>(pDestination);
+        returnPtr += rangeOffset;
+        return gsl::span<uint8_t>(returnPtr, rangeLength);
     }
 
-    const void* VulkanGraphicsTexture::MapForReadUntyped()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-        VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (mapMemoryResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
-        }
-
-        size_t nonCoherentAtomSize =
-            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-        size_t offset = GetOffset();
-        size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-        VkMappedMemoryRange mappedMemoryRange{};
-        mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedMemoryRange.memory = vulkanDeviceMemory;
-        mappedMemoryRange.offset = offset;
-        mappedMemoryRange.size = size;
-
-        VkResult invalidateResult = vkInvalidateMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-        if (invalidateResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to invalidate memory ranges to prevent writing! Reason: " +
-                                     std::to_string(invalidateResult));
-        }
-
-        return pDestination;
-    }
-
-    const void* VulkanGraphicsTexture::MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength)
+    gsl::span<const uint8_t> VulkanGraphicsTexture::MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
 
@@ -154,47 +97,15 @@ namespace NovelRT::Graphics::Vulkan
             }
         }
 
-        return reinterpret_cast<uint8_t*>(pDestination) + readRangeOffset;
+        auto returnPtr = reinterpret_cast<uint8_t*>(pDestination);
+        returnPtr += readRangeOffset;
+        return gsl::span<const uint8_t>(returnPtr, readRangeLength);
     }
-
-    void VulkanGraphicsTexture::Unmap()
+        
+    void VulkanGraphicsTexture::Unmap(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
-    }
-
-    void VulkanGraphicsTexture::UnmapAndWrite()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        size_t nonCoherentAtomSize =
-            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-        size_t offset = GetOffset();
-        size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-        VkMappedMemoryRange mappedMemoryRange{};
-        mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedMemoryRange.memory = vulkanDeviceMemory;
-        mappedMemoryRange.offset = offset;
-        mappedMemoryRange.size = size;
-
-        VkResult flushResult = vkFlushMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-        if (flushResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to flush memory ranges after writing! Reason: " +
-                                     std::to_string(flushResult));
-        }
-
-        vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
+        unused(writtenRangeLength);
+        unused(writtenRangeOffset); // TODO: Implement this
     }
 
     void VulkanGraphicsTexture::UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)

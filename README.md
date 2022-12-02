@@ -32,7 +32,7 @@ Currently there are no binary distributions of the engine as of yet, and we are 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 - [CMake](https://cmake.org/download/) >= 3.19.8
-- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.211.0
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.231.1
 
 
 The dependencies that are handled by CMake that do not need to be manually installed are as follows:
@@ -43,7 +43,7 @@ The dependencies that are handled by CMake that do not need to be manually insta
 - gtest/gmock 1.11.0
 - imgui 1.87
 - libpng 1.6.35
-- libsndfile 1.0.30
+- libsndfile 1.1.0
 - Microsoft GSL 4.0.0
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
@@ -118,8 +118,9 @@ _Prerequisites:_
 - XCode 12
 - XCode Command Line Tools matching the installed version
 - CMake 3.19.8
+- Vulkan SDK 1.3.231.1
 
-**NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK version 1.3.211.0 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
+**NOTE: Until native Metal support is introduced at a future time, it is _required_ that you install Vulkan SDK version 1.3.231.1 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will fail to properly configure.**
 
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
@@ -139,9 +140,9 @@ However, if you have Apple-Silicon Mac (M1, M2, etc), you must add an additional
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
 
-If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `NOVELRT_VULKAN_SDK_PATH` to your local Vulkan SDK location as such:
+If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `VULKAN_SDK` environment variable to your local Vulkan SDK location as such:
 ```
-cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/Vulkan SDK/1.3.216.0/macOS
+VULKAN_SDK=/Users/youruser/Vulkan SDK/1.3.231.1/macOS cmake .. 
 ```
 Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
 

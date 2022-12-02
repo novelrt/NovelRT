@@ -68,12 +68,9 @@ namespace NovelRT::Graphics::Vulkan
             return std::dynamic_pointer_cast<VulkanGraphicsMemoryBlock>(GraphicsTexture::GetBlock());
         }
 
-        [[nodiscard]] void* MapUntyped() final;
-        [[nodiscard]] void* MapUntyped(size_t rangeOffset, size_t rangeLength) final;
-        [[nodiscard]] const void* MapForReadUntyped() final;
-        [[nodiscard]] const void* MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) final;
-        void Unmap() final;
-        void UnmapAndWrite() final;
+        [[nodiscard]] gsl::span<uint8_t> MapUntyped(size_t rangeOffset, size_t rangeLength) final;
+        [[nodiscard]] gsl::span<const uint8_t> MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) final;
+        void Unmap(size_t writtenRangeOffset, size_t writtenRangeLength) final;
         void UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
         ~VulkanGraphicsTexture() override;

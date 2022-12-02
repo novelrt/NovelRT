@@ -27,7 +27,7 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void* VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t rangeLength)
+    gsl::span<uint8_t> VulkanGraphicsBuffer::MapUntyped(size_t rangeOffset, size_t rangeLength)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
@@ -36,8 +36,10 @@ namespace NovelRT::Graphics::Vulkan
 
         void* pDestination = nullptr;
         
+        /*
         uint64_t nonCoherentAtomSize =
             device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
+        */
 
         VkResult mapMemoryResult =
             vkMapMemory(vulkanDevice, vulkanDeviceMemory, 0, VK_WHOLE_SIZE, 0, &pDestination);
@@ -49,12 +51,18 @@ namespace NovelRT::Graphics::Vulkan
                                      std::to_string(mapMemoryResult));
         }
 
+/*
         auto returnPtr = reinterpret_cast<uint8_t*>(pDestination);
         returnPtr = reinterpret_cast<uint8_t*>(Maths::Utilities::AlignDown(reinterpret_cast<uintptr_t>(returnPtr) + rangeOffset, nonCoherentAtomSize));
-        return returnPtr;
+        return gsl::span<uint8_t>(returnPtr, Maths::Utilities::AlignUp(rangeLength, nonCoherentAtomSize));
+        */ //TODO: DO WE WANT THIS???
+
+        auto returnPtr = reinterpret_cast<uint8_t*>(pDestination);
+        returnPtr += rangeOffset;
+        return gsl::span<uint8_t>(returnPtr, rangeLength);
     }
 
-    const void* VulkanGraphicsBuffer::MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength)
+    gsl::span<const uint8_t> VulkanGraphicsBuffer::MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength)
     {
         std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
 
@@ -93,7 +101,15 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to map the Vulkan memory for read only!");
         }
 
-        return (reinterpret_cast<uint8_t*>(pDestination) + readRangeOffset);
+        auto returnPtr = reinterpret_cast<uint8_t*>(pDestination);
+        returnPtr += readRangeOffset;
+        return gsl::span<const uint8_t>(returnPtr, readRangeLength);
+    }
+
+    void VulkanGraphicsBuffer::Unmap(size_t writtenRangeOffset, size_t writtenRangeLength)
+    {
+        unused(writtenRangeLength);
+        unused(writtenRangeOffset); //TODO: Implement this
     }
 
     void VulkanGraphicsBuffer::UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)

@@ -6,6 +6,7 @@
 
 // Maths dependencies
 #include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Utilities/Misc.h>
 #include <array>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>

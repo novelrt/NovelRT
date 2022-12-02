@@ -4,10 +4,25 @@
 #ifndef NOVELRT_UTILITIES_MISC_H
 #define NOVELRT_UTILITIES_MISC_H
 
+#ifdef __has_builtin
+#define _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST __has_builtin(__builtin_bit_cast)
+#else
+#define _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST false
+#endif
+
 #include <filesystem>
 #include <gsl/span>
 #include <type_traits>
 #include <vector>
+
+#if __has_include(<version>)
+#include <version>
+
+#if __cpp_lib_bit_cast
+#include <bit>
+#endif
+
+#endif
 
 #define unused(x) (void)(x)
 
@@ -41,11 +56,7 @@ namespace NovelRT::Utilities
          */
         static std::filesystem::path getExecutableDirPath()
         {
-#ifdef __APPLE__
-            return getExecutablePath();
-#else
             return getExecutablePath().parent_path();
-#endif
         }
 
         [[nodiscard]] static std::vector<const char*> GetStringSpanAsCharPtrVector(
@@ -81,6 +92,44 @@ namespace NovelRT::Utilities
 
             return returnVec;
         }
+
+        /**
+         * @brief Casts an object instance as an unrelated object of a different type.
+         *
+         * @details
+         * With this implementation types can only be casted to other types that are of equal size and that are
+         * trivially copyable.
+         *
+         * @tparam TTo The target type the instance should be casted to.
+         * @tparam TFrom The original type of the object instance.
+         * @returns The object instance as a TTo.
+         */
+        template<class TTo, class TFrom>
+#if __cpp_lib_bit_cast
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
+                                              std::is_trivially_copyable_v<TFrom>,
+                                          TTo>
+        BitCast(const TFrom& value) noexcept
+        {
+            return std::bit_cast<TTo>(value);
+        }
+#elif _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST
+        constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
+                                              std::is_trivially_copyable_v<TFrom>,
+                                          TTo>
+        BitCast(const TFrom& value) noexcept
+        {
+            return __builtin_bit_cast(TTo, value);
+        }
+#else
+        inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
+                                           std::is_trivially_copyable_v<TFrom>,
+                                       TTo>
+        BitCast(const TFrom& value) noexcept
+        {
+            return *reinterpret_cast<const TTo*>(&value);
+        }
+#endif
     };
 }
 

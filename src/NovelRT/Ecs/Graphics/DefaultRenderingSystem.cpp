@@ -356,7 +356,7 @@ namespace NovelRT::Ecs::Graphics
                     gpuSpanCounterMap[renderComponent.primitiveInfoId][layer] =
                         GpuSpanCounter{gpuResourceManager.MapConstantBufferRegionForWriting<Maths::GeoMatrix4x4F>(
                                            _primitiveConfigurations[renderComponent.primitiveInfoId]
-                                               .gpuTransformConstantBufferRegions[layer]),
+                                               .gpuTransformConstantBufferRegions[layer]).data(),
                                        0};
                 }
 

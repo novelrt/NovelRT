@@ -17,12 +17,6 @@ int main()
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
-#if NOVELRT_MOLTENVK_VENDORED
-    auto icdPath = NovelRT::Utilities::Misc::getExecutablePath() / "MoltenVK_icd.json";
-    setenv("VK_ICD_FILENAMES", icdPath.c_str(), 0);
-    logger.logInfo("macOS detected - setting VK_ICD_FILENAMES to path: {}", icdPath.c_str());
-#endif
-
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()

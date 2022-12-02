@@ -86,20 +86,23 @@ namespace NovelRT::Graphics
 
         template<typename T>[[nodiscard]] gsl::span<T> Map(size_t rangeOffset, size_t rangeLength)
         {
-            auto bla = MapUntyped(rangeOffset, rangeLength).data();
-            return gsl::span<T>();
+            auto span = MapUntyped(rangeOffset, rangeLength);
+            auto ptrToData = span.data();
+            return gsl::span<T>(reinterpret_cast<T*>(ptrToData), span.size() / sizeof(T));
         }
 
-        [[nodiscard]] virtual const void* MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) = 0;
+        [[nodiscard]] virtual gsl::span<const uint8_t> MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength) = 0;
 
-        template<typename T>[[nodiscard]] const T* MapForRead(const GraphicsMemoryRegion<GraphicsResource>& readRegion)
+        template<typename T>[[nodiscard]] gsl::span<const T> MapForRead(const GraphicsMemoryRegion<GraphicsResource>& readRegion)
         {
             return MapForRead<T>(readRegion.GetOffset(), readRegion.GetSize());
         }
 
-        template<typename T>[[nodiscard]] const T* MapForRead(size_t readRangeOffset, size_t readRangeLength)
+        template<typename T>[[nodiscard]] gsl::span<const T> MapForRead(size_t readRangeOffset, size_t readRangeLength)
         {
-            return reinterpret_cast<const T*>(MapForReadUntyped(readRangeOffset, readRangeLength));
+            auto span = MapForReadUntyped(rangeOffset, rangeLength);
+            auto ptrToData = span.data();
+            return gsl::span<const T>(reinterpret_cast<T*>(ptrToData), span.size() / sizeof(T));
         }
 
         virtual void Unmap(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;

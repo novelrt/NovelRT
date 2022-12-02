@@ -1109,7 +1109,7 @@ namespace NovelRT::Maths
                                          const GeoVector3F& axis = GeoVector3F(0, 0, 1)) noexcept
         {
             *reinterpret_cast<glm::vec4*>(this) =
-                glm::rotate((*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&point)),
+                glm::rotate(*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&point),
                             angleRotationValue, *reinterpret_cast<const glm::vec3*>(&axis)) +
                 *reinterpret_cast<const glm::vec4*>(&point);
         }
@@ -1160,7 +1160,8 @@ namespace NovelRT::Maths
          */
         inline float Dot(GeoVector4F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other));
+            return glm::dot(*reinterpret_cast<const glm::vec4*>(this),
+                            NovelRT::Utilities::Misc::BitCast<glm::vec4>(other));
         }
 
         /**
