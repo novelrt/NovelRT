@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(FabulistTest MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(FabulistTest 
+  set_target_properties(FabulistTest
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.FabulistTest
@@ -23,7 +23,7 @@ target_link_libraries(FabulistTest
 
 copy_build_products(FabulistTest
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:FabulistTest>/../Resources,$<TARGET_FILE_DIR:FabulistTest>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:FabulistTest>/../Resources,$<TARGET_FILE_DIR:FabulistTest>/Resources>
 )
 
 if(APPLE)

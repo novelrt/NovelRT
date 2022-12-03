@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(AudioEcsSample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(AudioEcsSample 
+  set_target_properties(AudioEcsSample
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.AudioEcsSample
@@ -24,7 +24,7 @@ target_link_libraries(AudioEcsSample
 
 copy_build_products(AudioEcsSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:AudioEcsSample>/../Resources,$<TARGET_FILE_DIR:AudioEcsSample>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:AudioEcsSample>/../Resources,$<TARGET_FILE_DIR:AudioEcsSample>/Resources>
 )
 
 if(APPLE)

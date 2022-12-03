@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(UIEventExample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(UIEventExample 
+  set_target_properties(UIEventExample
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.UIEventExample
@@ -23,7 +23,7 @@ target_link_libraries(UIEventExample
 
 copy_build_products(UIEventExample
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:UIEventExample>/../Resources,$<TARGET_FILE_DIR:UIEventExample>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:UIEventExample>/../Resources,$<TARGET_FILE_DIR:UIEventExample>/Resources>
 )
 
 if(APPLE)
