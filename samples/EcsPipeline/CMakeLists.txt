@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(EcsPipeline MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(EcsPipeline 
+  set_target_properties(EcsPipeline
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.EcsPipeline
@@ -23,7 +23,7 @@ target_link_libraries(EcsPipeline
 
 copy_build_products(EcsPipeline
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:EcsPipeline>/../Resources,$<TARGET_FILE_DIR:EcsPipeline>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:EcsPipeline>/../Resources,$<TARGET_FILE_DIR:EcsPipeline>/Resources>
 )
 
 if(APPLE)
