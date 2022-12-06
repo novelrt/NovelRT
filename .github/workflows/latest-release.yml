@@ -51,15 +51,15 @@ jobs:
         id: cache-vulkan-macOS
         uses: actions/cache@v3
         with:
-          path: $GITHUB_WORKSPACE/NovelRT/build/VulkanSDK
+          path: build/VulkanSDK
           key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
           restore-keys: |
-            ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
+            ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}
 
       - name: Install Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
         id: install-vulkan-macOS
-        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/NovelRT/build/VulkanSDK
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/build/VulkanSDK
 
       - name: Install Vulkan SDK (Windows)
         uses: humbletim/setup-vulkan-sdk@v1.2.0
@@ -71,9 +71,8 @@ jobs:
 
       - name: Restore Vulkan SDK env. variable (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
-        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/NovelRT/build/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
+        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/build/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
 
-      - uses: novelrt/setup-cpp@v1
       - name: Build - ${{ matrix.configuration }}
         id: build
         run: |
