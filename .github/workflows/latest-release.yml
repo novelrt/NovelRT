@@ -6,7 +6,18 @@ on:
       - "main"
 
 jobs:
+  prerequisites:
+    name: Handle Prerequisites
+    runs-on: ubuntu-20.04
+    outputs:
+      date: ${{ steps.get-date.outputs.date }}
+    steps:
+      - name: Get date of build
+        id: get-date
+        run: echo "date=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
   build-release:
+    needs: [ prerequisites ]
     name: ${{ matrix.name }} - ${{ matrix.configuration }}
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
@@ -37,7 +48,7 @@ jobs:
         id: cache-vulkan-macOS
         uses: actions/cache@v3
         with:
-          path: $GITHUB_WORKSPACE/NovelRT/build/VulkanSDK
+          path: $GITHUB_WORKSPACE/VulkanSDK
           key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
           restore-keys: |
             ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
@@ -45,7 +56,7 @@ jobs:
       - name: Install Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
         id: install-vulkan-macOS
-        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/NovelRT/build/VulkanSDK
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/VulkanSDK
 
       - name: Install Vulkan SDK (Windows)
         uses: humbletim/setup-vulkan-sdk@v1.2.0
@@ -57,7 +68,7 @@ jobs:
 
       - name: Restore Vulkan SDK Env. Variable (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
-        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/NovelRT/build/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
+        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
 
       - uses: novelrt/setup-cpp@v1
       - name: Build NovelRT - ${{ matrix.configuration }}
@@ -93,7 +104,7 @@ jobs:
           retention-days: 1
 
   merge-releases:
-    needs: [ build-release ]
+    needs: [ build-release, prerequisites ]
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -106,14 +117,7 @@ jobs:
         - os: macos-11
           name: macOS
 
-    outputs:
-      date: ${{ steps.get-date.outputs.date }}
-
     steps:
-      - name: Get current date
-        id: get-date
-        run: echo "date=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
@@ -140,25 +144,25 @@ jobs:
       - name: Create release artifact
         run: |
           cd merged
-          zip -r "../NovelRT-${{ steps.get-date.outputs.date }}-${{ matrix.name }}.zip" .
+          zip -r "../NovelRT-${{ needs.prerequisites.outputs.date }}-${{ matrix.name }}.zip" .
           cd ..
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: novelrt-${{ steps.get-date.outputs.date }}
-          path: NovelRT-${{ steps.get-date.outputs.date }}-${{ matrix.name }}.zip
+          name: novelrt-${{ needs.prerequisites.outputs.date }}
+          path: NovelRT-${{ needs.prerequisites.outputs.date }}-${{ matrix.name }}.zip
           retention-days: 5
 
   publish-release:
     name: "Publish Draft"
-    needs: [ merge-releases ]
+    needs: [ merge-releases, prerequisites ]
     runs-on: ubuntu-20.04
     steps:
       - name: Gather artifacts
         uses: actions/download-artifact@v3
         with:
-          name: novelrt-${{ needs.merge-releases.outputs.date }}
+          name: novelrt-${{ needs.prerequisites.outputs.date }}
 
       - name: Publish NovelRT
         uses: marvinpinto/action-automatic-releases@v1.2.1
@@ -166,9 +170,8 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "NovelRT Draft - ${{ needs.merge-releases.outputs.date }}"
+          title: "NovelRT Draft - ${{ needs.prerequisites.outputs.date }}"
           files: |
-            NovelRT-${{ needs.merge-releases.outputs.date }}-Windows.zip
-            NovelRT-${{ needs.merge-releases.outputs.date }}-Ubuntu.zip
-            NovelRT-${{ needs.merge-releases.outputs.date }}-macOS.zip
-
+            NovelRT-${{ needs.prerequisites.outputs.date }}-Windows.zip
+            NovelRT-${{ needs.prerequisites.outputs.date }}-Ubuntu.zip
+            NovelRT-${{ needs.prerequisites.outputs.date }}-macOS.zip
