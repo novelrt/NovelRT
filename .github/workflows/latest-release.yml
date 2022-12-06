@@ -40,7 +40,10 @@ jobs:
           name: macOS 11 - AppleClang 13
 
     steps:
-      - name: Checkout Code
+      - name: Allow repository changes
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Cache Vulkan SDK (macOS)
@@ -66,37 +69,37 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
-      - name: Restore Vulkan SDK Env. Variable (macOS)
+      - name: Restore Vulkan SDK env. variable (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
         run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/NovelRT/build/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
 
       - uses: novelrt/setup-cpp@v1
-      - name: Build NovelRT - ${{ matrix.configuration }}
+      - name: Build - ${{ matrix.configuration }}
         id: build
         run: |
           ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --config ${{ matrix.configuration }} --target Engine Interop -j
 
-      - name: Install NovelRT - ${{ matrix.configuration }}
+      - name: Install - ${{ matrix.configuration }}
         run: cmake --install build --config "${{ matrix.configuration }}" --prefix build/package
 
-      - name: Copy PDBs and Licence (Windows)
+      - name: Copy PDBs and licence (Windows)
         run: |
           Get-ChildItem build/src/NovelRT/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
           Get-ChildItem build/src/NovelRT.Interop/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
           Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
         if: "contains(matrix.os, 'windows') && contains(matrix.configuration, 'Debug')"
 
-      - name: Copy Licence (macOS)
+      - name: Copy licence (macOS)
         run: |
           cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
         if: "contains(matrix.os, 'macos')"
 
-      - name: Copy Licence (Ubuntu)
+      - name: Copy licence (Ubuntu)
         run: cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
         if: "contains(matrix.os, 'ubuntu')"
 
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}
@@ -104,6 +107,7 @@ jobs:
           retention-days: 1
 
   merge-releases:
+    name: Merge Built Artifacts
     needs: [ build-release, prerequisites ]
     runs-on: ubuntu-20.04
     strategy:
@@ -118,7 +122,8 @@ jobs:
           name: macOS
 
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Gather artifacts
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
 
@@ -147,7 +152,7 @@ jobs:
           zip -r "../NovelRT-${{ needs.prerequisites.outputs.date }}-${{ matrix.name }}.zip" .
           cd ..
 
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: novelrt-${{ needs.prerequisites.outputs.date }}
@@ -155,7 +160,7 @@ jobs:
           retention-days: 5
 
   publish-release:
-    name: "Publish Draft"
+    name: Publish Draft Copy
     needs: [ merge-releases, prerequisites ]
     runs-on: ubuntu-20.04
     steps:
