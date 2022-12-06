@@ -1,0 +1,167 @@
+name: Publish NovelRT (Stable)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-release:
+    name: Build NovelRT - ${{ matrix.name }} - ${{ matrix.configuration }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+        os: [windows-2019, ubuntu-20.04, macos-11]
+        vulkanVersion: [1.3.231.1]
+        include:
+        - os: ubuntu-20.04
+          container: novelrt/novelrt-build:latest
+          name: Ubuntu 20.04 - Clang 10
+          c: CC=clang-10
+          cxx: CXX=clang++-10
+        - os: windows-2019
+          name: Windows - Visual Studio 2019
+        - os: macos-11
+          name: macOS 11 - AppleClang 13
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache Vulkan SDK (macOS)
+        if: "contains(matrix.os, 'macos')"
+        id: cache-vulkan-macOS
+        uses: actions/cache@v3
+        with:
+          path: $GITHUB_WORKSPACE/VulkanSDK
+          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
+          restore-keys: |
+            ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
+
+      - name: Install Vulkan SDK (macOS)
+        if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
+        id: install-vulkan-macOS
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/VulkanSDK
+
+      - name: Install Vulkan SDK (Windows)
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        if: "contains(matrix.os, 'windows')"
+        with:
+          vulkan-query-version: ${{ matrix.vulkanVersion }}
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
+      - name: Restore Vulkan SDK env. variable (macOS)
+        if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
+        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
+
+      - uses: novelrt/setup-cpp@v1
+      - name: Build - ${{ matrix.configuration }}
+        id: build
+        run: |
+          ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          cmake --build build --config ${{ matrix.configuration }} --target Engine Interop -j
+
+      - name: Install - ${{ matrix.configuration }}
+        run: cmake --install build --config "${{ matrix.configuration }}" --prefix build/package
+
+      - name: Copy PDBs and licence (Windows)
+        run: |
+          Get-ChildItem build/src/NovelRT/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+          Get-ChildItem build/src/NovelRT.Interop/${{ matrix.configuration }} -Filter *.pdb | Copy-Item -Destination build/package/lib -Force -PassThru
+          Get-ChildItem . -Filter LICENCE-DIST.md | Copy-Item -Destination build/package/bin/LICENCE.md -Force -PassThru
+        if: "contains(matrix.os, 'windows') && contains(matrix.configuration, 'Debug')"
+
+      - name: Copy licence (macOS)
+        run: |
+          cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
+        if: "contains(matrix.os, 'macos')"
+
+      - name: Copy licence (Ubuntu)
+        run: cp -v -f ./LICENCE-DIST.md build/package/lib/LICENCE.md
+        if: "contains(matrix.os, 'ubuntu')"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: novelrt-${{ matrix.os }}-${{ matrix.configuration }}-$GITHUB_REF_NAME
+          path: build/package
+          retention-days: 1
+
+  merge-releases:
+    name: Merge Built Artifacts
+    needs: [ build-release ]
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: [ windows-2019, ubuntu-20.04, macos-11 ]
+        include:
+        - os: windows-2019
+          name: Windows
+        - os: ubuntu-20.04
+          name: Ubuntu
+        - os: macos-11
+          name: macOS
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Merge build artifacts
+        run: |
+          mkdir merged
+          for artifact in $(find ./artifacts/ -type d -name "novelrt-${{ matrix.os }}-*"); do
+              cp -RT "$artifact" merged/
+          done
+
+      - name: Upload merged artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: NovelRT-${{ matrix.os }}-$GITHUB_REF_NAME
+          path: merged
+          retention-days: 1
+
+      - name: Gather merged artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: NovelRT-${{ matrix.os }}-$GITHUB_REF_NAME
+
+      - name: Create release artifact
+        run: |
+          cd merged
+          zip -r "../NovelRT-$GITHUB_REF_NAME-${{ matrix.name }}.zip" .
+          cd ..
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: novelrt-$GITHUB_REF_NAME
+          path: NovelRT-$GITHUB_REF_NAME-${{ matrix.name }}.zip
+          retention-days: 5
+
+  publish-release:
+    name: Publish New Edition
+    needs: [ merge-releases ]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Gather artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: novelrt-$GITHUB_REF_NAME
+
+      - name: Publish NovelRT
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "$GITHUB_REF_NAME"
+          prerelease: false
+          title: "NovelRT $GITHUB_REF_NAME"
+          files: |
+            NovelRT-$GITHUB_REF_NAME-Windows.zip
+            NovelRT-$GITHUB_REF_NAME-Ubuntu.zip
+            NovelRT-$GITHUB_REF_NAME-macOS.zip
