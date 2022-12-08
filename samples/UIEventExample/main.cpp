@@ -2,6 +2,9 @@
 // for more information.
 
 #include <NovelRT/NovelRT.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
 #include <memory>
 
 using namespace NovelRT::Ecs;
@@ -132,17 +135,34 @@ int main()
 
     scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
-    NovelRT::Timing::StepTimer timer;
+    NovelRT::Timing::StepTimer timer(60,0.1);
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
-    windowPtr->SetWindowTitle("UI Test");
+    windowPtr->SetWindowTitle("ImGui Test");
+
+    auto window = reinterpret_cast<GLFWwindow*>(GetGlfwWindowPluginProvider()->GetWindowingDevice()->GetHandle());
+
 
     DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
+    bool init = false;
     while (!windowPtr->GetShouldClose())
     {
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
+        if(!init)
+        {
+            //ImGui Init
+            ImGui::CreateContext();
+            ImGuiIO& io = ImGui::GetIO();
+            (void)io;
+            ImGui_ImplGlfw_InitForVulkan(window, true);
+            init = true;
+        }
     }
+
+    ImGui_ImplVulkan_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     return 0;
 }

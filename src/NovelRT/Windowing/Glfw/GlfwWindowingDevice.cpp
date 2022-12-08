@@ -2,6 +2,7 @@
 // for more information.
 
 #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
+#include <iostream>
 
 namespace NovelRT::Windowing::Glfw
 {
@@ -18,6 +19,10 @@ namespace NovelRT::Windowing::Glfw
             glfwGetError(&output);
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
+
+        glfwSetErrorCallback([](int error, const char* description) {
+            spdlog::error("GLFW ERROR {}: {}", error, description);
+        });
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         GLFWmonitor* monitor = nullptr;

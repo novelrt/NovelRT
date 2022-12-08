@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
 
         Threading::VolatileState _state;
 
-        VkCommandBuffer CreateVulkanCommandBuffer();
+
         VkCommandPool CreateVulkanCommandPool();
         VkFramebuffer CreateVulkanFramebuffer();
         VkImageView CreateVulkanSwapChainImageView();
@@ -41,7 +41,7 @@ namespace NovelRT::Graphics::Vulkan
         VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept;
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
-
+        VkCommandBuffer CreateVulkanCommandBuffer();
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
             return std::static_pointer_cast<VulkanGraphicsDevice>(GraphicsContext::GetDevice());

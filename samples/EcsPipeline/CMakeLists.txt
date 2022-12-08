@@ -1,5 +1,6 @@
 set(SOURCES
   main.cpp
+  ${imgui_SOURCES}
 )
 
 if(APPLE)
@@ -19,6 +20,12 @@ add_dependencies(EcsPipeline Resources)
 target_link_libraries(EcsPipeline
   PRIVATE
   Engine
+)
+
+target_include_directories(EcsPipeline
+  PRIVATE
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
 )
 
 copy_build_products(EcsPipeline

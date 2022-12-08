@@ -134,7 +134,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
 endif()
 
 # Packages w/o version specified typically break as they don't support
-# versioning like the others do. 
+# versioning like the others do.
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -191,6 +191,7 @@ endif()
 #
 # Add subdirectories
 #
+add_subdirectory(internal/imgui)
 add_subdirectory(resources)
 add_subdirectory(src)
 

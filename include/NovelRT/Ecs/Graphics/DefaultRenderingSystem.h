@@ -196,6 +196,11 @@ namespace NovelRT::Ecs::Graphics
             return _backgroundColour;
         }
 
+        [[nodiscard]] inline std::shared_ptr<NovelRT::Graphics::GraphicsDevice> GetGraphicsDevice() const noexcept
+        {
+            return _graphicsDevice;
+        }
+
         [[nodiscard]] uuids::uuid GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;
 
         [[nodiscard]] uuids::uuid GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;

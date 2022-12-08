@@ -1,5 +1,6 @@
 set(SOURCES
   main.cpp
+  ${imgui_SOURCES}
 )
 
 if(APPLE)
@@ -19,6 +20,12 @@ add_dependencies(UIEventExample Resources)
 target_link_libraries(UIEventExample
   PRIVATE
     Engine
+)
+
+target_include_directories(UIEventExample
+  PRIVATE
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
 )
 
 copy_build_products(UIEventExample
