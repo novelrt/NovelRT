@@ -40,9 +40,6 @@ jobs:
           name: macOS 11 - AppleClang 13
 
     steps:
-      - name: Allow repository changes
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -51,7 +48,7 @@ jobs:
         id: cache-vulkan-macOS
         uses: actions/cache@v3
         with:
-          path: build/VulkanSDK
+          path: VulkanSDK
           key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
           restore-keys: |
             ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}
@@ -59,7 +56,7 @@ jobs:
       - name: Install Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
         id: install-vulkan-macOS
-        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/build/VulkanSDK
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/VulkanSDK
 
       - name: Install Vulkan SDK (Windows)
         uses: humbletim/setup-vulkan-sdk@v1.2.0
@@ -71,7 +68,7 @@ jobs:
 
       - name: Restore Vulkan SDK env. variable (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit == 'true'"
-        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/build/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
+        run: echo "VULKAN_SDK=$GITHUB_WORKSPACE/VulkanSDK/${{ matrix.vulkanVersion }}/macOS" >> $GITHUB_ENV
 
       - name: Build - ${{ matrix.configuration }}
         id: build
