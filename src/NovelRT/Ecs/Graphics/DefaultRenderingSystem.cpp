@@ -249,17 +249,16 @@ namespace NovelRT::Ecs::Graphics
         };
 
         _uiProvider = _uiPluginProvider->GetUIProvider();
-        _uiProvider->Initialise(_graphicsDevice, windowingDevice, _graphicsPluginProvider.get(), pipeline);
+        _uiProvider->Initialise(_graphicsDevice, windowingDevice, _graphicsPluginProvider->GetGraphicsProvider(), pipeline);
 
         UIRenderEvent += [&](auto system, NovelRT::Ecs::Graphics::DefaultRenderingSystem::UIRenderEventArgs args)
         {
             unused(system);
-            unused(args);
             _uiProvider->Begin();
 
             _uiProvider->UIEvent(*_uiProvider);
 
-            _uiProvider->End();
+            _uiProvider->End(args.graphicsDevice->GetCurrentContext());
         };
     }
 

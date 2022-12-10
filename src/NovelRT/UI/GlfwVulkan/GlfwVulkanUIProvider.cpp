@@ -7,14 +7,13 @@ namespace NovelRT::UI::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
         : _isInitialised(false),
-        _initInfo(),
-        _graphicsDevice(nullptr)
+        _initInfo()
     {
     }
 
     void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
         std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
-        void* gfxProvider,
+        std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
     {
         _logger.logDebugLine("Initialising Dear ImGui UI service with GLFW and Vulkan...");
@@ -39,10 +38,9 @@ namespace NovelRT::UI::GlfwVulkan
             throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
         }
 
-        auto vulkanProvider = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider*>(gfxProvider);
-        auto vulkanDevice = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice*>(gfxDevice.get());
-        _graphicsDevice = std::shared_ptr<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(vulkanDevice);
-        auto vulkanPipeline = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline*>(pipeline.get());
+        auto vulkanProvider = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider>(gfxProvider);
+        auto vulkanDevice = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(gfxDevice);
+        auto vulkanPipeline = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline>(pipeline);
 
         //Init Dear ImGui Context
         ImGui::CreateContext();
@@ -119,12 +117,13 @@ namespace NovelRT::UI::GlfwVulkan
         ImGui::NewFrame();
     }
 
-    void GlfwVulkanUIProvider::End()
+    void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)
     {
+        auto ctx = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsContext>(context);
         ImGuiIO& io = ImGui::GetIO();
         unused(io);
         ImGui::Render();
-        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _graphicsDevice->GetCurrentContext()->GetVulkanCommandBuffer());
+        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ctx->GetVulkanCommandBuffer());
     }
 
     GlfwVulkanUIProvider::~GlfwVulkanUIProvider()
