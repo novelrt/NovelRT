@@ -9,6 +9,7 @@
 #include "../Input/Input.h"
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
+#include "../UI/UI.h"
 
 /**
  * @brief The NovelRT engine plugin system for loading modules such as Vulkan, GLFW3, OpenAL, and more.
@@ -20,6 +21,7 @@ namespace NovelRT::PluginManagement
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
     class IInputPluginProvider;
+    class IUIPluginProvider;
 }
 
 // clang-format off
@@ -28,6 +30,7 @@ namespace NovelRT::PluginManagement
 #include "IResourceManagementPluginProvider.h"
 #include "IGraphicsPluginProvider.h"
 #include "IWindowingPluginProvider.h"
+#include "IUIPluginProvider.h"
 #include "TemporaryFnPtrs.h" //TODO: THIS HEADER IS A HACK - DELETE AFTER MVP
 #include "DefaultPluginSelector.h"
 // clang-format on

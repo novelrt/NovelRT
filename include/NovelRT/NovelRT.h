@@ -48,6 +48,9 @@
 #include <fabulist/runtime/story.hpp>
 #include <fabulist/runtime/version.hpp>
 
+//Dear ImGui
+#include <imgui.h>
+
 // libpng
 #include <png.h>
 #endif // __cplusplus
@@ -115,6 +118,7 @@
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
   #include <NovelRT/Input/Input.h>
   #include <NovelRT/Input/Glfw/Input.Glfw.h>
+  #include <NovelRT/UI/UI.h>
 
   // Plugin Management types
   #include <NovelRT/PluginManagement/PluginManagement.h>

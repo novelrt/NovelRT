@@ -75,6 +75,9 @@ set(CORE_SOURCES
 
   Timing/StepTimer.cpp
 
+  UI/GlfwVulkan/GlfwVulkanUIProvider.cpp
+  UI/GlfwVulkan/GlfwVulkanUIPluginProvider.cpp
+
   Utilities/Misc.cpp
 
   Windowing/Glfw/GlfwWindowingDevice.cpp
