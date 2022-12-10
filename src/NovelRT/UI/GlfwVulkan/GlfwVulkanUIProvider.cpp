@@ -7,7 +7,8 @@ namespace NovelRT::UI::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
         : _isInitialised(false),
-        _initInfo()
+        _initInfo(),
+        _graphicsDevice(nullptr)
     {
     }
 
@@ -40,6 +41,7 @@ namespace NovelRT::UI::GlfwVulkan
 
         auto vulkanProvider = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider*>(gfxProvider);
         auto vulkanDevice = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice*>(gfxDevice.get());
+        _graphicsDevice = std::shared_ptr<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(vulkanDevice);
         auto vulkanPipeline = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline*>(pipeline.get());
 
         //Init Dear ImGui Context
@@ -102,7 +104,33 @@ namespace NovelRT::UI::GlfwVulkan
 
         _isInitialised = true;
         _logger.logDebugLine("Initialised Dear ImGui UI service with GLFW and Vulkan successfully.");
+        UIEvent += [&](auto sys)
+        {
+            unused(sys);
+            ImGui::ShowDemoWindow();
+            _logger.logDebugLine("Custom UI Event hit.");
+        };
     }
 
+    void GlfwVulkanUIProvider::Begin()
+    {
+        ImGui_ImplVulkan_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+    }
 
+    void GlfwVulkanUIProvider::End()
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        unused(io);
+        ImGui::Render();
+        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _graphicsDevice->GetCurrentContext()->GetVulkanCommandBuffer());
+    }
+
+    GlfwVulkanUIProvider::~GlfwVulkanUIProvider()
+    {
+        ImGui_ImplVulkan_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
 }

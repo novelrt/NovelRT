@@ -15,15 +15,18 @@ namespace NovelRT::UI::GlfwVulkan
     protected:
         bool _isInitialised;
         ImGui_ImplVulkan_InitInfo _initInfo;
-        std::shared_ptr<NovelRT::Graphics::GraphicsProvider> _graphicsProvider;
+        std::shared_ptr<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice> _graphicsDevice;
 
     public:
         GlfwVulkanUIProvider() noexcept;
-
+        ~GlfwVulkanUIProvider() final;
         void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
             std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
             void* gfxProvider,
             std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
+
+        void Begin();
+        void End();
     };
 }
 

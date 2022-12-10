@@ -16,11 +16,16 @@ namespace NovelRT::UI
         LoggingService _logger;
 
     public:
+        Utilities::Event<std::reference_wrapper<UIProvider>> UIEvent;
+
         virtual void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
             std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
             void* gfxProvider,
             std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline) = 0;
         virtual ~UIProvider() = default;
+        virtual void Begin() = 0;
+        virtual void End() = 0;
+
     };
 }
 
