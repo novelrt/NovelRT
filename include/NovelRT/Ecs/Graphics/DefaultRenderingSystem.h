@@ -26,11 +26,13 @@ namespace NovelRT::Ecs::Graphics
         Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IUIPluginProvider> _uiPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> _graphicsAdapter;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice> _graphicsDevice;
         std::shared_ptr<NovelRT::Windowing::IWindowingDevice> _windowingDevice;
+        std::shared_ptr<NovelRT::UI::UIProvider> _uiProvider;
 
         NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> _frameMatrixConstantBufferRegion;
 
@@ -84,6 +86,7 @@ namespace NovelRT::Ecs::Graphics
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
             std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
+            std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
             std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider);
 
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;

@@ -14,7 +14,6 @@ namespace NovelRT::UI::GlfwVulkan
 }
 
 // UI.GlfwVulkan dependencies
-#include "NovelRT/UI/UI.h"
 #include "NovelRT/Graphics/Graphics.h"
 #include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
 #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"

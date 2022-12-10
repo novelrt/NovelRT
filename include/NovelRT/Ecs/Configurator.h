@@ -22,6 +22,7 @@ namespace NovelRT::Ecs
         std::vector<std::shared_ptr<IEcsSystem>> _iecsSystems;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IUIPluginProvider> _uiPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<PluginManagement::IInputPluginProvider> _inputPluginProvider;
 
@@ -44,7 +45,7 @@ namespace NovelRT::Ecs
                 "NovelRT::Ecs::TransformComponent");
 
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
-                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
+                _graphicsPluginProvider, _windowingPluginProvider, _uiPluginProvider, _resourceManagementPluginProvider));
 
             target.GetComponentCache().RegisterComponentType(
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
@@ -201,6 +202,23 @@ namespace NovelRT::Ecs
             std::shared_ptr<PluginManagement::IInputPluginProvider> pluginInstance)
         {
             _inputPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IUIPluginProvider>(
+            std::shared_ptr<PluginManagement::IUIPluginProvider> pluginInstance)
+        {
+            _uiPluginProvider = std::move(pluginInstance);
             return *this;
         }
 

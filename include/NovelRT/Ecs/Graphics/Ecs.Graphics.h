@@ -10,6 +10,7 @@
 
 // Ecs.Graphics Dependencies
 #include "NovelRT/Graphics/RGBAColour.h"
+#include "NovelRT/UI/UI.h"
 
 namespace NovelRT::Ecs::Graphics
 {

@@ -7,14 +7,14 @@
 // dependencies for ECS
 // clang-format off
 
-#include "../Atom.h"
-#include "../Exceptions/Exceptions.h"
-#include "../Maths/Maths.h"
-#include "../Timing/Timestamp.h"
-#include "../Utilities/Event.h"
-#include "../Utilities/KeyValuePair.h"
-#include "../PluginManagement/PluginManagement.h"
-#include "../Threading/Threading.h"
+#include "NovelRT/Atom.h"
+#include "NovelRT/Exceptions/Exceptions.h"
+#include "NovelRT/Maths/Maths.h"
+#include "NovelRT/Timing/Timestamp.h"
+#include "NovelRT/Utilities/Event.h"
+#include "NovelRT/Utilities/KeyValuePair.h"
+#include "NovelRT/PluginManagement/PluginManagement.h"
+#include "NovelRT/Threading/Threading.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>

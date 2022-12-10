@@ -4,6 +4,7 @@
 #ifndef NOVELRT_UI_H
 #define NOVELRT_UI_H
 
+#include "NovelRT/PluginManagement/PluginManagement.h"
 /**
  * @brief The experimental UI plugin API.
  */

@@ -20,7 +20,10 @@ namespace NovelRT::UI::GlfwVulkan
     public:
         GlfwVulkanUIProvider() noexcept;
 
-        void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice, std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice, std::shared_ptr<NovelRT::PluginManagement::IGraphicsPluginProvider> gfxProvider, std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
+        void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
+            std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+            void* gfxProvider,
+            std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
     };
 }
 

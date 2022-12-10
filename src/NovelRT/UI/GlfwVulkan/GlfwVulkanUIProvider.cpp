@@ -11,26 +11,34 @@ namespace NovelRT::UI::GlfwVulkan
     {
     }
 
-    void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice, std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice, std::shared_ptr<NovelRT::PluginManagement::IGraphicsPluginProvider> gfxProvider, std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
+    void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
+        std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+        void* gfxProvider,
+        std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
     {
         _logger.logDebugLine("Initialising Dear ImGui UI service with GLFW and Vulkan...");
         if(gfxDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to gfxDevice!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to gfxDevice!");
+            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
+            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
         }
         if(windowingDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to windowingDevice!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to windowingDevice!");
+            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
+            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
         }
         if(gfxDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to gfxProvider!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided to gfxProvider!");
+            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IGraphicsPluginProvider!");
+            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IGraphicsPluginProvider!");
+        }
+        if(pipeline == nullptr)
+        {
+            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
+            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
         }
 
-        auto vulkanProvider = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider*>(gfxProvider.get());
+        auto vulkanProvider = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider*>(gfxProvider);
         auto vulkanDevice = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice*>(gfxDevice.get());
         auto vulkanPipeline = reinterpret_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline*>(pipeline.get());
 
@@ -69,17 +77,16 @@ namespace NovelRT::UI::GlfwVulkan
         _logger.logDebugLine("Dear ImGui - uploading default fonts...");
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        VkCommandBuffer* buffer = nullptr;
-        *buffer = vulkanDevice->GetCurrentContext()->GetVulkanCommandBuffer();
+        VkCommandBuffer buffer = vulkanDevice->GetCurrentContext()->CreateVulkanCommandBuffer();
 
-        vkBeginCommandBuffer(*buffer, &commandBufferBeginInfo);
-        ImGui_ImplVulkan_CreateFontsTexture(*buffer);
-        vkEndCommandBuffer(*buffer);
+        vkBeginCommandBuffer(buffer, &commandBufferBeginInfo);
+        ImGui_ImplVulkan_CreateFontsTexture(buffer);
+        vkEndCommandBuffer(buffer);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &*buffer;
+        submitInfo.pCommandBuffers = &buffer;
         auto executeGraphicsFence = vulkanDevice->GetCurrentContext()->GetWaitForExecuteCompletionFence();
 
         VkResult queueSubmitResult = vkQueueSubmit(vulkanDevice->GetVulkanGraphicsQueue(), 1, &submitInfo,
