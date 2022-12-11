@@ -82,6 +82,7 @@ namespace NovelRT::Ecs
 #include "Graphics/Ecs.Graphics.h"
 #include "Audio/Ecs.Audio.h"
 #include "Input/Ecs.Input.h"
+#include "UI/Ecs.UI.h"
 #include "Configurator.h"
 #include "LinkedEntityListView.h"
 #include "EntityGraphView.h"

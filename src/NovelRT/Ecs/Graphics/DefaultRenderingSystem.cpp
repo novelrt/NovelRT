@@ -109,18 +109,15 @@ namespace NovelRT::Ecs::Graphics
     DefaultRenderingSystem::DefaultRenderingSystem(
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingPluginProvider,
-        std::shared_ptr<PluginManagement::IUIPluginProvider> uiPluginProvider,
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagementPluginProvider)
         : _resourceManager([&]() { return NovelRT::Graphics::GraphicsResourceManager(_graphicsDevice); }),
           _graphicsPluginProvider(std::move(graphicsPluginProvider)),
           _windowingPluginProvider(std::move(windowingPluginProvider)),
-          _uiPluginProvider(std::move(uiPluginProvider)),
           _resourceManagementPluginProvider(std::move(resourceManagementPluginProvider)),
           _surfaceContext(nullptr),
           _graphicsAdapter(nullptr),
           _graphicsDevice(nullptr),
           _windowingDevice(nullptr),
-          _uiProvider(nullptr),
           _frameMatrixConstantBufferRegion(),
           _textureQueueMapMutex(),
           _namedTextureInfoObjects{},
@@ -246,19 +243,6 @@ namespace NovelRT::Ecs::Graphics
             _frameMatrixConstantBufferRegion = _resourceManager.getActual().LoadConstantBufferDataToNewRegion(
                 &frameTransform, sizeof(Maths::GeoMatrix4x4F));
             ;
-        };
-
-        _uiProvider = _uiPluginProvider->GetUIProvider();
-        _uiProvider->Initialise(_graphicsDevice, windowingDevice, _graphicsPluginProvider->GetGraphicsProvider(), pipeline);
-
-        UIRenderEvent += [&](auto system, NovelRT::Ecs::Graphics::DefaultRenderingSystem::UIRenderEventArgs args)
-        {
-            unused(system);
-            _uiProvider->Begin();
-
-            _uiProvider->UIEvent(*_uiProvider);
-
-            _uiProvider->End(args.graphicsDevice->GetCurrentContext());
         };
     }
 

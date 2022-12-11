@@ -45,7 +45,7 @@ namespace NovelRT::Ecs
                 "NovelRT::Ecs::TransformComponent");
 
             target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
-                _graphicsPluginProvider, _windowingPluginProvider, _uiPluginProvider, _resourceManagementPluginProvider));
+                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
 
             target.GetComponentCache().RegisterComponentType(
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
@@ -61,6 +61,9 @@ namespace NovelRT::Ecs
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
 
             target.RegisterSystem(std::make_shared<Ecs::Audio::AudioSystem>(_resourceManagementPluginProvider));
+
+            target.RegisterSystem(std::make_shared<NovelRT::Ecs::UI::UISystem>(_uiPluginProvider,
+                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>()));
         }
 
     public:

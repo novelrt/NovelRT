@@ -106,7 +106,6 @@ namespace NovelRT::UI::GlfwVulkan
         {
             unused(sys);
             ImGui::ShowDemoWindow();
-            _logger.logDebugLine("Custom UI Event hit.");
         };
     }
 
