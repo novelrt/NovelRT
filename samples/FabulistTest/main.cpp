@@ -17,6 +17,8 @@ int main()
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
+    NovelRT::EngineConfig::EnableEditorMode() = true;
+
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()

@@ -9,6 +9,7 @@ namespace NovelRT::UI::GlfwVulkan
         : _isInitialised(false),
         _initInfo()
     {
+        _editorMode = EngineConfig::EnableEditorMode();
     }
 
     void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
@@ -45,6 +46,11 @@ namespace NovelRT::UI::GlfwVulkan
         //Init Dear ImGui Context
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
+        // if(_editorMode)
+        // {
+        //     _logger.logDebugLine("Enabling viewport / editor mode for UI support.");
+        //     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        // }
         unused(io);
 
         //GLFW Specific Init
@@ -120,9 +126,15 @@ namespace NovelRT::UI::GlfwVulkan
     {
         auto ctx = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsContext>(context);
         ImGuiIO& io = ImGui::GetIO();
-        unused(io);
+        //unused(io);
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ctx->GetVulkanCommandBuffer());
+
+        // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        // {
+        //     ImGui::UpdatePlatformWindows();
+        //     ImGui::RenderPlatformWindowsDefault();
+        // }
     }
 
     GlfwVulkanUIProvider::~GlfwVulkanUIProvider()

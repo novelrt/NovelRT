@@ -14,6 +14,7 @@ namespace NovelRT::UI
     {
     protected:
         LoggingService _logger;
+        bool _editorMode;
 
     public:
         Utilities::Event<std::reference_wrapper<UIProvider>> UIEvent;
@@ -25,6 +26,17 @@ namespace NovelRT::UI
         virtual ~UIProvider() = default;
         virtual void Begin() = 0;
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
+
+        [[nodiscard]] inline bool& EditorMode() noexcept
+        {
+            return _editorMode;
+        }
+
+        [[nodiscard]] inline const bool& EditorMode() const noexcept
+        {
+            return _editorMode;
+        }
+
 
     };
 }
