@@ -7,7 +7,7 @@
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
-#include <NovelRT/UI/GlfwVulkanUIProvider/UI.GlfwVulkan.h>
+#include <NovelRT/UI/DearImGui/GlfwVulkan/UI.DearImGui.GlfwVulkan.h>
 
 namespace NovelRT::PluginManagement
 {
@@ -29,6 +29,6 @@ namespace NovelRT::PluginManagement
     }
     std::shared_ptr<IUIPluginProvider> GetGlfwVulkanUIPluginProvider() noexcept
     {
-        return std::make_shared<UI::GlfwVulkan::GlfwVulkanUIPluginProvider>();
+        return std::make_shared<UI::DearImGui::GlfwVulkan::GlfwVulkanUIPluginProvider>();
     }
 }

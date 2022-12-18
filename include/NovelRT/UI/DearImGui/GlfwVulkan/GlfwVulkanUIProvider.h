@@ -4,14 +4,18 @@
 #ifndef NOVELRT_UI_GLFWVULKAN_GLFWVULKANUIPROVIDER_H
 #define NOVELRT_UI_GLFWVULKAN_GLFWVULKANUIPROVIDER_H
 
-#ifndef NOVELRT_UI_GLFWVULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include UI.GlfwVulkan.h instead for the UI::GlfwVulkan namespace subset.
+#ifndef NOVELRT_UI_DEARIMGUI_GLFWVULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include UI.GlfwVulkan.h instead for the UI::DearImGui::GlfwVulkan namespace subset.
 #endif
 
-namespace NovelRT::UI::GlfwVulkan
+namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
-    class GlfwVulkanUIProvider final : public UI::UIProvider
+    class GlfwVulkanUIProvider final : public UI::IUIProvider
     {
+    private:
+        std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
+
+        void Render();
     protected:
         bool _isInitialised;
         ImGui_ImplVulkan_InitInfo _initInfo;
@@ -26,6 +30,7 @@ namespace NovelRT::UI::GlfwVulkan
 
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
+        std::shared_ptr<IUITextbox> CreateTextbox(std::string id, bool wordWrap, std::string text);
     };
 }
 

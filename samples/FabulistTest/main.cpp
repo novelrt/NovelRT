@@ -10,7 +10,6 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    std::cerr << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
 
@@ -28,6 +27,13 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
             .InitialiseAndRegisterComponents();
+
+    std::shared_ptr<NovelRT::Ecs::UI::UISystem> ui = scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::UI::UISystem>();
+    auto uiProvider = ui->GetProvider();
+    std::stringstream ss;
+    ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
+    auto box = uiProvider->CreateTextbox("fabulist", false, ss.str());
+    box->State() = NovelRT::UI::UIElementState::Shown;
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();

@@ -19,7 +19,7 @@ namespace NovelRT::Ecs::UI
             unused(system);
             _uiProvider->Begin();
 
-            _uiProvider->UIEvent(*_uiProvider);
+            _uiProvider->RenderEvent(*_uiProvider);
 
             _uiProvider->End(args.graphicsDevice->GetCurrentContext());
         };

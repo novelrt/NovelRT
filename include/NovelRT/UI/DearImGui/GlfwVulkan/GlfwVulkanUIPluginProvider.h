@@ -4,11 +4,11 @@
 #ifndef NOVELRT_UI_GLFWVULKAN_GLFWVULKANUIPLUGINPROVIDER_H
 #define NOVELRT_UI_GLFWVULKAN_GLFWVULKANUIPLUGINPROVIDER_H
 
-#ifndef NOVELRT_UI_GLFWVULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include UI.GlfwVulkan.h instead for the UI::GlfwVulkan namespace subset.
+#ifndef NOVELRT_UI_DEARIMGUI_GLFWVULKAN_H
+#error NovelRT does not support including types explicitly by default. Please include UI.DearImGui.GlfwVulkan.h instead for the UI::DearImGui::GlfwVulkan namespace subset.
 #endif
 
-namespace NovelRT::UI::GlfwVulkan
+namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
     class GlfwVulkanUIPluginProvider final : public NovelRT::PluginManagement::IUIPluginProvider
     {

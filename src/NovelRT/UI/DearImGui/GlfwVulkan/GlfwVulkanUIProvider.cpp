@@ -1,13 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/UI/GlfwVulkanUIProvider/UI.GlfwVulkan.h>
+#include <NovelRT/UI/DearImGui/GlfwVulkan/UI.DearImGui.GlfwVulkan.h>
 
-namespace NovelRT::UI::GlfwVulkan
+namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
         : _isInitialised(false),
-        _initInfo()
+        _initInfo(),
+        _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>())
     {
         _editorMode = EngineConfig::EnableEditorMode();
     }
@@ -108,10 +109,11 @@ namespace NovelRT::UI::GlfwVulkan
 
         _isInitialised = true;
         _logger.logDebugLine("Initialised Dear ImGui UI service with GLFW and Vulkan successfully.");
-        UIEvent += [&](auto sys)
+        RenderEvent += [&](auto sys)
         {
             unused(sys);
-            ImGui::ShowDemoWindow();
+            Render();
+        //     //ImGui::ShowDemoWindow();
         };
     }
 
@@ -122,11 +124,19 @@ namespace NovelRT::UI::GlfwVulkan
         ImGui::NewFrame();
     }
 
+    void GlfwVulkanUIProvider::Render()
+    {
+        for(auto&& x : _textboxes)
+        {
+            x->Render();
+        }
+    }
+
     void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)
     {
         auto ctx = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsContext>(context);
         ImGuiIO& io = ImGui::GetIO();
-        //unused(io);
+        unused(io);
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ctx->GetVulkanCommandBuffer());
 
@@ -142,5 +152,12 @@ namespace NovelRT::UI::GlfwVulkan
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
+    }
+
+    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string id, bool wordWrap, std::string text)
+    {
+        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(ImGuiTextbox(id, wordWrap, text)));
+
+        return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
     }
 }

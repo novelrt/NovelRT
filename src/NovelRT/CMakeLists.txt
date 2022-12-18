@@ -76,8 +76,9 @@ set(CORE_SOURCES
 
   Timing/StepTimer.cpp
 
-  UI/GlfwVulkan/GlfwVulkanUIProvider.cpp
-  UI/GlfwVulkan/GlfwVulkanUIPluginProvider.cpp
+  UI/DearImGui/ImGuiTextbox.cpp
+  UI/DearImGui/GlfwVulkan/GlfwVulkanUIProvider.cpp
+  UI/DearImGui/GlfwVulkan/GlfwVulkanUIPluginProvider.cpp
 
   Utilities/Misc.cpp
 

@@ -3,8 +3,7 @@ message(STATUS "Fetching Dear ImGui...")
 
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  #GIT_TAG Comes from the latest CI-passing commit on 'docking' branch for viewport/docking support
-  GIT_TAG c191faf0ba478e9c58a69c63306986a21ebfb6e4
+  GIT_TAG 91b356cf8e3f56c5457100ddbe93785e54048f22
 
   PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
   TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"

@@ -10,22 +10,24 @@
 
 namespace NovelRT::UI
 {
-    class UIProvider : public std::enable_shared_from_this<UIProvider>
+    class IUIProvider : public std::enable_shared_from_this<IUIProvider>
     {
     protected:
         LoggingService _logger;
         bool _editorMode;
+        //std::list<IUIElement> _elements;
 
     public:
-        Utilities::Event<std::reference_wrapper<UIProvider>> UIEvent;
+        Utilities::Event<std::reference_wrapper<IUIProvider>> RenderEvent;
 
         virtual void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
             std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
             std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
             std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline) = 0;
-        virtual ~UIProvider() = default;
+        virtual ~IUIProvider() = default;
         virtual void Begin() = 0;
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
+        virtual std::shared_ptr<IUITextbox> CreateTextbox(std::string id, bool wordWrap, std::string text) = 0;
 
         [[nodiscard]] inline bool& EditorMode() noexcept
         {
