@@ -7,27 +7,41 @@ namespace NovelRT::UI::DearImGui
 {
     ImGuiTextbox::ImGuiTextbox() noexcept
     {
+        _position = NovelRT::Maths::GeoVector2F::Zero();
+        _scale = NovelRT::Maths::GeoVector2F::One();
         _identifier = "";
         _text = "";
         _wordWrap = false;
+        _fontSize = 18.0f;
         _state = UIElementState::Hidden;
     }
 
-    ImGuiTextbox::ImGuiTextbox(std::string id, bool wordWrap, std::string text) noexcept
+    ImGuiTextbox::ImGuiTextbox(std::string id, std::string text,
+        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale) noexcept
     {
+        _position = position;
+        _scale = scale;
         _identifier = id;
         _wordWrap = wordWrap;
         _text = text;
+        _fontSize = 18.0f;
         _state = UIElementState::Hidden;
     }
 
-    void ImGuiTextbox::Render()
+    void ImGuiTextbox::Render(std::shared_ptr<IUIProvider> provider)
     {
         if(_state == UIElementState::Shown)
         {
+            ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            ImGui::SetWindowPos(ImVec2(_position.x, _position.y));
+            ImGui::SetWindowSize(ImVec2(_scale.x, _scale.y));
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
+            auto fontSize = ImGui::GetFontSize();
+            if(fontSize != _fontSize)
+            {
+                ImGui::SetWindowFontScale(_fontSize / fontSize);
+            }
 
-            ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-            ImGui::PushItemWidth(200.0f);
             if(_wordWrap)
             {
                 ImGui::TextWrapped(_text.c_str());
@@ -36,7 +50,8 @@ namespace NovelRT::UI::DearImGui
             {
                 ImGui::Text(_text.c_str());
             }
-            ImGui::PopItemWidth();
+            ImGui::PopStyleVar();
+
             ImGui::End();
 
 

@@ -32,8 +32,14 @@ int main()
     auto uiProvider = ui->GetProvider();
     std::stringstream ss;
     ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
-    auto box = uiProvider->CreateTextbox("fabulist", false, ss.str());
-    box->State() = NovelRT::UI::UIElementState::Shown;
+    auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
+        NovelRT::Maths::GeoVector2F(320, 664), NovelRT::Maths::GeoVector2F(960, 216));
+    auto namebox = uiProvider->CreateTextbox("fabulist-name", "Fabulist", false,
+        NovelRT::Maths::GeoVector2F(330, 624), NovelRT::Maths::GeoVector2F(186, 24));
+    textbox->State() = NovelRT::UI::UIElementState::Shown;
+    textbox->FontSize() = 20.0f;
+    namebox->State() = NovelRT::UI::UIElementState::Shown;
+    namebox->FontSize() = 22.0f;
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();

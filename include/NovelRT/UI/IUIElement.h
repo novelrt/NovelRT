@@ -15,9 +15,11 @@ namespace NovelRT::UI
     protected:
         std::string _identifier;
         UIElementState _state;
+        NovelRT::Maths::GeoVector2F _position;
+        NovelRT::Maths::GeoVector2F _scale;
 
     public:
-        virtual void Render() = 0;
+        virtual void Render(std::shared_ptr<IUIProvider> provider) = 0;
 
         [[nodiscard]] inline std::string& Identifier()
         {
@@ -37,6 +39,26 @@ namespace NovelRT::UI
         [[nodiscard]] inline const UIElementState& State() const
         {
             return _state;
+        }
+
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F& Position()
+        {
+            return _position;
+        }
+
+        [[nodiscard]] inline const NovelRT::Maths::GeoVector2F& Position() const
+        {
+            return _position;
+        }
+
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F& Scale()
+        {
+            return _scale;
+        }
+
+        [[nodiscard]] inline const NovelRT::Maths::GeoVector2F& Scale() const
+        {
+            return _scale;
         }
     };
 }

@@ -47,12 +47,13 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         //Init Dear ImGui Context
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
+        auto defaultFont = (NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / "Raleway-Regular.ttf").string();
+        io.Fonts->AddFontFromFileTTF(defaultFont.c_str(), 36.0f);
         // if(_editorMode)
         // {
         //     _logger.logDebugLine("Enabling viewport / editor mode for UI support.");
         //     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         // }
-        unused(io);
 
         //GLFW Specific Init
         ImGui_ImplGlfw_InitForVulkan(reinterpret_cast<GLFWwindow*>(windowingDevice->GetHandle()), true);
@@ -128,7 +129,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     {
         for(auto&& x : _textboxes)
         {
-            x->Render();
+            x->Render(this->shared_from_this());
         }
     }
 
@@ -145,6 +146,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         //     ImGui::UpdatePlatformWindows();
         //     ImGui::RenderPlatformWindowsDefault();
         // }
+
     }
 
     GlfwVulkanUIProvider::~GlfwVulkanUIProvider()
@@ -154,9 +156,10 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ImGui::DestroyContext();
     }
 
-    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string id, bool wordWrap, std::string text)
+    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string id, std::string text,
+        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale)
     {
-        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(ImGuiTextbox(id, wordWrap, text)));
+        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(id, text, wordWrap, position, scale));
 
         return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
     }

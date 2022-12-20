@@ -15,8 +15,9 @@ namespace NovelRT::UI::DearImGui
 
     public:
         ImGuiTextbox() noexcept;
-        ImGuiTextbox(std::string id, bool wordWrap, std::string text) noexcept;
-        void Render();
+        ImGuiTextbox(std::string id, std::string text, bool wordWrap,
+            NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale) noexcept;
+        void Render(std::shared_ptr<IUIProvider> provider);
     };
 }
 

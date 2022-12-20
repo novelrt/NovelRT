@@ -15,6 +15,7 @@ namespace NovelRT::UI
     protected:
         bool _wordWrap;
         std::string _text;
+        float _fontSize;
 
     public:
         [[nodiscard]] inline std::string& Identifier()
@@ -45,6 +46,16 @@ namespace NovelRT::UI
         [[nodiscard]] inline const std::string& Text() const
         {
             return _text;
+        }
+
+        [[nodiscard]] inline float& FontSize()
+        {
+            return _fontSize;
+        }
+
+        [[nodiscard]] inline const float& FontSize() const
+        {
+            return _fontSize;
         }
     };
 }

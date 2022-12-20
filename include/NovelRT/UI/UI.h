@@ -8,6 +8,7 @@
 #include <memory>
 #include <cstdint>
 #include "NovelRT/LoggingService.h"
+#include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Graphics/Graphics.h"
 #include "NovelRT/Windowing/Windowing.h"
 #include "NovelRT/Utilities/Event.h"
