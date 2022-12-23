@@ -35,11 +35,12 @@ int main()
     auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
         NovelRT::Maths::GeoVector2F(320, 664), NovelRT::Maths::GeoVector2F(960, 216));
     auto namebox = uiProvider->CreateTextbox("fabulist-name", "Fabulist", false,
-        NovelRT::Maths::GeoVector2F(330, 624), NovelRT::Maths::GeoVector2F(186, 24));
+        NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 24));
     textbox->State() = NovelRT::UI::UIElementState::Shown;
     textbox->FontSize() = 20.0f;
     namebox->State() = NovelRT::UI::UIElementState::Shown;
     namebox->FontSize() = 22.0f;
+    namebox->BackgroundColour() = NovelRT::Graphics::RGBAColour(255, 0, 0, 255);
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
@@ -89,7 +90,7 @@ int main()
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
-    windowPtr->SetWindowTitle("ECS Test");
+    windowPtr->SetWindowTitle("Fabulist Test");
 
     while (!windowPtr->GetShouldClose())
     {

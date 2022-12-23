@@ -16,6 +16,11 @@ namespace NovelRT::Graphics
         uint8_t b;
         uint8_t a;
 
+        RGBAColour() noexcept :
+            r(0), g(0), b(0), a(0)
+        {
+        }
+
         RGBAColour(uint8_t initialR, uint8_t initialG, uint8_t initialB, uint8_t initialA) noexcept
             : r(initialR), g(initialG), b(initialB), a(initialA)
         {

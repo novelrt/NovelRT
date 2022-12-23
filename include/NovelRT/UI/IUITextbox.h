@@ -16,6 +16,7 @@ namespace NovelRT::UI
         bool _wordWrap;
         std::string _text;
         float _fontSize;
+        NovelRT::Graphics::RGBAColour _backgroundColour;
 
     public:
         [[nodiscard]] inline std::string& Identifier()
@@ -56,6 +57,16 @@ namespace NovelRT::UI
         [[nodiscard]] inline const float& FontSize() const
         {
             return _fontSize;
+        }
+
+        [[nodiscard]] inline NovelRT::Graphics::RGBAColour& BackgroundColour()
+        {
+            return _backgroundColour;
+        }
+
+        [[nodiscard]] inline const NovelRT::Graphics::RGBAColour& BackgroundColour() const
+        {
+            return _backgroundColour;
         }
     };
 }

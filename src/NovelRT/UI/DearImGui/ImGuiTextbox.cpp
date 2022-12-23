@@ -14,6 +14,7 @@ namespace NovelRT::UI::DearImGui
         _wordWrap = false;
         _fontSize = 18.0f;
         _state = UIElementState::Hidden;
+        _backgroundColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
     }
 
     ImGuiTextbox::ImGuiTextbox(std::string id, std::string text,
@@ -26,16 +27,18 @@ namespace NovelRT::UI::DearImGui
         _text = text;
         _fontSize = 18.0f;
         _state = UIElementState::Hidden;
+        _backgroundColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
     }
 
     void ImGuiTextbox::Render(std::shared_ptr<IUIProvider> provider)
     {
         if(_state == UIElementState::Shown)
         {
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(_backgroundColour.getRScalar(), _backgroundColour.getGScalar(), _backgroundColour.getBScalar(), _backgroundColour.getAScalar()));
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
             ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             ImGui::SetWindowPos(ImVec2(_position.x, _position.y));
             ImGui::SetWindowSize(ImVec2(_scale.x, _scale.y));
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
             auto fontSize = ImGui::GetFontSize();
             if(fontSize != _fontSize)
             {
@@ -50,10 +53,11 @@ namespace NovelRT::UI::DearImGui
             {
                 ImGui::Text(_text.c_str());
             }
-            ImGui::PopStyleVar();
+
 
             ImGui::End();
-
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor();
 
         }
     }
