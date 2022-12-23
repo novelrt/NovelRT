@@ -34,7 +34,7 @@ namespace NovelRT::UI::DearImGui
     {
         if(_state == UIElementState::Shown)
         {
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(_backgroundColour.getRScalar(), _backgroundColour.getGScalar(), _backgroundColour.getBScalar(), _backgroundColour.getAScalar()));
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, _backgroundColour);
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
             ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             ImGui::SetWindowPos(ImVec2(_position.x, _position.y));
