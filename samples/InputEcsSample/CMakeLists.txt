@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(InputEcsSample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(InputEcsSample 
+  set_target_properties(InputEcsSample
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.InputEcsSample
@@ -23,7 +23,7 @@ target_link_libraries(InputEcsSample
 
 copy_build_products(InputEcsSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:InputEcsSample>/../Resources,$<TARGET_FILE_DIR:InputEcsSample>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:InputEcsSample>/../Resources,$<TARGET_FILE_DIR:InputEcsSample>/Resources>
 )
 
 if(APPLE)

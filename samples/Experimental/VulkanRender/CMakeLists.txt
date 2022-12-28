@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(VulkanRender MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(VulkanRender 
+  set_target_properties(VulkanRender
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.VulkanRender
@@ -23,7 +23,7 @@ target_link_libraries(VulkanRender
 
 copy_build_products(VulkanRender
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:VulkanRender>/../Resources,$<TARGET_FILE_DIR:VulkanRender>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:VulkanRender>/../Resources,$<TARGET_FILE_DIR:VulkanRender>/Resources>
 )
 
 if(APPLE)

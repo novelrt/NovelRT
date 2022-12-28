@@ -4,7 +4,7 @@ set(SOURCES
 
 if(APPLE)
   add_executable(PersistenceSample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
-  set_target_properties(PersistenceSample 
+  set_target_properties(PersistenceSample
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.PersistenceSample
@@ -23,7 +23,7 @@ target_link_libraries(PersistenceSample
 
 copy_build_products(PersistenceSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:APPLE>,$<TARGET_FILE_DIR:PersistenceSample>/../Resources,$<TARGET_FILE_DIR:PersistenceSample>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:PersistenceSample>/../Resources,$<TARGET_FILE_DIR:PersistenceSample>/Resources>
 )
 
 if(APPLE)
