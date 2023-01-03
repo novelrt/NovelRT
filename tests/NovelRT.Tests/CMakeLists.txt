@@ -1,7 +1,5 @@
+find_package(GTest)
 include(GoogleTest)
-if(NOVELRT_VULKAN_SDK)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
 
 set(SOURCES
   Ecs/CatalogueTest.cpp
@@ -49,16 +47,31 @@ set(SOURCES
 
   Timing/TimestampTest.cpp
 
+  Utilities/BitCastTest.cpp
   Utilities/BitflagsTest.cpp
   Utilities/EventTest.cpp
 
   main.cpp
 )
 
-add_executable(Engine_Tests ${SOURCES})
+
 include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 
-target_compile_options(Interop
+if(APPLE)
+  add_executable(Engine_Tests MACOSX_BUNDLE ${SOURCES})
+  set_target_properties(Engine_Tests 
+    PROPERTIES
+      BUNDLE True
+      MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.Engine_Tests
+      MACOS_BUNDLE_BUNDLE_NAME Engine_Tests
+      MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+      MACOSX_BUNDLE_SHORT_VERION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+  )
+else()
+  add_executable(Engine_Tests ${SOURCES})
+endif()
+
+target_compile_options(Engine_Tests
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
@@ -102,17 +115,27 @@ if(MSVC)
 endif()
 
 if(NOVELRT_BUILD_INTEROP)
-  copy_build_products(Engine_Tests
+  copy_runtime_dependencies(Engine_Tests
     DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
-
     DEPENDENCY Interop
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
   )
 else()
-  copy_build_products(Engine_Tests
+  copy_runtime_dependencies(Engine_Tests
     DEPENDENCY Engine
-    TARGET_LOCATION $<TARGET_FILE_DIR:Engine_Tests>
+  )
+endif()
+
+if(APPLE)
+  copy_runtime_dependencies(Engine_Tests
+    LIBRARY GTest::gtest_main
+    LIBRARY GTest::gtest
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib
   )
 endif()
 
@@ -120,8 +143,8 @@ target_link_libraries(Engine_Tests
   PUBLIC
     Engine
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
-    gtest_main
-)
+    GTest::gtest_main
+) 
 
 gtest_discover_tests(Engine_Tests
   EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/"

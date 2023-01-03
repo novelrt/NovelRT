@@ -1,9 +1,11 @@
 include(FetchContent)
 message(STATUS "Fetching Fabulist")
 
+set(FABULIST_THIRDPARTY_JSON OFF)
+
 FetchContent_Declare(Fabulist
         URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-        URL_HASH SHA512=3415d179f0931265678755e4b4ebf26866bab177dafd3b278fd57c9e93292e89e03735c6b1f995f7cb86355d1b9bcdc759e3d6e7e0c3dffc8a91c1ce7b3f7d9f
+        URL_HASH SHA512=028433c21807906bf56c430a20573b643c648ec44aee65395aa46b7e34b77de53c37e17184a2516a2ff3ec3ba614d1be86f95e53ec730b1e2e97453991ff9638
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -16,4 +18,18 @@ FetchContent_Declare(Fabulist
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
+# Until this is changed, always build Fabulist as Static
+set(BUILD_SHARED_LIBS OFF)
+set(FABULIST_THIRDPARTY_JSON OFF)
 FetchContent_MakeAvailable(Fabulist)
+add_dependencies(compiler runtime)
+
+if(APPLE)
+  set_target_properties(runtime PROPERTIES NO_SONAME TRUE)
+endif()
+
+# Appears to be a bug, doing this until established and/or resolved
+install(FILES
+  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/runtime.hpp
+  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/decoder.hpp
+  DESTINATION include/fabulist/runtime)

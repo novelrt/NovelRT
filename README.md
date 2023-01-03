@@ -27,24 +27,26 @@ For information on Fabulist, check it out from [here](https://github.com/novelrt
 
 Currently there are no binary distributions of the engine as of yet, and we are still in our early alpha for almost everything.
 
+### Dependencies
+
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
-### Dependencies
-- CMake 3.19.8
-- Doxygen 1.8.17 (if building docs)
-- Freetype 2.12.1
+- [CMake](https://cmake.org/download/) >= 3.19.8
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.3.231.1
+
+
+The dependencies that are handled by CMake that do not need to be manually installed are as follows:
+
+- Doxygen 1.8.17 (building docs)
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
 - libpng 1.6.35
-- libsndfile 1.0.30
+- libsndfile 1.1.0
 - Microsoft GSL 4.0.0
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
 - spdlog 1.10.0
-- Vulkan SDK 1.3.211.0 (if you require debug/validation layers)
-  OR
-- Vulkan Loader 1.3.211 + Vulkan Headers 1.3.211 (+ MoltenVK 1.1.9 - macOS only)
 
 ### Build instructions
 
@@ -59,7 +61,7 @@ First, you must install the dependencies. On Ubuntu 20.04, it looks like this:
 ```
 sudo apt install clang  libgl-dev xorg-dev libx11-xcb-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
 libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
-libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev python3-pip \
+libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev libxcb-util-dev \
 ```
 
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
@@ -77,7 +79,6 @@ cmake --build . -j
 
 #### Windows (x64 only)
 _Prerequisites:_
-- You must set up [Python 3](https://docs.python.org/3/using/windows.html#the-full-installer)(if you have not done so already).
 - Windows 10 x64
 - Either:
   - Visual Studio 2019 w/ "Desktop development with C++" Workload,
@@ -116,8 +117,9 @@ _Prerequisites:_
 - XCode 12
 - XCode Command Line Tools matching the installed version
 - CMake 3.19.8
+- Vulkan SDK 1.3.231.1
 
-**NOTE: Until native Metal support is introduced at a future time, it is _highly_ advised that you install Vulkan SDK version 1.3.211.0 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will try to vendor the required libraries, however this will _dramatically_ increase the build time.**
+**NOTE: Until native Metal support is introduced at a future time, it is _required_ that you install Vulkan SDK version 1.3.231.1 as a prerequisite to configuring/building NovelRT. The instructions below will indicate directions _assuming_ that the Vulkan SDK is already installed in a non-system path. If it is not installed, NovelRT's build system will fail to properly configure.**
 
 If you are building from a command line terminal, clone NovelRT and set up the build folder like so:
 ```
@@ -137,9 +139,9 @@ However, if you have Apple-Silicon Mac (M1, M2, etc), you must add an additional
 cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 ```
 
-If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `NOVELRT_VULKAN_SDK_PATH` to your local Vulkan SDK location as such:
+If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `VULKAN_SDK` environment variable to your local Vulkan SDK location as such:
 ```
-cmake .. -DNOVELRT_VULKAN_SDK_PATH=/Users/youruser/Vulkan SDK/1.3.216.0/macOS
+VULKAN_SDK=/Users/youruser/Vulkan SDK/1.3.231.1/macOS cmake .. 
 ```
 Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
 

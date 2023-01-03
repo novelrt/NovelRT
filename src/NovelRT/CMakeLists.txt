@@ -1,13 +1,8 @@
-if(NOVELRT_VULKAN_SDK)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
+set(CORE_SOURCES
 
-if(NOT DEFINED NOVELRT_LIB_SUFFIX)
-  set(NOVELRT_LIB_SUFFIX "" CACHE INTERNAL "")
-endif()
-
-set(SOURCES
   Atom.cpp
+  LoggingService.cpp
+  EngineConfig.cpp
 
   Audio/AudioService.cpp
 
@@ -24,12 +19,6 @@ set(SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
-
-  EngineConfig.cpp
-
-  Input/Glfw/GlfwInputDevice.cpp
-  Input/Glfw/GlfwInputPluginProvider.cpp
-  Input/NovelKey.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
@@ -57,11 +46,9 @@ set(SOURCES
   Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Graphics/Vulkan/VulkanShaderProgram.cpp
 
-  Threading/VolatileState.cpp
-  Windowing/Glfw/GlfwWindowingDevice.cpp
-  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
-
-  LoggingService.cpp
+  Input/Glfw/GlfwInputDevice.cpp
+  Input/Glfw/GlfwInputPluginProvider.cpp
+  Input/NovelKey.cpp
 
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
@@ -76,37 +63,50 @@ set(SOURCES
   ResourceManagement/Desktop/DesktopResourceLoader.cpp
   ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
 
+  Threading/VolatileState.cpp
+
   Timing/StepTimer.cpp
 
   Utilities/Misc.cpp
+
+  Windowing/Glfw/GlfwWindowingDevice.cpp
+  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 )
 
-add_library(Engine SHARED ${SOURCES})
-set_property(TARGET Engine PROPERTY OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>")
+add_library(Engine SHARED ${CORE_SOURCES})
+set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
+
+
+if(GENERATOR_IS_MULTI_CONFIG)
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>" )
+else()
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(ENGINE_NAME "NovelRT")
+  elseif(CMAKE_BUILD_TYPE)
+    set(ENGINE_NAME "NovelRT-${CMAKE_BUILD_TYPE}")
+  else()
+    set(ENGINE_NAME "NovelRT-\$<CONFIG>")
+  endif()
+  set_target_properties(Engine PROPERTIES OUTPUT_NAME ${ENGINE_NAME})
+endif()
 
 if(APPLE)
-  #Other OSes build fine but Apple builds in Alphabetical order which causes link failures
-  add_dependencies(Engine ${NOVELRT_VULKAN_DEPS})
-  set(NOVELRT_LIB_SUFFIX "dylib")
+  get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
+  set_target_properties(Engine PROPERTIES
+    SOVERSION ${PROJECT_VERSION}
+    NO_SONAME TRUE
+  )
+  target_link_options(Engine PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>)
 elseif(WIN32)
   set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-  target_link_libraries(Engine
-    PUBLIC
-      Winmm
-  )
-  set(NOVELRT_LIB_SUFFIX "dll")
 endif()
 
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${glm_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${GSL_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${stduuid_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${NOVELRT_PNG_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${NOVELRT_PNGLIBCONFG_SOURCE_DIR}>
-    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Vulkan::Headers,INTERFACE_INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:glm::glm,INTERFACE_INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:Microsoft.GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -155,62 +155,33 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    runtime # Fabulist support - target name is vague. Fix later. :]
-    freetype
-    glfw
-    OpenAL
-    png_static
-    spdlog
+    Vulkan::Vulkan
     TBB::tbb
-    $<TARGET_LINKER_FILE:${NOVELRT_VULKAN_TARGET}>
-    jsoncons
-    sndfile
+    OpenAL::OpenAL
+    SndFile::sndfile
+    glfw
+    png
+    spdlog::spdlog
+    nlohmann_json::nlohmann_json
+    stduuid
+    fabulist::runtime
+    Vorbis::vorbis
+    Vorbis::vorbisenc
+    FLAC::FLAC
+    Opus::opus
+    Ogg::ogg
+    $<$<CXX_COMPILER_ID:MSVC>:Winmm>
+    $<$<BOOL:${APPLE}>:${COREFOUNDATION}>
 )
 
-install(
-  TARGETS Engine
-  EXPORT NovelRT
-  DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-#Workaround due to hierarchy destruction when installing by TARGETS
-install(
-  DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
-  DESTINATION include/NovelRT
-  FILES_MATCHING PATTERN "*.h"
-)
-
-  # I hate CMake I hate it I hate it I hate it
-  # (work around for CMAKE REFUSING TO COPY NECESSARY FILES FOR DEBUGGING MAKING IT IMPOSSIBLE TO DEBUG)
-if(WIN32 OR APPLE)
-  #add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #    ${CMAKE_BINARY_DIR}/thirdparty
-  #    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:OpenAL>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:sndfile>
-    $<TARGET_FILE_DIR:Engine>)
-  add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:tbb>
-    $<TARGET_FILE_DIR:Engine>)
-  if(NOT NOVELRT_VULKAN_SDK)
-    add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-      $<TARGET_FILE:${NOVELRT_VULKAN_TARGET}>
-      $<TARGET_FILE_DIR:Engine>/$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>)
-    if(APPLE)
-      add_custom_command(TARGET Engine POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${NOVELRT_MOLTENVK_DYLIB_PATH}
-        $<TARGET_FILE_DIR:Engine>)
-      set(NOVELRT_ADDITIONAL_LIBS_APPLE ON)
-      set(NOVELRT_ADDITIONAL_LIBS "${NOVELRT_MOLTENVK_LIBTOCOPY};${NOVELRT_MOLTENVK_ICDTOCOPY}")
-    endif()
-  endif()
-  #file(GLOB libs RELATIVE
-  #  ${CMAKE_BINARY_DIR}/thirdparty ${CMAKE_BINARY_DIR}/thirdparty/*.${NOVELRT_LIB_SUFFIX})
-  set_target_properties(Engine
-    PROPERTIES
-      RESOURCE "$<TARGET_FILE_NAME:OpenAL>;$<TARGET_FILE_NAME:sndfile>;$<TARGET_FILE_NAME:tbb>;$<$<NOT:$<BOOL:${NOVELRT_VULKAN_SDK}>>:$<TARGET_FILE_NAME:${NOVELRT_VULKAN_TARGET}>>;$<$<BOOL:${NOVELRT_ADDITIONAL_LIBS_APPLE}>:${NOVELRT_ADDITIONAL_LIBS}>")
+if(NOVELRT_INSTALL)
+  install(
+    TARGETS Engine
+    EXPORT NovelRT
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    FRAMEWORK DESTINATION lib
+  )
 endif()
 

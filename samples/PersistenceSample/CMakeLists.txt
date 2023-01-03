@@ -1,23 +1,45 @@
-if(NOVELRT_VULKAN_SDK)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
-
 set(SOURCES
   main.cpp
-  )
+)
 
-add_executable(PersistenceSample ${SOURCES})
+if(APPLE)
+  add_executable(PersistenceSample MACOSX_BUNDLE ${NOVELCHAN_ICON} ${SOURCES})
+  set_target_properties(PersistenceSample
+    PROPERTIES
+      BUNDLE True
+      MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.PersistenceSample
+      MACOS_BUNDLE_BUNDLE_NAME PersistenceSample
+      MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+      MACOSX_BUNDLE_SHORT_VERION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+  )
+else()
+  add_executable(PersistenceSample ${SOURCES})
+endif()
 add_dependencies(PersistenceSample Resources)
 target_link_libraries(PersistenceSample
   PRIVATE
-  Engine
-  )
-target_compile_definitions(PersistenceSample PUBLIC -DNOVELRT_MOLTENVK_VENDORED=$<IF:$<BOOL:${NOVELRT_MOLTENVK_VENDORED}>,1,0>)
+    Engine
+)
 
 copy_build_products(PersistenceSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<TARGET_FILE_DIR:PersistenceSample>/Resources
+  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:PersistenceSample>/../Resources,$<TARGET_FILE_DIR:PersistenceSample>/Resources>
+)
 
-  DEPENDENCY Engine
-  TARGET_LOCATION $<TARGET_FILE_DIR:PersistenceSample>
+if(APPLE)
+  copy_runtime_dependencies(PersistenceSample
+    DEPENDENCY Engine
+    LIBRARY Vulkan::MoltenVK
+    LIBRARY Vorbis::vorbisenc
+    LIBRARY Vorbis::vorbis
+    LIBRARY FLAC::FLAC
+    LIBRARY Opus::opus
+    LIBRARY Ogg::ogg
+    LIBRARY ZLIB::zlib
   )
+  write_moltenvk_icd_file(PersistenceSample)
+else()
+  copy_runtime_dependencies(PersistenceSample
+    DEPENDENCY Engine
+  )
+endif()

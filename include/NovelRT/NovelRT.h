@@ -48,10 +48,6 @@
 #include <fabulist/runtime/story.hpp>
 #include <fabulist/runtime/version.hpp>
 
-// Freetype
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 // libpng
 #include <png.h>
 #endif // __cplusplus
