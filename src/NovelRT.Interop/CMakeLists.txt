@@ -65,8 +65,10 @@ set(INTEROP_SOURCES
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
+  Utilities/NrtEvent.cpp
 
-  Windowing/NrtIWindowingDevice.cpp)
+  Windowing/NrtIWindowingDevice.cpp
+)
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
 add_dependencies(Interop Engine)

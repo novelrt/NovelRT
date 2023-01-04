@@ -3,6 +3,7 @@
 
 #include "../Atom.h"
 #include <functional>
+#include <vector>
 
 #ifndef NOVELRT_UTILITIES_EVENT_H
 #define NOVELRT_UTILITIES_EVENT_H

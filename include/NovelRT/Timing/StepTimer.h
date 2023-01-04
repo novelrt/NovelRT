@@ -4,6 +4,7 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
+#include "../Utilities/Event.h"
 #include "Timestamp.h"
 
 #ifndef NOVELRT_TIMING_STEPTIMER_H
