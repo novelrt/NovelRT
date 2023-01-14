@@ -14,6 +14,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     {
     private:
         std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
+        NovelRT::Maths::GeoVector2F _windowSize;
 
         void Render();
     protected:
@@ -31,7 +32,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
         std::shared_ptr<IUITextbox> CreateTextbox(std::string id, std::string text,
-            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale);
+            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize);
     };
 }
 

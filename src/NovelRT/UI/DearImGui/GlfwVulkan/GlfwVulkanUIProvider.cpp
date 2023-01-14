@@ -8,7 +8,8 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
         : _isInitialised(false),
         _initInfo(),
-        _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>())
+        _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>()),
+        _windowSize()
     {
         _editorMode = EngineConfig::EnableEditorMode();
     }
@@ -43,12 +44,15 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         auto vulkanProvider = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider>(gfxProvider);
         auto vulkanDevice = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(gfxDevice);
         auto vulkanPipeline = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline>(pipeline);
-
+        _windowSize = windowingDevice->GetSize();
+        windowingDevice->SizeChanged += [&](NovelRT::Maths::GeoVector2F args){ _windowSize = args; };
         //Init Dear ImGui Context
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
         auto defaultFont = (NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / "Raleway-Regular.ttf").string();
         io.Fonts->AddFontFromFileTTF(defaultFont.c_str(), 36.0f);
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+
         // if(_editorMode)
         // {
         //     _logger.logDebugLine("Enabling viewport / editor mode for UI support.");
@@ -129,7 +133,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     {
         for(auto&& x : _textboxes)
         {
-            x->Render(this->shared_from_this());
+            x->Render(this->shared_from_this(), _windowSize);
         }
     }
 
@@ -157,9 +161,9 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     }
 
     std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string id, std::string text,
-        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale)
+        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize)
     {
-        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(id, text, wordWrap, position, scale));
+        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(id, text, wordWrap, position, scale, fontSize, _windowSize));
 
         return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
     }

@@ -19,7 +19,7 @@ namespace NovelRT::UI
         NovelRT::Maths::GeoVector2F _scale;
 
     public:
-        virtual void Render(std::shared_ptr<IUIProvider> provider) = 0;
+        virtual void Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F windowSize) = 0;
 
         [[nodiscard]] inline std::string& Identifier()
         {

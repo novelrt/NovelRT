@@ -32,12 +32,13 @@ int main()
     auto uiProvider = ui->GetProvider();
     std::stringstream ss;
     ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
-    auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
-        NovelRT::Maths::GeoVector2F(320, 664), NovelRT::Maths::GeoVector2F(960, 216));
+    //ss << windowingProvider->GetWindowingDevice()->GetWidth() << ", " << windowingProvider->GetWindowingDevice()->GetHeight() << "\n";
+    // auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
+    //     NovelRT::Maths::GeoVector2F(-480, -270), NovelRT::Maths::GeoVector2F(960, 216));
     auto namebox = uiProvider->CreateTextbox("fabulist-name", "Fabulist", false,
-        NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 24));
-    textbox->State() = NovelRT::UI::UIElementState::Shown;
-    textbox->FontSize() = 20.0f;
+        NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 24), 18.0f);
+    // textbox->State() = NovelRT::UI::UIElementState::Shown;
+    // textbox->FontSize() = 20.0f;
     namebox->State() = NovelRT::UI::UIElementState::Shown;
     namebox->FontSize() = 22.0f;
     namebox->BackgroundColour() = NovelRT::Graphics::RGBAColour(255, 0, 0, 255);

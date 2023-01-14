@@ -12,12 +12,17 @@ namespace NovelRT::UI::DearImGui
 {
     class ImGuiTextbox : public UI::IUITextbox
     {
+    private:
+        NovelRT::Maths::GeoVector2F _screenSize;
+        NovelRT::Maths::GeoVector2F _translatedPosition;
 
     public:
         ImGuiTextbox() noexcept;
-        ImGuiTextbox(std::string id, std::string text, bool wordWrap,
-            NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale) noexcept;
-        void Render(std::shared_ptr<IUIProvider> provider);
+        ImGuiTextbox(std::string id, std::string text,
+            bool wordWrap, NovelRT::Maths::GeoVector2F position,
+            NovelRT::Maths::GeoVector2F scale, float fontSize,
+            NovelRT::Maths::GeoVector2F screenSize) noexcept;
+        void Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F windowSize);
     };
 }
 
