@@ -32,15 +32,15 @@ int main()
     auto uiProvider = ui->GetProvider();
     std::stringstream ss;
     ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
+    ss << "Application average " << 1000.0f / ImGui::GetIO().Framerate << "ms/frame (" << ImGui::GetIO().Framerate <<
+        " FPS)" << std::endl;
     //ss << windowingProvider->GetWindowingDevice()->GetWidth() << ", " << windowingProvider->GetWindowingDevice()->GetHeight() << "\n";
-    // auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
-    //     NovelRT::Maths::GeoVector2F(-480, -270), NovelRT::Maths::GeoVector2F(960, 216));
+    auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
+        NovelRT::Maths::GeoVector2F(0, 300), NovelRT::Maths::GeoVector2F(540, 216), 16.0f);
     auto namebox = uiProvider->CreateTextbox("fabulist-name", "Fabulist", false,
-        NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 24), 18.0f);
-    // textbox->State() = NovelRT::UI::UIElementState::Shown;
-    // textbox->FontSize() = 20.0f;
+        NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 32), 18.0f);
+    textbox->State() = NovelRT::UI::UIElementState::Shown;
     namebox->State() = NovelRT::UI::UIElementState::Shown;
-    namebox->FontSize() = 22.0f;
     namebox->BackgroundColour() = NovelRT::Graphics::RGBAColour(255, 0, 0, 255);
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
@@ -97,6 +97,10 @@ int main()
     {
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
+        ss.str(std::string());
+        ss << "Application average " << 1000.0f / ImGui::GetIO().Framerate << "ms/frame (" << ImGui::GetIO().Framerate
+           << " FPS)" << std::endl;
+        textbox->Text() = ss.str();
     }
 
     return 0;

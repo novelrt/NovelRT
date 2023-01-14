@@ -29,7 +29,7 @@ namespace NovelRT::UI::DearImGui
         _identifier = id;
         _wordWrap = wordWrap;
         _text = text;
-        _fontSize = fontSize / 72.0f;
+        _fontSize = fontSize;
         _state = UIElementState::Hidden;
         _backgroundColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
     }
@@ -43,16 +43,16 @@ namespace NovelRT::UI::DearImGui
                 _screenSize = screenSize;
                 _translatedPosition = _position + (screenSize / 2);
             }
-            auto imguiFontSize = ImGui::GetFontSize();
+            //auto imguiFontSize = ImGui::GetFontSize();
 
             ImGui::PushStyleColor(ImGuiCol_WindowBg, _backgroundColour);
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
             ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             ImGui::SetWindowPos(_translatedPosition);
             ImGui::SetWindowSize(_scale);
-            if(imguiFontSize != _fontSize)
+            if(_fontSize != 36.0f)
             {
-                ImGui::SetWindowFontScale(_fontSize / imguiFontSize);
+                ImGui::SetWindowFontScale(_fontSize / 36.0f);
             }
 
             if(_wordWrap)
@@ -63,6 +63,7 @@ namespace NovelRT::UI::DearImGui
             {
                 ImGui::Text(_text.c_str());
             }
+            
 
             ImGui::End();
             ImGui::PopStyleVar();

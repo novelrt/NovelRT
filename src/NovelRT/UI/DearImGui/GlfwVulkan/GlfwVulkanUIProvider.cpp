@@ -118,6 +118,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         {
             unused(sys);
             Render();
+            //ImGui::ShowMetricsWindow();
         //     //ImGui::ShowDemoWindow();
         };
     }
