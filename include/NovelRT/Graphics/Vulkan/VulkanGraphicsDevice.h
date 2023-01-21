@@ -79,7 +79,7 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
+            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
             std::shared_ptr<VulkanGraphicsPipeline> pipeline,
@@ -87,7 +87,7 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
+            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 
         void PresentFrame() final;
 
@@ -96,9 +96,9 @@ namespace NovelRT::Graphics::Vulkan
 
         void WaitForIdle() final;
 
-        [[nodiscard]] inline gsl::span<std::shared_ptr<GraphicsContext>> GetContexts() final
+        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() final
         {
-            return gsl::span<std::shared_ptr<GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
+            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
                                                                _contextPtrs.getActual().size());
         }
 
@@ -119,7 +119,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
                                                                          ShaderProgramKind kind,
-                                                                         gsl::span<uint8_t> byteData) final;
+                                                                         NovelRT::Utilities::Misc::Span<uint8_t> byteData) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature> signature,
@@ -129,8 +129,8 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            gsl::span<GraphicsPipelineInput> inputs,
-            gsl::span<GraphicsPipelineResource> resources) final;
+            NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
+            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) final;
 
         [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
         {

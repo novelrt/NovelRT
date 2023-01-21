@@ -23,9 +23,9 @@ namespace NovelRT::Graphics::Vulkan
         VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
                             std::string entryPointName,
                             ShaderProgramKind kind,
-                            gsl::span<uint8_t> bytecode) noexcept;
+                            NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept;
 
-        [[nodiscard]] gsl::span<const uint8_t> GetBytecode() const noexcept final;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept final;
         [[nodiscard]] VkShaderModule GetShaderModule();
 
         ~VulkanShaderProgram() override;

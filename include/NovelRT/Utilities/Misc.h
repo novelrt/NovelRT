@@ -71,7 +71,7 @@ namespace NovelRT::Utilities
         }
 
         [[nodiscard]] static std::vector<const char*> GetStringSpanAsCharPtrVector(
-            const gsl::span<const std::string>& target) noexcept
+            const NovelRT::Utilities::Misc::Span<const std::string>& target) noexcept
         {
             size_t extensionLength = target.size();
             std::vector<const char*> targetPtrs{};

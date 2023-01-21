@@ -31,7 +31,7 @@ namespace NovelRT::Input::Glfw
                                                   const std::string& keyIdentifier) final;
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
-        [[nodiscard]] gsl::span<InputAction> GetAllMappings() noexcept final;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() noexcept final;
 
         ~GlfwInputDevice() final;
     };

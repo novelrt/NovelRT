@@ -92,7 +92,7 @@ namespace NovelRT::Ecs::Graphics
 
         template<typename TSpanType>
         [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
-                                                                              gsl::span<TSpanType> textureDataSpan,
+                                                                              NovelRT::Utilities::Misc::Span<TSpanType> textureDataSpan,
                                                                               uint32_t width,
                                                                               uint32_t height,
                                                                               uuids::uuid textureAssetDataHandle)
@@ -129,7 +129,7 @@ namespace NovelRT::Ecs::Graphics
         // texture loading. End-users shouldn't need to manually hard-code the data.
         template<typename TSpanType>
         [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(const std::string& vertexDataName,
-                                                                            gsl::span<TSpanType> vertexDataSpan)
+                                                                            NovelRT::Utilities::Misc::Span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");

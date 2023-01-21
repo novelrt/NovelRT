@@ -22,7 +22,7 @@ namespace NovelRT::Graphics::Vulkan
                                 uint32_t vertexBufferStride,
                                 GraphicsMemoryRegion<GraphicsResource> indexBufferView,
                                 uint32_t indexBufferStride,
-                                gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {})
+                                NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {})
             : GraphicsPrimitive(std::move(device),
                                 std::move(pipeline),
                                 std::move(vertexBufferView),

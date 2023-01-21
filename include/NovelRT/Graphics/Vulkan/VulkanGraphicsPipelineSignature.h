@@ -33,8 +33,8 @@ namespace NovelRT::Graphics::Vulkan
         VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,
                                         GraphicsPipelineBlendFactor srcBlendFactor,
                                         GraphicsPipelineBlendFactor dstBlendFactor,
-                                        gsl::span<const GraphicsPipelineInput> inputs,
-                                        gsl::span<const GraphicsPipelineResource> resources) noexcept;
+                                        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+                                        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
         {
@@ -61,7 +61,7 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanPipelineLayout.getActual();
         }
 
-        void DestroyDescriptorSets(gsl::span<VkDescriptorSet> vulkanDescriptorSets);
+        void DestroyDescriptorSets(NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets);
 
         ~VulkanGraphicsPipelineSignature() final;
     };

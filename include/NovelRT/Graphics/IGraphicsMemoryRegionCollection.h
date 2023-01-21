@@ -301,7 +301,7 @@ namespace NovelRT::Graphics
 
                 if (GetTotalFreeRegionSize() >= sizeWithMargins)
                 {
-                    gsl::span<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
+                    NovelRT::Utilities::Misc::Span<typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
                         *_freeRegionsBySize);
                     size_t freeRegionsBySizeLength = freeRegionsBySizeSpan.size();
 
@@ -429,7 +429,7 @@ namespace NovelRT::Graphics
 
             [[nodiscard]] size_t BinarySearchFirstRegionNodeWithSizeNotLessThan(size_t size) const noexcept
             {
-                gsl::span<const typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
+                NovelRT::Utilities::Misc::Span<const typename std::list<GraphicsMemoryRegion<TSelf>>::iterator> freeRegionsBySizeSpan(
                     &(*_freeRegionsBySize->begin()), _freeRegionsBySize->size());
 
                 size_t index = 0;

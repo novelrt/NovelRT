@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
                           uint32_t vertexBufferStride,
                           GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
                           uint32_t indexBufferStride,
-                          gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+                          NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
             : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)),
               _pipeline(std::move(pipeline)),
               _vertexBufferRegion(std::move(vertexBufferRegion)),
@@ -79,10 +79,10 @@ namespace NovelRT::Graphics
             return _indexBufferStride;
         }
 
-        [[nodiscard]] inline gsl::span<const GraphicsMemoryRegion<GraphicsResource>> GetInputResourceRegions()
+        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> GetInputResourceRegions()
             const noexcept
         {
-            return gsl::span<const GraphicsMemoryRegion<GraphicsResource>>(&(*_inputResourceRegions.begin()),
+            return NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>>(&(*_inputResourceRegions.begin()),
                                                                            _inputResourceRegions.size());
         }
 
