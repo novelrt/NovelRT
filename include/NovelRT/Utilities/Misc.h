@@ -22,7 +22,7 @@
 #include <bit>
 #endif
 
-#ifdef NOVELRT_USE_STD_SPAN
+#if NOVELRT_USE_STD_SPAN
 #include <span>
 #else
 #include <gsl/span>
