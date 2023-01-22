@@ -6,11 +6,12 @@
 namespace NovelRT::Graphics
 {
 
-    GraphicsPipelineSignature::GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
-                                                         GraphicsPipelineBlendFactor srcBlendFactor,
-                                                         GraphicsPipelineBlendFactor dstBlendFactor,
-                                                         NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                                         NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
+    GraphicsPipelineSignature::GraphicsPipelineSignature(
+        std::shared_ptr<GraphicsDevice> device,
+        GraphicsPipelineBlendFactor srcBlendFactor,
+        GraphicsPipelineBlendFactor dstBlendFactor,
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
         : GraphicsDeviceObject(std::move(device)),
           _srcBlendFactor(srcBlendFactor),
           _dstBlendFactor(dstBlendFactor),
@@ -23,8 +24,10 @@ namespace NovelRT::Graphics
     {
         return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
     }
-    NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources() const noexcept
+    NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
+        const noexcept
     {
-        return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()), _resources.size());
+        return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
+                                                                              _resources.size());
     }
 } // namespace NovelRT::Graphics

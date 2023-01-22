@@ -89,9 +89,10 @@ namespace NovelRT::Graphics
             uint32_t indexBufferStride,
             NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
 
-        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
-                                                                                 ShaderProgramKind kind,
-                                                                                 NovelRT::Utilities::Misc::Span<uint8_t> byteData) = 0;
+        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
+            std::string entryPointName,
+            ShaderProgramKind kind,
+            NovelRT::Utilities::Misc::Span<uint8_t> byteData) = 0;
 
         virtual void PresentFrame() = 0;
         virtual void Signal(std::shared_ptr<GraphicsFence> fence) = 0;

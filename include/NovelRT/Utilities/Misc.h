@@ -28,7 +28,6 @@
 #include <gsl/span>
 #endif // NOVELRT_USE_STD_SPAN
 
-
 #define unused(x) (void)(x)
 
 namespace NovelRT::Utilities

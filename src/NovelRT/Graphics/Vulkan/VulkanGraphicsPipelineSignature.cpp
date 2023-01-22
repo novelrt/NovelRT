@@ -248,7 +248,8 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets)
+    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(
+        NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets)
     {
         vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                              _vulkanDescriptorPool.getActual(), static_cast<int32_t>(vulkanDescriptorSets.size()),

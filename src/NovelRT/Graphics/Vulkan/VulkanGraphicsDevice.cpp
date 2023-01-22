@@ -382,9 +382,10 @@ namespace NovelRT::Graphics::Vulkan
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
 
-    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
-                                                                             ShaderProgramKind kind,
-                                                                             NovelRT::Utilities::Misc::Span<uint8_t> byteData)
+    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
+        std::string entryPointName,
+        ShaderProgramKind kind,
+        NovelRT::Utilities::Misc::Span<uint8_t> byteData)
     {
         return std::shared_ptr<ShaderProgram>(
             new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),

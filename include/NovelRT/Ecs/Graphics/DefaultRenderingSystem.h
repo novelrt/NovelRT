@@ -91,11 +91,12 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::FutureResult<TextureInfo> GetOrLoadTexture(const std::string& spriteName);
 
         template<typename TSpanType>
-        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(const std::string& textureDataName,
-                                                                              NovelRT::Utilities::Misc::Span<TSpanType> textureDataSpan,
-                                                                              uint32_t width,
-                                                                              uint32_t height,
-                                                                              uuids::uuid textureAssetDataHandle)
+        [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(
+            const std::string& textureDataName,
+            NovelRT::Utilities::Misc::Span<TSpanType> textureDataSpan,
+            uint32_t width,
+            uint32_t height,
+            uuids::uuid textureAssetDataHandle)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");
@@ -128,8 +129,9 @@ namespace NovelRT::Ecs::Graphics
         // TODO: in the future when we have mesh loading capabilities these will be replaced with similar mechanisms to
         // texture loading. End-users shouldn't need to manually hard-code the data.
         template<typename TSpanType>
-        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(const std::string& vertexDataName,
-                                                                            NovelRT::Utilities::Misc::Span<TSpanType> vertexDataSpan)
+        [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(
+            const std::string& vertexDataName,
+            NovelRT::Utilities::Misc::Span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");

@@ -98,8 +98,8 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() final
         {
-            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(&(*_contextPtrs.getActual().begin()),
-                                                               _contextPtrs.getActual().size());
+            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(
+                &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext()
@@ -117,9 +117,10 @@ namespace NovelRT::Graphics::Vulkan
             return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
         }
 
-        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(std::string entryPointName,
-                                                                         ShaderProgramKind kind,
-                                                                         NovelRT::Utilities::Misc::Span<uint8_t> byteData) final;
+        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(
+            std::string entryPointName,
+            ShaderProgramKind kind,
+            NovelRT::Utilities::Misc::Span<uint8_t> byteData) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature> signature,

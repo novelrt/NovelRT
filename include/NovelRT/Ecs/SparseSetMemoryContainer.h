@@ -244,7 +244,8 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t Length() const noexcept;
 
-        void ResetAndWriteDenseData(NovelRT::Utilities::Misc::Span<const size_t> ids, NovelRT::Utilities::Misc::Span<const uint8_t> data);
+        void ResetAndWriteDenseData(NovelRT::Utilities::Misc::Span<const size_t> ids,
+                                    NovelRT::Utilities::Misc::Span<const uint8_t> data);
 
         void ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data);
 

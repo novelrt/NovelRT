@@ -328,7 +328,9 @@ namespace NovelRT::Audio
         }
     }
 
-    ALuint AudioService::LoadSound(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate)
+    ALuint AudioService::LoadSound(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
+                                   int32_t channelCount,
+                                   int32_t sampleRate)
     {
         if (!isInitialised)
         {

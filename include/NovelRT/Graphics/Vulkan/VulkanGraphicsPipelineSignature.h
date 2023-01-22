@@ -30,11 +30,12 @@ namespace NovelRT::Graphics::Vulkan
             ShaderProgramVisibility shaderVisibility) const noexcept;
 
     public:
-        VulkanGraphicsPipelineSignature(std::shared_ptr<VulkanGraphicsDevice> device,
-                                        GraphicsPipelineBlendFactor srcBlendFactor,
-                                        GraphicsPipelineBlendFactor dstBlendFactor,
-                                        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+        VulkanGraphicsPipelineSignature(
+            std::shared_ptr<VulkanGraphicsDevice> device,
+            GraphicsPipelineBlendFactor srcBlendFactor,
+            GraphicsPipelineBlendFactor dstBlendFactor,
+            NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+            NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
         {

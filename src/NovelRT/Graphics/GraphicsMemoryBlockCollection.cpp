@@ -56,7 +56,8 @@ namespace NovelRT::Graphics
     size_t GraphicsMemoryBlockCollection::GetLargestSharedBlockSize() const noexcept
     {
         size_t result = 0;
-        NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
+        NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
+                                                                                          _blocks.size());
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
 
         for (size_t i = blocks.size(); i-- != 0;)
@@ -82,7 +83,8 @@ namespace NovelRT::Graphics
         // Bubble sort only until first swap. This is called after
         // freeing a region and will result in eventual consistency.
 
-        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
+        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
+                                                                                    _blocks.size());
 
         if (blocks.size() >= 2)
         {
@@ -148,7 +150,8 @@ namespace NovelRT::Graphics
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
         size_t sizeWithMargins = size + (2 * _allocator->GetSettings().MinimumAllocatedRegionMarginSize.value_or(0));
 
-        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()), _blocks.size());
+        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
+                                                                                    _blocks.size());
         size_t blocksLength = blocks.size();
 
         size_t availableMemory = (budget.GetEstimatedUsage() < budget.GetEstimatedBudget())
@@ -356,10 +359,11 @@ namespace NovelRT::Graphics
         return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None, outRegion);
     }
 
-    bool GraphicsMemoryBlockCollection::TryAllocate(size_t size,
-                                                    size_t alignment,
-                                                    GraphicsMemoryRegionAllocationFlags flags,
-                                                    NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions)
+    bool GraphicsMemoryBlockCollection::TryAllocate(
+        size_t size,
+        size_t alignment,
+        GraphicsMemoryRegionAllocationFlags flags,
+        NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions)
     {
         bool succeeded = true;
         size_t index;
@@ -391,8 +395,9 @@ namespace NovelRT::Graphics
         return succeeded;
     }
 
-    bool GraphicsMemoryBlockCollection::TryAllocate(size_t size,
-                                                    NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions)
+    bool GraphicsMemoryBlockCollection::TryAllocate(
+        size_t size,
+        NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions)
     {
         return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None, regions);
     }
