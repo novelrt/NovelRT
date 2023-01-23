@@ -17,7 +17,6 @@
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
-#include <gsl/span>
 #include <list>
 #include <memory>
 #include <mutex>

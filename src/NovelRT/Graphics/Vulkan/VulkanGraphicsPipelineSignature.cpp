@@ -248,7 +248,8 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(gsl::span<VkDescriptorSet> vulkanDescriptorSets)
+    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(
+        NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets)
     {
         vkFreeDescriptorSets(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                              _vulkanDescriptorPool.getActual(), static_cast<int32_t>(vulkanDescriptorSets.size()),
@@ -279,8 +280,8 @@ namespace NovelRT::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> device,
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
-        gsl::span<const GraphicsPipelineInput> inputs,
-        gsl::span<const GraphicsPipelineResource> resources) noexcept
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
         : GraphicsPipelineSignature(std::move(device), srcBlendFactor, dstBlendFactor, inputs, resources),
           _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),

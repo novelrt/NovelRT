@@ -191,7 +191,8 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanPipeline;
     }
 
-    size_t VulkanGraphicsPipeline::GetInputElementsCount(gsl::span<const GraphicsPipelineInput> inputs) const noexcept
+    size_t VulkanGraphicsPipeline::GetInputElementsCount(
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs) const noexcept
     {
         size_t returnCount = 0;
 

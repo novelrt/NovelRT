@@ -382,9 +382,10 @@ namespace NovelRT::Graphics::Vulkan
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
 
-    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(std::string entryPointName,
-                                                                             ShaderProgramKind kind,
-                                                                             gsl::span<uint8_t> byteData)
+    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
+        std::string entryPointName,
+        ShaderProgramKind kind,
+        NovelRT::Utilities::Misc::Span<uint8_t> byteData)
     {
         return std::shared_ptr<ShaderProgram>(
             new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
@@ -411,8 +412,8 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
-        gsl::span<GraphicsPipelineInput> inputs,
-        gsl::span<GraphicsPipelineResource> resources)
+        NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
+        NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
     {
         return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
             std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs,
@@ -473,7 +474,7 @@ namespace NovelRT::Graphics::Vulkan
         uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
         uint32_t indexBufferStride,
-        gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::static_pointer_cast<GraphicsPrimitive>(
             CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion,
@@ -486,7 +487,7 @@ namespace NovelRT::Graphics::Vulkan
         uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
         uint32_t indexBufferStride,
-        gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::make_shared<VulkanGraphicsPrimitive>(
             std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,

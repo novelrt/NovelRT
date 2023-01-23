@@ -22,11 +22,11 @@ namespace NovelRT::Graphics
         GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
                                   GraphicsPipelineBlendFactor srcBlendFactor,
                                   GraphicsPipelineBlendFactor dstBlendFactor,
-                                  gsl::span<const GraphicsPipelineInput> inputs,
-                                  gsl::span<const GraphicsPipelineResource> resources) noexcept;
+                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
-        [[nodiscard]] gsl::span<const GraphicsPipelineInput> GetInputs() const noexcept;
-        [[nodiscard]] gsl::span<const GraphicsPipelineResource> GetResources() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources() const noexcept;
 
         [[nodiscard]] inline GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
         {
