@@ -2,7 +2,6 @@
 // for more information.
 
 #include "../LifetimeExtender.h"
-#include <NovelRT.Interop/Ecs/NrtConfigurator.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
 #include <NovelRT/Utilities/Misc.h>
