@@ -13,7 +13,7 @@
 #include <string>
 
 /**
- * @Brief The input plugin API.
+ * @brief The input plugin API.
  */
 namespace NovelRT::Input
 {
