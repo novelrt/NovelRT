@@ -38,7 +38,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector2F with all components set to zero.
          */
-        GeoVector2F() noexcept : x(0.0f), y(0.0f)
+        [[nodiscard]] GeoVector2F() noexcept : x(0.0f), y(0.0f)
         {
         }
 
@@ -49,7 +49,7 @@ namespace NovelRT::Maths
          * @param y The Y component of the vector.
          * @return A GeoVector2F with the given components.
          */
-        GeoVector2F(float x, float y) noexcept : x(x), y(y)
+        [[nodiscard]] GeoVector2F(float x, float y) noexcept : x(x), y(y)
         {
         }
 
@@ -78,7 +78,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector2F created from normalising this GeoVector2F.
          */
-        inline GeoVector2F GetNormalised() const noexcept
+        [[nodiscard]] inline GeoVector2F GetNormalised() const noexcept
         {
             return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));
         }
@@ -101,7 +101,7 @@ namespace NovelRT::Maths
          *
          * @return The magnitude of this GeoVector2F.
          */
-        inline float GetMagnitude() const noexcept
+        [[nodiscard]] inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec2*>(this));
         }
@@ -124,7 +124,7 @@ namespace NovelRT::Maths
          *
          * @return The length of this GeoVector2F.
          */
-        inline float GetLength() const noexcept
+        [[nodiscard]] inline float GetLength() const noexcept
         {
             return GetMagnitude();
         }
@@ -146,7 +146,7 @@ namespace NovelRT::Maths
          *
          * @return The squared magnitude of this GeoVector2F.
          */
-        inline float GetSquaredMagnitude() const noexcept
+        [[nodiscard]] inline float GetSquaredMagnitude() const noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(this));
         }
@@ -168,7 +168,7 @@ namespace NovelRT::Maths
          *
          * @return The squared length of this GeoVector2F.
          */
-        inline float GetSquaredLength() const noexcept
+        [[nodiscard]] inline float GetSquaredLength() const noexcept
         {
             return GetSquaredMagnitude();
         }
@@ -179,7 +179,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if all components matched, otherwise false.
          */
-        inline bool operator==(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator==(GeoVector2F other) const noexcept
         {
             return *reinterpret_cast<const glm::vec2*>(this) == NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
@@ -190,7 +190,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
-        inline bool operator!=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator!=(GeoVector2F other) const noexcept
         {
             return *reinterpret_cast<const glm::vec2*>(this) != NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
@@ -202,7 +202,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is less than the other GeoVector2F's components, otherwise false.
          */
-        inline bool operator<(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator<(GeoVector2F other) const noexcept
         {
             return glm::any(glm::lessThan(*reinterpret_cast<const glm::vec2*>(this),
                                           NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -216,7 +216,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is less than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
-        inline bool operator<=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator<=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec2*>(this),
                                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -229,7 +229,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is greater than the other GeoVector2F's components, otherwise false.
          */
-        inline bool operator>(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator>(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec2*>(this),
                                              NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -243,7 +243,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is greater than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
-        inline bool operator>=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator>=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec2*>(this),
                                                   NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -279,7 +279,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise sum of this GeoVector2F and another
          * GeoVector2F.
          */
-        inline GeoVector2F operator+(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator+(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) +
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -315,7 +315,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and
          * another GeoVector2F.
          */
-        inline GeoVector2F operator-(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator-(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) -
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -351,7 +351,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the Hadamard product of this GeoVector2F and another
          * GeoVector2F.
          */
-        inline GeoVector2F operator*(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator*(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) *
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -387,7 +387,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise quotient of this GeoVector2F and another
          * GeoVector2F.
          */
-        GeoVector2F operator/(GeoVector2F other) const noexcept
+        [[nodiscard]] GeoVector2F operator/(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) /
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -430,7 +430,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise sum of this GeoVector2F and the provided
          * scalar.
          */
-        inline GeoVector2F operator+(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator+(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) + other);
         }
@@ -472,7 +472,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and the
          * provided scalar.
          */
-        inline GeoVector2F operator-(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator-(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) - other);
         }
@@ -514,7 +514,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the Hadamard product of this GeoVector2F and the
          * provided scalar.
          */
-        inline GeoVector2F operator*(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator*(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) * other);
         }
@@ -556,7 +556,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F where the components consist of the entrywise quotient of this GeoVector2F and the
          * provided scalar.
          */
-        GeoVector2F operator/(float other) const noexcept
+        [[nodiscard]] GeoVector2F operator/(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / other);
         }
@@ -923,7 +923,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
+        [[nodiscard]] bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec2*>(this),
                                        NovelRT::Utilities::Misc::BitCast<glm::vec2>(other),
@@ -953,7 +953,7 @@ namespace NovelRT::Maths
          * GeoVector2F.
          * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          */
-        inline float Dot(GeoVector2F other) noexcept
+        [[nodiscard]] inline float Dot(GeoVector2F other) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec2*>(this),
                             NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -990,7 +990,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the distance to.
          * @return The distance between this GeoVector2F and another GeoVector2F.
          */
-        inline float Distance(GeoVector2F other) noexcept
+        [[nodiscard]] inline float Distance(GeoVector2F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec2*>(this),
                                  NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -1026,7 +1026,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the squared distance to.
          * @return The squared distance between this GeoVector2F and another GeoVector2F.
          */
-        inline float SquaredDistance(GeoVector2F other) noexcept
+        [[nodiscard]] inline float SquaredDistance(GeoVector2F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();
         }
@@ -1036,7 +1036,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector2F instance with all components set to zero.
          */
-        static GeoVector2F Zero() noexcept
+        [[nodiscard]] static GeoVector2F Zero() noexcept
         {
             return GeoVector2F::Uniform(0);
         }
@@ -1046,7 +1046,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector2F instance with all components set to one.
          */
-        static GeoVector2F One() noexcept
+        [[nodiscard]] static GeoVector2F One() noexcept
         {
             return GeoVector2F::Uniform(1);
         }
@@ -1057,7 +1057,7 @@ namespace NovelRT::Maths
          * @param value The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
-        static GeoVector2F Uniform(float value) noexcept
+        [[nodiscard]] static GeoVector2F Uniform(float value) noexcept
         {
             return GeoVector2F(value, value);
         }
@@ -1100,7 +1100,7 @@ namespace NovelRT::Maths
      * @param rhs The GeoVector2F whos components get multiplied by the scalar.
      * @return A GeoVector2F where the components consist of the product of this and the provided scalar.
      */
-    inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
+    [[nodiscard]] inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
     {
         return rhs * lhs;
     }
