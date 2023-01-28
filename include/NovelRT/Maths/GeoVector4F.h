@@ -55,7 +55,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector4F with all components set to zero.
          */
-        GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+        [[nodiscard]] GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
         {
         }
 
@@ -68,7 +68,7 @@ namespace NovelRT::Maths
          * @param w The W component of the vector.
          * @return A GeoVector4F with the given components.
          */
-        GeoVector4F(float x, float y, float z, float w) noexcept : x(x), y(y), z(z), w(w)
+        [[nodiscard]] GeoVector4F(float x, float y, float z, float w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
@@ -79,7 +79,7 @@ namespace NovelRT::Maths
          * @return A new GeoVector4F with the given GeoVector2F X and Y components, with the Z and W components set to
          * zero.
          */
-        GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
+        [[nodiscard]] GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
         {
         }
 
@@ -90,7 +90,7 @@ namespace NovelRT::Maths
          * components.
          * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
          */
-        GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
+        [[nodiscard]] GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
         }
 
@@ -128,7 +128,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector4F created from normalising this GeoVector4F.
          */
-        inline GeoVector4F GetNormalised() const noexcept
+        [[nodiscard]] inline GeoVector4F GetNormalised() const noexcept
         {
             return GeoVector4F(glm::normalize(Vec4Value()));
         }
@@ -153,7 +153,7 @@ namespace NovelRT::Maths
          *
          * @return The magnitude of this GeoVector4F.
          */
-        inline float GetMagnitude() const noexcept
+        [[nodiscard]] inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec4*>(this));
         }
@@ -178,7 +178,7 @@ namespace NovelRT::Maths
          *
          * @return The length of this GeoVector4F.
          */
-        inline float GetLength() const noexcept
+        [[nodiscard]] inline float GetLength() const noexcept
         {
             return GetMagnitude();
         }
@@ -202,7 +202,7 @@ namespace NovelRT::Maths
          *
          * @return The squared magnitude of this GeoVector4F.
          */
-        inline float GetSquaredMagnitude() const noexcept
+        [[nodiscard]] inline float GetSquaredMagnitude() const noexcept
         {
             return glm::dot(Vec4Value(), Vec4Value());
         }
@@ -226,7 +226,7 @@ namespace NovelRT::Maths
          *
          * @return The squared length of this GeoVector4F.
          */
-        inline float GetSquaredLength() const noexcept
+        [[nodiscard]] inline float GetSquaredLength() const noexcept
         {
             return GetSquaredMagnitude();
         }
@@ -237,7 +237,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @returns true if all components matched, otherwise false.
          */
-        inline bool operator==(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator==(const GeoVector4F& other) const noexcept
         {
             return *reinterpret_cast<const glm::vec4*>(this) == *reinterpret_cast<const glm::vec4*>(&other);
         }
@@ -248,7 +248,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
-        inline bool operator!=(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator!=(const GeoVector4F& other) const noexcept
         {
             return *reinterpret_cast<const glm::vec4*>(this) != *reinterpret_cast<const glm::vec4*>(&other);
         }
@@ -260,7 +260,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is less than the other GeoVector4F's components, otherwise false.
          */
-        inline bool operator<(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator<(const GeoVector4F& other) const noexcept
         {
             return glm::any(
                 glm::lessThan(*reinterpret_cast<const glm::vec4*>(this), *reinterpret_cast<const glm::vec4*>(&other)));
@@ -274,7 +274,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is less than or equal to the other GeoVector4F's components,
          * otherwise false.
          */
-        inline bool operator<=(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator<=(const GeoVector4F& other) const noexcept
         {
             return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec4*>(this),
                                                *reinterpret_cast<const glm::vec4*>(&other)));
@@ -287,7 +287,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is greater than the other GeoVector4F's components, otherwise false.
          */
-        inline bool operator>(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator>(const GeoVector4F& other) const noexcept
         {
             return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec4*>(this),
                                              *reinterpret_cast<const glm::vec4*>(&other)));
@@ -301,7 +301,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is greater than or equal to the other GeoVector4F's components,
          * otherwise false.
          */
-        inline bool operator>=(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline bool operator>=(const GeoVector4F& other) const noexcept
         {
             return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec4*>(this),
                                                   *reinterpret_cast<const glm::vec4*>(&other)));
@@ -345,7 +345,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and another
          * GeoVector4F.
          */
-        inline GeoVector4F operator+(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator+(const GeoVector4F& other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) + *reinterpret_cast<const glm::vec4*>(&other));
         }
@@ -388,7 +388,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and
          * another GeoVector4F.
          */
-        inline GeoVector4F operator-(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator-(const GeoVector4F& other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) - *reinterpret_cast<const glm::vec4*>(&other));
         }
@@ -431,7 +431,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and another
          * GeoVector4F.
          */
-        inline GeoVector4F operator*(const GeoVector4F& other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator*(const GeoVector4F& other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) * *reinterpret_cast<const glm::vec4*>(&other));
         }
@@ -474,7 +474,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and another
          * GeoVector4F.
          */
-        GeoVector4F operator/(const GeoVector4F& other) const noexcept
+        [[nodiscard]] GeoVector4F operator/(const GeoVector4F& other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) / *reinterpret_cast<const glm::vec4*>(&other));
         }
@@ -526,7 +526,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and the provided
          * scalar.
          */
-        inline GeoVector4F operator+(float other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator+(float other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) + other);
         }
@@ -578,7 +578,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and the
          * provided scalar.
          */
-        inline GeoVector4F operator-(float other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator-(float other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) - other);
         }
@@ -630,7 +630,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and the
          * provided scalar.
          */
-        inline GeoVector4F operator*(float other) const noexcept
+        [[nodiscard]] inline GeoVector4F operator*(float other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) * other);
         }
@@ -682,7 +682,7 @@ namespace NovelRT::Maths
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and the
          * provided scalar.
          */
-        GeoVector4F operator/(float other) const noexcept
+        [[nodiscard]] GeoVector4F operator/(float other) const noexcept
         {
             return GeoVector4F(*reinterpret_cast<const glm::vec4*>(this) / other);
         }
@@ -1123,7 +1123,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool EpsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
+        [[nodiscard]] bool EpsilonEquals(const GeoVector4F& other, const GeoVector4F& epsilonValue) const noexcept
         {
             return glm::all(glm::equal(Vec4Value(), other.Vec4Value(), epsilonValue.Vec4Value()));
         }
@@ -1158,7 +1158,7 @@ namespace NovelRT::Maths
          * @return The sum of products of the left-hand side GeoVector4Fs components and the right-hand side
          * GeoVector4Fs components.
          */
-        inline float Dot(GeoVector4F other) noexcept
+        [[nodiscard]] inline float Dot(GeoVector4F other) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec4*>(this),
                             NovelRT::Utilities::Misc::BitCast<glm::vec4>(other));
@@ -1204,7 +1204,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the distance to.
          * @return The distance between this GeoVector4F and another GeoVector4F.
          */
-        inline float Distance(GeoVector4F other) noexcept
+        [[nodiscard]] inline float Distance(GeoVector4F other) noexcept
         {
             return glm::distance(Vec4Value(), other.Vec4Value());
         }
@@ -1248,7 +1248,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the square distance to.
          * @return The squared distance between this GeoVector4F and another GeoVector4F.
          */
-        inline float SquaredDistance(GeoVector4F other) noexcept
+        [[nodiscard]] inline float SquaredDistance(GeoVector4F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();
         }
@@ -1258,7 +1258,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to zero.
          */
-        static GeoVector4F Zero() noexcept
+        [[nodiscard]] static GeoVector4F Zero() noexcept
         {
             return GeoVector4F::Uniform(0);
         }
@@ -1268,7 +1268,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector4F instance with all components set to one.
          */
-        static GeoVector4F One() noexcept
+        [[nodiscard]] static GeoVector4F One() noexcept
         {
             return GeoVector4F::Uniform(1);
         }
@@ -1279,7 +1279,7 @@ namespace NovelRT::Maths
          * @param value The value to use as the uniform value across the GeoVector4F.
          * @return a new GeoVector4F instance with all components set to the specified value.
          */
-        static GeoVector4F Uniform(float value) noexcept
+        [[nodiscard]] static GeoVector4F Uniform(float value) noexcept
         {
             return GeoVector4F(value, value, value, value);
         }
@@ -1332,7 +1332,7 @@ namespace NovelRT::Maths
      * @param rhs The GeoVector4F whos components get multiplied by the scalar.
      * @return A GeoVector4F where the components consist of the product of this and the provided scalar.
      */
-    inline GeoVector4F operator*(float lhs, const GeoVector4F& rhs) noexcept
+    [[nodiscard]] inline GeoVector4F operator*(float lhs, const GeoVector4F& rhs) noexcept
     {
         return rhs * lhs;
     }
