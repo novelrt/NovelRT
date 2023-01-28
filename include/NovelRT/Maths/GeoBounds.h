@@ -46,7 +46,7 @@ namespace NovelRT::Maths
          * @param point The GeoVector2F to be evaluated.
          * @return true if the given GeoVector2F is within the confines of this GeoBounds instance, otherwise false.
          */
-        [[nodiscard]] bool pointIsWithinBounds(GeoVector2F point) const noexcept;
+        [[nodiscard]] bool PointIsWithinBounds(GeoVector2F point) const noexcept;
 
         /**
          * @brief Evaluates whether another GeoBounds instance intersects with this GeoBounds instance or not.
@@ -57,7 +57,7 @@ namespace NovelRT::Maths
          * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than
          * 0.
          */
-        [[nodiscard]] bool intersectsWith(GeoBounds otherBounds) const;
+        [[nodiscard]] bool IntersectsWith(GeoBounds otherBounds) const;
 
         /**
          * @brief Gets the specified corner, relative to the rotation and size of this GeoBounds instance.
@@ -67,7 +67,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F representing the local space position of the corner relative to the rotation and size
          * of the GeoBounds instance.
          */
-        [[nodiscard]] GeoVector2F getCornerInLocalSpace(int32_t index) const noexcept;
+        [[nodiscard]] GeoVector2F GetCornerInLocalSpace(int32_t index) const noexcept;
 
         /**
          * @brief Gets the specified corner in world space, relative to the position, rotation and size of this
@@ -78,7 +78,7 @@ namespace NovelRT::Maths
          * @return A GeoVector2F representing the world space position of the corner relative to the position, size and
          * rotation of the GeoBounds instance.
          */
-        [[nodiscard]] GeoVector2F getCornerInWorldSpace(int32_t index) const noexcept;
+        [[nodiscard]] GeoVector2F GetCornerInWorldSpace(int32_t index) const noexcept;
 
         /**
          * @brief Gets the extent of this GeoBounds instance that is represented by the width and height as a
@@ -86,7 +86,7 @@ namespace NovelRT::Maths
          *
          * @return Returns a GeoVector2F that containts the width and height of the extents.
          */
-        [[nodiscard]] GeoVector2F getExtents() const noexcept;
+        [[nodiscard]] GeoVector2F GetExtents() const noexcept;
 
         /**
          * @brief Evaluates if all the components match between two instances of GeoBounds.

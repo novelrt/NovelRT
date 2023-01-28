@@ -152,7 +152,7 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] bool tryInsert(std::shared_ptr<QuadTreePoint> point) noexcept
         {
-            if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition()))
+            if (point == nullptr || !getBounds().PointIsWithinBounds(point->getPosition()))
             {
                 return false;
             }
@@ -188,14 +188,14 @@ namespace NovelRT::Maths
          */
         template<typename TQuadTreePoint, typename... TArgs> [[nodiscard]] bool tryInsert(GeoBounds bounds, TArgs... args)
         {
-            return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0),
+            return tryInsert(std::make_shared<TQuadTreePoint>(bounds.GetCornerInWorldSpace(0),
                                                               std::forward<TArgs>(args)...)) ||
-                   tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(1),
+                   tryInsert(std::make_shared<TQuadTreePoint>(bounds.GetCornerInWorldSpace(1),
                                                               std::forward<TArgs>(args)...)) ||
-                   tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(3),
+                   tryInsert(std::make_shared<TQuadTreePoint>(bounds.GetCornerInWorldSpace(3),
                                                               std::forward<TArgs>(args)...)) ||
                    tryInsert(
-                       std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(2), std::forward<TArgs>(args)...));
+                       std::make_shared<TQuadTreePoint>(bounds.GetCornerInWorldSpace(2), std::forward<TArgs>(args)...));
         }
 
         /**
@@ -206,7 +206,7 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
         {
-            if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition()))
+            if (point == nullptr || !getBounds().PointIsWithinBounds(point->getPosition()))
             {
                 return false;
             }
@@ -239,7 +239,7 @@ namespace NovelRT::Maths
          */
         void getIntersectingPoints(GeoBounds bounds, std::vector<std::shared_ptr<QuadTreePoint>>& intersectingPoints)
         {
-            if (!getBounds().intersectsWith(bounds))
+            if (!getBounds().IntersectsWith(bounds))
             {
                 return;
             }
@@ -249,7 +249,7 @@ namespace NovelRT::Maths
                 for (size_t index = 0; index < getPointCount(); index++)
                 {
                     auto point = getPoint(index);
-                    if (bounds.pointIsWithinBounds(point->getPosition()))
+                    if (bounds.PointIsWithinBounds(point->getPosition()))
                     {
                         intersectingPoints.emplace_back(point);
                     }

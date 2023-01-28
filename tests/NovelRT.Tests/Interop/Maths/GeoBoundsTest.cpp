@@ -14,7 +14,7 @@ TEST(InteropGeoBoundsTest, zeroReturnsZeroedOutGeoBounds)
 {
     NrtGeoBounds expectedBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoBounds_equal(expectedBounds, Nrt_GeoBounds_zero()));
+    EXPECT_TRUE(Nrt_GeoBounds_Equal(expectedBounds, Nrt_GeoBounds_zero()));
 }
 
 TEST(InteropGeoBoundsTest, equalsOperatorReturnsTrueWhenBoundsAreEqual)
@@ -22,7 +22,7 @@ TEST(InteropGeoBoundsTest, equalsOperatorReturnsTrueWhenBoundsAreEqual)
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoBounds_equal(bounds0, bounds1));
+    EXPECT_TRUE(Nrt_GeoBounds_Equal(bounds0, bounds1));
 }
 
 TEST(InteropGeoBoundsTest, equalsOperatorReturnsFalseWhenBoundsAreNotEqual)
@@ -30,7 +30,7 @@ TEST(InteropGeoBoundsTest, equalsOperatorReturnsFalseWhenBoundsAreNotEqual)
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(10.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_FALSE(Nrt_GeoBounds_equal(bounds0, bounds1));
+    EXPECT_FALSE(Nrt_GeoBounds_Equal(bounds0, bounds1));
 }
 
 TEST(InteropGeoBoundsTest, notEqualsOperatorReturnsFalseWhenBoundsAreEqual)
@@ -38,7 +38,7 @@ TEST(InteropGeoBoundsTest, notEqualsOperatorReturnsFalseWhenBoundsAreEqual)
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_FALSE(Nrt_GeoBounds_notEqual(bounds0, bounds1));
+    EXPECT_FALSE(Nrt_GeoBounds_NotEqual(bounds0, bounds1));
 }
 
 TEST(InteropGeoBoundsTest, notEqualsOperatorReturnsTrueWhenBoundsAreNotEqual)
@@ -46,103 +46,103 @@ TEST(InteropGeoBoundsTest, notEqualsOperatorReturnsTrueWhenBoundsAreNotEqual)
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(10.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoBounds_notEqual(bounds0, bounds1));
+    EXPECT_TRUE(Nrt_GeoBounds_NotEqual(bounds0, bounds1));
 }
 
-TEST(InteropGeoBoundsTest, getCornerInLocalSpaceReturnsCorrectValues)
+TEST(InteropGeoBoundsTest, GetCornerInLocalSpaceReturnsCorrectValues)
 {
     NrtGeoBounds bounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(-2.5f), Nrt_GeoBounds_getCornerInLocalSpace(bounds, 0)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{+2.5f, -2.5f}, Nrt_GeoBounds_getCornerInLocalSpace(bounds, 1)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(+2.5f), Nrt_GeoBounds_getCornerInLocalSpace(bounds, 2)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{-2.5f, +2.5f}, Nrt_GeoBounds_getCornerInLocalSpace(bounds, 3)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(-2.5f), Nrt_GeoBounds_GetCornerInLocalSpace(bounds, 0)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{+2.5f, -2.5f}, Nrt_GeoBounds_GetCornerInLocalSpace(bounds, 1)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(+2.5f), Nrt_GeoBounds_GetCornerInLocalSpace(bounds, 2)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{-2.5f, +2.5f}, Nrt_GeoBounds_GetCornerInLocalSpace(bounds, 3)));
 }
 
-TEST(InteropGeoBoundsTest, getCornerInWorldSpaceReturnsCorrectValues)
+TEST(InteropGeoBoundsTest, GetCornerInWorldSpaceReturnsCorrectValues)
 {
     NrtGeoBounds bounds{Nrt_GeoVector2F_One(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(-1.5f), Nrt_GeoBounds_getCornerInWorldSpace(bounds, 0)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{+3.5f, -1.5f}, Nrt_GeoBounds_getCornerInWorldSpace(bounds, 1)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(+3.5f), Nrt_GeoBounds_getCornerInWorldSpace(bounds, 2)));
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{-1.5f, +3.5f}, Nrt_GeoBounds_getCornerInWorldSpace(bounds, 3)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(-1.5f), Nrt_GeoBounds_GetCornerInWorldSpace(bounds, 0)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{+3.5f, -1.5f}, Nrt_GeoBounds_GetCornerInWorldSpace(bounds, 1)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(+3.5f), Nrt_GeoBounds_GetCornerInWorldSpace(bounds, 2)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(NrtGeoVector2F{-1.5f, +3.5f}, Nrt_GeoBounds_GetCornerInWorldSpace(bounds, 3)));
 }
 
-TEST(InteropGeoBoundsTest, pointIsWithinBoundsReturnsTrueWhenWithinBounds)
+TEST(InteropGeoBoundsTest, PointIsWithinBoundsReturnsTrueWhenWithinBounds)
 {
     NrtGeoBounds bounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoBounds_pointIsWithinBounds(bounds, Nrt_GeoVector2F_One()));
+    EXPECT_TRUE(Nrt_GeoBounds_PointIsWithinBounds(bounds, Nrt_GeoVector2F_One()));
 }
 
-TEST(InteropGeoBoundsTest, pointIsWithinBoundsReturnsFalseWhenNotWithinBounds)
+TEST(InteropGeoBoundsTest, PointIsWithinBoundsReturnsFalseWhenNotWithinBounds)
 {
     NrtGeoBounds bounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    EXPECT_FALSE(Nrt_GeoBounds_pointIsWithinBounds(bounds, Nrt_GeoVector2F_Uniform(10.0f)));
+    EXPECT_FALSE(Nrt_GeoBounds_PointIsWithinBounds(bounds, Nrt_GeoVector2F_Uniform(10.0f)));
 }
 
 TEST(InteropGeoBoundsTest, getExtentsReturnsCorrectExtentsValue)
 {
     NrtGeoBounds bounds{Nrt_GeoVector2F_One(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(2.5f), Nrt_GeoBounds_getExtents(bounds)));
+    EXPECT_TRUE(Nrt_GeoVector2F_Equal(Nrt_GeoVector2F_Uniform(2.5f), Nrt_GeoBounds_GetExtents(bounds)));
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersecting)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsTrueWhenIntersecting)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(1.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     int32_t output = NRT_FALSE;
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds0, bounds1, &output), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_GeoBounds_IntersectsWith(bounds0, bounds1, &output), NRT_SUCCESS);
     EXPECT_TRUE(output);
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsTrueWhenIntersectingInversed)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsTrueWhenIntersectingInversed)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(1.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     int32_t output = NRT_FALSE;
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_GeoBounds_IntersectsWith(bounds1, bounds0, &output), NRT_SUCCESS);
     EXPECT_TRUE(output);
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersecting)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsFalseWhenNotIntersecting)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(100.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     int32_t output = NRT_TRUE;
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds0, bounds1, &output), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_GeoBounds_IntersectsWith(bounds0, bounds1, &output), NRT_SUCCESS);
     EXPECT_FALSE(output);
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsFalseWhenNotIntersectingInversed)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsFalseWhenNotIntersectingInversed)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(100.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     int32_t output = NRT_TRUE;
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_GeoBounds_IntersectsWith(bounds1, bounds0, &output), NRT_SUCCESS);
     EXPECT_FALSE(output);
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsErrorCodeWhenBoundsAreRotated)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsErrorCodeWhenBoundsAreRotated)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 20.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(1.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
     int32_t output = NRT_FALSE;
 
-    EXPECT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, &output), NRT_FAILURE_NOT_SUPPORTED);
+    EXPECT_EQ(Nrt_GeoBounds_IntersectsWith(bounds1, bounds0, &output), NRT_FAILURE_NOT_SUPPORTED);
 }
 
-TEST(InteropGeoBoundsTest, intersectsWithReturnsNullptrFailureWhenGivenNullptr)
+TEST(InteropGeoBoundsTest, IntersectsWithReturnsNullptrFailureWhenGivenNullptr)
 {
     NrtGeoBounds bounds0{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Uniform(5.0f), 20.0f};
     NrtGeoBounds bounds1{Nrt_GeoVector2F_Uniform(1.0f), Nrt_GeoVector2F_Uniform(5.0f), 0.0f};
 
-    ASSERT_EQ(Nrt_GeoBounds_intersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
+    ASSERT_EQ(Nrt_GeoBounds_IntersectsWith(bounds1, bounds0, nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
 }
