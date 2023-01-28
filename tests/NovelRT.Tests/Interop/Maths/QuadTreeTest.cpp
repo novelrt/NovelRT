@@ -26,12 +26,12 @@ bool CheckPointsForEqualityC(NrtQuadTreePointHandle one, NrtQuadTreePointHandle 
 {
     auto left = reinterpret_cast<Maths::QuadTreePoint*>(one);
     auto right = reinterpret_cast<Maths::QuadTreePoint*>(two);
-    return left->getPosition() == right->getPosition();
+    return left->GetPosition() == right->GetPosition();
 }
 
 bool CheckPointsForEqualityCpp(Maths::QuadTreePoint* left, Maths::QuadTreePoint* right)
 {
-    return left->getPosition() == right->getPosition();
+    return left->GetPosition() == right->GetPosition();
 }
 
 bool CheckBoundsForEquality(NrtGeoBounds one, NrtGeoBounds two)
@@ -183,23 +183,23 @@ TEST_F(InteropQuadTreeTest, GetPointReturnsNullInstanceFailureWhenGivenNullptrFo
 
 TEST_F(InteropQuadTreeTest, InsertOneReturnsTrue)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     ASSERT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, InsertFourDoesNotSubdivide)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
 
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 4u);
@@ -237,19 +237,19 @@ TEST_F(InteropQuadTreeTest, InsertFourDoesNotSubdivide)
 
 TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndPointsAreCorrect)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
@@ -300,19 +300,19 @@ TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndPointsAreCorrect)
 
 TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndBoundsAreCorrect)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
@@ -361,26 +361,26 @@ TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndBoundsAreCorrect)
 
 TEST_F(InteropQuadTreeTest, InsertOutOfBoundsReturnsFalse)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(3840.0f, 2160.0f);
 
     EXPECT_EQ(NRT_FALSE, Nrt_QuadTree_TryInsert(_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, PointVector_GetSizeReturnsCorrectValue)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     NrtGeoBounds inputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);
@@ -397,19 +397,19 @@ TEST_F(InteropQuadTreeTest, PointVector_DeleteReturnsNullInstanceFailureWhenGive
 
 TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsAllPoints)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     NrtGeoBounds outputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);
@@ -438,7 +438,7 @@ TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsAllPoints)
 
 TEST_F(InteropQuadTreeTest, RemoveExistingReturnsTrue)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
 
     ASSERT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
     EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point0));
@@ -446,25 +446,25 @@ TEST_F(InteropQuadTreeTest, RemoveExistingReturnsTrue)
 
 TEST_F(InteropQuadTreeTest, RemoveNoneExistingReturnsFalse)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_FALSE(Nrt_QuadTree_TryRemove(_quadTree, point0));
 }
 
 TEST_F(InteropQuadTreeTest, RemoveOneCausesMergeWhenAdjacentPointCountLessThan5)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point4));
@@ -504,22 +504,22 @@ TEST_F(InteropQuadTreeTest, RemoveOneCausesMergeWhenAdjacentPointCountLessThan5)
 
 TEST_F(InteropQuadTreeTest, RemoveOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    auto point5 = Nrt_QuadTreePoint_createFromFloat(0.5f, 0.5f);
+    auto point5 = Nrt_QuadTreePoint_CreateFromFloat(0.5f, 0.5f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point5));
 
     EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point5));
@@ -572,19 +572,19 @@ TEST_F(InteropQuadTreeTest, RemoveOneDoesNotCauseMergeWhenAdjacentPointCountMore
 
 TEST_F(InteropQuadTreeTest, GetIntersectingPointsForQuadTreeBoundsReturnsAll)
 {
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    auto point0 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
-    auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
+    auto point1 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
-    auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
+    auto point2 = Nrt_QuadTreePoint_CreateFromFloat(-1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
-    auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
+    auto point3 = Nrt_QuadTreePoint_CreateFromFloat(1.0f, -1.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
+    auto point4 = Nrt_QuadTreePoint_CreateFromFloat(0.0f, 0.0f);
     EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     NrtGeoBounds outputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);

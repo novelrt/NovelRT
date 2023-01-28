@@ -42,7 +42,7 @@ namespace NovelRT::Maths
          *
          * @return The position in two-dimensional space of this point.
          */
-        [[nodiscard]] GeoVector2F getPosition() const noexcept
+        [[nodiscard]] GeoVector2F GetPosition() const noexcept
         {
             return _position;
         }

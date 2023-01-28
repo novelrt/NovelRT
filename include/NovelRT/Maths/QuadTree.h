@@ -152,7 +152,7 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] bool TryInsert(std::shared_ptr<QuadTreePoint> point) noexcept
         {
-            if (point == nullptr || !GetBounds().PointIsWithinBounds(point->getPosition()))
+            if (point == nullptr || !GetBounds().PointIsWithinBounds(point->GetPosition()))
             {
                 return false;
             }
@@ -206,7 +206,7 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] bool TryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
         {
-            if (point == nullptr || !GetBounds().PointIsWithinBounds(point->getPosition()))
+            if (point == nullptr || !GetBounds().PointIsWithinBounds(point->GetPosition()))
             {
                 return false;
             }
@@ -249,7 +249,7 @@ namespace NovelRT::Maths
                 for (size_t index = 0; index < GetPointCount(); index++)
                 {
                     auto point = GetPoint(index);
-                    if (bounds.PointIsWithinBounds(point->getPosition()))
+                    if (bounds.PointIsWithinBounds(point->GetPosition()))
                     {
                         intersectingPoints.emplace_back(point);
                     }
