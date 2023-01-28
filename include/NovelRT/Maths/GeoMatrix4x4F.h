@@ -47,7 +47,7 @@ namespace NovelRT::Maths
          *
          * @return The newly instantiated GeoMatrix4x4F object.
          */
-        GeoMatrix4x4F() noexcept
+        [[nodiscard]] GeoMatrix4x4F() noexcept
             : x(GeoVector4F::Zero()), y(GeoVector4F::Zero()), z(GeoVector4F::Zero()), w(GeoVector4F::Zero())
         {
         }
@@ -61,7 +61,7 @@ namespace NovelRT::Maths
          * @param w The fourth row in the matrix.
          * @return The newly instantiated GeoMatrix4x4F object.
          */
-        GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
+        [[nodiscard]] GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
@@ -154,7 +154,7 @@ namespace NovelRT::Maths
          * @param other The other GeoMatrix4x4F to evaluate against.
          * @return true if all components matched, otherwise false.
          */
-        inline bool operator==(GeoMatrix4x4F other) const noexcept
+        [[nodiscard]] inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) == NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
         }
@@ -166,7 +166,7 @@ namespace NovelRT::Maths
          * @param other The other GeoMatrix4x4F to evaluate against.
          * @return true if any of the components do not match, otherwise false.
          */
-        inline bool operator!=(GeoMatrix4x4F other) const noexcept
+        [[nodiscard]] inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
             return *reinterpret_cast<const glm::mat4*>(this) != NovelRT::Utilities::Misc::BitCast<glm::mat4>(other);
         }
@@ -209,7 +209,7 @@ namespace NovelRT::Maths
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
          */
-        inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator+(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) +
                                  NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
@@ -253,7 +253,7 @@ namespace NovelRT::Maths
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and another
          * GeoMatrix4x4F.
          */
-        inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator-(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) -
                                  NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
@@ -297,7 +297,7 @@ namespace NovelRT::Maths
          * @return A matrix product where the components consist of the sum of the products of this GeoMatrix4x4F's rows
          * and another GeoMatrix4x4F's columns.
          */
-        inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator*(GeoMatrix4x4F other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) *
                                  NovelRT::Utilities::Misc::BitCast<glm::mat4>(other));
@@ -484,7 +484,7 @@ namespace NovelRT::Maths
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
          * scalar.
          */
-        inline GeoMatrix4x4F operator+(float other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator+(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) + other);
         }
@@ -535,7 +535,7 @@ namespace NovelRT::Maths
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
          * provided scalar.
          */
-        inline GeoMatrix4x4F operator-(float other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator-(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) - other);
         }
@@ -585,7 +585,7 @@ namespace NovelRT::Maths
          * @param other The other scalar that gets multiplied by this matrix.
          * @return a matrix where the components consist of the product of this GeoMatrix4x4F and the provided scalar.
          */
-        inline GeoMatrix4x4F operator*(float other) const noexcept
+        [[nodiscard]] inline GeoMatrix4x4F operator*(float other) const noexcept
         {
             return GeoMatrix4x4F(*reinterpret_cast<const glm::mat4*>(this) * other);
         }
@@ -764,7 +764,7 @@ namespace NovelRT::Maths
          *
          * @return An Identity GeoMatrix4x4F.
          */
-        static GeoMatrix4x4F GetDefaultIdentity() noexcept
+        [[nodiscard]] static GeoMatrix4x4F GetDefaultIdentity() noexcept
         {
             return GeoMatrix4x4F(glm::identity<glm::mat4>());
         }
@@ -780,7 +780,7 @@ namespace NovelRT::Maths
          * @param zFar Distance to the far clipping plane along the -Z axis.
          * @return A projection GeoMatrix4x4F for projecting a three-dimensional space onto a plane.
          */
-        static GeoMatrix4x4F CreateOrthographic(float left,
+        [[nodiscard]] static GeoMatrix4x4F CreateOrthographic(float left,
                                                 float right,
                                                 float bottom,
                                                 float top,
@@ -808,7 +808,7 @@ namespace NovelRT::Maths
          * @param z The scale component over the Z axis.
          * @return A matrix with scale components applied.
          */
-        static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
+        [[nodiscard]] static GeoMatrix4x4F CreateFromScale(float x, float y, float z) noexcept
         {
             return GeoMatrix4x4F(glm::scale(glm::vec3(x, y, z)));
         }
@@ -821,7 +821,7 @@ namespace NovelRT::Maths
          * @param up Specifies the direction of the up vector of the observer.
          * @return A view matrix looking towards a reference point from the given eye position.
          */
-        static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
+        [[nodiscard]] static GeoMatrix4x4F CreateFromLookAt(GeoVector3F eye, GeoVector3F centre, GeoVector3F up)
         {
             return GeoMatrix4x4F(glm::lookAt(NovelRT::Utilities::Misc::BitCast<glm::vec3>(eye),
                                              NovelRT::Utilities::Misc::BitCast<glm::vec3>(centre),
