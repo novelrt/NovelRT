@@ -65,16 +65,16 @@ TEST_F(QuadTreeTest, insertOneReturnsTrue)
 TEST_F(QuadTreeTest, insertFourDoesNotSubdivide)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     EXPECT_EQ(_quadTree->getPointCount(), 4u);
 
@@ -92,19 +92,19 @@ TEST_F(QuadTreeTest, insertFourDoesNotSubdivide)
 TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
     EXPECT_EQ(_quadTree->getPointCount(), 0u);
 
@@ -123,19 +123,19 @@ TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect)
 TEST_F(QuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
     EXPECT_EQ(_quadTree->getPointCount(), 0u);
 
@@ -165,19 +165,19 @@ TEST_F(QuadTreeTest, insertOutOfBoundsReturnsFalse)
 TEST_F(QuadTreeTest, getIntersectingPointsReturnsAllPoints)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
     auto intersectingPoints = _quadTree->getIntersectingPoints(_quadTree->getBounds());
 
@@ -193,7 +193,7 @@ TEST_F(QuadTreeTest, getIntersectingPointsReturnsAllPoints)
 TEST_F(QuadTreeTest, removeExistingReturnsTrue)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     EXPECT_EQ(true, _quadTree->tryRemove(point0));
 }
@@ -207,21 +207,21 @@ TEST_F(QuadTreeTest, removeNoneExistingReturnsFalse)
 TEST_F(QuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
-    _quadTree->tryRemove(point4);
+    unused(_quadTree->tryRemove(point4));
 
     EXPECT_EQ(_quadTree->getPointCount(), 4u);
 
@@ -239,24 +239,24 @@ TEST_F(QuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5)
 TEST_F(QuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
     auto point5 = std::make_shared<QuadTreePoint>(0.5f, 0.5f);
-    _quadTree->tryInsert(point5);
+    unused(_quadTree->tryInsert(point5));
 
-    _quadTree->tryRemove(point5);
+    unused(_quadTree->tryRemove(point5));
 
     EXPECT_EQ(_quadTree->getPointCount(), 0u);
 
@@ -281,19 +281,19 @@ TEST_F(QuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4)
 TEST_F(QuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll)
 {
     auto point0 = std::make_shared<QuadTreePoint>(-1.0f, 1.0f);
-    _quadTree->tryInsert(point0);
+    unused(_quadTree->tryInsert(point0));
 
     auto point1 = std::make_shared<QuadTreePoint>(1.0f, 1.0f);
-    _quadTree->tryInsert(point1);
+    unused(_quadTree->tryInsert(point1));
 
     auto point2 = std::make_shared<QuadTreePoint>(-1.0f, -1.0f);
-    _quadTree->tryInsert(point2);
+    unused(_quadTree->tryInsert(point2));
 
     auto point3 = std::make_shared<QuadTreePoint>(1.0f, -1.0f);
-    _quadTree->tryInsert(point3);
+    unused(_quadTree->tryInsert(point3));
 
     auto point4 = std::make_shared<QuadTreePoint>(0.0f, 0.0f);
-    _quadTree->tryInsert(point4);
+    unused(_quadTree->tryInsert(point4));
 
     auto intersectingPoints = _quadTree->getIntersectingPoints(_quadTree->getBounds());
     EXPECT_EQ(intersectingPoints.size(), 5u);
