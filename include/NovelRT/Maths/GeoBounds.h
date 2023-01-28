@@ -39,7 +39,7 @@ namespace NovelRT::Maths
          * @param rotation A starting rotation for the GeoBounds instance that is represented in degrees.
          * @return Newly constructed GeoBounds object containing the position, size, and rotation components.
          */
-        GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
+        [[nodiscard]] GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
 
         /**
          * @brief Determines if a given GeoVector2F is within the confines of this bounding box.
@@ -93,7 +93,7 @@ namespace NovelRT::Maths
          *
          * @return true if all components of the GeoBounds instances match, otherwise false.
          */
-        inline bool operator==(GeoBounds other) const noexcept
+        [[nodiscard]] inline bool operator==(GeoBounds other) const noexcept
         {
             return position == other.position && size == other.size && rotation == other.rotation;
         }
@@ -103,7 +103,7 @@ namespace NovelRT::Maths
          *
          * @return true if any or all components of the GeoBounds instances do not match, otherwise true.
          */
-        inline bool operator!=(GeoBounds other) const noexcept
+        [[nodiscard]] inline bool operator!=(GeoBounds other) const noexcept
         {
             return position != other.position || size != other.size || rotation != other.rotation;
         }
