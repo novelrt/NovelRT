@@ -14,7 +14,7 @@ using namespace NovelRT::Maths;
 static const float TEST_WIDTH = 1920.0f;
 static const float TEST_HEIGHT = 1080.0f;
 
-NrtGeoBounds getCenteredBoundsC(float width, float height)
+NrtGeoBounds GetCenteredBoundsC(float width, float height)
 {
     auto size = GeoVector2F(width, height);
     auto position = GeoVector2F(0, 0);
@@ -22,19 +22,19 @@ NrtGeoBounds getCenteredBoundsC(float width, float height)
     return *reinterpret_cast<NrtGeoBounds*>(result);
 }
 
-bool checkPointsForEqualityC(NrtQuadTreePointHandle one, NrtQuadTreePointHandle two)
+bool CheckPointsForEqualityC(NrtQuadTreePointHandle one, NrtQuadTreePointHandle two)
 {
     auto left = reinterpret_cast<Maths::QuadTreePoint*>(one);
     auto right = reinterpret_cast<Maths::QuadTreePoint*>(two);
     return left->getPosition() == right->getPosition();
 }
 
-bool checkPointsForEqualityCpp(Maths::QuadTreePoint* left, Maths::QuadTreePoint* right)
+bool CheckPointsForEqualityCpp(Maths::QuadTreePoint* left, Maths::QuadTreePoint* right)
 {
     return left->getPosition() == right->getPosition();
 }
 
-bool checkBoundsForEquality(NrtGeoBounds one, NrtGeoBounds two)
+bool CheckBoundsForEquality(NrtGeoBounds one, NrtGeoBounds two)
 {
     auto left = reinterpret_cast<GeoBounds&>(one);
     auto right = reinterpret_cast<GeoBounds&>(two);
@@ -49,96 +49,96 @@ protected:
     void SetUp() override
     {
         auto bounds = new NrtGeoBounds{};
-        *bounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
-        _quadTree = Nrt_QuadTree_create(*bounds);
+        *bounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+        _quadTree = Nrt_QuadTree_Create(*bounds);
     }
 };
 
-TEST_F(InteropQuadTreeTest, createReturnsValidHandle)
+TEST_F(InteropQuadTreeTest, CreateReturnsValidHandle)
 {
-    EXPECT_NE(reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT))),
+    EXPECT_NE(reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_Create(GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT))),
               nullptr);
 }
 
-TEST_F(InteropQuadTreeTest, deleteReturnsSuccessWhenGivenValidHandle)
+TEST_F(InteropQuadTreeTest, DeleteReturnsSuccessWhenGivenValidHandle)
 {
-    NrtQuadTreeHandle tree = Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
+    NrtQuadTreeHandle tree = Nrt_QuadTree_Create(GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT));
     EXPECT_EQ(Nrt_QuadTree_Destroy(tree), NRT_SUCCESS);
 }
 
-TEST_F(InteropQuadTreeTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
+TEST_F(InteropQuadTreeTest, DeleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     ASSERT_EQ(Nrt_QuadTree_Destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
 TEST_F(InteropQuadTreeTest,
-       deleteReturnsAlreadyDeletedOrRemovedFailureWhenPointIsBeingHeldOntoElsewhereAndHasAlreadyBeenDeletedFromCache)
+       DeleteReturnsAlreadyDeletedOrRemovedFailureWhenPointIsBeingHeldOntoElsewhereAndHasAlreadyBeenDeletedFromCache)
 {
-    auto handle = reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_create(getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))
+    auto handle = reinterpret_cast<Maths::QuadTree*>(Nrt_QuadTree_Create(GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT)))
                       ->shared_from_this();
     ASSERT_EQ(Nrt_QuadTree_Destroy(reinterpret_cast<NrtQuadTreeHandle>(handle.get())), NRT_SUCCESS);
     ASSERT_EQ(Nrt_QuadTree_Destroy(reinterpret_cast<NrtQuadTreeHandle>(handle.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsValidPointVectorHandleAndCanAlsoBeDeleted)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsValidPointVectorHandleAndCanAlsoBeDeleted)
 {
     NrtPointVectorHandle vec = nullptr;
 
-    int32_t result = Nrt_QuadTree_getIntersectingPoints(_quadTree, getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT), &vec);
+    int32_t result = Nrt_QuadTree_GetIntersectingPoints(_quadTree, GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT), &vec);
     EXPECT_EQ(result, NRT_SUCCESS);
     EXPECT_EQ(Nrt_PointVector_Destroy(vec), NRT_SUCCESS);
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullInstanceFailureWhenGivenNullPtrForInput)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsNullInstanceFailureWhenGivenNullPtrForInput)
 {
-    NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+    NrtGeoBounds expectedBounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
     NrtPointVectorHandle outputVector = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, &outputVector),
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(nullptr, expectedBounds, &outputVector),
               NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullptrFailureWhenGivenNullPtrForOutput)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsNullptrFailureWhenGivenNullPtrForOutput)
 {
-    NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+    NrtGeoBounds expectedBounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, expectedBounds, nullptr),
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(_quadTree, expectedBounds, nullptr),
               NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsNullInstanceFailureWhenGivenNullPtrForBothInputAndOutput)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsNullInstanceFailureWhenGivenNullPtrForBothInputAndOutput)
 {
-    NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+    NrtGeoBounds expectedBounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(nullptr, expectedBounds, nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(nullptr, expectedBounds, nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getBoundsGetsCorrectBounds)
+TEST_F(InteropQuadTreeTest, GetBoundsGetsCorrectBounds)
 {
-    NrtGeoBounds expectedBounds = getCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
+    NrtGeoBounds expectedBounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
     NrtGeoBounds actualBounds = Nrt_GeoBounds_zero();
-    actualBounds = Nrt_QuadTree_getBounds(_quadTree);
+    actualBounds = Nrt_QuadTree_GetBounds(_quadTree);
 
-    EXPECT_TRUE(checkBoundsForEquality(actualBounds, expectedBounds));
+    EXPECT_TRUE(CheckBoundsForEquality(actualBounds, expectedBounds));
 }
 
-TEST_F(InteropQuadTreeTest, getPointCountReturnsZeroWhenTreeHasNoPoints)
+TEST_F(InteropQuadTreeTest, GetPointCountReturnsZeroWhenTreeHasNoPoints)
 {
-    EXPECT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 0u);
+    EXPECT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
 }
 
-TEST_F(InteropQuadTreeTest, getPointMethodsReturnsNullptrWhenTreeHasNoChildren)
+TEST_F(InteropQuadTreeTest, GetPointMethodsReturnsNullptrWhenTreeHasNoChildren)
 {
     NrtQuadTreeHandle topLeft = nullptr;
     NrtQuadTreeHandle topRight = nullptr;
     NrtQuadTreeHandle bottomLeft = nullptr;
     NrtQuadTreeHandle bottomRight = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getTopLeft(_quadTree, &topLeft), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getTopRight(_quadTree, &topRight), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomLeft(_quadTree, &bottomLeft), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomRight(_quadTree, &bottomRight), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopLeft(_quadTree, &topLeft), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopRight(_quadTree, &topRight), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomLeft(_quadTree, &bottomLeft), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomRight(_quadTree, &bottomRight), NRT_SUCCESS);
 
     EXPECT_EQ(topLeft, nullptr);
     EXPECT_EQ(topRight, nullptr);
@@ -146,17 +146,17 @@ TEST_F(InteropQuadTreeTest, getPointMethodsReturnsNullptrWhenTreeHasNoChildren)
     EXPECT_EQ(bottomRight, nullptr);
 }
 
-TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
+TEST_F(InteropQuadTreeTest, GetPointReturnsNullForTooLargeIndex)
 {
     NrtQuadTreePointHandle point0 = nullptr;
     NrtQuadTreePointHandle point1 = nullptr;
     NrtQuadTreePointHandle point2 = nullptr;
     NrtQuadTreePointHandle point3 = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, &point0), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 1, &point1), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 2, &point2), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 3, &point3), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 0, &point0), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 1, &point1), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 2, &point2), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 3, &point3), NRT_SUCCESS);
 
     EXPECT_EQ(point0, nullptr);
     EXPECT_EQ(point1, nullptr);
@@ -164,70 +164,70 @@ TEST_F(InteropQuadTreeTest, getPointReturnsNullForTooLargeIndex)
     EXPECT_EQ(point3, nullptr);
 }
 
-TEST_F(InteropQuadTreeTest, getPointReturnsNullInstanceFailureWhenGivenNullptrForInput)
+TEST_F(InteropQuadTreeTest, GetPointReturnsNullInstanceFailureWhenGivenNullptrForInput)
 {
     NrtQuadTreePointHandle point = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, &point), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(nullptr, 0, &point), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getPointReturnsNullptrFailureWhenGivenNullptrForOutput)
+TEST_F(InteropQuadTreeTest, GetPointReturnsNullptrFailureWhenGivenNullptrForOutput)
 {
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 0, nullptr), NRT_FAILURE_NULL_ARGUMENT_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getPointReturnsNullInstanceFailureWhenGivenNullptrForInputAndOutput)
+TEST_F(InteropQuadTreeTest, GetPointReturnsNullInstanceFailureWhenGivenNullptrForInputAndOutput)
 {
-    ASSERT_EQ(Nrt_QuadTree_getPoint(nullptr, 0, nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(nullptr, 0, nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, insertOneReturnsTrue)
-{
-    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    ASSERT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
-}
-
-TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide)
+TEST_F(InteropQuadTreeTest, InsertOneReturnsTrue)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+    ASSERT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
+}
 
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+TEST_F(InteropQuadTreeTest, InsertFourDoesNotSubdivide)
+{
+    auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
+
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
-    ASSERT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 4u);
+    ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 4u);
 
     NrtQuadTreePointHandle outputPointResult0 = nullptr;
     NrtQuadTreePointHandle outputPointResult1 = nullptr;
     NrtQuadTreePointHandle outputPointResult2 = nullptr;
     NrtQuadTreePointHandle outputPointResult3 = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, &outputPointResult0), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 1, &outputPointResult1), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 2, &outputPointResult2), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 3, &outputPointResult3), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 0, &outputPointResult0), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 1, &outputPointResult1), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 2, &outputPointResult2), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 3, &outputPointResult3), NRT_SUCCESS);
 
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResult0, point0));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResult1, point1));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResult2, point2));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResult3, point3));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResult0, point0));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResult1, point1));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResult2, point2));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResult3, point3));
 
     NrtQuadTreeHandle outputCornerTreeTopLeft = nullptr;
     NrtQuadTreeHandle outputCornerTreeTopRight = nullptr;
     NrtQuadTreeHandle outputCornerTreeBottomLeft = nullptr;
     NrtQuadTreeHandle outputCornerTreeBottomRight = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getTopLeft(_quadTree, &outputCornerTreeTopLeft), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getTopRight(_quadTree, &outputCornerTreeTopRight), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomLeft(_quadTree, &outputCornerTreeBottomLeft), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomRight(_quadTree, &outputCornerTreeBottomRight), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopLeft(_quadTree, &outputCornerTreeTopLeft), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopRight(_quadTree, &outputCornerTreeTopRight), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomLeft(_quadTree, &outputCornerTreeBottomLeft), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomRight(_quadTree, &outputCornerTreeBottomRight), NRT_SUCCESS);
 
     EXPECT_EQ(outputCornerTreeTopLeft, nullptr);
     EXPECT_EQ(outputCornerTreeTopRight, nullptr);
@@ -235,44 +235,44 @@ TEST_F(InteropQuadTreeTest, insertFourDoesNotSubdivide)
     EXPECT_EQ(outputCornerTreeBottomRight, nullptr);
 }
 
-TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect)
+TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndPointsAreCorrect)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    ASSERT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 0u);
+    ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
 
     NrtQuadTreeHandle treeOutputTopLeft = nullptr;
     NrtQuadTreeHandle treeOutputTopRight = nullptr;
     NrtQuadTreeHandle treeOutputBottomLeft = nullptr;
     NrtQuadTreeHandle treeOutputBottomRight = nullptr;
 
-    int32_t treeResultTopLeft = Nrt_QuadTree_getTopLeft(_quadTree, &treeOutputTopLeft);
-    int32_t treeResultTopRight = Nrt_QuadTree_getTopRight(_quadTree, &treeOutputTopRight);
-    int32_t treeResultBottomLeft = Nrt_QuadTree_getBottomLeft(_quadTree, &treeOutputBottomLeft);
-    int32_t treeResultBottomRight = Nrt_QuadTree_getBottomRight(_quadTree, &treeOutputBottomRight);
+    int32_t treeResultTopLeft = Nrt_QuadTree_GetTopLeft(_quadTree, &treeOutputTopLeft);
+    int32_t treeResultTopRight = Nrt_QuadTree_GetTopRight(_quadTree, &treeOutputTopRight);
+    int32_t treeResultBottomLeft = Nrt_QuadTree_GetBottomLeft(_quadTree, &treeOutputBottomLeft);
+    int32_t treeResultBottomRight = Nrt_QuadTree_GetBottomRight(_quadTree, &treeOutputBottomRight);
 
     ASSERT_EQ(treeResultTopLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultTopRight, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomRight, NRT_SUCCESS);
 
-    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_getPointCount(treeOutputTopLeft);
-    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_getPointCount(treeOutputTopRight);
-    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_getPointCount(treeOutputBottomLeft);
-    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_getPointCount(treeOutputBottomRight);
+    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_GetPointCount(treeOutputTopLeft);
+    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_GetPointCount(treeOutputTopRight);
+    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_GetPointCount(treeOutputBottomLeft);
+    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_GetPointCount(treeOutputBottomRight);
 
     EXPECT_EQ(outputChildTreeSizeTopLeft, 2u);
     EXPECT_EQ(outputChildTreeSizeTopRight, 1u);
@@ -285,57 +285,57 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndPointsAreCorrect)
     NrtQuadTreePointHandle outputPointResultBottomRight = nullptr;
     NrtQuadTreePointHandle outputPointResultTopLeftTwo = nullptr;
 
-    Nrt_QuadTree_getPoint(treeOutputTopLeft, 0, &outputPointResultTopLeft);
-    Nrt_QuadTree_getPoint(treeOutputTopRight, 0, &outputPointResultTopRight);
-    Nrt_QuadTree_getPoint(treeOutputBottomLeft, 0, &outputPointResultBottomLeft);
-    Nrt_QuadTree_getPoint(treeOutputBottomRight, 0, &outputPointResultBottomRight);
-    Nrt_QuadTree_getPoint(treeOutputTopLeft, 1, &outputPointResultTopLeftTwo);
+    Nrt_QuadTree_GetPoint(treeOutputTopLeft, 0, &outputPointResultTopLeft);
+    Nrt_QuadTree_GetPoint(treeOutputTopRight, 0, &outputPointResultTopRight);
+    Nrt_QuadTree_GetPoint(treeOutputBottomLeft, 0, &outputPointResultBottomLeft);
+    Nrt_QuadTree_GetPoint(treeOutputBottomRight, 0, &outputPointResultBottomRight);
+    Nrt_QuadTree_GetPoint(treeOutputTopLeft, 1, &outputPointResultTopLeftTwo);
 
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopLeft, point0));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopRight, point1));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultBottomLeft, point2));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultBottomRight, point3));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopLeftTwo, point4));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopLeft, point0));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopRight, point1));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultBottomLeft, point2));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultBottomRight, point3));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopLeftTwo, point4));
 }
 
-TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect)
+TEST_F(InteropQuadTreeTest, InsertFiveDoesSubdivideAndBoundsAreCorrect)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    ASSERT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 0u);
+    ASSERT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
 
     NrtQuadTreeHandle treeOutputTopLeft = nullptr;
     NrtQuadTreeHandle treeOutputTopRight = nullptr;
     NrtQuadTreeHandle treeOutputBottomLeft = nullptr;
     NrtQuadTreeHandle treeOutputBottomRight = nullptr;
 
-    int32_t treeResultTopLeft = Nrt_QuadTree_getTopLeft(_quadTree, &treeOutputTopLeft);
-    int32_t treeResultTopRight = Nrt_QuadTree_getTopRight(_quadTree, &treeOutputTopRight);
-    int32_t treeResultBottomLeft = Nrt_QuadTree_getBottomLeft(_quadTree, &treeOutputBottomLeft);
-    int32_t treeResultBottomRight = Nrt_QuadTree_getBottomRight(_quadTree, &treeOutputBottomRight);
+    int32_t treeResultTopLeft = Nrt_QuadTree_GetTopLeft(_quadTree, &treeOutputTopLeft);
+    int32_t treeResultTopRight = Nrt_QuadTree_GetTopRight(_quadTree, &treeOutputTopRight);
+    int32_t treeResultBottomLeft = Nrt_QuadTree_GetBottomLeft(_quadTree, &treeOutputBottomLeft);
+    int32_t treeResultBottomRight = Nrt_QuadTree_GetBottomRight(_quadTree, &treeOutputBottomRight);
 
     ASSERT_EQ(treeResultTopLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultTopRight, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomRight, NRT_SUCCESS);
 
-    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_getPointCount(treeOutputTopLeft);
-    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_getPointCount(treeOutputTopRight);
-    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_getPointCount(treeOutputBottomLeft);
-    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_getPointCount(treeOutputBottomRight);
+    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_GetPointCount(treeOutputTopLeft);
+    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_GetPointCount(treeOutputTopRight);
+    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_GetPointCount(treeOutputBottomLeft);
+    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_GetPointCount(treeOutputBottomRight);
 
     EXPECT_EQ(outputChildTreeSizeTopLeft, 2u);
     EXPECT_EQ(outputChildTreeSizeTopRight, 1u);
@@ -344,78 +344,78 @@ TEST_F(InteropQuadTreeTest, insertFiveDoesSubdivideAndBoundsAreCorrect)
 
     auto expectedSize = NrtGeoVector2F{TEST_WIDTH / 2, TEST_HEIGHT / 2};
 
-    NrtGeoBounds outputBoundsTopLeft = Nrt_QuadTree_getBounds(treeOutputTopLeft);
-    NrtGeoBounds outputBoundsTopRight = Nrt_QuadTree_getBounds(treeOutputTopRight);
-    NrtGeoBounds outputBoundsBottomLeft = Nrt_QuadTree_getBounds(treeOutputBottomLeft);
-    NrtGeoBounds outputBoundsBottomRight = Nrt_QuadTree_getBounds(treeOutputBottomRight);
+    NrtGeoBounds outputBoundsTopLeft = Nrt_QuadTree_GetBounds(treeOutputTopLeft);
+    NrtGeoBounds outputBoundsTopRight = Nrt_QuadTree_GetBounds(treeOutputTopRight);
+    NrtGeoBounds outputBoundsBottomLeft = Nrt_QuadTree_GetBounds(treeOutputBottomLeft);
+    NrtGeoBounds outputBoundsBottomRight = Nrt_QuadTree_GetBounds(treeOutputBottomRight);
 
-    EXPECT_TRUE(checkBoundsForEquality(
+    EXPECT_TRUE(CheckBoundsForEquality(
         outputBoundsTopLeft, NrtGeoBounds{NrtGeoVector2F{-TEST_WIDTH / 4, TEST_HEIGHT / 4}, expectedSize, 0}));
-    EXPECT_TRUE(checkBoundsForEquality(outputBoundsTopRight,
+    EXPECT_TRUE(CheckBoundsForEquality(outputBoundsTopRight,
                                        NrtGeoBounds{NrtGeoVector2F{TEST_WIDTH / 4, TEST_HEIGHT / 4}, expectedSize, 0}));
-    EXPECT_TRUE(checkBoundsForEquality(
+    EXPECT_TRUE(CheckBoundsForEquality(
         outputBoundsBottomLeft, NrtGeoBounds{NrtGeoVector2F{-TEST_WIDTH / 4, -TEST_HEIGHT / 4}, expectedSize, 0}));
-    EXPECT_TRUE(checkBoundsForEquality(
+    EXPECT_TRUE(CheckBoundsForEquality(
         outputBoundsBottomRight, NrtGeoBounds{NrtGeoVector2F{TEST_WIDTH / 4, -TEST_HEIGHT / 4}, expectedSize, 0}));
 }
 
-TEST_F(InteropQuadTreeTest, insertOutOfBoundsReturnsFalse)
+TEST_F(InteropQuadTreeTest, InsertOutOfBoundsReturnsFalse)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(3840.0f, 2160.0f);
 
-    EXPECT_EQ(NRT_FALSE, Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_EQ(NRT_FALSE, Nrt_QuadTree_TryInsert(_quadTree, point0));
 }
 
-TEST_F(InteropQuadTreeTest, PointVector_getSizeReturnsCorrectValue)
+TEST_F(InteropQuadTreeTest, PointVector_GetSizeReturnsCorrectValue)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    NrtGeoBounds inputGeoBounds = Nrt_QuadTree_getBounds(_quadTree);
+    NrtGeoBounds inputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);
     NrtPointVectorHandle resultVector = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, inputGeoBounds, &resultVector), NRT_SUCCESS);
-    EXPECT_EQ(Nrt_PointVector_getSize(resultVector), 5u);
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(_quadTree, inputGeoBounds, &resultVector), NRT_SUCCESS);
+    EXPECT_EQ(Nrt_PointVector_GetSize(resultVector), 5u);
 }
 
-TEST_F(InteropQuadTreeTest, PointVector_deleteReturnsNullInstanceFailureWhenGivenNullptr)
+TEST_F(InteropQuadTreeTest, PointVector_DeleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     ASSERT_EQ(Nrt_PointVector_Destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsAllPoints)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    NrtGeoBounds outputGeoBounds = Nrt_QuadTree_getBounds(_quadTree);
+    NrtGeoBounds outputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);
     NrtPointVectorHandle resultVector = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, outputGeoBounds, &resultVector), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(_quadTree, outputGeoBounds, &resultVector), NRT_SUCCESS);
 
     NrtQuadTreePointHandle outputPoint0 = nullptr;
     NrtQuadTreePointHandle outputPoint1 = nullptr;
@@ -423,78 +423,78 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsReturnsAllPoints)
     NrtQuadTreePointHandle outputPoint3 = nullptr;
     NrtQuadTreePointHandle outputPoint4 = nullptr;
 
-    ASSERT_EQ(Nrt_PointVector_getPointFromIndex(resultVector, 0, &outputPoint0), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_PointVector_getPointFromIndex(resultVector, 1, &outputPoint1), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_PointVector_getPointFromIndex(resultVector, 2, &outputPoint2), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_PointVector_getPointFromIndex(resultVector, 3, &outputPoint3), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_PointVector_getPointFromIndex(resultVector, 4, &outputPoint4), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_PointVector_GetPointFromIndex(resultVector, 0, &outputPoint0), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_PointVector_GetPointFromIndex(resultVector, 1, &outputPoint1), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_PointVector_GetPointFromIndex(resultVector, 2, &outputPoint2), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_PointVector_GetPointFromIndex(resultVector, 3, &outputPoint3), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_PointVector_GetPointFromIndex(resultVector, 4, &outputPoint4), NRT_SUCCESS);
 
-    EXPECT_TRUE(checkPointsForEqualityC(outputPoint0, point0));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPoint1, point4));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPoint2, point1));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPoint3, point2));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPoint4, point3));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPoint0, point0));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPoint1, point4));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPoint2, point1));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPoint3, point2));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPoint4, point3));
 }
 
-TEST_F(InteropQuadTreeTest, removeExistingReturnsTrue)
+TEST_F(InteropQuadTreeTest, RemoveExistingReturnsTrue)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
 
-    ASSERT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
-    EXPECT_TRUE(Nrt_QuadTree_tryRemove(_quadTree, point0));
+    ASSERT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point0));
 }
 
-TEST_F(InteropQuadTreeTest, removeNoneExistingReturnsFalse)
+TEST_F(InteropQuadTreeTest, RemoveNoneExistingReturnsFalse)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_FALSE(Nrt_QuadTree_tryRemove(_quadTree, point0));
+    EXPECT_FALSE(Nrt_QuadTree_TryRemove(_quadTree, point0));
 }
 
-TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5)
+TEST_F(InteropQuadTreeTest, RemoveOneCausesMergeWhenAdjacentPointCountLessThan5)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    EXPECT_TRUE(Nrt_QuadTree_tryRemove(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point4));
 
-    EXPECT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 4u);
+    EXPECT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 4u);
 
     NrtQuadTreePointHandle newOutputPoint0 = nullptr;
     NrtQuadTreePointHandle newOutputPoint1 = nullptr;
     NrtQuadTreePointHandle newOutputPoint2 = nullptr;
     NrtQuadTreePointHandle newOutputPoint3 = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 0, &newOutputPoint0), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 1, &newOutputPoint1), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 2, &newOutputPoint2), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getPoint(_quadTree, 3, &newOutputPoint3), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 0, &newOutputPoint0), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 1, &newOutputPoint1), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 2, &newOutputPoint2), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetPoint(_quadTree, 3, &newOutputPoint3), NRT_SUCCESS);
 
-    EXPECT_TRUE(checkPointsForEqualityC(newOutputPoint0, point0));
-    EXPECT_TRUE(checkPointsForEqualityC(newOutputPoint1, point1));
-    EXPECT_TRUE(checkPointsForEqualityC(newOutputPoint2, point2));
-    EXPECT_TRUE(checkPointsForEqualityC(newOutputPoint3, point3));
+    EXPECT_TRUE(CheckPointsForEqualityC(newOutputPoint0, point0));
+    EXPECT_TRUE(CheckPointsForEqualityC(newOutputPoint1, point1));
+    EXPECT_TRUE(CheckPointsForEqualityC(newOutputPoint2, point2));
+    EXPECT_TRUE(CheckPointsForEqualityC(newOutputPoint3, point3));
 
     NrtQuadTreeHandle newTopLeftTree = nullptr;
     NrtQuadTreeHandle newTopRightTree = nullptr;
     NrtQuadTreeHandle newBottomLeftTree = nullptr;
     NrtQuadTreeHandle newBottomRightTree = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getTopLeft(_quadTree, &newTopLeftTree), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getTopRight(_quadTree, &newTopRightTree), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomLeft(_quadTree, &newBottomLeftTree), NRT_SUCCESS);
-    ASSERT_EQ(Nrt_QuadTree_getBottomRight(_quadTree, &newBottomRightTree), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopLeft(_quadTree, &newTopLeftTree), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetTopRight(_quadTree, &newTopRightTree), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomLeft(_quadTree, &newBottomLeftTree), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetBottomRight(_quadTree, &newBottomRightTree), NRT_SUCCESS);
 
     EXPECT_EQ(newTopLeftTree, nullptr);
     EXPECT_EQ(newTopLeftTree, nullptr);
@@ -502,49 +502,49 @@ TEST_F(InteropQuadTreeTest, removeOneCausesMergeWhenAdjacentPointCountLessThan5)
     EXPECT_EQ(newTopLeftTree, nullptr);
 }
 
-TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4)
+TEST_F(InteropQuadTreeTest, RemoveOneDoesNotCauseMergeWhenAdjacentPointCountMoreThan4)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
     auto point5 = Nrt_QuadTreePoint_createFromFloat(0.5f, 0.5f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point5));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point5));
 
-    EXPECT_TRUE(Nrt_QuadTree_tryRemove(_quadTree, point5));
+    EXPECT_TRUE(Nrt_QuadTree_TryRemove(_quadTree, point5));
 
-    EXPECT_EQ(Nrt_QuadTree_getPointCount(_quadTree), 0u);
+    EXPECT_EQ(Nrt_QuadTree_GetPointCount(_quadTree), 0u);
 
     NrtQuadTreeHandle treeOutputTopLeft = nullptr;
     NrtQuadTreeHandle treeOutputTopRight = nullptr;
     NrtQuadTreeHandle treeOutputBottomLeft = nullptr;
     NrtQuadTreeHandle treeOutputBottomRight = nullptr;
 
-    int32_t treeResultTopLeft = Nrt_QuadTree_getTopLeft(_quadTree, &treeOutputTopLeft);
-    int32_t treeResultTopRight = Nrt_QuadTree_getTopRight(_quadTree, &treeOutputTopRight);
-    int32_t treeResultBottomLeft = Nrt_QuadTree_getBottomLeft(_quadTree, &treeOutputBottomLeft);
-    int32_t treeResultBottomRight = Nrt_QuadTree_getBottomRight(_quadTree, &treeOutputBottomRight);
+    int32_t treeResultTopLeft = Nrt_QuadTree_GetTopLeft(_quadTree, &treeOutputTopLeft);
+    int32_t treeResultTopRight = Nrt_QuadTree_GetTopRight(_quadTree, &treeOutputTopRight);
+    int32_t treeResultBottomLeft = Nrt_QuadTree_GetBottomLeft(_quadTree, &treeOutputBottomLeft);
+    int32_t treeResultBottomRight = Nrt_QuadTree_GetBottomRight(_quadTree, &treeOutputBottomRight);
 
     ASSERT_EQ(treeResultTopLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultTopRight, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomLeft, NRT_SUCCESS);
     ASSERT_EQ(treeResultBottomRight, NRT_SUCCESS);
 
-    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_getPointCount(treeOutputTopLeft);
-    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_getPointCount(treeOutputTopRight);
-    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_getPointCount(treeOutputBottomLeft);
-    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_getPointCount(treeOutputBottomRight);
+    size_t outputChildTreeSizeTopLeft = Nrt_QuadTree_GetPointCount(treeOutputTopLeft);
+    size_t outputChildTreeSizeTopRight = Nrt_QuadTree_GetPointCount(treeOutputTopRight);
+    size_t outputChildTreeSizeBottomLeft = Nrt_QuadTree_GetPointCount(treeOutputBottomLeft);
+    size_t outputChildTreeSizeBottomRight = Nrt_QuadTree_GetPointCount(treeOutputBottomRight);
 
     EXPECT_EQ(outputChildTreeSizeTopLeft, 2u);
     EXPECT_EQ(outputChildTreeSizeTopRight, 1u);
@@ -557,40 +557,40 @@ TEST_F(InteropQuadTreeTest, removeOneDoesNotCauseMergeWhenAdjacentPointCountMore
     NrtQuadTreePointHandle outputPointResultBottomRight = nullptr;
     NrtQuadTreePointHandle outputPointResultTopLeftTwo = nullptr;
 
-    Nrt_QuadTree_getPoint(treeOutputTopLeft, 0, &outputPointResultTopLeft);
-    Nrt_QuadTree_getPoint(treeOutputTopRight, 0, &outputPointResultTopRight);
-    Nrt_QuadTree_getPoint(treeOutputBottomLeft, 0, &outputPointResultBottomLeft);
-    Nrt_QuadTree_getPoint(treeOutputBottomRight, 0, &outputPointResultBottomRight);
-    Nrt_QuadTree_getPoint(treeOutputTopLeft, 1, &outputPointResultTopLeftTwo);
+    Nrt_QuadTree_GetPoint(treeOutputTopLeft, 0, &outputPointResultTopLeft);
+    Nrt_QuadTree_GetPoint(treeOutputTopRight, 0, &outputPointResultTopRight);
+    Nrt_QuadTree_GetPoint(treeOutputBottomLeft, 0, &outputPointResultBottomLeft);
+    Nrt_QuadTree_GetPoint(treeOutputBottomRight, 0, &outputPointResultBottomRight);
+    Nrt_QuadTree_GetPoint(treeOutputTopLeft, 1, &outputPointResultTopLeftTwo);
 
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopLeft, point0));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopRight, point1));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultBottomLeft, point2));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultBottomRight, point3));
-    EXPECT_TRUE(checkPointsForEqualityC(outputPointResultTopLeftTwo, point4));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopLeft, point0));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopRight, point1));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultBottomLeft, point2));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultBottomRight, point3));
+    EXPECT_TRUE(CheckPointsForEqualityC(outputPointResultTopLeftTwo, point4));
 }
 
-TEST_F(InteropQuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll)
+TEST_F(InteropQuadTreeTest, GetIntersectingPointsForQuadTreeBoundsReturnsAll)
 {
     auto point0 = Nrt_QuadTreePoint_createFromFloat(-1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point0));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point0));
 
     auto point1 = Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point1));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point1));
 
     auto point2 = Nrt_QuadTreePoint_createFromFloat(-1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point2));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point2));
 
     auto point3 = Nrt_QuadTreePoint_createFromFloat(1.0f, -1.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point3));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point3));
 
     auto point4 = Nrt_QuadTreePoint_createFromFloat(0.0f, 0.0f);
-    EXPECT_TRUE(Nrt_QuadTree_tryInsert(_quadTree, point4));
+    EXPECT_TRUE(Nrt_QuadTree_TryInsert(_quadTree, point4));
 
-    NrtGeoBounds outputGeoBounds = Nrt_QuadTree_getBounds(_quadTree);
+    NrtGeoBounds outputGeoBounds = Nrt_QuadTree_GetBounds(_quadTree);
     NrtPointVectorHandle outputVector = nullptr;
 
-    ASSERT_EQ(Nrt_QuadTree_getIntersectingPoints(_quadTree, outputGeoBounds, &outputVector), NRT_SUCCESS);
+    ASSERT_EQ(Nrt_QuadTree_GetIntersectingPoints(_quadTree, outputGeoBounds, &outputVector), NRT_SUCCESS);
     auto intersectingPointsVector = reinterpret_cast<std::vector<std::shared_ptr<Maths::QuadTreePoint>>*>(outputVector);
 
     EXPECT_EQ(intersectingPointsVector->size(), 5u);
@@ -601,9 +601,9 @@ TEST_F(InteropQuadTreeTest, getIntersectingPointsForQuadTreeBoundsReturnsAll)
     auto cPoint3 = reinterpret_cast<Maths::QuadTreePoint*>(point3);
     auto cPoint4 = reinterpret_cast<Maths::QuadTreePoint*>(point4);
 
-    EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPointsVector->at(0).get(), cPoint0));
-    EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPointsVector->at(1).get(), cPoint4));
-    EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPointsVector->at(2).get(), cPoint1));
-    EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPointsVector->at(3).get(), cPoint2));
-    EXPECT_TRUE(checkPointsForEqualityCpp(intersectingPointsVector->at(4).get(), cPoint3));
+    EXPECT_TRUE(CheckPointsForEqualityCpp(intersectingPointsVector->at(0).get(), cPoint0));
+    EXPECT_TRUE(CheckPointsForEqualityCpp(intersectingPointsVector->at(1).get(), cPoint4));
+    EXPECT_TRUE(CheckPointsForEqualityCpp(intersectingPointsVector->at(2).get(), cPoint1));
+    EXPECT_TRUE(CheckPointsForEqualityCpp(intersectingPointsVector->at(3).get(), cPoint2));
+    EXPECT_TRUE(CheckPointsForEqualityCpp(intersectingPointsVector->at(4).get(), cPoint3));
 }
